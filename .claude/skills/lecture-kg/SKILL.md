@@ -27,6 +27,7 @@ description: 신성진(CDSA)의 기존 HTML 강의안 지식그래프(이 저장
 2. **더 깊이 보기**
    - `python kg/query.py search "하네스 권한 로그"`: 슬라이드 단위 검색
    - `python kg/query.py doc <fileId 또는 파일명 일부> --full`: 한 문서의 목차와 섹션 본문 전체
+   - `python kg/query.py topic` / `topic 데이터분석`: 강의 주제(11개) 묶음별 이력
    - `python kg/query.py concept 바이브코딩` / `client 행정안전부`: 개념별·고객사별 이력
 3. **원본이 필요하면** Drive 커넥터로 연다. `mcp__Google_Drive__download_file_content(fileId)`를 호출한다.
    큰 파일은 결과가 디스크에 저장된다. 그다음 `python kg/drive_sync.py decode /tmp/raw` 후
@@ -39,7 +40,11 @@ description: 신성진(CDSA)의 기존 HTML 강의안 지식그래프(이 저장
    - 재료팩에서 참고한 기존 강의안의 fileId를 작성 메모에 남긴다.
 5. 완성본을 Drive에 올릴지는 사용자에게 먼저 묻는다. 올리면 아래 B 절차로 그래프를 갱신한다.
 
-## B. Drive와 그래프 동기화 (클라우드 세션)
+## B. Drive와 그래프 동기화
+
+**평소에는 GitHub Actions(`.github/workflows/sync-drive.yml`)가 6시간마다 자동으로 동기화한다.**
+작업 전에 `git pull`로 최신 그래프를 받는다. Actions가 설정되지 않았거나(`docs/drive-sync-setup.md`) 즉시 반영이
+필요할 때만 아래 클라우드 절차를 쓴다.
 
 1. 폴더 목록 받기. 결과가 크면 디스크에 저장되므로 저장된 경로를 쓴다.
    `mcp__Google_Drive__search_files(query="parentId = '1RwIqsIMKoCry1-19KqCxSov9-wUbRQ9W'", pageSize=1000, excludeContentSnippets=true)`
@@ -57,8 +62,9 @@ description: 신성진(CDSA)의 기존 HTML 강의안 지식그래프(이 저장
 로컬에서는 Drive 동기화 폴더를 직접 읽으므로 작은 파일과 10MB 넘는 파일까지 모두 색인된다.
 사용자에게 `scripts/sync_local.ps1`(Windows) 또는 `scripts/sync_local.sh`를 안내한다.
 
-## 개념 사전 확장
+## 개념·주제 사전 확장
 
 새 주제가 자주 나오는데 개념 노드로 잡히지 않으면 `kg/vocab.py`의 `CONCEPTS`에 한 줄을 추가한다.
 형식은 `"대표명": ("분류", ["동의어", ...])`다. 그다음 `python kg/build.py`를 다시 실행한다.
-원본 없이도 이전 색인 본문으로 개념이 다시 계산된다. 고객사는 `CLIENTS`, 문서 유형은 `DOC_TYPES`에서 고친다.
+원본 없이도 이전 색인 본문으로 개념이 다시 계산된다. 고객사는 `CLIENTS`, 문서 유형은 `DOC_TYPES`,
+강의 주제 묶음(뷰어 첫 화면)은 `TOPICS`에서 고친다. 주제는 파일명 정규식이 먼저 적용되고, 안 맞으면 개념 점수로 정해진다.

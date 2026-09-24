@@ -122,3 +122,42 @@ DOC_TYPES: list[tuple[str, str]] = [
                      r"viewer|뷰어|board|planner|launcher|generator|editor|timer|calc|form|시스템|검색|상황판|플랫폼|"
                      r"서비스|lab|stepper|chat|shell|filler|inspector|manager|프로그램|smart_factory|ui"),
 ]
+
+# ── 강의 주제 (첫 화면 '주제 지도'의 묶음 단위)
+# (주제명, 색 슬롯 1~8 / 0=중립 회색, 설명, 파일명 정규식, {개념: 가중치})
+#  1) 파일명(가족명·페이지 제목)이 정규식에 맞으면 위에서부터 먼저 맞는 주제로 들어간다.
+#  2) 안 맞으면 개념 가중치 점수가 가장 높은 주제로 들어간다 (점수 3 미만이면 '기타').
+TOPICS: list[tuple[str, int, str, str, dict[str, float]]] = [
+    ("수강생 실습 산출물", 0, "분임 과제, 일차별 개인 결과물, 프로포절 취합본 등 교육생이 만든 결과물",
+     r"분임|\d일차_|숙제|assignment|프로포절|첨부-\d+_|Q\d+_source|slm_report|취합본|통합본|박경란|유진희|윤정이", {}),
+    ("공공 AI 인재과정·AI챔피언", 1, "행안부·국가공무원인재원 AI챔피언, 공공 AI 전문인재 과정, 문제은행·평가·해커톤",
+     r"champion|챔피언|전문인재|역량트랙|행안부|8과목|인재원|개편안|조편성|문제은행|해커톤|mois_|마라토너|일반교육|session-\d|Session \d",
+     {"AI 챔피언": 3, "평가·문제은행": 1.5, "해커톤·프로젝트": 1.5, "교육 설계": .5}),
+    ("기관 사업·제안·보고", 8, "ASTIS·보건복지 등 수행 사업의 착수·중간보고, 교육 제안서·소개서, 기획 문서",
+     r"ASTIS|착수보고|중간보고|보건복지|제안서|교육제안|proposal|교육소개서|견적|PRD|KCA_연구|후보주제|핵심브리프|교육과정_재설계|설득논리",
+     {"PRD·기획": 2, "문서·보고서 작성": .5}),
+    ("AI 데이터분석", 5, "삼성전자 등 기업 대상 AI 데이터분석 실무, EDA·시각화·머신러닝",
+     r"데이터분석|dataanalysis|AI데이터|데이터리더|분석연습|지리공간|csv_analysis|pyodide|바이브분석|keyword_analysis|product_analysis",
+     {"데이터 분석": 2, "시각화": 1.5, "통계·머신러닝": 1.5, "파이썬": 1, "공공데이터": 1, "지리공간 분석": 1}),
+    ("직장인 업무자동화·스프레드시트", 6, "엑셀·구글 시트·오피스 자동화, 직장인 온라인 차시 강의",
+     r"온라인강의안|차시_|직장인|스프레드시트|sheets|엑셀|구글함수|구글스프레드|kakao_sheets",
+     {"스프레드시트": 2, "Apps Script": 2, "업무 자동화": 1, "발표자료 제작": .5}),
+    ("행정 업무자동화", 2, "공무원·교육행정 대상 행정업무 자동화, 기관 거버넌스·업무혁신 과정",
+     r"행정업무자동화|기관통합거버넌스|기관업무혁신|교육행정|서울교육연수원|kotsa|AI기반_업무자동화|행정",
+     {"공공행정 AI": 2, "업무 자동화": 1, "문서·보고서 작성": 1, "회의·요약": .5}),
+    ("바이브코딩·코딩 에이전트", 4, "Claude Code·Codex·Cursor로 만드는 바이브코딩, 기업 특강(유한킴벌리·카카오엔터 등)",
+     r"바이브코딩|vibe|claude_code|claudecode|claude_access|claude_ai_vs|codex|cursor|코딩에이전트|coding|ax_camp|github|lovable|백엔드|supabase|ChatGPT_Claude|유한킴벌리|카카오엔터|kakaoent|HTML_CSS",
+     {"바이브코딩": 2, "Claude Code": 2, "Codex": 1.5, "Cursor": 1.5, "GitHub": 1, "배포": 1, "웹앱 제작": 1, "CLI·터미널": 1}),
+    ("AI 에이전트·하네스", 3, "LLM·에이전트·하네스 실행구조, MCP·스킬·컨텍스트, AI 트렌드 특강·키노트",
+     r"에이전트|agent|하네스|harness|hyperframe|LLM|에이전틱|질문의시대|프론티어|context_injection|MCP|transformer|lrm|온톨로지|트렌드",
+     {"AI 에이전트": 2, "하네스": 2, "MCP": 2, "LLM": 1, "도구 호출": 1, "RAG": 1, "서브에이전트": 1, "스킬": 1,
+      "컨텍스트 엔지니어링": 1}),
+    ("생성형 AI 리터러시·강사양성", 7, "생성형 AI 기초·프롬프트·리터러시, 강사양성 과정, 교육청 직무연수",
+     r"생성형AI|생성형_AI|리터러시|Module01|강사양성|generative|전북교육청|프롬프트|prompt|ai_writing|챗지피티|AI와_함께",
+     {"생성형 AI": 2, "프롬프트 엔지니어링": 1.5, "AI 리터러시": 2, "할루시네이션": 1, "ChatGPT": .5, "멀티모달": .5}),
+    ("실습 데모·웹 도구", 0, "강의 중 만든 예제 앱, 웹사이트, 보고서 생성기, 검색·상황판 도구",
+     r"site|portfolio|brand|portal|landing|scroll|app|tool|generator|editable|editor|viewer|board|planner|launcher|timer|calc|form|"
+     r"dashboard|대시보|시스템|검색|상황판|플랫폼|서비스|lab|stepper|chat|shell|filler|inspector|manager|프로그램|report_|양식|사업자",
+     {"웹앱 제작": .5, "브랜딩·디자인": 1}),
+    ("기타", 0, "주제를 특정하기 어려운 파일 (제목만 있는 짧은 파일 등)", r"$^", {}),
+]

@@ -6,6 +6,7 @@
   python kg/query.py doc 삼성전자_20260825          # 문서 카드 + 목차 (--full: 섹션 본문까지)
   python kg/query.py concept 하네스                 # 개념 → 관련 문서·함께 다룬 개념
   python kg/query.py client 행정안전부              # 고객사별 문서
+  python kg/query.py topic [데이터분석]              # 강의 주제별 문서 (인자 없으면 주제 목록)
   python kg/query.py stats
 """
 from __future__ import annotations
@@ -184,6 +185,25 @@ def cmd_client(a):
         print(f"  · {d['date']}  {d['family']}  ({d['doc_type']}, 섹션 {d['n_sections']})  fileId={d['id']}")
 
 
+def cmd_topic(a):
+    docs, _, _ = load()
+    from vocab import TOPICS
+    names = [t[0] for t in TOPICS]
+    if not a.name:
+        for t in names:
+            ds = [d for d in docs.values() if d.get("topic") == t]
+            print(f"{len(ds):>4}  {t}")
+        return
+    hit = [t for t in names if a.name.lower() in t.lower()]
+    if not hit:
+        sys.exit("주제 목록: " + ", ".join(names))
+    for t in hit:
+        ds = sorted((d for d in docs.values() if d.get("topic") == t), key=lambda d: d["date"] or "", reverse=True)
+        print(f"## {t} — 문서 {len(ds)}개")
+        for d in ds:
+            print(f"  · {d['date']}  {d['family']}  ({d['doc_type']}, 섹션 {d['n_sections']})  fileId={d['id']}")
+
+
 def cmd_stats(a):
     docs, chunks, graph = load()
     ds = list(docs.values())
@@ -227,7 +247,7 @@ def cmd_pack(a):
     L += ["", "## 1. 가장 가까운 기존 강의안", "",
           "| # | 문서 | 유형 | 날짜 | 고객사 | 섹션 | fileId |", "|---:|---|---|---|---|---:|---|"]
     for n, d in enumerate(top_docs, 1):
-        L.append(f"| {n} | {d.get('page_title') or d['family']} | {d['doc_type']} | {d['date']} | "
+        L.append(f"| {n} | {d.get('page_title') or d['family']} | {d['doc_type']} · {d.get('topic', '')} | {d['date']} | "
                  f"{', '.join(d['clients']) or '—'} | {d['n_sections']} | `{d['id']}` |")
     L += ["", "## 2. 재사용 후보 슬라이드 (원문 발췌)", ""]
     per = Counter()
@@ -280,6 +300,7 @@ def main():
     p = sp.add_parser("doc"); p.add_argument("key"); p.add_argument("--full", action="store_true"); p.set_defaults(f=cmd_doc)
     p = sp.add_parser("concept"); p.add_argument("name"); p.add_argument("-k", type=int, default=25); p.set_defaults(f=cmd_concept)
     p = sp.add_parser("client"); p.add_argument("name"); p.set_defaults(f=cmd_client)
+    p = sp.add_parser("topic"); p.add_argument("name", nargs="?"); p.set_defaults(f=cmd_topic)
     p = sp.add_parser("stats"); p.set_defaults(f=cmd_stats)
     a = ap.parse_args()
     a.f(a)

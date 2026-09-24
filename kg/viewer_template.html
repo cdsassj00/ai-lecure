@@ -9,6 +9,7 @@
   --navy:#101827; --coral:#b94a48; --coralbg:#f6e7e6;
   --green:#2e7d5b; --amber:#b87a1c; --blue:#3f63a0; --violet:#6a4f9c;
   --canvas:#f5f6f8; --edge:#b7c1ce;
+  --t1:#2a78d6; --t2:#eb6834; --t3:#1baf7a; --t4:#eda100; --t5:#e87ba4; --t6:#008300; --t7:#4a3aa7; --t8:#e34948; --t0:#9aa3b0;
   --font:'IBM Plex Sans KR','Pretendard','Noto Sans KR','Malgun Gothic',system-ui,sans-serif;
   --mono:'IBM Plex Mono',ui-monospace,Menlo,Consolas,monospace;
 }
@@ -20,6 +21,7 @@
     --navy:#dfe6f0; --coral:#e07b73; --coralbg:#3a2224;
     --green:#5fb58c; --amber:#d9a449; --blue:#7c9ee0; --violet:#a28ad6;
     --canvas:#111823; --edge:#3a4a60;
+      --t1:#3987e5; --t2:#d95926; --t3:#199e70; --t4:#c98500; --t5:#d55181; --t6:#008300; --t7:#9085e9; --t8:#e66767; --t0:#5d6a7c;
   }
 }
 :root[data-theme="dark"]{
@@ -29,6 +31,7 @@
   --navy:#dfe6f0; --coral:#e07b73; --coralbg:#3a2224;
   --green:#5fb58c; --amber:#d9a449; --blue:#7c9ee0; --violet:#a28ad6;
   --canvas:#111823; --edge:#3a4a60;
+  --t1:#3987e5; --t2:#d95926; --t3:#199e70; --t4:#c98500; --t5:#d55181; --t6:#008300; --t7:#9085e9; --t8:#e66767; --t0:#5d6a7c;
 }
 [hidden]{display:none!important}
 html,body{height:100%}
@@ -74,6 +77,15 @@ ul.docs .d{font-family:var(--mono);font-size:11px;color:var(--mut);font-variant-
 a.open{display:inline-flex;gap:6px;align-items:center;font-size:13px;font-weight:600;color:var(--panel);background:var(--coral);
   padding:7px 12px;border-radius:6px;text-decoration:none;justify-self:start}
 .hint{font-size:12.5px;color:var(--mut);line-height:1.6}
+table.topics{width:100%;border-collapse:collapse;font-size:13px;font-variant-numeric:tabular-nums}
+table.topics td{padding:5px 4px;border-bottom:1px solid var(--line);vertical-align:middle}
+table.topics td.n{text-align:right;color:var(--mut);font-family:var(--mono);font-size:11.5px;white-space:nowrap}
+table.topics button{all:unset;cursor:pointer;display:inline-flex;align-items:center;gap:8px;color:var(--ink)}
+table.topics button:hover span,table.topics button:focus-visible span{text-decoration:underline}
+.sw{width:11px;height:11px;border-radius:50%;flex:none;display:inline-block}
+.sw.neutral{border-radius:2px}
+.bar{height:6px;border-radius:3px;background:var(--line)}
+.bar i{display:block;height:100%;border-radius:3px;background:var(--mut)}
 .hint b{color:var(--ink)}
 main{position:relative;min-width:0;min-height:0;background:var(--canvas)}
 #net{position:absolute;inset:0}
@@ -100,8 +112,9 @@ main{position:relative;min-width:0;min-height:0;background:var(--canvas)}
       <input id="q" type="search" placeholder="개념·문서·목차 검색 (예: MCP, 삼성전자, 하네스)" autocomplete="off">
       <div class="row"><span class="lbl">보기</span>
         <div class="seg" role="group" aria-label="보기 방식">
-          <button type="button" id="m-concept" aria-pressed="true">개념 지도</button>
-          <button type="button" id="m-all" aria-pressed="false">문서 포함</button>
+          <button type="button" id="m-topic" aria-pressed="true">주제 지도</button>
+          <button type="button" id="m-concept" aria-pressed="false">개념 지도</button>
+          <button type="button" id="m-all" aria-pressed="false">전체 연결</button>
         </div>
         <label class="chip" id="c-content"><input type="checkbox" id="only-content">본문 색인만</label>
       </div>
@@ -113,10 +126,8 @@ main{position:relative;min-width:0;min-height:0;background:var(--canvas)}
     <div id="net"></div>
     <div id="loading">그래프 배치 중…</div>
     <div class="legend">
-      <span><i style="background:var(--coral)"></i>개념</span>
-      <span><i class="sq" style="background:var(--navy)"></i>분류</span>
-      <span><i style="background:var(--blue)"></i>문서</span>
-      <span><i style="background:var(--green)"></i>고객사</span>
+      <span id="lg-topic">큰 원 = 강의 주제 · 작은 점 = 강의안 (색 = 주제, 속 빈 점 = 제목만 색인)</span>
+      <span id="lg-other" hidden><i style="background:var(--coral)"></i>개념 <i class="sq" style="background:var(--navy)"></i>분류 <i style="background:var(--blue)"></i>문서 <i style="background:var(--green)"></i>고객사</span>
     </div>
   </main>
 </div>
@@ -139,7 +150,9 @@ const nIdx = G.nodes.filter(n => n.type === 'document' && n.has_content).length;
 const nCon = G.nodes.filter(n => n.type === 'concept').length;
 $('#stats').textContent = `문서 ${nDocs} · 본문 ${nIdx} · 개념 ${nCon}`;
 
-let mode = 'concept', onlyContent = false;
+let mode = 'topic', onlyContent = false;
+const topics = G.nodes.filter(n => n.type === 'topic').sort((a, b) => a.order - b.order);
+const tcol = slot => css('--t' + slot);
 const types = [...new Set(G.nodes.filter(n => n.type === 'doctype').map(n => n.label))];
 const activeTypes = new Set(types);
 for (const t of types) {
@@ -161,10 +174,27 @@ function palette() {
 function docVisible(n) {
   return activeTypes.has(n.doc_type) && (!onlyContent || n.has_content);
 }
+function topicNodes() {
+  const P = palette(), out = [];
+  for (const t of topics) out.push({id: t.id, label: `${t.label}\n${t.docs}`, shape: 'dot', size: 16 + Math.sqrt(t.docs) * 3.2,
+    color: {background: tcol(t.slot), border: tcol(t.slot), highlight: {background: tcol(t.slot), border: P.ink}},
+    font: {color: P.ink, size: 22, face: 'IBM Plex Sans KR, sans-serif', strokeWidth: 5, strokeColor: P.canvas},
+    mass: 8});
+  for (const n of G.nodes) {
+    if (n.type !== 'document' || !docVisible(n)) continue;
+    const t = byId.get('topic:' + n.topic); const c = tcol(t ? t.slot : 0);
+    out.push({id: n.id, label: '', title: n.label + (n.date ? ' · ' + n.date : ''), shape: 'dot', mass: .7,
+      size: n.has_content ? 4 + Math.sqrt(n.n || 1) * .9 : 3.5,
+      color: {background: n.has_content ? c : P.canvas, border: c, highlight: {background: c, border: P.ink}},
+      font: {color: P.mut, size: 9, face: 'IBM Plex Sans KR, sans-serif'}, borderWidth: n.has_content ? 1 : 1.5});
+  }
+  return out;
+}
 function visNodes() {
+  if (mode === 'topic') return topicNodes();
   const P = palette(), out = [];
   for (const n of G.nodes) {
-    if (n.type === 'doctype') continue;
+    if (n.type === 'doctype' || n.type === 'topic') continue;
     if (n.type === 'document' && (mode !== 'all' || !docVisible(n))) continue;
     if (n.type === 'client' && mode !== 'all') continue;
     const base = {id: n.id, label: n.label, font: {color: P.ink, face: 'IBM Plex Sans KR, sans-serif'}};
@@ -197,7 +227,10 @@ function visEdges(ids) {
   G.edges.forEach((e, i) => {
     if (!ids.has(e.s) || !ids.has(e.t)) return;
     if (e.type === '유형') return;
+    if (mode === 'topic' && e.type !== '주제') return;
+    if (mode !== 'topic' && e.type === '주제') return;
     if (e.type === '함께 등장' && (mode === 'all' || !keepCo.has(i))) return;
+    if (e.type === '주제') { out.push({id: i, from: e.s, to: e.t, width: .5, color: {color: P.edge, opacity: .45}, smooth: false}); return; }
     const w = e.type === '함께 등장' ? Math.min(3, 0.6 + e.w / 25) : e.type === '유사' ? 1 : 0.6;
     out.push({id: i, from: e.s, to: e.t, width: w, color: {color: P.edge, opacity: e.type === '다룸' ? .35 : .6},
       dashes: e.type === '유사', smooth: false});
@@ -212,9 +245,11 @@ function render() {
   if (net) net.destroy();
   $('#loading').hidden = false;
   net = new vis.Network($('#net'), {nodes: dsN, edges: dsE}, {
-    physics: {solver: 'forceAtlas2Based', forceAtlas2Based: {gravitationalConstant: mode === 'all' ? -60 : -160, springLength: mode === 'all' ? 80 : 150, springConstant: .04, avoidOverlap: .8},
-      stabilization: {iterations: mode === 'all' ? 260 : 180, fit: true}},
-    interaction: {hover: true, tooltipDelay: 150, hideEdgesOnDrag: true}, nodes: {borderWidth: 1.5}});
+    physics: {solver: 'forceAtlas2Based', forceAtlas2Based: mode === 'topic'
+        ? {gravitationalConstant: -30, centralGravity: .01, springLength: 22, springConstant: .12, avoidOverlap: .1}
+        : {gravitationalConstant: mode === 'all' ? -60 : -160, springLength: mode === 'all' ? 80 : 150, springConstant: .04, avoidOverlap: .8},
+      stabilization: {iterations: mode === 'concept' ? 180 : 300, fit: true}},
+    interaction: {hover: true, tooltipDelay: 150, hideEdgesOnDrag: true}, nodes: {borderWidth: 1.5, scaling: {label: {enabled: false, drawThreshold: 4}}}});
   const done = () => { net.setOptions({physics: false}); $('#loading').hidden = true; net.fit(); };
   net.once('stabilizationIterationsDone', done);
   setTimeout(() => { $('#loading').hidden = true; }, 5000);
@@ -238,7 +273,9 @@ function show(id) {
     const d = docs[id.slice(4)] || {};
     const cons = neighbors(id, 'concept').sort((a, b) => b.e.w - a.e.w);
     const sim = neighbors(id, 'document');
+    const tp = byId.get('topic:' + n.topic);
     h += `<div><div class="kicker">${esc(n.doc_type)}</div><h2>${esc(d.page_title || n.label)}</h2></div>
+      ${tp ? `<div class="tags"><button type="button" class="tag k" data-id="${esc(tp.id)}"><i class="sw" style="background:var(--t${tp.slot})"></i> ${esc(tp.label)}</button>${d.topic_alt ? `<span class="tag k">보조: ${esc(d.topic_alt)}</span>` : ''}</div>` : ''}
       <dl class="meta"><dt>파일</dt><dd>${esc(d.title || n.label)}</dd>
       <dt>날짜</dt><dd>${esc(n.date || '—')}</dd>
       <dt>고객사</dt><dd>${esc((d.clients || []).join(', ') || '—')}</dd>
@@ -251,6 +288,30 @@ function show(id) {
     if (d.keywords?.length) h += `<div class="sec"><h3>키워드</h3><div class="tags">${d.keywords.map(k => `<span class="tag k">${esc(k)}</span>`).join('')}</div></div>`;
     if (d.outline?.length) h += `<div class="sec"><h3>목차 (${d.outline.length})</h3><ol class="outline">${d.outline.map(o => `<li>${esc(o)}</li>`).join('')}</ol></div>`;
     if (sim.length) h += `<div class="sec"><h3>비슷한 문서</h3>${docList(sim)}</div>`;
+  } else if (n.type === 'topic') {
+    const ds = neighbors(id, 'document');
+    const con = new Map(), cl = new Map(), ty = new Map();
+    for (const x of ds) {
+      for (const e of adj.get(x.o.id) || []) {
+        const o = byId.get(e.s === x.o.id ? e.t : e.s); if (!o) continue;
+        if (o.type === 'concept') con.set(o.id, (con.get(o.id) || 0) + Math.log1p(e.w));
+        if (o.type === 'client') cl.set(o.id, (cl.get(o.id) || 0) + 1);
+      }
+      ty.set(x.o.doc_type, (ty.get(x.o.doc_type) || 0) + 1);
+    }
+    const top = m => [...m.entries()].sort((a, b) => b[1] - a[1]);
+    h += `<div><div class="kicker" style="color:var(--t${n.slot})">강의 주제</div><h2>${esc(n.label)}</h2></div>
+      <p class="sum">${esc(n.desc)}</p>
+      <dl class="meta"><dt>문서</dt><dd>${n.docs}개 (본문 색인 ${n.indexed}개)</dd>
+      <dt>기간</dt><dd>${esc(n.from || '—')} ~ ${esc(n.to || '—')}</dd>
+      <dt>유형</dt><dd>${top(ty).map(([k, v]) => esc(k) + ' ' + v).join(' · ')}</dd></dl>
+      <p class="hint">이 주제로 새 강의안 재료 모으기<br><span class="mono">python kg/query.py pack "${esc(n.label)} …대상·시간"</span></p>`;
+    const cs = top(con).slice(0, 14).map(([k]) => ({o: byId.get(k)}));
+    if (cs.length) h += `<div class="sec"><h3>자주 다룬 개념</h3>${tagList(cs)}</div>`;
+    const cls = top(cl).slice(0, 10).map(([k]) => ({o: byId.get(k)}));
+    if (cls.length) h += `<div class="sec"><h3>고객사</h3>${tagList(cls, 'k')}</div>`;
+    ds.forEach(x => x.e = {w: x.o.has_content ? 1 : 0});
+    h += `<div class="sec"><h3>강의안 (최신순)</h3>${docList(ds.sort((a, b) => String(b.o.date).localeCompare(String(a.o.date))).map(x => ({...x, e: {w: 0}})))}</div>`;
   } else if (n.type === 'concept') {
     const ds = neighbors(id, 'document');
     const co = neighbors(id, 'concept').sort((a, b) => b.e.w - a.e.w);
@@ -270,12 +331,17 @@ function show(id) {
 $('#detail').addEventListener('click', ev => {
   const b = ev.target.closest('[data-id]'); if (!b) return;
   const id = b.dataset.id;
-  if (!dsN.get(id) && byId.get(id)?.type === 'document') { setMode('all'); setTimeout(() => show(id), 60); }
+  if (!dsN.get(id) && byId.get(id)?.type === 'document') { setMode('topic'); setTimeout(() => show(id), 60); }
+  if (!dsN.get(id) && byId.get(id)?.type === 'concept') { setMode('concept'); setTimeout(() => show(id), 60); }
   show(id);
 });
 function setMode(m) {
-  mode = m; $('#m-concept').setAttribute('aria-pressed', m === 'concept'); $('#m-all').setAttribute('aria-pressed', m === 'all'); render();
+  mode = m;
+  for (const k of ['topic', 'concept', 'all']) $('#m-' + k).setAttribute('aria-pressed', m === k);
+  $('#lg-topic').hidden = m !== 'topic'; $('#lg-other').hidden = m === 'topic';
+  render();
 }
+$('#m-topic').onclick = () => { setMode('topic'); intro(); };
 $('#m-concept').onclick = () => setMode('concept');
 $('#m-all').onclick = () => setMode('all');
 $('#only-content').addEventListener('change', e => { onlyContent = e.target.checked; $('#c-content').classList.toggle('on', onlyContent); render(); });
@@ -288,6 +354,7 @@ function search(q) {
   for (const n of G.nodes) {
     if (n.type === 'doctype' || n.type === 'category') continue;
     let s = 0;
+    if (n.type === 'topic' && n.desc.toLowerCase().includes(ql)) s += 4;
     if (n.label.toLowerCase().includes(ql)) s += n.type === 'concept' ? 10 : 6;
     if (n.type === 'document') {
       const d = docs[n.id.slice(4)] || {};
@@ -308,6 +375,17 @@ function search(q) {
   net.selectNodes(vis_.slice(0, 80));
 }
 function intro() {
+  if (mode === 'topic') {
+    const max = Math.max(...topics.map(t => t.docs));
+    $('#detail').innerHTML = `<div><div class="kicker">강의 주제 ${topics.length}개</div><h2>주제를 누르면 그 주제의 강의안이 모입니다</h2></div>
+      <table class="topics"><tbody>${topics.map(t => `<tr><td><button type="button" data-id="${esc(t.id)}">
+        <i class="sw ${t.slot ? '' : 'neutral'}" style="background:var(--t${t.slot})"></i><span>${esc(t.label)}</span></button></td>
+        <td style="width:28%"><div class="bar"><i style="width:${(100 * t.docs / max).toFixed(0)}%;background:var(--t${t.slot})"></i></div></td>
+        <td class="n">${t.docs} · 본문 ${t.indexed}</td></tr>`).join('')}</tbody></table>
+      <p class="hint">작은 점 하나가 강의안 하나입니다(버전 사본은 하나로 묶음). 속이 빈 점은 아직 제목만 색인된 문서입니다.
+      <b>개념 지도</b>는 MCP·하네스 같은 개념끼리의 관계를, <b>전체 연결</b>은 문서·개념·고객사를 한꺼번에 보여 줍니다.</p>`;
+    return;
+  }
   const top = G.nodes.filter(n => n.type === 'concept').sort((a, b) => b.docs - a.docs).slice(0, 18).map(o => ({o}));
   $('#detail').innerHTML = `<div><div class="kicker">사용법</div><h2>개념을 누르면 관련 강의안이 모입니다</h2></div>
     <p class="hint">빨간 점은 <b>개념</b>, 남색 상자는 <b>분류</b>입니다. <b>문서 포함</b>으로 바꾸면 파란 점(강의안)과 초록 마름모(고객사)가 나타나고,

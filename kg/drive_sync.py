@@ -74,8 +74,7 @@ def cmd_pending(a):
     for fam, members in fams.items():
         latest = max(members, key=lambda f: (f.get("modifiedTime") or "", int(f.get("fileSize") or 0)))
         d = by_fam.get(fam)
-        up_to_date = d and d["has_content"] and d.get("indexed_modified") and \
-            d["indexed_modified"] >= (latest.get("modifiedTime") or "")
+        up_to_date = d and d.get("indexed_modified") and d["indexed_modified"] >= (latest.get("modifiedTime") or "")
         if up_to_date:
             continue
         size = int(latest.get("fileSize") or 0)

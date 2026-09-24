@@ -31,7 +31,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from extract import extract  # noqa: E402
-from vocab import CLIENTS, CONCEPTS, DOC_TYPES  # noqa: E402
+from vocab import CLIENTS, CONCEPTS, DOC_TYPES, TOPICS  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
 MANIFEST = ROOT / "data" / "drive_manifest.json"
@@ -65,6 +65,29 @@ def doc_type(title: str, page_title: str) -> str:
         if page_title and re.search(pat, page_title, re.I):
             return name
     return "기타"
+
+
+TOPIC_RULES = [(name, re.compile(pat, re.I), sig) for name, _, _, pat, sig in TOPICS]
+
+
+def assign_topic(title: str, page_title: str, concepts: dict) -> tuple[str, str | None]:
+    """문서 → (주 주제, 보조 주제). 파일명 규칙 우선, 없으면 개념 점수."""
+    scores = {}
+    for name, _, sig in TOPIC_RULES:
+        scores[name] = sum(w * math.log1p(concepts.get(c, 0)) for c, w in sig.items())
+    primary = None
+    for text in (title, page_title or ""):
+        for name, pat, _ in TOPIC_RULES:
+            if pat.search(text):
+                primary = name
+                break
+        if primary:
+            break
+    ranked = [n for n, sc in sorted(scores.items(), key=lambda x: -x[1]) if sc >= 3]
+    if not primary:
+        primary = ranked[0] if ranked else "기타"
+    alt = next((n for n in ranked if n != primary), None)
+    return primary, alt
 
 
 # ───────────────────────── 개념 매칭 ─────────────────────────
@@ -200,16 +223,18 @@ def build(src_dirs: list[Path], raw_dirs: list[Path], max_chunk_chars: int) -> N
         }
         page_title, sections, text_all = "", [], ""
         indexed = None
+        pm = prev_meta.get(canon["id"], {})
         if canon["path"] is not None:
+            indexed = canon["modified"]  # 본문이 비어 있어도 '확인함'으로 기록해 다음 동기화 때 다시 받지 않는다
             try:
                 ex = extract(read_html(canon["path"]), max_chars=max_chunk_chars)
                 page_title, sections = ex["title"], ex["sections"]
-                indexed = canon["modified"]
             except Exception as e:  # noqa: BLE001
                 print("  ! extract 실패", canon["title"], e, file=sys.stderr)
         elif canon["id"] in prev_secs:  # 증분 빌드: 원본이 없으면 이전 색인 본문을 그대로 쓴다
-            pm = prev_meta.get(canon["id"], {})
             page_title, sections, indexed = pm.get("page_title", ""), prev_secs[canon["id"]], pm.get("indexed_modified")
+        else:
+            page_title, indexed = pm.get("page_title", ""), pm.get("indexed_modified")
         text_all = "\n".join(s["heading"] + "\n" + s["text"] for s in sections)
         title_text = fam.replace("_", " ") + " " + page_title
         cc = count_concepts(text_all)
@@ -226,13 +251,14 @@ def build(src_dirs: list[Path], raw_dirs: list[Path], max_chunk_chars: int) -> N
             "clients": match_clients(canon["title"] + " " + page_title, text_all),
             "date": date_from(canon["title"], canon["modified"]),
             "has_content": bool(sections),
-            "indexed_modified": indexed if sections else None,
+            "indexed_modified": indexed,
             "n_sections": len(sections),
             "text_chars": len(text_all),
             "concepts": dict(concepts.most_common(15)),
             "outline": [s["heading"] for s in sections][:80],
             "summary": _summary(sections),
         })
+        rec["topic"], rec["topic_alt"] = assign_topic(fam, page_title, rec["concepts"])
         rec["_tok"] = Counter(tokens(title_text + " " + " ".join(rec["outline"])))
         docs.append(rec)
         for i, s in enumerate(sections):
@@ -290,6 +316,7 @@ def viewer_body(graph: dict, docs: list[dict]) -> str:
         d["id"]: {
             "title": d["title"], "page_title": d["page_title"], "clients": d["clients"],
             "summary": d["summary"], "keywords": d["keywords"], "outline": d["outline"][:40],
+            "topic_alt": d.get("topic_alt"),
             "versions": len(d["versions"]),
         } for d in docs
     }
@@ -312,13 +339,22 @@ def make_graph(docs: list[dict]) -> dict:
     for d in docs:
         nodes.append({"id": "doc:" + d["id"], "type": "document", "label": d["family"][:60],
                       "doc_type": d["doc_type"], "date": d["date"], "has_content": d["has_content"],
-                      "url": d["url"], "n": d["n_sections"]})
+                      "url": d["url"], "n": d["n_sections"], "topic": d["topic"]})
+        edges.append({"s": "doc:" + d["id"], "t": "topic:" + d["topic"], "type": "주제", "w": 1})
         for c, w in d["concepts"].items():
             edges.append({"s": "doc:" + d["id"], "t": "concept:" + c, "type": "다룸", "w": w})
             used_concepts[c] += 1
         for cl in d["clients"]:
             edges.append({"s": "doc:" + d["id"], "t": "client:" + cl, "type": "고객사", "w": 1})
         edges.append({"s": "doc:" + d["id"], "t": "type:" + d["doc_type"], "type": "유형", "w": 1})
+    for i, (name, slot, desc, _, _) in enumerate(TOPICS):
+        ds = [d for d in docs if d["topic"] == name]
+        if not ds:
+            continue
+        dates = sorted(d["date"] for d in ds if d["date"])
+        nodes.append({"id": "topic:" + name, "type": "topic", "label": name, "slot": slot, "order": i,
+                      "desc": desc, "docs": len(ds), "indexed": sum(d["has_content"] for d in ds),
+                      "from": dates[0] if dates else None, "to": dates[-1] if dates else None})
     for c, n in used_concepts.items():
         cat = CONCEPTS[c][0]
         nodes.append({"id": "concept:" + c, "type": "concept", "label": c, "category": cat, "docs": n})
@@ -380,6 +416,18 @@ def make_index(docs: list[dict], graph: dict) -> str:
          f"원본 파일 {sum(1 + len(d['versions']) for d in docs)}개",
          "- 검색: `python kg/query.py search \"키워드\"` · 재료팩: `python kg/query.py pack \"새 강의 주제\"`",
          "- 문서 링크는 Google Drive 원본입니다. Claude는 Drive 커넥터로 fileId를 열어 원문을 볼 수 있습니다.", ""]
+    L += ["## 주제별 문서", ""]
+    for name, _, desc, _, _ in TOPICS:
+        ds = sorted((d for d in docs if d["topic"] == name), key=lambda d: d["date"] or "", reverse=True)
+        if not ds:
+            continue
+        L.append(f"### {name} ({len(ds)}, 본문 {sum(d['has_content'] for d in ds)})")
+        L.append(f"{desc}")
+        L.append("")
+        L += [f"- {d['date'] or ''} `{d['family'][:60]}` ({d['doc_type']}) `{d['id']}`" for d in ds[:40]]
+        if len(ds) > 40:
+            L.append(f"- … 외 {len(ds) - 40}개 (`python kg/query.py topic \"{name}\"`)")
+        L.append("")
     L += ["## 개념별 문서", ""]
     concept_docs = defaultdict(list)
     for d in docs:

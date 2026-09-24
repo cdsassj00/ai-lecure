@@ -4,6 +4,406 @@
 - 검색: `python kg/query.py search "키워드"` · 재료팩: `python kg/query.py pack "새 강의 주제"`
 - 문서 링크는 Google Drive 원본입니다. Claude는 Drive 커넥터로 fileId를 열어 원문을 볼 수 있습니다.
 
+## 주제별 문서
+
+### 수강생 실습 산출물 (68, 본문 27)
+분임 과제, 일차별 개인 결과물, 프로포절 취합본 등 교육생이 만든 결과물
+
+- 2026-09-06 `1분임(수정)` (실습 산출물) `13-Qh9Tw9_oelKbtLmvWN7tzddEvB0fVB`
+- 2026-09-06 `2분임(시설사용허가)` (실습 산출물) `1L-78hssHysZsX4e8sHoelzrXt6NXAFWX`
+- 2026-09-06 `2분임(학교시설통합관리)` (실습 산출물) `1Ui1eTTb4JjASOk8Bgy0I0Y55Fr7jN6qF`
+- 2026-09-06 `3분임` (실습 산출물) `11fmuzXRBkT3Ixig7yLZxue3VqxjckdGA`
+- 2026-09-06 `4분임` (실습 산출물) `1Gaggc3qQ_0JNokGZQZTda3HtTPnAoczU`
+- 2026-09-06 `5분임` (실습 산출물) `18DejVb0D8lWAsfI2n6UQvaOnfDcohFzO`
+- 2026-09-06 `6분임★★` (실습 산출물) `1BzEWDVVGXXwoXUTaxMxHnKZdipCVpp7K`
+- 2026-09-06 `전체_분임_AI프로젝트_통합본` (실습 산출물) `1iJpzZQ4_MaMUAG7KSffansLFphfgeUaG`
+- 2026-09-02 `1분임` (실습 산출물) `1rK30wiQ8GZIFWapkeBuwriwp7R4h3PEk`
+- 2026-09-02 `4분임_보고용` (실습 산출물) `108gtkE9EJfeLBgJGcjXQMUqM-Cq7T9U9`
+- 2026-09-02 `분임별_AI프로젝트_1페이지_프로포절` (실습 산출물) `1yg7RwdSdv0jrvzkP1ZUFeixF2Z4Wdsww`
+- 2026-09-02 `서울시교육청_AI프로젝트_분임별_프로포절_취합본` (실습 산출물) `1lKvQqcimrUn54WPfKnWYL2P-MLWy-Pe7`
+- 2026-08-26 `Q23_source__index` (실습 산출물) `1V0fmSgDZQd22fNxG6A4P9KEpcbPjmOCJ`
+- 2026-08-26 `Q3_source__index` (실습 산출물) `1GGVim_3U0gW_jPqp3D19obSrAHoKM_47`
+- 2026-08-26 `Q3_source__보도자료_상황판` (실습 산출물) `1eamEdXLpA7r-3NoMobKmAB8l26wtHR0D`
+- 2026-08-26 `Q3_source__소스.zip` (실습 산출물) `1umbxLFNfCYTsb7NRKIihMvfMYOZtXmHi`
+- 2026-08-26 `Q3_source__행정안전부_보도자료_검색페이지` (실습 산출물) `1YCoK6eMgDSOAiX0weBjYML9MPm_lD-7T`
+- 2026-08-13 `1min-speech-assignment` (발표·키노트) `1PEcLwMuLs8Ln7_xnfKxosBY3kApVl1N3`
+- 2026-05-09 `kac_kihyun_slm_report` (보고서) `1z-gqWfo_DV5Kv9yttY19jpmAK2kLvIU3`
+- 2026-05-09 `기상청_최철운_slm_report` (보고서) `1RHdGaU5XQBLYYi_ESxk1t0EVnBMYl75X`
+- 2026-05-08 `코레일유통_한재진_slm_report (Gemma4-E2B)` (보고서) `1peSKMDsFkiOPpgaJ4jalZawWdIJmvNQz`
+- 2026-05-08 `코레일유통_한재진_slm_report(Gemma4-31B)` (보고서) `1fcGB-yqwmgZxOfVlGyFyLsAsSGfuNu2c`
+- 2026-05-07 `day1_slm_github_assignment_template` (실습 산출물) `1BmDUpcIkeVjxcFhzBSQPXnDn9ZX2IOUj`
+- 2026-04-15 `4일차_강혜라` (실습 산출물) `1hyCLkPIiFpTXgXxzN_v5jOzuO0wOvsYy`
+- 2026-04-15 `4일차_김예린` (실습 산출물) `1P7Ca_6KuSy4EFQQiaSPWAujLj0wyLQjd`
+- 2026-04-15 `4일차_김현진` (실습 산출물) `17tUd7vcJ1PJ_xwOHEXVNqLpYbotW7HYw`
+- 2026-04-15 `4일차_남유정` (실습 산출물) `18m1UtLUCIQ7Qa6gxTVeSNwBbDQwgqo5E`
+- 2026-04-15 `4일차_민시은` (실습 산출물) `1hGH4NIsKRuIKWUONE9uQgZK7uTaGDmD5`
+- 2026-04-15 `4일차_박미영` (실습 산출물) `1btllccFw3iCgJfBk8Ks9fKzJRkftelev`
+- 2026-04-15 `4일차_박서연` (실습 산출물) `1ZE_1njjbf76T8_CELG8UWkAqjjSzlSyH`
+- 2026-04-15 `4일차_박정민` (실습 산출물) `16r0YzWkwTRWmpru25iyb1ymGVqGii62q`
+- 2026-04-15 `4일차_서예은` (실습 산출물) `1h_LFcAsXFrGgl5d1Olg5y_JFw_g1xaFG`
+- 2026-04-15 `4일차_승태진` (실습 산출물) `1z8-OBd8U3CRb-idFs8QPGjjNLVFE3Efw`
+- 2026-04-15 `4일차_신채원` (실습 산출물) `1f4nA0Omvva-KeiPZi7rB_lgJ2Pind7aE`
+- 2026-04-15 `4일차_심선아` (실습 산출물) `1e4beapGjWxraoqq4w2FQlfCT4_1MwSIF`
+- 2026-04-15 `4일차_윤지민` (실습 산출물) `1cILGQqCn26vDT9lK2x6IHq8JAgyW_SIO`
+- 2026-04-15 `4일차_이길용` (실습 산출물) `1hUIR62ojIDsHD6bvbBT01TpPy6WVZKyf`
+- 2026-04-15 `4일차_이슬` (실습 산출물) `1nwAaVxVwqJcjQlr9hzENwWtH40bAVDzR`
+- 2026-04-15 `4일차_임동환` (실습 산출물) `1hdCWGcRdgmf6QcqSHJJfAZlXu9H7m0Bk`
+- 2026-04-15 `4일차_장원준` (실습 산출물) `1pxUv_rq2Zj3a2L_mhHfACTTDOYkrbNuD`
+- … 외 28개 (`python kg/query.py topic "수강생 실습 산출물"`)
+
+### 공공 AI 인재과정·AI챔피언 (66, 본문 50)
+행안부·국가공무원인재원 AI챔피언, 공공 AI 전문인재 과정, 문제은행·평가·해커톤
+
+- 2026-09-17 `2026-전문인재 1기-조편성-발표` (안내·운영) `1sVQPZJKJTpHgJqe3eKEwex6u6DjuBKkb`
+- 2026-07-29 `코레일유통_AI챔피언_GREEN_BLUE_통합_8H_A4커리큘럼` (강의계획·커리큘럼) `1WVd3E5LuaT006imXfCpMBFM79Y8udUmE`
+- 2026-07-29 `코레일유통_AI챔피언_GREEN_BLUE_통합_8H_커리큘럼` (강의계획·커리큘럼) `1secRV9AMdOi0RrMUB4xICFCdkFUnoz4U`
+- 2026-07-21 `sample` (기타) `1Nf9mqh-cDdudTc0oCrH4WgNOLQm3g0pY`
+- 2026-07-21 `전문인재_운영계획_발표사이트` (발표·키노트) `1toEARrq36jO5rFmHwcuuPvEjqfrCmnIB`
+- 2026-07-20 `AI챔피언_인재원장_키노트_v2_keynote_dark` (발표·키노트) `1BRPVna2NdFWB8C-a9gEEiLITuqXYmYma`
+- 2026-07-20 `AI챔피언_인재원장_키노트_v2_keynote_dark__참고파일` (발표·키노트) `1Go8KvHWqD5RtTJ2s5gzyA9vXVl6lx4ca`
+- 2026-07-15 `AI챔피언_교육의_취지와_방향_·_국가공무원인재원_10분_발표_편집본` (발표·키노트) `1tCHEaCzjF8u3zoIozXggAej5RsX0ZmFS`
+- 2026-07-15 `AI챔피언_인재원장_키노트_7장` (발표·키노트) `113zV_hqH3d2TjJx7TMHRVZP6_mD_t7E4`
+- 2026-07-15 `AI챔피언_인재원장_키노트_7장_dark` (발표·키노트) `1uuWgl1WRf5juCHooWZwWv-yOVxdZ_jfE`
+- 2026-07-15 `AI챔피언_인재원장_키노트_7장_light` (발표·키노트) `1JLPJXnfRBffvlkJ6J5l22vtZV35mYXf6`
+- 2026-07-10 `강의안_AI데이터챔피언_마라토너_lecture-deck` (강의안) `1APsEiKXP3sSAbE-QPoVAuNP6tvAdwNld`
+- 2026-07-07 `AI챔피언_전문인재과정_실전평가_1기_정답표_채점용` (평가·문제) `1AjKkc-X7msRzDf1SStYi49bKX4izCj7t`
+- 2026-07-07 `AI챔피언_전문인재과정_실전평가_2기_이론_문제지` (평가·문제) `13DtAC0H71ilfAW-CaXZB92YvQGb0h5nH`
+- 2026-07-07 `AI챔피언_전문인재과정_실전평가_2기_작업형_문제지` (평가·문제) `1BnWCkjJOWy8AqB7KpopkKsEDkx04R_wQ`
+- 2026-07-07 `AI챔피언_전문인재과정_실전평가_2기_정답표_채점용` (평가·문제) `1ZBfRjIegypG6G1lpUr09uMSgO3dcvhhS`
+- 2026-07-07 `theory` (평가·문제) `12Ar3xX7GVxVL3VyVqnq9i_n5fU4sbcUG`
+- 2026-07-02 `AI챔피언_문제은행_통합` (평가·문제) `1TcVgivziVexwAdSxntJ9kzaiwowyMe6R`
+- 2026-06-30 `AI챔피언_전문인재과정_연습용_모의평가시험지` (평가·문제) `1IJSd4lm65yUZWHelIy86K-AUZHttUGhH`
+- 2026-06-19 `발표_슬라이드쇼_7페이지교체본` (발표·키노트) `1ZCNo-EVRkoiEQphSSiRYXk6r-U9oMUMX`
+- 2026-05-30 `mois_org_report_editable_html` (보고서) `11DTNPrFMvM1XvzpX3-DiUrUyGaMtyI5T`
+- 2026-05-30 `mois_org_report_style` (보고서) `1CqZz391QF1aIHN6Oq9eOkCjcKoVwMPQ8`
+- 2026-05-27 `20260527_기관맞춤형_AI챔피언_운영가이드` (안내·운영) `1KZjgCOfWQ2R_nuN6FQuPqEkT_0p--UD8`
+- 2026-05-19 `2026_AI챔피언_해커톤_대회_운영지침` (안내·운영) `1CvvHjtTe68jcBy8djKlPK4d_Wp130VLt`
+- 2026-05-10 `session-02-complete` (강의안) `1YeqZHqxBTOK1-W72HOO2l5U8-Q-QDuPP`
+- 2026-05-08 `한국방송통신전파진흥원_정백철_slm_model_report` (보고서) `1qW5z36UQ3c3QCTBWN5_FdCR1j0Dl3fj9`
+- 2026-05-06 `session-01-complete` (강의안) `119PAS95Qf_b44fQluoXMi_Enzlo35vQT`
+- 2026-05-03 `1_2026년 행안부 공공 AI 역량트랙 _교육 개편안` (강의계획·커리큘럼) `1r_DB5Qh431XVSqioRWnDjQagwaXs-JiP`
+- 2026-05-03 `2_2026년 행안부 공공 AI 역량트랙 _ 8과목 세부개요_0424` (강의계획·커리큘럼) `1Fa2NpwOffYnBHPj3b6isESfLxIs29RKb`
+- 2026-05-01 `2_2026년_행안부_공공_AI_역량트랙___8과목_세부개요_0501_v3_C06C08개편` (강의계획·커리큘럼) `19dYKBcN6fw4EprbqUudbB3-ejrPR6LaK`
+- 2026-04-25 `2_2026년_행안부_공공_AI_역량트랙___8과목_세부개요_0424_v2_전면개편` (강의계획·커리큘럼) `17bmElrs3nevOnQw_WP-MtatnpnUiUwtR`
+- 2026-04-22 `Session 01 강의안 (standalone)` (강의안) `1Qmk1Lv1uB4eD3Vw3yRq5dcZI5iLT9lxP`
+- 2026-04-21 `2026_행안부_전문인재과정_페이지뷰_실습과제포함` (교재·매뉴얼) `1GHSdmxvyuv8cDQwcKFc9VUazr-I8Q-v-`
+- 2026-04-21 `session-03-complete` (강의안) `1oGhdoiWREpKsGCu95xRj_dMQ206fTzCG`
+- 2026-04-21 `session-04-complete` (강의안) `1d8zVZukdbWQLzPe2BOwk5nZyCTkYgOs2`
+- 2026-04-21 `session-05-complete` (강의안) `1KvunfsD1Bz9Md5aLk3G9g2zC-43fI4tK`
+- 2026-04-21 `session-06-complete` (강의안) `1qMBd0Rv8Hsse-THpg56-PEKJQQkUjE9A`
+- 2026-04-21 `session-07-complete` (강의안) `1DaRSu3kwOCmzxZR2FdMQNKGEUjLtQDyO`
+- 2026-04-21 `session-08-complete` (강의안) `1nMkiGKbTUDTQ6_xl4BCdPXYRF9FbTQ-n`
+- 2026-04-19 `session-01-slides` (강의안) `1nvJz1qYrDcwNShoxEMs-gyUABjNFxtfS`
+- … 외 26개 (`python kg/query.py topic "공공 AI 인재과정·AI챔피언"`)
+
+### 기관 사업·제안·보고 (35, 본문 23)
+ASTIS·보건복지 등 수행 사업의 착수·중간보고, 교육 제안서·소개서, 기획 문서
+
+- 2026-09-24 `ASTIS_바이브코딩_실무교재_초안` (교재·매뉴얼) `1aQuPy_L_uE5NxNyYqMjeLoNB1oTOWjxH`
+- 2026-09-22 `ASTIS_바이브코딩_교재_스켈레톤` (교재·매뉴얼) `1svHkeX6em_B8-P3C8UiMjB_cndt72cf5`
+- 2026-09-21 `청소년지도사_디지털도구200활용_교재_페이지뷰` (교재·매뉴얼) `15fbNfppqPPR2b_hlDXszFgWKHH-2Tmmt`
+- 2026-09-19 `KCA_연구보고서의 최신화와 재현 방법론` (보고서) `1hf8wNLW2NMN7NYyoMwoipNIwrTusmqt5`
+- 2026-09-13 `01_교육과정_재설계_배경과_설득논리` (강의안) `1xUMvpdFSyDpGoYvRxBXONr7Oyw-U6Bru`
+- 2026-09-13 `02_회의용_핵심브리프` (보고서) `11E8V8udnqIL_doPZc1tuYRFznvSCbEeS`
+- 2026-09-12 `00_후보주제_검토` (강의계획·커리큘럼) `1JgcuaIBpZiPJ9UVQdCttQ3nN2zoADaE0`
+- 2026-09-12 `01_후보주제20개_중간보고검토안` (강의계획·커리큘럼) `1o7Kok7liZsfz-eDbR19MLdskznRcjz7f`
+- 2026-09-12 `2026_보건복지_AI실습데이터_개발계획안` (기타) `1xdhG0dCa7WvRk8BGoEJqEaeBNkUza1Ut`
+- 2026-09-12 `2026_보건복지_AI실습데이터_개발계획안_페이지뷰` (교재·매뉴얼) `1fQsRaarTSAIaE8EwsJzAsKmUmxCddP0_`
+- 2026-08-30 `05차시_제안서_PDF_제작_온라인강의안` (제안서·소개서) `1G_K57tn4NCvc4LhovZsXgJGdXIIdKbeV`
+- 2026-08-30 `참고_제안서_디자인` (제안서·소개서) `1boonoIJXZ-Y8IvMmOj2msxQS7ku588Ht`
+- 2026-08-05 `CDSA_2026_교육소개서_V4_A4세로_책자판` (제안서·소개서) `1doQAUE9UJuPNOm1TcnirV0xTffU4pPHk`
+- 2026-08-05 `CDSA_2026_교육소개서_V4_가로형_전체판` (제안서·소개서) `19_234JSwBXh1nLpkMPCmUyu9jinVvG-t`
+- 2026-08-05 `CDSA_교육소개서_V4_프로토타입_가로` (제안서·소개서) `1h_WOYOhKekMgSzyBmzyQ1l2MqVBRCm_2`
+- 2026-08-04 `2026_CDSA_교육소개서_세로형` (제안서·소개서) `1F_VXG4nKz8Vd7czYc42r849AkhLT-4vd`
+- 2026-08-04 `2026_CDSA_교육제안서_가로형` (제안서·소개서) `1p74V863_c1MUX5Hz162dZBWyV3KucNNO`
+- 2026-07-31 `PRD_EGIS` (기획서·PRD) `1l5pDAvgxSpOgsKhqA8DmtTPrWuvMg7Mt`
+- 2026-07-21 `ASTIS_중간보고_발표사이트` (보고서) `1dKerDoThgE4a1I8q7hzWt0kzaJDRP7b7`
+- 2026-07-18 `2026_ASTIS_중간보고_ssjhtml2` (보고서) `1l6eyzAXDSz19yxxUs7-oStmgZlASRk2r`
+- 2026-07-18 `2026_ASTIS_중간보고_전면재작성` (보고서) `12a84lsTmqo8w7pLkzVmUFqsoC0muTDRf`
+- 2026-07-18 `2026_ASTIS_중간보고_코덱스` (보고서) `13xQPcv3hkRuq6DRrNK0luUXKekw3LV_F`
+- 2026-07-18 `ASTIS_중간보고_웹키노트` (보고서) `1w3Me64-7MGVMMJyEZU6AgMonxCd7ENnu`
+- 2026-07-18 `ASTIS_중간보고_웹키노트__중간보고_클로드` (보고서) `1Hu0eNeG_vbRUr8XsW7_pUGq98H3J6iRF`
+- 2026-07-18 `ASTIS_중간보고_클로드` (보고서) `10hibXZqYp9GhXPmfjPOOR4FtxArN62y6`
+- 2026-07-18 `중간보고서` (보고서) `1Ny12_eG5qgRWe8yh2I6ioHT6wubExzQq`
+- 2026-07-18 `중간보고서_ssjhtml2` (보고서) `1xYd_Bwb0KDD7GOAh1n81ro7L5Dvr9pOo`
+- 2026-07-18 `중간보고서_ssjhtml2__중간보고_안티그래비티` (보고서) `1VMgDWOp01h33xevYgpMkp9NYDncBn1Eu`
+- 2026-07-15 `KCA_에이전틱AI_교육제안` (제안서·소개서) `1-H6QWzAtFpcUu1Y6Gtfy61Quwinv4pps`
+- 2026-06-23 `KCC건설_AI교육_제안서` (제안서·소개서) `1BbukNd1dyDgtM26iQO2Ot6ajRQjcptBr`
+- 2026-05-28 `2026_ASTIS_착수보고` (보고서) `1qAkoQLBW7MQ-HFdJnczdPUD-4W-7egww`
+- 2026-05-27 `2026_ASTIS_착수보고_편집본` (보고서) `1hU0WZ5R-xe5yAhA593c4wtY3g6XEf7vm`
+- 2026-05-07 `ax_camp_proposal` (제안서·소개서) `18Hwdj_4ehUa5rHajMIsQn97OqHc-ZCdH`
+- 2026-04-14 `환경공단_하수도처_AI퍼실리테이션_견적안` (제안서·소개서) `1bHGk6-TwkxPbd5C72-9e-yaPeOE9fLyj`
+- 2026-01-02 `제안서` (제안서·소개서) `1ZhgxpTa3FFEnXy3gWZIhdA7HzpQV13xk`
+
+### AI 데이터분석 (21, 본문 13)
+삼성전자 등 기업 대상 AI 데이터분석 실무, EDA·시각화·머신러닝
+
+- 2026-08-30 `08차시_데이터분석_자동화_온라인강의안` (강의안) `1UCZ9bv_UpWsU_w__HRalKvkdVednlD9v`
+- 2026-08-25 `삼성전자_20260825_AI데이터분석실무` (강의안) `1759rWBlz9MPvZ_8jvOghVuWhHd4l0YNf`
+- 2026-08-23 `삼성전자_AI데이터분석_강의안_20장_SVG` (강의안) `1LCW9vsXLf5Dhajqkeac9uSLReOcD9MK_`
+- 2026-08-23 `삼성전자_AI데이터분석_강의안_ssjhtml4_SVG` (강의안) `14VhRbtsxgYsfDi3qXxug5sZYkcG9PDVY`
+- 2026-08-22 `삼성전자_AI데이터분석_강의안_10장` (강의안) `1tRT9RVUU149MF5CxPM-UK4V8bXyaLgUL`
+- 2026-08-22 `삼성전자_AI데이터분석_강의안_35장_마스터_SVG` (강의안) `17mQT5zNmyzt7ORtQYbGht9p90v8xYDUc`
+- 2026-08-22 `삼성전자_AI데이터분석_강의안_기존정본_SVG` (강의안) `1wzSoTti8t3TjQxUYdQCpx6L08pFL8Ltz`
+- 2026-08-22 `삼성전자_AI데이터분석_전체강의안_112장_SSJHTML4` (강의안) `1ZgoZHIiWW1MgKEmAW2H--K-VXfJHGp43`
+- 2026-08-22 `삼성전자_AI데이터분석_전체강의안_112장_고품질` (강의안) `1mgLscb6GpnOhkAY1cg48Z39S9sxhbRo5`
+- 2026-07-09 `기후부_AI데이터리더_강의안_샘플5장` (강의안) `1nPaJz5sexFR84yV7MXSnTUifD9Mmaczn`
+- 2026-07-08 `강의안 템플릿.dc` (강의안) `166NaJPnBAcdvSMWy3b-SLbglyIyozMZ_`
+- 2026-07-04 `pyodide-lab` (실습 도구·데모 앱) `1jLYBVKdgRIwn_lEV_D1Q9K-9L_GJTsXy`
+- 2026-06-29 `keyword_analysis` (기타) `1ed0CPH-nvP1lz1YZWQcP7waOWzxKtGZP`
+- 2026-06-29 `product_analysis` (기타) `1hleRlVU14AcT7V1pbj4Zl3O5KbR2KxAf`
+- 2026-06-16 `데이터분석연습` (기타) `1pBFPTEy6OCU2UqIFkX73Fh4QBPgkQS6F`
+- 2026-06-16 `지리공간_머신러닝_분석지도` (보고서) `1B0FOdxDR2ieKhSYsXa5P1mw6MAW_TgMQ`
+- 2026-05-31 `csv_analysis_report_20260531_162050` (보고서) `1KB8tPbpEn9pu3ZfgGfgGBzLvXWWRwn-8`
+- 2026-02-11 `바이브분석` (기타) `1Aw44hqKJolUj7qbeMHLE0Vxh8IMf0sj2`
+- 2026-02-07 `dataanalysis` (기타) `1CJaSnloHu39yKWEQGIDyBgm_3ZKs_nmE`
+- 2026-02-02 `AI데이터분석` (기타) `1uQbMJpSqhSWTytILdHI7L58y2YqAFakd`
+- 2026-01-26 `강의안` (강의안) `1p1cxdP-kyLy4xzfAJIGTR9ZeOVU8FFr9`
+
+### 직장인 업무자동화·스프레드시트 (27, 본문 10)
+엑셀·구글 시트·오피스 자동화, 직장인 온라인 차시 강의
+
+- 2026-09-15 `tiffany_omnichannel_copilot_curriculum` (강의계획·커리큘럼) `1FTkQzMZSxN5HhV-M_x71r2D4E7W9k72V`
+- 2026-08-30 `03차시_플러그인_커넥터_스킬_온라인강의안` (강의안) `1Y0viOj03fWpYs9xQmvG9g3qgiq_kGH0L`
+- 2026-08-30 `04차시_경쟁사_제품_조사_온라인강의안` (강의안) `1m9znViFJrkaK4vTMgiq7-wW9Q1OFt63A`
+- 2026-08-30 `04차시_파워포인트_자동화_온라인강의안` (강의안) `1AIjgYUSCFOJ6FKVQLNLNsUOebMQls4mu`
+- 2026-08-30 `05차시_문서_자동화_온라인강의안` (강의안) `1MZeXCMjdNqH2YaP8it5Me_STMiqy9AIc`
+- 2026-08-30 `06차시_재무_증빙_검토_온라인강의안` (보고서) `1IyV0L7Tp6Y4VtOrzMpXU9nFLa85c7MH3`
+- 2026-08-30 `07차시_엑셀_자동화_온라인강의안` (강의안) `1lyI4f4YGMFCsApbo9syP-9u9VWa9rx0q`
+- 2026-08-30 `08차시_경영실적_원인_분석_온라인강의안` (강의안) `13sNBUU7oFvynJIyVOBQc86x45f4GxnFZ`
+- 2026-08-30 `09차시_메일회의일정_자동화_온라인강의안` (강의안) `1hyZRtDzaHmu9dIwwwBXQ7pzB5mVzkm1d`
+- 2026-08-30 `10차시_마케팅_캠페인_제작_온라인강의안` (강의안) `17Jm4Rk2bOOksZUExkvRS9T5Cb3f5EIgP`
+- 2026-08-30 `10차시_조사기획_자동화_온라인강의안` (기획서·PRD) `19Cf1cVpmYKDKO_8hBEsyLSUtg7FN71xo`
+- 2026-08-30 `11차시_이미지콘텐츠_랜딩페이지_온라인강의안` (강의안) `13QASRXA_xLX0yGeIdnlRHaFHSajz8oc0`
+- 2026-08-30 `11차시_프로젝트_상태_통합_온라인강의안` (강의안) `17CNPiAlGXIQEFUXPWpZZVpM2d5JEHSWE`
+- 2026-08-30 `12차시_업무에이전트_통합_온라인강의안` (강의안) `1yidIDuY6guEDmGgsk9Y7kh5auQOYwGG_`
+- 2026-08-30 `12차시_월간보고_통합_자동화_온라인강의안` (강의안) `1HEMqb1oIcWwhr7HD2R0N3Aur06b_n8vr`
+- 2026-08-18 `2주차_강의요약_엑셀_파이썬_업무자동화` (강의안) `1NRPNXdM2UC-5RhytceEeeDhP_uINJlpk`
+- 2026-08-08 `직장인_AI업무자동화_온라인강의_커리큘럼` (강의계획·커리큘럼) `1eQq-v0byzQXnmnSnQDikF-lQqgmQtlq6`
+- 2026-07-27 `SB일렉트릭_강의안_전체` (강의안) `1ThWAJCtC04xrKHOAg0LFo7PLiFI81GAQ`
+- 2026-07-24 `google_sheets_manual_pageview` (교재·매뉴얼) `1LmHTIovKCiD080GouSrdaRDOwZpFU9At`
+- 2026-07-23 `AI와_함께_쓰는_구글스프레드시트` (기타) `1w6qJCRIjnaFC1Mbbz96zy5paMLnlz0Ga`
+- 2026-07-17 `google_sheets_ssjhtml2_50` (강의안) `1UoA-lkRs2N6vr3zX4H83kfU3UqVTrxBT`
+- 2026-07-10 `kakao_sheets_lecture_deck` (강의안) `1X5fL-cYpTQWchmMR_us5KFBRRssTBSM-`
+- 2026-07-09 `kakao_sheets_curriculum` (강의계획·커리큘럼) `1m5haEoyg9B8yLCVyA3ibr7D3yna7bctU`
+- 2026-07-09 `kakao_sheets_lecture` (강의안) `1hQnj8Fn2Yemxd4-64dIjT7rd5dlClN58`
+- 2026-07-09 `구글스프레드시트_사전학습자료` (교재·매뉴얼) `1Ap0ILUw0XP7fVo0Fwv4gXl5bhOu3UL1M`
+- 2026-06-19 `excel_auto_deck` (강의안) `1T-JVAPDzb5h2WsEfXq1t1v6I4zpoOxXc`
+- 2025-11-21 `구글함수` (기타) `11WX3nJxMcmw2orR746r0RK_kNj7ISAAa`
+
+### 행정 업무자동화 (17, 본문 13)
+공무원·교육행정 대상 행정업무 자동화, 기관 거버넌스·업무혁신 과정
+
+- 2026-09-22 `01_행정업무자동화_기초_안내문` (안내·운영) `1OPjCk2Tw-LVS3HyVrV7lPJygt876dgIE`
+- 2026-09-22 `02_행정업무자동화_심화_안내문` (안내·운영) `1e1_ot4WSoKlrOqqb92On8jIfYSCJ3UVi`
+- 2026-09-22 `04_기관업무혁신시스템_안내문` (안내·운영) `1wDusf00WpB9-3JfL6gQOUmR5gXoImddj`
+- 2026-09-18 `research_revalidation_framework_ssjhtml4` (기타) `1ZMsik4E_gSXcvWOZqyi4So4vr_v31Atl`
+- 2026-09-13 `01_행정업무자동화` (기타) `1jvimzs5JiCJYJldLlBqJhY8BfxK14QoT`
+- 2026-09-13 `03_기관통합거버넌스` (기타) `11qO_0UlIyGNn_MNtYFt58lXAFP_bv1lr`
+- 2026-09-05 `리더를_위한_작은선물_교재_페이지뷰` (교재·매뉴얼) `1ccGovJwLQ-Vbpd29cN7Q1oiaGYxxSC1Y`
+- 2026-09-01 `AI_프로젝트_기획_질문지` (기획서·PRD) `1gf_Grp41uxuf96cIJolns13oQb5RdNNf`
+- 2026-08-20 `서울교육연수원프로젝트기획서` (기획서·PRD) `1VBsKhiY08Kez6PZ_QP0YsUk-kOiqbAE4`
+- 2026-08-20 `서울교육연수원프로젝트기획서_팀` (기획서·PRD) `1fPux99VCFT853-vWbnYJrhbIgxxZsco0`
+- 2026-08-06 `교육행정_AI실습카드_100선_별책부록` (교재·매뉴얼) `1PgrjyYKTOpAKihylBFp-0r4q6EG78tul`
+- 2026-08-06 `교육행정_바이브코딩_업무자동화_4일_통합강의안` (강의안) `1yL-EgWpKTQnY9bVGZXJB_YwshyiXWgCY`
+- 2026-07-25 `AI기반_업무자동화_강의안` (강의안) `1gmvZy9ExgKfcJfHQIFiFG9HUq0R0abRK`
+- 2026-06-08 `kotsa_ai_portal` (실습 도구·데모 앱) `13JPaZmi5idHt4VQ-bx0NRlZwk1gfgcQB`
+- 2026-05-05 `행정안전부_A4_세로_편집가능` (기타) `1AQ6R8e-QkyYb4YJenWDYgeH1EoXd-22s`
+- 2026-04-19 `경영자를_위한_프라이빗_AI_라운지_2026` (기타) `1HDZQb26sOqqDINijYVZCtaEZVuLbBhcm`
+- 2026-01-13 `AI혁신연구재단` (기타) `11dQhnvOXZ2dukFNdbjb5dMF0xYCiCZVI`
+
+### 바이브코딩·코딩 에이전트 (25, 본문 17)
+Claude Code·Codex·Cursor로 만드는 바이브코딩, 기업 특강(유한킴벌리·카카오엔터 등)
+
+- 2026-09-21 `AI에이전트_바이브코딩_교재_페이지뷰` (교재·매뉴얼) `1VC_PrRNm2G5X6qNGMfLsAbT9RHBKyhSH`
+- 2026-09-08 `바이브코딩_에이전트_MCP_컨텍스트_페이지교재` (교재·매뉴얼) `1KW-yWQ4TGnKoZSTJQVMBqPauMPy649kS`
+- 2026-09-08 `바이브코딩_에이전트_MCP_컨텍스트_페이지교재_v3_가독성개선` (교재·매뉴얼) `1nRk3fE2mGsSwfGVCd1cdOnG6a-pBDMLK`
+- 2026-09-06 `백엔드란무엇인가_Supabase-Cloudflare_교재` (교재·매뉴얼) `1lOVLh5coXuPGFfvPWftIYD7UgCiiD5CC`
+- 2026-09-02 `풍산_총무담당자_바이브코딩_3시간_강의안` (강의안) `1p-2LAxoWJkUIPbBNYdU8wcliZb2-WshP`
+- 2026-08-24 `3주차_강의요약_HTML_CSS_JS_업무자동화` (강의안) `1IKV9UPIy6xFp-VsXIwuvopI0lazu2n4t`
+- 2026-08-20 `사전_프로젝트_기획서` (기획서·PRD) `12m4c-VCxV_O3bG6PBbrNu6IiVHOErIp3`
+- 2026-08-18 `유한킴벌리_바이브코딩_특강_20260818` (강의안) `1i6WJEJsn3m4j1wDm42pC1Petu3013foX`
+- 2026-08-18 `유한킴벌리_바이브코딩특강_강의계획서_20260818_CDSA` (강의계획·커리큘럼) `1gZEe96mdIb00crDEnOyCZnJTPOJ6XQE4`
+- 2026-08-18 `유한킴벌리_바이브코딩특강_강의안_20260818` (강의안) `1YG1gC6nedwSIKy_kRBNo7rPyTgBk3VRd`
+- 2026-08-18 `유한킴벌리_바이브코딩특강_강의안_SIGNAL_20260818` (강의안) `18xbXbOHyevED6_cuvQSzjsXWEc-jnLP9`
+- 2026-07-18 `AI활용_서비스개발_이중균_교안__202607_농촌진흥청바이브코딩` (강의안) `1JEJDPMDc_0r2xwJQSgmQ-csNfXW5O8mK`
+- 2026-07-17 `ChatGPT_Claude_비교보고_수정_20260717_0035` (보고서) `14k7qlMJI81ApgBjHYvC85UDoY9mEW38s`
+- 2026-07-16 `ChatGPT_Claude_Web_Desktop_CLI_구조_강의안_SSJHTML2` (강의안) `1LUd33pJjG5HS4MfUk1t3xYoJWBUZn5Us`
+- 2026-07-02 `04_바이브코딩1_데이터시각화` (강의안) `1FeWegUD4PB10oUEZBi-3LMau3Y5G3IXL`
+- 2026-07-02 `05_바이브코딩2_업무자동화` (강의안) `1w7ujLIIIqzfHQNQFF8lx4hsUQEurL6_o`
+- 2026-06-30 `교재_생성형AI코딩에이전트` (교재·매뉴얼) `1EScBvtq8-FT6ralgzsSG7b1BsBF5nJMu`
+- 2026-06-16 `카카오엔터_코딩에이전트활용` (강의안) `1aEBBGWug9sznokcraDbuX62Edx26IlP_`
+- 2026-05-15 `claude_access_paths_beginner_manual_revised_2026-05-15` (교재·매뉴얼) `1lLqKb3wB8WAFvvemQpXyIqKYfwO1RHBj`
+- 2026-05-15 `claude_ai_vs_claude_app_manual_2026-05-15` (교재·매뉴얼) `1thI8LV_XZGfDl6KfrTouYw77bWJNjhkL`
+- 2026-05-15 `lovable-guide` (교재·매뉴얼) `1JI_Q0xQn6RB0qR2CRU_c-neEKtHvDSKO`
+- 2026-05-12 `claudecode-token-guide` (교재·매뉴얼) `1ADCA2l45XNaKbd7D7l7yjwYJ4LIqYvDT`
+- 2026-05-06 `ax_camp_slides` (강의안) `1vbPdYHT_o49j6SPf7dFB1hhCn4Yll7p0`
+- 2026-04-23 `kakaoent_lecture` (강의안) `1M8F1sPQJDOOjvR0ekJOS-hTtG0SnQwp3`
+- 2026-03-02 `claude_code_lesson_plan` (강의계획·커리큘럼) `1r5zBXrYnQgltD5vSiqOeD18UZluv6UfE`
+
+### AI 에이전트·하네스 (40, 본문 32)
+LLM·에이전트·하네스 실행구조, MCP·스킬·컨텍스트, AI 트렌드 특강·키노트
+
+- 2026-09-20 `transformer-eli5` (강의안) `19163leM5gn5u0n8AIwqINWCxLwU2qksc`
+- 2026-09-13 `uiseong_ai_agent_leadership_redesign` (실습 도구·데모 앱) `18Ft1VjLKv7cmSbmVqb6QMXx-DxqKIuQv`
+- 2026-09-13 `질문의시대는끝났다_키노트__202609_의성군` (발표·키노트) `1pgMuhrwyhj4P2xyAwFSQ1AEHu-afSXI7`
+- 2026-09-11 `의성군_AI전략리더_AI에이전트_강의안` (강의안) `1cTyELSYVJS3LixRQ0Ao-dWMdQvOb3JyD`
+- 2026-09-09 `Context_Injection_교재_키워드_시맨틱검색_확장판` (교재·매뉴얼) `1j1mubNdEJTLZKSs8pZ_CH-4WGiO4L5AX`
+- 2026-09-08 `Context_Injection_교재_페이지뷰` (교재·매뉴얼) `1N-02MVdk9lyNI-lXZ4y1vTRUb97oIyOU`
+- 2026-09-07 `Context_Injection_교재_출판마스터` (교재·매뉴얼) `1J5smfuyPyKirEvyU-VdtG-0xVW3DxVF0`
+- 2026-09-07 `Context_Injection_커리큘럼_1장` (강의계획·커리큘럼) `1bky7v6HmGoLC4xT2ZXZ2beFByT4X7wRv`
+- 2026-09-03 `reference_deck` (강의안) `1-zVwpKIfZns97XtYER_VsoVVneQiQH7p`
+- 2026-08-26 `LLM과_에이전트` (기타) `1rbIcWIwpA6RUsChk_4X6Zrzt7PlSTk-m`
+- 2026-08-06 `AI_에이전트_첫걸음_편집형교재` (교재·매뉴얼) `1hfi_XNgkUpMxZVCH5oigYn33wk9txaKd`
+- 2026-08-01 `AI트렌드특강_프롬프트에서에이전트로` (강의안) `1TV5l0Up3RJzCHVlnp53ElQmBvTmcIepi`
+- 2026-08-01 `질문의시대는끝났다_키노트` (발표·키노트) `1K1oanPnvLD8uhfi4MQnh68OqWA6H0_2g`
+- 2026-08-01 `질문의시대는끝났다_키노트__202608_한국방송통신전파진흥원` (발표·키노트) `1-DBe2zrbGtCfKaWt8mpC2-tbyguR4GjL`
+- 2026-07-21 `에이전틱AI_실무활용_교안` (강의안) `15ygORqVHha_WHjD8WAYyxW51S6IILd9l`
+- 2026-07-16 `AI에이전트_서비스별_PPT생성플로우_19장_상세설명_ssjhtml2` (실습 도구·데모 앱) `1Q_Ql1ISMAbOPu1O2GLD5AX6EbhFuTDGh`
+- 2026-07-16 `LLM_에이전트_하네스_실행구조_이미지동일_16대9` (강의안) `1wehRIWbvFs6Of4HRiUoSdkGWtk7TbaFU`
+- 2026-07-16 `LLM_에이전트_하네스_실행구조_한장_DOM_SVG` (강의안) `1BrMc1qki9yG6BGzeCK_NOcIXZ90oAyfP`
+- 2026-07-16 `LLM_에이전트_하네스_클라우드_로컬_실행구조_4장_16대9_SSJHTML2` (강의안) `12D51Z80z-LHqwcaoeV1W8yo-PlgKErbd`
+- 2026-07-08 `AI프렌즈_발대식특강_시네마틱` (강의안) `1Uk8i3LZAv8EBbV3dvljwB8X6vJCRegmQ`
+- 2026-07-07 `기후에너지환경부_AI프렌즈_발대식특강_강의안` (강의안) `12BjG-IaBDSaghJ6sVYgQrCouHVfZMOSo`
+- 2026-07-06 `ai_agent_lottie_trend` (기타) `129WyUK6j4TjrPAMf4yK7TSfdVH3GTGtj`
+- 2026-07-06 `ai_agent_lottie_trend_FIXED` (기타) `1OgaotF8WNHVMWyPKLLq7wrEuoYKLK3tr`
+- 2026-07-06 `hyperframe_llm_agent_animation` (실습 도구·데모 앱) `19_rQB6dF8R8rMz-REE8-0uOiJ1bH2wkK`
+- 2026-07-06 `hyperframe_llm_harness_flow` (강의안) `1YAwhX5Jqnspk-7V_AWwIVdXFXqQ3ZjMl`
+- 2026-07-06 `hyperframe_llm_harness_flow_v3_clean` (강의안) `1nRl-mBjJMc8iOjfkdBt3SWRefuFg8CgD`
+- 2026-07-06 `기후에너지환경부_AI프렌즈_발대식특강` (강의안) `14hX3r3dKjihJBz_j-DO6Xqno0Qx6drg0`
+- 2026-07-06 `기후에너지환경부_AI프렌즈_발대식특강_35min` (강의안) `1X8-j_rQ1x0H3e8Vx0dY6dp3zCQXboNwf`
+- 2026-07-06 `기후에너지환경부_AI프렌즈_발대식특강_35min_1` (강의안) `1y6b9dY-7BL98s_7GZDkiGWu-lfWOIRTd`
+- 2026-07-05 `정리노트_LLM위키와_온톨로지` (강의안) `1w9Fh8GAAn5yN1sniTD_P8bad0Da7d0pf`
+- 2026-07-02 `01_AI_에이전트_시대` (강의안) `1N18mhS2ErOuipePxMX4Lszze3EIU4GxU`
+- 2026-07-02 `02_AI_프론티어_탐색` (강의안) `1O0ptQL5Wan8SSihujtQBZw1DVsXFkdSJ`
+- 2026-07-02 `06_AI_에이전트_개발_입문` (기타) `1Fb054uX_6yX0Es_SPOl4JEV9v26hI-_0`
+- 2026-06-19 `발표_슬라이드쇼_AI에이전트시대_공공교육_개정본` (발표·키노트) `1fUsodG0pIBXPGLjRyxbco-YSiLszimJ5`
+- 2026-05-17 `harness_runtime_guide_dense` (교재·매뉴얼) `1XZE_LDztV8wVm3Wv6VxwJNhzL1LwBn_u`
+- 2026-05-09 `transformer_inference_qkv_stepper` (강의안) `1s3QPI2lo-bqJPxRfjNlcylA1oKDSuXAj`
+- 2026-05-09 `transformer_qkv_stepper` (강의안) `1-9mXMDdeYz_kfOlovrsIuK0bWpZ1c95a`
+- 2026-04-15 `harness-editorial` (강의안) `1btDt_fbt-iJfDy49TOj2fiROikiQhhJi`
+- 2026-04-09 `북마크` (교재·매뉴얼) `1YYcfJWfNInWmLIxYuVGDmUJuGUrrYE8a`
+- 2026-04-01 `lrm` (실습 도구·데모 앱) `1BTF5mdrqDUCdDMejYcpEikaNPHNzJDtR`
+
+### 생성형 AI 리터러시·강사양성 (25, 본문 19)
+생성형 AI 기초·프롬프트·리터러시, 강사양성 과정, 교육청 직무연수
+
+- 2026-09-18 `새해농업인실용교육_AI활용교육기획과_강의교안작성_4H_초안` (강의안) `14E2JNJZk46Gy-w8cNcVmzM0iakCFGGKd`
+- 2026-09-15 `67명_자료검토` (보고서) `1MLxj2fkRK4XWVgeDgPgZ9CIV9D7tulK0`
+- 2026-09-10 `강사양성과정_강의안_초안` (강의안) `1aN0Ed0gecm3DIJTPJEBb2XzIzFzu12Kl`
+- 2026-09-10 `강사양성과정_교재_페이지뷰_초안` (교재·매뉴얼) `1POSLRs1JBEBNv_BFd7LMkMdhnCTZrDSu`
+- 2026-08-30 `생성형AI전문역량강화_강의안_16by9` (강의안) `1I_KO6LLhcnYBUMUUEeKu380adWlCg0OR`
+- 2026-08-30 `생성형AI전문역량강화_교재_페이지뷰` (교재·매뉴얼) `10_oliMu8Ewb9xkYI8uCANpbl1FPTtQda`
+- 2026-08-25 `전북교육청_전산직_AI통합플랫폼_직무연수_7H_강의안` (강의안) `1BGKvOArgkxRhf-NzNx-VAl8m0EkLM2OE`
+- 2026-08-25 `전북교육청_전산직_생성형AI실무역량강화_7H_lecture-deck` (강의안) `1zMfLTvAl3ckJUH9TXlyVURqZW17Wtt3Q`
+- 2026-07-19 `generative_ai_book_spread` (교재·매뉴얼) `1n_oC7W7qMpgluceM0OhMkVt8RJJzMMZN`
+- 2026-07-15 `2026_강사양성과정_강의안_v2.dc` (강의안) `17toMNJL02FlMxuWaO0bL2ieDVsg6VFA5`
+- 2026-07-15 `2026_강사양성과정_강의안_v2.dc__2026_강사양성과정` (강의안) `1dv91kYMz2eoVR8DU0nEfSN213xRCotZg`
+- 2026-07-15 `생성형AI_강사양성과정` (강의안) `1AM7rDiuodltEYEQg1BZLA8Cq9Z7i7woV`
+- 2026-07-09 `2026_강사양성과정_강의안.dc` (강의안) `1Zvw40q-5awik0f-zmVEethGJmPkorAyJ`
+- 2026-07-09 `2026_강사양성과정_강의안.dc__2026_강사양성과정` (강의안) `1ZA4C-jQy8d2ea2LyvMcVOXxff2qXYZ1A`
+- 2026-07-09 `모듈카드_라이브러리.dc` (강의안) `1FVyajJ4SG_5Farf5W6qyuQ5e11BU4xVT`
+- 2026-06-23 `vip_prompt_share_single_file` (기타) `1h0cl6ZpecdSOC-6nt5OZsm1yH4XB6Xa2`
+- 2026-06-19 `03_kakao_prompt_korean` (기타) `1JapXvDYEDNqB4cijFhpm1VbxnNDuk5t_`
+- 2026-06-19 `03_kakao_prompt_only` (기타) `1-0uvAKYVNMZDEh9fQWmCV_sKxUPltH2B`
+- 2026-06-19 `all_prompt_cards_A4` (교재·매뉴얼) `1LLOSfZXYGt1mFPo6hE3sBtlpPWhQIqId`
+- 2026-05-23 `① AI리터러시와_업무활용_교재_페이지뷰` (교재·매뉴얼) `1dWOr4lbnA63i5tjOZk9zP2Mxy63wDJs7`
+- 2026-05-23 `② 데이터 리터러시_교재_페이지뷰` (교재·매뉴얼) `1YOfZFoEr2NTEJeXV-ybMXLp9FzkEO22d`
+- 2026-04-21 `Module01_AI리터러시와업무활용_강의안` (강의안) `1OmYC7Jv3BH9rpVlAxofrlXn7Mp7dGNv3`
+- 2026-04-21 `Module01_강의안_SVG다운로드` (강의안) `12--tI833PliRlKWK3EvpMeXlCYcMy3D6`
+- 2026-03-29 `ai_writing_curriculum_polished` (강의계획·커리큘럼) `1fgiFUt1bGU8lEa4i1qywH5cyeJmwb-Bi`
+- 2025-12-01 `챗지피티` (기타) `1pi8DeSW5oqKR1x8o_lfdyRw1XPBbNeaL`
+
+### 실습 데모·웹 도구 (61, 본문 20)
+강의 중 만든 예제 앱, 웹사이트, 보고서 생성기, 검색·상황판 도구
+
+- 2026-09-22 `ai-curriculum-board` (강의계획·커리큘럼) `10ffH-vSCcRxka3jpP5rfsU6Ygdh_AHM8`
+- 2026-09-15 `브라우저실습` (기타) `1Dj1n67Dx58oeJBvQAhQZo3ZkIgyeMcVI`
+- 2026-09-15 `양식_레퍼런스` (기타) `1rlu9sempQPnfIzHBGqQUkRCpYEbOSe-L`
+- 2026-09-12 `03_강사용매뉴얼_공통원고와집필양식` (교재·매뉴얼) `1A0LjNDD5VP36lF3YZC13WYBYBCxp4o9t`
+- 2026-09-09 `semantic_search_beginner_guide` (교재·매뉴얼) `1daTfBhRah_mewMcl_0nGTjMAbN3tH5A8`
+- 2026-09-07 `shell_book` (교재·매뉴얼) `1rdLBB4Ri7wIYyteyKXN3vVsGukAqN833`
+- 2026-09-06 `shell` (실습 도구·데모 앱) `11t5IQWd3Gb7AC8G8Vow_ZHaLXCB94TdF`
+- 2026-09-06 `shell_modern` (실습 도구·데모 앱) `1EWKmqudjBZLhZ9n0S6JKv5bsV1VJLk72`
+- 2026-09-01 `local_folder_inspector` (실습 도구·데모 앱) `16GPAj4_OJo4d5dXXVQGOoV7vElUF_KRy`
+- 2026-08-30 `KAK_brand_portfolio_10p_standalone` (실습 도구·데모 앱) `1BFNOf_EiufYvgjSiuc8aHAQUD2Yfrvj1`
+- 2026-08-30 `KAK_brand_portfolio_saventure` (실습 도구·데모 앱) `1diKXlAD4GlGBuhqR58RMOUfPfC4QWxjb`
+- 2026-08-30 `KAK_immersive_brand_site` (실습 도구·데모 앱) `10R8SfyqthMc3S_FL38yC2s-LfLoRr0F1`
+- 2026-08-23 `ssjsitepreview` (실습 도구·데모 앱) `1WTdK54ww38DNySHYs_A4E1-y_0h24KvY`
+- 2026-08-19 `flowday_planner` (실습 도구·데모 앱) `1ymUYb1TC258mbQcgB3-wlXqEM-gdw0rV`
+- 2026-08-19 `offline_work_launcher` (실습 도구·데모 앱) `1Vje5OOR_x6rNlyQmyuGak2iWmEExtbXI`
+- 2026-07-23 `board_connected` (실습 도구·데모 앱) `1KHvYcJdmEsk9xlv9cSFTYyCqk8xxkel0`
+- 2026-07-23 `board_connected_fixed` (실습 도구·데모 앱) `1Rh9p75UkBZfaGMTcMX7881ynYKa3xSDW`
+- 2026-07-22 `chat_ui_replica_single` (실습 도구·데모 앱) `1EnQVouUZq5OZH5aMB0PkiTpBZgvuVk1p`
+- 2026-07-18 `AI활용_서비스개발_이중균_교안` (강의안) `1tgRYckxZr1xjXVKl6wALiw2JgB2UnjfO`
+- 2026-07-05 `scroll-film` (실습 도구·데모 앱) `1KU_ytkROW7AstmsOKubnTbonOqMghPW3`
+- 2026-07-02 `03_AI_서비스_워크플로우_구성` (강의안) `1rLXUEVLWIUeaPZk5QcvEtHC9ekRePDb7`
+- 2026-07-01 `single_file_board` (실습 도구·데모 앱) `1FNwqGF8v7-_J_roCYJZGU94eSFgxieTp`
+- 2026-07-01 `watch-timer` (실습 도구·데모 앱) `1NfNHKKkG696TO-CLDJ8mjHb8fWoKMbGF`
+- 2026-06-28 `exam_application_form_target` (실습 도구·데모 앱) `1z-iTToZiUHguJKVw-kWxC4WLxuE47ahJ`
+- 2026-06-19 `03_kakao_public_chat_card` (실습 도구·데모 앱) `1gzi6oRsNzUo2G4b5ucSFV9kacl1S_f48`
+- 2026-06-18 `gemini-nano-chat` (실습 도구·데모 앱) `1jHeS0IKFfYs03moiGaEwirOE0QHiCOsC`
+- 2026-06-16 `청렴신고_시민검색서비스` (실습 도구·데모 앱) `1Mu6pp-_U6eVPfG1XG0Ru32uHfVC15Vef`
+- 2026-06-15 `business_registration_form_editable` (실습 도구·데모 앱) `1rzZ6L79jBuAh1l2Ld0j2tJJUWdPCk_Di`
+- 2026-06-15 `사업자등록신청서_개인사업자용` (기타) `1ub5RND6TN89vGsuBdDMCFe6tloMJdmiU`
+- 2026-06-15 `사업자등록증` (기타) `1qfSpW_rajtJZA0nOcWgbBOD8qdmaKuIg`
+- 2026-06-12 `security_role_editor` (실습 도구·데모 앱) `1-D9PGer6lrbHj4JVabZu4Ejm8G7_iMWG`
+- 2026-06-08 `ai_portal` (실습 도구·데모 앱) `1bIpbRaiDopXYKgYad8qvm1KhnQVm8NNh`
+- 2026-06-08 `aiclass_hub` (실습 도구·데모 앱) `1xRSThnvmMO3ctvRTQp1r2gmzT4y9QIuW`
+- 2026-06-08 `climate_report_editable_site` (보고서) `1TPi4yH69Wzrwir6GW7mQtNekZ_vajL5x`
+- 2026-06-08 `document_version_manager_desert_style` (실습 도구·데모 앱) `1iCmDOrh55CnbDGRzDQFkyJKqH0dUGkMG`
+- 2026-06-08 `hr_system` (실습 도구·데모 앱) `1fMgw4dU4cZvqoYiIgq5pKkc50SkHk2K-`
+- 2026-06-08 `교감_AI업무플랫폼` (실습 도구·데모 앱) `1Hv3_9CwOMbEI4siLJIpFR1U8XpvnJP3Z`
+- 2026-06-08 `무단점유_관리시스템` (실습 도구·데모 앱) `16-MM3zLI685UDilFqFdephgojyVec5KN`
+- 2026-05-30 `profile_portfolio_site` (실습 도구·데모 앱) `1OMan9zX9Ly-4hCHx52MSuZlPzVfuv_s9`
+- 2026-05-30 `shin_profile_integrated_site` (실습 도구·데모 앱) `1WtnX5QZxPX2eEOtITyGY1yMP_soxPix0`
+- … 외 21개 (`python kg/query.py topic "실습 데모·웹 도구"`)
+
+### 기타 (120, 본문 30)
+주제를 특정하기 어려운 파일 (제목만 있는 짧은 파일 등)
+
+- 2026-09-21 `code_artifact` (기타) `1EhkPJ2K_M1OxWNupUxwIBtmsovFVK7nf`
+- 2026-09-20 `typesafe_jev_model` (기타) `1BMAmSzIe_5mLnIAIeHZIGGHKvKTAimAb`
+- 2026-09-19 `System_One_Jev_교재형_페이지뷰` (교재·매뉴얼) `1YICj9ieAArz97o8_hQCgQb6gELQZAugR`
+- 2026-09-15 `시작본` (보고서) `14hlvlsrohN7kSxgwKADCOwQoCxMC7NUq`
+- 2026-09-13 `index` (기타) `1Y28kz9_ZCEnWyyUZ4k3ryr3kD58uVbSX`
+- 2026-09-12 `00_개발계획_검토` (보고서) `1V5Zi4yUoJcxB2XLb3qLbPALZEaJ1yR3_`
+- 2026-09-12 `00_수집자료_보기` (기타) `1xni4jRvzPlK5QnpQVuWv3U6Xfm8GvgBe`
+- 2026-09-10 `00_강사일정_모듈배치표` (강의계획·커리큘럼) `1t_K9tkJt__pAWGjIcjXa6uAmcoiBqQdM`
+- 2026-09-08 `team-project-notice` (안내·운영) `1DQfpOShrmDDiwMHH2ltgyhKYloNiiNHI`
+- 2026-09-07 `preview` (기타) `1zMvAJYs2kdEnby94IW7UbvrfOWIgbPir`
+- 2026-09-05 `리더를_위한_작은선물_커리큘럼_1장` (강의계획·커리큘럼) `1tWtgxt0UGoj3pRHjglGgEX-csz1d1RnQ`
+- 2026-08-25 `삼성전자_20260825_샘플5장` (기타) `1bVm9cqGXMD1m2hjKK5Wnx_FrFsNvfsoD`
+- 2026-08-23 `ai_business_idea_sample_01` (기타) `1fhOCt16f5DZr2fsjtp5vsTweWvODLMyC`
+- 2026-08-11 `IDEA28_연차사용현황판_애플스타일` (기타) `11EpHEtphEVWkHtt00u07NX4y8GoKnpc-`
+- 2026-08-05 `AI_Lecture_Contract_HiMSolutek` (강의안) `1d0WGfO1pYkMmy-rQIP0Neo1VIM3XNSdb`
+- 2026-08-05 `paper` (기타) `101Mgm_HSytba9izDDNp0Wcd5aZBjCEo8`
+- 2026-08-03 `KCA_전자파_안전_신호관제실` (기타) `1sQ57lFLYDqEmN8h_D30_ckN9SJ2g83dK`
+- 2026-07-27 `sb` (기타) `143kCYkvQdiGMS6ampAr_BQ43w6PeXGnE`
+- 2026-07-22 `dayflow_single_file` (기타) `17z7YkTykwn9ywdqmGbYO07eRk3NPtLaL`
+- 2026-07-21 `stt` (기타) `1K_FQBLREv1elWNj-LVyVIe6y-Iap8DOt`
+- 2026-07-14 `babylonjs_smart_factory` (실습 도구·데모 앱) `1mC-6wI5PF5VK8rxQtkiyETQXtfCaM4tE`
+- 2026-07-14 `오징어회_20260714-1745` (기타) `16KzstmnjvcCSARwZi9oKBmUEGrxq-1_-`
+- 2026-07-12 `work_pet_video_to_webp` (기타) `1eLJRhxSneHR4AM4-MjhFUbI5U6u_uk2L`
+- 2026-07-11 `metro` (기타) `1HtI_Rt4ikYMLkl13XyJc28ahH71BCYLL`
+- 2026-07-11 `storybook` (교재·매뉴얼) `1BRsJ-gsQjuQFJfuZoefRwpRnqSj5uF4h`
+- 2026-07-09 `cdsa` (기타) `1CNObFNkTQsIHMSW7w0txBLNPAjksJUxs`
+- 2026-07-07 `practical` (기타) `1R-y9TyAq1oCCGMlApQXgc2pdQb_W4L3C`
+- 2026-07-06 `ssjppt1_레이아웃샘플_10종` (기타) `17QO7T3pErg37fDljkww_bfDfKnH33aQB`
+- 2026-07-05 `film-slicer` (기타) `1zXGdwutNhjODL1JiFn9JLW46DmMvZyBC`
+- 2026-07-03 `aura-one-full` (실습 도구·데모 앱) `1G116xcldrgCS93DWaWdlpcZbtCRXoTYd`
+- 2026-07-01 `starter__첨부` (기타) `1R7T1y_0ubYl2M05pEOyfnzlgMqbDM1DF`
+- 2026-07-01 `문서` (기타) `1p2nvpRgE63tSUoqqnPa4inzpcZ88aGuT`
+- 2026-07-01 `파일정리` (기타) `1fdVOB4gM1fv1km_Hm1OFL-MxYF6uA1gZ`
+- 2026-06-28 `curriculum` (강의계획·커리큘럼) `1iNvVkaRMw_l3mlg1rvUWETHeaRJa7TKi`
+- 2026-06-26 `bonghwa_ai_slides_view_only` (강의안) `1DNy9sFJspb1ZzpFC9LfM9kEyh7UmS-mZ`
+- 2026-06-23 `zoom_meeting_link` (기타) `12p4Ncn3v3MWbVdj_KDXAqwVPdHxMwMbQ`
+- 2026-06-22 `00_all_topics_16x9` (강의안) `1sMhT1GrkayKIGrobLw9ZW_futSgNMzDg`
+- 2026-06-22 `00_all_topics_3pages_16x9` (강의안) `1N7TEyfh8HsUTiULfbLrirVD8Z9F3z2g0`
+- 2026-06-22 `01_welfare_topic` (기타) `1B_6zoF3F8PUAntJrUlCatQly4c6AYuHJ`
+- 2026-06-22 `hackathon_topics_problem_only` (평가·문제) `1n8T5-k7aR045CniKzDJFuK9Y71fgR6fX`
+- … 외 80개 (`python kg/query.py topic "기타"`)
+
 ## 개념별 문서
 
 ### AI 기초
@@ -62,7 +462,7 @@
 - **회의·요약** (104) — `AI기반_업무자동화_강의안`, `01_행정업무자동화`, `교육행정_AI실습카드_100선_별책부록`, `① AI리터러시와_업무활용_교재_페이지뷰`, `모듈카드_라이브러리.dc`, `3주차_강의요약_HTML_CSS_JS_업무자동화`, `AI활용_서비스개발_이중균_교안`, `AI활용_서비스개발_이중균_교안__202607_농촌진흥청바이브코딩`
 - **교육 설계** (99) — `03_기관통합거버넌스`, `01_행정업무자동화`, `harness_runtime_guide_dense`, `강의안 템플릿.dc`, `session-04-complete`, `모듈카드_라이브러리.dc`, `session-04-slides`, `session-03-complete`
 - **평가·문제은행** (67) — `AI챔피언_전문인재과정_연습용_모의평가시험지`, `20260527_기관맞춤형_AI챔피언_운영가이드`, `03_기관통합거버넌스`, `AI활용_서비스개발_이중균_교안`, `AI활용_서비스개발_이중균_교안__202607_농촌진흥청바이브코딩`, `발표_슬라이드쇼_AI에이전트시대_공공교육_개정본`, `2026_보건복지_AI실습데이터_개발계획안_페이지뷰`, `67명_자료검토`
-- **발표자료 제작** (41) — `AI에이전트_서비스별_PPT생성플로우_19장_상세설명_ssjhtml2`, `session-02-complete`, `교육행정_AI실습카드_100선_별책부록`, `ai-curriculum-board`, `모듈카드_라이브러리.dc`, `design-system-guide`, `session-03-slides`, `AI활용_서비스개발_이중균_교안`
+- **발표자료 제작** (42) — `AI에이전트_서비스별_PPT생성플로우_19장_상세설명_ssjhtml2`, `session-02-complete`, `교육행정_AI실습카드_100선_별책부록`, `ai-curriculum-board`, `모듈카드_라이브러리.dc`, `design-system-guide`, `session-03-slides`, `AI활용_서비스개발_이중균_교안`
 - **AI 챔피언** (30) — `67명_자료검토`, `20260527_기관맞춤형_AI챔피언_운영가이드`, `AI챔피언_인재원장_키노트_v2_keynote_dark`, `AI챔피언_인재원장_키노트_v2_keynote_dark__참고파일`, `session-02-complete`, `바이브코딩_에이전트_MCP_컨텍스트_페이지교재`, `바이브코딩_에이전트_MCP_컨텍스트_페이지교재_v3_가독성개선`, `발표_슬라이드쇼_AI에이전트시대_공공교육_개정본`
 - **해커톤·프로젝트** (13) — `2026_AI챔피언_해커톤_대회_운영지침`, `session-05-complete`, `AI_프로젝트_기획_질문지`, `사전_프로젝트_기획서`, `session-01_3`, `서울교육연수원프로젝트기획서`, `서울교육연수원프로젝트기획서_팀`, `전문인재_운영계획_발표사이트`
 - **브랜딩·디자인** (12) — `lrm`, `AI챔피언_전문인재과정_연습용_모의평가시험지`, `kakaoent_lecture`, `KAK_brand_portfolio_10p_standalone`, `KAK_brand_portfolio_saventure`, `tiffany_omnichannel_copilot_curriculum`, `KAK_immersive_brand_site`, `profile_portfolio_site`
@@ -187,7 +587,7 @@
 | 2026-07-02 | 03_AI_서비스_워크플로우_구성 | 31 | 프롬프트 엔지니어링, 워크플로 자동화, 파이썬, Gemini, CLAUDE.md·메모리 | `1rLXUEVLWIUeaPZk5QcvEtHC9ekRePDb7` |
 | 2026-07-02 | 04_바이브코딩1_데이터시각화 | 20 | 시각화, 통계·머신러닝, LLM, 파이썬, 바이브코딩 | `1FeWegUD4PB10oUEZBi-3LMau3Y5G3IXL` |
 | 2026-07-02 | 05_바이브코딩2_업무자동화 | 27 | 업무 자동화, 스프레드시트, CLI·터미널, LLM, 토큰 | `1w7ujLIIIqzfHQNQFF8lx4hsUQEurL6_o` |
-| 2026-06-26 | bonghwa_ai_slides_view_only | — |  | `1DNy9sFJspb1ZzpFC9LfM9kEyh7UmS-mZ` |
+| 2026-06-26 | bonghwa_ai_slides_view_only | — | 발표자료 제작 | `1DNy9sFJspb1ZzpFC9LfM9kEyh7UmS-mZ` |
 | 2026-06-22 | 00_all_topics_16x9 | — |  | `1sMhT1GrkayKIGrobLw9ZW_futSgNMzDg` |
 | 2026-06-22 | 00_all_topics_3pages_16x9 | — |  | `1N7TEyfh8HsUTiULfbLrirVD8Z9F3z2g0` |
 | 2026-06-19 | excel_auto_deck | 1 | 스프레드시트, 업무 자동화, CLI·터미널 | `1T-JVAPDzb5h2WsEfXq1t1v6I4zpoOxXc` |
