@@ -1,0 +1,702 @@
+<!doctype html>
+<html lang="ko">
+<head><meta name="robots" content="noindex, nofollow">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>생성형 AI, 어디에 적용할 것인가 — IDEA 001</title>
+  <style>
+    @font-face { font-family: "Book Sans KR"; src: url(data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==) format("woff2"); font-style: normal; font-weight: 100 900; font-display: swap; }
+    @font-face { font-family: "Book Serif KR"; src: url(data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==) format("woff2"); font-style: normal; font-weight: 100 900; font-display: swap; }
+
+    :root {
+      --paper: #f7f4ec;
+      --paper-deep: #eee9de;
+      --ink: #172b36;
+      --muted: #687279;
+      --rule: #aeb5b5;
+      --coral: #e86352;
+      --coral-soft: #f4c8bd;
+      --sage: #80977e;
+      --sage-soft: #dce4d8;
+      --blue-soft: #dbe6e9;
+      --screen: #3f4345;
+      --sans: "Book Sans KR", Pretendard, "Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+      --serif: "Book Serif KR", "Noto Serif KR", "Nanum Myeongjo", "Batang", serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body { min-height: 100%; }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 50% 18%, rgba(255,255,255,.1), transparent 34%),
+        var(--screen);
+      font-family: var(--sans);
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+
+    .toolbar {
+      position: fixed;
+      z-index: 20;
+      top: 20px;
+      right: 22px;
+      display: flex;
+      gap: 8px;
+    }
+
+    .toolbar button {
+      border: 1px solid rgba(255,255,255,.22);
+      border-radius: 999px;
+      padding: 10px 16px;
+      color: #fff;
+      background: rgba(20,25,28,.76);
+      box-shadow: 0 6px 22px rgba(0,0,0,.18);
+      font: 700 12px/1 var(--sans);
+      letter-spacing: -.02em;
+      cursor: pointer;
+      backdrop-filter: blur(10px);
+      transition: transform .18s ease, background .18s ease;
+    }
+
+    .toolbar button:hover {
+      transform: translateY(-2px);
+      background: var(--coral);
+    }
+
+    .stage {
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 64px 34px;
+      overflow: auto;
+    }
+
+    .spread {
+      position: relative;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      width: min(1188px, calc(100vw - 68px));
+      aspect-ratio: 297 / 210;
+      background: var(--paper);
+      box-shadow:
+        0 42px 80px rgba(0,0,0,.3),
+        0 10px 24px rgba(0,0,0,.2);
+      isolation: isolate;
+    }
+
+    .spread::before {
+      content: "";
+      position: absolute;
+      z-index: 5;
+      top: 0;
+      bottom: 0;
+      left: 50%;
+      width: 28px;
+      transform: translateX(-50%);
+      pointer-events: none;
+      background: linear-gradient(90deg,
+        rgba(34,38,38,.12),
+        rgba(34,38,38,.045) 25%,
+        rgba(255,255,255,.34) 50%,
+        rgba(34,38,38,.04) 75%,
+        rgba(34,38,38,.12));
+      mix-blend-mode: multiply;
+      opacity: .72;
+    }
+
+    .page {
+      position: relative;
+      min-width: 0;
+      overflow: hidden;
+      background:
+        repeating-linear-gradient(0deg, rgba(83,73,51,.012) 0 1px, transparent 1px 4px),
+        radial-gradient(circle at 18% 13%, rgba(255,255,255,.74), transparent 32%),
+        var(--paper);
+    }
+
+    .page-left {
+      padding: 6.5% 7.6% 5.3% 8.5%;
+      border-right: 1px solid rgba(56,65,68,.16);
+    }
+
+    .page-right {
+      padding: 6.5% 8.4% 5.3% 8.6%;
+    }
+
+    .folio {
+      position: absolute;
+      bottom: 3.35%;
+      font: 700 10px/1 var(--sans);
+      letter-spacing: .18em;
+      color: #667176;
+    }
+
+    .page-left .folio { left: 8.5%; }
+    .page-right .folio { right: 8.4%; }
+
+    .running-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 2.5%;
+      border-bottom: 1px solid var(--ink);
+      font: 800 9px/1 var(--sans);
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+
+    .running-head .part { color: var(--coral); }
+    .running-head .book-title { color: #6f797d; }
+
+    .idea-heading {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 4.2%;
+      margin-top: 6.2%;
+      align-items: start;
+    }
+
+    .idea-no {
+      width: 47px;
+      height: 47px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      color: var(--paper);
+      background: var(--ink);
+      font: 800 17px/1 var(--sans);
+      letter-spacing: -.04em;
+    }
+
+    .idea-label {
+      display: block;
+      margin: 1px 0 7px;
+      color: var(--coral);
+      font: 800 9px/1 var(--sans);
+      letter-spacing: .16em;
+    }
+
+    h1 {
+      margin: 0;
+      font: 800 clamp(24px, 2.35vw, 38px)/1.13 var(--serif);
+      letter-spacing: -.055em;
+      word-break: keep-all;
+    }
+
+    .subtitle {
+      margin: 2.8% 0 0 calc(47px + 4.2%);
+      color: #5c686e;
+      font: 500 clamp(10px, .86vw, 14px)/1.55 var(--sans);
+      letter-spacing: -.025em;
+      word-break: keep-all;
+    }
+
+    .visual {
+      position: relative;
+      height: 50.5%;
+      margin-top: 1.8%;
+    }
+
+    .visual svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+      overflow: visible;
+    }
+
+    .visual .line {
+      fill: none;
+      stroke: var(--ink);
+      stroke-width: 2.15;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .visual .thin { stroke-width: 1.35; }
+    .visual .dash { stroke-dasharray: 4 5; }
+    .visual .paper-fill { fill: var(--paper); }
+    .visual .coral-fill { fill: var(--coral-soft); }
+    .visual .coral-strong { fill: var(--coral); }
+    .visual .sage-fill { fill: var(--sage-soft); }
+    .visual .blue-fill { fill: var(--blue-soft); }
+    .visual .ink-fill { fill: var(--ink); }
+
+    .visual text {
+      fill: var(--ink);
+      font-family: var(--sans);
+    }
+
+    .visual .step-no {
+      fill: var(--paper);
+      font-size: 9px;
+      font-weight: 800;
+      text-anchor: middle;
+      dominant-baseline: middle;
+    }
+
+    .visual .step-label {
+      font-size: 9px;
+      font-weight: 800;
+      letter-spacing: -.02em;
+      text-anchor: middle;
+    }
+
+    .visual .micro {
+      font-size: 7px;
+      font-weight: 700;
+      fill: #6a7579;
+      text-anchor: middle;
+    }
+
+    .visual .scan-line {
+      stroke: var(--coral);
+      stroke-width: 2;
+      stroke-linecap: round;
+      animation: scan 3s ease-in-out infinite;
+    }
+
+    @keyframes scan {
+      0%, 100% { transform: translateY(-18px); opacity: .35; }
+      50% { transform: translateY(34px); opacity: 1; }
+    }
+
+    .idea-formula {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 7px;
+      padding-top: 2.5%;
+      border-top: 1px solid var(--rule);
+    }
+
+    .formula-item { min-width: 0; }
+
+    .formula-item b {
+      display: block;
+      margin-bottom: 5px;
+      color: var(--coral);
+      font: 800 8px/1 var(--sans);
+      letter-spacing: .1em;
+    }
+
+    .formula-item span {
+      display: block;
+      font: 700 9px/1.35 var(--sans);
+      letter-spacing: -.04em;
+      word-break: keep-all;
+    }
+
+    .quote {
+      position: absolute;
+      left: 8.5%;
+      right: 7.6%;
+      bottom: 7.6%;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      color: var(--ink);
+      font: 700 clamp(10px, .82vw, 13px)/1.55 var(--serif);
+      letter-spacing: -.035em;
+    }
+
+    .quote::before {
+      content: "";
+      flex: 0 0 25px;
+      height: 3px;
+      margin-top: 8px;
+      background: var(--coral);
+    }
+
+    .right-kicker {
+      margin: 5.8% 0 2.4%;
+      color: var(--coral);
+      font: 800 9px/1 var(--sans);
+      letter-spacing: .15em;
+    }
+
+    h2 {
+      margin: 0;
+      padding-bottom: 3.4%;
+      border-bottom: 1px solid var(--ink);
+      font: 800 clamp(21px, 1.8vw, 29px)/1.24 var(--serif);
+      letter-spacing: -.05em;
+      word-break: keep-all;
+    }
+
+    .lead {
+      margin: 3.8% 0 0;
+      font: 600 clamp(10px, .82vw, 13px)/1.75 var(--serif);
+      letter-spacing: -.025em;
+      word-break: keep-all;
+    }
+
+    .lead::first-letter {
+      float: left;
+      margin: 3px 7px 0 0;
+      color: var(--coral);
+      font: 800 34px/.82 var(--serif);
+    }
+
+    .content-grid {
+      display: grid;
+      grid-template-columns: 1.08fr .92fr;
+      gap: 5.6%;
+      margin-top: 4%;
+    }
+
+    .section {
+      margin-bottom: 8.5%;
+      break-inside: avoid;
+    }
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      margin: 0 0 7px;
+      font: 800 9px/1.2 var(--sans);
+      letter-spacing: .02em;
+    }
+
+    .section-title .mark {
+      display: inline-grid;
+      width: 17px;
+      height: 17px;
+      place-items: center;
+      border-radius: 50%;
+      color: var(--paper);
+      background: var(--ink);
+      font: 800 7px/1 var(--sans);
+    }
+
+    .section p {
+      margin: 0;
+      color: #3f4d53;
+      font: 500 clamp(8.5px, .69vw, 11px)/1.68 var(--serif);
+      letter-spacing: -.018em;
+      word-break: keep-all;
+    }
+
+    .rag-card {
+      position: relative;
+      margin: 0 0 8.5%;
+      padding: 10% 9% 9%;
+      background: var(--ink);
+      color: var(--paper);
+      overflow: hidden;
+    }
+
+    .rag-card::after {
+      content: "R";
+      position: absolute;
+      right: -5px;
+      bottom: -26px;
+      color: rgba(255,255,255,.055);
+      font: 900 110px/1 var(--sans);
+    }
+
+    .rag-card .tag {
+      display: inline-block;
+      margin-bottom: 10px;
+      padding: 5px 7px 4px;
+      color: var(--ink);
+      background: var(--coral);
+      font: 900 7px/1 var(--sans);
+      letter-spacing: .12em;
+    }
+
+    .rag-card h3 {
+      position: relative;
+      z-index: 1;
+      margin: 0 0 8px;
+      font: 800 clamp(12px, .95vw, 15px)/1.35 var(--serif);
+      letter-spacing: -.04em;
+    }
+
+    .rag-card p {
+      position: relative;
+      z-index: 1;
+      margin: 0;
+      color: #e8ecea;
+      font: 500 clamp(8px, .65vw, 10.5px)/1.65 var(--serif);
+      letter-spacing: -.02em;
+      word-break: keep-all;
+    }
+
+    .business-box {
+      padding-top: 8%;
+      border-top: 4px solid var(--coral);
+    }
+
+    .business-box h3 {
+      margin: 0 0 8px;
+      color: var(--coral);
+      font: 900 9px/1.2 var(--sans);
+      letter-spacing: .05em;
+    }
+
+    .business-box ul {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .business-box li {
+      position: relative;
+      padding: 4px 0 4px 11px;
+      border-bottom: 1px solid rgba(23,43,54,.15);
+      font: 700 clamp(8px, .64vw, 10px)/1.35 var(--sans);
+      letter-spacing: -.035em;
+      word-break: keep-all;
+    }
+
+    .business-box li::before {
+      content: "";
+      position: absolute;
+      top: 9px;
+      left: 0;
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: var(--coral);
+    }
+
+    .principle {
+      position: absolute;
+      left: 8.6%;
+      right: 8.4%;
+      bottom: 7.3%;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 10px;
+      align-items: center;
+      padding: 9px 12px;
+      background: var(--sage-soft);
+    }
+
+    .principle b {
+      color: var(--sage);
+      font: 900 8px/1 var(--sans);
+      letter-spacing: .08em;
+    }
+
+    .principle span {
+      font: 700 clamp(8px, .64vw, 10px)/1.4 var(--serif);
+      letter-spacing: -.025em;
+      word-break: keep-all;
+    }
+
+    @media (max-width: 820px) {
+      .stage { display: block; padding: 70px 16px 32px; }
+      .spread {
+        width: 100%;
+        aspect-ratio: auto;
+        grid-template-columns: 1fr;
+        box-shadow: 0 24px 50px rgba(0,0,0,.26);
+      }
+      .spread::before { display: none; }
+      .page { min-height: 141.4vw; }
+      .page-left, .page-right { padding: 8% 8% 7%; }
+      h1 { font-size: clamp(28px, 7vw, 42px); }
+      h2 { font-size: clamp(24px, 5.5vw, 34px); }
+      .subtitle, .lead { font-size: 13px; }
+      .section p, .rag-card p { font-size: 11px; }
+      .business-box li, .principle span { font-size: 10px; }
+      .visual { height: 47%; }
+      .quote { left: 8%; right: 8%; }
+      .principle { left: 8%; right: 8%; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation: none !important; transition: none !important; }
+    }
+
+    @page { size: A4 landscape; margin: 0; }
+
+    @media print {
+      html, body {
+        width: 297mm;
+        height: 210mm;
+        background: #fff;
+      }
+      .toolbar { display: none; }
+      .stage { display: block; min-height: 0; padding: 0; }
+      .spread {
+        width: 297mm;
+        height: 210mm;
+        aspect-ratio: auto;
+        box-shadow: none;
+      }
+      .page { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+      .scan-line { animation: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="toolbar" aria-label="문서 도구">
+    <button type="button" onclick="window.print()">PDF · 인쇄</button>
+  </nav>
+
+  <main class="stage">
+    <section class="spread" aria-label="생성형 AI 비즈니스 아이디어 책 펼침면">
+      <article class="page page-left" aria-labelledby="idea-title">
+        <header class="running-head">
+          <span class="part">PART 01 · AI는 본다</span>
+          <span class="book-title">생성형 AI, 어디에 적용할 것인가</span>
+        </header>
+
+        <div class="idea-heading">
+          <div class="idea-no">01</div>
+          <div>
+            <span class="idea-label">FOOD × MULTIMODAL AI</span>
+            <h1 id="idea-title">이 식품표시,<br />법을 지키고 있을까?</h1>
+          </div>
+        </div>
+
+        <p class="subtitle">포장지 사진 한 장에서 글자를 읽고, 최신 표시기준을 찾아 검토가 필요한 부분을 먼저 보여준다.</p>
+
+        <figure class="visual" aria-label="식품 포장 촬영부터 법령 근거 점검까지의 과정">
+          <svg viewBox="0 0 500 285" role="img" aria-labelledby="svg-title svg-desc">
+            <title id="svg-title">식품표시 점검 AI 작동 과정</title>
+            <desc id="svg-desc">휴대전화로 제품을 촬영하고, AI가 문자를 인식한 뒤 법령을 검색해 점검 결과를 표시한다.</desc>
+
+            <!-- 연결 흐름 -->
+            <path class="line thin dash" d="M105 130 C150 92 180 92 214 121" />
+            <path class="line thin dash" d="M282 121 C322 92 350 91 386 116" />
+            <path class="line thin dash" d="M410 151 C411 184 388 202 354 218" />
+
+            <!-- STEP 1: phone + package -->
+            <circle class="ink-fill" cx="42" cy="37" r="12" />
+            <text class="step-no" x="42" y="37">1</text>
+            <text class="step-label" x="82" y="40">포장 촬영</text>
+            <rect class="coral-fill" x="57" y="86" width="66" height="95" rx="5" />
+            <path class="line" d="M68 87 L68 72 Q68 65 75 65 H108 Q115 65 115 72 V181" />
+            <rect class="paper-fill line" x="61" y="75" width="47" height="91" rx="7" />
+            <line class="line thin" x1="78" y1="81" x2="91" y2="81" />
+            <circle class="line thin" cx="85" cy="158" r="3" />
+            <rect class="sage-fill line thin" x="72" y="94" width="27" height="38" rx="2" />
+            <path class="line thin" d="M78 107 Q85 99 93 107 V125 H78 Z" />
+            <path class="line thin" d="M76 89 h-7 v7 M96 89 h7 v7 M76 137 h-7 v-7 M96 137 h7 v-7" />
+            <text class="micro" x="86" y="193">카메라 · 제품 뒷면</text>
+
+            <!-- STEP 2: AI eye -->
+            <circle class="ink-fill" cx="205" cy="37" r="12" />
+            <text class="step-no" x="205" y="37">2</text>
+            <text class="step-label" x="250" y="40">글자와 구조 인식</text>
+            <circle class="blue-fill line" cx="250" cy="126" r="49" />
+            <path class="line" d="M213 126 Q250 92 287 126 Q250 160 213 126 Z" />
+            <circle class="coral-strong line" cx="250" cy="126" r="13" />
+            <circle class="paper-fill" cx="246" cy="121" r="4" />
+            <path class="line thin" d="M222 91 h-17 v13 M278 91 h17 v13 M222 161 h-17 v-13 M278 161 h17 v-13" />
+            <rect class="paper-fill line thin" x="203" y="181" width="94" height="24" rx="12" />
+            <text class="micro" x="250" y="196">OCR + 멀티모달 이해</text>
+
+            <!-- STEP 3: documents / RAG -->
+            <circle class="ink-fill" cx="359" cy="37" r="12" />
+            <text class="step-no" x="359" y="37">3</text>
+            <text class="step-label" x="405" y="40">최신 기준 검색</text>
+            <path class="sage-fill line" d="M351 91 H429 V178 H351 Z" />
+            <path class="paper-fill line" d="M337 78 H415 V165 H337 Z" />
+            <path class="line thin" d="M350 95 H397 M350 106 H388 M350 117 H398 M350 128 H381" />
+            <rect class="coral-fill" x="347" y="138" width="56" height="12" rx="2" />
+            <circle class="paper-fill line" cx="421" cy="161" r="24" />
+            <circle class="line" cx="416" cy="156" r="10" />
+            <line class="line" x1="424" y1="164" x2="437" y2="177" />
+            <text class="micro" x="383" y="197">법령 · 고시 · 표시지침 RAG</text>
+
+            <!-- STEP 4: result -->
+            <circle class="ink-fill" cx="214" cy="248" r="12" />
+            <text class="step-no" x="214" y="248">4</text>
+            <text class="step-label" x="280" y="251">검토할 부분과 근거 제시</text>
+            <rect class="paper-fill line" x="339" y="213" width="105" height="54" rx="5" />
+            <circle class="coral-fill line thin" cx="354" cy="228" r="7" />
+            <path class="line thin" d="M351 228 l3 3 6-7" />
+            <line class="line thin" x1="368" y1="225" x2="427" y2="225" />
+            <circle class="coral-strong" cx="354" cy="247" r="7" />
+            <path d="M351 244 l6 6 M357 244 l-6 6" class="line thin" />
+            <line class="line thin" x1="368" y1="244" x2="421" y2="244" />
+            <line class="line thin" x1="368" y1="252" x2="403" y2="252" />
+          </svg>
+        </figure>
+
+        <div class="idea-formula" aria-label="아이디어 구성 요소">
+          <div class="formula-item"><b>INPUT</b><span>식품 포장 사진</span></div>
+          <div class="formula-item"><b>UNDERSTAND</b><span>OCR·멀티모달</span></div>
+          <div class="formula-item"><b>GROUND</b><span>표시기준 RAG</span></div>
+          <div class="formula-item"><b>OUTPUT</b><span>근거형 점검표</span></div>
+        </div>
+
+        <p class="quote">AI가 법을 대신 판단하는 것이 아니다. 사람이 확인해야 할 곳을 더 빨리, 더 빠짐없이 찾게 한다.</p>
+        <span class="folio">014</span>
+      </article>
+
+      <article class="page page-right" aria-labelledby="article-title">
+        <header class="running-head">
+          <span class="part">IDEA 001</span>
+          <span class="book-title">VISION · OCR · RAG</span>
+        </header>
+
+        <p class="right-kicker">사진 한 장이 법령 검토의 시작이 된다</p>
+        <h2 id="article-title">포장지의 작은 글씨와<br />최신 법령을 연결하는 일</h2>
+
+        <p class="lead">식품 포장에는 제품명, 원재료명, 알레르기 유발물질, 영양정보처럼 반드시 확인해야 할 내용이 빽빽하게 들어 있다. 제품이 바뀌거나 법령이 개정될 때마다 담당자는 작은 글씨와 긴 기준 문서를 반복해서 대조한다.</p>
+
+        <div class="content-grid">
+          <div>
+            <section class="section">
+              <h3 class="section-title"><span class="mark">01</span> AI는 무엇을 보는가</h3>
+              <p>사용자가 포장지 뒷면을 촬영하면 OCR이 이미지 속 문자를 텍스트로 바꾼다. 멀티모달 AI는 글자만 읽는 데서 멈추지 않고, 어느 부분이 원재료명이고 어떤 표가 영양정보인지 위치와 관계까지 함께 해석한다.</p>
+            </section>
+
+            <section class="section">
+              <h3 class="section-title"><span class="mark">02</span> 어떻게 점검하는가</h3>
+              <p>읽어낸 내용을 제품 유형에 맞는 표시기준과 비교한다. 필수 항목의 누락, 단위 불일치, 알레르기 표시 후보처럼 검토가 필요한 부분을 표시하고 관련 조항을 함께 제시한다. 담당자는 처음부터 모든 문서를 읽는 대신 표시된 부분부터 확인한다.</p>
+            </section>
+
+            <section class="section">
+              <h3 class="section-title"><span class="mark">03</span> LLM만으로 부족한 이유</h3>
+              <p>LLM이 학습한 지식에는 특정 시점까지의 일반 정보가 들어 있다. 그러나 법령은 개정되고 세부 기준은 제품과 국가에 따라 달라진다. 최신성과 정확성이 중요한 업무에서는 모델의 기억보다 지금 제공되는 공식 문서가 우선되어야 한다.</p>
+            </section>
+          </div>
+
+          <aside>
+            <section class="rag-card">
+              <span class="tag">TECH NOTE · RAG</span>
+              <h3>RAG는 AI에게<br />참고문서를 펼쳐주는 기술이다</h3>
+              <p>질문과 관련된 법령·고시·지침을 먼저 검색한 뒤 그 내용을 LLM의 입력에 함께 넣는다. AI가 기억에만 의존하지 않고, 제공된 근거 안에서 답하게 만드는 방식이다.</p>
+            </section>
+
+            <section class="business-box">
+              <h3>BUSINESS POINT</h3>
+              <ul>
+                <li>식품 제조사의 출시 전 자체점검</li>
+                <li>유통사의 입점상품 표시 검수</li>
+                <li>수출제품의 국가별 기준 비교</li>
+                <li>표시·광고 컨설팅 검토 서비스</li>
+                <li>현장점검용 모바일 업무도구</li>
+              </ul>
+            </section>
+          </aside>
+        </div>
+
+        <div class="principle">
+          <b>HUMAN CHECK</b>
+          <span>AI는 위반 여부를 확정하지 않는다. 적용 조항·문서 버전·판단 이유를 보여주고 최종 결정은 담당자와 전문가가 한다.</span>
+        </div>
+        <span class="folio">015</span>
+      </article>
+    </section>
+  </main>
+<script>/* kg-preview: #<heading> \uc704\uce58\ub85c \uc774\ub3d9 */
+(function(){function norm(t){return (t||'').replace(/\s+/g,'').toLowerCase()}
+function go(){var h=decodeURIComponent(location.hash.slice(1));if(!h)return;var k=norm(h).slice(0,24);if(!k)return;
+var best=null,bl=1e9,els=document.body.querySelectorAll('h1,h2,h3,h4,h5,p,div,span,li,td,text,tspan,section,article');
+for(var i=0;i<els.length;i++){var e=els[i],t=norm(e.textContent);if(t.length<bl&&t.indexOf(k)>-1){best=e;bl=t.length}}
+if(!best)return;var box=best.closest('section,[class*=slide],[class*=page],article')||best;
+box.scrollIntoView({block:'start'});box.style.outline='3px solid #c0504d';box.style.outlineOffset='4px';
+setTimeout(function(){box.style.outline=''},2600)}
+window.addEventListener('load',function(){setTimeout(go,400)});window.addEventListener('hashchange',go)})();</script></body>
+</html>

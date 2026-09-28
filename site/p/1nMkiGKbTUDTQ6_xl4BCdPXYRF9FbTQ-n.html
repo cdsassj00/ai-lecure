@@ -1,0 +1,1684 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head><meta name="robots" content="noindex, nofollow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Session 08 · API · MCP · AI 아키텍처 캔버스</title>
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700;9..144,800&family=Noto+Serif+KR:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f5efe4;--bg2:#ede4d3;--ink:#2b2015;--ink2:#5a4a38;--ink3:#8a7659;--acc:#b8532a;--acc3:#d49575;--ln:#d8c8ae;--ln2:#e6d9bf;--dk:#1a1612;--dk2:#241e17;--on:#ede4d3;--on2:#a89172;--serif:'Fraunces','Noto Serif KR',Georgia,serif;--sans:'Pretendard Variable',Pretendard,sans-serif;--mono:'JetBrains Mono',ui-monospace,Consolas,monospace}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{margin:0;padding:0;overflow:hidden;height:100vh;width:100vw;background:#0e0a06;font-family:var(--sans);-webkit-font-smoothing:antialiased}
+.deck{height:100vh;overflow-y:scroll;scroll-snap-type:y mandatory;scroll-behavior:smooth;scrollbar-width:none;-ms-overflow-style:none;background:#0e0a06}
+.deck::-webkit-scrollbar{display:none}
+.stage{width:100vw;min-height:100vh;display:flex;align-items:center;justify-content:center;scroll-snap-align:start;padding:0;background:#0e0a06}
+.slide{width:1600px;height:900px;background:var(--bg);position:relative;overflow:hidden;transform-origin:center;box-shadow:0 40px 90px -30px rgba(0,0,0,0.7);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' seed='3'/%3E%3CfeColorMatrix values='0 0 0 0 0.16  0 0 0 0 0.12  0 0 0 0 0.08  0 0 0 0.025 0'/%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E")}
+
+.hbar{position:absolute;top:0;left:0;right:0;height:52px;background:var(--dk);display:flex;align-items:center;justify-content:space-between;padding:0 80px}
+.hbar-l{display:flex;align-items:center;gap:12px;font-family:var(--mono);font-size:10.5px;color:#fff;letter-spacing:2.5px;font-weight:600}
+.hbar-l::before{content:"";width:22px;height:8px;background:var(--acc)}
+.hbar-r{font-family:var(--mono);font-size:10.5px;color:#bbb;letter-spacing:1.5px}
+.hl{position:absolute;left:80px;right:80px;top:86px}
+.hl-kicker{font-family:var(--mono);font-size:12px;color:var(--ink3);letter-spacing:2.5px;font-weight:700;margin-bottom:14px}
+.hl-title{font-family:var(--serif);font-weight:700;font-size:36px;line-height:1.22;letter-spacing:-0.5px;color:var(--ink)}
+.hl-sub{font-size:15.5px;color:var(--ink2);margin-top:12px;line-height:1.6}
+.hl-bar{width:60px;height:3px;background:var(--ink);margin-top:16px}
+.hl-rule{position:absolute;left:80px;right:80px;top:248px;height:1px;background:var(--ln2)}
+.fbar{position:absolute;bottom:0;left:0;right:0;height:52px;background:#f0e8d8;border-top:3px solid var(--ln);display:flex;align-items:center;justify-content:space-between;padding:0 80px}
+.fbar-l,.fbar-r{display:flex;flex-direction:column;gap:2px}.fbar-r{align-items:flex-end}
+.fbar-label{font-family:var(--mono);font-size:10px;color:var(--ink3);letter-spacing:2.5px;font-weight:700}
+.fbar-title{font-size:13px;color:var(--ink)}
+
+.bd{position:absolute;left:80px;right:80px;top:264px;bottom:72px;display:grid;gap:1px;background:var(--ln2)}
+.bd.col3{grid-template-columns:1fr 1fr 1fr}
+.bd.col2{grid-template-columns:1fr 1fr}
+.bd.col2w{grid-template-columns:1.25fr 1fr}
+.bd.col2n{grid-template-columns:1fr 1.3fr}
+.col{background:var(--bg);padding:30px 34px;display:flex;flex-direction:column;overflow:hidden;min-width:0;gap:14px}
+.col > .grow{flex:1;min-height:0;display:flex;flex-direction:column;justify-content:flex-end;gap:10px}
+
+.card{background:var(--bg);padding:34px 36px;display:flex;flex-direction:column;gap:16px;overflow:hidden;min-width:0}
+.card.dk{background:var(--dk);color:var(--on)}
+.card-k{font-family:var(--mono);font-size:11px;color:var(--acc);letter-spacing:2.5px;font-weight:700}
+.card.dk .card-k{color:var(--acc3)}
+.card-anchor{font-family:var(--serif);font-size:26px;font-weight:700;line-height:1.22;color:var(--ink);letter-spacing:-0.4px}
+.card.dk .card-anchor{color:var(--on)}
+.card-anchor em{color:var(--acc);font-style:normal}
+.card.dk .card-anchor em{color:var(--acc3)}
+.card-body{font-size:14px;line-height:1.75;color:var(--ink2)}
+.card.dk .card-body{color:var(--on2)}
+.card-body strong{color:var(--ink);font-weight:700}
+.card.dk .card-body strong{color:var(--on)}
+.card-spacer{flex:1;min-height:8px}
+.card-note{font-size:12.5px;color:var(--ink3);font-style:italic;line-height:1.6}
+.card.dk .card-note{color:var(--on2)}
+
+.sh{display:flex;align-items:baseline;gap:12px;margin-bottom:3px}
+.sh-n{font-family:var(--mono);font-size:11px;color:var(--ink3);letter-spacing:2.5px;font-weight:700;white-space:nowrap}
+.sh-t{font-size:12.5px;color:var(--ink2)}
+.sh-line{height:1px;background:var(--ln2);margin-bottom:10px}
+
+.mtbl{width:100%;border-collapse:collapse;font-size:12.5px}
+.mtbl thead th{font-family:var(--mono);font-size:10px;color:var(--ink3);letter-spacing:1.5px;font-weight:700;text-align:left;padding:9px 9px;border-bottom:1.5px solid var(--ink);background:var(--bg2)}
+.mtbl tbody td{padding:10px 9px;border-bottom:1px solid var(--ln2);color:var(--ink2);vertical-align:top;line-height:1.6}
+.mtbl tbody tr:last-child td{border-bottom:0}
+.mtbl tbody td:first-child{color:var(--ink);font-weight:700;font-family:var(--mono);font-size:10.5px;letter-spacing:1px;white-space:nowrap}
+.mtbl tbody td.q{color:var(--ink);font-weight:600;font-family:var(--sans);font-size:12.5px;letter-spacing:0}
+
+.co{background:var(--bg2);border-left:3px solid var(--acc);padding:14px 18px}
+.co-lb{font-family:var(--mono);font-size:10.5px;color:var(--acc);letter-spacing:2px;font-weight:700;margin-bottom:5px}
+.co-main{font-size:14.5px;color:var(--ink);font-weight:700;line-height:1.5}
+.co p{font-size:12.5px;color:var(--ink2);line-height:1.7;margin-top:5px}
+
+.next{background:var(--dk);padding:16px 20px;color:var(--on)}
+.next-k{font-family:var(--mono);font-size:10.5px;color:var(--acc3);letter-spacing:2px;font-weight:700;margin-bottom:5px}
+.next-t{font-size:13.5px;line-height:1.65;color:var(--on2)}
+.next-t strong{color:var(--on);font-weight:700}
+
+.pit{border-left:3px solid var(--ink);padding:11px 15px;background:var(--bg2)}
+.pit-lb{font-family:var(--mono);font-size:10px;color:var(--ink3);letter-spacing:2px;font-weight:700;margin-bottom:5px}
+.pit-h{font-size:13px;color:var(--ink);font-weight:700;line-height:1.45}
+.pit-d{font-size:12px;color:var(--ink2);line-height:1.65;margin-top:4px}
+
+.smap{display:flex;flex-direction:column;gap:7px}
+.smap-i{display:grid;grid-template-columns:50px 1fr;gap:12px;align-items:start;padding:9px 13px;background:var(--bg2);border-left:2px solid var(--ln)}
+.smap-i.on{border-left-color:var(--acc);background:#f0e7d6}
+.smap-n{font-family:var(--mono);font-size:11px;color:var(--acc);letter-spacing:1.5px;font-weight:700;padding-top:2px}
+.smap-t{font-size:13px;color:var(--ink);font-weight:600;line-height:1.5}
+
+.qex{background:var(--bg2);border-left:3px solid var(--ink);padding:20px 26px;font-family:var(--serif);font-size:19px;line-height:1.75;color:var(--ink)}
+.qex .hot{background:var(--ink);color:var(--on);padding:2px 7px;border-radius:2px;font-weight:700;font-family:var(--sans);font-size:16px;letter-spacing:-0.2px}
+.qex .dim{color:var(--ink3);font-style:italic;font-size:16px}
+
+.draft{padding:14px 18px}
+.draft.weak{background:var(--bg2);border-left:3px solid var(--ln)}
+.draft.strong{background:var(--dk);color:var(--on);border-left:3px solid var(--acc3)}
+.draft-k{font-family:var(--mono);font-size:10px;letter-spacing:1.8px;font-weight:700;color:var(--ink3);margin-bottom:5px}
+.draft.strong .draft-k{color:var(--acc3)}
+.draft-t{font-size:13.5px;line-height:1.7;color:var(--ink)}
+.draft.strong .draft-t{color:var(--on)}
+.draft-note{font-size:11px;color:var(--ink3);margin-top:7px;line-height:1.55;font-style:italic}
+.draft.strong .draft-note{color:var(--on2)}
+
+.cmp2{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--ln2)}
+.cmp2c{padding:18px 22px;display:flex;flex-direction:column;gap:9px;background:var(--bg2)}
+.cmp2c.dk{background:var(--dk);color:var(--on)}
+.cmp2c-k{font-family:var(--mono);font-size:10.5px;color:var(--acc);letter-spacing:2px;font-weight:700}
+.cmp2c.dk .cmp2c-k{color:var(--acc3)}
+.cmp2c-h{font-family:var(--serif);font-size:19px;font-weight:700;color:var(--ink);line-height:1.3;letter-spacing:-0.3px}
+.cmp2c.dk .cmp2c-h{color:var(--on)}
+.cmp2c-d{font-size:12.5px;color:var(--ink2);line-height:1.7}
+.cmp2c.dk .cmp2c-d{color:var(--on2)}
+.cmp2c-list{display:flex;flex-direction:column;gap:4px;font-size:12px;line-height:1.65;color:var(--ink2)}
+.cmp2c.dk .cmp2c-list{color:var(--on2)}
+.cmp2c-list li{list-style:none;padding-left:14px;position:relative}
+.cmp2c-list li::before{content:"—";position:absolute;left:0;color:var(--ink3);font-family:var(--mono)}
+.cmp2c.dk .cmp2c-list li::before{color:var(--on2)}
+.cmp2c-fig{font-family:var(--mono);font-size:10px;color:var(--ink3);letter-spacing:1.5px;font-weight:700;padding-top:7px;border-top:1px solid var(--ln);margin-top:auto}
+.cmp2c.dk .cmp2c-fig{color:var(--acc3);border-top-color:#3a2f24}
+
+.hybrid{background:#f0e7d6;border-left:4px solid var(--acc);padding:18px 24px;display:flex;flex-direction:column;gap:8px}
+.hybrid-k{font-family:var(--mono);font-size:11px;color:var(--acc);letter-spacing:2.5px;font-weight:700}
+.hybrid-h{font-family:var(--serif);font-size:21px;font-weight:700;color:var(--ink);line-height:1.3;letter-spacing:-0.3px}
+.hybrid-d{font-size:13px;color:var(--ink2);line-height:1.7}
+.hybrid-d strong{color:var(--ink);font-weight:700}
+
+.tline{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--ln2);width:100%}
+.tblock{background:var(--bg2);padding:18px 20px;display:flex;flex-direction:column;gap:8px;position:relative}
+.tblock.dk{background:var(--dk);color:var(--on)}
+.tblock-w{font-family:var(--mono);font-size:11px;color:var(--acc);letter-spacing:2px;font-weight:700}
+.tblock.dk .tblock-w{color:var(--acc3)}
+.tblock-h{font-family:var(--serif);font-size:21px;font-weight:700;line-height:1.25;color:var(--ink);letter-spacing:-0.3px}
+.tblock.dk .tblock-h{color:var(--on)}
+.tblock-sess{font-size:11.5px;color:var(--ink2);line-height:1.6;font-family:var(--mono);letter-spacing:0.3px}
+.tblock.dk .tblock-sess{color:var(--on2)}
+.tblock-d{font-size:12px;color:var(--ink2);line-height:1.7}
+.tblock.dk .tblock-d{color:var(--on2)}
+
+/* 추가 컴포넌트 */
+.flow{display:grid;gap:10px;align-items:center}
+.flow.h4{grid-template-columns:1fr auto 1fr auto 1fr auto 1fr}
+.flow.h3{grid-template-columns:1fr auto 1fr auto 1fr}
+.flow-box{background:var(--bg2);border:1px solid var(--ln);padding:12px 14px;text-align:center;display:flex;flex-direction:column;gap:4px}
+.flow-box.dk{background:var(--dk);color:var(--on);border-color:var(--dk)}
+.flow-box.on{background:#f0e7d6;border-color:var(--acc);border-width:2px}
+.flow-box-k{font-family:var(--mono);font-size:9.5px;color:var(--ink3);letter-spacing:1.5px;font-weight:700}
+.flow-box.dk .flow-box-k{color:var(--acc3)}
+.flow-box.on .flow-box-k{color:var(--acc)}
+.flow-box-t{font-size:12.5px;color:var(--ink);font-weight:700;line-height:1.4}
+.flow-box.dk .flow-box-t{color:var(--on)}
+.flow-arrow{font-family:var(--mono);font-size:22px;color:var(--acc);font-weight:700;text-align:center}
+
+.grid2x2{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:1px;background:var(--ln2)}
+.qd{background:var(--bg2);padding:16px 20px;display:flex;flex-direction:column;gap:6px}
+.qd.dk{background:var(--dk);color:var(--on)}
+.qd-k{font-family:var(--mono);font-size:10px;color:var(--ink3);letter-spacing:2px;font-weight:700}
+.qd.dk .qd-k{color:var(--acc3)}
+.qd-h{font-size:14px;color:var(--ink);font-weight:700;line-height:1.35;font-family:var(--serif)}
+.qd.dk .qd-h{color:var(--on)}
+.qd-d{font-size:12px;color:var(--ink2);line-height:1.65}
+.qd.dk .qd-d{color:var(--on2)}
+.qd-d strong{color:var(--ink);font-weight:700}
+.qd.dk .qd-d strong{color:var(--on)}
+
+.ladder{display:flex;flex-direction:column;gap:1px;background:var(--ln2)}
+.ladder-step{background:var(--bg);padding:14px 18px;display:grid;grid-template-columns:56px 1fr auto;gap:16px;align-items:center}
+.ladder-step.dk{background:var(--dk);color:var(--on)}
+.ladder-step.on{background:#f0e7d6}
+.ladder-n{font-family:var(--serif);font-size:28px;color:var(--acc);font-weight:700;letter-spacing:-0.03em}
+.ladder-step.dk .ladder-n{color:var(--acc3)}
+.ladder-b{display:flex;flex-direction:column;gap:3px;min-width:0}
+.ladder-h{font-size:14px;color:var(--ink);font-weight:700;line-height:1.4}
+.ladder-step.dk .ladder-h{color:var(--on)}
+.ladder-d{font-size:12px;color:var(--ink2);line-height:1.6}
+.ladder-step.dk .ladder-d{color:var(--on2)}
+.ladder-tag{font-family:var(--mono);font-size:9.5px;color:var(--ink3);letter-spacing:1.5px;font-weight:700;text-align:right;white-space:nowrap}
+.ladder-step.dk .ladder-tag{color:var(--acc3)}
+
+.code{background:var(--dk2);padding:14px 18px;font-family:var(--mono);font-size:11.5px;line-height:1.75;color:var(--on);white-space:pre-wrap;border-left:3px solid var(--acc3)}
+.code .cm{color:var(--on2)}
+.code .kw{color:var(--acc3);font-weight:600}
+
+.typelist{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--ln2);flex:1}
+.type{background:var(--bg2);padding:16px 18px;display:flex;flex-direction:column;gap:6px}
+.type.dk{background:var(--dk);color:var(--on)}
+.type-n{font-family:var(--serif);font-size:32px;color:var(--acc);font-weight:700;line-height:1;letter-spacing:-0.03em}
+.type.dk .type-n{color:var(--acc3)}
+.type-h{font-size:13px;color:var(--ink);font-weight:700;line-height:1.35}
+.type.dk .type-h{color:var(--on)}
+.type-d{font-size:11.5px;color:var(--ink2);line-height:1.6}
+.type.dk .type-d{color:var(--on2)}
+.type-tag{font-family:var(--mono);font-size:9.5px;color:var(--ink3);letter-spacing:1.5px;font-weight:700;margin-top:auto;padding-top:6px;border-top:1px solid var(--ln)}
+.type.dk .type-tag{color:var(--acc3);border-top-color:#3a2f24}
+
+.toolbar{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:center;justify-content:center;gap:6px;padding:6px 20px;background:rgba(14,10,6,0.92);backdrop-filter:blur(10px);border-bottom:1px solid rgba(255,255,255,0.08)}
+.toolbar button{background:rgba(255,255,255,0.08);color:#ccc;border:1px solid rgba(255,255,255,0.12);padding:5px 14px;font-family:var(--mono);font-size:10px;letter-spacing:1.5px;cursor:pointer;border-radius:3px;text-transform:uppercase;font-weight:600}
+.toolbar button:hover{background:var(--acc);color:#fff;border-color:var(--acc)}
+.toolbar .pg{color:rgba(255,255,255,0.55);font-size:11px;padding:5px 10px;min-width:80px;text-align:center;font-family:var(--mono);letter-spacing:1px}
+@media print{@page{size:423.33mm 237.5mm;margin:0}*{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}html,body{overflow:visible!important;height:auto!important;background:#fff!important}.deck{overflow:visible!important;height:auto!important;scroll-snap-type:none!important;background:#fff!important}.stage{min-height:0!important;height:auto!important;page-break-after:always;page-break-inside:avoid;padding:0!important;margin:0!important;background:#fff!important;display:block!important}.stage:last-child{page-break-after:avoid}.slide{transform:none!important;box-shadow:none!important;width:1600px!important;height:900px!important}.toolbar{display:none!important}}
+
+.sm{font-size:12px;color:var(--ink2);line-height:1.6}
+.st{font-size:11px;color:var(--ink3);margin-top:4px}
+/* S07 extras */
+.flow-box-lb{font-family:var(--mono);font-size:9.5px;letter-spacing:1.5px;color:var(--ink3);font-weight:700;text-transform:uppercase}
+.flow-box.dark .flow-box-lb{color:var(--acc3)}
+.chk{display:grid;grid-template-columns:13px 1fr;gap:8px;margin-bottom:5px}
+.chk-b{width:13px;height:13px;border:1.2px solid var(--ink);margin-top:3px}
+.chk-t{font-size:12px;color:var(--ink2);line-height:1.55}
+.step{display:grid;grid-template-columns:18px 1fr;gap:10px;margin-bottom:7px}
+.step-n{width:18px;height:18px;background:var(--ink);color:var(--bg);font-family:var(--mono);font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center;margin-top:2px}
+.step-t{font-size:12.5px;color:var(--ink);font-weight:700;line-height:1.35}
+.step-d{font-size:11.5px;color:var(--ink2);margin-top:2px;line-height:1.55}
+.netbox{border:1.5px dashed var(--ink3);padding:11px 14px;margin:8px 0;background:rgba(138,118,89,0.05);position:relative}
+.netbox-lb{position:absolute;top:-8px;left:12px;font-family:var(--mono);font-size:9.5px;letter-spacing:2px;color:var(--ink3);font-weight:700;background:var(--bg);padding:0 6px;text-transform:uppercase}
+.netbox.ext{border-color:var(--acc)}.netbox.ext .netbox-lb{color:var(--acc)}
+.pill{display:inline-block;font-family:var(--mono);font-size:10px;color:var(--acc);background:rgba(184,83,42,0.1);padding:2px 6px;letter-spacing:0.08em;text-transform:uppercase;font-weight:600;border-radius:2px;margin:1px 3px 1px 0}
+
+/* === S04 ORIGINAL COMPONENTS === */
+.bd.col1{grid-template-columns:1fr;background:transparent;gap:0}
+.bth{font-size:15px;color:var(--ink);font-weight:600;margin-bottom:7px;line-height:1.4}
+.bt{font-size:13.5px;line-height:1.78;color:var(--ink2);margin-bottom:8px}
+.bt strong{color:var(--ink);font-weight:600}
+.cod{background:var(--dk);padding:12px 15px;margin:8px 0;position:relative;overflow:hidden}
+.cod::before{content:"";position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='nd'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' seed='5'/%3E%3CfeColorMatrix values='0 0 0 0 1  0 0 0 0 0.92  0 0 0 0 0.78  0 0 0 0.04 0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23nd)'/%3E%3C/svg%3E");opacity:0.6;pointer-events:none}
+.cod>*{position:relative}
+.cod-lb{font-family:var(--mono);font-size:10px;color:var(--on2);letter-spacing:2px;font-weight:700;margin-bottom:6px}
+.cod-main{font-size:15.5px;color:var(--on);font-weight:700;line-height:1.35;margin-bottom:6px}
+.cod p{font-size:12.5px;color:var(--on2);line-height:1.7}
+.dstrip{background:var(--dk);padding:9px 16px;margin:8px 0;display:grid;grid-template-columns:repeat(3,1fr);position:relative;overflow:hidden}
+.dstrip::before{content:"";position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='ns'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' seed='7'/%3E%3CfeColorMatrix values='0 0 0 0 1  0 0 0 0 0.92  0 0 0 0 0.78  0 0 0 0.04 0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23ns)'/%3E%3C/svg%3E");opacity:0.6;pointer-events:none}
+.dstrip>*{position:relative}
+.ds-c:not(:first-child){border-left:1px solid rgba(255,255,255,0.12);padding-left:16px}
+.ds-a{font-family:var(--mono);font-size:9.5px;color:var(--on2);letter-spacing:1.5px;font-weight:700}
+.ds-n{font-size:22px;color:var(--on);font-weight:800;margin-top:3px}
+.ds-d{font-size:10px;color:var(--on2);margin-top:2px}
+.quote{border-left:3px solid var(--ink);padding:11px 15px;margin:8px 0}
+.quote-src{font-family:var(--mono);font-size:10px;color:var(--ink3);letter-spacing:2px;font-weight:700;margin-bottom:5px}
+.quote-q{font-family:var(--serif);font-size:14px;color:var(--ink);font-weight:700;font-style:italic;line-height:1.45}
+.quote-a{font-size:11.5px;color:var(--ink2);margin-top:3px}
+.cblk{background:var(--dk);color:var(--on);padding:11px 14px;font-family:var(--mono);font-size:11.5px;line-height:1.7;border-left:2px solid var(--acc);margin:8px 0;white-space:pre-wrap}
+.cblk .cm{color:var(--acc3);opacity:0.8}.cblk .kw{color:var(--acc3);font-weight:600}
+.cblk .cap{font-size:10px;color:var(--on2);margin-top:5px;letter-spacing:0.1em;white-space:normal}
+.icard{background:var(--bg2);border:1px solid var(--ln);padding:11px 14px;margin-bottom:7px}
+.icard-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:5px}
+.icard-lb{font-family:var(--mono);font-size:9.5px;color:var(--acc);letter-spacing:2px;font-weight:700}
+.icard-sess{font-family:var(--mono);font-size:9.5px;color:var(--ink3);letter-spacing:1.5px;font-weight:600}
+.icard.dark{background:var(--dk);border-color:var(--dk)}
+.icard.dark .icard-lb{color:var(--acc3)}.icard.dark .icard-sess{color:var(--on2)}
+.icard.dark .bth{color:var(--on)}.icard.dark .bt{color:var(--on2)}.icard.dark .bt strong{color:var(--on)}
+.fig{font-family:var(--mono);font-size:10.5px;color:var(--ink3);letter-spacing:1.5px;font-weight:700;margin:8px 0 5px}
+.hero{display:flex;flex-direction:column;justify-content:center;padding:56px 90px}
+.hero-k{font-family:var(--mono);font-size:11.5px;color:var(--acc3);letter-spacing:3px;font-weight:700;margin-bottom:18px}
+.hero-t{font-family:var(--serif);font-size:52px;line-height:1.18;font-weight:700;color:var(--on);letter-spacing:-0.02em}
+.hero-s{font-size:17px;color:var(--on2);line-height:1.7;margin-top:22px;max-width:1100px;font-style:italic}
+.hero-q{border-left:3px solid var(--acc3);padding:16px 24px;margin-top:26px;max-width:1000px}
+.hero-q-q{font-family:var(--serif);font-size:21px;color:var(--on);font-weight:700;font-style:italic;line-height:1.5}
+.hero-q-a{font-size:12px;color:var(--on2);letter-spacing:2px;margin-top:10px;font-family:var(--mono);font-weight:700}
+
+</style>
+</head>
+<body>
+<div class="deck" id="deck">
+<div class="stage"><div class="slide" data-title="Cover">
+  <div class="hbar"><div class="hbar-l">SESSION 08 · CAPSTONE · API · MCP · MULTI-AGENT</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 08
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">08 · API · MCP · AI 아키텍처 캔버스</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">001 / 032</span></div></div></div></div>
+  <div style="position:absolute;top:56px;left:80px;display:flex;align-items:center;gap:14px;font-family:var(--mono);font-size:10px;color:var(--acc);letter-spacing:2.5px;font-weight:600"><div style="width:22px;height:8px;background:var(--acc)"></div>PUBLIC AI EXPERT PROGRAM · 2026 · FINAL</div>
+  <div style="position:absolute;top:56px;right:80px;font-family:var(--mono);font-size:10px;color:var(--ink3);letter-spacing:2px;text-align:right;line-height:1.6">Module 08 / Session 08 · Final<br>Hub Leader Track · Capstone</div>
+  <div style="position:absolute;top:140px;right:80px;font-family:var(--serif);font-size:260px;line-height:1;color:var(--acc);font-weight:300;opacity:0.07;letter-spacing:-0.06em;pointer-events:none;font-style:italic">08</div>
+  <div style="position:absolute;top:180px;left:80px;right:80px;bottom:140px;display:grid;grid-template-columns:1fr 380px;gap:60px">
+    <div>
+      <div style="font-family:var(--mono);font-size:10px;color:var(--acc);letter-spacing:3px;font-weight:700;margin-bottom:14px">SESSION 08 · LECTURE COVER · CAPSTONE</div>
+      <div style="font-family:var(--serif);font-weight:700;font-size:56px;line-height:1.08;letter-spacing:-0.03em;color:var(--ink)">API·MCP 기반<br>멀티 에이전트 아키텍처<br>기획 및 구축</div>
+      <div style="width:60px;height:2px;background:var(--acc);margin:22px 0 16px"></div>
+      <div style="font-family:var(--serif);font-size:19px;color:var(--ink);font-weight:600;line-height:1.5">마지막 차시 — 아키텍처 캔버스 발표 + 8주 여정의 마무리</div>
+      <p style="margin-top:18px;font-size:14px;color:var(--ink2);line-height:1.8;max-width:640px"><strong style="color:var(--ink)">Part A.</strong> API 인문학 + 세 상식(키·비용·재시도) + 공공 API 6종 카탈로그. <strong style="color:var(--ink)">Part B.</strong> MCP 개념·서버 구축·카탈로그 + MCP vs A2A · 멀티 에이전트. <strong style="color:var(--ink)">Part C.</strong> AI 아키텍처 캔버스 6셀 작성 + 최종 발표 + 30/60/90 복귀 플랜.</p>
+    </div>
+    <div style="align-self:end;border-top:1px solid var(--ink);padding-top:16px">
+      <div style="display:grid;grid-template-columns:90px 1fr;gap:12px;padding:8px 0;border-bottom:1px solid var(--ln);font-size:13px"><span style="font-family:var(--mono);font-size:9.5px;letter-spacing:2px;color:var(--ink3);font-weight:700">PROGRAM</span><span style="font-family:var(--serif);color:var(--ink);font-weight:600">공공 AI 전문인재 양성과정</span></div>
+      <div style="display:grid;grid-template-columns:90px 1fr;gap:12px;padding:8px 0;border-bottom:1px solid var(--ln);font-size:13px"><span style="font-family:var(--mono);font-size:9.5px;letter-spacing:2px;color:var(--ink3);font-weight:700">SESSION</span><span style="font-family:var(--serif);color:var(--ink);font-weight:600">08 / 08 · CAPSTONE</span></div>
+      <div style="display:grid;grid-template-columns:90px 1fr;gap:12px;padding:8px 0;border-bottom:1px solid var(--ln);font-size:13px"><span style="font-family:var(--mono);font-size:9.5px;letter-spacing:2px;color:var(--ink3);font-weight:700">GOAL</span><span style="font-family:var(--serif);color:var(--ink);font-weight:600">아키텍처 캔버스 1장 · 발표 3분</span></div>
+      <div style="display:grid;grid-template-columns:90px 1fr;gap:12px;padding:8px 0;border-bottom:1px solid var(--ln);font-size:13px"><span style="font-family:var(--mono);font-size:9.5px;letter-spacing:2px;color:var(--ink3);font-weight:700">FORMAT</span><span style="font-family:var(--serif);color:var(--ink);font-weight:600">강의 150m + 발표 90m</span></div>
+      <div style="display:grid;grid-template-columns:90px 1fr;gap:12px;padding:8px 0;border-bottom:1px solid var(--ln);font-size:13px"><span style="font-family:var(--mono);font-size:9.5px;letter-spacing:2px;color:var(--ink3);font-weight:700">SLIDES</span><span style="font-family:var(--serif);color:var(--ink);font-weight:600">32 pages</span></div>
+      <div style="display:grid;grid-template-columns:90px 1fr;gap:12px;padding:8px 0;font-size:13px"><span style="font-family:var(--mono);font-size:9.5px;letter-spacing:2px;color:var(--ink3);font-weight:700">PREREQ</span><span style="font-family:var(--serif);color:var(--ink);font-weight:600">1~7차시 완료 · Claude Desktop</span></div>
+    </div>
+  </div>
+  <div style="position:absolute;bottom:64px;left:80px;font-family:var(--mono);font-size:10px;color:var(--ink3);letter-spacing:2px">— Editorial Warm Edition · Capstone Lecture Format</div>
+  <div style="position:absolute;bottom:64px;right:80px;font-size:13px;color:var(--ink2);text-align:right;line-height:1.7;max-width:520px">8주 여정의 마지막. 거점리더는 코드를 치는 사람이 아니라<br>연결을 설계하고 검수하는 사람으로 다시 태어난다.</div>
+</div></div>
+
+<!-- 02 HERO · 구현은 에이전트, 설계는 사람 -->
+<div class="stage"><div class="slide" data-title="Hero Design Human">
+  <div class="hbar"><div class="hbar-l">MODULE 08 · SESSION KEY MESSAGE</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 08</div></div>
+  <div class="bd col1"><div class="col hero" style="background:var(--bg2);padding:56px 90px;justify-content:center">
+    <div style="font-family:var(--mono);font-size:11.5px;color:var(--acc);letter-spacing:3px;font-weight:700;margin-bottom:18px">SESSION 08 · ONE SENTENCE</div>
+    <div style="font-family:var(--serif);font-size:52px;line-height:1.18;font-weight:700;color:var(--ink);letter-spacing:-0.02em">구현은 <span style="color:var(--acc)">에이전트</span>가 한다.<br>설계는 <span style="color:var(--acc)">사람</span>이 한다.</div>
+    <div style="width:60px;height:3px;background:var(--acc);margin:22px 0 22px"></div>
+    <p style="font-size:17px;color:var(--ink2);line-height:1.7;max-width:1100px;font-style:italic">이 원칙이 8주 전체의 요약이자 8차시의 출발점이다. 거점리더는 API·MCP·멀티 에이전트 코드를 직접 치지 않는다. 대신 <strong style="color:var(--ink)">트리거·재료·처리·프롬프트·산출물·배포</strong>라는 6개의 칸을 명확히 채운다. 그 설계서 한 장이 동료·에이전트·시스템을 동시에 움직인다.</p>
+    <div style="border-left:3px solid var(--acc);padding:16px 24px;margin-top:26px;max-width:1050px;background:var(--bg)"><div style="font-family:var(--serif);font-size:21px;color:var(--ink);font-weight:700;font-style:italic;line-height:1.5">"코드를 치는 속도가 아니라 연결을 설계하는 시야가 거점리더의 무기다. 8주 여정의 결론은 '연결 설계자'라는 정체성이다."</div><div style="font-size:12px;color:var(--ink3);letter-spacing:2px;margin-top:10px;font-family:var(--mono);font-weight:700">— 커리큘럼 종결 원칙</div></div>
+  </div></div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">08 · API·MCP 기반 멀티 에이전트 아키텍처 기획 및 구축</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">002 / 032</span></div></div>
+</div></div>
+
+<!-- 03 UNIT 01 · API 인문학 -->
+<div class="stage"><div class="slide" data-title="API Humanist">
+  <div class="hbar"><div class="hbar-l">MODULE 08 · UNIT 01 · API · HUMANIST LANGUAGE</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 08</div></div>
+  <div class="hl"><div class="hl-kicker">UNIT 01 · API는 '인간적 언어' · LECTURE 08-A-1 · 8MIN</div><div class="hl-title">API의 개념과 구조</div><div class="hl-sub">엔드포인트·메서드·페이로드가 두렵게 쓰여 있어도 결국 "주소·동사·편지". 기술 용어를 일상어로 번역하면 진입 장벽이 사라진다.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col2">
+    <div class="col">
+      <div class="sh"><span class="sh-n">THREE WORDS</span><span class="sh-t">기술 용어의 인문학적 번역</span></div><div class="sh-line"></div>
+      <div class="bth">API는 편지 왕래다 — 이 원칙이 핵심</div>
+      <p class="bt">API는 내가 직접 만들지 않은 함수를 <strong>네트워크 너머로 호출</strong>하는 창문이다. 창문 너머 누가 있는지 몰라도, 약속된 문법으로 말을 걸면 약속된 형식으로 답이 온다. 공공 업무의 <strong>온나라·법령·KOSIS·국민신문고</strong>를 이 창문을 통해 드나들 수 있다.</p>
+      <table class="mtbl"><thead><tr><th>TECH</th><th>HUMAN</th><th>예시</th></tr></thead><tbody>
+        <tr><td>엔드포인트 URL</td><td>보낼 주소</td><td>apis.data.go.kr/...</td></tr>
+        <tr><td>메서드 GET/POST</td><td>조회·제출 동사</td><td>GET=조회, POST=제출</td></tr>
+        <tr><td>페이로드 JSON</td><td>편지 내용</td><td>{"date":"20260420"}</td></tr>
+        <tr><td>헤더 Authorization</td><td>신분증 도장</td><td>serviceKey=...</td></tr>
+        <tr><td>응답 200</td><td>잘 받았다</td><td>정상 응답</td></tr>
+        <tr><td>응답 4xx/5xx</td><td>반송 사유</td><td>인증·서버 실패</td></tr>
+      </tbody></table>
+      <div class="co"><div class="co-lb">KEY TAKEAWAY</div><div class="co-main">API 문서 앞에서 겁먹지 않는다</div><p>문서가 100쪽이어도 "주소·동사·편지·도장" 네 자리만 찾아 채우면 첫 호출이 된다. 나머지는 예시 코드 복사·붙여넣기로 해결.</p></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">MINIMAL CALL</span><span class="sh-t">10줄 첫 호출</span></div><div class="sh-line"></div>
+      <div class="bth">[실습예시] 기상청 초단기 실황 조회</div>
+      <div class="cblk"><span class="cm"># 기상청 공공 API · 10줄 호출</span>
+<span class="kw">import</span> requests, os
+<span class="kw">from</span> dotenv <span class="kw">import</span> load_dotenv
+load_dotenv()
+
+url = "https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtNcst"
+params = {
+  "serviceKey": os.getenv("DATA_GO_KR_KEY"),
+  "dataType": "JSON",
+  "base_date": "20260420",
+  "base_time": "1000",
+  "nx": 60, "ny": 127,
+}
+r = requests.get(url, params=params, timeout=10)
+<span class="kw">print</span>(r.json())</div>
+      <p class="bt">이것이 API의 기본 구조다. <strong>requests.get + dict</strong>. 문서가 아무리 길어도 이 패턴으로 귀결된다. 공공 API 6종 모두 구조가 같다.</p>
+      <div class="fig">FIGURE 01 · MAIL METAPHOR · 요청 → 처리 → 응답</div>
+      <div class="dstrip"><div class="ds-c"><div class="ds-a">LINES</div><div class="ds-n">10</div><div class="ds-d">첫 호출 코드량</div></div><div class="ds-c"><div class="ds-a">CONCEPTS</div><div class="ds-n">3</div><div class="ds-d">주소·동사·편지</div></div><div class="ds-c"><div class="ds-a">DOMAIN</div><div class="ds-n">공공</div><div class="ds-d">모든 6종 동일</div></div></div>
+      <div class="pit"><div class="pit-lb">PITFALL</div><div class="pit-h">▸ 키를 코드에 하드코딩</div><div class="pit-d">.env + load_dotenv가 기본. Git 커밋 전 .gitignore 확인. 한 번 유출되면 폐기·재발급.</div></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">08 · API·MCP 기반 멀티 에이전트 아키텍처 기획 및 구축</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">003 / 032</span></div></div>
+</div></div>
+
+<!-- 04 REST · GraphQL · RPC 기본 -->
+<div class="stage"><div class="slide" data-title="REST GraphQL RPC">
+  <div class="hbar"><div class="hbar-l">MODULE 08 · UNIT 01 · API STYLES · REST · GRAPHQL · RPC</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 08</div></div>
+  <div class="hl"><div class="hl-kicker">UNIT 01 · API 스타일 3종 · LECTURE 08-A-1b · 6MIN</div><div class="hl-title">REST·GraphQL·RPC 문법 비교</div><div class="hl-sub">API 문서를 읽다 보면 세 가지 스타일이 반복된다. 구조가 다를 뿐 "주소·동사·편지"의 본질은 같다. 공공 API 대부분은 REST다.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col3">
+    <div class="col">
+      <div class="sh"><span class="sh-n">REST</span><span class="sh-t">가장 흔한 형태</span></div><div class="sh-line"></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">REST · 공공 표준</span><span class="icard-sess">HTTP + JSON</span></div><div class="bth">URL이 "자원"을 가리키고 메서드가 "동사"</div><p class="bt">GET /민원/123 → 조회, POST /민원 → 생성, PUT /민원/123 → 수정, DELETE /민원/123 → 삭제. <strong>data.go.kr·법령·KOSIS·국민신문고 모두 REST.</strong></p></div>
+      <div class="cblk"><span class="cm"># REST 호출 예시</span>
+GET /api/v1/complaints/123
+Authorization: Bearer TOKEN
+Accept: application/json
+
+<span class="cm"># 응답</span>
+{"id":123,"category":"도로",
+ "status":"처리중"}</div>
+      <div class="co"><div class="co-lb">FIT</div><div class="co-main">공공 업무의 99%는 REST로 끝난다</div><p>외부 학술 지식 없이도 "주소 + 파라미터"만 조합해서 호출 가능. 입문자에게 가장 친절한 스타일.</p></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">GRAPHQL</span><span class="sh-t">원하는 필드만 선택</span></div><div class="sh-line"></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">GRAPHQL · GitHub·Shopify</span><span class="icard-sess">쿼리 언어</span></div><div class="bth">"필요한 필드만 골라서" 한 번에 가져오는 설계</div><p class="bt">REST가 여러 번 호출해야 하는 경우를 한 요청으로. 클라이언트가 데이터 형태를 결정. <strong>공공에는 드물지만</strong> GitHub MCP·내부 플랫폼에서 만날 수 있다.</p></div>
+      <div class="cblk"><span class="cm"># GraphQL 쿼리 예시</span>
+query {
+  complaint(id: 123) {
+    id
+    category
+    assignee {
+      name
+      email
+    }
+  }
+}</div>
+      <div class="pit"><div class="pit-lb">주의</div><div class="pit-h">▸ 쿼리가 과하면 서버 부하</div><div class="pit-d">한 요청에 몇 KB가 돌아올지 예측하기 어렵다. depth·rate limit 기본 설정 확인.</div></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">RPC · gRPC</span><span class="sh-t">함수 호출 스타일</span></div><div class="sh-line"></div>
+      <div class="icard dark"><div class="icard-top"><span class="icard-lb">gRPC · 내부 시스템</span><span class="icard-sess">HTTP/2 + Protobuf</span></div><div class="bth">"함수를 네트워크 너머로 부른다" 그대로</div><p class="bt">REST가 자원을, gRPC는 함수를 모델로 삼는다. 속도·효율은 우수하지만 브라우저 직접 호출이 어렵다. <strong>마이크로서비스 내부 통신</strong>·AI 모델 서빙(Triton)에 자주 등장.</p></div>
+      <table class="mtbl"><thead><tr><th>AXIS</th><th>REST</th><th>GraphQL</th><th>RPC</th></tr></thead><tbody>
+        <tr><td>모델</td><td>자원</td><td>쿼리</td><td>함수</td></tr>
+        <tr><td>전송</td><td>HTTP+JSON</td><td>HTTP+JSON</td><td>HTTP/2+PB</td></tr>
+        <tr><td>공공</td><td>99%</td><td>드묾</td><td>내부망</td></tr>
+        <tr><td>난이도</td><td>★☆☆</td><td>★★☆</td><td>★★★</td></tr>
+      </tbody></table>
+      <div class="cod"><div class="cod-lb">JUDGMENT</div><div class="cod-main">입문자는 REST만 알면 충분하다</div><p>GraphQL·gRPC는 "있다"만 알아두고, 실제 필요가 생길 때 학습. 공공 실무의 95% 이상은 REST로 해결된다.</p></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">08 · API·MCP 기반 멀티 에이전트 아키텍처 기획 및 구축</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">004 / 032</span></div></div>
+</div></div>
+
+<!-- 05 API 3 Knowings · Key · Cost · Retry -->
+<div class="stage"><div class="slide" data-title="API 3 Knowings">
+  <div class="hbar"><div class="hbar-l">MODULE 08 · UNIT 01 · API · KEY · COST · RETRY</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 08</div></div>
+  <div class="hl"><div class="hl-kicker">UNIT 01 · API 상식 3 · LECTURE 08-A-2 · 8MIN</div><div class="hl-title">API 운영 필수 3가지</div><div class="hl-sub">기술보다 운영이 사고를 낸다. 잘못된 키 관리·요금 폭탄·실패 처리 누락이 공공 AI 도입 실패의 대다수 원인.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col3">
+    <div class="col">
+      <div class="sh"><span class="sh-n">01 · KEY</span><span class="sh-t">API 키 3원칙</span></div><div class="sh-line"></div>
+      <div class="bth">API 키는 전자서명 + 결제카드다</div>
+      <p class="bt">유출되면 누구든 당신 계정으로 호출한다. <strong>세 가지만 지키면 99% 안전.</strong></p>
+      <table class="mtbl"><thead><tr><th>원칙</th><th>실행</th></tr></thead><tbody>
+        <tr><td>① 분리</td><td>.env + .gitignore</td></tr>
+        <tr><td>② 용도별</td><td>개발·운영·외부 각각</td></tr>
+        <tr><td>③ 교체</td><td>90일 로테이션</td></tr>
+      </tbody></table>
+      <div class="cblk"><span class="cm"># .env 패턴</span>
+DATA_GO_KR_KEY=xxxx
+OPENAI_API_KEY=sk-xxxx
+
+<span class="cm"># .gitignore</span>
+.env
+.env.*
+*.pem</div>
+      <div class="pit"><div class="pit-lb">실제 사고</div><div class="pit-h">▸ 스크린샷 공유에서 유출</div><div class="pit-d">에이전트 대화창·Slack 캡처에 키가 그대로 보임. 사전 모자이크 루틴.</div></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">02 · COST</span><span class="sh-t">요금 구조</span></div><div class="sh-line"></div>
+      <div class="bth">공공 API는 대부분 무료, LLM API는 토큰당 과금</div>
+      <p class="bt">무한 루프 한 번에 수십만 원 청구도 가능. <strong>먼저 한도 설정, 그 다음 코드.</strong></p>
+      <table class="mtbl"><thead><tr><th>MODEL</th><th>IN/1M</th><th>OUT/1M</th></tr></thead><tbody>
+        <tr><td>Claude Haiku</td><td>$0.80</td><td>$4.00</td></tr>
+        <tr><td>Claude Sonnet</td><td>$3.00</td><td>$15.00</td></tr>
+        <tr><td>Claude Opus</td><td>$15.00</td><td>$75.00</td></tr>
+        <tr><td>GPT-4.1 mini</td><td>$0.40</td><td>$1.60</td></tr>
+        <tr><td>Gemini Flash</td><td>$0.15</td><td>$0.60</td></tr>
+      </tbody></table>
+      <div class="co"><div class="co-lb">PREVENT</div><div class="co-main">$10~$50 spend limit부터 시작</div><p>Anthropic·OpenAI 콘솔의 spend limit + 50% 알림. 주 1회 사용량 리뷰.</p></div>
+      <div class="dstrip"><div class="ds-c"><div class="ds-a">LIMIT</div><div class="ds-n">$10</div><div class="ds-d">첫 한도</div></div><div class="ds-c"><div class="ds-a">ALERT</div><div class="ds-n">50%</div><div class="ds-d">자동 알림</div></div><div class="ds-c"><div class="ds-a">REVIEW</div><div class="ds-n">주 1회</div><div class="ds-d">사용량 체크</div></div></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">03 · RETRY</span><span class="sh-t">실패·재시도</span></div><div class="sh-line"></div>
+      <div class="bth">네트워크는 5~10% 일시 실패가 일상</div>
+      <p class="bt">지수 백오프 재시도 래퍼 하나면 대부분 자동 복구. <strong>에이전트 안정성의 기본기.</strong></p>
+      <div class="cblk"><span class="cm"># 지수 백오프 재시도</span>
+<span class="kw">import</span> time
+
+<span class="kw">def</span> retry(fn, tries=5):
+  <span class="kw">for</span> i <span class="kw">in</span> <span class="kw">range</span>(tries):
+    <span class="kw">try</span>: <span class="kw">return</span> fn()
+    <span class="kw">except</span> Exception <span class="kw">as</span> e:
+      wait = 2 ** i  <span class="cm"># 1·2·4·8·16s</span>
+      time.sleep(wait)
+  <span class="kw">raise</span> RuntimeError("5회 실패")</div>
+      <table class="mtbl"><thead><tr><th>STATUS</th><th>ACTION</th></tr></thead><tbody>
+        <tr><td>200</td><td>처리</td></tr>
+        <tr><td>401</td><td>키 확인·중단</td></tr>
+        <tr><td>429</td><td>대기·재시도</td></tr>
+        <tr><td>500</td><td>재시도</td></tr>
+        <tr><td>503</td><td>재시도</td></tr>
+      </tbody></table>
+      <div class="cod"><div class="cod-lb">3-STEP CHECK</div><div class="cod-main">키 분리 · 한도 설정 · 재시도 래퍼</div><p>이 세 가지가 공공 AI 운영의 기본. 코드 이전에 체크리스트로.</p></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">08 · API·MCP 기반 멀티 에이전트 아키텍처 기획 및 구축</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">005 / 032</span></div></div>
+</div></div>
+
+<!-- 06 API Key 보안 운영 -->
+<div class="stage"><div class="slide" data-title="API Key Security">
+  <div class="hbar"><div class="hbar-l">MODULE 08 · UNIT 01 · API KEY · VAULT · ENV · SCOPE</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 08</div></div>
+  <div class="hl"><div class="hl-kicker">UNIT 01 · API 키 보안 운영 · LECTURE 08-A-2a · 6MIN</div><div class="hl-title">API 키 관리와 보안</div><div class="hl-sub">개인 .env는 시작점이지, 종착점이 아니다. 팀·부서가 쓰기 시작하면 vault와 권한 분리로 올라가야 한다.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col2">
+    <div class="col">
+      <div class="sh"><span class="sh-n">LEVEL 1·2</span><span class="sh-t">개인 · 팀</span></div><div class="sh-line"></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">LEVEL 1 · 개인 .env</span><span class="icard-sess">입문</span></div><div class="bth">프로젝트 루트 .env + .gitignore</div><p class="bt">혼자 쓰는 로컬 스크립트는 이 수준으로 충분. <strong>.env를 그대로 공유하거나 복사해서 전달하는 순간 위험이 시작.</strong></p></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">LEVEL 2 · 팀 vault</span><span class="icard-sess">부서</span></div><div class="bth">1Password·Bitwarden·KeePass 공용 저장소</div><p class="bt">팀원이 <strong>vault에서 개인 .env를 생성</strong>. 담당자 변경 시 vault만 회수. 감사 로그도 남는다.</p></div>
+      <div class="cblk"><span class="cm"># vault에서 env 주입 (예)</span>
+<span class="kw">import</span> subprocess
+key = subprocess.check_output(
+  ["op", "read", "op://Public/API/key"]
+).decode().strip()
+os.environ["OPENAI_API_KEY"] = key</div>
+      <div class="co"><div class="co-lb">운영 팁</div><div class="co-main">.env.example만 Git에 올린다</div><p>실제 값 없이 키 이름만 있는 템플릿. 신규 팀원 온보딩 가이드.</p></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">LEVEL 3 · 권한 분리</span><span class="sh-t">SCOPE · EXPIRE · LOG</span></div><div class="sh-line"></div>
+      <div class="bth">키 하나가 모든 권한을 갖지 않도록 쪼갠다</div>
+      <p class="bt">OpenAI·Anthropic 콘솔 모두 <strong>프로젝트별 키 발급</strong>을 지원한다. 민원 분류 프로젝트 키는 리서치 프로젝트에 못 쓰게 한다. 유출 시 피해 범위도 그 프로젝트로 제한.</p>
+      <table class="mtbl"><thead><tr><th>속성</th><th>개인</th><th>팀 운영</th></tr></thead><tbody>
+        <tr><td>저장</td><td>.env</td><td>vault</td></tr>
+        <tr><td>범위</td><td>전체</td><td>프로젝트별</td></tr>
+        <tr><td>유효기간</td><td>무기한</td><td>90일</td></tr>
+        <tr><td>모니터링</td><td>수동</td><td>알림 자동</td></tr>
+        <tr><td>회수</td><td>수동 폐기</td><td>vault 해지</td></tr>
+      </tbody></table>
+      <div class="cod"><div class="cod-lb">공공 기관 적용</div><div class="cod-main">"키 관리 담당자 1인" 지정</div><p>부서에 "AI 키 집사" 역할을 둔다. 발급·회수·로테이션·사고 대응 일원화. 거점리더가 맡기 좋은 역할.</p></div>
+      <div class="pit"><div class="pit-lb">PITFALL</div><div class="pit-h">▸ 키를 이메일·메신저로 전달</div><div class="pit-d">가장 흔한 유출 경로. 전송은 vault 공유 링크로만.</div><div class="pit-h">▸ 퇴직·인사이동 시 키 미회수</div><div class="pit-d">분기별 vault 리뷰로 사용하지 않는 키 정리. 감사 로그 필수.</div></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">08 · API·MCP 기반 멀티 에이전트 아키텍처 기획 및 구축</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">006 / 032</span></div></div>
+</div></div>
+
+<!-- 07 비용 구조 이해 -->
+<div class="stage"><div class="slide" data-title="Cost Structure">
+  <div class="hbar"><div class="hbar-l">MODULE 08 · UNIT 01 · COST · TOKENS · CALLS · STORAGE</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 08</div></div>
+  <div class="hl"><div class="hl-kicker">UNIT 01 · 비용 구조 이해 · LECTURE 08-A-2b · 6MIN</div><div class="hl-title">AI API 비용 구조 이해</div><div class="hl-sub">"얼마나 들지" 답할 수 있어야 도입 승인을 받는다. 공공 부서의 예산 심의에서 실제로 요구되는 숫자를 체득한다.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col2w">
+    <div class="col">
+      <div class="sh"><span class="sh-n">TOKEN</span><span class="sh-t">가장 큰 변수</span></div><div class="sh-line"></div>
+      <div class="bth">토큰은 "글자 조각" — 한국어 1글자 ≈ 1.5~2 토큰</div>
+      <p class="bt">GPT·Claude·Gemini 모두 <strong>입력 토큰·출력 토큰을 각각</strong> 계산. 한국어는 영어보다 2배가량 많이 쓰인다. A4 1페이지(약 600자) ≈ 1,000~1,200 토큰.</p>
+      <table class="mtbl"><thead><tr><th>업무</th><th>IN 토큰</th><th>OUT 토큰</th><th>비용(Sonnet)</th></tr></thead><tbody>
+        <tr><td>민원 분류 1건</td><td>400</td><td>50</td><td>$0.002</td></tr>
+        <tr><td>민원 응대안</td><td>2,000</td><td>500</td><td>$0.014</td></tr>
+        <tr><td>법령 요약 1쪽</td><td>1,200</td><td>300</td><td>$0.008</td></tr>
+        <tr><td>회의록 1시간 요약</td><td>15,000</td><td>2,000</td><td>$0.075</td></tr>
+        <tr><td>RAG 답변 1건</td><td>3,500</td><td>400</td><td>$0.017</td></tr>
+      </tbody></table>
+      <div class="cod"><div class="cod-lb">RULE OF THUMB · 공공 실무</div><div class="cod-main">"월 1,000건 처리 = $10~$30 수준"</div><p>대부분 업무는 Haiku·Flash·GPT-4.1 mini로 <strong>월 몇 만 원</strong>이면 해결. Opus는 정말 중요한 건(법령 해석·최종 검토)에만 투입.</p></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">CALLS · STORAGE</span><span class="sh-t">숨은 비용</span></div><div class="sh-line"></div>
+      <div class="bth">공공 API는 호출 한도, 임베딩은 저장 비용</div>
+      <p class="bt">공공 API는 <strong>일/시간당 호출 한도</strong>(KOSIS 일 1만, 브이월드 일 3만). 초과 시 자동 차단. RAG용 벡터 DB는 월 저장료가 별도.</p>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">EMBEDDING · RAG</span></div><div class="bth">임베딩 요금 + 벡터 DB 저장료</div><p class="bt">OpenAI text-embedding-3-small: $0.02/1M 토큰. 10만 쪽 문서 임베딩 ≈ $3. 벡터 DB(Pinecone·Qdrant)는 월 $10~~.</p></div>
+      <div class="dstrip"><div class="ds-c"><div class="ds-a">KOSIS</div><div class="ds-n">10k/일</div><div class="ds-d">호출 한도</div></div><div class="ds-c"><div class="ds-a">VWORLD</div><div class="ds-n">30k/일</div><div class="ds-d">호출 한도</div></div><div class="ds-c"><div class="ds-a">EMBED</div><div class="ds-n">$0.02</div><div class="ds-d">/1M 토큰</div></div></div>
+      <div class="pit"><div class="pit-lb">예산 심의 대응</div><div class="pit-h">▸ "최악 시나리오"를 숫자로</div><div class="pit-d">"월 3,000건 × 평균 0.02$ × 2배 여유 = 월 $120" 같은 식으로 상한을 제시하면 승인이 빠르다.</div></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">08 · API·MCP 기반 멀티 에이전트 아키텍처 기획 및 구축</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">007 / 032</span></div></div>
+</div></div>
+
+<!-- 08 재시도 · 타임아웃 · 실패 처리 -->
+<div class="stage"><div class="slide" data-title="Retry Timeout Failure">
+  <div class="hbar"><div class="hbar-l">MODULE 08 · UNIT 01 · RETRY · TIMEOUT · FAILURE HANDLING</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 08</div></div>
+  <div class="hl"><div class="hl-kicker">UNIT 01 · 실패 처리 패턴 · LECTURE 08-A-2c · 6MIN</div><div class="hl-title">API 실패 처리 패턴</div><div class="hl-sub">에이전트가 외부 API·MCP를 호출한다는 것은 "실패 가능성 경로"가 늘어난다는 뜻. 실패를 가정한 설계가 곧 신뢰다.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col3">
+    <div class="col">
+      <div class="sh"><span class="sh-n">RETRY</span><span class="sh-t">지수 백오프 · 재시도 규칙</span></div><div class="sh-line"></div>
+      <div class="bth">5회 · 1·2·4·8·16초 대기 기본</div>
+      <p class="bt">대부분의 장애는 몇 초 안에 해소. 즉시 5회 재시도보다 <strong>지수 간격</strong>이 서버 부하를 줄이고 성공률을 높인다.</p>
+      <div class="cblk"><span class="cm"># tenacity 라이브러리 활용</span>
+<span class="kw">from</span> tenacity <span class="kw">import</span> (
+  retry, wait_exponential,
+  stop_after_attempt, retry_if_exception_type
+)
+
+<span class="kw">@retry</span>(
+  wait=wait_exponential(min=1, max=30),
+  stop=stop_after_attempt(5),
+  retry=retry_if_exception_type(
+    (ConnectionError, Timeout)
+  ),
+)
+<span class="kw">def</span> call_api():
+  <span class="kw">return</span> requests.get(URL, timeout=10)</div>
+      <div class="co"><div class="co-lb">RETRY 대상</div><div class="co-main">재시도할 것 vs 하지 말 것</div><p>5xx·429·Timeout → 재시도. <strong>401·403·400 → 중단</strong>(재시도해도 같은 실패).</p></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">TIMEOUT</span><span class="sh-t">영원히 기다리지 않는다</span></div><div class="sh-line"></div>
+      <div class="bth">connect_timeout · read_timeout 분리</div>
+      <p class="bt">기본 requests.get에는 타임아웃이 없다. <strong>무조건 명시</strong>가 규칙. 공공 API는 평균 1~3초, LLM은 10~60초.</p>
+      <table class="mtbl"><thead><tr><th>업무</th><th>connect</th><th>read</th></tr></thead><tbody>
+        <tr><td>공공 API</td><td>3s</td><td>10s</td></tr>
+        <tr><td>LLM 일반</td><td>5s</td><td>60s</td></tr>
+        <tr><td>LLM 스트림</td><td>5s</td><td>300s</td></tr>
+        <tr><td>내부 DB</td><td>1s</td><td>5s</td></tr>
+      </tbody></table>
+      <div class="cod"><div class="cod-lb">LLM 특이 사항</div><div class="cod-main">스트리밍은 "첫 바이트 타임아웃"으로 판단</div><p>전체 응답이 아니라 <strong>첫 토큰이 얼마나 빨리 오는가</strong>가 건강한 연결의 기준. 30초 내 첫 바이트가 없으면 재시도.</p></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">CIRCUIT BREAKER</span><span class="sh-t">장애 전파 차단</span></div><div class="sh-line"></div>
+      <div class="bth">연속 실패 → 일정 시간 호출 차단</div>
+      <p class="bt">한 API가 30분째 죽어 있으면 계속 호출해봐야 실패만 쌓인다. 5회 연속 실패 시 <strong>1분간 자동 차단</strong>, 이후 조심스레 재개.</p>
+      <div class="cblk"><span class="cm"># 간단한 서킷브레이커</span>
+<span class="kw">from</span> datetime <span class="kw">import</span> datetime, timedelta
+
+state = {"fails":0, "open_until":<span class="kw">None</span>}
+
+<span class="kw">def</span> guarded(fn):
+  now = datetime.now()
+  <span class="kw">if</span> state["open_until"] <span class="kw">and</span> now &lt; state["open_until"]:
+    <span class="kw">raise</span> RuntimeError("circuit open")
+  <span class="kw">try</span>:
+    r = fn(); state["fails"]=0; <span class="kw">return</span> r
+  <span class="kw">except</span> Exception:
+    state["fails"] += 1
+    <span class="kw">if</span> state["fails"] &gt;= 5:
+      state["open_until"] = now + timedelta(minutes=1)
+    <span class="kw">raise</span></div>
+      <div class="pit"><div class="pit-lb">에이전트 관점</div><div class="pit-h">▸ 조용한 실패가 가장 무섭다</div><div class="pit-d">재시도·타임아웃·서킷 모두 <strong>로그</strong>가 기본. 실패 건은 부서 대시보드로 집계.</div></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">08 · API·MCP 기반 멀티 에이전트 아키텍처 기획 및 구축</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">008 / 032</span></div></div>
+</div></div>
+
+<!-- 09 HERO · MCP는 신기능이 아니라 연결 표준이다 -->
+<div class="stage"><div class="slide" data-title="Hero MCP Standard">
+  <div class="hbar"><div class="hbar-l">MODULE 08 · UNIT 02 · MCP KEY MESSAGE</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 08</div></div>
+  <div class="bd col1"><div class="col hero" style="background:var(--bg);padding:56px 90px;justify-content:center">
+    <div style="font-family:var(--mono);font-size:11.5px;color:var(--acc);letter-spacing:3px;font-weight:700;margin-bottom:18px">UNIT 02 · ONE SENTENCE</div>
+    <div style="font-family:var(--serif);font-size:52px;line-height:1.18;font-weight:700;color:var(--ink);letter-spacing:-0.02em">MCP는 왜<br><span style="color:var(--acc)">표준</span>이 되는가</div>
+    <div style="width:60px;height:3px;background:var(--acc);margin:22px 0 22px"></div>
+    <p style="font-size:17px;color:var(--ink2);line-height:1.7;max-width:1150px;font-style:italic">2024년 말 Anthropic이 제안하자 Google·OpenAI·Microsoft가 잇달아 채택했다. 이유는 간단하다. <strong style="color:var(--ink)">에이전트가 쓸 도구를 만드는 공통 문법이 없었기 때문</strong>이다. USB·HTTP처럼 MCP도 "재미있는 기능"이 아니라 "없으면 불편한 기반"이다. 거점리더의 언어로 하면 — <strong style="color:var(--ink)">"우리 부서 도구를 여러 에이전트가 공유하도록 해주는 콘센트"</strong>다.</p>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:34px">
+      <div style="border:1px solid var(--ln);padding:14px 16px;background:var(--bg2)"><div style="font-family:var(--mono);font-size:10px;color:var(--acc);letter-spacing:2px;font-weight:700">NOT A FEATURE</div><div style="font-size:14px;color:var(--ink);font-weight:600;margin-top:6px;line-height:1.5">특정 제품의 기능이 아니다. HTTP처럼 누구나 구현할 수 있는 공개 규격.</div></div>
+      <div style="border:1px solid var(--ln);padding:14px 16px;background:var(--bg2)"><div style="font-family:var(--mono);font-size:10px;color:var(--acc);letter-spacing:2px;font-weight:700">NOT A LANGUAGE</div><div style="font-size:14px;color:var(--ink);font-weight:600;margin-top:6px;line-height:1.5">새로 배우는 언어가 아니다. Python·Node로 서버 하나 짜면 끝.</div></div>
+      <div style="border:1px solid var(--ln);padding:14px 16px;background:var(--bg2)"><div style="font-family:var(--mono);font-size:10px;color:var(--acc);letter-spacing:2px;font-weight:700">IT IS STANDARD</div><div style="font-size:14px;color:var(--ink);font-weight:600;margin-top:6px;line-height:1.5">한 번 만들면 Claude·Cursor·Antigravity·Copilot이 모두 쓴다.</div></div>
+    </div>
+  </div></div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">08 · API·MCP 기반 멀티 에이전트 아키텍처 기획 및 구축</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">009 / 032</span></div></div>
+</div></div>
+
+<!-- 10 UNIT 02 · 공공 활용 API 6종 카탈로그 -->
+<div class="stage"><div class="slide" data-title="Public API Catalog">
+  <div class="hbar"><div class="hbar-l">MODULE 08 · UNIT 02 · PUBLIC API · CATALOG SIX</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 08</div></div>
+  <div class="hl"><div class="hl-kicker">UNIT 02 · 공공 API 카탈로그 · LECTURE 08-A-3 · 8MIN</div><div class="hl-title">공공 API 6종 카탈로그</div><div class="hl-sub">data.go.kr에 3만여 API가 있다. 공공 업무 자동화에서 자주 쓰이는 여섯 축을 대표 API로 정리한다.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col3">
+    <div class="col">
+      <div class="sh"><span class="sh-n">01 · WEATHER · LAW</span><span class="sh-t">기상 · 법령</span></div><div class="sh-line"></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">API 01 · 기상청</span><span class="icard-sess">apis.data.go.kr</span></div><div class="bth">초단기·동네·중기예보 · 재난 예경보</div><p class="bt">좌표(nx,ny)만 알면 10줄로 실황 조회. <strong>재난 알림·외근 안전·행사 운영</strong>에 직결. 일 10,000회 무료.</p></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">API 02 · 국가법령정보센터</span><span class="icard-sess">law.go.kr</span></div><div class="bth">법령·시행령·시행규칙 조문 JSON</div><p class="bt">법령 RAG의 기초 재료. 본문 원문을 그대로 받아 파이프라인에 투입. <strong>무료 · 무제한.</strong></p></div>
+      <div class="quote"><div class="quote-src">SOURCE · 공공데이터포털</div><div class="quote-q">"모든 공공 API의 출발점은 data.go.kr이다."</div><div class="quote-a">— 카탈로그 진입 가이드</div></div>
+      <div class="co"><div class="co-lb">USE CASE</div><div class="co-main">"이 사안에 적용될 조문 5개" — 하이브리드</div><p>에이전트가 키워드를 받아 법령 API + RAG 조합으로 답변. 출처 인용 자동.</p></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">02 · STATS · SPACE</span><span class="sh-t">통계 · 공간</span></div><div class="sh-line"></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">API 03 · KOSIS 통계청</span><span class="icard-sess">kosis.kr</span></div><div class="bth">인구·경제·교통·복지 시계열</div><p class="bt">엑셀 다운로드 대신 코드로. <strong>orgId·tblId</strong>를 사전 문서화해두는 것이 핵심. 일 10k 무료.</p></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">API 04 · 브이월드·국가주소</span><span class="icard-sess">vworld.kr</span></div><div class="bth">주소→좌표 · 행정구역 · 지번</div><p class="bt">민원 위치 분석의 기초. "○○동" 자동 관할구 매핑. 일 30k 무료.</p></div>
+      <div class="cblk"><span class="cm"># KOSIS 월별 인구 조회</span>
+url = "https://kosis.kr/openapi/Param/statisticsParameterData.do"
+params = {
+  "apiKey": KEY,
+  "orgId": "101",       <span class="cm"># 통계청</span>
+  "tblId": "DT_1B040A3",
+  "prdSe": "M",
+  "startPrdDe": "202601",
+  "endPrdDe": "202612",
+  "format": "json",
+}
+r = requests.get(url, params=params, timeout=10).json()</div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">03 · DOC · CITIZEN</span><span class="sh-t">공문 · 민원</span></div><div class="sh-line"></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">API 05 · 온나라·전자문서</span><span class="icard-sess">gwp.go.kr</span></div><div class="bth">기안·결재·공문 이력 조회</div><p class="bt">내부 시스템 연계용. <strong>기관별 접근 권한 필요.</strong> 개별 협의로 진행.</p></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">API 06 · 국민신문고</span><span class="icard-sess">epeople.go.kr</span></div><div class="bth">민원 접수·처리 이력·통계</div><p class="bt">부서별 평균 처리 시간·카테고리 분석. 민원 분류 에이전트의 학습 데이터.</p></div>
+      <table class="mtbl"><thead><tr><th>API</th><th>AUTH</th><th>COST</th></tr></thead><tbody>
+        <tr><td>기상청</td><td>무료</td><td>일 10k</td></tr>
+        <tr><td>법령</td><td>무료</td><td>무제한</td></tr>
+        <tr><td>KOSIS</td><td>무료</td><td>일 10k</td></tr>
+        <tr><td>브이월드</td><td>무료</td><td>일 30k</td></tr>
+        <tr><td>온나라</td><td>기관 승인</td><td>내부</td></tr>
+        <tr><td>국민신문고</td><td>기관 승인</td><td>협의</td></tr>
+      </tbody></table>
+      <div class="cod"><div class="cod-lb">FIRST MISSION</div><div class="cod-main">data.go.kr 가입 · 키 1개 · 3종 첫 호출</div><p>오늘의 첫 미션. 나머지 5개는 필요해질 때 추가.</p></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">08 · API·MCP 기반 멀티 에이전트 아키텍처 기획 및 구축</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">010 / 032</span></div></div>
+</div></div>
+
+<!-- 11 공공 API 호출 예시 코드 -->
+<div class="stage"><div class="slide" data-title="Public API Code">
+  <div class="hbar"><div class="hbar-l">MODULE 08 · UNIT 02 · PUBLIC API · CODE SAMPLES</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 08</div></div>
+  <div class="hl"><div class="hl-kicker">UNIT 02 · 공공 API 호출 예시 · LECTURE 08-A-3b · 7MIN</div><div class="hl-title">공공 API 실행 예시</div><div class="hl-sub">공공 API 3종의 최소 실행 코드. 키만 바꾸면 바로 돈다. 에이전트에 그대로 넘겨 "이 함수를 내 부서에 맞게 바꿔줘"라고 요청하면 된다.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col3">
+    <div class="col">
+      <div class="sh"><span class="sh-n">01 · 기상청</span><span class="sh-t">초단기 실황</span></div><div class="sh-line"></div>
+      <div class="bth">[실습] 서울 강남 현재 기온·강수</div>
+      <div class="cblk"><span class="cm"># 기상청 초단기 실황</span>
+<span class="kw">import</span> requests, os, datetime <span class="kw">as</span> dt
+<span class="kw">from</span> dotenv <span class="kw">import</span> load_dotenv
+load_dotenv()
+
+now = dt.datetime.now()
+base_date = now.strftime("%Y%m%d")
+base_time = now.strftime("%H00")
+
+url = "https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtNcst"
+params = {
+  "serviceKey": os.getenv("DATA_GO_KR"),
+  "dataType": "JSON",
+  "numOfRows": 10,
+  "pageNo": 1,
+  "base_date": base_date,
+  "base_time": base_time,
+  "nx": 61, "ny": 126,  <span class="cm"># 강남</span>
+}
+r = requests.get(url, params=params, timeout=10)
+items = r.json()["response"]["body"]["items"]["item"]
+<span class="kw">for</span> it <span class="kw">in</span> items:
+  <span class="kw">print</span>(it["category"], it["obsrValue"])</div>
+      <div class="co"><div class="co-lb">TIP</div><div class="co-main">좌표 nx·ny는 기상청 격자표 참조</div><p>서울·부산·대구 등 주요 도시 격자를 사전에 표로 확보.</p></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">02 · 국가법령</span><span class="sh-t">법령 본문 조회</span></div><div class="sh-line"></div>
+      <div class="bth">[실습] "정보공개법" 본문 가져오기</div>
+      <div class="cblk"><span class="cm"># 국가법령정보 API</span>
+<span class="kw">import</span> requests
+
+url = "https://www.law.go.kr/DRF/lawService.do"
+params = {
+  "OC": "yourEmail",   <span class="cm"># 이메일 아이디</span>
+  "target": "law",
+  "type": "JSON",
+  "MST": "237466",     <span class="cm"># 정보공개법</span>
+}
+r = requests.get(url, params=params, timeout=10)
+data = r.json()
+
+<span class="cm"># 조문 배열 추출</span>
+law = data["법령"]["조문"]["조문단위"]
+<span class="kw">for</span> art <span class="kw">in</span> law[:5]:
+  <span class="kw">print</span>(art["조문번호"],
+        art.get("조문내용", "")[:80])</div>
+      <div class="pit"><div class="pit-lb">PITFALL</div><div class="pit-h">▸ MST 법령 ID 관리</div><div class="pit-d">자주 쓰는 법령 ID는 부서 위키에 표로. 에이전트가 추측하지 않도록.</div></div>
+      <div class="co"><div class="co-lb">응용</div><div class="co-main">조문 → 임베딩 → RAG 인덱스</div><p>7차시 RAG 파이프라인의 원재료. 법령 개정일을 태그로 관리하면 버전 관리까지.</p></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">03 · KOSIS</span><span class="sh-t">통계 시계열</span></div><div class="sh-line"></div>
+      <div class="bth">[실습] 2026년 월별 출생아 수</div>
+      <div class="cblk"><span class="cm"># KOSIS 통계 API</span>
+url = "https://kosis.kr/openapi/Param/statisticsParameterData.do"
+params = {
+  "method": "getList",
+  "apiKey": os.getenv("KOSIS_KEY"),
+  "itmId": "T10+",
+  "objL1": "ALL",
+  "format": "json",
+  "jsonVD": "Y",
+  "prdSe": "M",         <span class="cm"># 월별</span>
+  "startPrdDe": "202601",
+  "endPrdDe": "202612",
+  "orgId": "101",
+  "tblId": "DT_1B81A15",  <span class="cm"># 출생·사망</span>
+}
+r = requests.get(url, params=params, timeout=10).json()
+
+<span class="kw">import</span> pandas <span class="kw">as</span> pd
+df = pd.DataFrame(r)
+<span class="kw">print</span>(df[["PRD_DE","DT"]].head())</div>
+      <div class="cod"><div class="cod-lb">AGENT 위임 패턴</div><div class="cod-main">"이 코드를 우리 부서 통계로 바꿔줘"</div><p>세 샘플 모두 에이전트에게 <strong>그대로 던지는 것이 빠르다</strong>. 거점리더는 tblId·nx·MST만 결정.</p></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">08 · API·MCP 기반 멀티 에이전트 아키텍처 기획 및 구축</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">011 / 032</span></div></div>
+</div></div>
+
+<!-- 12 공공 API 조합 사례 -->
+<div class="stage"><div class="slide" data-title="Public API Combo">
+  <div class="hbar"><div class="hbar-l">MODULE 08 · UNIT 02 · PUBLIC API · COMBOS</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 08</div></div>
+  <div class="hl"><div class="hl-kicker">UNIT 02 · 공공 API 조합 사례 · LECTURE 08-A-3c · 6MIN</div><div class="hl-title">공공 API 조합 사례 3종</div><div class="hl-sub">단일 API는 재료일 뿐. 둘 이상을 조합하면 부서가 즉시 체감하는 기능이 된다. 3가지 공공 콤보를 예시로 설계한다.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col3">
+    <div class="col">
+      <div class="sh"><span class="sh-n">COMBO 01</span><span class="sh-t">재난 안내 에이전트</span></div><div class="sh-line"></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">기상 + 법령</span></div><div class="bth">폭염·호우 예보 → 해당 조례·매뉴얼 자동 안내</div><p class="bt">기상청 API에서 <strong>특보 키워드</strong> 감지 → 법령 API로 "재난안전법" 관련 조문 검색 → 담당 부서 매뉴얼 요약. <strong>매주 여름 반복되는 업무</strong>를 30초로.</p></div>
+      <div class="cblk"><span class="cm"># 의사 코드</span>
+warn = 기상청.실황(지역)
+<span class="kw">if</span> warn["특보"]:
+  법 = 법령API.검색("재난안전")
+  매뉴얼 = RAG.검색(warn["특보"])
+  알림 = LLM.요약(warn, 법, 매뉴얼)
+  Slack.post(알림)</div>
+      <div class="dstrip"><div class="ds-c"><div class="ds-a">TRIGGER</div><div class="ds-n">매시</div><div class="ds-d">특보 폴링</div></div><div class="ds-c"><div class="ds-a">LATENCY</div><div class="ds-n">30s</div><div class="ds-d">탐지→발송</div></div><div class="ds-c"><div class="ds-a">CHANNEL</div><div class="ds-n">Slack</div><div class="ds-d">담당 부서방</div></div></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">COMBO 02</span><span class="sh-t">민원 지능 라우팅</span></div><div class="sh-line"></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">민원 + 주소 + 법령</span></div><div class="bth">민원 원문 → 관할구 매핑 → 조례 인용 응대안</div><p class="bt">국민신문고 API에서 신규 민원 수신 → 브이월드로 <strong>주소→관할구</strong> 변환 → 해당 구 조례 검색 → 응대 초안. 부서 간 떠넘기기 축소.</p></div>
+      <div class="cod"><div class="cod-lb">효과</div><div class="cod-main">평균 처리 시간 3일 → 당일 초안</div><p>사람이 <strong>초안 검토·결재</strong>만. 감사 근거로 모든 조회 로그 저장.</p></div>
+      <div class="pit"><div class="pit-lb">주의</div><div class="pit-h">▸ 개인정보 마스킹 필수</div><div class="pit-d">민원인 이름·전화번호는 에이전트에 넘기기 전에 치환. 로그도 마스킹본으로.</div></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">COMBO 03</span><span class="sh-t">월말 정책 보고서</span></div><div class="sh-line"></div>
+      <div class="icard dark"><div class="icard-top"><span class="icard-lb">KOSIS + 법령 + 내부 DB</span></div><div class="bth">월말 · 통계 집계 + 법령 변경 + 부서 실적 → HWP</div><p class="bt">매월 말일 <strong>자동 트리거</strong>. KOSIS에서 담당 지표 시계열 → 법령 API로 해당 월 개정 추적 → 부서 DB에서 실적 집계 → HWP 보고서 초안. 결재 큐에 자동 투입.</p></div>
+      <div class="dstrip"><div class="ds-c"><div class="ds-a">HUMAN</div><div class="ds-n">6h</div><div class="ds-d">기존 수작업</div></div><div class="ds-c"><div class="ds-a">AGENT</div><div class="ds-n">8m</div><div class="ds-d">자동 생성</div></div><div class="ds-c"><div class="ds-a">REVIEW</div><div class="ds-n">30m</div><div class="ds-d">사람 검수</div></div></div>
+      <div class="co"><div class="co-lb">핵심</div><div class="co-main">"자동 생성 + 사람 검수" 패턴</div><p>모든 콤보의 공통 구조. 에이전트가 99% 만들고, 사람이 최종 승인.</p></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">08 · API·MCP 기반 멀티 에이전트 아키텍처 기획 및 구축</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">012 / 032</span></div></div>
+</div></div>
+
+<!-- 13 UNIT 03 · MCP 개념 -->
+<div class="stage"><div class="slide" data-title="MCP Concept">
+  <div class="hbar"><div class="hbar-l">MODULE 08 · UNIT 03 · MCP · STANDARD OUTLET</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 08</div></div>
+  <div class="hl"><div class="hl-kicker">UNIT 03 · MCP 개념 · LECTURE 08-B-1 · 8MIN</div><div class="hl-title">MCP의 개념과 역할</div><div class="hl-sub">API는 각자 다른 소켓, MCP는 모든 에이전트가 알아듣는 한 규격. 이 차이가 생태계를 바꾼다.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col2">
+    <div class="col">
+      <div class="sh"><span class="sh-n">WHY MCP</span><span class="sh-t">API와의 차이</span></div><div class="sh-line"></div>
+      <div class="bth">"우리 에이전트만의 도구"가 아니라 "모두의 도구"</div>
+      <p class="bt">기존: Gmail·Slack·Notion 각각을 쓰려면 에이전트마다 개별 코드. <strong>MCP(Model Context Protocol)</strong>: 도구 쪽에서 MCP 서버를 한 번 만들면 <strong>모든 MCP 지원 에이전트</strong>(Claude·Cursor·Antigravity·Copilot·Continue)가 동일하게 사용.</p>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">HOST</span><span class="icard-sess">에이전트 앱</span></div><div class="bth">Claude Desktop · Cursor · Antigravity</div><p class="bt">MCP를 소비하는 쪽. 사용자는 여기에 설정 한 줄만 추가.</p></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">CLIENT</span><span class="icard-sess">연결부</span></div><div class="bth">Host 안에 내장된 MCP 프로토콜 처리기</div><p class="bt">사용자 눈에 보이지 않음. Host 업데이트에 따라 기능이 늘어난다.</p></div>
+      <div class="icard dark"><div class="icard-top"><span class="icard-lb">SERVER</span><span class="icard-sess">도구 제공자</span></div><div class="bth">tools · resources · prompts 세 가지를 노출</div><p class="bt">Gmail·Slack·내부 DB·파일시스템을 에이전트에 열어준다. <strong>거점리더가 만들거나 시킬 수 있는 것은 바로 이 Server.</strong></p></div>
+      <div class="co"><div class="co-lb">KEY TAKEAWAY</div><div class="co-main">도구 개발 1번, 에이전트 생태계 전체가 사용</div><p>부서 내부 MCP 하나가 수십 명의 에이전트에 동시에 연결된다.</p></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">HISTORY</span><span class="sh-t">2024 → 2026</span></div><div class="sh-line"></div>
+      <div class="bth">콘센트 표준이 되자 가전이 폭발한 역사와 같다</div>
+      <p class="bt">2024.11 Anthropic 제안 → 2025년 빅테크 전체 채택 → 2026년 <strong>기본 AI 생태계 표준</strong>. 공공 부문은 표준 채택 후행 특성상 <strong>지금이 진입 적기.</strong></p>
+      <div class="dstrip"><div class="ds-c"><div class="ds-a">PROPOSE</div><div class="ds-n">2024.11</div><div class="ds-d">Anthropic 공개</div></div><div class="ds-c"><div class="ds-a">ADOPT</div><div class="ds-n">2025</div><div class="ds-d">Google·OpenAI·MS</div></div><div class="ds-c"><div class="ds-a">STANDARD</div><div class="ds-n">2026</div><div class="ds-d">생태계 기본</div></div></div>
+      <div class="cblk"><span class="cm"># MCP 서버의 도구 노출 예</span>
+<span class="kw">from</span> mcp.server <span class="kw">import</span> Server
+app = Server("dept-tools")
+
+<span class="kw">@app.tool</span>()
+<span class="kw">async def</span> search_민원(keyword: str) -&gt; list:
+  """부서 민원 DB에서 키워드 검색"""
+  <span class="kw">return</span> db.query(keyword)
+
+<span class="kw">@app.tool</span>()
+<span class="kw">async def</span> draft_회신(민원id: int) -&gt; str:
+  """민원 ID로 회신 초안 생성"""
+  <span class="kw">return</span> make_reply(민원id)</div>
+      <div class="pit"><div class="pit-lb">MCP 오해 3가지</div><div class="pit-h">▸ "새 프로그래밍 언어다"</div><div class="pit-d">아니다. HTTP·JSON처럼 통신 규약.</div><div class="pit-h">▸ "Claude 전용이다"</div><div class="pit-d">아니다. Cursor·Antigravity·OpenAI도 채택.</div><div class="pit-h">▸ "MCP 없으면 에이전트가 아니다"</div><div class="pit-d">선택 사항. 다만 표준 이점이 크다.</div></div>
+      <div class="quote"><div class="quote-src">SOURCE · ANTHROPIC · MCP 발표</div><div class="quote-q">"에이전트가 쓸 도구를 만드는 공통 표준이 필요했다."</div><div class="quote-a">— MCP 최초 공개</div></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">08 · API·MCP 기반 멀티 에이전트 아키텍처 기획 및 구축</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">013 / 032</span></div></div>
+</div></div>
+
+<!-- 14 MCP 서버 구축 — 부서 자원 노출 -->
+<div class="stage"><div class="slide" data-title="MCP Build Dept">
+  <div class="hbar"><div class="hbar-l">MODULE 08 · UNIT 03 · MCP · DEPT RESOURCE EXPOSURE</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 08</div></div>
+  <div class="hl"><div class="hl-kicker">UNIT 03 · 부서 MCP 서버 구축 · LECTURE 08-B-1b · 7MIN</div><div class="hl-title">부서 MCP 서버 설계</div><div class="hl-sub">MCP 서버를 직접 짜지 않는다. "어떤 자원을, 어떤 권한으로, 어떤 도구 이름으로" 노출할지 설계서 1장이 거점리더 산출물.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col2w">
+    <div class="col">
+      <div class="sh"><span class="sh-n">SPEC</span><span class="sh-t">부서 MCP 설계서 양식</span></div><div class="sh-line"></div>
+      <div class="bth">[실습예시] 민원 분석 MCP 서버 설계서</div>
+      <div class="cblk"><span class="cm"># 부서 MCP 설계서 · 1p</span>
+
+## 목적
+부서 민원 DB·응대 이력을 에이전트가
+안전하게 조회·요약할 수 있도록 노출.
+
+## 도구 (tools)
+1. list_recent(days:int) -&gt; list
+   최근 N일 접수 민원 요약 리스트
+2. search(keyword:str) -&gt; list
+   본문·제목 키워드 검색
+3. get_detail(id:int) -&gt; dict
+   민원 1건 상세 (개인정보 마스킹)
+4. list_similar(id:int) -&gt; list
+   유사 과거 민원 상위 5건
+5. draft_reply(id:int) -&gt; str
+   응대안 초안 · 조례 근거 자동 인용
+
+## 리소스 (resources)
+- manual://부서매뉴얼
+- law://관할구조례
+
+## 스택
+- Python 3.11 · mcp SDK
+- SQLite (./data/민원.db · 마스킹본)
+
+## 권한·보안
+- tools 실행은 로컬 PC에서만
+- 개인정보 필드 8종 자동 마스킹
+- 실행 로그 ./logs/ · 90일 보관
+
+## 검수 체크리스트
+[ ] Claude Desktop에 설정 1줄 추가
+[ ] "오늘 민원 요약" 질문 성공
+[ ] 개인정보 노출 테스트 3건 모두 마스킹
+[ ] 오류 시 서킷브레이커 동작
+[ ] 동료 1명이 설정해 동일 동작</div>
+      <div class="pit"><div class="pit-lb">SPEC 작성 PITFALL</div><div class="pit-h">▸ 도구 10개를 한 번에 노출</div><div class="pit-d">초안은 5개로 고정. 사용 로그를 보며 추가·축소. 과잉 노출은 감사 부담만 키운다.</div></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">PROCESS</span><span class="sh-t">거점리더의 5단계</span></div><div class="sh-line"></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">STEP 01</span></div><div class="bth">자원 목록화 — "우리 부서가 가진 것"</div><p class="bt">DB·문서·API·사용 기록을 목록으로. <strong>민감도 등급</strong>을 함께.</p></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">STEP 02</span></div><div class="bth">도구 5개 선정 — "자주 쓸 것만"</div><p class="bt">욕심내지 않는다. 일단 5개로 시작. 사용 후 부족한 것만 추가.</p></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">STEP 03</span></div><div class="bth">설계서 1장 작성</div><p class="bt">왼쪽 예시 양식 그대로. 에이전트에 넘길 수 있는 수준의 명세.</p></div>
+      <div class="icard dark"><div class="icard-top"><span class="icard-lb">STEP 04 ★</span></div><div class="bth">Claude Code에 구현 위임</div><p class="bt">설계서를 그대로 붙여넣고 "이 설계서대로 MCP 서버를 Python으로 만들어줘. SDK는 modelcontextprotocol/python-sdk 사용". <strong>30분 내 1차 동작.</strong></p></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">STEP 05</span></div><div class="bth">검수 체크리스트 통과</div><p class="bt">동료 1인 재현 성공이 "완료"의 최소 기준.</p></div>
+      <div class="co"><div class="co-lb">KEY TAKEAWAY</div><div class="co-main">거점리더의 산출물은 코드가 아니라 <strong>설계서 + 검수 기준</strong></div><p>구현은 에이전트에게, 판단·검수는 사람에게.</p></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">08 · API·MCP 기반 멀티 에이전트 아키텍처 기획 및 구축</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">014 / 032</span></div></div>
+</div></div>
+
+<!-- 15 MCP 카탈로그 — smithery.ai 탐색 -->
+<div class="stage"><div class="slide" data-title="MCP Catalog Tour">
+  <div class="hbar"><div class="hbar-l">MODULE 08 · UNIT 03 · MCP CATALOG · SMITHERY · OFFICIAL</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 08</div></div>
+  <div class="hl"><div class="hl-kicker">UNIT 03 · MCP 카탈로그 투어 · LECTURE 08-B-2a · 6MIN</div><div class="hl-title">MCP 카탈로그 탐색</div><div class="hl-sub">이미 공개된 MCP 서버 수백 개. 만들기 전에 찾는다. Smithery는 MCP의 "앱스토어" 역할.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col3">
+    <div class="col">
+      <div class="sh"><span class="sh-n">OFFICIAL</span><span class="sh-t">공식 레퍼런스</span></div><div class="sh-line"></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">modelcontextprotocol.io</span></div><div class="bth">Anthropic 공식 · 사양·레퍼런스 서버</div><p class="bt">"Reference Servers" 섹션에 <strong>filesystem·fetch·git·github·gdrive·memory·puppeteer·sqlite</strong> 등 30+ 공식 서버. 문서·예시 품질이 가장 높다.</p></div>
+      <table class="mtbl"><thead><tr><th>서버</th><th>용도</th></tr></thead><tbody>
+        <tr><td>filesystem</td><td>로컬 파일 접근</td></tr>
+        <tr><td>fetch</td><td>웹페이지 가져오기</td></tr>
+        <tr><td>git / github</td><td>리포 · 이슈</td></tr>
+        <tr><td>gdrive</td><td>드라이브 문서</td></tr>
+        <tr><td>sqlite</td><td>로컬 DB 쿼리</td></tr>
+        <tr><td>memory</td><td>영구 메모</td></tr>
+        <tr><td>puppeteer</td><td>브라우저 자동화</td></tr>
+      </tbody></table>
+      <div class="co"><div class="co-lb">FIT</div><div class="co-main">입문자는 공식만 먼저</div><p>품질·보안 확신 있음. 2~3개 설정해 습관 들이기.</p></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">SMITHERY</span><span class="sh-t">smithery.ai</span></div><div class="sh-line"></div>
+      <div class="icard dark"><div class="icard-top"><span class="icard-lb">SMITHERY ★</span><span class="icard-sess">MCP 앱스토어</span></div><div class="bth">1,000+ MCP 서버 카탈로그 · 원클릭 설치</div><p class="bt">카테고리·인기순 탐색 + <strong>설치 명령어 자동 생성</strong>. Claude Desktop·Cursor·Windsurf 설정도 복사 가능. 공공 업무와 겹치는 서버가 수십 종.</p></div>
+      <table class="mtbl"><thead><tr><th>카테고리</th><th>예시</th></tr></thead><tbody>
+        <tr><td>Productivity</td><td>Notion·Linear·Jira</td></tr>
+        <tr><td>Communication</td><td>Slack·Discord·Gmail</td></tr>
+        <tr><td>Data</td><td>Postgres·Airtable·Sheets</td></tr>
+        <tr><td>Web</td><td>Brave Search·Firecrawl</td></tr>
+        <tr><td>DevOps</td><td>Docker·Kubernetes·AWS</td></tr>
+      </tbody></table>
+      <div class="cod"><div class="cod-lb">탐색 미션</div><div class="cod-main">내 업무에 쓸 MCP 1개를 찾아와라</div><p>Smithery에서 카테고리 필터 → 설치 → 첫 호출 성공까지 20분.</p></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">COMMUNITY</span><span class="sh-t">mcp.so · GitHub</span></div><div class="sh-line"></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">mcp.so · GitHub awesome-mcp</span></div><div class="bth">커뮤니티 수집 · 신규 서버 발견</div><p class="bt">2026 기준 공식 30+ · 커뮤니티 1,000+ · <strong>월 20% 신규 추가</strong>. GitHub의 awesome-mcp 리스트가 가장 빠르게 업데이트.</p></div>
+      <div class="dstrip"><div class="ds-c"><div class="ds-a">OFFICIAL</div><div class="ds-n">30+</div><div class="ds-d">Anthropic·파트너</div></div><div class="ds-c"><div class="ds-a">COMMUNITY</div><div class="ds-n">1,000+</div><div class="ds-d">2026 기준</div></div><div class="ds-c"><div class="ds-a">GROWTH</div><div class="ds-n">20%/월</div><div class="ds-d">신규 추가</div></div></div>
+      <div class="pit"><div class="pit-lb">PITFALL · 커뮤니티 서버</div><div class="pit-h">▸ 개발자 미상·유지보수 불확실</div><div class="pit-d">공공 업무에는 공식·대형 커뮤니티만. 코드 소스 확인 후 내부 fork 권장.</div><div class="pit-h">▸ env·권한 과도 요구</div><div class="pit-d">"모든 디렉토리 접근"·"전체 OAuth"는 경계. 최소 권한 설정.</div></div>
+      <div class="quote"><div class="quote-src">SOURCE · Smithery · 2026</div><div class="quote-q">"MCP 서버를 찾는 건 쉽다. 어려운 건 우리 부서에 맞게 좁히는 것."</div><div class="quote-a">— 카탈로그 큐레이션 원칙</div></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">08 · API·MCP 기반 멀티 에이전트 아키텍처 기획 및 구축</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">015 / 032</span></div></div>
+</div></div>
+
+<!-- 16 MCP 직접 구축 — Node · Python 샘플 -->
+<div class="stage"><div class="slide" data-title="MCP Build Samples">
+  <div class="hbar"><div class="hbar-l">MODULE 08 · UNIT 03 · MCP · NODE · PYTHON SAMPLES</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 08</div></div>
+  <div class="hl"><div class="hl-kicker">UNIT 03 · MCP 직접 구축 · LECTURE 08-B-2b · 8MIN</div><div class="hl-title">MCP 서버 직접 구축</div><div class="hl-sub">에이전트에 넘길 때 "이 샘플 구조로 짜줘"라고 하면 속도가 4배. 거점리더는 이 스켈레톤을 기억하고 있으면 충분.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col3">
+    <div class="col">
+      <div class="sh"><span class="sh-n">PYTHON · 서버</span><span class="sh-t">mcp 공식 SDK</span></div><div class="sh-line"></div>
+      <div class="bth">[실습] 부서 민원 검색 MCP 서버 30줄</div>
+      <div class="cblk"><span class="cm"># server.py · Python MCP</span>
+<span class="kw">from</span> mcp.server.fastmcp <span class="kw">import</span> FastMCP
+<span class="kw">import</span> sqlite3
+
+app = FastMCP("dept-민원")
+DB = "./data/민원.db"
+
+<span class="kw">@app.tool</span>()
+<span class="kw">def</span> search(keyword: str, n: int = 5) -&gt; list:
+  """민원 키워드 검색"""
+  con = sqlite3.connect(DB)
+  rows = con.execute(
+    "SELECT id,title,summary FROM c "
+    "WHERE title LIKE ? "
+    "ORDER BY created DESC LIMIT ?",
+    (<span class="st">f"%{keyword}%"</span>, n)
+  ).fetchall()
+  con.close()
+  <span class="kw">return</span> [dict(id=r[0], title=r[1],
+              summary=r[2]) <span class="kw">for</span> r <span class="kw">in</span> rows]
+
+<span class="kw">@app.tool</span>()
+<span class="kw">def</span> recent(days: int = 7) -&gt; list:
+  """최근 N일 민원"""
+  <span class="kw">return</span> query_recent(days)
+
+<span class="kw">if</span> __name__ == "__main__":
+  app.run()</div>
+      <div class="co"><div class="co-lb">실행</div><div class="co-main">python server.py</div><p>로컬 stdio로 구동. Host가 자식 프로세스로 띄운다.</p></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">NODE · 서버</span><span class="sh-t">typescript-sdk</span></div><div class="sh-line"></div>
+      <div class="bth">[실습] 로컬 파일 인덱스 MCP</div>
+      <div class="cblk"><span class="cm">// server.ts · Node MCP</span>
+<span class="kw">import</span> { Server } <span class="kw">from</span> "@modelcontextprotocol/sdk/server";
+<span class="kw">import</span> fs <span class="kw">from</span> "node:fs/promises";
+
+<span class="kw">const</span> app = <span class="kw">new</span> Server({
+  name: "dept-files",
+  version: "0.1.0"
+});
+
+app.tool(
+  "list_docs",
+  { dir: <span class="kw">"string"</span> },
+  <span class="kw">async</span> ({ dir }) =&gt; {
+    <span class="kw">const</span> items = <span class="kw">await</span> fs.readdir(dir);
+    <span class="kw">return</span> { files: items };
+  }
+);
+
+app.tool(
+  "read_doc",
+  { path: <span class="kw">"string"</span> },
+  <span class="kw">async</span> ({ path }) =&gt; {
+    <span class="kw">const</span> body = <span class="kw">await</span> fs.readFile(
+      path, "utf8"
+    );
+    <span class="kw">return</span> { content: body };
+  }
+);
+
+app.run();</div>
+      <div class="pit"><div class="pit-lb">PITFALL</div><div class="pit-h">▸ 경로 검증 없이 read</div><div class="pit-d">상위 디렉토리 탈출(../) 방어. 허용 루트 지정.</div></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">CONNECT</span><span class="sh-t">Claude Desktop 설정</span></div><div class="sh-line"></div>
+      <div class="bth">claude_desktop_config.json 한 블록</div>
+      <div class="cblk"><span class="cm">// claude_desktop_config.json</span>
+{
+  "mcpServers": {
+    "dept-민원": {
+      "command": "python",
+      "args": [
+        "/Users/me/mcp/server.py"
+      ]
+    },
+    "dept-files": {
+      "command": "node",
+      "args": [
+        "/Users/me/mcp/server.js",
+        "/Users/me/부서문서"
+      ]
+    },
+    "filesystem": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-filesystem",
+        "/Users/me/work"
+      ]
+    }
+  }
+}</div>
+      <div class="cod"><div class="cod-lb">확인</div><div class="cod-main">저장 → Claude Desktop 재시작 → 🔌 아이콘</div><p>채팅창에 "민원 최근 7일 요약"이라 입력하면 dept-민원 MCP가 자동 호출된다.</p></div>
+      <div class="dstrip"><div class="ds-c"><div class="ds-a">LINES</div><div class="ds-n">30</div><div class="ds-d">서버 코드량</div></div><div class="ds-c"><div class="ds-a">CONFIG</div><div class="ds-n">5</div><div class="ds-d">json 블록 줄</div></div><div class="ds-c"><div class="ds-a">RESTART</div><div class="ds-n">1</div><div class="ds-d">Host 재시작</div></div></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">08 · API·MCP 기반 멀티 에이전트 아키텍처 기획 및 구축</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">016 / 032</span></div></div>
+</div></div>
+
+<!-- 17 MCP vs A2A · 멀티 에이전트 비교 -->
+<div class="stage"><div class="slide" data-title="MCP vs A2A">
+  <div class="hbar"><div class="hbar-l">MODULE 08 · UNIT 03 · MCP vs A2A · MULTI-AGENT</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 08</div></div>
+  <div class="hl"><div class="hl-kicker">UNIT 03 · MCP vs A2A 비교 · LECTURE 08-B-3 · 7MIN</div><div class="hl-title">MCP와 A2A 비교</div><div class="hl-sub">멀티 에이전트 시대의 두 축. 하나는 "도구 사용", 다른 하나는 "협업 통신". 혼동하지 않는다.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col3">
+    <div class="col">
+      <div class="sh"><span class="sh-n">01 · MCP</span><span class="sh-t">도구와의 소통</span></div><div class="sh-line"></div>
+      <div class="bth">한 에이전트가 여러 MCP 서버를 도구로 사용</div>
+      <p class="bt">에이전트는 <strong>주체</strong>, 도구는 <strong>객체</strong>. 호출 방향이 항상 에이전트 → 서버. 응답은 데이터·실행 결과.</p>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">AGENT</span><span class="icard-sess">한 명</span></div><div class="bth">"나에게 필요한 도구를 쓴다"</div></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">MCP SERVER</span><span class="icard-sess">여러 도구</span></div><div class="bth">파일·DB·API·SaaS 등</div></div>
+      <div class="fig">FIGURE 03 · MCP · 주체→객체 단방향</div>
+      <div class="co"><div class="co-lb">KEY</div><div class="co-main">"나"와 "도구"의 관계</div><p>MCP는 에이전트가 자신의 능력을 <strong>확장</strong>하는 규약.</p></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">02 · A2A</span><span class="sh-t">에이전트 간 협업</span></div><div class="sh-line"></div>
+      <div class="bth">에이전트가 동료 에이전트에 작업을 위임·보고</div>
+      <p class="bt">Google이 제안한 <strong>A2A(Agent-to-Agent)</strong> 프로토콜과 Anthropic의 sub-agent가 각각 접근 방식. 공통 목적: <strong>역할 분담 · 병렬 실행 · 전문화.</strong></p>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">MAIN</span></div><div class="bth">오케스트레이터 · 접수·분배·통합</div></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">SUB · 분석</span></div><div class="bth">전문 영역 1</div></div>
+      <div class="icard dark"><div class="icard-top"><span class="icard-lb">SUB · 응대</span></div><div class="bth">전문 영역 2</div></div>
+      <div class="fig">FIGURE 04 · A2A · 동료↔동료 양방향</div>
+      <div class="co"><div class="co-lb">KEY</div><div class="co-main">"동료"에게 "일"을 나눈다</div></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">03 · COMPARE</span><span class="sh-t">혼동하지 않는다</span></div><div class="sh-line"></div>
+      <table class="mtbl"><thead><tr><th>AXIS</th><th>MCP</th><th>A2A</th></tr></thead><tbody>
+        <tr><td>관계</td><td>주인-도구</td><td>동료-동료</td></tr>
+        <tr><td>방향</td><td>단방향</td><td>양방향</td></tr>
+        <tr><td>제공자</td><td>서비스·시스템</td><td>다른 에이전트</td></tr>
+        <tr><td>사용</td><td>도구 호출</td><td>위임·보고</td></tr>
+        <tr><td>메시지</td><td>함수 호출</td><td>task/message</td></tr>
+        <tr><td>공공 우선</td><td>부서 DB·API 노출</td><td>역할별 전문화</td></tr>
+      </tbody></table>
+      <div class="cod"><div class="cod-lb">실무 조합</div><div class="cod-main">A2A가 큰 그림 · MCP가 세부 실행</div><p>오케스트레이터(MAIN)가 A2A로 서브에 위임 → 서브는 자신의 MCP 도구로 실행. 두 규약이 <strong>서로 보완.</strong></p></div>
+      <div class="pit"><div class="pit-lb">PITFALL</div><div class="pit-h">▸ 두 규약을 경쟁으로 이해</div><div class="pit-d">MCP는 "도구 사용 표준", A2A는 "에이전트 협업 표준". 층위가 다르다.</div></div>
+      <div class="quote"><div class="quote-src">SOURCE · 멀티 에이전트 실전</div><div class="quote-q">"MCP 없이는 도구가 파편화, A2A 없이는 에이전트가 고립된다."</div><div class="quote-a">— 2026 아키텍처 원칙</div></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">08 · API·MCP 기반 멀티 에이전트 아키텍처 기획 및 구축</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">017 / 032</span></div></div>
+</div></div>
+
+<!-- 18 멀티 에이전트 역할 분담 -->
+<div class="stage"><div class="slide" data-title="Multi Agent Roles">
+  <div class="hbar"><div class="hbar-l">MODULE 08 · UNIT 03 · MULTI-AGENT · PLANNER · EXECUTOR · VERIFIER · REPORTER</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 08</div></div>
+  <div class="hl"><div class="hl-kicker">UNIT 03 · 멀티 에이전트 역할 분담 · LECTURE 08-B-3b · 6MIN</div><div class="hl-title">멀티 에이전트 역할 분담</div><div class="hl-sub">팀 프로젝트와 똑같다. 역할이 명확해야 에이전트 팀도 돌아간다. 공공 업무에 가장 자주 쓰이는 네 역할을 표준화.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col2w">
+    <div class="col">
+      <div class="sh"><span class="sh-n">ROLES</span><span class="sh-t">4역 상세</span></div><div class="sh-line"></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">PLANNER · 기획자</span><span class="icard-sess">Opus·Sonnet</span></div><div class="bth">목표 → 단계 · 순서 · 검증 기준</div><p class="bt">사용자 요청을 받아 작업을 분해한다. <strong>"무엇을 만들고 어떻게 검증하는가"</strong>를 정한다. 추론 능력이 높은 모델이 유리.</p></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">EXECUTOR · 실행자</span><span class="icard-sess">Sonnet·Haiku</span></div><div class="bth">도구 호출 · 실제 작업 수행</div><p class="bt">MCP 도구·API·코드를 실제로 실행. <strong>속도·안정성</strong>이 우선. Haiku급 경량 모델도 충분한 경우가 많다.</p></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">VERIFIER · 검증자</span><span class="icard-sess">별도 모델</span></div><div class="bth">결과 검증 · 규정 적합 · 개인정보</div><p class="bt">Executor 결과를 <strong>다른 모델</strong>이 검증한다. 같은 모델로 자기 검증하면 놓치기 쉬운 실수를 잡아낸다.</p></div>
+      <div class="icard dark"><div class="icard-top"><span class="icard-lb">REPORTER · 보고자</span><span class="icard-sess">Haiku·Flash</span></div><div class="bth">사람에게 요약·보고 · 로그</div><p class="bt">최종 결과를 사람 눈높이로 요약. 감사 로그·실행 시간·사용 토큰을 정리. <strong>경량·저렴</strong> 모델이 적합.</p></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">FLOW</span><span class="sh-t">전형적 흐름</span></div><div class="sh-line"></div>
+      <div class="cblk"><span class="cm"># 민원 응대 멀티 에이전트</span>
+
+사용자 → MAIN(Planner)
+  ↓ 계획: 1)분류 2)법령 3)초안 4)검증 5)보고
+
+MAIN → Executor-A (분류)
+  · MCP: 민원DB.search_similar
+  · LLM: 카테고리 판정
+  → 결과 반환
+
+MAIN → Executor-B (법령)
+  · MCP: 법령API.search
+  · LLM: 조문 요약
+  → 결과 반환
+
+MAIN → Executor-C (응대)
+  · 템플릿 + 조문 + 분류
+  · HWP 초안 생성
+  → 결과 반환
+
+MAIN → Verifier
+  · 개인정보 마스킹 확인
+  · 조문 인용 정확성 확인
+  · 톤·공문 규칙 확인
+
+MAIN → Reporter
+  · 사용자에게 3문장 요약
+  · 감사 로그 기록</div>
+      <div class="co"><div class="co-lb">RULE</div><div class="co-main">3~5개면 충분 · 10개 넘으면 설계 오류</div><p>역할 추가 비용은 선형이지만 <strong>조율 비용은 지수</strong>. 4역이 공공 실무의 최적점.</p></div>
+      <div class="pit"><div class="pit-lb">PITFALL · 멀티 에이전트</div><div class="pit-h">▸ 역할 중복 · R&amp;R 모호</div><div class="pit-d">두 에이전트가 같은 일 반복. 설계서에 입력·출력·책임 명시.</div><div class="pit-h">▸ 무한 위임 루프</div><div class="pit-d">Executor가 다시 Planner 호출 → 교착. 최대 깊이 3 제한.</div></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">08 · API·MCP 기반 멀티 에이전트 아키텍처 기획 및 구축</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">018 / 032</span></div></div>
+</div></div>
+
+<!-- 19 HERO · 같은 업무를 두 번 푼다 -->
+<div class="stage"><div class="slide" data-title="Hero Solve Twice">
+  <div class="hbar"><div class="hbar-l">MODULE 08 · PART C · KEY MESSAGE</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 08</div></div>
+  <div class="bd col1"><div class="col hero" style="background:var(--dk);color:var(--on);padding:56px 90px;justify-content:center">
+    <div class="hero-k">PART C · TRANSITION</div>
+    <div class="hero-t">이번엔 같은 업무를<br><span style="color:var(--acc3)">구조로</span> 다시 푼다</div>
+    <div class="hero-s">첫 번째 풀이는 1차시에 손으로 썼던 미션 카드였다. 오늘 두 번째 풀이는 동일한 업무를 <strong style="color:var(--on)">AI 아키텍처 캔버스 6칸</strong>으로 다시 푼다. 손 풀이와 캔버스 풀이 사이의 거리가 당신이 8주 동안 이동한 거리다.</div>
+    <div class="hero-q"><div class="hero-q-q">"재료 창고(1~3차시) → 바이브 코딩(4~5차시) → 에이전트·RAG(6~7차시) → 아키텍처(8차시). 여기까지 왔으면 이제 부서로 돌아갈 준비가 된 것이다."</div><div class="hero-q-a">— 커리큘럼 설계 원칙 · 8주 여정 요약</div></div>
+  </div></div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">08 · API·MCP 기반 멀티 에이전트 아키텍처 기획 및 구축</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">019 / 032</span></div></div>
+</div></div>
+
+<!-- 20 UNIT 04 · AI 아키텍처 캔버스 6셀 소개 -->
+<div class="stage"><div class="slide" data-title="Canvas Six Cells">
+  <div class="hbar"><div class="hbar-l">MODULE 08 · UNIT 04 · AI ARCHITECTURE CANVAS · SIX CELLS</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 08</div></div>
+  <div class="bd col1"><div class="col" style="padding:36px 80px;background:var(--bg);justify-content:center">
+    <div style="font-family:var(--mono);font-size:11px;color:var(--acc);letter-spacing:3px;font-weight:700;margin-bottom:14px">UNIT 04 · 캡스톤 산출물 · LECTURE 08-C-1</div>
+    <div style="font-family:var(--serif);font-weight:700;font-size:42px;line-height:1.18;letter-spacing:-0.02em;color:var(--ink)">아키텍처 캔버스의 여섯 칸</div>
+    <div style="width:60px;height:3px;background:var(--acc);margin:18px 0 14px"></div>
+    <p style="font-size:15px;color:var(--ink2);line-height:1.7;max-width:1340px;font-style:italic">비즈니스 모델 캔버스의 AI 버전. 여섯 칸이 에이전트 시스템의 전체다. 작성 순서는 <strong style="color:var(--ink)">1 · 2 · 5 · 3 · 4 · 6</strong> — 트리거·재료를 먼저, 산출물을 그 다음, 처리·프롬프트·배포는 마지막.</p>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:1fr 1fr;gap:14px;margin-top:20px">
+      <div style="border:1.5px solid var(--ln);background:var(--bg2);padding:18px 22px;position:relative"><div style="font-family:var(--mono);font-size:10.5px;color:var(--acc);letter-spacing:2.5px;font-weight:700">01 · TRIGGER</div><div style="font-family:var(--serif);font-size:22px;color:var(--ink);font-weight:700;margin-top:8px;line-height:1.3">언제 시작되는가</div><div style="font-size:13px;color:var(--ink2);margin-top:8px;line-height:1.65">스케줄(매일 09시) · 메일 수신 · 폴더 변경 · 사용자 요청 · 결재 승인 이벤트</div></div>
+      <div style="border:1.5px solid var(--ln);background:var(--bg2);padding:18px 22px"><div style="font-family:var(--mono);font-size:10.5px;color:var(--acc);letter-spacing:2.5px;font-weight:700">02 · MATERIALS</div><div style="font-family:var(--serif);font-size:22px;color:var(--ink);font-weight:700;margin-top:8px;line-height:1.3">무엇을 재료로 받는가</div><div style="font-size:13px;color:var(--ink2);margin-top:8px;line-height:1.65">파일(PDF·HWP·XLSX) · DB · 공공 API · 사용자 입력 · 과거 RAG 인덱스</div></div>
+      <div style="border:1.5px solid var(--ln);background:var(--dk);color:var(--on);padding:18px 22px;position:relative"><div style="font-family:var(--mono);font-size:10.5px;color:var(--acc3);letter-spacing:2.5px;font-weight:700">03 · PROCESS</div><div style="font-family:var(--serif);font-size:22px;color:var(--on);font-weight:700;margin-top:8px;line-height:1.3">어떻게 처리하는가</div><div style="font-size:13px;color:var(--on2);margin-top:8px;line-height:1.65">LLM 호출 · RAG · 분류 · 변환 · 멀티 에이전트 · 도구 체인</div></div>
+      <div style="border:1.5px solid var(--ln);background:var(--bg2);padding:18px 22px"><div style="font-family:var(--mono);font-size:10.5px;color:var(--acc);letter-spacing:2.5px;font-weight:700">04 · SYSTEM PROMPT</div><div style="font-family:var(--serif);font-size:22px;color:var(--ink);font-weight:700;margin-top:8px;line-height:1.3">에이전트의 역할·톤·제약</div><div style="font-size:13px;color:var(--ink2);margin-top:8px;line-height:1.65">페르소나 · 금칙어 · 검증 규칙 · 출처 인용 포맷 · 응답 길이</div></div>
+      <div style="border:1.5px solid var(--ln);background:var(--bg2);padding:18px 22px"><div style="font-family:var(--mono);font-size:10.5px;color:var(--acc);letter-spacing:2.5px;font-weight:700">05 · OUTPUT</div><div style="font-family:var(--serif);font-size:22px;color:var(--ink);font-weight:700;margin-top:8px;line-height:1.3">무엇을 남기는가</div><div style="font-size:13px;color:var(--ink2);margin-top:8px;line-height:1.65">파일(HWP·XLSX·PDF) · 메일 · Slack · 대시보드 · DB 저장 · 알림</div></div>
+      <div style="border:1.5px solid var(--ln);background:var(--dk);color:var(--on);padding:18px 22px"><div style="font-family:var(--mono);font-size:10.5px;color:var(--acc3);letter-spacing:2.5px;font-weight:700">06 · DEPLOY</div><div style="font-family:var(--serif);font-size:22px;color:var(--on);font-weight:700;margin-top:8px;line-height:1.3">어디서 돌아가는가</div><div style="font-size:13px;color:var(--on2);margin-top:8px;line-height:1.65">로컬 PC · 부서 서버 · 내부망 VM · 클라우드 · 스케줄러 · 감사 로그</div></div>
+    </div>
+  </div></div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">08 · API·MCP 기반 멀티 에이전트 아키텍처 기획 및 구축</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">020 / 032</span></div></div>
+</div></div>
+
+<!-- 21 셀 1 Trigger · 셀 2 Materials -->
+<div class="stage"><div class="slide" data-title="Cell 1 2">
+  <div class="hbar"><div class="hbar-l">MODULE 08 · UNIT 04 · CELL 01 · 02 · TRIGGER · MATERIALS</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 08</div></div>
+  <div class="hl"><div class="hl-kicker">UNIT 04 · 셀 1·2 상세 · LECTURE 08-C-1a · 6MIN</div><div class="hl-title">아키텍처 캔버스 셀 1·2 · 트리거와 재료</div><div class="hl-sub">설계의 출발점. 잘못된 트리거는 "돌아가지 않는 시스템"을, 잘못된 재료는 "엉뚱한 답을 내는 시스템"을 만든다.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col2">
+    <div class="col">
+      <div class="sh"><span class="sh-n">CELL 01 · TRIGGER</span><span class="sh-t">5가지 유형</span></div><div class="sh-line"></div>
+      <div class="bth">트리거는 "자동화가 시작되는 순간"</div>
+      <p class="bt">사람이 매번 버튼을 누르면 자동화가 아니다. 5가지 유형 중 <strong>업무 성격에 맞는 것 하나</strong>를 고른다.</p>
+      <table class="mtbl"><thead><tr><th>유형</th><th>예시</th><th>공공 업무</th></tr></thead><tbody>
+        <tr><td>스케줄</td><td>매일 09시</td><td>일일 브리핑</td></tr>
+        <tr><td>파일 이벤트</td><td>폴더 신규</td><td>민원 PDF 접수</td></tr>
+        <tr><td>메시지 이벤트</td><td>메일 수신</td><td>국민신문고</td></tr>
+        <tr><td>웹훅</td><td>외부 콜백</td><td>결재 승인</td></tr>
+        <tr><td>사람 요청</td><td>슬랙 멘션</td><td>즉석 질의</td></tr>
+      </tbody></table>
+      <div class="co"><div class="co-lb">설계 힌트</div><div class="co-main">"어떤 사건이 이 업무를 불러오는가"</div><p>수작업 흐름을 관찰하면 자연스럽게 보인다. 부서원에게 "이 일 언제 시작하세요?"를 물으면 답이 된다.</p></div>
+      <div class="pit"><div class="pit-lb">PITFALL</div><div class="pit-h">▸ 너무 촘촘한 스케줄</div><div class="pit-d">매 5분 돌면 비용·로그 폭증. 업무 주기 + 여유로.</div></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">CELL 02 · MATERIALS</span><span class="sh-t">4계층</span></div><div class="sh-line"></div>
+      <div class="bth">재료는 "에이전트가 보고 판단하는 모든 것"</div>
+      <p class="bt">파일·DB·API·사용자 입력 네 계층 + <strong>과거 사례 RAG</strong>. 재료의 품질이 결과의 상한선.</p>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">LAYER 1 · FILES</span></div><div class="bth">PDF · HWP · XLSX · 이미지</div><p class="bt">가장 흔한 재료. PyMuPDF·python-docx·pandas로 추출. HWP는 5차시 파이프라인.</p></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">LAYER 2 · DB · API</span></div><div class="bth">내부 DB · 공공 API · SaaS</div><p class="bt">MCP 서버로 노출하는 계층. 실시간·시계열 정보.</p></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">LAYER 3 · INPUT</span></div><div class="bth">사용자 요청 · 폼 입력</div><p class="bt">자연어 질의 · 체크박스 · 드롭다운.</p></div>
+      <div class="icard dark"><div class="icard-top"><span class="icard-lb">LAYER 4 · RAG</span></div><div class="bth">과거 사례·매뉴얼 벡터 인덱스</div><p class="bt">7차시 RAG의 결과물. 비슷한 과거 민원·판례·매뉴얼을 유사도로 가져와 프롬프트에 주입.</p></div>
+      <div class="cod"><div class="cod-lb">설계 질문</div><div class="cod-main">"재료 중 하나가 사라지면 에이전트가 어떻게 되나"</div><p>답할 수 있으면 설계가 탄탄. 못 답하면 재료 의존도 설계가 빠진 것.</p></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">08 · API·MCP 기반 멀티 에이전트 아키텍처 기획 및 구축</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">021 / 032</span></div></div>
+</div></div>
+
+<!-- 22 셀 3 Processing · 셀 4 System Prompt -->
+<div class="stage"><div class="slide" data-title="Cell 3 4">
+  <div class="hbar"><div class="hbar-l">MODULE 08 · UNIT 04 · CELL 03 · 04 · PROCESS · SYSTEM PROMPT</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 08</div></div>
+  <div class="hl"><div class="hl-kicker">UNIT 04 · 셀 3·4 상세 · LECTURE 08-C-1b · 7MIN</div><div class="hl-title">아키텍처 캔버스 셀 3·4 · 처리와 프롬프트</div><div class="hl-sub">시스템의 심장. 여기서 LLM·RAG·멀티 에이전트가 어떻게 엮이는지 결정. 시스템 프롬프트가 에이전트의 인격을 정한다.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col2">
+    <div class="col">
+      <div class="sh"><span class="sh-n">CELL 03 · PROCESS</span><span class="sh-t">처리 파이프라인</span></div><div class="sh-line"></div>
+      <div class="bth">"재료 → 산출물" 사이의 변환 체인</div>
+      <p class="bt">단일 LLM 호출 · RAG 증강 · 멀티 에이전트 · MCP 체인 중 하나 이상을 조합. <strong>가장 단순한 것부터 시도</strong>한 뒤 필요할 때만 복잡도를 올린다.</p>
+      <div class="cblk"><span class="cm"># 처리 파이프라인 의사 코드</span>
+
+<span class="cm">## 패턴 1 · 단일 LLM</span>
+result = LLM(prompt + materials)
+
+<span class="cm">## 패턴 2 · RAG 증강</span>
+hits = vector.search(query, k=5)
+result = LLM(prompt + query + hits)
+
+<span class="cm">## 패턴 3 · 도구 체인</span>
+data1 = mcp.법령.search(q)
+data2 = mcp.DB.similar(q)
+result = LLM(prompt + data1 + data2)
+
+<span class="cm">## 패턴 4 · 멀티 에이전트</span>
+plan = Planner(goal)
+<span class="kw">for</span> step <span class="kw">in</span> plan:
+  Executor.run(step)
+Verifier.check(results)
+Reporter.summarize()</div>
+      <div class="co"><div class="co-lb">선택 기준</div><div class="co-main">"이 업무의 핵심 난점은 무엇인가"</div><p>정보 부족이면 RAG, 반복·규모면 단일 LLM, 전문성 다원이면 멀티 에이전트.</p></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">CELL 04 · SYSTEM PROMPT</span><span class="sh-t">인격·톤·제약</span></div><div class="sh-line"></div>
+      <div class="bth">시스템 프롬프트는 "고정된 계약서"</div>
+      <p class="bt">매번 사용자 프롬프트에 반복해 쓸 내용을 <strong>한 번 고정</strong>. 페르소나·톤·금칙·출력 규칙.</p>
+      <div class="cblk"><span class="cm"># 민원 응대 에이전트 · 시스템 프롬프트</span>
+
+당신은 <strong>공공기관 민원 담당 주무관</strong>이다.
+
+역할:
+- 민원 원문을 읽고 조례·법령 근거로 응대
+- 개인정보(이름·전화·주민번호) 마스킹
+
+톤:
+- 공문서 어투 · "~합니다", "~드립니다"
+- 과도한 격식 지양 · 존중 유지
+
+출력 규칙:
+- 인사 1문단
+- 민원 이해 요약 2~3줄
+- 법령·조례 근거 (조문 번호 명시)
+- 처리 일정 · 담당 부서
+- 추가 문의 안내
+
+제약:
+- 법령에 없는 약속 금지
+- 확정되지 않은 처리 결과 언급 금지
+- 감정적 표현 · 사견 포함 금지</div>
+      <div class="pit"><div class="pit-lb">PITFALL · 시스템 프롬프트</div><div class="pit-h">▸ 너무 길어져 맥락 잡아먹음</div><div class="pit-d">300~800 단어 권장. 2,000 단어 넘으면 주의.</div><div class="pit-h">▸ 예시 없이 규칙만 나열</div><div class="pit-d">좋은 답·나쁜 답 각 1개를 함께 제시하면 정확도 급증.</div></div>
+      <div class="cod"><div class="cod-lb">검수</div><div class="cod-main">"이 프롬프트로 신입 주무관이 답할 수 있겠는가"</div><p>사람을 기준으로 충분하면 에이전트도 충분하다.</p></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">08 · API·MCP 기반 멀티 에이전트 아키텍처 기획 및 구축</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">022 / 032</span></div></div>
+</div></div>
+
+<!-- 23 셀 5 Output · 셀 6 Deployment -->
+<div class="stage"><div class="slide" data-title="Cell 5 6">
+  <div class="hbar"><div class="hbar-l">MODULE 08 · UNIT 04 · CELL 05 · 06 · OUTPUT · DEPLOY</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 08</div></div>
+  <div class="hl"><div class="hl-kicker">UNIT 04 · 셀 5·6 상세 · LECTURE 08-C-1c · 6MIN</div><div class="hl-title">아키텍처 캔버스 셀 5·6 · 출력과 배포</div><div class="hl-sub">산출물의 형태와 운영 환경. "한 번 돌고 끝"인 데모와 "부서가 의존하는 자산"을 가르는 두 칸.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col2">
+    <div class="col">
+      <div class="sh"><span class="sh-n">CELL 05 · OUTPUT</span><span class="sh-t">산출물 4유형</span></div><div class="sh-line"></div>
+      <div class="bth">산출물은 "다음 단계의 재료"여야 한다</div>
+      <p class="bt">에이전트가 만든 결과가 <strong>결재 큐·대시보드·Slack</strong> 어디로 흘러갈지 정한다. 떠 있는 채팅창에서 끝나면 자동화가 아니다.</p>
+      <table class="mtbl"><thead><tr><th>유형</th><th>매체</th><th>공공 예시</th></tr></thead><tbody>
+        <tr><td>파일</td><td>HWP·XLSX·PDF</td><td>보고서·분류표</td></tr>
+        <tr><td>메시지</td><td>메일·Slack·Teams</td><td>담당자 알림</td></tr>
+        <tr><td>DB 기록</td><td>RDB·NoSQL</td><td>처리 이력 저장</td></tr>
+        <tr><td>대시보드</td><td>웹·Streamlit</td><td>실시간 상황판</td></tr>
+      </tbody></table>
+      <div class="co"><div class="co-lb">PAIR</div><div class="co-main">출력 1개 + 로그 1개 = 최소 세트</div><p>사람 보는 결과 + 감사용 로그는 항상 함께. 기본 템플릿으로 고정.</p></div>
+      <div class="cod"><div class="cod-lb">설계 질문</div><div class="cod-main">"이 산출물이 사라지면 누가 곤란한가"</div><p>답할 수 있어야 산출물의 가치가 증명된다.</p></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">CELL 06 · DEPLOY</span><span class="sh-t">배포 4계층</span></div><div class="sh-line"></div>
+      <div class="bth">"어디서 도는가"가 보안 정책을 결정한다</div>
+      <p class="bt">배포 위치에 따라 데이터 주권·네트워크·로그·인증 방침이 다르다. <strong>개인 → 부서 → 기관 → 외부 클라우드</strong> 순으로 올라간다.</p>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">TIER 1 · 로컬 PC</span></div><div class="bth">개인 Windows · 내 노트북</div><p class="bt">첫 프로토타입. <strong>Windows 작업 스케줄러 + Python.</strong> 가장 빠르게 가치 검증.</p></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">TIER 2 · 부서 서버</span></div><div class="bth">부서 공용 PC · 미니 서버</div><p class="bt">동료가 함께 쓰는 수준. 24/7 가동. SMB·공유폴더 연동.</p></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">TIER 3 · 기관 내부망</span></div><div class="bth">기관 VM · 내부 K8s</div><p class="bt">보안 심의·감사 로그 필수. 5차시 Ollama 로컬 모델과 결합하면 완전 내부망.</p></div>
+      <div class="icard dark"><div class="icard-top"><span class="icard-lb">TIER 4 · 외부 클라우드</span></div><div class="bth">AWS·GCP·Azure</div><p class="bt">공공 데이터는 <strong>비식별·암호화 필수</strong>. 상급 기관 승인. 일반 공공 업무에는 Tier 1~3이 먼저.</p></div>
+      <div class="pit"><div class="pit-lb">PITFALL</div><div class="pit-h">▸ 처음부터 Tier 4 욕심</div><div class="pit-d">파일럿은 Tier 1에서. 가치 증명 후 단계적 승격.</div></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">08 · API·MCP 기반 멀티 에이전트 아키텍처 기획 및 구축</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">023 / 032</span></div></div>
+</div></div>
+
+<!-- 24 캔버스 작성 실습 -->
+<div class="stage"><div class="slide" data-title="Canvas Practice">
+  <div class="hbar"><div class="hbar-l">MODULE 08 · UNIT 04 · CANVAS · WRITING WORKSHOP</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 08</div></div>
+  <div class="hl"><div class="hl-kicker">UNIT 04 · 캔버스 작성 실습 · LECTURE 08-C-2 · 20MIN</div><div class="hl-title">캔버스 작성 실습 가이드</div><div class="hl-sub">오늘의 산출물 ①. 1차시에 썼던 "거점 미션 카드"를 AI 아키텍처 캔버스로 다시 쓴다. 작성 순서 1·2·5·3·4·6.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col2w">
+    <div class="col">
+      <div class="sh"><span class="sh-n">TEMPLATE</span><span class="sh-t">한 장 양식</span></div><div class="sh-line"></div>
+      <div class="bth">[실습 템플릿] 내 업무를 이 양식으로</div>
+      <div class="cblk"><span class="cm"># AI Architecture Canvas · 1p</span>
+
+## 업무명
+___________________________
+
+## 현재 수작업 흐름 (한 줄)
+___________________________
+
+## 01 · TRIGGER 트리거
+- 유형: 스케줄 / 이벤트 / 요청
+- 구체: ______________
+
+## 02 · MATERIALS 재료
+- 파일: ______________
+- API·DB: ______________
+- RAG 인덱스: ______________
+
+## 05 · OUTPUT 산출물 ← 먼저
+- 형태: ______________
+- 저장·전달: ______________
+- 로그: ______________
+
+## 03 · PROCESS 처리
+- 패턴: 단일LLM / RAG / 멀티
+- 도구 체인: ______________
+- 검증 단계: ______________
+
+## 04 · SYSTEM PROMPT
+- 역할: ______________
+- 톤: ______________
+- 금칙: ______________
+
+## 06 · DEPLOY 배포
+- Tier: 1 / 2 / 3 / 4
+- 환경: ______________
+- 모니터링: ______________
+
+## 1차시 미션 카드 연결
+- 어떤 거점 미션을 실현하는가
+- 동료와 어떻게 공유하는가</div>
+      <div class="co"><div class="co-lb">작성 원칙</div><div class="co-main">비어 있는 칸이 하나라도 있으면 미완</div><p>6칸 모두 한 줄씩은 반드시 채운다. 모르면 "미정 · 1주 내 결정"이라도 적어둔다. 공백 칸은 구현 위임의 사각지대가 된다.</p></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">PROCESS</span><span class="sh-t">20분 작성 가이드</span></div><div class="sh-line"></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">STEP 01 · 5m</span></div><div class="bth">1차시 미션 카드를 꺼낸다</div><p class="bt">캡스톤의 출발점. 8주 동안 뭐가 변했는지 그 미션을 통해 확인한다.</p></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">STEP 02 · 3m</span></div><div class="bth">현재 수작업 흐름 한 줄</div><p class="bt">"받는다 → 분류 → 응대 → 결재" 수준의 압축.</p></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">STEP 03 · 5m</span></div><div class="bth">트리거·재료·산출물 (1·2·5)</div><p class="bt">"무엇이 들어와서 무엇이 나가는가"가 먼저. 나머지는 뒤에.</p></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">STEP 04 · 5m</span></div><div class="bth">처리·프롬프트·배포 (3·4·6)</div><p class="bt">가장 단순한 패턴부터. 멀티 에이전트는 필요할 때만.</p></div>
+      <div class="icard dark"><div class="icard-top"><span class="icard-lb">STEP 05 · 2m</span></div><div class="bth">짝과 상호 검토</div><p class="bt">옆자리 수강생이 6칸을 읽고 이해되면 합격. 막히는 칸이 있으면 보강.</p></div>
+      <div class="co"><div class="co-lb">완성 기준</div><div class="co-main">"동료가 이 캔버스만 보고 구현 위임이 가능해야 한다"</div><p>에이전트에 그대로 던질 수 있는 수준이 목표.</p></div>
+      <div class="dstrip"><div class="ds-c"><div class="ds-a">TIME</div><div class="ds-n">20m</div><div class="ds-d">작성</div></div><div class="ds-c"><div class="ds-a">REVIEW</div><div class="ds-n">10m</div><div class="ds-d">짝 검토</div></div><div class="ds-c"><div class="ds-a">OUTPUT</div><div class="ds-n">1p</div><div class="ds-d">PDF 발표용</div></div></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">08 · API·MCP 기반 멀티 에이전트 아키텍처 기획 및 구축</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">024 / 032</span></div></div>
+</div></div>
+
+<!-- 25 캔버스 발표 예시 3종 공공 사례 -->
+<div class="stage"><div class="slide" data-title="Canvas Examples">
+  <div class="hbar"><div class="hbar-l">MODULE 08 · UNIT 04 · CANVAS · THREE EXAMPLES</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 08</div></div>
+  <div class="hl"><div class="hl-kicker">UNIT 04 · 캔버스 발표 예시 · LECTURE 08-C-3 · 6MIN</div><div class="hl-title">공공 업무 3사례로 본 캔버스</div><div class="hl-sub">공공 업무에서 가장 많이 나오는 세 시나리오를 완성형 캔버스로 예시. 각자 발표 때 이 수준의 명료함을 목표로.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col3">
+    <div class="col">
+      <div class="sh"><span class="sh-n">EX 01</span><span class="sh-t">월말 정책 보고서</span></div><div class="sh-line"></div>
+      <div class="cod"><div class="cod-lb">CANVAS 01</div><div class="cod-main">월말 · KOSIS + 법령 + 부서 DB → HWP 보고서</div>
+        <p>① TRIGGER 매월 말일 18시 스케줄</p>
+        <p>② MATERIALS KOSIS·법령API·부서 실적 DB</p>
+        <p>⑤ OUTPUT HWP 본문 + 그래프 PNG + 결재 큐</p>
+        <p>③ PROCESS 집계 → LLM 해석 → HWP 템플릿</p>
+        <p>④ PROMPT "정책 분석 주무관" 페르소나</p>
+        <p>⑥ DEPLOY 부서 서버 · 월 1회 정답률 측정</p>
+      </div>
+      <div class="co"><div class="co-lb">효과</div><div class="co-main">6시간 → 30분</div><p>사람은 최종 검토·서명만.</p></div>
+      <div class="dstrip"><div class="ds-c"><div class="ds-a">HUMAN</div><div class="ds-n">6h</div><div class="ds-d">수작업 평균</div></div><div class="ds-c"><div class="ds-a">AGENT</div><div class="ds-n">12m</div><div class="ds-d">초안 생성</div></div><div class="ds-c"><div class="ds-a">REVIEW</div><div class="ds-n">18m</div><div class="ds-d">검토·서명</div></div></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">EX 02</span><span class="sh-t">민원 자동 분류·응대</span></div><div class="sh-line"></div>
+      <div class="cod"><div class="cod-lb">CANVAS 02</div><div class="cod-main">메일 수신 → RAG + 조례 → HWP 초안</div>
+        <p>① TRIGGER 민원 메일 수신(국민신문고 API)</p>
+        <p>② MATERIALS 민원 원문 · 과거 유사 RAG · 관할구 조례</p>
+        <p>⑤ OUTPUT HWP 응대 초안 + 담당자 Slack + DB 기록</p>
+        <p>③ PROCESS 분류 → 유사사례 5건 → 초안 작성 → 검증</p>
+        <p>④ PROMPT 공문서체 · 개인정보 마스킹 필수</p>
+        <p>⑥ DEPLOY 내부망 FastAPI · 로그 90일</p>
+      </div>
+      <div class="pit"><div class="pit-lb">주의</div><div class="pit-h">▸ 사람 승인 게이트 필수</div><div class="pit-d">자동 발송 금지. 반드시 담당자 확인 후 발송.</div></div>
+      <div class="dstrip"><div class="ds-c"><div class="ds-a">처리</div><div class="ds-n">3d→당일</div><div class="ds-d">평균 리드타임</div></div><div class="ds-c"><div class="ds-a">RAG</div><div class="ds-n">5건</div><div class="ds-d">유사사례 인용</div></div><div class="ds-c"><div class="ds-a">마스킹</div><div class="ds-n">8종</div><div class="ds-d">개인정보 필드</div></div></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">EX 03</span><span class="sh-t">회의록 자동 요약</span></div><div class="sh-line"></div>
+      <div class="cod"><div class="cod-lb">CANVAS 03</div><div class="cod-main">녹음 종료 → Whisper + LLM → Slack</div>
+        <p>① TRIGGER 회의실 녹음 파일 업로드</p>
+        <p>② MATERIALS MP3 · 참석자 명단 · 회의 제목</p>
+        <p>⑤ OUTPUT 요약 MD · 액션 아이템 · Slack 포스트</p>
+        <p>③ PROCESS Whisper(로컬) → LLM 요약 → 액션 추출</p>
+        <p>④ PROMPT "회의록 정리 서기" · 핵심·결론·액션 3단</p>
+        <p>⑥ DEPLOY 로컬 PC · 민감 회의는 오프라인</p>
+      </div>
+      <div class="dstrip"><div class="ds-c"><div class="ds-a">HUMAN</div><div class="ds-n">1.5h</div><div class="ds-d">수기 정리</div></div><div class="ds-c"><div class="ds-a">AGENT</div><div class="ds-n">15m</div><div class="ds-d">자동</div></div><div class="ds-c"><div class="ds-a">REVIEW</div><div class="ds-n">5m</div><div class="ds-d">검토 송부</div></div></div>
+      <div class="co"><div class="co-lb">오프라인 옵션</div><div class="co-main">민감 회의는 Whisper 로컬 + Ollama</div><p>외부 API 금지 회의실에서도 동일 파이프라인 구동 가능. 5차시 Ollama 스택을 그대로 재사용.</p></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">08 · API·MCP 기반 멀티 에이전트 아키텍처 기획 및 구축</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">025 / 032</span></div></div>
+</div></div>
+
+<!-- 26 UNIT 05 · 최종 발표 · 평가 가이드 -->
+<div class="stage"><div class="slide" data-title="Final Presentation">
+  <div class="hbar"><div class="hbar-l">MODULE 08 · UNIT 05 · FINAL PRESENTATION · RUBRIC</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 08</div></div>
+  <div class="hl"><div class="hl-kicker">UNIT 05 · 최종 발표 · 평가 가이드 · LECTURE 08-D-1 · 40MIN</div><div class="hl-title">최종 발표와 평가 기준</div><div class="hl-sub">캔버스 한 장을 바탕으로 3분 발표. 평가는 맥락 이해·캔버스 명료성·동료 피드백 품질·수용 태도 4축.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col2">
+    <div class="col">
+      <div class="sh"><span class="sh-n">SCRIPT</span><span class="sh-t">3분 발표 5요소</span></div><div class="sh-line"></div>
+      <div class="bth">3분 안에 담을 5요소</div>
+      <table class="mtbl"><thead><tr><th>단계</th><th>시간</th><th>내용</th></tr></thead><tbody>
+        <tr><td>① 맥락</td><td>30s</td><td>"내 부서는 ___. 반복되는 ___ 업무"</td></tr>
+        <tr><td>② 캔버스</td><td>90s</td><td>트리거 → 배포까지 한 호흡</td></tr>
+        <tr><td>③ 효과</td><td>30s</td><td>시간·품질·확산 효과</td></tr>
+        <tr><td>④ 난제</td><td>20s</td><td>보안·승인·수용</td></tr>
+        <tr><td>⑤ 요청</td><td>10s</td><td>"조언 구합니다"</td></tr>
+      </tbody></table>
+      <div class="co"><div class="co-lb">PRESENTATION TIP</div><div class="co-main">슬라이드 1장 · 캔버스만 보여준다</div><p>화려한 디자인보다 <strong>6칸이 명확히 읽히는 것</strong>이 중요. 6칸이 서사로 이어지는가가 평가 기준 1.</p></div>
+      <div class="pit"><div class="pit-lb">PITFALL</div><div class="pit-h">▸ 도구 설명에 시간 낭비</div><div class="pit-d">청중은 이미 도구를 안다. "내 부서 문제"에 집중.</div><div class="pit-h">▸ 3분을 넘긴다</div><div class="pit-d">타이머 절제. 넘치면 "요청" 항목이 잘린다.</div></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">RUBRIC</span><span class="sh-t">4축 평가표</span></div><div class="sh-line"></div>
+      <table class="mtbl"><thead><tr><th>축</th><th>평가 포인트</th><th>가중</th></tr></thead><tbody>
+        <tr><td>맥락</td><td>부서·업무 구체성</td><td>20%</td></tr>
+        <tr><td>설계 명료성</td><td>6칸 연결·현실성</td><td>40%</td></tr>
+        <tr><td>피드백 품질</td><td>동료 발표에 준 의견</td><td>25%</td></tr>
+        <tr><td>수용 태도</td><td>받은 피드백 반영 의지</td><td>15%</td></tr>
+      </tbody></table>
+      <div class="cod"><div class="cod-lb">동료 피드백 3형식</div><div class="cod-main">관찰 → 제안 → 질문 순</div><p>"이 칸이 이렇게 읽힙니다(관찰) / 이렇게 바꾸면 어떨까요(제안) / 이 부분은 어떻게 보시나요(질문)". 비난·자랑 금지.</p></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">CAPSTONE 산출물</span></div><div class="bth">오늘 제출해야 하는 4가지</div><p class="bt"><strong>① 아키텍처 캔버스 1장 · ② MCP 연결 3개 스크린샷 · ③ 3분 발표 · ④ 받은 피드백 3개 요약.</strong> 4가지 모두 제출해야 캡스톤 완료.</p></div>
+      <div class="dstrip"><div class="ds-c"><div class="ds-a">발표</div><div class="ds-n">3m</div><div class="ds-d">인당</div></div><div class="ds-c"><div class="ds-a">Q&amp;A</div><div class="ds-n">2m</div><div class="ds-d">동료 질의</div></div><div class="ds-c"><div class="ds-a">토탈</div><div class="ds-n">40m</div><div class="ds-d">8명 기준</div></div></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">08 · API·MCP 기반 멀티 에이전트 아키텍처 기획 및 구축</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">026 / 032</span></div></div>
+</div></div>
+
+<!-- 27 8주 여정 회고 -->
+<div class="stage"><div class="slide" data-title="8 Week Review">
+  <div class="hbar"><div class="hbar-l">MODULE 08 · UNIT 05 · 8-WEEK REVIEW · WHAT CHANGED</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 08</div></div>
+  <div class="hl"><div class="hl-kicker">UNIT 05 · 8주 여정 회고 · LECTURE 08-D-2 · 10MIN</div><div class="hl-title">8주 여정의 회고 3축</div><div class="hl-sub">도구가 늘어난 것이 아니라 정체성이 이동했다. 8주 동안 어디서 어디로 이동했는지 3축으로 회고.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col3">
+    <div class="col">
+      <div class="sh"><span class="sh-n">AXIS 01</span><span class="sh-t">역할의 이동</span></div><div class="sh-line"></div>
+      <div class="bth">"프롬프트 쓰는 사람" → "설계·검수하는 사람"</div>
+      <p class="bt">1~3차시는 프롬프트·재료 수집. 4~5차시는 자동화·바이브 코딩. 6~7차시는 에이전트·RAG. <strong>8차시 마지막에 남는 것은 설계 역량.</strong></p>
+      <table class="mtbl"><thead><tr><th>W</th><th>역할</th><th>산출물</th></tr></thead><tbody>
+        <tr><td>01</td><td>탐색자</td><td>미션 카드</td></tr>
+        <tr><td>02</td><td>수집가</td><td>결합 설계서</td></tr>
+        <tr><td>03</td><td>조립가</td><td>워크플로우</td></tr>
+        <tr><td>04</td><td>분석가</td><td>시각화</td></tr>
+        <tr><td>05</td><td>자동화가</td><td>HWP·VBA·Ollama</td></tr>
+        <tr><td>06</td><td>에이전트 사용자</td><td>Rules·Skills</td></tr>
+        <tr><td>07</td><td>RAG 구축자</td><td>내 문서 AI</td></tr>
+        <tr><td>08</td><td>아키텍트</td><td>캔버스</td></tr>
+      </tbody></table>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">AXIS 02</span><span class="sh-t">도구의 이동</span></div><div class="sh-line"></div>
+      <div class="bth">"도구 이름" → "도구 카테고리"</div>
+      <p class="bt">1~2차시에서 15+ 도구를 훑었지만, 이제는 이름을 외우지 않는다. <strong>카테고리·인터페이스·통합 방식</strong>으로 이해한다.</p>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">도구 50+</span></div><div class="bth">문서·이미지·영상·음성·회의·번역·논문·검색·데이터·노코드</div></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">바이브 코딩</span></div><div class="bth">Cursor·Claude Code·Windsurf·Replit</div></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">에이전트</span></div><div class="bth">Claude Desktop·Cursor Composer·Antigravity</div></div>
+      <div class="icard dark"><div class="icard-top"><span class="icard-lb">API · MCP</span></div><div class="bth">공공 API 6종 · MCP 서버 카탈로그 · A2A</div></div>
+      <div class="co"><div class="co-lb">KEY</div><div class="co-main">이제 새 도구가 나와도 5분 안에 판단</div><p>"카테고리 어디 · 무엇을 대체 · 내 캔버스에 넣을 자리".</p></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">AXIS 03</span><span class="sh-t">영향 단위의 이동</span></div><div class="sh-line"></div>
+      <div class="bth">"나 혼자" → "동료 한 명" → "부서"</div>
+      <p class="bt">1차시의 개인 미션에서 시작해 동료 공유, 부서 확산, 타 부서 교류로. <strong>거점리더의 본질은 확산.</strong></p>
+      <div class="dstrip"><div class="ds-c"><div class="ds-a">W01~W03</div><div class="ds-n">나</div><div class="ds-d">개인 숙달</div></div><div class="ds-c"><div class="ds-a">W04~W06</div><div class="ds-n">동료</div><div class="ds-d">1:1 공유</div></div><div class="ds-c"><div class="ds-a">W07~W08</div><div class="ds-n">부서</div><div class="ds-d">시스템 확산</div></div></div>
+      <div class="cod"><div class="cod-lb">REFLECTION</div><div class="cod-main">8주 전의 나와 비교해 변한 것 3가지</div><p>① 새 도구 앞에서 덜 당황한다 ② 코드를 직접 안 쳐도 문제를 해결한다 ③ 동료에게 무엇을 보여줄지 안다. <strong>이 세 가지가 거점리더의 정체성.</strong></p></div>
+      <div class="quote"><div class="quote-src">SOURCE · 8주 여정 설계 원칙</div><div class="quote-q">"8주 뒤에도 배움이 멈추지 않는 사람이 거점리더다."</div><div class="quote-a">— 커리큘럼 종결 노트</div></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">08 · API·MCP 기반 멀티 에이전트 아키텍처 기획 및 구축</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">027 / 032</span></div></div>
+</div></div>
+
+<!-- 28 Stage A · B · C 총정리 -->
+<div class="stage"><div class="slide" data-title="Stage Summary">
+  <div class="hbar"><div class="hbar-l">MODULE 08 · UNIT 05 · STAGE A · B · C · OUTPUT SUMMARY</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 08</div></div>
+  <div class="hl"><div class="hl-kicker">UNIT 05 · Stage 산출물 총정리 · LECTURE 08-D-3 · 6MIN</div><div class="hl-title">Stage별 산출물 총정리</div><div class="hl-sub">복귀 후 부서에서 "뭐 배워왔어?"라는 질문을 받을 때, 이 목록이 답이 된다. 하나하나가 재현 가능한 자산이다.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col3">
+    <div class="col">
+      <div class="sh"><span class="sh-n">STAGE A · 재료</span><span class="sh-t">W01~W03</span></div><div class="sh-line"></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">W01 · 지형도</span></div><div class="bth">거점 미션 카드</div><p class="bt">본인 부서의 AI 미션 선언. 캡스톤 캔버스의 출발점.</p></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">W02 · 도구 50+</span></div><div class="bth">결합 설계서 1장 + 5분 루틴</div><p class="bt">카테고리별 도구 투어 · 새 도구 5분 판단 프레임.</p></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">W03 · 워크플로우</span></div><div class="bth">메타 프롬프트 + 파이프라인 1개</div><p class="bt">프롬프트 공유 아카이브 기여. 회의록·리서치·홍보 중 1개 파이프라인 조립.</p></div>
+      <div class="co"><div class="co-lb">총 3개</div><div class="co-main">미션 + 설계서 + 파이프라인</div></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">STAGE B · 실행</span><span class="sh-t">W04~W06</span></div><div class="sh-line"></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">W04 · 분석</span></div><div class="bth">데이터 시각화 1건</div><p class="bt">Julius·NotebookLM 조합. 부서 데이터로 실제 차트.</p></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">W05 · 자동화</span></div><div class="bth">HWP 스크립트 + Ollama 내부망</div><p class="bt">공문서 반복 업무 자동화. 5차시의 핵심 산출물.</p></div>
+      <div class="icard dark"><div class="icard-top"><span class="icard-lb">W06 · 에이전트</span></div><div class="bth">CLAUDE.md · AGENTS.md · Skills 폴더</div><p class="bt">Rules·Skills 1개 이상 보유. 부서 공유 가능.</p></div>
+      <div class="co"><div class="co-lb">총 3개</div><div class="co-main">시각화 + 자동화 + 에이전트 설정</div></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">STAGE C · 아키텍처</span><span class="sh-t">W07~W08</span></div><div class="sh-line"></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">W07 · RAG</span></div><div class="bth">정답률 80%+ RAG + 웹 배포 1개</div><p class="bt">부서 문서 기반 Q&amp;A. 단일 HTML 또는 FastAPI.</p></div>
+      <div class="icard dark"><div class="icard-top"><span class="icard-lb">W08 · 캔버스 ★</span></div><div class="bth">AI 아키텍처 캔버스 + MCP 연결 3개</div><p class="bt">오늘의 캡스톤 산출물. 발표 + 피드백 + 30/60/90 계획.</p></div>
+      <div class="cod"><div class="cod-lb">TOTAL · 8주 아카이브</div><div class="cod-main">8개 코어 산출물 + α</div><p>개인 폴더에 정리하면 복귀 첫 주에 동료 시연 재료로 바로 사용 가능.</p></div>
+      <div class="dstrip"><div class="ds-c"><div class="ds-a">STAGE A</div><div class="ds-n">3</div><div class="ds-d">재료</div></div><div class="ds-c"><div class="ds-a">STAGE B</div><div class="ds-n">3</div><div class="ds-d">실행</div></div><div class="ds-c"><div class="ds-a">STAGE C</div><div class="ds-n">2</div><div class="ds-d">아키텍처</div></div></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">08 · API·MCP 기반 멀티 에이전트 아키텍처 기획 및 구축</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">028 / 032</span></div></div>
+</div></div>
+
+<!-- 29 HERO · 연결을 설계하는 사람 -->
+<div class="stage"><div class="slide" data-title="Hero Connection Designer">
+  <div class="hbar"><div class="hbar-l">MODULE 08 · FINAL KEY MESSAGE</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 08</div></div>
+  <div class="bd col1"><div class="col hero" style="background:var(--bg2);padding:56px 90px;justify-content:center">
+    <div style="font-family:var(--mono);font-size:11.5px;color:var(--acc);letter-spacing:3px;font-weight:700;margin-bottom:18px">FINAL KEY MESSAGE</div>
+    <div style="font-family:var(--serif);font-size:52px;line-height:1.18;font-weight:700;color:var(--ink);letter-spacing:-0.02em">이제 당신은<br><span style="color:var(--acc)">연결을 설계하는 사람</span>이다.</div>
+    <div style="width:60px;height:3px;background:var(--acc);margin:22px 0 22px"></div>
+    <p style="font-size:17px;color:var(--ink2);line-height:1.7;max-width:1150px;font-style:italic">API·MCP·멀티 에이전트·아키텍처 캔버스 — 이 단어들이 더는 낯설지 않다. 그러나 진짜 자산은 단어가 아니라 <strong style="color:var(--ink)">"무엇을 무엇에 연결해 어떤 문제를 풀 것인가"</strong>를 한 장에 그릴 수 있는 능력이다. 부서의 문제, 공공 API, 내부 DB, 에이전트, 사람의 판단 — 이 다섯을 한 캔버스에 꿰어낼 수 있다면 당신은 이미 연결 설계자다.</p>
+    <div style="border-left:3px solid var(--acc);padding:16px 24px;margin-top:26px;max-width:1050px;background:var(--bg)"><div style="font-family:var(--serif);font-size:21px;color:var(--ink);font-weight:700;font-style:italic;line-height:1.5">"도구는 매년 바뀐다. 모델 이름은 반년마다 바뀐다. 변하지 않는 것은 '어떻게 연결할지 한 장에 그리는 능력'이다. 그것이 거점리더의 영구 자산이다."</div><div style="font-size:12px;color:var(--ink3);letter-spacing:2px;margin-top:10px;font-family:var(--mono);font-weight:700">— 8주 커리큘럼 종결 메시지</div></div>
+  </div></div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">08 · API·MCP 기반 멀티 에이전트 아키텍처 기획 및 구축</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">029 / 032</span></div></div>
+</div></div>
+
+<!-- 30 복귀 후 30일 실행 플랜 -->
+<div class="stage"><div class="slide" data-title="30 Day Plan">
+  <div class="hbar"><div class="hbar-l">MODULE 08 · UNIT 05 · RETURN · 30/60/90 PLAN</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 08</div></div>
+  <div class="hl"><div class="hl-kicker">UNIT 05 · 복귀 후 30·60·90일 플랜 · LECTURE 08-E · 10MIN</div><div class="hl-title">복귀 후 30·60·90일 플랜</div><div class="hl-sub">복귀 후 첫 30일이 가장 중요하다. 여기서 모멘텀을 잃으면 교육이 개인 자산에 머문다. 부서 자산으로 올라가는 구체 플랜.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col2">
+    <div class="col">
+      <div class="sh"><span class="sh-n">FIRST 30</span><span class="sh-t">Day 1~30 · 공유</span></div><div class="sh-line"></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">WEEK 1</span><span class="icard-sess">개인 재정비</span></div><div class="bth">8주 산출물 폴더 정리 + 부서 맥락 재확인</div><p class="bt">교육 자료·코드·캔버스를 부서 폴더 구조로 재배치. 1주일간 본 업무에 복귀하며 "어디에 AI를 꽂을지" 3곳 후보 지정.</p></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">WEEK 2</span><span class="icard-sess">동료 1명 시연</span></div><div class="bth">가장 친한 동료에게 10분 시연</div><p class="bt">캔버스·RAG·MCP 3개 중 <strong>하나만</strong>. 반응·질문을 기록. "이게 왜 내 업무에 유용한가" 자문자답.</p></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">WEEK 3</span><span class="icard-sess">팀 회의 5분</span></div><div class="bth">주간 회의에서 5분 핵심 공유</div><p class="bt">전체 팀 앞에서 발표. 기술 자랑이 아니라 <strong>"우리 부서 어떤 반복 업무에 적용 가능한가"</strong>. 가장 관심 있는 1명을 파일럿 파트너로.</p></div>
+      <div class="icard dark"><div class="icard-top"><span class="icard-lb">WEEK 4</span><span class="icard-sess">공용 자산 1개</span></div><div class="bth">부서 공유 폴더에 첫 자산 업로드</div><p class="bt">CLAUDE.md·AGENTS.md·Skill·프롬프트·캔버스 중 1개. 부서 이름 붙은 <strong>공용 자산의 첫 번째 아이템.</strong></p></div>
+      <div class="co"><div class="co-lb">30일 체크</div><div class="co-main">시연 3회 + 공용 자산 1개 + 파일럿 파트너 1명</div><p>이 3가지가 60일 확산의 발판.</p></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">60 · 90</span><span class="sh-t">Day 31~60 · 61~90</span></div><div class="sh-line"></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">DAY 31~60 · 공통화</span></div><div class="bth">부서 AGENTS.md · Skill 1개 + 월 1회 공유회</div><p class="bt">개인 산출물 → 부서 자산. 공용 폴더에 규칙·스킬 배포. 월 1회 "부서 AI 공유회" 30분. 성공·실패 모두 기록.</p></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">DAY 61~90 · 확장</span></div><div class="bth">타 부서 거점리더 1명과 교류</div><p class="bt">유사 업무 부서와 MCP·Skill 교차 사용. <strong>기관 표준화 제안 문서 1장</strong> 초안. 과정 동기들과의 분기 네트워크 미팅.</p></div>
+      <div class="cod"><div class="cod-lb">90일 이후</div><div class="cod-main">지속 원칙 3가지</div><p>① 주 1회 30분 <strong>"새 도구 5분 파악 루틴"</strong> ② 월 1회 부서 공유회 ③ 분기 1회 거점리더 네트워크.</p></div>
+      <div class="dstrip"><div class="ds-c"><div class="ds-a">30d</div><div class="ds-n">시연 3</div><div class="ds-d">+ 자산 1</div></div><div class="ds-c"><div class="ds-a">60d</div><div class="ds-n">부서 규칙</div><div class="ds-d">+ 공유회</div></div><div class="ds-c"><div class="ds-a">90d</div><div class="ds-n">네트워크</div><div class="ds-d">+ 표준 제안</div></div></div>
+      <div class="pit"><div class="pit-lb">PITFALL · 복귀 후</div><div class="pit-h">▸ 완벽주의에 빠진다</div><div class="pit-d">20%만 옮겨도 부서가 바뀐다. 완벽은 진행의 적.</div><div class="pit-h">▸ 혼자 빠르게 달린다</div><div class="pit-d">거점리더는 혼자 빠른 사람이 아니라 함께 이동시키는 사람.</div></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">08 · API·MCP 기반 멀티 에이전트 아키텍처 기획 및 구축</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">030 / 032</span></div></div>
+</div></div>
+
+<!-- 31 추가 학습 자료 · 커뮤니티 · 리소스 -->
+<div class="stage"><div class="slide" data-title="Resources">
+  <div class="hbar"><div class="hbar-l">MODULE 08 · UNIT 05 · RESOURCES · COMMUNITY · NEXT</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 08</div></div>
+  <div class="hl"><div class="hl-kicker">UNIT 05 · 지속 학습 자료 · LECTURE 08-E-2 · 5MIN</div><div class="hl-title">지속 학습 자료 지도</div><div class="hl-sub">8주는 끝이지만 학습은 계속된다. 매년 갱신해서 써도 되는 "정착점" 자료들을 카테고리별로 정리.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col3">
+    <div class="col">
+      <div class="sh"><span class="sh-n">LEARN</span><span class="sh-t">공식·심화 학습</span></div><div class="sh-line"></div>
+      <table class="mtbl"><thead><tr><th>자료</th><th>용도</th></tr></thead><tbody>
+        <tr><td>modelcontextprotocol.io</td><td>MCP 공식 문서</td></tr>
+        <tr><td>anthropic.com/docs</td><td>Claude·Agent</td></tr>
+        <tr><td>openai.com/docs</td><td>GPT·Agent</td></tr>
+        <tr><td>ai.google.dev</td><td>Gemini·A2A</td></tr>
+        <tr><td>data.go.kr</td><td>공공 API 카탈로그</td></tr>
+        <tr><td>huggingface.co</td><td>모델·Spaces</td></tr>
+      </tbody></table>
+      <div class="co"><div class="co-lb">월 1회 점검</div><div class="co-main">공식 changelog 훑기 30분</div><p>모델·규격이 분기 단위로 크게 바뀐다. 버전 감각이 자산.</p></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">심화 추천</span></div><div class="bth">Anthropic Engineering Blog · OpenAI Cookbook</div><p class="bt">실전 패턴·베스트 프랙티스. 공공 업무 번역이 거점리더의 몫.</p></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">COMMUNITY</span><span class="sh-t">국내·국제</span></div><div class="sh-line"></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">국내</span></div><div class="bth">공공 AI 실무자 슬랙·디스코드 · 본 과정 동기 채널</div><p class="bt">교육 종료 후에도 동기 그룹이 유지. 격월 오프라인 밋업을 제안하는 것도 거점리더의 역할.</p></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">국제 오픈소스</span></div><div class="bth">Anthropic·OpenAI·HuggingFace Discord</div><p class="bt">질문하면 24시간 내 답. 영어가 부담이면 번역 도구로 충분.</p></div>
+      <div class="icard dark"><div class="icard-top"><span class="icard-lb">트렌드 플랫폼</span></div><div class="bth">ProductHunt · Toolify · Smithery</div><p class="bt">월 1회 30분 스캔 루틴. 2차시에서 정착시킨 5분 파악 루틴을 그대로 적용.</p></div>
+      <div class="dstrip"><div class="ds-c"><div class="ds-a">주</div><div class="ds-n">30m</div><div class="ds-d">뉴스·블로그</div></div><div class="ds-c"><div class="ds-a">월</div><div class="ds-n">1회</div><div class="ds-d">카탈로그 스캔</div></div><div class="ds-c"><div class="ds-a">분기</div><div class="ds-n">1회</div><div class="ds-d">네트워크</div></div></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">REFERENCE</span><span class="sh-t">책·논문·저장소</span></div><div class="sh-line"></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">GitHub 저장소</span></div><div class="bth">awesome-mcp · awesome-claude-code · anthropic-cookbook</div><p class="bt">카테고리별 큐레이션. 일주일에 한 번 star 기준 상위 훑기.</p></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">논문·리포트</span></div><div class="bth">arXiv cs.CL · Anthropic Research · OpenAI Research</div><p class="bt">핵심만 훑되, <strong>"공공 업무 번역"은 거점리더가 한다.</strong></p></div>
+      <div class="cod"><div class="cod-lb">FINAL NOTE · 지속 학습 원칙</div><div class="cod-main">"완벽한 이해 후 적용"이 아니라 "적용하며 이해"</div><p>20% 이해로 배포하고, 운영하며 배운다. 이것이 8주 동안 몸으로 체득한 방식.</p></div>
+      <div class="quote"><div class="quote-src">SOURCE · 과정 종료 노트</div><div class="quote-q">"학습을 멈춘 거점리더는 거점리더가 아니다. 8주는 멈추지 않는 습관을 만들기 위한 기간이었다."</div><div class="quote-a">— 공공 AI 전문인재 양성과정</div></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">08 · API·MCP 기반 멀티 에이전트 아키텍처 기획 및 구축</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">031 / 032</span></div></div>
+</div></div>
+
+<!-- 32 CLOSING · 수고하셨습니다 -->
+<div class="stage"><div class="slide" data-title="Closing Farewell">
+  <div class="hbar"><div class="hbar-l">MODULE 08 · CLOSING · JOURNEY END · NEW BEGINNING</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 08</div></div>
+  <div class="bd col1"><div class="col hero" style="background:var(--dk);color:var(--on);padding:50px 90px;justify-content:center">
+    <div style="font-family:var(--mono);font-size:11.5px;color:var(--acc3);letter-spacing:3px;font-weight:700;margin-bottom:16px">SESSION 08 · FINAL · 8 WEEK CLOSING</div>
+    <div style="font-family:var(--serif);font-size:44px;line-height:1.18;font-weight:700;color:var(--on);letter-spacing:-0.02em">8주의 여정, <span style="color:var(--acc3)">여기서 마칩니다.</span></div>
+    <div style="width:60px;height:3px;background:var(--acc3);margin:18px 0 18px"></div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:8px">
+      <div style="border:1px solid rgba(255,255,255,0.15);padding:14px 16px"><div style="font-family:var(--mono);font-size:9.5px;color:var(--acc3);letter-spacing:2px;font-weight:700">W01 · W02</div><div style="font-size:13px;color:var(--on);font-weight:600;margin-top:5px;line-height:1.5">지형도 · 도구 50+</div></div>
+      <div style="border:1px solid rgba(255,255,255,0.15);padding:14px 16px"><div style="font-family:var(--mono);font-size:9.5px;color:var(--acc3);letter-spacing:2px;font-weight:700">W03 · W04</div><div style="font-size:13px;color:var(--on);font-weight:600;margin-top:5px;line-height:1.5">워크플로우 · 시각화</div></div>
+      <div style="border:1px solid rgba(255,255,255,0.15);padding:14px 16px"><div style="font-family:var(--mono);font-size:9.5px;color:var(--acc3);letter-spacing:2px;font-weight:700">W05 · W06</div><div style="font-size:13px;color:var(--on);font-weight:600;margin-top:5px;line-height:1.5">자동화 · 에이전트</div></div>
+      <div style="border:1px solid rgba(255,255,255,0.15);padding:14px 16px"><div style="font-family:var(--mono);font-size:9.5px;color:var(--acc3);letter-spacing:2px;font-weight:700">W07 · W08</div><div style="font-size:13px;color:var(--on);font-weight:600;margin-top:5px;line-height:1.5">RAG · API·MCP</div></div>
+    </div>
+    <div style="border-left:3px solid var(--acc3);padding:18px 24px;margin-top:26px;max-width:1200px">
+      <div style="font-family:var(--mono);font-size:10px;color:var(--on2);letter-spacing:2px;font-weight:700;margin-bottom:10px">8-WEEK SUMMARY · 3 AXES</div>
+      <div style="font-family:var(--serif);font-size:19px;color:var(--on);font-weight:700;font-style:italic;line-height:1.55">역할은 <span style="color:var(--acc3)">프롬프트 작성자</span>에서 <span style="color:var(--acc3)">연결 설계자</span>로, 도구는 <span style="color:var(--acc3)">이름</span>에서 <span style="color:var(--acc3)">카테고리</span>로, 영향은 <span style="color:var(--acc3)">개인</span>에서 <span style="color:var(--acc3)">부서</span>로 — 당신이 이동한 거리입니다.</div>
+    </div>
+    <div style="margin-top:38px;font-family:var(--serif);font-size:56px;color:var(--acc3);font-style:italic;text-align:center;letter-spacing:-0.01em;line-height:1.2">— 수고하셨습니다.</div>
+    <div style="text-align:center;margin-top:14px;font-size:14px;color:var(--on2);line-height:1.7;font-style:italic">이제 8주의 끝이 아니라 당신 부서에서의 첫 90일이 시작됩니다.<br>연결을 설계하는 거점리더로서의 여정이 지금부터입니다.</div>
+  </div></div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">08 · API·MCP 기반 멀티 에이전트 아키텍처 기획 및 구축</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">032 / 032</span></div></div>
+</div></div>
+</div>
+
+<script>
+(function(){
+  document.querySelectorAll('.toolbar,.deck-nav').forEach(e=>e.remove());
+  const tb = document.createElement('div');
+  tb.className = 'toolbar';
+  tb.innerHTML = `<button onclick="pNav(-1)">◀</button><span class="pg" id="pgInd">1 / 1</span><button onclick="pNav(1)">▶</button><button onclick="window.print()">⬇ PDF</button><button onclick="tFull()">⛶ FULL</button><button id="editBtn" onclick="tEdit()">✎ EDIT</button>`;
+  document.body.appendChild(tb);
+})();
+
+const allSlides = document.querySelectorAll('.slide');
+const allStages = document.querySelectorAll('.stage');
+const deck = document.getElementById('deck');
+
+function fitSlides(){const vw=innerWidth,vh=innerHeight;const r=Math.min(vw/1600,vh/900);allSlides.forEach(s=>{s.style.transform=`scale(${r})`;s.style.transformOrigin='center center'})}
+addEventListener('resize',fitSlides);fitSlides();
+
+function curIdx(){let i=0,m=1e9;allStages.forEach((s,x)=>{const d=Math.abs(s.getBoundingClientRect().top+s.getBoundingClientRect().height/2-innerHeight/2);if(d<m){m=d;i=x}});return i}
+function pNav(dir){const i=curIdx()+dir;if(i>=0&&i<allStages.length)allStages[i].scrollIntoView({behavior:'smooth'})}
+function updPg(){document.getElementById('pgInd').textContent=`${curIdx()+1} / ${allStages.length}`}
+deck.addEventListener('scroll',updPg);updPg();
+function tFull(){if(document.fullscreenElement)document.exitFullscreen();else document.documentElement.requestFullscreen().catch(()=>{})}
+
+let editMode=false;
+function tEdit(){
+  editMode=!editMode;
+  const btn=document.getElementById('editBtn'),tb=document.querySelector('.toolbar');
+  const SEL='.bth,.bt,.cod-lb,.cod-main,.cod p,.ds-n,.ds-d,.hero-k,.hero-t,.hero-s,.hero-q-q,.hero-q-a,.icard-lb,.icard-sess,.quote-q,.quote-a,.quote-src,.fig,.hl-kicker,.hl-title,.hl-sub,.card-k,.card-anchor,.card-body,.card-note,.co-lb,.co-main,.co p,.next-k,.next-t,.pit-lb,.pit-h,.pit-d,.sh-n,.sh-t,.hybrid-k,.hybrid-h,.hybrid-d,.draft-k,.draft-t,.draft-note,.cmp2c-k,.cmp2c-h,.cmp2c-d,.cmp2c-fig,.qd-k,.qd-h,.qd-d,.ladder-h,.ladder-d,.ladder-tag,.tblock-w,.tblock-h,.tblock-d,.tblock-sess,.type-h,.type-d,.type-tag,.flow-box-t,.hbar-l,.hbar-r,.fbar-title,.mtbl td,.mtbl th,h1,p';
+  if(editMode){
+    btn.textContent='✎ EDITING';btn.style.background='#b8532a';btn.style.color='#fff';tb.style.borderBottom='2px solid #b8532a';
+    document.querySelectorAll(SEL).forEach(el=>{el.contentEditable='true';el.style.outline='1px dashed rgba(184,83,42,0.3)';el.style.cursor='text'});
+    deck.style.scrollSnapType='none';
+    sToast('EDIT ON — 텍스트 클릭 수정 · Ctrl+S 저장 · E 또는 ESC로 종료');
+  }else{
+    btn.textContent='✎ EDIT';btn.style.background='';btn.style.color='';tb.style.borderBottom='';
+    document.querySelectorAll('[contenteditable="true"]').forEach(el=>{el.contentEditable='false';el.style.outline='';el.style.cursor=''});
+    deck.style.scrollSnapType='y mandatory';
+    sToast('EDIT OFF — 프레젠테이션 모드');
+  }
+}
+function sToast(m){let t=document.getElementById('toast');if(!t){t=document.createElement('div');t.id='toast';t.style.cssText='position:fixed;bottom:60px;left:50%;transform:translateX(-50%);background:rgba(14,10,6,0.92);color:#ede4d3;font-family:var(--mono,monospace);font-size:11px;letter-spacing:1.5px;padding:10px 24px;border-radius:4px;z-index:300;pointer-events:none;opacity:0;transition:opacity 0.4s';document.body.appendChild(t)}t.textContent=m;t.style.opacity='1';clearTimeout(t._tid);t._tid=setTimeout(()=>{t.style.opacity='0'},3000)}
+
+document.addEventListener('keydown',e=>{
+  if(editMode){
+    if(e.key==='s'&&(e.ctrlKey||e.metaKey)){e.preventDefault();const b=new Blob(['<!DOCTYPE html>\n'+document.documentElement.outerHTML],{type:'text/html'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=document.title.replace(/[^a-zA-Z0-9가-힣\s·_-]/g,'')+'.html';a.click();URL.revokeObjectURL(a.href);sToast('HTML 파일 저장 완료')}
+    if(e.key==='Escape'||e.key==='e'||e.key==='E'){if(!document.activeElement||document.activeElement===document.body)tEdit()}
+    return;
+  }
+  if(e.key==='ArrowRight'||e.key==='ArrowDown'||e.key===' '||e.key==='PageDown'){e.preventDefault();pNav(1)}
+  else if(e.key==='ArrowLeft'||e.key==='ArrowUp'||e.key==='PageUp'){e.preventDefault();pNav(-1)}
+  else if(e.key==='Home'){e.preventDefault();allStages[0].scrollIntoView({behavior:'smooth'})}
+  else if(e.key==='End'){e.preventDefault();allStages[allStages.length-1].scrollIntoView({behavior:'smooth'})}
+  else if(e.key==='f'||e.key==='F11'){e.preventDefault();tFull()}
+  else if(e.key==='Escape'){if(document.fullscreenElement)document.exitFullscreen()}
+  else if(e.key==='e'||e.key==='E'){tEdit()}
+});
+</script>
+<script>/* kg-preview: #<heading> \uc704\uce58\ub85c \uc774\ub3d9 */
+(function(){function norm(t){return (t||'').replace(/\s+/g,'').toLowerCase()}
+function go(){var h=decodeURIComponent(location.hash.slice(1));if(!h)return;var k=norm(h).slice(0,24);if(!k)return;
+var best=null,bl=1e9,els=document.body.querySelectorAll('h1,h2,h3,h4,h5,p,div,span,li,td,text,tspan,section,article');
+for(var i=0;i<els.length;i++){var e=els[i],t=norm(e.textContent);if(t.length<bl&&t.indexOf(k)>-1){best=e;bl=t.length}}
+if(!best)return;var box=best.closest('section,[class*=slide],[class*=page],article')||best;
+box.scrollIntoView({block:'start'});box.style.outline='3px solid #c0504d';box.style.outlineOffset='4px';
+setTimeout(function(){box.style.outline=''},2600)}
+window.addEventListener('load',function(){setTimeout(go,400)});window.addEventListener('hashchange',go)})();</script></body>
+</html>

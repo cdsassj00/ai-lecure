@@ -22,23 +22,37 @@ Google Drive `강의안/01_강의관련` 폴더의 HTML 강의안을 지식그�
 ```
 kg/
   extract.py          HTML → 슬라이드/섹션 텍스트 (base64 이미지 제거, JS로 그리는 SVG 강의안도 복원)
-  vocab.py            개념·고객사·문서유형 사전 ← 여기를 고쳐서 그래프를 다듬는다
+  content_topics.py   내용 주제 체계 (대주제 7 · 소주제 40, 키워드) ← 슬라이드를 주제로 묶는 기준
+  topic_map.py        슬라이드 → 주제 배정, 중복 슬라이드 합치기 → graph/topics.json
+  vocab.py            개념·고객사·문서유형·과정 묶음 사전
   build.py            그래프 빌드 (로컬 폴더 --src / Drive 다운로드 --raw, 증분)
   query.py            search · pack(재료팩) · doc · concept · client · stats
   drive_sync.py       클라우드 세션용 Drive 매니페스트 갱신·다운로드 디코딩
   drive_fetch.py      GitHub Actions용 Drive API 동기화 (바뀐 파일만 다운로드)
-  viewer_template.html
-graph/                빌드 산출물 (INDEX.md, documents.json, chunks.jsonl, graph.json, viewer.html)
+  map_template.html   강의 콘텐츠 지도 화면
+graph/                빌드 산출물 (INDEX.md, documents.json, chunks.jsonl, graph.json, topics.json, viewer.html)
+site/                 배포용: index.html(콘텐츠 지도) + p/<fileId>.html(강의안 원본 미리보기)
 data/drive_manifest.json   Drive 폴더 파일 목록
 scripts/sync_local.*       로컬 전체 빌드 + push
 .claude/skills/lecture-kg/ Claude가 이 그래프를 쓰는 절차
 ```
 
+## 강의 콘텐츠 지도 (화면)
+
+`site/index.html`(또는 `graph/viewer.html`)을 열면 됩니다.
+
+- **지도**: 대주제 7개 안에 소주제 40개가 버블로 들어 있습니다. 버블 크기는 슬라이드 수, 색 진하기는 그 주제를 다룬 강의안 수입니다.
+- **주제 선택**: 오른쪽에 그 주제로 가르친 슬라이드가 모입니다. 여러 강의안에 똑같이 들어간 슬라이드는 한 장으로 합치고 "강의안 N개에서 사용"으로 표시합니다.
+  함께 가르친 주제, 강의안별로 좁혀 보기도 할 수 있습니다.
+- **미리보기**: 슬라이드 제목을 누르면 팝업이 열립니다. '원본 화면' 탭은 강의안 HTML을 그대로 띄우고 해당 슬라이드로 이동합니다.
+  '핵심 내용' 탭은 그 강의안의 목차와 슬라이드 본문을 보여 줍니다.
+- **컨텍스트 만들기**: 슬라이드를 체크하고 버튼을 누르면 새 강의안 작성용 마크다운이 만들어집니다. 복사해서 Claude에게 붙여 넣으면 됩니다.
+
 ## 그래프 모델
 
 - **노드**: 강의 주제(11개), 문서(강의안 계열), 개념(55개, 7개 분류), 분류, 고객사, 문서유형
-- **강의 주제**: `kg/vocab.py`의 `TOPICS`. 파일명 규칙이 맞으면 그 주제, 아니면 다루는 개념 점수로 가장 가까운 주제에 배정합니다.
-  뷰어의 첫 화면(주제 지도)과 `python kg/query.py topic`이 이 묶음을 씁니다.
+- **과정 묶음**: `kg/vocab.py`의 `TOPICS`. 강의안(파일) 단위로 어떤 과정에 속하는지 나눕니다. `python kg/query.py course`에서 씁니다.
+- **내용 주제**: `kg/content_topics.py`. 슬라이드 단위로 무엇을 가르쳤는지 나눕니다. 콘텐츠 지도와 `context` 명령이 씁니다.
 - **엣지**
   - `다룸`: 문서→개념 (가중치 = 본문 언급 수, 제목에 나오면 가중)
   - `함께 등장`: 개념↔개념 (같은 문서에 3회 이상 함께 등장)
@@ -59,9 +73,13 @@ python kg/query.py search "하네스 권한 로그"
 # 한 문서 목차·본문
 python kg/query.py doc 에이전틱AI_실무활용 --full
 
-# 강의 주제별 목록
-python kg/query.py topic
-python kg/query.py topic 데이터분석
+# 내용 주제별 컨텍스트 (슬라이드 원문 모음)
+python kg/query.py topics
+python kg/query.py context "MCP" -n 20 -o ctx.md
+
+# 과정 묶음별 강의안 목록
+python kg/query.py course
+python kg/query.py course 데이터분석
 
 # 개념·고객사 이력
 python kg/query.py concept MCP
@@ -80,4 +98,4 @@ Claude가 `CLAUDE.md`와 `lecture-kg` 스킬을 따라 재료팩을 만들고, �
 - **클라우드**: Claude에게 "강의안 그래프를 드라이브와 동기화해줘"라고 요청하면 됩니다.
   새로 생기거나 바뀐 파일 중 40KB~9.5MB인 파일만 받아서 증분 빌드합니다.
 
-`graph/viewer.html`을 브라우저로 열면 그래프를 탐색할 수 있습니다.
+`site/p/`의 미리보기는 저장소 용량을 줄이려고 1.5MB가 넘는 원본에서 base64 이미지를 뺀 판입니다(현재 약 46MB).

@@ -1,0 +1,1807 @@
+<!doctype html>
+<html lang="ko">
+<head><meta name="robots" content="noindex, nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>삼성전자 AI 데이터분석 실무 · 8H</title>
+<style>
+:root{--bg:#f5f6f8;--surface:#fff;--tint:#e5e9ef;--line:#d7dee8;--line2:#bdc7d4;--ink:#102139;--body:#3d4c60;--muted:#68758a;--faint:#93a1b3;--navy:#101827;--coral:#b94a48;--coral-dark:#943539;--green:#2e7d5b;--gold:#c38424;--blue:#4266a3;--cream:#fff4d6;--program-navy:#071724;--program-blue:#1769aa;--program-cyan:#0891a8;--program-practice:#edf8f8;--program-output:#f7f4df}
+*{box-sizing:border-box}html,body{margin:0;background:#dce1e8;color:var(--ink);font-family:"Pretendard Variable",Pretendard,"Noto Sans KR","Malgun Gothic",sans-serif;word-break:keep-all;overflow-wrap:break-word}body{padding:54px 0}.deck{display:flex;flex-direction:column;align-items:center;gap:28px}
+.slide{width:1280px;height:720px;position:relative;overflow:hidden;background:radial-gradient(circle at 86% 16%,#fff 0,#f5f6f8 38%,#eef1f4 100%);box-shadow:0 14px 35px -22px #0d1724;flex:none}
+.topbar{height:44px;background:var(--navy);color:#f5f1e8;padding:0 48px;display:flex;align-items:center;justify-content:space-between;font-size:13px}.course{font-weight:800}.course small{font-size:10px;opacity:.68;margin-left:10px;letter-spacing:1.1px}.part{font-size:12px;color:#d5dbe4}
+.stage{height:644px;padding:18px 50px 10px;display:flex;flex-direction:column}
+.eyebrow{color:var(--coral);font-size:12.5px;font-weight:900;letter-spacing:.5px;margin-bottom:5px}
+.title{font-size:32px;line-height:1.18;letter-spacing:-1.2px;margin:0;font-weight:900}
+.title.long{font-size:26px;letter-spacing:-.8px;line-height:1.22}
+.split-right pre,.quote-main pre{font-family:Consolas,"D2Coding",monospace;font-size:12.2px;line-height:1.42;background:#0d1724;color:#e6edf5;padding:12px 14px;margin:8px 0 0;white-space:pre-wrap}
+.subtitle{font-size:16.5px;line-height:1.5;color:var(--body);margin:6px 0 0}
+.content{flex:1;min-height:0;margin-top:12px;position:relative;display:flex;align-items:stretch}
+.anchor{min-height:52px;flex:none;border-top:2px solid var(--navy);display:flex;align-items:center;gap:16px;margin-top:10px;padding:7px 3px 0;font-size:15px;line-height:1.4}
+.anchor b{background:var(--navy);color:#fff;padding:5px 11px;border-radius:4px;font-size:12px}
+.anchor span{font-weight:700;color:var(--ink)}
+footer{position:absolute;left:0;right:0;bottom:0;height:32px;background:rgba(255,255,255,.92);border-top:1px solid var(--line);display:flex;align-items:center;padding:0 50px;color:var(--muted);font-size:11px}
+footer span:nth-child(2){margin-left:auto;margin-right:18px}footer b{font-size:12px;color:var(--ink)}
+.toolbar{position:fixed;right:16px;top:12px;z-index:1000;background:#101827ed;border:1px solid #33445a;border-radius:8px;padding:7px 9px;display:flex;gap:6px;align-items:center;box-shadow:0 8px 24px #0004}
+.toolbar button{background:#fff;color:#102139;border:0;border-radius:5px;padding:7px 10px;font-weight:800;cursor:pointer}
+.toolbar span{color:#fff;font-size:12px;margin-left:4px;min-width:56px}
+.editing [data-editable]{outline:2px dashed #b94a48;outline-offset:3px}
+.presenting{padding:0;background:#05080d;overflow:hidden}.presenting .toolbar{display:none}.presenting .deck{display:block}
+.presenting .slide{display:none;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) scale(var(--scale,1));transform-origin:center;box-shadow:none}
+.presenting .slide.active{display:block}
+body.single{padding:0;overflow:hidden;background:#fff}.single .toolbar{display:none}.single .deck{display:block}.single .slide{display:none;box-shadow:none}.single .slide.active{display:block}
+
+.cover{background:radial-gradient(circle at 78% 18%,#1c3a52 0,#0c1c2b 42%,#071018 100%);color:#fff}
+.cover:before{content:"";position:absolute;width:640px;height:640px;border:1px solid #5aa0c455;border-radius:50%;right:-140px;top:-160px;box-shadow:0 0 0 90px #5aa0c40a,0 0 0 180px #5aa0c408}
+.cover-rail{height:48px;border-bottom:1px solid #ffffff28;display:flex;justify-content:space-between;align-items:center;padding:0 54px;font-size:12px;letter-spacing:1.2px;color:#c9d6df}
+.cover-main{position:absolute;left:76px;right:74px;top:118px;bottom:70px;display:flex;flex-direction:column;justify-content:center}
+.cover-kicker{font-size:14px;color:#8ec8e8;font-weight:900;letter-spacing:1.2px;margin-bottom:18px}
+.cover h1{font-size:64px;line-height:1.08;letter-spacing:-2.8px;margin:0;max-width:980px}
+.cover h1 em{font-style:normal;color:#b8e7cf}
+.cover p{font-size:20px;color:#d5e0e6;margin:22px 0 40px;max-width:900px}
+.cover-route{display:flex;align-items:center;gap:12px;font-size:14px;color:#e4eef2}
+.cover-route span{border-top:2px solid #6db3d4;padding-top:9px;min-width:132px}
+.cover-route i{width:28px;height:1px;background:#6c8f99}
+.cover footer{background:#050b0ccc;border-color:#ffffff22;color:#c2d2cb}
+
+.program-cover{background:#071724;color:#f7fbfd;padding:38px 58px 30px}
+.program-cover:before{content:"";position:absolute;width:520px;height:520px;right:-160px;top:-120px;border-radius:50%;background:radial-gradient(circle,#1769aa33,transparent 68%)}
+.program-cover:after{content:"";position:absolute;width:420px;height:420px;left:-180px;bottom:-220px;border:1px solid #1769aa44;border-radius:50%}
+.program-cover__id{position:relative;z-index:1;display:flex;justify-content:space-between;align-items:center;height:30px;border-bottom:1px solid #ffffff22;font-size:12px;letter-spacing:.8px;color:#c7d7e2}
+.program-cover__main{position:relative;z-index:1;margin-top:36px;max-width:1050px}
+.program-path{position:relative;z-index:1;margin-top:28px;display:grid;grid-template-columns:repeat(8,1fr);gap:8px}
+.program-path span{border-top:2px solid #5aa0c4;padding:10px 6px 0;font-size:12.5px;line-height:1.35;color:#d5e2ea}
+.program-path b{display:block;color:#8ec8e8;font-size:11px;letter-spacing:.4px;margin-bottom:4px}
+.program-cover__code{font-size:12px;letter-spacing:2.4px;color:#8ec8e8;font-weight:800}
+.program-cover h1{margin:16px 0 0;font-size:60px;line-height:1.08;letter-spacing:-.05em;font-weight:900}
+.program-cover .lead{margin:18px 0 0;font-size:18px;line-height:1.5;color:#d5e2ea;max-width:860px}
+.program-tags{display:flex;gap:8px;margin-top:22px;flex-wrap:wrap}
+.program-tags span{border:1px solid #ffffff36;padding:6px 12px;font-size:13px;color:#e7f2f7}
+.program-facts{position:absolute;left:58px;right:58px;bottom:108px;z-index:1;display:grid;grid-template-columns:1.1fr 1fr 1.2fr;gap:16px;border-top:1px solid #ffffff28;padding-top:16px}
+.program-facts>div{font-size:13.5px;line-height:1.45;color:#d5e2ea}
+.program-facts b{display:block;color:#8ec8e8;font-size:12px;margin-bottom:6px;letter-spacing:.4px}
+.program-meta{position:absolute;right:58px;bottom:58px;display:flex;gap:28px;font-size:13px;color:#c7d7e2;z-index:1}
+.program-meta b{display:block;color:#fff;font-size:16px;margin-top:4px}
+.program-cover footer{background:transparent;border:0;color:#9bb0bd}
+
+.curriculum-page{background:#f5f6f8}
+.curriculum-page .stage{padding:12px 44px 8px}
+.curr-head{display:flex;justify-content:space-between;align-items:flex-end;height:62px}
+.curr-head h1{font-size:26px;margin:0}.curr-head p{margin:4px 0 0;color:var(--muted);font-size:13px}
+.curr-head .right{text-align:right;font-size:13px;color:var(--body)}
+.curriculum-ledger{--curriculum-cols:62px 214px 260px 314px 270px 72px;height:552px;border-top:3px solid var(--navy);border-bottom:2px solid var(--navy);width:1192px;margin-top:8px}
+.curriculum-head,.curriculum-row{display:grid;grid-template-columns:var(--curriculum-cols)}
+.curriculum-head{height:38px;background:var(--navy);color:#fff;font-size:12px;font-weight:800}
+.curriculum-head>div,.curriculum-row>div{padding:7px 9px;display:flex;flex-direction:column;justify-content:center}
+.curriculum-body{height:511px;display:grid;min-height:0}
+.rows-4 .curriculum-body{grid-template-rows:repeat(4,minmax(0,1fr))}
+.curriculum-row{border-bottom:1px solid var(--line);background:#fff}
+.curriculum-row:last-child{border-bottom:0}
+.curriculum-row .no{background:#eef1f4;color:var(--program-blue);font-size:22px;font-weight:900;align-items:center}
+.curriculum-row .no small{display:block;font-size:10px;color:var(--muted);font-weight:800}
+.curriculum-row .topic b{font-size:13.5px;line-height:1.3}
+.curriculum-row .topic span,.curriculum-row ul{font-size:11.2px;line-height:1.45;color:var(--body);margin:4px 0 0;padding:0 0 0 14px}
+.curriculum-row .practice{background:var(--program-practice);border-left:3px solid var(--program-cyan)}
+.curriculum-row .output{background:var(--program-output)}
+.curriculum-row .output b{font-size:12.5px}
+.curriculum-row .mins{text-align:center;align-items:center;color:var(--muted);font-size:12px;font-weight:800}
+.curriculum-page .stage{height:auto}
+.curriculum-page footer{position:absolute}
+
+.chapter-divider{display:flex;flex-direction:column;padding:0;background:linear-gradient(135deg,#f5f6f8 0,#edf0f3 70%,#e7ecef 100%)}
+.chapter-top{height:44px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 46px;background:var(--navy);color:#f3ede2;font-size:12px}
+.chapter-top small{opacity:.65;margin-left:8px}
+.chapter-head{flex:none;padding:20px 50px 18px;background:var(--tint);border-bottom:1.5px solid var(--line2)}
+.chapter-eyebrow{font-size:13px;color:var(--coral);font-weight:900;letter-spacing:.4px}
+.chapter-head h1{margin:5px 0 0;font-size:34px;letter-spacing:-1.3px}
+.chapter-body{flex:1;display:grid;grid-template-columns:240px 1fr;align-items:center;padding:0 80px 28px 50px;min-height:0}
+.chapter-no{font-size:110px;font-weight:900;line-height:.9;text-align:center;letter-spacing:-5px;color:#d3dae4}
+.chapter-message{border-left:4px solid var(--blue);padding:18px 0 18px 40px}
+.chapter-message h2{margin:0;font-size:30px;line-height:1.35;letter-spacing:-1.1px}
+.chapter-message p{font-size:17px;line-height:1.55;color:var(--body);max-width:720px;margin:14px 0 0}
+.chapter-next{display:flex;gap:18px;margin-top:18px;font-size:13.5px;color:var(--muted)}
+.chapter-next span{border-left:2px solid var(--line2);padding-left:12px}
+
+.prop{width:100%;display:grid;grid-template-rows:1fr auto;gap:16px}
+.prop-line{font-size:40px;line-height:1.28;font-weight:900;letter-spacing:-1.6px;display:flex;align-items:center}
+.prop-line em{font-style:normal;color:var(--coral)}
+.prop-ev{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.prop-ev>div{background:#fff;border-top:5px solid var(--blue);padding:18px 22px}
+.prop-ev b{display:block;font-size:17px;margin-bottom:8px}.prop-ev p{margin:0;font-size:14.5px;line-height:1.5;color:var(--body)}
+
+.before-after{width:100%;display:grid;grid-template-columns:1fr 110px 1fr;align-items:stretch}
+.before,.after{padding:22px 28px;border-top:5px solid var(--coral);background:#fff;display:flex;flex-direction:column;justify-content:center}
+.after{border-top-color:var(--green)}
+.before>span,.after>span{font-size:13px;font-weight:900;color:var(--muted)}
+.before h3,.after h3{font-size:24px;margin:10px 0 16px}
+.before ol,.after ol{font-size:15.5px;line-height:1.7;color:var(--body);padding-left:22px;margin:0}
+.axis{display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--muted);font-size:12px;text-align:center}
+.axis i{height:150px;width:2px;background:var(--line2);position:relative;margin:12px}
+.axis i:after{content:"";position:absolute;bottom:-2px;left:-5px;border:6px solid transparent;border-top-color:var(--line2)}
+
+.hub-map{width:100%;height:100%;position:relative}
+.hub-core{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:196px;height:136px;border-radius:50%;background:var(--navy);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:22px;font-weight:900;z-index:2;text-align:center}
+.hub-core small{font-size:12px;margin-top:6px;color:#cbd5df;font-weight:700}
+.hub-item{position:absolute;width:228px;min-height:78px;background:#fff;border-left:5px solid var(--blue);padding:12px 14px;z-index:2}
+.hub-item b{font-size:16px}.hub-item span{display:block;font-size:12.5px;color:var(--body);margin-top:4px;line-height:1.4}
+.h1{left:2%;top:2%}.h2{right:2%;top:2%}.h3{left:2%;bottom:2%}.h4{right:2%;bottom:2%}.h5{left:38%;top:0}.h6{left:38%;bottom:0}
+.hub-map svg{position:absolute;inset:0;width:100%;height:100%;z-index:0}
+.hub-map svg line{stroke:#bdc7d4;stroke-width:1.8}
+
+.myth-grid{width:100%;display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--line2);background:#fff}
+.claim-side,.correction-side{padding:28px 36px;display:flex;flex-direction:column;justify-content:center}
+.claim-side{background:#f4e7e7;border-right:1px solid var(--line2)}.correction-side{background:#e8f1ed}
+.myth-grid span{font-size:13px;font-weight:900;letter-spacing:.7px;color:var(--muted)}
+.myth-grid strong{font-size:28px;letter-spacing:-1px;margin:10px 0 14px}
+.claim-side strong{color:var(--coral)}.correction-side strong{color:var(--green)}
+.myth-grid ul{font-size:16px;line-height:1.7;margin:0;padding-left:20px;color:var(--body)}
+
+.open-columns{width:100%;display:grid;border-top:3px solid var(--navy);border-bottom:3px solid var(--navy);background:#fff}
+.open-columns.three{grid-template-columns:repeat(3,1fr)}
+.open-columns>div{padding:22px 28px;display:flex;flex-direction:column;justify-content:center}
+.open-columns>div+div{border-left:1px solid var(--line2)}
+.open-columns span{font-size:12.5px;color:var(--coral);font-weight:900}
+.open-columns h3{font-size:22px;margin:10px 0 12px}
+.open-columns p{font-size:14.5px;line-height:1.5;color:var(--body);margin:0}
+.open-columns small{font-size:12.5px;color:var(--green);font-weight:800;margin-top:16px;border-top:1px solid var(--line);padding-top:10px}
+
+.river{width:100%;display:grid;grid-template-rows:1fr 88px;gap:14px}
+.river-main{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;position:relative;align-items:center}
+.river-main:before{content:"";position:absolute;left:3%;right:3%;height:14px;background:linear-gradient(90deg,var(--blue),var(--green));top:50%;transform:translateY(-50%);border-radius:8px}
+.river-main>span{z-index:1;background:#fff;border-top:5px solid var(--blue);min-height:168px;padding:16px 12px;display:flex;flex-direction:column;justify-content:center;box-shadow:0 8px 18px -16px #000}
+.river-main>span:nth-child(n+4){border-top-color:var(--green)}
+.river-main b{font-size:15px}.river-main small{font-size:12.5px;color:var(--body);margin-top:8px;line-height:1.4}
+.river-branch{display:grid;grid-template-columns:150px 1fr 1fr 1fr;align-items:center;background:#f3e7e7;border-left:6px solid var(--coral);padding:0 16px;gap:12px}
+.river-branch b{font-size:15px}.river-branch span{font-size:13px;border-left:1px solid #d9bcbc;padding-left:12px}
+
+.split-explain{width:100%;display:grid;grid-template-columns:42% 58%;gap:22px}
+.split-left,.split-right{background:#fff;padding:20px 24px;display:flex;flex-direction:column;justify-content:center}
+.split-left{border-top:5px solid var(--navy)}.split-right{border-top:5px solid var(--blue)}
+.split-left h3,.split-right h3{font-size:20px;margin:0 0 12px}
+.split-left p,.split-right p{font-size:14.5px;line-height:1.5;color:var(--body);margin:0 0 10px}
+.split-right ol{margin:0;padding-left:20px;font-size:14.5px;line-height:1.65;color:var(--body)}
+
+.quote-box{width:100%;display:grid;grid-template-columns:1.15fr .85fr;gap:22px}
+.quote-main{background:var(--navy);color:#fff;padding:28px 32px;display:flex;flex-direction:column;justify-content:center}
+.quote-main q{font-size:26px;line-height:1.4;font-weight:800;letter-spacing:-.8px}
+.quote-main q:before,.quote-main q:after{content:""}
+.quote-main small{margin-top:16px;color:#b8c8d4;font-size:13px}
+.quote-side{background:#fff;border-top:5px solid var(--gold);padding:20px 22px;display:flex;flex-direction:column;justify-content:center}
+.quote-side b{font-size:16px}.quote-side ul{margin:10px 0 0;padding-left:18px;font-size:14.5px;line-height:1.6;color:var(--body)}
+
+.brief-sheet{width:100%;display:grid;grid-template-columns:1.7fr .7fr;gap:18px}
+.brief-main{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:repeat(3,1fr);border-top:2px solid var(--navy);border-bottom:2px solid var(--navy);background:#fff}
+.brief-main>div{padding:12px 16px;border-bottom:1px solid var(--line);display:flex;flex-direction:column;justify-content:center}
+.brief-main>div:nth-child(odd){border-right:1px solid var(--line)}
+.brief-main>div:nth-last-child(-n+2){border-bottom:0}
+.brief-main b{font-size:16px;color:var(--green)}.brief-main span{font-size:13.5px;color:var(--body);margin-top:5px;line-height:1.45}
+.brief-cue{background:var(--navy);color:#fff;padding:22px;display:flex;flex-direction:column;justify-content:center}
+.brief-cue>b{font-size:20px;color:#b8e7cf}.brief-cue p{font-size:15.5px;line-height:1.5}
+.brief-cue small{font-size:12.5px;line-height:1.5;color:#cbd5df;border-top:1px solid #ffffff33;padding-top:12px}
+
+.anatomy-map{width:100%;height:100%;position:relative}
+.anatomy-core{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:188px;height:128px;border-radius:50%;background:var(--navy);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:22px;font-weight:900;z-index:2;text-align:center}
+.anatomy-core small{font-size:12px;margin-top:6px;color:#cbd5df}
+.anno{position:absolute;width:232px;min-height:74px;background:#fff;border-left:5px solid var(--blue);padding:12px 14px;z-index:2}
+.anno b{font-size:15.5px}.anno span{display:block;font-size:12.5px;color:var(--body);margin-top:4px;line-height:1.4}
+.a1{left:2%;top:2%}.a2{right:2%;top:2%}.a3{left:2%;bottom:2%}.a4{right:2%;bottom:2%}.a5{left:38%;top:0}.a6{left:38%;bottom:0}
+.anatomy-map svg{position:absolute;inset:0;width:100%;height:100%;z-index:0}
+.anatomy-map svg line{stroke:#bdc7d4;stroke-width:1.8}
+
+.staircase{width:100%;height:100%;display:flex;align-items:flex-end;padding:0 8px;gap:12px}
+.stair{flex:1;background:#fff;border-top:6px solid var(--blue);padding:14px 13px;display:flex;flex-direction:column;justify-content:center}
+.stair b{font-size:16.5px}.stair span{font-size:13px;color:var(--body);margin:8px 0;line-height:1.4}
+.stair small{font-size:11.5px;color:var(--green);font-weight:800}
+.stair.s1{height:46%}.stair.s2{height:58%}.stair.s3{height:70%}.stair.s4{height:82%}.stair.s5{height:94%;border-top-color:var(--green)}
+
+.demo-stage{width:100%;display:grid;grid-template-columns:1.55fr .75fr;gap:18px}
+.demo-screen{background:#0d1724;color:#e6edf5;border-radius:8px;overflow:hidden;display:flex;flex-direction:column}
+.demo-head{height:38px;background:#202e40;display:flex;align-items:center;padding:0 16px;font-size:13px;font-weight:900;color:#a9c5e8}
+.demo-screen pre{font-family:Consolas,"D2Coding",monospace;font-size:13.5px;line-height:1.5;white-space:pre-wrap;margin:0;padding:16px 20px;flex:1}
+.observe{background:#fff;border-top:5px solid var(--green);padding:18px 20px;display:flex;flex-direction:column;justify-content:center}
+.observe>b{font-size:18px}.observe ol{font-size:13.5px;line-height:1.6;padding-left:18px;color:var(--body)}
+.observe small{font-size:12px;line-height:1.45;border-top:1px solid var(--line);padding-top:10px;color:var(--muted)}
+.console-out{background:#111f2f;border-top:1px solid #31455c;padding:10px 20px;font-family:Consolas,monospace;font-size:12.5px;color:#91d6b8}
+
+.decision-tree{width:100%;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:72px 1fr 52px;gap:12px 18px}
+.decision-root{grid-column:1/3;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:900}
+.decision-path{background:#fff;padding:16px 22px;border-top:5px solid var(--coral);display:grid;grid-template-columns:44px 1fr;align-items:center}
+.decision-path.right{border-top-color:var(--green)}
+.decision-path>span{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#f3e7e7;color:var(--coral);font-weight:900}
+.decision-path .ok{background:#e7f1ec;color:var(--green)}
+.decision-path b{font-size:18px}.decision-path p{font-size:13.5px;line-height:1.5;color:var(--body);margin:6px 0 0}
+.decision-bottom{grid-column:1/3;background:var(--cream);border-left:6px solid var(--gold);display:flex;align-items:center;padding:0 20px;font-size:14px;font-weight:800}
+
+.spectrum{width:100%;display:grid;grid-template-rows:48px 1fr 78px}
+.spectrum-axis{display:grid;grid-template-columns:auto 1fr auto;align-items:center;font-size:13px;font-weight:900;color:var(--muted)}
+.spectrum-axis i{height:3px;background:linear-gradient(90deg,var(--blue),var(--green));margin:0 14px}
+.spectrum-points{position:relative;border-top:4px solid var(--navy);margin-top:28px}
+.spectrum-points>div{position:absolute;left:var(--p);transform:translateX(-50%);top:-12px;width:168px;text-align:center}
+.spectrum-points>div:before{content:"";display:block;width:18px;height:18px;border-radius:50%;background:var(--green);border:4px solid #fff;box-shadow:0 0 0 2px var(--navy);margin:0 auto 12px}
+.spectrum-points b{font-size:14px;display:block}.spectrum-points small{font-size:11.5px;line-height:1.35;color:var(--body);display:block;margin-top:4px}
+.spectrum-basis{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.spectrum-basis span{background:var(--cream);border-left:5px solid var(--gold);padding:14px 16px;font-size:13.5px;font-weight:800;line-height:1.45}
+
+.zoom-sequence{width:100%;display:grid;grid-template-columns:.7fr 48px 1.4fr .55fr;gap:12px;align-items:stretch}
+.zoom-overview,.zoom-detail,.zoom-observe{background:#fff;border-top:5px solid var(--blue);padding:16px 18px}
+.zoom-overview b,.zoom-detail b,.zoom-observe b{display:block;font-size:16px}
+.zoom-overview>span{display:block;color:var(--body);font-size:13px;margin:10px 0 14px;line-height:1.45}
+.sheet-tabs{display:flex;flex-direction:column;gap:8px}
+.sheet-tabs i{font-style:normal;background:var(--tint);padding:10px 12px;font-size:13px;font-weight:800}
+.zoom-arrow{display:flex;align-items:center;justify-content:center;font-size:36px;color:var(--coral)}
+.zoom-detail table{width:100%;border-collapse:collapse;margin:12px 0}
+.zoom-detail th,.zoom-detail td{border:1px solid var(--line);padding:8px;text-align:center;font-size:13px}
+.zoom-detail th{background:var(--navy);color:#fff}
+.zoom-detail small{font-size:12.5px;color:var(--body);line-height:1.4}
+.zoom-observe{border-top-color:var(--green);display:flex;flex-direction:column;gap:8px}
+.zoom-observe span{background:#edf5f1;padding:9px 10px;font-size:12.5px;line-height:1.4}
+
+.cycle{width:100%;height:100%;position:relative}
+.cycle:before{content:"";position:absolute;width:320px;height:320px;border:3px dashed var(--line2);border-radius:50%;left:50%;top:50%;transform:translate(-50%,-50%)}
+.cycle-node{position:absolute;width:206px;min-height:70px;background:#fff;border-left:5px solid var(--green);padding:12px 14px;z-index:2}
+.cycle-node b{font-size:15.5px}.cycle-node span{display:block;font-size:12.5px;color:var(--body);margin-top:4px;line-height:1.4}
+.cycle .n1{left:6%;top:2%}.cycle .n2{left:38%;top:0}.cycle .n3{right:6%;top:18%}.cycle .n4{right:16%;bottom:2%}.cycle .n5{left:16%;bottom:2%}
+.cycle-center{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);background:var(--navy);color:#fff;border-radius:50%;width:140px;height:140px;display:flex;align-items:center;justify-content:center;text-align:center;font-size:18px;font-weight:900;z-index:2}
+
+.wire-map{width:100%;display:grid;grid-template-columns:230px 1fr 168px 230px;align-items:center;position:relative}
+.wire-col{height:100%;display:flex;flex-direction:column;justify-content:space-around;z-index:2}
+.wire-node{background:#fff;border-left:5px solid var(--blue);padding:14px 14px;box-shadow:0 6px 18px -16px #000}
+.wire-node b{display:block;font-size:16px}.wire-node span{display:block;font-size:12.5px;color:var(--body);margin-top:5px;line-height:1.4}
+.wire-map svg{width:100%;height:100%;grid-column:2/4;grid-row:1;z-index:0}
+.wire-map svg path{fill:none;stroke:var(--blue);stroke-width:2.2}
+.harness-core{grid-column:3;grid-row:1;z-index:3;width:150px;height:250px;background:var(--navy);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:10px}
+.harness-core strong{font-size:20px;color:#b8e7cf;margin-bottom:12px}
+.harness-core span{font-size:13px;padding:6px 0;border-top:1px solid #ffffff2c;width:88px;text-align:center}
+.wire-col.right{grid-column:4;grid-row:1}
+.wire-col.right .wire-node{border-left-color:var(--green)}
+
+.case-canvas{width:100%;display:grid;grid-template-columns:.7fr 1.4fr .7fr;gap:14px}
+.case-context,.case-result{background:#fff;border-top:5px solid var(--blue);padding:18px 18px;display:flex;flex-direction:column;justify-content:center}
+.case-context b,.case-result>b{font-size:16px;color:var(--blue)}
+.case-context p{font-size:13.5px;line-height:1.5;color:var(--body);margin:8px 0 12px}
+.case-context ul,.case-result ul{font-size:13.5px;line-height:1.55;color:var(--body);padding-left:18px;margin:0}
+.case-flow{display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,#fff,#eef3f5);padding:16px;gap:8px}
+.case-flow span{flex:1;text-align:center}.case-flow b{font-size:14.5px;display:block}
+.case-flow small{font-size:12px;color:var(--body);display:block;margin-top:6px;line-height:1.35}
+.case-flow i{font-size:22px;font-style:normal;color:var(--green)}
+.case-result{border-top-color:var(--green)}
+
+.matrix-wrap{width:100%;display:flex}
+.matrix{width:100%;border-collapse:collapse;table-layout:fixed;background:#fff;border-top:3px solid var(--navy);border-bottom:2px solid var(--navy)}
+.matrix th{background:var(--navy);color:#fff;font-size:14px;padding:10px 12px;text-align:left}
+.matrix td{font-size:14px;line-height:1.4;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:middle}
+.matrix tr:last-child td{border-bottom:0}
+.matrix tbody tr:nth-child(even){background:#f5f7f8}
+
+.number-story{width:100%;display:grid;grid-template-columns:380px 1fr;gap:36px;align-items:stretch}
+.big-number{background:var(--navy);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:84px;font-weight:900;line-height:.85;letter-spacing:-4px;border-radius:10px;text-align:center;padding:20px}
+.big-number small{font-size:16px;letter-spacing:0;margin-top:18px;color:#b8e7cf;font-weight:700}
+.story-lines{display:grid;grid-template-rows:1fr 1fr 1fr;border-top:2px solid var(--ink);border-bottom:2px solid var(--ink)}
+.story-lines>div{padding:14px 8px 12px 0;display:grid;grid-template-columns:120px 1fr;align-items:center}
+.story-lines>div+div{border-top:1px solid var(--line2)}
+.story-lines b{font-size:16px;color:var(--coral)}.story-lines p{font-size:15.5px;line-height:1.5;margin:0;color:var(--body)}
+
+.case-strip{width:100%;display:grid;grid-template-rows:repeat(3,1fr);border-top:2px solid var(--navy);border-bottom:2px solid var(--navy);background:#fff}
+.case-strip>div{display:grid;grid-template-columns:140px 1fr 1fr 1fr;align-items:center;padding:0 16px;gap:12px}
+.case-strip>div+div{border-top:1px solid var(--line)}
+.case-strip b{font-size:18px}.case-strip span{font-size:13.5px;line-height:1.45;color:var(--body)}
+
+.layer-stack{width:100%;display:flex;flex-direction:column-reverse;align-items:center;justify-content:center;gap:8px}
+.layer{height:68px;display:grid;grid-template-columns:170px 1fr;align-items:center;padding:0 22px;border-left:7px solid var(--blue);background:#fff}
+.layer b{font-size:16.5px}.layer span{font-size:14px;color:var(--body);line-height:1.4}
+.layer.l1{width:64%;border-color:#b94a48}.layer.l2{width:74%;border-color:#c38424}.layer.l3{width:84%;border-color:#4266a3}.layer.l4{width:94%;border-color:#101827}
+
+.timeline-board{width:100%;display:grid;grid-template-columns:repeat(4,1fr);position:relative;align-items:center;gap:12px}
+.timeline-board:before{content:"";position:absolute;left:5%;right:5%;top:50%;height:4px;background:var(--line2)}
+.time-node{z-index:1;background:#fff;border:1px solid var(--line2);border-top:6px solid var(--blue);padding:18px 14px;height:210px;display:flex;flex-direction:column;justify-content:center;box-shadow:0 8px 18px -16px #000}
+.time-node.hot{border-top-color:var(--green);transform:translateY(-12px)}
+.time-node time{font-size:14px;font-weight:900;color:var(--blue)}
+.time-node b{font-size:18px;margin:12px 0 8px}.time-node span{font-size:13.5px;line-height:1.45;color:var(--body)}
+
+.recap-map{width:100%;height:100%;position:relative}
+.recap-center{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:196px;height:120px;background:var(--navy);color:#fff;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:900;z-index:2;text-align:center}
+.recap-item{position:absolute;width:232px;min-height:86px;background:#fff;border-top:5px solid var(--green);padding:12px 14px;z-index:2}
+.recap-item b{font-size:16px}.recap-item span{display:block;color:var(--body);font-size:12.5px;margin-top:6px;line-height:1.4}
+.recap-map .r1{left:3%;top:2%}.recap-map .r2{right:3%;top:2%}.recap-map .r3{left:3%;bottom:2%}.recap-map .r4{right:3%;bottom:2%}
+.recap-map .r5{left:38%;top:0}.recap-map .r6{left:38%;bottom:0}
+.recap-map svg{position:absolute;inset:0;width:100%;height:100%}
+.recap-map svg path,.recap-map svg line{stroke:#bdc7d4;stroke-width:1.8;fill:none}
+
+.discuss{width:100%;display:grid;grid-template-columns:1.1fr .9fr;gap:18px}
+.discuss-q{background:var(--navy);color:#fff;padding:26px 28px;display:flex;flex-direction:column;justify-content:center}
+.discuss-q b{font-size:13px;color:#8ec8e8}.discuss-q h3{font-size:26px;line-height:1.35;margin:10px 0 0}
+.discuss-axis{display:grid;grid-template-rows:1fr 1fr;gap:12px}
+.discuss-axis>div{background:#fff;border-left:5px solid var(--gold);padding:16px 18px;display:flex;flex-direction:column;justify-content:center}
+.discuss-axis b{font-size:16px}.discuss-axis p{margin:6px 0 0;font-size:14px;line-height:1.45;color:var(--body)}
+
+.roadmap{width:100%;display:grid;grid-template-columns:repeat(3,1fr);gap:14px;align-items:stretch;position:relative}
+.roadmap:before{content:"";position:absolute;left:6%;right:6%;height:5px;background:linear-gradient(90deg,var(--blue),var(--green));top:50%;transform:translateY(-50%)}
+.road-seg{z-index:1;background:#fff;border-top:6px solid var(--blue);padding:20px 18px;display:flex;flex-direction:column;justify-content:center}
+.road-seg:nth-child(3){border-top-color:var(--green)}
+.road-seg time{font-size:13px;color:var(--coral);font-weight:900}
+.road-seg b{font-size:20px;margin:10px 0 8px}.road-seg span{font-size:14px;line-height:1.45;color:var(--body)}
+.road-seg small{font-size:12px;color:var(--green);margin-top:14px;border-top:1px solid var(--line);padding-top:8px}
+
+.closing{background:radial-gradient(circle at 78% 30%,#1c3a52 0,#0c1c2b 42%,#071018 100%);color:#fff}
+.closing .topbar{border-bottom:1px solid #ffffff26}
+.closing .subtitle{color:#cbdad4}.closing .anchor{border-color:#b8e7cf}
+.closing .anchor b{background:#b8e7cf;color:#0b211c}.closing .anchor span{color:#fff}
+.closing footer{background:#050b0ccc;border-color:#ffffff25;color:#c2d2cb}
+.closing-map .recap-center{background:#b8e7cf;color:#0b211c}
+.closing-map .recap-item{background:#ffffff12;color:#fff;border-top-color:#8dd0b1}
+.closing-map .recap-item span{color:#d3dfda}
+.closing-map svg line{stroke:#ffffff40}
+
+@media print{body{padding:0;background:#fff}.toolbar{display:none!important}.deck{display:block}.slide{box-shadow:none;break-after:page;page-break-after:always;margin:0}}
+@page{size:1280px 720px;margin:0}
+@media(max-width:1300px) and (not print){body:not(.presenting):not(.single) .slide{transform:scale(.78);transform-origin:top center;margin-bottom:-158px}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div class="toolbar">
+  <button id="presentBtn">발표</button>
+  <button id="editBtn">편집</button>
+  <button id="saveBtn">저장</button>
+  <button id="printBtn">PDF</button>
+  <span id="counter"></span>
+</div>
+<div class="deck">
+
+<section class="slide cover" id="s01" data-role="cover" data-layout="cover-stage" data-purpose="8시간 과정의 대상·목표·학습 경로를 제시한다">
+  <div class="cover-rail"><span>SAMSUNG ELECTRONICS · AI DATA ANALYSIS</span><span>2026.08.25</span></div>
+  <div class="cover-main">
+    <div class="cover-kicker">8 HOURS · PRACTICAL WORKSHOP</div>
+    <h1 data-editable>AI 데이터분석 실무 8H</h1>
+    <p data-editable>생성형 AI를 데이터 분석 보조도구가 아니라 분석 실행 에이전트로 활용하는 실무 과정입니다.</p>
+    <div class="cover-route"><span>Prompt</span><i></i><span>Code</span><i></i><span>Agent</span><i></i><span>Excel · Chart · HTML</span></div>
+  </div>
+  <footer><span>신성진 · 한국데이터사이언티스트협회</span><span>SEC-AI-DA-8H</span><b data-page-number>01</b></footer>
+</section>
+
+<section class="slide program-cover" id="s02" data-role="cover" data-layout="program-cover" data-purpose="과정 범위와 수업 방식을 고정한다">
+  <div class="program-cover__id"><span>삼성전자 · AI 데이터분석 실무</span><span>COURSE SEC-AI-DA-8H</span></div>
+  <div class="program-path">
+    <span><b>01</b>AI 데이터 분석의 변화</span>
+    <span><b>02</b>ChatGPT 데이터 분석</span>
+    <span><b>03</b>Python을 AI에게 맡기는 법</span>
+    <span><b>04</b>pyclass-notebook</span>
+    <span><b>05</b>Antigravity Agent</span>
+    <span><b>06</b>실무 데이터 자동 분석</span>
+    <span><b>07</b>Visualization &amp; Output</span>
+    <span><b>08</b>Agent Mini Project</span>
+  </div>
+  <div class="program-cover__main">
+    <div class="program-cover__code">PROMPT → CODE → AGENT</div>
+    <h1 data-editable>Prompt → Code → Agent</h1>
+    <p class="lead" data-editable>사람이 모든 코드를 직접 작성하는 방식에서, AI가 데이터 구조를 이해하고 코드를 작성·실행·수정하며 산출물까지 완성하는 방식으로 데이터 분석 업무가 변화하고 있습니다.</p>
+    <div class="program-tags"><span>ChatGPT</span><span>Python</span><span>pyclass-notebook</span><span>Antigravity</span><span>Excel · HTML</span></div>
+  </div>
+  <div class="program-facts">
+    <div><b>배울 것</b>데이터 구조를 AI와 동기화하고, 자연어 요구사항을 분석계획으로 바꾸며, 생성 코드를 읽고 수정한다. 정제·파생·집계·시각화 후 Excel·HTML로 산출한다.</div>
+    <div><b>이 과정이 다른 점</b>단순 ChatGPT 프롬프트 교육이 아니다. pyclass-notebook과 Antigravity로 프로젝트 단위 에이전트 분석을 수행하고, 자연어 요구사항만으로 미니 프로젝트를 완성한다.</div>
+    <div><b>핵심 메시지</b>Python을 잘 쓰는 사람이 되는 것보다, AI가 만든 분석 과정과 결과를 통제할 수 있는 사람이 되는 것이 이번 과정의 목표이다.</div>
+  </div>
+  <div class="program-meta"><div>수준<b>실무 입문</b></div><div>시간<b>8 Hours</b></div><div>방식<b>Hands-on / Project</b></div></div>
+  <footer><span>SEC-AI-DA-8H · 8 modules</span><span>삼성전자 · 2026.08.25</span><b data-page-number>02</b></footer>
+</section>
+
+<section class="slide curriculum-page" id="s03" data-role="program" data-layout="curriculum-ledger" data-purpose="1~4시간 모듈의 목표·실습·산출물을 한 표로 제시한다">
+  <main class="stage">
+    <div class="curr-head">
+      <div><h1 data-editable>8H Curriculum · 01–04</h1><p>SESSION · TOPIC · HANDS-ON</p></div>
+      <div class="right">2026.08.25 · 8 Hours<br>Excel/CSV · ChatGPT → Python → pyclass-notebook</div>
+    </div>
+    <div class="curriculum-ledger rows-4" role="table">
+      <div class="curriculum-head" role="row">
+        <div>SESSION</div><div>TOPIC</div><div>HANDS-ON</div><div>실습 절차 · 자료</div><div>산출물 · 검수</div><div>시간</div>
+      </div>
+      <div class="curriculum-body">
+        <div class="curriculum-row" role="row">
+          <div class="no">01<small>1H</small></div>
+          <div class="topic"><b>AI 데이터 분석의 변화</b><span>LLM · Coding Agent · Harness · MCP · Apps의 역할과 연결 구조</span></div>
+          <div><ul><li>개발자, 분석가, 실무자의 경계</li><li>DX와 AX를 함께 읽기</li><li>노코딩을 넘어 바이브코딩으로</li></ul></div>
+          <div class="practice"><ul><li>자료: 본인 반복 데이터 작업 1건</li><li>맡길 일과 직접 판단할 일 분리</li><li>확인: 검증 기준을 적었는가</li></ul></div>
+          <div class="output"><b>역할 재정의 메모</b><span>검수: 역할 진단 문항 3개</span></div>
+          <div class="mins">1H</div>
+        </div>
+        <div class="curriculum-row" role="row">
+          <div class="no">02<small>1H</small></div>
+          <div class="topic"><b>ChatGPT 데이터 분석</b><span>Excel/CSV 구조 파악 · 분석 질문 설계 · 분석계획 만들기</span></div>
+          <div><ul><li>분석 어시스트용 시스템 프롬프트 5요소</li><li>형식별 불러오기 패턴</li><li>한 단계씩 요청하는 규칙</li></ul></div>
+          <div class="practice"><ul><li>자료: 샘플시트 또는 교육용 CSV</li><li>구조 파악 → 질문 → 분석계획</li><li>확인: 질문마다 필요 컬럼이 있는가</li></ul></div>
+          <div class="output"><b>분석계획 1장</b><span>검수: 한 번에 전체 코드를 요구하지 않았는가</span></div>
+          <div class="mins">1H</div>
+        </div>
+        <div class="curriculum-row" role="row">
+          <div class="no">03<small>1H</small></div>
+          <div class="topic"><b>Python을 AI에게 맡기는 법</b><span>AI 생성 코드를 읽기 위한 최소 Python · 오류 수정 · 재실행</span></div>
+          <div><ul><li>코드 셀과 마크다운 셀</li><li>입력·처리·출력 확인</li><li>에러 전체와 직전 코드를 함께 재제공</li></ul></div>
+          <div class="practice"><ul><li>자료: AI가 준 짧은 코드 1개</li><li>경로·컬럼명 표시 후 한 셀 수정</li><li>확인: 실행 전 다음 단계로 가지 않았는가</li></ul></div>
+          <div class="output"><b>코드 읽기 메모</b><span>검수: 확인 포인트가 코드와 함께 있는가</span></div>
+          <div class="mins">1H</div>
+        </div>
+        <div class="curriculum-row" role="row">
+          <div class="no">04<small>1H</small></div>
+          <div class="topic"><b>pyclass-notebook</b><span>설치 · 셀 단위 코드 실행 · DataFrame 확인 · 반복 분석</span></div>
+          <div><ul><li>pip install pyclass-notebook</li><li>작성 → 실행 → 결과 확인 → 수정</li><li>info()와 describe()로 구조 읽기</li></ul></div>
+          <div class="practice"><ul><li>자료: 교육용 CSV</li><li>실행 → 로드 → 표 확인</li><li>확인: info 결과가 화면에 보이는가</li></ul></div>
+          <div class="output"><b>실행된 노트북</b><span>검수: 설치 로그가 아니라 표가 나왔는가</span></div>
+          <div class="mins">1H</div>
+        </div>
+      </div>
+    </div>
+  </main>
+  <footer><span>SEC-AI-DA-8H · 01–04</span><span>삼성전자 AI 데이터분석 실무</span><b data-page-number>03</b></footer>
+</section>
+
+<section class="slide curriculum-page" id="s04" data-role="program" data-layout="curriculum-ledger" data-purpose="5~8시간 모듈의 목표·실습·산출물을 한 표로 제시한다">
+  <main class="stage">
+    <div class="curr-head">
+      <div><h1 data-editable>8H Curriculum · 05–08</h1><p>에이전트 분석에서 산출물과 미니 프로젝트까지.</p></div>
+      <div class="right">외부 서비스 제한 시<br>ChatGPT 중심 + Local Python 대체 트랙</div>
+    </div>
+    <div class="curriculum-ledger rows-4" role="table">
+      <div class="curriculum-head" role="row">
+        <div>SESSION</div><div>TOPIC</div><div>HANDS-ON</div><div>실습 절차 · 자료</div><div>산출물 · 검수</div><div>시간</div>
+      </div>
+      <div class="curriculum-body">
+        <div class="curriculum-row" role="row">
+          <div class="no">05<small>1H</small></div>
+          <div class="topic"><b>Antigravity Agent</b><span>폴더 탐색 → 파일 이해 → 코드 작성 → 실행 → 오류 수정</span></div>
+          <div><ul><li>프로젝트 폴더와 파일을 읽는다</li><li>터미널에서 실행한다</li><li>오류가 나면 다시 수정한다</li></ul></div>
+          <div class="practice"><ul><li>자료: 프로젝트 폴더 + Excel/CSV</li><li>탐색 → 작성 → 실행 → 수정</li><li>확인: 파일이 저장되고 실행되는가</li></ul></div>
+          <div class="output"><b>실행 로그와 수정 기록</b><span>검수: 에이전트가 연 파일과 결과가 맞는가</span></div>
+          <div class="mins">1H</div>
+        </div>
+        <div class="curriculum-row" role="row">
+          <div class="no">06<small>1H</small></div>
+          <div class="topic"><b>실무 데이터 자동 분석</b><span>정제 · 파생지표 · 그룹 집계 · 이상치 및 리스크 탐색</span></div>
+          <div><ul><li>전처리는 청소가 아니라 해석 준비이다</li><li>info()와 describe()로 구조 읽기</li><li>groupby와 crosstab으로 집단 차이 읽기</li></ul></div>
+          <div class="practice"><ul><li>자료: 엑셀/CSV 실습 파일</li><li>타입 변환 → 파생 → 집계</li><li>확인: 제외한 행과 이유를 기록했는가</li></ul></div>
+          <div class="output"><b>전처리 로그 + 집계표</b><span>검수: 원본 파일명·변환 규칙·파생 정의</span></div>
+          <div class="mins">1H</div>
+        </div>
+        <div class="curriculum-row" role="row">
+          <div class="no">07<small>1H</small></div>
+          <div class="topic"><b>Visualization &amp; Output</b><span>차트 · Excel 분석 결과 · HTML Dashboard 자동 생성</span></div>
+          <div><ul><li>시각화는 메시지 설계 과목이다</li><li>차트 선택의 기준 표</li><li>단일 HTML 대시보드</li></ul></div>
+          <div class="practice"><ul><li>자료: 집계가 끝난 표</li><li>핵심 차트 + Excel 또는 HTML</li><li>확인: 제목·축·단위가 읽히는가</li></ul></div>
+          <div class="output"><b>차트와 HTML/Excel</b><span>검수: 차트 하나가 문장 하나를 지원하는가</span></div>
+          <div class="mins">1H</div>
+        </div>
+        <div class="curriculum-row" role="row">
+          <div class="no">08<small>1H</small></div>
+          <div class="topic"><b>Agent Mini Project</b><span>자연어 요구사항만으로 분석 프로젝트 완성 · 결과 검증</span></div>
+          <div><ul><li>캡스톤 1단계: 데이터 준비와 질문 정의</li><li>2단계 EDA → 3단계 시각화·대시보드</li><li>4단계 자동화와 보고 문서 마무리</li></ul></div>
+          <div class="practice"><ul><li>자료: 요구사항 한 문장 + 데이터</li><li>계획→분석→산출→검증</li><li>확인: 핵심 수치를 원표와 대조</li></ul></div>
+          <div class="output"><b>분석 결과 + 검증 메모</b><span>검수: 패턴과 미확정 해석이 분리됐는가</span></div>
+          <div class="mins">1H</div>
+        </div>
+      </div>
+    </div>
+  </main>
+  <footer><span>SEC-AI-DA-8H · 05–08</span><span>삼성전자 AI 데이터분석 실무</span><b data-page-number>04</b></footer>
+</section>
+
+<section class="slide" id="s05" data-role="activity" data-layout="activity-brief" data-purpose="수업 시작 전 환경과 대체 트랙을 점검한다">
+  <header class="topbar"><div class="course">삼성전자 AI 데이터분석 실무 <small>SEC-AI-DA-8H</small></div><div class="part">시작 · Setup Checklist</div></header>
+  <main class="stage">
+    <div class="eyebrow">시작 · Setup Checklist</div>
+    <h1 class="title" data-editable>Setup Checklist</h1>
+    <p class="subtitle" data-editable>외부 서비스 제한 시 ChatGPT 중심 + Local Python 대체 트랙으로 진행한다.</p>
+    <div class="content">
+      <div class="brief-sheet">
+        <div class="brief-main">
+          <div><b>Chrome / Edge</b><span>Required. ChatGPT 및 웹 기반 실습. 최신 버전.</span></div>
+          <div><b>Python 3.x</b><span>Required. python --version 으로 확인한다.</span></div>
+          <div><b>pyclass-notebook</b><span>Required. pip install pyclass-notebook</span></div>
+          <div><b>ChatGPT 계정</b><span>Required. 로그인 및 사용 가능 여부.</span></div>
+          <div><b>Google Antigravity</b><span>Recommended. 설치 및 실행 가능 여부.</span></div>
+          <div><b>VS Code / Cursor</b><span>Optional. 일반 코드 편집 환경 비교.</span></div>
+        </div>
+        <div class="brief-cue">
+          <b>현장 점검</b>
+          <p>외부 인터넷 및 ChatGPT / Google 계정 로그인, Python 실행 및 pip install, Antigravity 설치·실행, Excel/CSV 로컬 파일 읽기·쓰기.</p>
+          <small>교육용 샘플시트와 공개 CSV만 사용한다. 사내 원자료는 올리지 않는다.</small>
+        </div>
+      </div>
+    </div>
+    <div class="anchor"><b>대체 트랙</b><span data-editable>외부 서비스 제한 시 ChatGPT 중심 + Local Python으로 같은 산출물을 만든다.</span></div>
+  </main>
+  <footer><span>삼성전자 AI 데이터분석 실무</span><span>시작</span><b data-page-number>05</b></footer>
+</section>
+
+<section class="slide" id="s06" data-role="concept" data-layout="proposition" data-purpose="과정 목표와 학습 원칙을 원문으로 제시한다">
+  <header class="topbar"><div class="course">삼성전자 AI 데이터분석 실무 <small>SEC-AI-DA-8H</small></div><div class="part">시작 · 핵심 메시지</div></header>
+  <main class="stage">
+    <div class="eyebrow">시작 · 핵심 메시지</div>
+    <h1 class="title long" data-editable>코드를 암기하는 것이 아니라, 문제를 정의하고 결과를 검증하는 습관</h1>
+    <p class="subtitle" data-editable>노코드 데이터분석은 코드를 완전히 쓰지 않는다는 뜻이 아니라, AI에게 정확히 지시하고, 받은 코드를 검증하고, 필요한 부분만 수정하는 실무형 접근을 뜻한다.</p>
+    <div class="content">
+      <div class="prop">
+        <div class="prop-line" data-editable>Python을 잘 쓰는 사람보다, <em>분석 과정과 결과를 통제할 수 있는 사람</em>이 목표이다.</div>
+        <div class="prop-ev">
+          <div><b>학습 원칙</b><p>생성형 AI가 준 코드는 반드시 셀 단위로 실행하면서 확인한다. 결과 확인 전에는 다음 단계로 넘어가지 않는다. 하나의 대답을 정답처럼 믿지 않고, 핵심 수치와 결론은 원문 데이터로 재검증한다.</p></div>
+          <div><b>사람이 끝까지 가져갈 일</b><p>분석 질문의 범위와 우선순위. 데이터 민감성 판단과 외부 반출 여부. 결측치와 이상치의 의미. 상관과 인과 구분. 최종 보고 문장의 표현 수위.</p></div>
+        </div>
+      </div>
+    </div>
+    <div class="anchor"><b>연결</b><span data-editable>공공조직 자료는 민감도와 공개 가능 범위를 먼저 판단한 뒤 AI 도구에 넣는다.</span></div>
+  </main>
+  <footer><span>삼성전자 AI 데이터분석 실무</span><span>시작</span><b data-page-number>06</b></footer>
+</section>
+
+<section class="slide chapter-divider" id="s07" data-role="chapter" data-layout="chapter-gate" data-purpose="1시간의 학습 질문을 연다" data-divider-index="1">
+  <div class="chapter-top"><span>삼성전자 AI 데이터분석 실무 <small>LECTURE SERIES</small></span><span>삼성전자 · 2026.08.25</span></div>
+  <div class="chapter-head">
+    <div class="chapter-eyebrow" data-divider-label>1H</div>
+    <h1>AI 데이터 분석의 변화</h1>
+  </div>
+  <div class="chapter-body">
+    <div class="chapter-no" data-divider-number>01</div>
+    <div class="chapter-message">
+      <h2>제02장 교과서 없는 초학문의 등장</h2>
+      <p>생성형 AI는 기존 학문처럼 오랜 기간 정리된 교과서를 기반으로만 움직이지 않으며, 실무에서 등장한 프롬프트·워크플로우·에이전트 사용법이 먼저 퍼지고 이후에 개념으로 정리되는 흐름을 자주 보인다.</p>
+      <div class="chapter-next"><span>역할 경계</span><span>DX / AX</span><span>바이브코딩</span></div>
+    </div>
+  </div>
+  <footer><span>SEC-AI-DA-8H · PART 01</span><span>다음: ChatGPT 데이터 분석</span><b data-page-number>07</b></footer>
+</section>
+
+<section class="slide" id="s08" data-role="compare" data-layout="before-after" data-purpose="개발자·분석가·실무자 역할 변화를 비교한다">
+  <header class="topbar"><div class="course">삼성전자 AI 데이터분석 실무 <small>SEC-AI-DA-8H</small></div><div class="part">1H · 제03장</div></header>
+  <main class="stage">
+    <div class="eyebrow">1H · 제03장</div>
+    <h1 class="title long" data-editable>개발자, 분석가, 실무자의 경계가 흐려지는 이유</h1>
+    <p class="subtitle" data-editable>프로그래머가 분석 업무를 보조하고, 분석가가 간단한 웹서비스를 만들며, 일반 실무자가 챗봇과 자동화 흐름을 설계하는 일이 늘어나고 있다.</p>
+    <div class="content">
+      <div class="before-after">
+        <div class="before">
+          <span>역할이 섞여도 남는 핵심</span>
+          <h3>여전히 중요한 책무</h3>
+          <ol>
+            <li>개발자: 환경 구축, 배포, 시스템 연결</li>
+            <li>분석가: 변수 설계, 해석, 검증</li>
+            <li>일반 실무자: 업무 맥락 제공, 보고 구조 설계</li>
+            <li>전문성이 불필요해진 것이 아니다. 쓰이는 지점이 달라졌다.</li>
+          </ol>
+        </div>
+        <div class="axis">역할<i></i>AI 이후</div>
+        <div class="after">
+          <span>AI 이후 더 강조되는 부분</span>
+          <h3>도구 범위가 넓어진다</h3>
+          <ol>
+            <li>개발자: AI가 만든 코드의 안정성 검토</li>
+            <li>분석가: 문제정의와 설명</li>
+            <li>일반 실무자: 질문 설계와 결과 적용 판단</li>
+            <li>실무자는 개발자에게 모든 것을 넘기기보다 문제를 정리해 첫 결과를 만들어보는 위치로 이동한다.</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="anchor"><b>질문</b><span data-editable>나는 지금 무엇을 AI에게 맡길 수 있고, 무엇은 반드시 직접 판단해야 하는가.</span></div>
+  </main>
+  <footer><span>삼성전자 AI 데이터분석 실무</span><span>1H</span><b data-page-number>08</b></footer>
+</section>
+
+<section class="slide" id="s09" data-role="structure" data-layout="hub-spoke" data-purpose="LLM·에이전트·하네스·MCP·Apps의 역할을 한 도식에 둔다">
+  <header class="topbar"><div class="course">삼성전자 AI 데이터분석 실무 <small>SEC-AI-DA-8H</small></div><div class="part">1H · 연결 구조</div></header>
+  <main class="stage">
+    <div class="eyebrow">1H · LLM · Coding Agent · Harness · MCP · Apps</div>
+    <h1 class="title long" data-editable>LLM · Coding Agent · Harness · MCP · Apps의 역할과 연결 구조</h1>
+    <p class="subtitle" data-editable>ChatGPT Apps와 MCP는 사내 데이터·API·분석도구가 AI와 연결되는 구조를 개념적으로 살펴본다. 이번 과정에서는 개발 자체보다 AI가 외부 도구를 호출하고 업무를 수행하는 구조를 이해하는 데 초점을 둔다.</p>
+    <div class="content">
+      <div class="hub-map" data-wire="hub">
+        <svg></svg>
+        <div class="hub-item h1" data-port><b>LLM</b><span>데이터 구조 해석, 분석기획, Python 코드 생성·수정, 결과 해석 및 산출물 설계.</span></div>
+        <div class="hub-item h2" data-port><b>Coding Agent</b><span>프로젝트 폴더와 파일을 읽고, 코드를 작성하고, 터미널에서 실행하고, 오류가 나면 다시 수정한다.</span></div>
+        <div class="hub-item h3" data-port><b>MCP</b><span>사내 데이터·API·분석도구가 AI와 연결되는 프로토콜. 개념 확인.</span></div>
+        <div class="hub-item h4" data-port><b>Apps</b><span>ChatGPT Apps를 통해 특정 업무 화면을 붙여 쓰는 확장. 오늘 필수는 아니다.</span></div>
+        <div class="hub-item h5" data-port><b>Harness</b><span>에이전트를 파일·터미널·브라우저에 연결해 계획·실행·검증을 반복하게 하는 실행 체계.</span></div>
+        <div class="hub-core">분석 실행<br>에이전트<small>작성 · 실행 · 수정</small></div>
+      </div>
+    </div>
+    <div class="anchor"><b>범위</b><span data-editable>이번 과정에서는 개발 자체보다, AI가 외부 도구를 호출하고 업무를 수행하는 구조를 이해한다.</span></div>
+  </main>
+  <footer><span>삼성전자 AI 데이터분석 실무</span><span>1H</span><b data-page-number>09</b></footer>
+</section>
+
+<section class="slide" id="s10" data-role="teaching" data-layout="myth-check" data-purpose="노코드와 바이브코딩의 정의를 교정한다">
+  <header class="topbar"><div class="course">삼성전자 AI 데이터분석 실무 <small>SEC-AI-DA-8H</small></div><div class="part">1H · 제06장</div></header>
+  <main class="stage">
+    <div class="eyebrow">1H · 제06장</div>
+    <h1 class="title" data-editable>노코딩을 넘어 바이브코딩으로</h1>
+    <p class="subtitle" data-editable>노코딩이 프로그램 없이 기능을 연결하는 접근이라면, 바이브코딩은 생성형 AI와의 대화를 통해 코드를 받아 실행하고, 수정하고, 다시 요청하면서 원하는 결과물에 가까워지는 방식이다.</p>
+    <div class="content">
+      <div class="myth-grid">
+        <div class="claim-side">
+          <span>흔히 생기는 오해</span>
+          <strong>프롬프트만 잘 치면 다 된다</strong>
+          <ul>
+            <li>코드를 직접 쓰지 않으면 기술적 이해가 전혀 필요 없다고 생각하기 쉽다.</li>
+            <li>실제로는 반대이다. 코드를 외우는 부담은 줄어들 수 있으나, 결과가 왜 깨졌는지는 더 구조적으로 이해해야 한다.</li>
+            <li>생성형 AI가 만든 코드를 검토할 수 있는 최소한의 안목이 필요하다.</li>
+          </ul>
+        </div>
+        <div class="correction-side">
+          <span>바이브코딩 실천 원칙</span>
+          <strong>한 단계씩, 확인 후 다음</strong>
+          <ul>
+            <li>한 번에 전체 프로젝트를 요구하지 말고 한 단계씩 요청한다.</li>
+            <li>코드와 함께 확인 포인트를 반드시 요구한다.</li>
+            <li>결과 확인 전에는 다음 단계로 넘어가지 않는다.</li>
+            <li>최종 산출물은 코드가 아니라 업무 결과물이다.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="anchor"><b>원칙 4</b><span data-editable>에러가 나면 에러 전체와 직전 코드, 현재 목적을 함께 다시 제공한다.</span></div>
+  </main>
+  <footer><span>삼성전자 AI 데이터분석 실무</span><span>1H</span><b data-page-number>10</b></footer>
+</section>
+
+<section class="slide" id="s11" data-role="compare" data-layout="open-columns" data-purpose="DX와 AX를 목적·산출물·검증 기준으로 구분한다">
+  <header class="topbar"><div class="course">삼성전자 AI 데이터분석 실무 <small>SEC-AI-DA-8H</small></div><div class="part">1H · 제04장</div></header>
+  <main class="stage">
+    <div class="eyebrow">1H · 제04장</div>
+    <h1 class="title" data-editable>DX와 AX를 함께 읽기</h1>
+    <p class="subtitle" data-editable>데이터분석AI와 생성형AI를 서로 대체 관계로 보지 않는다. 목적, 산출물, 검증 기준이 다르다.</p>
+    <div class="content">
+      <div class="open-columns three">
+        <div>
+          <span>DX</span>
+          <h3>데이터 기반 의사결정</h3>
+          <p>예측, 분류, 탐지, 최적화 등 데이터 기반 의사결정의 토대를 강화하는 흐름이다. 민원 위험 예측, 재난 취약지 탐지, 수요 예측이 이 축에 가깝다.</p>
+          <small>검증 기준: 정확도와 재현성</small>
+        </div>
+        <div>
+          <span>AX</span>
+          <h3>생성형 업무 생산성</h3>
+          <p>문서작성, 요약, 분석 설계, 시각화 초안, 자동화 아이디어 등 업무 생산성을 높이는 흐름이다. 데이터 설명, 코드 생성, 보고서 초안, 대시보드 UI 생성이 이 축에 가깝다.</p>
+          <small>검증 기준: 근거와 표현 적절성</small>
+        </div>
+        <div>
+          <span>연결 질문</span>
+          <h3>지금 일의 산출물은 무엇인가</h3>
+          <p>최종 산출물은 예측 점수인가, 설명 문장인가. 결과를 사용하는 사람은 모델 학습자에 가까운가, 보고서를 읽는 의사결정자에 가까운가. 사람 검토가 필요한 지점은 어느 단계인가.</p>
+          <small>자동 요약이 잘된다고 정책 판단까지 자동화할 수 있다고 생각하면 안 된다.</small>
+        </div>
+      </div>
+    </div>
+    <div class="anchor"><b>주의</b><span data-editable>예측모델의 정확도와 생성형 AI의 문장 품질을 같은 기준으로 비교하면 안 된다.</span></div>
+  </main>
+  <footer><span>삼성전자 AI 데이터분석 실무</span><span>1H</span><b data-page-number>11</b></footer>
+</section>
+
+<section class="slide chapter-divider" id="s12" data-role="chapter" data-layout="chapter-gate" data-purpose="2시간의 학습 질문을 연다" data-divider-index="2">
+  <div class="chapter-top"><span>삼성전자 AI 데이터분석 실무 <small>LECTURE SERIES</small></span><span>삼성전자 · 2026.08.25</span></div>
+  <div class="chapter-head">
+    <div class="chapter-eyebrow" data-divider-label>2H</div>
+    <h1>ChatGPT 데이터 분석</h1>
+  </div>
+  <div class="chapter-body">
+    <div class="chapter-no" data-divider-number>02</div>
+    <div class="chapter-message">
+      <h2>Excel/CSV 구조 파악 · 분석 질문 설계 · 분석계획 만들기</h2>
+      <p>데이터 구조 해석, 분석기획, Python 코드 생성·수정, 결과 해석 및 산출물 설계에 ChatGPT를 사용한다.</p>
+      <div class="chapter-next"><span>시스템 프롬프트 5요소</span><span>형식별 패턴</span><span>EDA 해석 원칙</span></div>
+    </div>
+  </div>
+  <footer><span>SEC-AI-DA-8H · PART 02</span><span>다음: Python을 AI에게 맡기는 법</span><b data-page-number>12</b></footer>
+</section>
+
+<section class="slide" id="s13" data-role="process" data-layout="process-river" data-purpose="생성형 AI 시대의 데이터분석 프로세스를 제시한다">
+  <header class="topbar"><div class="course">삼성전자 AI 데이터분석 실무 <small>SEC-AI-DA-8H</small></div><div class="part">2H · 제05장</div></header>
+  <main class="stage">
+    <div class="eyebrow">2H · 제05장</div>
+    <h1 class="title long" data-editable>생성형 AI 시대의 데이터분석 프로세스</h1>
+    <p class="subtitle" data-editable>문제 설명, 데이터 구조 파악, 수집 코드 생성, 전처리 초안, 차트 추천, 해석 보조, HTML 대시보드 틀, 자동화 골격까지 여러 단계가 빨라질 수 있다. 그러나 이 속도가 곧바로 품질을 보장하지는 않는다.</p>
+    <div class="content">
+      <div class="river">
+        <div class="river-main">
+          <span><b>구조 파악</b><small>데이터 파일 구조를 읽고 기본 불러오기 코드를 제안한다.</small></span>
+          <span><b>집계 초안</b><small>요약 통계, 빈도표, 그룹별 집계, 차트 초안을 빠르게 만들어 준다.</small></span>
+          <span><b>패턴 설명</b><small>차트가 보여주는 패턴을 자연어로 설명해 준다.</small></span>
+          <span><b>자동화 골격</b><small>반복 업무를 줄이는 스크립트 골격을 제안한다.</small></span>
+          <span><b>보고 구조</b><small>결과를 정책 메모나 보고서 구조로 다시 정리해 준다.</small></span>
+        </div>
+        <div class="river-branch">
+          <b>사람이 끝까지 가져갈 일</b>
+          <span>분석 질문의 범위와 우선순위</span>
+          <span>결측치와 이상치의 의미 판단</span>
+          <span>상관과 인과 구분, 표현 수위</span>
+        </div>
+      </div>
+    </div>
+    <div class="anchor"><b>재정의</b><span data-editable>분석가의 역할은 코드 작성자에서 설계자와 연결자로 옮겨간다. 무엇을 먼저 볼지는 사람이 정한다.</span></div>
+  </main>
+  <footer><span>삼성전자 AI 데이터분석 실무</span><span>2H</span><b data-page-number>13</b></footer>
+</section>
+
+<section class="slide" id="s14" data-role="explain" data-layout="split-explain" data-purpose="시스템 프롬프트 5요소와 원문 예시를 제시한다">
+  <header class="topbar"><div class="course">삼성전자 AI 데이터분석 실무 <small>SEC-AI-DA-8H</small></div><div class="part">2H · 제11장</div></header>
+  <main class="stage">
+    <div class="eyebrow">2H · 제11장</div>
+    <h1 class="title" data-editable>분석 어시스트용 시스템 프롬프트 설계</h1>
+    <p class="subtitle" data-editable>중요한 것은 문장 한 줄이 아니라, 어떤 작업 흐름과 제약 조건을 AI에게 먼저 알려주는가이다.</p>
+    <div class="content">
+      <div class="split-explain">
+        <div class="split-left">
+          <h3>좋은 시스템 프롬프트의 다섯 요소</h3>
+          <p>첫째, 현재 실행 환경이 무엇인지. 둘째, 필요한 라이브러리 설치 여부를 어떻게 처리할지. 셋째, 코드와 확인 포인트를 어떤 순서로 줄지. 넷째, 결과 확인 전 다음 단계로 넘어가지 않게 할지. 다섯째, 최종 목표가 단순 코드 생성인지 전략 연결까지 포함하는지.</p>
+          <p>프롬프트가 잘못되면 AI가 한 번에 너무 많은 코드를 내놓아 검증이 어려워지고, 설치 코드와 실행 코드가 섞이며, 데이터 구조를 충분히 설명하지 않아 엉뚱한 컬럼명을 사용한다.</p>
+        </div>
+        <div class="split-right">
+          <h3>시스템 프롬프트 예시</h3>
+          <pre>나는 로컬 Jupyter Notebook 환경에서 데이터 분석을 수행한다.
+다음 규칙을 반드시 지켜라.
+1) 내가 요청한 작업에 대해서만 코드 작성
+2) 필요한 라이브러리 설치 코드 포함
+3) 코드 → 실행 결과 확인 포인트 순서로 제시
+4) 결과 확인 전에는 다음 단계 제안 금지
+5) 추가 분석이나 확장 제안은 요청 시에만 수행</pre>
+        </div>
+      </div>
+    </div>
+    <div class="anchor"><b>목표 칸</b><span data-editable>[최종 목표] 데이터 기반으로 분석 주제 도출. 각 분석 결과를 바탕으로 실행 가능한 전략까지 연결.</span></div>
+  </main>
+  <footer><span>삼성전자 AI 데이터분석 실무</span><span>2H</span><b data-page-number>14</b></footer>
+</section>
+
+<section class="slide" id="s15" data-role="teaching" data-layout="quote-evidence" data-purpose="EDA 해석을 AI에게 맡길 때의 원칙과 원문 프롬프트를 제시한다">
+  <header class="topbar"><div class="course">삼성전자 AI 데이터분석 실무 <small>SEC-AI-DA-8H</small></div><div class="part">2H · 제22장</div></header>
+  <main class="stage">
+    <div class="eyebrow">2H · 제22장</div>
+    <h1 class="title long" data-editable>LLM에게 EDA 결과를 맡길 때의 원칙</h1>
+    <p class="subtitle" data-editable>코드 그 자체보다 실행 결과와 차트를 함께 담은 문서를 주면 해석 품질이 올라간다. 자료를 무엇까지 줄 수 있는지를 먼저 정한다.</p>
+    <div class="content">
+      <div class="quote-box">
+        <div class="quote-main">
+          <pre>1) 먼저 데이터에서 눈에 띄는 패턴 5개를 정리하고,
+2) 현재 결과만으로는 확정할 수 없는 해석 5개를 분리하고,
+3) 후속으로 추가 확인할 변수 조합과 차트를 제안해 줘.
+단, 상관관계를 인과처럼 단정하지 말고,
+공공정책 문서에 바로 쓰기 어려운 과장 표현은 피할 것.</pre>
+          <small>교재 22장 EDA 해석용 프롬프트 예시</small>
+        </div>
+        <div class="quote-side">
+          <b>세 가지를 동시에 요구한다</b>
+          <ul>
+            <li>보이는 패턴을 정리한다.</li>
+            <li>아직 확정할 수 없는 해석을 분리한다.</li>
+            <li>후속으로 더 보면 좋은 질문을 제안하게 한다.</li>
+            <li>이렇게 하면 AI가 결론 기계가 아니라 탐색 보조자로 기능한다.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="anchor"><b>보안</b><span data-editable>원자료 전체가 아니라 컬럼 구조와 요약 통계, 교육용 샘플만 올린다.</span></div>
+  </main>
+  <footer><span>삼성전자 AI 데이터분석 실무</span><span>2H</span><b data-page-number>15</b></footer>
+</section>
+
+<section class="slide" id="s16" data-role="activity" data-layout="activity-brief" data-purpose="분석 질문과 분석계획을 만드는 활동을 안내한다">
+  <header class="topbar"><div class="course">삼성전자 AI 데이터분석 실무 <small>SEC-AI-DA-8H</small></div><div class="part">2H · 실습</div></header>
+  <main class="stage">
+    <div class="eyebrow">2H · Excel/CSV 구조 파악 · 분석 질문 설계</div>
+    <h1 class="title" data-editable>분석 질문 설계 · 분석계획 만들기</h1>
+    <p class="subtitle" data-editable>HANDS-ON: Excel/CSV 구조 파악 · 분석 질문 설계 · 분석계획 만들기</p>
+    <div class="content">
+      <div class="brief-sheet">
+        <div class="brief-main">
+          <div><b>목표</b><span>데이터로 답 가능한 질문과 불러오기-정리-집계 순서를 한 장에 적는다.</span></div>
+          <div><b>입력</b><span>교육용 샘플시트 또는 CSV. 파일명, 형식, 컬럼명을 먼저 적는다.</span></div>
+          <div><b>핵심 행동</b><span>형식을 알리고, 질문을 쓰며, 질문마다 필요 컬럼을 표시한다.</span></div>
+          <div><b>실무 적용 질문</b><span>지금 내 업무에서 가장 반복되는 데이터 작업은 무엇인가. 그 결과를 검증할 기준은 무엇인가.</span></div>
+          <div><b>완료 신호</b><span>질문, 필요 컬럼, 다음 한 단계 요청문이 남아 있다.</span></div>
+          <div><b>실패 징후</b><span>컬럼명을 추측한 코드, 한 번에 전체 프로젝트, 확인 없이 보고서 초안.</span></div>
+        </div>
+        <div class="brief-cue">
+          <b>워크북 03</b>
+          <p>분석 어시스트 프롬프트 설계. 실행 환경, 설치 처리, 확인 순서, 정지 규칙, 최종 목표를 넣는다.</p>
+          <small>게시판: cdsa.notion.site/samsung0825</small>
+        </div>
+      </div>
+    </div>
+    <div class="anchor"><b>산출물</b><span data-editable>분석계획 1장. 한 번에 전체 코드를 요구하지 않았는지 검수한다.</span></div>
+  </main>
+  <footer><span>삼성전자 AI 데이터분석 실무</span><span>2H</span><b data-page-number>16</b></footer>
+</section>
+
+<section class="slide chapter-divider" id="s17" data-role="chapter" data-layout="chapter-gate" data-purpose="3시간의 학습 질문을 연다" data-divider-index="3">
+  <div class="chapter-top"><span>삼성전자 AI 데이터분석 실무 <small>LECTURE SERIES</small></span><span>삼성전자 · 2026.08.25</span></div>
+  <div class="chapter-head">
+    <div class="chapter-eyebrow" data-divider-label>3H</div>
+    <h1>Python을 AI에게 맡기는 법</h1>
+  </div>
+  <div class="chapter-body">
+    <div class="chapter-no" data-divider-number>03</div>
+    <div class="chapter-message">
+      <h2>AI 생성 코드를 읽기 위한 최소 Python · 오류 수정 · 재실행</h2>
+      <p>Jupyter Notebook은 코드를 한 번에 모두 실행하는 것이 아니라, 셀 단위로 실행하고, 바로 아래에서 결과를 확인하고, 필요한 경우 한 셀만 다시 고칠 수 있다. 생성형 AI가 만든 코드를 검증하는 과정도 이 구조와 잘 맞는다.</p>
+      <div class="chapter-next"><span>셀 단위 실행</span><span>형식별 불러오기</span><span>에러 재제공</span></div>
+    </div>
+  </div>
+  <footer><span>SEC-AI-DA-8H · PART 03</span><span>다음: pyclass-notebook</span><b data-page-number>17</b></footer>
+</section>
+
+<section class="slide" id="s18" data-role="explain" data-layout="anatomy" data-purpose="Jupyter 기본 조작과 셀 단위 검증 구조를 분해한다">
+  <header class="topbar"><div class="course">삼성전자 AI 데이터분석 실무 <small>SEC-AI-DA-8H</small></div><div class="part">3H · 제10장</div></header>
+  <main class="stage">
+    <div class="eyebrow">3H · 제10장</div>
+    <h1 class="title" data-editable>Jupyter Notebook이 적합한 이유</h1>
+    <p class="subtitle" data-editable>코드와 설명과 차트를 한 문서 안에 함께 담을 수 있으므로, 나중에 보고서화와 발표자료 전환에도 유리하다.</p>
+    <div class="content">
+      <div class="anatomy-map" data-wire="hub">
+        <svg></svg>
+        <div class="anno a1" data-port><b>1. 셀 종류</b><span>코드 셀과 마크다운 셀의 차이. 실행 단위와 설명 단위를 나눈다.</span></div>
+        <div class="anno a2" data-port><b>2. 실행 키</b><span>Shift + Enter, Ctrl + Enter의 의미. 실행 후 다음 셀로 갈지, 그 자리에 남을지.</span></div>
+        <div class="anno a3" data-port><b>3. 삽입·삭제</b><span>셀 위아래 삽입과 삭제 방법. 한 단계만 고치기 위한 기본 조작.</span></div>
+        <div class="anno a4" data-port><b>4. 실행 순서</b><span>실행 순서가 결과에 어떤 영향을 주는지. 앞 셀을 건너뛰면 변수가 없다.</span></div>
+        <div class="anno a5" data-port><b>5. 작은 출력</b><span>결과가 맞는지 확인하기 위한 작은 출력 습관. head, shape, columns.</span></div>
+        <div class="anno a6" data-port><b>6. 학습 문서</b><span>노트북 파일은 분석 흔적과 중간 메모를 포함한다. 단순 실행 도구가 아니라 협업 문서이다.</span></div>
+        <div class="anatomy-core">셀 단위<br>검증<small>한 셀 = 한 확인</small></div>
+      </div>
+    </div>
+    <div class="anchor"><b>원칙</b><span data-editable>생성형 AI가 준 코드는 반드시 셀 단위로 실행하면서 확인한다. 결과 확인 전에는 다음 단계로 넘어가지 않는다.</span></div>
+  </main>
+  <footer><span>삼성전자 AI 데이터분석 실무</span><span>3H</span><b data-page-number>18</b></footer>
+</section>
+
+<section class="slide" id="s19" data-role="process" data-layout="staircase" data-purpose="바이브코딩 실천 원칙 5단계를 제시한다">
+  <header class="topbar"><div class="course">삼성전자 AI 데이터분석 실무 <small>SEC-AI-DA-8H</small></div><div class="part">3H · 제06장 실천 원칙</div></header>
+  <main class="stage">
+    <div class="eyebrow">3H · 바이브코딩 실천 원칙</div>
+    <h1 class="title" data-editable>바이브코딩 실천 원칙</h1>
+    <p class="subtitle" data-editable>바이브코딩 학습은 “프롬프트만 잘 치면 다 된다”는 식으로 가면 실패한다. 작은 실행 단위, 확인 포인트, 셀 단위 검증, 재요청 규칙, 결과 해석 메모까지 함께 훈련한다.</p>
+    <div class="content">
+      <div class="staircase">
+        <div class="stair s1"><b>1</b><span>한 번에 전체 프로젝트를 요구하지 말고 한 단계씩 요청한다.</span></div>
+        <div class="stair s2"><b>2</b><span>코드와 함께 확인 포인트를 반드시 요구한다.</span></div>
+        <div class="stair s3"><b>3</b><span>결과 확인 전에는 다음 단계로 넘어가지 않는다.</span></div>
+        <div class="stair s4"><b>4</b><span>에러가 나면 에러 전체와 직전 코드, 현재 목적을 함께 다시 제공한다.</span></div>
+        <div class="stair s5"><b>5</b><span>최종 산출물은 코드가 아니라 업무 결과물이라는 점을 잊지 않는다.</span></div>
+      </div>
+    </div>
+    <div class="anchor"><b>제06장</b><span data-editable>작은 실행 단위, 확인 포인트, 셀 단위 검증, 재요청 규칙, 결과 해석 메모까지 함께 훈련한다.</span></div>
+  </main>
+  <footer><span>삼성전자 AI 데이터분석 실무</span><span>3H</span><b data-page-number>19</b></footer>
+</section>
+
+<section class="slide" id="s20" data-role="demo" data-layout="demo-stage" data-purpose="데이터 불러오기 확인 포인트와 형식별 요청을 보여 준다">
+  <header class="topbar"><div class="course">삼성전자 AI 데이터분석 실무 <small>SEC-AI-DA-8H</small></div><div class="part">3H · 제12장</div></header>
+  <main class="stage">
+    <div class="eyebrow">3H · 제12장 데이터 불러오기</div>
+    <h1 class="title" data-editable>데이터 불러오기: 형식별 패턴 이해</h1>
+    <p class="subtitle" data-editable>생성형 AI에게 정확한 코드를 받으려면 형식 정보가 반드시 필요하다. 파일명, 경로, 인코딩, 시트명, JSON 키까지 알려줘야 응답 품질이 올라간다.</p>
+    <div class="content">
+      <div class="demo-stage">
+        <div class="demo-screen">
+          <div class="demo-head">확인 출력 · 파일명과 컬럼은 현장에서 바꾼다</div>
+          <pre>import pandas as pd
+df = pd.read_csv("sample.csv", encoding="utf-8-sig")
+print(df.shape)
+print(df.columns)
+print(df.head())
+print(df.info())</pre>
+          <div class="console-out">CSV: 파일명, 경로, 인코딩 후보. 요청 예 — 이 CSV를 cp949 우선, 실패 시 utf-8-sig로 다시 불러와 줘.</div>
+        </div>
+        <div class="observe">
+          <b>구조 진단 후 바로 물을 질문</b>
+          <ol>
+            <li>결측이 많은 컬럼은 실제 누락인가, 구조적 공백인가.</li>
+            <li>숫자처럼 보이는 컬럼이 문자열로 들어온 이유는 무엇인가.</li>
+            <li>값의 범위가 상식적으로 말이 되는가.</li>
+            <li>분석에 꼭 필요한 컬럼과 덜 중요한 컬럼을 구분했는가.</li>
+          </ol>
+          <small>shape와 columns가 예상과 같으면 다음 셀로 간다. 다르면 여기서 멈춘다.</small>
+        </div>
+      </div>
+    </div>
+    <div class="anchor"><b>형식 설명</b><span data-editable>형식 설명도 데이터 리터러시의 일부이다. 컬럼명을 추측한 코드가 나오면 구조부터 다시 알린다.</span></div>
+  </main>
+  <footer><span>삼성전자 AI 데이터분석 실무</span><span>3H</span><b data-page-number>20</b></footer>
+</section>
+
+<section class="slide" id="s21" data-role="synthesis" data-layout="decision-tree" data-purpose="에러 재제공 규칙과 프롬프트 실패 징후를 고정한다">
+  <header class="topbar"><div class="course">삼성전자 AI 데이터분석 실무 <small>SEC-AI-DA-8H</small></div><div class="part">3H · 오류 수정 · 재실행</div></header>
+  <main class="stage">
+    <div class="eyebrow">3H · 오류 수정 · 재실행</div>
+    <h1 class="title long" data-editable>에러가 나면 에러 전체와 직전 코드, 현재 목적을 함께 다시 제공한다</h1>
+    <p class="subtitle" data-editable>프롬프트가 잘못되면 설치 코드와 실행 코드가 섞이고, 결과 확인 없이 다음 단계 제안을 계속해 학습 흐름이 무너진다.</p>
+    <div class="content">
+      <div class="decision-tree">
+        <div class="decision-root">프롬프트가 잘못되면 AI가 한 번에 너무 많은 코드를 내놓아 검증이 어려워지고, 설치 코드와 실행 코드가 섞인다.</div>
+        <div class="decision-path">
+          <span>A</span>
+          <div><b>환경 오류</b><p>모듈 없음, 권한, 경로. 설치 코드를 따로 제시하게 하고 같은 셀을 재실행한다. 필요한 라이브러리 설치 여부를 어떻게 처리할지 시스템 프롬프트에 넣어 둔다.</p></div>
+        </div>
+        <div class="decision-path right">
+          <span class="ok">B</span>
+          <div><b>데이터·컬럼 오류</b><p>없는 컬럼, 인코딩, 빈 시트. 실제 columns 출력과 파일명·경로·인코딩을 붙여 재요청한다. 데이터 구조를 충분히 설명하지 않으면 엉뚱한 컬럼명 코드가 나온다.</p></div>
+        </div>
+        <div class="decision-bottom">한 번에 전체 프로젝트를 새로 시작하지 않는다. 직전 코드와 현재 목적, 에러 전체를 함께 다시 제공한다.</div>
+      </div>
+    </div>
+    <div class="anchor"><b>정지 규칙</b><span data-editable>결과 확인 전에는 다음 단계 제안 금지. 추가 분석이나 확장 제안은 요청 시에만 수행.</span></div>
+  </main>
+  <footer><span>삼성전자 AI 데이터분석 실무</span><span>3H</span><b data-page-number>21</b></footer>
+</section>
+
+<section class="slide chapter-divider" id="s22" data-role="chapter" data-layout="chapter-gate" data-purpose="4시간의 학습 질문을 연다" data-divider-index="4">
+  <div class="chapter-top"><span>삼성전자 AI 데이터분석 실무 <small>LECTURE SERIES</small></span><span>삼성전자 · 2026.08.25</span></div>
+  <div class="chapter-head">
+    <div class="chapter-eyebrow" data-divider-label>4H</div>
+    <h1>pyclass-notebook</h1>
+  </div>
+  <div class="chapter-body">
+    <div class="chapter-no" data-divider-number>04</div>
+    <div class="chapter-message">
+      <h2>설치 · 셀 단위 코드 실행 · DataFrame 확인 · 반복 분석</h2>
+      <p>복잡한 IDE 설정을 최소화하고, 교육생이 Python 코드의 작성 → 실행 → 결과 확인 → 수정 사이클에 바로 들어갈 수 있도록 구성한 실습 도구이다.</p>
+      <div class="chapter-next"><span>pip install</span><span>환경 선택표</span><span>info() / describe()</span></div>
+    </div>
+  </div>
+  <footer><span>SEC-AI-DA-8H · PART 04</span><span>다음: Antigravity Agent</span><b data-page-number>22</b></footer>
+</section>
+
+<section class="slide" id="s23" data-role="compare" data-layout="spectrum" data-purpose="실행 환경 선택표를 조건 축 위에 놓는다">
+  <header class="topbar"><div class="course">삼성전자 AI 데이터분석 실무 <small>SEC-AI-DA-8H</small></div><div class="part">4H · 제07장</div></header>
+  <main class="stage">
+    <div class="eyebrow">4H · 제07장</div>
+    <h1 class="title" data-editable>실행 환경을 고르는 기준</h1>
+    <p class="subtitle" data-editable>특정 환경 하나만을 정답처럼 제시하지 않는다. 좋은 학습자는 가장 멋진 환경을 고르기보다, 지금 조직에서 실제로 돌릴 수 있는 환경을 먼저 판단한다.</p>
+    <div class="content">
+      <div class="spectrum">
+        <div class="spectrum-axis"><span>설치 부담 낮음</span><i></i><span>로컬 통제 강함</span></div>
+        <div class="spectrum-points">
+          <div style="--p:12%"><b>Google Colab</b><small>설치 권한이 거의 없다. 브라우저만 있으면 시작 가능.</small></div>
+          <div style="--p:38%"><b>pyclass-notebook</b><small>오늘 실습 기본. pip install 후 셀 단위 실행.</small></div>
+          <div style="--p:64%"><b>python.org + Jupyter</b><small>학습 이후 개인 PC 복습 중심. 가볍고 범용적이다.</small></div>
+          <div style="--p:88%"><b>로컬 Jupyter / Anaconda</b><small>내부 자료를 외부로 올리기 어렵거나 가상환경 분리가 필요할 때.</small></div>
+        </div>
+        <div class="spectrum-basis">
+          <span>설치 권한, 보안 정책, 네트워크 상태, 복습 편의성, 협업 방식까지 넣어 보면 현실적인 선택이 가능해진다.</span>
+          <span>관공서·사내 PC: 관리자 권한, PATH, 외부 네트워크 차단 시 pip 실패, 휠 파일 사전 준비를 확인한다.</span>
+        </div>
+      </div>
+    </div>
+    <div class="anchor"><b>오늘 기본</b><span data-editable>pyclass-notebook. 막히면 ChatGPT 코드 생성 + 로컬 Python 대체 트랙.</span></div>
+  </main>
+  <footer><span>삼성전자 AI 데이터분석 실무</span><span>4H</span><b data-page-number>23</b></footer>
+</section>
+
+<section class="slide" id="s24" data-role="explain" data-layout="zoom-sequence" data-purpose="info()와 describe()로 구조를 읽는 법을 확대한다">
+  <header class="topbar"><div class="course">삼성전자 AI 데이터분석 실무 <small>SEC-AI-DA-8H</small></div><div class="part">4H · 제17장</div></header>
+  <main class="stage">
+    <div class="eyebrow">4H · 제17장</div>
+    <h1 class="title" data-editable>info()와 describe()로 구조를 읽는 법</h1>
+    <p class="subtitle" data-editable>info()와 describe()는 단순 초급 함수가 아니라, 전체 데이터의 건강 상태를 가장 빠르게 진단하는 도구이다.</p>
+    <div class="content">
+      <div class="zoom-sequence">
+        <div class="zoom-overview">
+          <b>info()</b>
+          <span>컬럼 수, 타입, Non-Null 개수를 한 번에 보여준다. 어떤 컬럼에 결측이 많은지, 어떤 컬럼이 object로 들어와 있는지, 데이터가 예상보다 작거나 큰지 빠르게 판단한다.</span>
+          <div class="sheet-tabs"><i>컬럼 수</i><i>dtype</i><i>Non-Null</i></div>
+        </div>
+        <div class="zoom-arrow">→</div>
+        <div class="zoom-detail">
+          <b>describe()</b>
+          <table>
+            <thead><tr><th>보는 값</th><th>해석</th></tr></thead>
+            <tbody>
+              <tr><td>평균·중앙값</td><td>차이가 크면 분포가 한쪽으로 치우친 것</td></tr>
+              <tr><td>최댓값·최솟값</td><td>이상치 또는 입력 오류 가능성</td></tr>
+              <tr><td>결측</td><td>곧바로 오류를 뜻하지 않는다</td></tr>
+            </tbody>
+          </table>
+          <small>결측을 삭제 대상으로만 보는 습관은 위험하다. 결측이 정보일 가능성을 먼저 검토한다.</small>
+        </div>
+        <div class="zoom-observe">
+          <b>바로 물을 질문</b>
+          <span>결측이 많은 컬럼은 실제 누락인가, 구조적 공백인가.</span>
+          <span>숫자처럼 보이는 컬럼이 문자열로 들어온 이유는 무엇인가.</span>
+          <span>값의 범위가 상식적으로 말이 되는가.</span>
+          <span>분석에 꼭 필요한 컬럼과 덜 중요한 컬럼을 구분했는가.</span>
+        </div>
+      </div>
+    </div>
+    <div class="anchor"><b>완료</b><span data-editable>info 결과가 화면에 보이면 이 시간의 설치·실행은 완료이다. 설치 로그가 산출물이 아니다.</span></div>
+  </main>
+  <footer><span>삼성전자 AI 데이터분석 실무</span><span>4H</span><b data-page-number>24</b></footer>
+</section>
+
+<section class="slide" id="s25" data-role="process" data-layout="loop-cycle" data-purpose="작성-실행-확인-수정 순환을 보여 준다">
+  <header class="topbar"><div class="course">삼성전자 AI 데이터분석 실무 <small>SEC-AI-DA-8H</small></div><div class="part">4H · 사이클</div></header>
+  <main class="stage">
+    <div class="eyebrow">4H · 작성 → 실행 → 결과 확인 → 수정</div>
+    <h1 class="title" data-editable>셀 단위 코드 실행 · DataFrame 확인 · 반복 분석</h1>
+    <p class="subtitle" data-editable>pyclass-notebook은 설치 부담을 최소화하고, 셀 단위 실행, 데이터프레임 즉시 확인, AI 생성 코드 실험에 최적화되어 있다.</p>
+    <div class="content">
+      <div class="cycle">
+        <div class="cycle-center">반복<br>분석</div>
+        <div class="cycle-node n1"><b>작성</b><span>AI가 준 코드를 한 셀에 붙인다. 한 단계만 요청한다.</span></div>
+        <div class="cycle-node n2"><b>실행</b><span>셀 단위로 실행한다. Shift + Enter.</span></div>
+        <div class="cycle-node n3"><b>결과 확인</b><span>shape, columns, head, info가 예상과 같은지 본다.</span></div>
+        <div class="cycle-node n4"><b>수정</b><span>경로, 인코딩, 컬럼명만 고친다. 새 프로젝트를 시작하지 않는다.</span></div>
+        <div class="cycle-node n5"><b>재요청</b><span>에러 전체와 직전 코드, 현재 목적을 함께 다시 제공한다.</span></div>
+      </div>
+    </div>
+    <div class="anchor"><b>WHY THIS TOOL</b><span data-editable>설치 부담 최소화 · 셀 단위 실행 · 데이터프레임 즉시 확인 · AI 생성 코드 실험에 최적화.</span></div>
+  </main>
+  <footer><span>삼성전자 AI 데이터분석 실무</span><span>4H</span><b data-page-number>25</b></footer>
+</section>
+
+<section class="slide" id="s26" data-role="activity" data-layout="activity-brief" data-purpose="pyclass-notebook 설치와 첫 실행을 안내한다">
+  <header class="topbar"><div class="course">삼성전자 AI 데이터분석 실무 <small>SEC-AI-DA-8H</small></div><div class="part">4H · 실습</div></header>
+  <main class="stage">
+    <div class="eyebrow">4H · 설치 · 셀 단위 코드 실행</div>
+    <h1 class="title" data-editable>pip install pyclass-notebook</h1>
+    <p class="subtitle" data-editable>직접 개발한 Python 학습·분석 환경. 복잡한 IDE 설정 없이 작성 → 실행 → 결과 확인 → 수정 사이클에 바로 들어간다.</p>
+    <div class="content">
+      <div class="brief-sheet">
+        <div class="brief-main">
+          <div><b>목표</b><span>노트북이 열리고, CSV를 읽은 DataFrame이 화면에 보이게 한다.</span></div>
+          <div><b>입력</b><span>Python 3.x, pip, 교육용 CSV. python --version 확인 후 설치.</span></div>
+          <div><b>핵심 행동</b><span>pip install pyclass-notebook → 실행 → CSV 로드 → info() 확인.</span></div>
+          <div><b>관찰</b><span>pip 차단, 권한, 경로 오류 중 어디가 막히는지 구분한다.</span></div>
+          <div><b>완료 신호</b><span>info 결과가 보인다. 설치 로그가 산출물이 아니다.</span></div>
+          <div><b>대체</b><span>설치가 안 되면 ChatGPT 코드 생성 + 로컬 Jupyter/Colab로 같은 확인을 한다.</span></div>
+        </div>
+        <div class="brief-cue">
+          <b>현장 점검</b>
+          <p>Python 실행 및 pip install 가능 여부. Excel/CSV 로컬 파일 읽기·쓰기 가능 여부.</p>
+          <small>설치가 안 되는 좌석을 먼저 모은다. 전체 설치를 기다리지 않고 트랙을 나눈다.</small>
+        </div>
+      </div>
+    </div>
+    <div class="anchor"><b>참고 영상</b><span data-editable>Python 활용 영상 01 · 02 (수업안내 페이지 Learning Resources).</span></div>
+  </main>
+  <footer><span>삼성전자 AI 데이터분석 실무</span><span>4H</span><b data-page-number>26</b></footer>
+</section>
+
+<section class="slide chapter-divider" id="s27" data-role="chapter" data-layout="chapter-gate" data-purpose="5시간의 학습 질문을 연다" data-divider-index="5">
+  <div class="chapter-top"><span>삼성전자 AI 데이터분석 실무 <small>LECTURE SERIES</small></span><span>삼성전자 · 2026.08.25</span></div>
+  <div class="chapter-head">
+    <div class="chapter-eyebrow" data-divider-label>5H</div>
+    <h1>Antigravity Agent</h1>
+  </div>
+  <div class="chapter-body">
+    <div class="chapter-no" data-divider-number>05</div>
+    <div class="chapter-message">
+      <h2>폴더 탐색 → 파일 이해 → 코드 작성 → 실행 → 오류 수정</h2>
+      <p>프로젝트 폴더와 파일을 읽고, 코드를 작성하고, 터미널에서 실행하고, 오류가 발생하면 다시 수정하는 에이전트형 분석 환경으로 활용한다.</p>
+      <div class="chapter-next"><span>폴더 단위</span><span>Agent Mission</span><span>Apps / MCP</span></div>
+    </div>
+  </div>
+  <footer><span>SEC-AI-DA-8H · PART 05</span><span>다음: 실무 데이터 자동 분석</span><b data-page-number>27</b></footer>
+</section>
+
+<section class="slide" id="s28" data-role="structure" data-layout="three-lane-wire" data-purpose="폴더·에이전트·산출물의 연결을 보여 준다">
+  <header class="topbar"><div class="course">삼성전자 AI 데이터분석 실무 <small>SEC-AI-DA-8H</small></div><div class="part">5H · AI Agent Lab</div></header>
+  <main class="stage">
+    <div class="eyebrow">5H · Google Antigravity</div>
+    <h1 class="title" data-editable>프로젝트 폴더와 파일을 읽는 에이전트형 분석 환경</h1>
+    <p class="subtitle" data-editable>ChatGPT는 데이터 구조 해석·분석기획·코드 생성에 쓰고, Antigravity는 프로젝트 폴더를 읽고 실행·수정하는 환경으로 쓴다.</p>
+    <div class="content">
+      <div class="wire-map" data-wire="lane">
+        <svg></svg>
+        <div class="wire-col">
+          <div class="wire-node" data-port="in"><b>프로젝트 폴더</b><span>Excel/CSV와 작업 파일이 있는 작업 단위.</span></div>
+          <div class="wire-node" data-port="in"><b>파일 이해</b><span>컬럼, 시트, 인코딩, 경로를 먼저 읽게 한다.</span></div>
+          <div class="wire-node" data-port="in"><b>요구사항</b><span>자연어로 분석 목표와 산출물 형식을 적는다.</span></div>
+        </div>
+        <div class="harness-core" data-port="core"><strong>Agent</strong><span>탐색</span><span>작성</span><span>실행</span><span>수정</span></div>
+        <div class="wire-col right">
+          <div class="wire-node" data-port="out"><b>코드 파일</b><span>폴더에 저장된 분석 스크립트·노트북.</span></div>
+          <div class="wire-node" data-port="out"><b>실행 로그</b><span>터미널 결과와 오류 메시지.</span></div>
+          <div class="wire-node" data-port="out"><b>Excel · HTML</b><span>최종 산출물. 코드가 아니라 업무 결과물.</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="anchor"><b>대체</b><span data-editable>Antigravity가 없으면 ChatGPT 코드 생성 + pyclass-notebook 실행으로 같은 단계를 간다.</span></div>
+  </main>
+  <footer><span>삼성전자 AI 데이터분석 실무</span><span>5H</span><b data-page-number>28</b></footer>
+</section>
+
+<section class="slide" id="s29" data-role="process" data-layout="process-river" data-purpose="탐색-작성-실행-수정의 주 흐름을 제시한다">
+  <header class="topbar"><div class="course">삼성전자 AI 데이터분석 실무 <small>SEC-AI-DA-8H</small></div><div class="part">5H · HANDS-ON</div></header>
+  <main class="stage">
+    <div class="eyebrow">5H · HANDS-ON</div>
+    <h1 class="title" data-editable>폴더 탐색 → 파일 이해 → 코드 작성 → 실행 → 오류 수정</h1>
+    <p class="subtitle" data-editable>한 번에 전체 프로젝트를 요구하지 말고 한 단계씩 요청한다. 코드와 함께 확인 포인트를 반드시 요구한다.</p>
+    <div class="content">
+      <div class="river">
+        <div class="river-main">
+          <span><b>1. 폴더 탐색</b><small>어떤 파일이 있는지, Excel/CSV 위치를 먼저 읽게 한다.</small></span>
+          <span><b>2. 파일 이해</b><small>형식, 시트, 컬럼, 인코딩을 출력하게 한다.</small></span>
+          <span><b>3. 코드 작성</b><small>요청한 작업에 대해서만 코드를 작성하게 한다.</small></span>
+          <span><b>4. 실행</b><small>터미널에서 실행하고 표를 확인한다.</small></span>
+          <span><b>5. 오류 수정</b><small>에러 전체와 직전 코드, 현재 목적을 함께 다시 제공한다.</small></span>
+        </div>
+        <div class="river-branch">
+          <b>여기서 멈추는 신호</b>
+          <span>없는 파일을 가정한 코드</span>
+          <span>확인 없이 다음 단계 제안</span>
+          <span>산출물 없이 대화만 남은 상태</span>
+        </div>
+      </div>
+    </div>
+    <div class="anchor"><b>검수</b><span data-editable>에이전트가 연 파일과 결과가 맞는가. 실행 로그와 수정 기록이 남아 있는가.</span></div>
+  </main>
+  <footer><span>삼성전자 AI 데이터분석 실무</span><span>5H</span><b data-page-number>29</b></footer>
+</section>
+
+<section class="slide" id="s30" data-role="demo" data-layout="demo-stage" data-purpose="Agent Mission Example 원문을 시연 화면에 둔다">
+  <header class="topbar"><div class="course">삼성전자 AI 데이터분석 실무 <small>SEC-AI-DA-8H</small></div><div class="part">5H · Agent Mission</div></header>
+  <main class="stage">
+    <div class="eyebrow">5H · Agent Mission Example</div>
+    <h1 class="title" data-editable>Agent Mission Example</h1>
+    <p class="subtitle" data-editable>수업안내 페이지의 미션 문장을 그대로 사용한다. 파일명과 지표는 현장 데이터에 맞게 바꾼다.</p>
+    <div class="content">
+      <div class="demo-stage">
+        <div class="demo-screen">
+          <div class="demo-head">자연어 요구사항</div>
+          <pre>이 폴더의 Excel 파일 구조를 분석하고,
+의미 있는 경영지표를 제안한 뒤
+Python으로 분석해 주세요.
+오류가 발생하면 수정하고,
+최종 결과를 Excel과 HTML Dashboard로
+만들어 주세요.</pre>
+          <div class="console-out">관찰: 폴더를 읽었는가, 코드를 저장했는가, 실행했는가, 오류를 수정했는가, Excel과 HTML이 생겼는가.</div>
+        </div>
+        <div class="observe">
+          <b>사람이 볼 지점</b>
+          <ol>
+            <li>폴더 탐색이 먼저인가.</li>
+            <li>파일 구조를 출력했는가.</li>
+            <li>코드가 파일로 남았는가.</li>
+            <li>오류 시 같은 미션을 이어서 수정하는가.</li>
+          </ol>
+          <small>시연이 실패하면 이 네 질문만 남기고 ChatGPT + pyclass-notebook으로 전환한다.</small>
+        </div>
+      </div>
+    </div>
+    <div class="anchor"><b>산출물</b><span data-editable>실행 로그와 수정 기록. 최종 결과는 Excel과 HTML Dashboard.</span></div>
+  </main>
+  <footer><span>삼성전자 AI 데이터분석 실무</span><span>5H</span><b data-page-number>30</b></footer>
+</section>
+
+<section class="slide" id="s31" data-role="case" data-layout="case-canvas" data-purpose="ChatGPT Apps와 MCP를 개념 사례로 제시한다">
+  <header class="topbar"><div class="course">삼성전자 AI 데이터분석 실무 <small>SEC-AI-DA-8H</small></div><div class="part">5H · Advanced</div></header>
+  <main class="stage">
+    <div class="eyebrow">5H · Advanced · ChatGPT Apps / MCP</div>
+    <h1 class="title" data-editable>ChatGPT Apps / MCP</h1>
+    <p class="subtitle" data-editable>사내 데이터·API·분석도구가 AI와 연결되는 구조를 개념적으로 살펴본다. 이번 과정에서는 개발 자체보다 구조를 이해하는 데 초점을 둔다.</p>
+    <div class="content">
+      <div class="case-canvas">
+        <div class="case-context">
+          <b>배경</b>
+          <p>ChatGPT만으로는 폴더와 터미널에 손이 닿지 않는다. Apps와 MCP는 모델이 외부 도구를 호출하게 하는 연결 층이다.</p>
+          <ul>
+            <li>사내 데이터</li>
+            <li>API</li>
+            <li>분석도구</li>
+          </ul>
+        </div>
+        <div class="case-flow">
+          <span><b>질문</b><small>분석 요구사항</small></span><i>→</i>
+          <span><b>LLM</b><small>계획·코드</small></span><i>→</i>
+          <span><b>MCP / Apps</b><small>도구 호출</small></span><i>→</i>
+          <span><b>결과</b><small>표·파일·화면</small></span>
+        </div>
+        <div class="case-result">
+          <b>오늘 범위</b>
+          <ul>
+            <li>연결 구조를 그림으로 이해한다.</li>
+            <li>개발 실습은 필수가 아니다.</li>
+            <li>현장 실습의 본체는 Antigravity 또는 ChatGPT + 로컬 실행이다.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="anchor"><b>초점</b><span data-editable>AI가 외부 도구를 호출하고 업무를 수행하는 구조를 이해한다.</span></div>
+  </main>
+  <footer><span>삼성전자 AI 데이터분석 실무</span><span>5H</span><b data-page-number>31</b></footer>
+</section>
+
+<section class="slide chapter-divider" id="s32" data-role="chapter" data-layout="chapter-gate" data-purpose="6시간의 학습 질문을 연다" data-divider-index="6">
+  <div class="chapter-top"><span>삼성전자 AI 데이터분석 실무 <small>LECTURE SERIES</small></span><span>삼성전자 · 2026.08.25</span></div>
+  <div class="chapter-head">
+    <div class="chapter-eyebrow" data-divider-label>6H</div>
+    <h1>실무 데이터 자동 분석</h1>
+  </div>
+  <div class="chapter-body">
+    <div class="chapter-no" data-divider-number>06</div>
+    <div class="chapter-message">
+      <h2>정제 · 파생지표 · 그룹 집계 · 이상치 및 리스크 탐색</h2>
+      <p>전처리는 청소가 아니라 해석 준비이다. 전체 평균만 보면 보이지 않던 차이는 집단별로 나누어 볼 때 드러난다.</p>
+      <div class="chapter-next"><span>형식별 패턴</span><span>전처리 기록</span><span>groupby / crosstab</span></div>
+    </div>
+  </div>
+  <footer><span>SEC-AI-DA-8H · PART 06</span><span>다음: Visualization &amp; Output</span><b data-page-number>32</b></footer>
+</section>
+
+<section class="slide" id="s33" data-role="compare" data-layout="evidence-matrix" data-purpose="CSV·엑셀·JSON에 필요한 정보를 같은 열로 비교한다">
+  <header class="topbar"><div class="course">삼성전자 AI 데이터분석 실무 <small>SEC-AI-DA-8H</small></div><div class="part">6H · 제12장</div></header>
+  <main class="stage">
+    <div class="eyebrow">6H · 제12장</div>
+    <h1 class="title" data-editable>형식별 요청 문장 예시</h1>
+    <p class="subtitle" data-editable>공공데이터는 대부분 CSV, XLSX, JSON 중 하나의 형태로 제공된다. 가장 먼저 익혀야 하는 실무 감각은 “어떤 형식의 파일을 지금 다루고 있는가”를 빠르게 파악하는 것이다.</p>
+    <div class="content">
+      <div class="matrix-wrap">
+        <table class="matrix">
+          <thead><tr><th>형식</th><th>LLM에게 먼저 알려야 할 정보</th><th>요청 예시</th></tr></thead>
+          <tbody>
+            <tr><td>CSV</td><td>파일명, 경로, 인코딩 후보</td><td>이 CSV를 cp949 우선, 실패 시 utf-8-sig로 다시 불러와 줘</td></tr>
+            <tr><td>XLSX</td><td>파일명, 시트명, 머리글 위치</td><td>이 엑셀에서 개방현황 시트만 읽고 첫 두 행은 건너뛰어 줘</td></tr>
+            <tr><td>JSON</td><td>URL 또는 파일명, 데이터가 있는 키</td><td>이 JSON 구조를 먼저 출력하고 실제 items 키를 찾아 DataFrame으로 바꿔 줘</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="anchor"><b>보충</b><span data-editable>CSV는 인코딩 문제가 자주 생기고, XLSX는 시트와 머리글 구조가 복잡할 수 있으며, JSON은 데이터가 중첩된 키 안에 들어 있을 수 있다.</span></div>
+  </main>
+  <footer><span>삼성전자 AI 데이터분석 실무</span><span>6H</span><b data-page-number>33</b></footer>
+</section>
+
+<section class="slide" id="s34" data-role="explain" data-layout="split-explain" data-purpose="전처리가 해석에 미치는 영향을 원문으로 설명한다">
+  <header class="topbar"><div class="course">삼성전자 AI 데이터분석 실무 <small>SEC-AI-DA-8H</small></div><div class="part">6H · 제15장</div></header>
+  <main class="stage">
+    <div class="eyebrow">6H · 제15장</div>
+    <h1 class="title" data-editable>전처리는 청소가 아니라 해석 준비이다</h1>
+    <p class="subtitle" data-editable>결측치가 많은 이유가 무엇인지, object 타입 컬럼이 실제 숫자를 담고 있는지, 주소에서 지역을 어떻게 나눌지 같은 결정이 뒤의 EDA와 시각화, 보고서 해석에 직접적인 영향을 미친다.</p>
+    <div class="content">
+      <div class="split-explain">
+        <div class="split-left">
+          <h3>왜 전처리가 해석을 좌우하는가</h3>
+          <p>많은 초급 학습자가 전처리를 지루한 사전작업처럼 여기지만, 실제로는 이 단계가 분석 품질을 크게 좌우한다.</p>
+          <p>주말운영시간 결측치는 단순 누락이 아니라 “주말 미운영”이라는 실질적 의미를 담을 수 있고, 위경도 컬럼은 숫자처럼 보여도 문자열일 수 있으며, 사용료는 무료 시설과 유료 시설이 섞여 분포가 매우 비대칭적일 수 있다. 이런 구조를 이해하지 않고 평균만 보면 쉽게 오판한다.</p>
+        </div>
+        <div class="split-right">
+          <h3>전처리 기록에 남겨야 할 것</h3>
+          <ol>
+            <li>원본 파일명과 수집일 — 데이터 기준 시점을 추적하기 위해</li>
+            <li>인코딩과 읽기 방식 — 재현 가능성 확보를 위해</li>
+            <li>타입 변환 규칙 — 숫자 변환 시 오류를 줄이기 위해</li>
+            <li>파생변수 정의 — 이후 해석 근거를 남기기 위해</li>
+            <li>제외한 행과 이유 — 분석 범위를 설명하기 위해</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="anchor"><b>EDA</b><span data-editable>제16장: EDA는 답을 확정하는 과정이 아니라 질문을 정교하게 만드는 과정이다.</span></div>
+  </main>
+  <footer><span>삼성전자 AI 데이터분석 실무</span><span>6H</span><b data-page-number>34</b></footer>
+</section>
+
+<section class="slide" id="s35" data-role="concept" data-layout="number-story" data-purpose="groupby와 crosstab으로 집단 차이를 읽는 이유를 설명한다">
+  <header class="topbar"><div class="course">삼성전자 AI 데이터분석 실무 <small>SEC-AI-DA-8H</small></div><div class="part">6H · 제20장</div></header>
+  <main class="stage">
+    <div class="eyebrow">6H · 제20장</div>
+    <h1 class="title long" data-editable>groupby와 crosstab으로 숨어 있던 차이 읽기</h1>
+    <p class="subtitle" data-editable>전체 평균만 보면 보이지 않던 차이는 집단별로 나누어 볼 때 드러난다. 고급 모델이 없어도, 비교 기준을 어떻게 세우느냐에 따라 분석의 힘이 달라진다.</p>
+    <div class="content">
+      <div class="number-story">
+        <div class="big-number">집단별<small>전체 값보다 정책에 더 직접적인 경우가 많다</small></div>
+        <div class="story-lines">
+          <div><b>평균 왜곡</b><p>0원과 고가 유료가 섞이면 평균은 매우 왜곡되기 쉽다. 평균과 중앙값 차이가 크다면 분포가 한쪽으로 치우쳐 있다는 뜻이다.</p></div>
+          <div><b>집단 지표</b><p>시도별 시설 수, 시설유형별 평균 면적, 시도별 유료시설 비율, 시설유형별 주말 운영 비율은 groupby()와 crosstab()만으로도 상당 부분 드러낼 수 있다.</p></div>
+          <div><b>설명 문장</b><p>“시도별 유료 비율 차이가 크다”만으로는 부족하다. 절대 규모와 비율을 구분해 해석해야 한다. 교차집계 결과는 설명 문장으로 바로 이어져야 한다.</p></div>
+        </div>
+      </div>
+    </div>
+    <div class="anchor"><b>수치형</b><span data-editable>제19장: 먼저 dtype을 확인하고, 숫자로 변환하고, 변환 실패는 NaN으로 처리하며, 변환 이후 다시 요약 통계를 본다.</span></div>
+  </main>
+  <footer><span>삼성전자 AI 데이터분석 실무</span><span>6H</span><b data-page-number>35</b></footer>
+</section>
+
+<section class="slide" id="s36" data-role="activity" data-layout="activity-brief" data-purpose="정제·파생·집계 실습의 완료 신호를 제시한다">
+  <header class="topbar"><div class="course">삼성전자 AI 데이터분석 실무 <small>SEC-AI-DA-8H</small></div><div class="part">6H · 실습</div></header>
+  <main class="stage">
+    <div class="eyebrow">6H · 정제 · 파생지표 · 그룹 집계 · 이상치 및 리스크 탐색</div>
+    <h1 class="title" data-editable>전처리 로그와 파생변수 정의서</h1>
+    <p class="subtitle" data-editable>HANDS-ON: 정제 · 파생지표 · 그룹 집계 · 이상치 및 리스크 탐색</p>
+    <div class="content">
+      <div class="brief-sheet">
+        <div class="brief-main">
+          <div><b>목표</b><span>타입 변환, 파생변수, 그룹 집계를 한 노트북에서 연결하고 기록을 남긴다.</span></div>
+          <div><b>입력</b><span>교육용 Excel/CSV. 사내 원자료는 올리지 않는다.</span></div>
+          <div><b>핵심 행동</b><span>dtype 확인 → 숫자 변환 → 파생 정의 → groupby/crosstab.</span></div>
+          <div><b>관찰</b><span>변환 실패 행, 평균과 중앙값 차이, 집단별 값과 전체 평균의 차이.</span></div>
+          <div><b>완료 신호</b><span>원본 파일명, 변환 규칙, 파생 정의, 제외 행과 이유가 적혀 있다.</span></div>
+          <div><b>이상치</b><span>최대값이 지나치게 크다면 입력 오류나 특수 건 여부를 따로 확인한다.</span></div>
+        </div>
+        <div class="brief-cue">
+          <b>워크북 05</b>
+          <p>전처리 로그와 파생변수 정의서. 제외한 행과 이유를 남기지 않으면 분석 범위를 설명할 수 없다.</p>
+          <small>상관관계 표만 던지고 원인까지 단정하게 만들지 않는다.</small>
+        </div>
+      </div>
+    </div>
+    <div class="anchor"><b>산출물</b><span data-editable>전처리 로그 + 집계표. 검수: 제외 행과 이유가 남아 있는가.</span></div>
+  </main>
+  <footer><span>삼성전자 AI 데이터분석 실무</span><span>6H</span><b data-page-number>36</b></footer>
+</section>
+
+<section class="slide chapter-divider" id="s37" data-role="chapter" data-layout="chapter-gate" data-purpose="7시간의 학습 질문을 연다" data-divider-index="7">
+  <div class="chapter-top"><span>삼성전자 AI 데이터분석 실무 <small>LECTURE SERIES</small></span><span>삼성전자 · 2026.08.25</span></div>
+  <div class="chapter-head">
+    <div class="chapter-eyebrow" data-divider-label>7H</div>
+    <h1>Visualization &amp; Output</h1>
+  </div>
+  <div class="chapter-body">
+    <div class="chapter-no" data-divider-number>07</div>
+    <div class="chapter-message">
+      <h2>차트 · Excel 분석 결과 · HTML Dashboard 자동 생성</h2>
+      <p>시각화 파트의 핵심은 라이브러리 문법을 외우게 하는 데 있지 않다. 실제 목적은 “무엇을 보고 싶은가”와 “누구에게 보여줄 것인가”에 맞춰 가장 적절한 차트를 고르는 훈련에 있다.</p>
+      <div class="chapter-next"><span>차트 선택 표</span><span>단일 HTML</span><span>보고서 전환</span></div>
+    </div>
+  </div>
+  <footer><span>SEC-AI-DA-8H · PART 07</span><span>다음: Agent Mini Project</span><b data-page-number>37</b></footer>
+</section>
+
+<section class="slide" id="s38" data-role="case" data-layout="case-strip" data-purpose="차트 선택의 기준 표를 원문 그대로 제시한다">
+  <header class="topbar"><div class="course">삼성전자 AI 데이터분석 실무 <small>SEC-AI-DA-8H</small></div><div class="part">7H · 제23장</div></header>
+  <main class="stage">
+    <div class="eyebrow">7H · 제23장</div>
+    <h1 class="title long" data-editable>시각화는 코딩 과목이 아니라 메시지 설계 과목이다</h1>
+    <p class="subtitle" data-editable>막대차트, 히스토그램, 산점도, 박스플롯, 히트맵은 모두 각기 다른 질문에 답하는 도구이다. 제목과 주석이 과장되지 않는가, 절대값과 비율을 혼동하지 않는가, 차트 하나가 하나의 핵심 문장을 지원하는가를 먼저 본다.</p>
+    <div class="content">
+      <div class="case-strip">
+        <div><b>막대차트</b><span>보고 싶은 것: 지역별 규모 비교</span><span>실무 해석: 순위와 격차를 읽기 쉬움</span><span>정렬, 숫자 라벨, 한글 폰트</span></div>
+        <div><b>히스토그램</b><span>보고 싶은 것: 사용료 분포</span><span>실무 해석: 무료와 유료를 분리해서 볼 필요가 있다</span><span>0원이 많으면 전체와 0원 제외를 나란히</span></div>
+        <div><b>산점도·박스</b><span>면적과 수용인원 관계 / 유형별 요금 분포</span><span>이상치와 추세, 평균이 아니라 분포와 편차</span><span>히트맵·pairplot은 후속 탐색 후보를 좁힐 때</span></div>
+      </div>
+    </div>
+    <div class="anchor"><b>판단 기준</b><span data-editable>생성형 AI는 차트를 빠르게 만들어 주지만, 오해를 줄이는 판단 기준은 사람이 가져야 한다.</span></div>
+  </main>
+  <footer><span>삼성전자 AI 데이터분석 실무</span><span>7H</span><b data-page-number>38</b></footer>
+</section>
+
+<section class="slide" id="s39" data-role="structure" data-layout="layer-stack" data-purpose="단일 HTML 대시보드의 층과 요구사항을 설명한다">
+  <header class="topbar"><div class="course">삼성전자 AI 데이터분석 실무 <small>SEC-AI-DA-8H</small></div><div class="part">7H · 제27장</div></header>
+  <main class="stage">
+    <div class="eyebrow">7H · 제27장</div>
+    <h1 class="title" data-editable>단일 HTML 대시보드는 왜 실무 친화적인가</h1>
+    <p class="subtitle" data-editable>브라우저로 열 수 있고, 로컬 파일을 바로 읽을 수 있으며, 별도 서버를 띄우지 않아도 되는 경우가 많아 학습과 실무 시연에 적합하다.</p>
+    <div class="content">
+      <div class="layer-stack">
+        <div class="layer l1"><b>HTML 구조</b><span>어떤 카드와 차트를 어떤 순서로 보여줄지. 사용자가 CSV를 올리면 어떤 계산을 해야 하는지.</span></div>
+        <div class="layer l2"><b>CSS 스타일</b><span>색상과 폰트는 읽기 쉬운 문서 톤을 유지한다. 예쁘게 그리는 것보다 오해를 줄이는 것이 더 중요하다.</span></div>
+        <div class="layer l3"><b>JS 상호작용</b><span>필터, 파일 선택, 오류 메시지를 사용자에게 알려준다. 프론트엔드 전문 개발이 목적은 아니다.</span></div>
+        <div class="layer l4"><b>요구사항 예시</b><span>CSV 파일 선택 → 기본 통계 카드 → 핵심 차트 자동 생성 → 오류 시 확인할 것을 안내.</span></div>
+      </div>
+    </div>
+    <div class="anchor"><b>seaborn / plotly</b><span data-editable>정적 보고서용 차트, 통계형 차트, 클릭과 hover가 가능한 HTML 차트는 쓰임이 다르다.</span></div>
+  </main>
+  <footer><span>삼성전자 AI 데이터분석 실무</span><span>7H</span><b data-page-number>39</b></footer>
+</section>
+
+<section class="slide" id="s40" data-role="process" data-layout="process-river" data-purpose="노트북을 보고서와 발표자료로 바꾸는 단계를 제시한다">
+  <header class="topbar"><div class="course">삼성전자 AI 데이터분석 실무 <small>SEC-AI-DA-8H</small></div><div class="part">7H · 제32장</div></header>
+  <main class="stage">
+    <div class="eyebrow">7H · 제32장 · 제33장</div>
+    <h1 class="title" data-editable>노트북을 보고서와 발표자료로 바꾸는 단계</h1>
+    <p class="subtitle" data-editable>분석 결과가 Jupyter Notebook 안에만 남아 있으면 실무적으로는 절반만 끝난 것이다. 상사와 동료는 .ipynb보다 HTML, PDF, PPTX, 메모 형태를 더 쉽게 읽는다.</p>
+    <div class="content">
+      <div class="river">
+        <div class="river-main">
+          <span><b>1. 무엇을 보여줄지</b><small>모든 셀을 다 내보내지 않는다. 핵심 통계, 의미 있는 차트, 한계 설명, 후속 조치를 남긴다.</small></span>
+          <span><b>2. 요약</b><small>데이터와 분석 결과 요약. 원문 수치를 사람이 다시 본다.</small></span>
+          <span><b>3. 구조</b><small>보고서 목차와 섹션 구조 설계.</small></span>
+          <span><b>4. 섹션 초안</b><small>섹션별 초안 작성. 한 번에 전체 보고서를 요구하면 후반부가 얕아지기 쉽다.</small></span>
+          <span><b>5. 통합 편집</b><small>표현 수위 조정. 과장 표현과 단정 문장을 줄인다.</small></span>
+        </div>
+        <div class="river-branch">
+          <b>보고서 요청 4단계</b>
+          <span>요약 → 구조 → 섹션 → 통합</span>
+          <span>모델 선택보다 지시 구조가 중요하다</span>
+          <span>격식체, 근거 문장, 한계 표기</span>
+        </div>
+      </div>
+    </div>
+    <div class="anchor"><b>발표</b><span data-editable>제34장: 하나의 슬라이드에는 하나의 메시지만 남기는 편이 좋다. 어떤 차트를 남기고 어떤 문장을 제목으로 올릴 것인가.</span></div>
+  </main>
+  <footer><span>삼성전자 AI 데이터분석 실무</span><span>7H</span><b data-page-number>40</b></footer>
+</section>
+
+<section class="slide" id="s41" data-role="activity" data-layout="split-explain" data-purpose="차트와 Excel·HTML 산출물 실습을 안내한다">
+  <header class="topbar"><div class="course">삼성전자 AI 데이터분석 실무 <small>SEC-AI-DA-8H</small></div><div class="part">7H · 실습</div></header>
+  <main class="stage">
+    <div class="eyebrow">7H · 차트 · Excel 분석 결과 · HTML Dashboard</div>
+    <h1 class="title" data-editable>차트와 Excel · HTML 산출물</h1>
+    <p class="subtitle" data-editable>HANDS-ON: 차트 · Excel 분석 결과 · HTML Dashboard 자동 생성</p>
+    <div class="content">
+      <div class="split-explain">
+        <div class="split-left">
+          <h3>실습에서 만들 것</h3>
+          <p>집계가 끝난 표로 핵심 차트를 그리고, Excel 분석 결과 또는 단일 HTML 대시보드 중 1종을 만든다.</p>
+          <p>공공부문에서 차트는 예쁘게 그리는 것보다 오해를 줄이는 것이 더 중요하다. 제목과 축, 단위가 읽히는지, 절대값과 비율을 혼동하지 않는지를 본다.</p>
+        </div>
+        <div class="split-right">
+          <h3>단일 HTML 대시보드 요구사항 예시</h3>
+          <ol>
+            <li>브라우저에서 CSV 파일 선택이 가능해야 한다.</li>
+            <li>파일 업로드 직후 기본 통계가 카드 형태로 보여야 한다.</li>
+            <li>핵심 차트가 자동 생성되어야 한다.</li>
+            <li>색상과 폰트는 읽기 쉬운 문서 톤을 유지해야 한다.</li>
+            <li>오류가 발생하면 사용자에게 무엇을 확인해야 하는지 알려줘야 한다.</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="anchor"><b>검수</b><span data-editable>차트 하나가 문장 하나를 지원하는가. 제목·축·단위가 읽히는가.</span></div>
+  </main>
+  <footer><span>삼성전자 AI 데이터분석 실무</span><span>7H</span><b data-page-number>41</b></footer>
+</section>
+
+<section class="slide chapter-divider" id="s42" data-role="chapter" data-layout="chapter-gate" data-purpose="8시간의 학습 질문을 연다" data-divider-index="8">
+  <div class="chapter-top"><span>삼성전자 AI 데이터분석 실무 <small>LECTURE SERIES</small></span><span>삼성전자 · 2026.08.25</span></div>
+  <div class="chapter-head">
+    <div class="chapter-eyebrow" data-divider-label>8H</div>
+    <h1>Agent Mini Project</h1>
+  </div>
+  <div class="chapter-body">
+    <div class="chapter-no" data-divider-number>08</div>
+    <div class="chapter-message">
+      <h2>자연어 요구사항만으로 분석 프로젝트 완성 · 결과 검증</h2>
+      <p>캡스톤의 첫 단계는 파일을 여는 것이 아니라 질문을 정하는 것이다. 모듈별 결과를 하나의 주제로 묶어야 업무 흐름으로 전환된다.</p>
+      <div class="chapter-next"><span>질문 정의</span><span>EDA 노트북</span><span>대시보드·보고</span></div>
+    </div>
+  </div>
+  <footer><span>SEC-AI-DA-8H · PART 08</span><span>다음: 보안 경계선 · 회수</span><b data-page-number>42</b></footer>
+</section>
+
+<section class="slide" id="s43" data-role="process" data-layout="timeline" data-purpose="캡스톤 네 단계를 원문 제목으로 제시한다">
+  <header class="topbar"><div class="course">삼성전자 AI 데이터분석 실무 <small>SEC-AI-DA-8H</small></div><div class="part">8H · 제37–40장</div></header>
+  <main class="stage">
+    <div class="eyebrow">8H · 캡스톤 4단계</div>
+    <h1 class="title" data-editable>캡스톤 실습은 산출물을 묶어내는 과정이다</h1>
+    <p class="subtitle" data-editable>데이터 수집과 전처리, EDA, 시각화, HTML 대시보드, 자동화, 보고서 요약이 각각 따로 존재하면 학습은 되었지만 업무 흐름으로 전환되었다고 보기 어렵다.</p>
+    <div class="content">
+      <div class="timeline-board">
+        <div class="time-node"><time>1단계</time><b>데이터 준비와 질문 정의</b><span>파일을 여는 것이 아니라 질문을 정한다. 필요 컬럼과 파생변수가 그다음에 분명해진다.</span></div>
+        <div class="time-node"><time>2단계</time><b>EDA 노트북 완성</b><span>구조, 결측, 수치형 정리, 파생, 그룹별 집계, 교차집계, 상관관계. 각 셀 앞에 짧은 설명을 붙인다.</span></div>
+        <div class="time-node hot"><time>3단계</time><b>시각화와 HTML 대시보드 연결</b><span>어떤 차트가 핵심인지, 어떤 순서로 보여줄지 다시 정한다.</span></div>
+        <div class="time-node"><time>4단계</time><b>자동화와 보고 문서 마무리</b><span>경로만 바뀌면 같은 통계와 차트를 다시 만들 수 있는지 점검한다. 발견·미확정·다음 조치를 정리한다.</span></div>
+      </div>
+    </div>
+    <div class="anchor"><b>질문 예</b><span data-editable>지역별 격차가 있는가. 유형별 유료 비율은 얼마나 다른가. 어떤 집단의 운영 구조가 특이한가.</span></div>
+  </main>
+  <footer><span>삼성전자 AI 데이터분석 실무</span><span>8H</span><b data-page-number>43</b></footer>
+</section>
+
+<section class="slide" id="s44" data-role="activity" data-layout="activity-brief" data-purpose="미니 프로젝트의 목표와 완료 신호를 제시한다">
+  <header class="topbar"><div class="course">삼성전자 AI 데이터분석 실무 <small>SEC-AI-DA-8H</small></div><div class="part">8H · 실습</div></header>
+  <main class="stage">
+    <div class="eyebrow">8H · 자연어 요구사항만으로 분석 프로젝트 완성 · 결과 검증</div>
+    <h1 class="title" data-editable>Agent Mini Project</h1>
+    <p class="subtitle" data-editable>최종 질문 선택은 사람이 한다. 조직의 관심사와 발표 목적을 가장 잘 아는 것은 사람 쪽이기 때문이다.</p>
+    <div class="content">
+      <div class="brief-sheet">
+        <div class="brief-main">
+          <div><b>목표</b><span>자연어 요구사항 한 문장으로 분석·산출·검증까지 연결한다.</span></div>
+          <div><b>입력</b><span>교육용 Excel/CSV + 요구사항. Agent Mission Example을 현장 데이터에 맞게 수정한다.</span></div>
+          <div><b>핵심 행동</b><span>질문 정의 → EDA 노트북 → 차트/HTML 또는 Excel → 핵심 수치 원표 대조.</span></div>
+          <div><b>노트북 기본 블록</b><span>불러오기와 파일 정보, 구조·결측, 파생 설명, 집계와 1문장 해석, 차트 메모, 후속 질문.</span></div>
+          <div><b>완료 신호</b><span>패턴과 확정할 수 없는 해석이 분리되어 있고, 핵심 수치를 원표와 대조했다.</span></div>
+          <div><b>보고 5문장</b><span>어떤 데이터를 썼는지, 무엇을 발견했는지, 무엇은 아직 확정할 수 없는지, 다음 조치는 무엇인지.</span></div>
+        </div>
+        <div class="brief-cue">
+          <b>검수</b>
+          <p>확정 문장과 미확정 문장이 분리됐는가. AI가 제시한 핵심 수치와 결론을 다시 확인했는가.</p>
+          <small>상관관계를 인과처럼 단정하지 않는다.</small>
+        </div>
+      </div>
+    </div>
+    <div class="anchor"><b>산출물</b><span data-editable>분석 결과 + 검증 메모. 코드가 아니라 업무 결과물이다.</span></div>
+  </main>
+  <footer><span>삼성전자 AI 데이터분석 실무</span><span>8H</span><b data-page-number>44</b></footer>
+</section>
+
+<section class="slide" id="s45" data-role="synthesis" data-layout="recap-map" data-purpose="8시간 핵심을 학습 흐름 표로 다시 연결한다">
+  <header class="topbar"><div class="course">삼성전자 AI 데이터분석 실무 <small>SEC-AI-DA-8H</small></div><div class="part">회수 · 학습 흐름</div></header>
+  <main class="stage">
+    <div class="eyebrow">회수 · Core Workflow</div>
+    <h1 class="title" data-editable>Core Workflow</h1>
+    <p class="subtitle" data-editable>ChatGPT 분석설계 → Python 코드 생성 → pyclass-notebook 실행·확인 → Antigravity 에이전트 실행 → Excel · Chart · HTML.</p>
+    <div class="content">
+      <div class="recap-map" data-wire="hub">
+        <svg></svg>
+        <div class="recap-center">Prompt →<br>Code → Agent</div>
+        <div class="recap-item r1" data-port><b>01 변화</b><span>역할 경계, DX/AX, 바이브코딩 실천 원칙</span></div>
+        <div class="recap-item r2" data-port><b>02 ChatGPT</b><span>시스템 프롬프트 5요소, 분석계획</span></div>
+        <div class="recap-item r3" data-port><b>03–04 실행</b><span>셀 단위 검증, pyclass-notebook, info()/describe()</span></div>
+        <div class="recap-item r4" data-port><b>05 Agent</b><span>폴더 탐색 → 작성 → 실행 → 오류 수정</span></div>
+        <div class="recap-item r5" data-port><b>06 자동 분석</b><span>전처리 기록, groupby/crosstab</span></div>
+        <div class="recap-item r6" data-port><b>07–08 산출</b><span>차트 선택, HTML/Excel, 캡스톤 4단계</span></div>
+      </div>
+    </div>
+    <div class="anchor"><b>핵심 메시지</b><span data-editable>Python을 잘 쓰는 사람이 되는 것보다, AI가 만든 분석 과정과 결과를 통제할 수 있는 사람이 되는 것이 이번 과정의 목표이다.</span></div>
+  </main>
+  <footer><span>삼성전자 AI 데이터분석 실무</span><span>회수</span><b data-page-number>45</b></footer>
+</section>
+
+<section class="slide" id="s46" data-role="teaching" data-layout="quote-evidence" data-purpose="보안 경계와 최소 검증 체크를 원문으로 제시한다">
+  <header class="topbar"><div class="course">삼성전자 AI 데이터분석 실무 <small>SEC-AI-DA-8H</small></div><div class="part">회수 · 제35장</div></header>
+  <main class="stage">
+    <div class="eyebrow">회수 · 제35장</div>
+    <h1 class="title long" data-editable>공공조직에서 AI 보조 분석을 쓸 때의 보안 경계선</h1>
+    <p class="subtitle" data-editable>raw 데이터 전체를 그대로 업로드하는 방식은 학습 환경에서는 편해 보여도 실무 전환 시에는 위험할 수 있다. 삼성 과정에서도 교육용 샘플시트와 공개 CSV만 사용한다.</p>
+    <div class="content">
+      <div class="quote-box">
+        <div class="quote-main">
+          <q>민감정보는 제거하거나 익명화하고, 가능한 경우 요약 통계나 샘플 구조만 제공하며, 외부 서비스 사용 시 기관 규정을 우선 확인해야 한다.</q>
+          <small>보고서 초안에 AI를 썼다면, 최종 수치와 결론은 반드시 원문 데이터로 대조한다.</small>
+        </div>
+        <div class="quote-side">
+          <b>최소 보안·검증 체크리스트</b>
+          <ul>
+            <li>입력 자료에 개인정보가 포함되어 있지 않은가.</li>
+            <li>비공개 내부자료를 외부 서비스에 그대로 넣지 않았는가.</li>
+            <li>AI가 제시한 핵심 수치와 결론을 다시 확인했는가.</li>
+            <li>결과 문장에 과도한 단정 표현이 없는가.</li>
+            <li>누가 검토했고 무엇을 수정했는지 기록이 남아 있는가.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="anchor"><b>현장</b><span data-editable>외부 서비스 제한 시 ChatGPT 중심 + Local Python 대체 트랙으로 진행한다.</span></div>
+  </main>
+  <footer><span>삼성전자 AI 데이터분석 실무</span><span>회수</span><b data-page-number>46</b></footer>
+</section>
+
+<section class="slide" id="s47" data-role="discussion" data-layout="discussion-lens" data-purpose="실무 적용 질문을 원문 문항으로 연다">
+  <header class="topbar"><div class="course">삼성전자 AI 데이터분석 실무 <small>SEC-AI-DA-8H</small></div><div class="part">회수 · 제02장 · 워크북 01</div></header>
+  <main class="stage">
+    <div class="eyebrow">회수 · 실무 적용 질문</div>
+    <h1 class="title" data-editable>실무 적용 질문</h1>
+    <p class="subtitle" data-editable>더 중요한 질문은 “나는 지금 무엇을 AI에게 맡길 수 있고, 무엇은 반드시 직접 판단해야 하는가”이다.</p>
+    <div class="content">
+      <div class="discuss">
+        <div class="discuss-q">
+          <b>제02장</b>
+          <h3>지금 바로 AI에게 맡길 수 있는 가장 작은 분석 작업은 무엇인가. 그 결과를 검증할 기준은 무엇인가.</h3>
+        </div>
+        <div class="discuss-axis">
+          <div><b>워크북 01. 역할 진단</b><p>지금 내 업무에서 직접 코드 작성보다 분석 설계가 더 중요한 작업 세 가지를 적어보라. 생성형 AI를 쓰면 빨라질 작업과 오히려 더 신중해야 할 작업을 나누어 적어보라.</p></div>
+          <div><b>역할이 섞이는 상황</b><p>개발자, 분석가, 실무자 역할이 섞이는 상황에서 내가 가장 강한 역할은 무엇인지 적어보라.</p></div>
+        </div>
+      </div>
+    </div>
+    <div class="anchor"><b>반복 업무</b><span data-editable>지금 내 업무에서 가장 반복되는 데이터 작업은 무엇인가. 직접 코드를 짜는 시간이 많이 드는가, 아니면 구조를 설명하는 시간이 더 많이 드는가.</span></div>
+  </main>
+  <footer><span>삼성전자 AI 데이터분석 실무</span><span>회수</span><b data-page-number>47</b></footer>
+</section>
+
+<section class="slide" id="s48" data-role="synthesis" data-layout="action-roadmap" data-purpose="학습 이후 기대 성과를 원문 항목으로 제시한다">
+  <header class="topbar"><div class="course">삼성전자 AI 데이터분석 실무 <small>SEC-AI-DA-8H</small></div><div class="part">회수 · 기대 성과</div></header>
+  <main class="stage">
+    <div class="eyebrow">회수 · 학습 이후 기대 성과</div>
+    <h1 class="title" data-editable>학습 이후 기대 성과</h1>
+    <p class="subtitle" data-editable>생성형 AI가 만든 코드와 설명을 무비판적으로 받아들이지 않고, 확인 포인트와 검증 절차를 함께 운영할 수 있게 된다.</p>
+    <div class="content">
+      <div class="roadmap">
+        <div class="road-seg">
+          <time>역할 · 환경</time>
+          <b>구분과 선택</b>
+          <span>DX와 AX의 차이를 설명하고, 생성형 AI 시대에 분석가가 어떤 역할을 맡아야 하는지 설명할 수 있다. 조직 보안 조건에 맞는 실행 환경을 고른다.</span>
+          <small>Colab, 로컬 Jupyter, pyclass-notebook</small>
+        </div>
+        <div class="road-seg">
+          <time>수집 · 분석</time>
+          <b>지시와 검증</b>
+          <span>CSV, XLSX, JSON을 읽고, 생성형 AI에게 정확한 수집·전처리 코드를 요청할 수 있다. 기초 EDA, 시각화, 대시보드 초안을 설계할 수 있다.</span>
+          <small>형식별 정보 + 확인 포인트</small>
+        </div>
+        <div class="road-seg">
+          <time>보고 · 통제</time>
+          <b>산출과 재검증</b>
+          <span>노트북 결과를 HTML/Excel/보고 형태로 바꾸고, 핵심 수치와 결론은 원문 데이터로 재검증한다.</span>
+          <small>패턴과 미확정 해석 분리</small>
+        </div>
+      </div>
+    </div>
+    <div class="anchor"><b>자동화</b><span data-editable>제29장: 매주 같은 파일을 열고 같은 형식의 보고서를 만드는 시점부터는 자동화 설계가 필요하다.</span></div>
+  </main>
+  <footer><span>삼성전자 AI 데이터분석 실무</span><span>회수</span><b data-page-number>48</b></footer>
+</section>
+
+<section class="slide closing" id="s49" data-role="cover" data-layout="cover-stage" data-purpose="과정 종료와 다음 자료를 닫는다">
+  <div class="cover-rail"><span>한국데이터사이언티스트협회 · CDSA</span><span>2026.08.25</span></div>
+  <div class="cover-main">
+    <div class="cover-kicker">AI를 배우는 교육에서, AI와 함께 일하는 방법을 설계하는 교육으로</div>
+    <h1 data-editable>Prompt → Code → Agent</h1>
+    <p data-editable>이 과목의 본질은 코드를 암기하는 것이 아니라, AI에게 일을 맡길 수 있을 만큼 문제를 분명하게 정의하고 결과를 검증하는 습관을 기르는 데 있다.</p>
+    <div class="cover-route"><span>게시판 cdsa.notion.site/samsung0825</span><i></i><span>sjshin@cdsa.or.kr</span><i></i><span>설문 sally.coach/r/mgt0317</span></div>
+  </div>
+  <footer><span>신성진 · 한국데이터사이언티스트협회</span><span>SEC-AI-DA-8H</span><b data-page-number>49</b></footer>
+</section>
+
+
+</div>
+<script>
+const slides=[...document.querySelectorAll('.slide')];
+let current=0, editing=false;
+
+function syncDividerNumbers(){
+  const dividers=[...document.querySelectorAll('.slide[data-role="chapter"], .slide[data-role="section"]')];
+  dividers.forEach((slide,index)=>{
+    const order=index+1;
+    const label=String(order).padStart(2,'0');
+    slide.dataset.dividerIndex=String(order);
+    slide.querySelectorAll('[data-divider-number]').forEach(node=>{
+      node.textContent=label;
+      node.contentEditable='false';
+    });
+    slide.querySelectorAll('[data-divider-label]').forEach(node=>{
+      const rest=node.textContent.replace(/^PART\s+\d+\s*·\s*/,'');
+      node.textContent='PART '+label+' · '+rest;
+    });
+  });
+}
+
+function syncPageNumbers(){
+  slides.forEach((slide,index)=>slide.querySelectorAll('[data-page-number]').forEach(node=>node.textContent=String(index+1).padStart(2,'0')));
+}
+
+function updateCounter(){
+  const node=document.getElementById('counter');
+  if(node) node.textContent=(current+1)+' / '+slides.length;
+}
+
+function activate(index){
+  current=Math.max(0,Math.min(slides.length-1,index));
+  slides.forEach((slide,i)=>slide.classList.toggle('active',i===current));
+  updateCounter();
+  const url=new URL(location.href);
+  if(document.body.classList.contains('presenting')) url.searchParams.set('slide',String(current+1));
+  history.replaceState(null,'',url);
+  requestAnimationFrame(drawAllWires);
+}
+
+function fitPresentation(){
+  const scale=Math.min(innerWidth/1280,innerHeight/720);
+  document.documentElement.style.setProperty('--scale',String(scale));
+}
+
+function enterPresentation(){
+  document.body.classList.remove('single');
+  document.body.classList.add('presenting');
+  fitPresentation();
+  activate(current);
+  document.documentElement.requestFullscreen?.().catch(()=>{});
+}
+
+function exitPresentation(){
+  document.body.classList.remove('presenting');
+  document.exitFullscreen?.().catch(()=>{});
+  const url=new URL(location.href);
+  url.searchParams.delete('slide');
+  history.replaceState(null,'',url);
+}
+
+function toggleEdit(){
+  editing=!editing;
+  document.body.classList.toggle('editing',editing);
+  document.querySelectorAll('[data-editable]').forEach(node=>node.contentEditable=editing?'true':'false');
+  document.querySelectorAll('[data-divider-number]').forEach(node=>node.contentEditable='false');
+  document.getElementById('editBtn').textContent=editing?'편집 종료':'편집';
+}
+
+function saveHtml(){
+  syncDividerNumbers();
+  syncPageNumbers();
+  document.querySelectorAll('[contenteditable]').forEach(node=>node.setAttribute('contenteditable','false'));
+  const clone=document.documentElement.cloneNode(true);
+  clone.querySelector('body').classList.remove('editing','presenting','single');
+  clone.querySelectorAll('.slide').forEach(node=>node.classList.remove('active'));
+  const blob=new Blob(['<!doctype html>\n'+clone.outerHTML],{type:'text/html;charset=utf-8'});
+  const link=document.createElement('a');
+  link.href=URL.createObjectURL(blob);
+  link.download='삼성전자_20260825_AI데이터분석실무.html';
+  link.click();
+  setTimeout(()=>URL.revokeObjectURL(link.href),1000);
+  if(editing) document.querySelectorAll('[data-editable]').forEach(node=>node.contentEditable='true');
+}
+
+function portPoint(mapRect, el, toward){
+  const r=el.getBoundingClientRect();
+  const cx=r.left+r.width/2-mapRect.left;
+  const cy=r.top+r.height/2-mapRect.top;
+  if(!toward) return {x:cx,y:cy};
+  const tx=toward.x, ty=toward.y;
+  const dx=tx-cx, dy=ty-cy;
+  if(Math.abs(dx)*r.height > Math.abs(dy)*r.width){
+    return {x: dx>0 ? r.right-mapRect.left : r.left-mapRect.left, y:cy};
+  }
+  return {x:cx, y: dy>0 ? r.bottom-mapRect.top : r.top-mapRect.top};
+}
+
+function drawHub(map){
+  const svg=map.querySelector('svg');
+  const core=map.querySelector('.hub-core, .anatomy-core, .recap-center');
+  const items=[...map.querySelectorAll('[data-port]')];
+  if(!svg||!core||!items.length) return;
+  if(map.closest('.slide') && !map.closest('.slide').classList.contains('active') && (document.body.classList.contains('presenting')||document.body.classList.contains('single'))) return;
+  const mr=map.getBoundingClientRect();
+  const cr=core.getBoundingClientRect();
+  const c={x:cr.left+cr.width/2-mr.left, y:cr.top+cr.height/2-mr.top};
+  svg.setAttribute('viewBox','0 0 '+map.clientWidth+' '+map.clientHeight);
+  svg.innerHTML=items.map(item=>{
+    const p=portPoint(mr,item,c);
+    const q=portPoint(mr,core,p);
+    return '<line x1="'+q.x+'" y1="'+q.y+'" x2="'+p.x+'" y2="'+p.y+'" />';
+  }).join('');
+}
+
+function drawLane(map){
+  const svg=map.querySelector('svg');
+  const core=map.querySelector('[data-port="core"]');
+  const ins=[...map.querySelectorAll('[data-port="in"]')];
+  const outs=[...map.querySelectorAll('[data-port="out"]')];
+  if(!svg||!core) return;
+  if(map.closest('.slide') && !map.closest('.slide').classList.contains('active') && (document.body.classList.contains('presenting')||document.body.classList.contains('single'))) return;
+  const mr=map.getBoundingClientRect();
+  const c=portPoint(mr,core);
+  svg.setAttribute('viewBox','0 0 '+map.clientWidth+' '+map.clientHeight);
+  const lines=[];
+  ins.forEach(el=>{
+    const p=portPoint(mr,el,c);
+    const q=portPoint(mr,core,p);
+    lines.push('<path d="M '+p.x+' '+p.y+' C '+(p.x+40)+' '+p.y+', '+(q.x-40)+' '+q.y+', '+q.x+' '+q.y+'" />');
+  });
+  outs.forEach(el=>{
+    const p=portPoint(mr,el,c);
+    const q=portPoint(mr,core,p);
+    lines.push('<path d="M '+q.x+' '+q.y+' C '+(q.x+40)+' '+q.y+', '+(p.x-40)+' '+p.y+', '+p.x+' '+p.y+'" />');
+  });
+  svg.innerHTML=lines.join('');
+}
+
+function drawAllWires(){
+  document.querySelectorAll('[data-wire="hub"]').forEach(drawHub);
+  document.querySelectorAll('[data-wire="lane"]').forEach(drawLane);
+}
+
+document.getElementById('presentBtn').addEventListener('click',enterPresentation);
+document.getElementById('editBtn').addEventListener('click',toggleEdit);
+document.getElementById('saveBtn').addEventListener('click',saveHtml);
+document.getElementById('printBtn').addEventListener('click',()=>window.print());
+
+addEventListener('keydown',event=>{
+  if(editing) return;
+  if(event.key==='p'||event.key==='P'){enterPresentation();return;}
+  if(event.key==='Escape'){exitPresentation();return;}
+  if(event.key==='ArrowRight'||event.key===' '||event.key==='PageDown'){if(document.body.classList.contains('presenting')||document.body.classList.contains('single')){event.preventDefault();activate(current+1)}}
+  if(event.key==='ArrowLeft'||event.key==='PageUp'){if(document.body.classList.contains('presenting')||document.body.classList.contains('single')){event.preventDefault();activate(current-1)}}
+  if(event.key==='Home'){activate(0)}
+  if(event.key==='End'){activate(slides.length-1)}
+});
+addEventListener('resize',()=>{fitPresentation();drawAllWires()});
+addEventListener('load',drawAllWires);
+document.addEventListener('fullscreenchange',()=>{if(!document.fullscreenElement) document.body.classList.remove('presenting')});
+
+syncDividerNumbers();
+syncPageNumbers();
+const requested=Number(new URLSearchParams(location.search).get('slide'));
+if(Number.isFinite(requested)&&requested>=1&&requested<=slides.length){
+  document.body.classList.add('single');
+  current=requested-1;
+  activate(current);
+}else{
+  updateCounter();
+  drawAllWires();
+}
+</script>
+<script>/* kg-preview: #<heading> \uc704\uce58\ub85c \uc774\ub3d9 */
+(function(){function norm(t){return (t||'').replace(/\s+/g,'').toLowerCase()}
+function go(){var h=decodeURIComponent(location.hash.slice(1));if(!h)return;var k=norm(h).slice(0,24);if(!k)return;
+var best=null,bl=1e9,els=document.body.querySelectorAll('h1,h2,h3,h4,h5,p,div,span,li,td,text,tspan,section,article');
+for(var i=0;i<els.length;i++){var e=els[i],t=norm(e.textContent);if(t.length<bl&&t.indexOf(k)>-1){best=e;bl=t.length}}
+if(!best)return;var box=best.closest('section,[class*=slide],[class*=page],article')||best;
+box.scrollIntoView({block:'start'});box.style.outline='3px solid #c0504d';box.style.outlineOffset='4px';
+setTimeout(function(){box.style.outline=''},2600)}
+window.addEventListener('load',function(){setTimeout(go,400)});window.addEventListener('hashchange',go)})();</script></body>
+</html>

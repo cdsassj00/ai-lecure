@@ -1,0 +1,405 @@
+<!doctype html>
+<html lang="ko">
+<head><meta name="robots" content="noindex, nofollow">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>LLM → Agent Loop → Local LLM → Harness → Tool Calling</title>
+<style>
+:root {
+  --bg:#f8fafc;
+  --ink:#111827;
+  --muted:#64748b;
+  --line:#d8e2f0;
+  --cloud:#c8463f;
+  --cloud-soft:#fff1ee;
+  --pc:#386bc2;
+  --pc-soft:#eef5ff;
+  --llm:#fff1a8;
+  --tool:#dbeafe;
+  --internal:#bfdbfe;
+  --external:#fde68a;
+  --harness:#e0f2fe;
+  --agent:#fee2e2;
+  --shadow:0 24px 70px rgba(15,23,42,.14);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  font-family:"Pretendard","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
+  color:var(--ink);
+  background:linear-gradient(180deg,#fff 0%,#f7fbff 45%,#fff 100%);
+  overflow-x:hidden;
+}
+.topbar{
+  position:fixed; inset:0 0 auto 0; height:64px; z-index:50;
+  display:flex; align-items:center; justify-content:space-between;
+  padding:0 28px; background:rgba(255,255,255,.86);
+  border-bottom:1px solid rgba(148,163,184,.28); backdrop-filter:blur(16px);
+}
+.brand{font-size:18px;font-weight:900;letter-spacing:-.04em}
+.brand span{color:var(--pc)}
+.stage{display:flex;align-items:center;gap:9px;padding:8px 13px;border:1px solid var(--line);border-radius:99px;background:white;font-size:13px;color:#475569}
+.stage i{display:block;width:9px;height:9px;border-radius:99px;background:var(--pc);box-shadow:0 0 0 5px rgba(56,107,194,.13)}
+
+.hero{
+  min-height:100vh; display:grid; grid-template-columns:1fr .95fr; gap:38px;
+  padding:110px 6vw 54px; align-items:center;
+}
+.hero h1{margin:0 0 24px;font-size:clamp(42px,6vw,82px);line-height:.98;letter-spacing:-.08em}
+.hero p{margin:0 0 30px;max-width:760px;font-size:clamp(18px,2vw,24px);line-height:1.65;color:#475569;word-break:keep-all}
+.btns{display:flex;gap:12px;flex-wrap:wrap}
+.btn{border:0;border-radius:16px;padding:15px 20px;font-size:16px;font-weight:900;text-decoration:none;cursor:pointer;display:inline-flex;align-items:center;justify-content:center}
+.primary{background:#111827;color:white}
+.secondary{background:white;color:#1f2937;border:1px solid #dbe4f0}
+.sketch{position:relative;border-radius:30px;overflow:hidden;background:white;border:1px solid rgba(148,163,184,.25);box-shadow:var(--shadow)}
+.sketch img{width:100%;display:block}
+.sketch b{position:absolute;left:18px;top:18px;background:rgba(255,255,255,.88);border:1px solid rgba(148,163,184,.35);border-radius:99px;padding:9px 13px;font-size:13px}
+
+.hyper{position:relative}
+.sticky{
+  position:sticky; top:64px; height:calc(100vh - 64px);
+  display:grid; grid-template-columns:minmax(760px,1.55fr) minmax(330px,.45fr);
+  gap:24px; padding:26px 4vw; align-items:center;
+}
+.canvas{
+  position:relative; height:min(78vh,760px); min-height:560px;
+  border-radius:34px; background:
+    radial-gradient(circle at 25% 35%,rgba(254,226,226,.78),transparent 30%),
+    radial-gradient(circle at 74% 38%,rgba(219,234,254,.85),transparent 34%),
+    white;
+  border:1px solid rgba(148,163,184,.24); box-shadow:var(--shadow); overflow:hidden;
+}
+svg{width:100%;height:100%;display:block}
+.panel{
+  align-self:stretch; display:flex; flex-direction:column; justify-content:space-between;
+  padding:26px; border-radius:28px; background:white; border:1px solid rgba(148,163,184,.26); box-shadow:var(--shadow)
+}
+.panel h2{margin:0 0 13px;font-size:clamp(28px,3vw,42px);line-height:1.08;letter-spacing:-.06em}
+.panel p{margin:0;font-size:17px;line-height:1.65;color:#475569;word-break:keep-all}
+.key{margin-top:22px;padding:16px;border-radius:18px;background:#f8fafc;border:1px solid #e5edf7;font-size:15px;line-height:1.55;color:#334155;word-break:keep-all}
+.bar{height:9px;background:#eef2f7;border-radius:99px;overflow:hidden;margin-top:28px}
+.bar span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--cloud),var(--pc));transition:width .45s ease;border-radius:99px}
+.mini{display:flex;justify-content:space-between;margin-top:12px;color:#94a3b8;font-size:11px}
+
+.frame{height:88vh;display:grid;place-items:center;padding:0 6vw}
+.card{width:min(760px,100%);margin-left:auto;padding:28px;border-radius:28px;background:rgba(255,255,255,.86);border:1px solid rgba(148,163,184,.25);box-shadow:0 16px 42px rgba(15,23,42,.08);backdrop-filter:blur(18px)}
+.card strong{display:inline-flex;margin-bottom:8px;color:var(--pc);font-size:14px}
+.card h3{margin:0 0 10px;font-size:34px;letter-spacing:-.05em}
+.card p{margin:0;font-size:18px;line-height:1.68;color:#475569;word-break:keep-all}
+
+.original{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:white;opacity:0;pointer-events:none;z-index:9;transition:opacity .35s}
+.show-original .original{opacity:1}
+.toggle{position:absolute;right:22px;bottom:22px;z-index:12;border:0;border-radius:99px;background:#111827;color:#fff;padding:11px 14px;font-weight:900;cursor:pointer}
+
+.end{padding:90px 6vw 110px;text-align:center}
+.end h2{margin:0 0 18px;font-size:clamp(36px,5vw,64px);letter-spacing:-.07em}
+.end p{max-width:840px;margin:0 auto 28px;font-size:20px;line-height:1.7;color:#475569;word-break:keep-all}
+
+.txt{font-family:"Pretendard","Apple SD Gothic Neo","Malgun Gothic",sans-serif;font-weight:900;letter-spacing:-.05em}
+.hand{font-family:"Comic Sans MS","Nanum Pen Script","Malgun Gothic",cursive;font-weight:900}
+[data-part]{transition:opacity .52s ease,transform .52s ease,filter .52s ease;transform-box:fill-box;transform-origin:center}
+body[data-stage="0"] [data-part]{opacity:.22}
+body[data-stage="0"] .all, body[data-stage="0"] #intro{opacity:1}
+
+body[data-stage="1"] [data-part]{opacity:.12}
+body[data-stage="1"] #cloud,body[data-stage="1"] #plainLLM,body[data-stage="1"] #cloudCaption,body[data-stage="1"] #s1{opacity:1}
+
+body[data-stage="2"] [data-part]{opacity:.11}
+body[data-stage="2"] #cloud,body[data-stage="2"] #agentLoop,body[data-stage="2"] #cloudTools,body[data-stage="2"] #loopArrows,body[data-stage="2"] #s2{opacity:1}
+
+body[data-stage="3"] [data-part]{opacity:.11}
+body[data-stage="3"] #pcBox,body[data-stage="3"] #localLLM,body[data-stage="3"] #intoPC,body[data-stage="3"] #s3{opacity:1}
+
+body[data-stage="4"] [data-part]{opacity:.11}
+body[data-stage="4"] #pcBox,body[data-stage="4"] #localLLM,body[data-stage="4"] #harness,body[data-stage="4"] #harnessLines,body[data-stage="4"] #s4{opacity:1}
+
+body[data-stage="5"] [data-part]{opacity:.10}
+body[data-stage="5"] #pcBox,body[data-stage="5"] #localLLM,body[data-stage="5"] #harness,body[data-stage="5"] #internalTools,body[data-stage="5"] #internalLines,body[data-stage="5"] #s5{opacity:1}
+
+body[data-stage="6"] [data-part]{opacity:.10}
+body[data-stage="6"] #pcBox,body[data-stage="6"] #localLLM,body[data-stage="6"] #harness,body[data-stage="6"] #externalTools,body[data-stage="6"] #externalLines,body[data-stage="6"] #s6{opacity:1}
+
+body[data-stage="7"] [data-part]{opacity:1}
+body[data-stage="7"] #finalFlow,body[data-stage="7"] #s7{opacity:1}
+
+.pulse{animation:pulse 1.4s ease-in-out infinite}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.04)}}
+.flow{stroke-dasharray:1000;stroke-dashoffset:1000;animation:draw 1.5s ease forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+.rotate{animation:spin 7s linear infinite;transform-origin:center}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+@media(max-width:1100px){
+  .hero{grid-template-columns:1fr;padding-top:96px}
+  .sticky{position:relative;top:auto;height:auto;grid-template-columns:1fr}
+  .canvas{height:650px;min-height:650px}
+  .frame{height:auto;padding:38px 6vw}
+}
+@media(max-width:720px){
+  .topbar{padding:0 16px} .stage{display:none}
+  .hero{padding:92px 18px 36px}
+  .sticky{padding:18px}
+  .canvas{height:560px;min-height:560px;border-radius:24px}
+  .panel{padding:20px}
+  .card h3{font-size:27px}
+}
+</style>
+</head>
+<body data-stage="0">
+<header class="topbar">
+  <div class="brand">Hyperframe <span>Harness Flow v2</span></div>
+  <div class="stage"><i></i><span id="stageLabel">0. 전체 흐름</span></div>
+</header>
+
+<section class="hero" id="top">
+  <div>
+    <h1>LLM이<br>내 PC 안으로 들어오고<br>하네스가 툴호출을 연결한다</h1>
+    <p>
+      흐름을 다시 잡았습니다. 시작은 단순 LLM이고, 다음은 LLM+Tool+Loop 형태의 Agent입니다.
+      그 다음 LLM 실행/작업공간이 내 PC로 들어오며, 하네스가 내부 도구와 외부 도구 호출을 모두 연결합니다.
+    </p>
+    <div class="btns">
+      <a class="btn primary" href="#story">수정 흐름 보기</a>
+      <button class="btn secondary" onclick="document.querySelector('.canvas')?.classList.toggle('show-original')">원본 스케치 토글</button>
+    </div>
+  </div>
+  <div class="sketch">
+    <b>원본 스케치 참조</b>
+    <img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="original sketch">
+  </div>
+</section>
+
+<main class="hyper" id="story">
+<section class="sticky">
+  <div class="canvas">
+    <img class="original" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="original sketch overlay">
+    <button class="toggle" onclick="this.closest('.canvas').classList.toggle('show-original')">원본 보기</button>
+
+    <svg viewBox="0 0 1600 900">
+      <defs>
+        <marker id="arrowR" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0 L10,5 L0,10z" fill="#c8463f"/></marker>
+        <marker id="arrowB" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0 L10,5 L0,10z" fill="#386bc2"/></marker>
+        <marker id="arrowG" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0 L10,5 L0,10z" fill="#0f766e"/></marker>
+        <pattern id="diagB" width="12" height="12" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="12" stroke="#386bc2" stroke-width="3" opacity=".22"/></pattern>
+        <filter id="glowB" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="7" result="b"/><feColorMatrix in="b" type="matrix" values="0 0 1 0 .15 0 0 1 0 .35 0 0 1 0 .8 0 0 0 .45 0"/><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        <filter id="glowR" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="7" result="b"/><feColorMatrix in="b" type="matrix" values="1 0 0 0 .75 0 1 0 0 .22 0 0 1 0 .18 0 0 0 .45 0"/><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+      </defs>
+
+      <g id="intro" data-part class="all">
+        <text x="800" y="52" text-anchor="middle" class="txt" font-size="35" fill="#111827">LLM → Agent Loop → Local LLM → Harness → Tool Calling</text>
+        <text x="800" y="84" text-anchor="middle" font-size="17" fill="#64748b">하네스는 LLM과 도구 호출 사이의 연결·권한·실행 계층입니다</text>
+      </g>
+
+      <!-- CLOUD -->
+      <g id="cloud" data-part class="all">
+        <rect x="54" y="130" width="520" height="610" rx="22" fill="#fffafa" stroke="#c8463f" stroke-width="2.5"/>
+        <text x="84" y="710" class="txt" font-size="48" fill="#c8463f">클라우드/모델 영역</text>
+      </g>
+
+      <g id="plainLLM" data-part class="all" filter="url(#glowR)">
+        <circle cx="300" cy="315" r="112" fill="#fff1a8" stroke="#c8463f" stroke-width="2.4"/>
+        <text x="300" y="322" text-anchor="middle" class="hand" font-size="62" fill="#c8463f">LLM</text>
+        <text x="300" y="362" text-anchor="middle" class="txt" font-size="17" fill="#c8463f">단어 조합·추론·답변</text>
+      </g>
+
+      <g id="cloudCaption" data-part>
+        <rect x="126" y="438" width="348" height="78" rx="18" fill="#fff1ee" stroke="#c8463f"/>
+        <text x="300" y="470" text-anchor="middle" class="txt" font-size="20" fill="#c8463f">1단계: LLM 단독</text>
+        <text x="300" y="498" text-anchor="middle" font-size="15" fill="#c8463f">답은 하지만, 직접 행동하지는 못함</text>
+      </g>
+
+      <g id="agentLoop" data-part filter="url(#glowR)">
+        <rect x="112" y="196" width="386" height="420" rx="28" fill="none" stroke="#c8463f" stroke-width="3" stroke-dasharray="10 8"/>
+        <text x="300" y="184" text-anchor="middle" class="hand" font-size="54" fill="#c8463f">LLM + Tool + Loop Agent</text>
+        <circle cx="300" cy="348" r="88" fill="#fff1a8" stroke="#c8463f" stroke-width="2"/>
+        <text x="300" y="358" text-anchor="middle" class="hand" font-size="52" fill="#c8463f">LLM</text>
+        <g class="rotate">
+          <path d="M218,300 C250,238 345,226 388,280" fill="none" stroke="#c8463f" stroke-width="4" marker-end="url(#arrowR)"/>
+          <path d="M390,397 C346,455 249,452 214,392" fill="none" stroke="#c8463f" stroke-width="4" marker-end="url(#arrowR)"/>
+        </g>
+        <text x="168" y="288" class="txt" font-size="15" fill="#c8463f">계획</text>
+        <text x="408" y="292" class="txt" font-size="15" fill="#c8463f">호출</text>
+        <text x="405" y="428" class="txt" font-size="15" fill="#c8463f">관찰</text>
+        <text x="166" y="428" class="txt" font-size="15" fill="#c8463f">수정</text>
+      </g>
+
+      <g id="cloudTools" data-part>
+        <rect x="92" y="538" width="128" height="52" rx="12" fill="#dbeafe" stroke="#c8463f"/>
+        <text x="156" y="570" text-anchor="middle" class="txt" font-size="15" fill="#c8463f">검색</text>
+        <rect x="238" y="538" width="128" height="52" rx="12" fill="#fde68a" stroke="#c8463f"/>
+        <text x="302" y="570" text-anchor="middle" class="txt" font-size="15" fill="#c8463f">문서</text>
+        <rect x="384" y="538" width="128" height="52" rx="12" fill="#fee2e2" stroke="#c8463f"/>
+        <text x="448" y="570" text-anchor="middle" class="txt" font-size="15" fill="#c8463f">API</text>
+      </g>
+
+      <g id="loopArrows" data-part>
+        <path d="M300,438 C300,485 258,508 164,538" fill="none" stroke="#c8463f" stroke-width="2.6" marker-end="url(#arrowR)" class="flow"/>
+        <path d="M300,438 C302,488 302,508 302,538" fill="none" stroke="#c8463f" stroke-width="2.6" marker-end="url(#arrowR)" class="flow"/>
+        <path d="M300,438 C336,486 394,508 448,538" fill="none" stroke="#c8463f" stroke-width="2.6" marker-end="url(#arrowR)" class="flow"/>
+      </g>
+
+      <!-- MOVE INTO PC -->
+      <g id="intoPC" data-part>
+        <path d="M575,355 C660,310 725,300 790,335" fill="none" stroke="#386bc2" stroke-width="5" marker-end="url(#arrowB)" class="flow"/>
+        <text x="684" y="285" text-anchor="middle" class="txt" font-size="23" fill="#386bc2">LLM/작업공간이 내 PC로 들어옴</text>
+      </g>
+
+      <!-- PC -->
+      <g id="pcBox" data-part class="all">
+        <rect x="780" y="124" width="750" height="620" rx="28" fill="#ffffff" stroke="#386bc2" stroke-width="2.6"/>
+        <circle cx="1190" cy="116" r="88" fill="url(#diagB)" stroke="#386bc2" stroke-width="2"/>
+        <text x="1190" y="126" text-anchor="middle" class="hand" font-size="49" fill="#386bc2">내 PC</text>
+        <text x="808" y="710" class="txt" font-size="38" fill="#386bc2">로컬 실행환경 / IDE / 브라우저 / 파일시스템</text>
+      </g>
+
+      <g id="localLLM" data-part class="all" filter="url(#glowB)">
+        <rect x="850" y="210" width="250" height="176" rx="25" fill="#eef5ff" stroke="#386bc2" stroke-width="2.4"/>
+        <circle cx="975" cy="282" r="54" fill="#fff1a8" stroke="#386bc2" stroke-width="2"/>
+        <text x="975" y="291" text-anchor="middle" class="hand" font-size="38" fill="#386bc2">LLM</text>
+        <text x="975" y="358" text-anchor="middle" class="txt" font-size="20" fill="#386bc2">Local Agent Core</text>
+      </g>
+
+      <!-- HARNESS CENTER -->
+      <g id="harness" data-part class="all" filter="url(#glowB)">
+        <rect x="1160" y="202" width="128" height="410" rx="18" fill="#e0f2fe" stroke="#0f766e" stroke-width="3"/>
+        <text x="1224" y="392" text-anchor="middle" class="txt" font-size="27" fill="#0f766e" transform="rotate(-90 1224 392)">HARNESS</text>
+        <text x="1224" y="556" text-anchor="middle" font-size="14" fill="#0f766e">권한·통신·실행</text>
+      </g>
+
+      <g id="harnessLines" data-part>
+        <path d="M1100,296 C1128,300 1138,306 1160,318" fill="none" stroke="#0f766e" stroke-width="4" marker-end="url(#arrowG)" class="flow"/>
+        <path d="M1160,510 C1125,520 1095,515 1058,492" fill="none" stroke="#0f766e" stroke-width="4" marker-end="url(#arrowG)" class="flow"/>
+        <text x="1128" y="274" text-anchor="middle" class="txt" font-size="17" fill="#0f766e">tool call</text>
+        <text x="1112" y="542" text-anchor="middle" class="txt" font-size="17" fill="#0f766e">result</text>
+      </g>
+
+      <!-- INTERNAL TOOLS -->
+      <g id="internalTools" data-part class="all">
+        <rect x="840" y="450" width="120" height="70" rx="14" fill="#bfdbfe" stroke="#386bc2" stroke-width="1.7"/>
+        <text x="900" y="480" text-anchor="middle" class="txt" font-size="16" fill="#386bc2">OS</text>
+        <text x="900" y="504" text-anchor="middle" font-size="13" fill="#386bc2">명령체계</text>
+        <rect x="980" y="450" width="120" height="70" rx="14" fill="#bfdbfe" stroke="#386bc2" stroke-width="1.7"/>
+        <text x="1040" y="492" text-anchor="middle" class="txt" font-size="16" fill="#386bc2">파이썬</text>
+        <rect x="840" y="540" width="120" height="70" rx="14" fill="#bfdbfe" stroke="#386bc2" stroke-width="1.7"/>
+        <text x="900" y="570" text-anchor="middle" class="txt" font-size="16" fill="#386bc2">파일</text>
+        <text x="900" y="594" text-anchor="middle" font-size="13" fill="#386bc2">엑셀·PDF</text>
+        <rect x="980" y="540" width="120" height="70" rx="14" fill="#bfdbfe" stroke="#386bc2" stroke-width="1.7"/>
+        <text x="1040" y="582" text-anchor="middle" class="txt" font-size="16" fill="#386bc2">브라우저</text>
+        <text x="970" y="642" class="txt" font-size="19" fill="#386bc2" text-anchor="middle">내부 도구 호출</text>
+      </g>
+
+      <g id="internalLines" data-part>
+        <path d="M1160,420 C1096,428 1010,440 900,450" fill="none" stroke="#386bc2" stroke-width="3" marker-end="url(#arrowB)" class="flow"/>
+        <path d="M1160,446 C1110,448 1080,450 1040,450" fill="none" stroke="#386bc2" stroke-width="3" marker-end="url(#arrowB)" class="flow"/>
+        <path d="M1160,474 C1080,506 1000,528 900,540" fill="none" stroke="#386bc2" stroke-width="3" marker-end="url(#arrowB)" class="flow"/>
+        <path d="M1160,498 C1114,512 1082,528 1040,540" fill="none" stroke="#386bc2" stroke-width="3" marker-end="url(#arrowB)" class="flow"/>
+      </g>
+
+      <!-- EXTERNAL TOOLS -->
+      <g id="externalTools" data-part class="all">
+        <rect x="1340" y="230" width="138" height="68" rx="13" fill="#fde68a" stroke="#c8463f" stroke-width="1.7"/>
+        <text x="1409" y="272" text-anchor="middle" class="txt" font-size="17" fill="#c8463f">외부문서</text>
+        <rect x="1340" y="326" width="138" height="68" rx="13" fill="#fde68a" stroke="#c8463f" stroke-width="1.7"/>
+        <text x="1409" y="368" text-anchor="middle" class="txt" font-size="17" fill="#c8463f">WEB</text>
+        <rect x="1340" y="422" width="138" height="68" rx="13" fill="#fde68a" stroke="#c8463f" stroke-width="1.7"/>
+        <text x="1409" y="452" text-anchor="middle" class="txt" font-size="16" fill="#c8463f">외부 앱</text>
+        <text x="1409" y="474" text-anchor="middle" font-size="13" fill="#c8463f">외부 사이트</text>
+        <rect x="1340" y="518" width="138" height="68" rx="13" fill="#fde68a" stroke="#c8463f" stroke-width="1.7"/>
+        <text x="1409" y="548" text-anchor="middle" class="txt" font-size="16" fill="#c8463f">API</text>
+        <text x="1409" y="570" text-anchor="middle" font-size="13" fill="#c8463f">SaaS</text>
+        <text x="1409" y="642" class="txt" font-size="19" fill="#c8463f" text-anchor="middle">외부 도구 호출</text>
+      </g>
+
+      <g id="externalLines" data-part>
+        <path d="M1288,330 C1310,292 1320,266 1340,264" fill="none" stroke="#c8463f" stroke-width="3" marker-end="url(#arrowR)" class="flow"/>
+        <path d="M1288,362 C1310,360 1320,360 1340,360" fill="none" stroke="#c8463f" stroke-width="3" marker-end="url(#arrowR)" class="flow"/>
+        <path d="M1288,438 C1310,448 1320,454 1340,456" fill="none" stroke="#c8463f" stroke-width="3" marker-end="url(#arrowR)" class="flow"/>
+        <path d="M1288,512 C1316,526 1326,542 1340,552" fill="none" stroke="#c8463f" stroke-width="3" marker-end="url(#arrowR)" class="flow"/>
+      </g>
+
+      <g id="finalFlow" data-part>
+        <path d="M300,315 C495,245 640,255 850,282" fill="none" stroke="#386bc2" stroke-width="5" stroke-dasharray="11 10" marker-end="url(#arrowB)" class="flow"/>
+        <path d="M1100,300 C1152,310 1160,320 1160,320" fill="none" stroke="#0f766e" stroke-width="5" marker-end="url(#arrowG)" class="flow"/>
+        <path d="M1288,420 C1320,420 1324,420 1340,420" fill="none" stroke="#c8463f" stroke-width="5" marker-end="url(#arrowR)" class="flow"/>
+        <path d="M1160,486 C1090,505 1030,520 968,542" fill="none" stroke="#386bc2" stroke-width="5" marker-end="url(#arrowB)" class="flow"/>
+      </g>
+
+      <!-- stage badges -->
+      <g id="s1" data-part><rect x="96" y="760" width="330" height="54" rx="27" fill="#fff1ee" stroke="#c8463f"/><text x="261" y="794" text-anchor="middle" class="txt" font-size="20" fill="#c8463f">① LLM 단독: 답변 생성</text></g>
+      <g id="s2" data-part><rect x="112" y="760" width="392" height="54" rx="27" fill="#fff1ee" stroke="#c8463f"/><text x="308" y="794" text-anchor="middle" class="txt" font-size="20" fill="#c8463f">② LLM + Tool + Loop = Agent</text></g>
+      <g id="s3" data-part><rect x="838" y="760" width="420" height="54" rx="27" fill="#eef5ff" stroke="#386bc2"/><text x="1048" y="794" text-anchor="middle" class="txt" font-size="20" fill="#386bc2">③ LLM/작업공간이 내 PC로 이동</text></g>
+      <g id="s4" data-part><rect x="1010" y="760" width="420" height="54" rx="27" fill="#e0f2fe" stroke="#0f766e"/><text x="1220" y="794" text-anchor="middle" class="txt" font-size="20" fill="#0f766e">④ 하네스가 툴호출을 연결</text></g>
+      <g id="s5" data-part><rect x="828" y="760" width="410" height="54" rx="27" fill="#eef5ff" stroke="#386bc2"/><text x="1033" y="794" text-anchor="middle" class="txt" font-size="20" fill="#386bc2">⑤ 내부 도구: OS·파일·파이썬</text></g>
+      <g id="s6" data-part><rect x="1110" y="760" width="410" height="54" rx="27" fill="#fff1ee" stroke="#c8463f"/><text x="1315" y="794" text-anchor="middle" class="txt" font-size="20" fill="#c8463f">⑥ 외부 도구: 문서·웹·API</text></g>
+      <g id="s7" data-part><rect x="530" y="820" width="590" height="58" rx="29" fill="#111827"/><text x="825" y="857" text-anchor="middle" class="txt" font-size="22" fill="#fff">LLM은 PC 안에서 하네스를 통해 내·외부 도구를 호출한다</text></g>
+    </svg>
+  </div>
+
+  <aside class="panel">
+    <div>
+      <h2 id="panelTitle">전체 흐름</h2>
+      <p id="panelDesc">흐름은 LLM 단독에서 시작해, LLM+Tool+Loop Agent로 확장되고, 이후 LLM/작업공간이 내 PC 안으로 들어옵니다. 하네스가 내부 도구와 외부 도구 호출을 연결합니다.</p>
+      <div class="key" id="panelKey">핵심: 하네스는 단순 통로가 아니라 tool call, 권한, 실행, 결과 반환을 묶는 연결 계층입니다.</div>
+    </div>
+    <div>
+      <div class="bar"><span id="barFill"></span></div>
+      <div class="mini"><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span></div>
+    </div>
+  </aside>
+</section>
+
+<section class="frame" data-frame="0"><div class="card"><strong>FRAME 0</strong><h3>흐름 재정의</h3><p>전체 흐름은 “클라우드 LLM이 브릿지를 통해 PC를 조작한다”보다, “LLM/작업공간이 내 PC 안으로 들어오고, 하네스가 내·외부 도구 호출을 연결한다”로 보는 편이 자연스럽습니다.</p></div></section>
+<section class="frame" data-frame="1"><div class="card"><strong>FRAME 1</strong><h3>LLM 단독</h3><p>처음에는 LLM이 답변을 생성합니다. 텍스트를 이해하고 추론하고 설명할 수 있지만, 이 상태만으로는 파일을 열거나 프로그램을 실행하거나 웹을 조작하지 않습니다.</p></div></section>
+<section class="frame" data-frame="2"><div class="card"><strong>FRAME 2</strong><h3>LLM + Tool + Loop = Agent</h3><p>에이전트는 LLM에 도구와 반복 루프가 붙은 구조입니다. 계획하고, 도구를 호출하고, 결과를 관찰하고, 다시 수정하는 루프가 생기면서 작업 수행 능력이 생깁니다.</p></div></section>
+<section class="frame" data-frame="3"><div class="card"><strong>FRAME 3</strong><h3>LLM이 내 PC로 들어온다</h3><p>코딩 에이전트나 로컬 자동화 환경에서는 LLM이 단순 클라우드 대화창에 머무르지 않고, 내 PC의 작업공간, 파일시스템, 터미널, IDE와 연결됩니다.</p></div></section>
+<section class="frame" data-frame="4"><div class="card"><strong>FRAME 4</strong><h3>하네스가 연결한다</h3><p>하네스는 LLM이 바로 OS나 웹을 만지는 것이 아니라, 정해진 인터페이스를 통해 tool call을 전달하고 실행 결과를 다시 돌려받게 하는 연결 계층입니다.</p></div></section>
+<section class="frame" data-frame="5"><div class="card"><strong>FRAME 5</strong><h3>내부 도구 호출</h3><p>내부 도구는 OS 명령, 파이썬, 로컬 파일, 엑셀, PDF, 브라우저 제어처럼 내 PC 안에 있는 실행 자원입니다. 하네스가 이를 안전한 호출 단위로 묶어줍니다.</p></div></section>
+<section class="frame" data-frame="6"><div class="card"><strong>FRAME 6</strong><h3>외부 도구 호출</h3><p>외부 도구는 외부문서, 웹, 외부 사이트, API, SaaS입니다. 내 PC의 하네스는 내부 도구뿐 아니라 외부 도구 호출도 함께 중계합니다.</p></div></section>
+<section class="frame" data-frame="7"><div class="card"><strong>FRAME 7</strong><h3>최종 정리</h3><p>결론적으로 LLM은 판단과 계획을 만들고, Agent Loop는 작업을 반복 수행하며, 내 PC의 하네스는 내부·외부 도구 호출을 연결합니다. 그래서 “답변 생성”이 “실행 자동화”가 됩니다.</p></div></section>
+</main>
+
+<section class="end">
+  <h2>수정 흐름 반영 완료</h2>
+  <p>이 버전은 LLM → LLM+Tool+Loop Agent → Local LLM/PC Workspace → Harness → Internal/External Tool Calling 순서로 다시 구성했습니다.</p>
+  <a class="btn primary" href="#top">처음으로</a>
+</section>
+
+<script>
+const copy = [
+  ["0. 전체 흐름","전체 흐름","흐름은 LLM 단독에서 시작해, LLM+Tool+Loop Agent로 확장되고, 이후 LLM/작업공간이 내 PC 안으로 들어옵니다. 하네스가 내부 도구와 외부 도구 호출을 연결합니다.","핵심: 하네스는 단순 통로가 아니라 tool call, 권한, 실행, 결과 반환을 묶는 연결 계층입니다."],
+  ["1. LLM 단독","LLM 단독: 답변 생성","LLM은 텍스트를 이해하고 답변을 생성합니다. 하지만 이 상태만으로는 내 PC 파일, OS, 파이썬, 브라우저, 외부 사이트를 직접 조작하지 않습니다.","강의 포인트: LLM 단독은 ‘말하는 뇌’에 가깝고, 아직 손발과 작업 루프가 붙지 않은 상태입니다."],
+  ["2. Agent Loop","LLM + Tool + Loop = Agent","Agent는 LLM에 도구 호출과 반복 루프가 붙은 구조입니다. 계획 → 도구 호출 → 결과 관찰 → 수정이라는 사이클이 만들어집니다.","강의 포인트: Agent의 본질은 도구 하나가 아니라 반복 실행 루프입니다."],
+  ["3. Local LLM","LLM/작업공간이 내 PC로 들어온다","코딩 에이전트나 로컬 자동화 환경에서는 LLM이 내 PC의 작업폴더, 터미널, IDE, 파일시스템과 연결됩니다.","강의 포인트: 여기서부터 AI는 대화창이 아니라 내 PC 작업환경 안에서 작동하는 실행 주체가 됩니다."],
+  ["4. Harness","하네스가 tool call을 연결한다","하네스는 LLM이 도구를 직접 만지는 것이 아니라, 정해진 인터페이스로 명령을 보내고 결과를 돌려받게 하는 연결 계층입니다.","핵심: 하네스는 권한, 실행, 로그, 결과 반환, 실패 처리까지 관리하는 작업 연결 장치입니다."],
+  ["5. 내부 도구","내부 도구 호출","내부 도구는 OS 명령, 파이썬, 로컬 파일, 엑셀, PDF, 브라우저 제어처럼 내 PC 안에 있는 실행 자원입니다.","예시: 파일명 일괄변경, 엑셀 분석, PDF 분리, 파이썬 실행, 브라우저 콘솔 자동화."],
+  ["6. 외부 도구","외부 도구 호출","외부 도구는 외부문서, 웹, 외부 사이트, API, SaaS입니다. 하네스는 내부 도구와 외부 도구 호출을 같은 흐름 안에서 중계합니다.","예시: 웹 검색, API 호출, 구글 드라이브, 노션, 슬랙, 외부 업무시스템, 공공데이터 포털."],
+  ["7. 결론","답변 생성에서 실행 자동화로","최종 구조는 LLM → Agent Loop → Local Workspace → Harness → Internal/External Tools입니다. 이때 하네스가 실행 가능한 업무자동화의 핵심 연결부입니다.","한 줄 요약: LLM은 판단하고, Agent는 반복하고, 하네스는 연결하고, 내 PC와 외부 도구가 실행합니다."]
+];
+const frames=[...document.querySelectorAll("[data-frame]")], body=document.body;
+const title=document.getElementById("panelTitle"), desc=document.getElementById("panelDesc"), key=document.getElementById("panelKey"), label=document.getElementById("stageLabel"), bar=document.getElementById("barFill");
+function setStage(n){
+  body.dataset.stage=String(n);
+  const c=copy[n]||copy[0];
+  label.textContent=c[0]; title.textContent=c[1]; desc.textContent=c[2]; key.textContent=c[3];
+  bar.style.width=((n/7)*100)+"%";
+}
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)setStage(Number(e.target.dataset.frame))}),{threshold:.56});
+frames.forEach(f=>io.observe(f));
+window.addEventListener("keydown",e=>{
+  const cur=Number(body.dataset.stage||0);
+  if(e.key==="ArrowDown"||e.key==="PageDown")document.querySelector(`[data-frame="${Math.min(7,cur+1)}"]`)?.scrollIntoView({behavior:"smooth",block:"center"});
+  if(e.key==="ArrowUp"||e.key==="PageUp")document.querySelector(`[data-frame="${Math.max(0,cur-1)}"]`)?.scrollIntoView({behavior:"smooth",block:"center"});
+});
+setStage(0);
+</script>
+<script>/* kg-preview: #<heading> \uc704\uce58\ub85c \uc774\ub3d9 */
+(function(){function norm(t){return (t||'').replace(/\s+/g,'').toLowerCase()}
+function go(){var h=decodeURIComponent(location.hash.slice(1));if(!h)return;var k=norm(h).slice(0,24);if(!k)return;
+var best=null,bl=1e9,els=document.body.querySelectorAll('h1,h2,h3,h4,h5,p,div,span,li,td,text,tspan,section,article');
+for(var i=0;i<els.length;i++){var e=els[i],t=norm(e.textContent);if(t.length<bl&&t.indexOf(k)>-1){best=e;bl=t.length}}
+if(!best)return;var box=best.closest('section,[class*=slide],[class*=page],article')||best;
+box.scrollIntoView({block:'start'});box.style.outline='3px solid #c0504d';box.style.outlineOffset='4px';
+setTimeout(function(){box.style.outline=''},2600)}
+window.addEventListener('load',function(){setTimeout(go,400)});window.addEventListener('hashchange',go)})();</script></body>
+</html>

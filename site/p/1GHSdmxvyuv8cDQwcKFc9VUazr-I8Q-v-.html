@@ -1,0 +1,1444 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head><meta name="robots" content="noindex, nofollow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI·데이터기반행정 전문인재 양성과정 · 커리큘럼 페이지뷰</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono&family=Noto+Sans+KR:wght@400;500;700&family=Noto+Serif+KR:wght@300;400;500;700&family=Pretendard&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#faf4e6; --paper-2:#f1e8d2; --paper-3:#e9dcc0;
+  --ink:#1f1810; --ink-soft:#3a2e20; --ink-mute:#6a5a44;
+  --dark:#2b2015; --dark-2:#1a1208; --dark-ink:#f5ecd6; --dark-mute:#c8b895;
+  --accent:#8a3d1f; --accent-warm:#c96238; --accent-soft:#e07a4a;
+  --line:#c8b898; --line-soft:#e5d9bf; --code-bg:#ede0c3;
+}
+*{box-sizing:border-box;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+html,body{margin:0;padding:0;background:linear-gradient(180deg,#c9bfa8 0%,#b8ac92 100%);
+  min-height:100vh;font-family:'Inter','Pretendard','Noto Sans KR',sans-serif;
+  color:var(--ink-soft);font-size:10pt;line-height:1.7}
+
+/* ===== TOPBAR ===== */
+.topbar{position:fixed;top:0;left:0;right:0;height:52px;z-index:50;
+  background:rgba(43,32,21,.88);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  display:flex;align-items:center;gap:14px;padding:0 24px;
+  border-bottom:1px solid rgba(201,184,149,.25)}
+.topbar .brand{font-family:'Noto Serif KR',serif;font-weight:700;font-size:13pt;
+  color:var(--dark-ink);letter-spacing:-.2px}
+.topbar .brand-sub{font-family:'Inter',sans-serif;font-size:8.5pt;font-weight:500;
+  letter-spacing:2pt;text-transform:uppercase;color:var(--dark-mute);margin-left:4px}
+.topbar .spacer{flex:1}
+.topbar button{height:34px;padding:0 14px;border-radius:4px;cursor:pointer;
+  font:700 11.5px 'Inter',sans-serif;letter-spacing:1.4px;text-transform:uppercase;
+  border:1px solid rgba(245,236,214,.35);background:transparent;color:var(--dark-ink)}
+.topbar button:hover{background:rgba(245,236,214,.08)}
+.topbar .btn-edit.active{background:var(--accent-warm);border-color:var(--accent-warm);color:#fff}
+.topbar .btn-pdf{background:#111;color:#fff;border-color:#111}
+.topbar .btn-pdf:hover{background:#000}
+
+/* ===== PAGE STACK ===== */
+.stack{padding:84px 0 60px;display:flex;flex-direction:column;align-items:center;gap:16mm}
+.sheet{width:210mm;min-height:297mm;background:var(--paper);color:var(--ink-soft);
+  padding:20mm 18mm 24mm;position:relative;overflow:hidden;
+  box-shadow:0 1px 2px rgba(0,0,0,.08),0 18px 56px rgba(0,0,0,.26),0 40px 100px rgba(0,0,0,.14)}
+.sheet::after{content:counter(pg,decimal-leading-zero) " / 19  ·  AI·데이터기반행정 전문인재 양성과정";
+  counter-increment:pg;
+  position:absolute;bottom:0;left:18mm;right:18mm;height:14mm;
+  font:700 7.5pt/1 'Inter',sans-serif;letter-spacing:2pt;
+  text-transform:uppercase;color:var(--ink-mute);
+  border-top:.3mm solid var(--line);padding-top:4mm;
+  display:flex;justify-content:space-between;align-items:flex-start}
+body{counter-reset:pg}
+.sheet.cover::after{display:none}
+body.edit-mode .sheet{box-shadow:0 1px 2px rgba(0,0,0,.08),0 18px 56px rgba(0,0,0,.26),
+  0 0 0 3px rgba(201,98,56,.25)}
+
+/* ===== COVER ===== */
+.sheet.cover{padding:0;background:var(--dark);color:var(--dark-ink);
+  display:flex;flex-direction:column;overflow:hidden}
+.sheet.cover::before{content:"";position:absolute;top:0;left:0;right:0;
+  height:5mm;background:var(--accent-warm);z-index:3}
+.pc-content{flex:1;padding:24mm 22mm 12mm;display:flex;flex-direction:column;
+  justify-content:space-between}
+.pc-top .pc-org-en{font-family:'Inter',sans-serif;font-size:8pt;letter-spacing:3pt;
+  text-transform:uppercase;color:var(--dark-mute);line-height:2}
+.pc-top .pc-org-en strong{display:block;color:var(--accent-soft);font-weight:700;
+  font-size:8.5pt;margin-bottom:3mm}
+.pc-center .pc-year{font-family:'Noto Serif KR',serif;font-weight:300;font-size:22pt;
+  color:var(--accent-soft);margin-bottom:4mm;letter-spacing:-.5pt}
+.pc-center .pc-title{font-family:'Noto Serif KR',serif;font-weight:700;font-size:36pt;
+  color:var(--dark-ink);line-height:1.18;letter-spacing:-1.2pt;margin:0 0 6mm}
+.pc-center .pc-rule{width:48mm;height:1.2mm;background:var(--accent-warm);margin:6mm 0}
+.pc-center .pc-doc-type{font-family:'Noto Serif KR',serif;font-weight:400;font-size:24pt;
+  color:var(--paper-2);margin-bottom:3mm}
+.pc-center .pc-subtitle{font-family:'Noto Serif KR',serif;font-weight:400;font-size:12pt;
+  color:var(--paper-2);line-height:1.7;max-width:130mm}
+.pc-bottom .pc-meta{display:grid;grid-template-columns:1fr 1fr 1fr;
+  border-top:.4mm solid rgba(245,236,214,.25);padding-top:6mm;gap:8mm}
+.pc-meta .m .ml{font:700 7pt/1 'Inter',sans-serif;letter-spacing:2.5pt;
+  text-transform:uppercase;color:var(--accent-soft);margin-bottom:3mm}
+.pc-meta .m .mv{font-family:'Noto Serif KR',serif;font-size:12pt;font-weight:500;
+  color:var(--dark-ink)}
+.pc-footer-strip{background:#fff;color:var(--dark);padding:9mm 22mm 11mm;
+  display:flex;justify-content:space-between;align-items:center;position:relative}
+.pc-footer-strip::before{content:"";position:absolute;top:0;left:0;right:0;
+  height:.8mm;background:var(--accent-warm)}
+.pc-fs-logo{height:11mm;width:auto;display:block;object-fit:contain}
+.pc-fs-meta{text-align:right;font:600 7.5pt/1.6 'Inter',sans-serif;
+  letter-spacing:1.8pt;color:var(--ink-mute);text-transform:uppercase;
+  max-width:80mm}
+
+/* ===== DOC TITLE PAGE ===== */
+.sheet.title-page{display:flex;flex-direction:column;justify-content:center;padding:30mm 24mm}
+.title-page .kicker{font:700 9pt/1 'Inter',sans-serif;letter-spacing:3.5pt;
+  text-transform:uppercase;color:var(--accent);margin-bottom:8mm}
+.title-page h1{font-family:'Noto Serif KR',serif;font-weight:700;font-size:28pt;
+  line-height:1.25;letter-spacing:-1pt;color:var(--ink);margin:0 0 10mm}
+.title-page .rule{width:40mm;height:.8mm;background:var(--accent-warm);margin-bottom:8mm}
+.title-page .lede{font-family:'Noto Serif KR',serif;font-weight:400;font-size:12pt;
+  font-style:italic;color:var(--ink-soft);margin-bottom:12mm;line-height:1.7}
+.title-page p{font-size:10pt;line-height:1.85;color:var(--ink-soft);
+  margin:3mm 0;text-align:justify}
+.title-page .callout{background:var(--paper-2);border-left:3pt solid var(--accent-warm);
+  padding:6mm 8mm;margin-top:10mm}
+.title-page .callout .label{font:700 7.5pt/1 'Inter',sans-serif;letter-spacing:2.5pt;
+  text-transform:uppercase;color:var(--accent);margin-bottom:3mm}
+.title-page .callout p{margin:2mm 0;font-size:9.5pt;color:var(--ink)}
+
+/* ===== SESSION SHEET ===== */
+.sheet.session{padding:0 0 24mm}
+.session h2{background:var(--dark);color:var(--dark-ink);padding:16mm 18mm 12mm;
+  margin:0;border-left:4pt solid var(--accent-warm);
+  font-family:'Noto Serif KR',serif;font-weight:700;font-size:17pt;line-height:1.3}
+.session h2 .num{display:block;font:700 7.5pt/1 'Inter',sans-serif;letter-spacing:3pt;
+  text-transform:uppercase;color:var(--accent-soft);margin-bottom:3mm}
+.session h2 .sub{display:block;font-family:'Pretendard',sans-serif;font-size:9.5pt;
+  font-weight:400;color:var(--dark-mute);margin-top:2.5mm;letter-spacing:-.1pt}
+.session-body{padding:10mm 18mm 0}
+.session-body p{font-size:10pt;line-height:1.8;color:var(--ink-soft);
+  margin:3mm 0;text-align:justify}
+.session-body h3{font-family:'Inter','Pretendard',sans-serif;font-weight:700;
+  font-size:11.5pt;color:var(--ink);margin:8mm 0 3mm;letter-spacing:-.2px;
+  padding-left:3mm;border-left:3pt solid var(--accent-warm);page-break-after:avoid}
+.session-body ul{margin:2mm 0 5mm;padding:0;list-style:none}
+.session-body ul li{position:relative;padding:1.5mm 0 1.5mm 7mm;font-size:9.8pt;
+  line-height:1.68;color:var(--ink-soft);border-bottom:.2mm dashed var(--line-soft)}
+.session-body ul li:last-child{border-bottom:none}
+.session-body ul li::before{content:"";position:absolute;left:2mm;top:4.2mm;
+  width:2mm;height:2mm;background:var(--accent-warm)}
+.session-body ul li b,.session-body ul li strong{color:var(--ink);font-weight:700}
+.callout{background:var(--paper-2);border-left:3pt solid var(--accent-warm);
+  padding:5mm 7mm;margin:6mm 0;page-break-inside:avoid}
+.callout .label{font:700 7.5pt/1 'Inter',sans-serif;letter-spacing:2.5pt;
+  text-transform:uppercase;color:var(--accent);margin-bottom:3mm}
+.callout p{margin:1mm 0;font-size:9.5pt;color:var(--ink);line-height:1.7}
+.dark-panel{background:var(--dark);color:var(--dark-ink);
+  border-left:4pt solid var(--accent-warm);padding:6mm 8mm;margin:6mm 0;
+  page-break-inside:avoid}
+.dark-panel .lbl{font:700 7.5pt/1 'Inter',sans-serif;letter-spacing:2.5pt;
+  text-transform:uppercase;color:var(--accent-soft);margin-bottom:3mm}
+.dark-panel p{margin:1mm 0;font-size:9.5pt;color:var(--dark-ink);line-height:1.7}
+code{background:var(--code-bg);padding:1pt 4pt;border-radius:2pt;
+  font:9pt 'JetBrains Mono',monospace;color:var(--ink)}
+
+/* ===== CURRICULUM DETAIL PAGE ===== */
+.sheet.session.detail h2{background:var(--dark-2);border-left-color:var(--accent);
+  padding:14mm 18mm 10mm}
+.session.detail h2 .num{color:var(--accent-soft)}
+.detail-body{padding:9mm 18mm 0}
+.detail-body .intro-line{font-family:'Noto Serif KR',serif;font-weight:400;font-size:10.5pt;
+  font-style:italic;color:var(--ink-soft);margin:0 0 6mm;padding-bottom:4mm;
+  border-bottom:.3mm solid var(--line)}
+
+/* Objectives block */
+.objectives{background:var(--paper-2);border-left:3pt solid var(--accent-warm);
+  padding:5mm 7mm 5mm 7mm;margin:0 0 7mm}
+.objectives .label{font:700 7.5pt/1 'Inter',sans-serif;letter-spacing:2.5pt;
+  text-transform:uppercase;color:var(--accent);margin-bottom:3.5mm}
+.objectives ol{margin:0;padding:0;list-style:none;counter-reset:obj}
+.objectives ol li{counter-increment:obj;position:relative;padding:1.8mm 0 1.8mm 10mm;
+  font-size:9.6pt;line-height:1.7;color:var(--ink);
+  border-bottom:.2mm dashed rgba(138,61,31,.18)}
+.objectives ol li:last-child{border-bottom:none}
+.objectives ol li::before{content:"O" counter(obj,decimal-leading-zero);position:absolute;
+  left:0;top:1.8mm;font:700 8pt/1 'Inter',sans-serif;
+  color:var(--accent-warm);letter-spacing:.8pt}
+.objectives ol li b{color:var(--ink);font-weight:700}
+
+/* Section heading (shared) */
+.detail-body h3{font-family:'Inter','Pretendard',sans-serif;font-weight:700;
+  font-size:11pt;color:var(--ink);margin:7mm 0 3mm;letter-spacing:-.2px;
+  padding-left:3mm;border-left:3pt solid var(--accent-warm);page-break-after:avoid}
+.detail-body h3 .en{font:600 7.5pt/1 'Inter',sans-serif;letter-spacing:2.5pt;
+  text-transform:uppercase;color:var(--accent);margin-left:3mm}
+
+/* Time allocation table */
+.time-table{width:100%;border-collapse:collapse;margin:0 0 6mm}
+.time-table td{padding:2mm 3mm;font-size:9.4pt;line-height:1.55;
+  border-bottom:.2mm dashed var(--line-soft);vertical-align:top;color:var(--ink-soft)}
+.time-table tr:last-child td{border-bottom:none}
+.time-table td.time{font:700 8.5pt/1.4 'Inter',sans-serif;color:var(--accent);
+  width:28mm;letter-spacing:.3pt;white-space:nowrap}
+.time-table td.part{font-weight:700;color:var(--ink);width:22mm;
+  font-size:9pt;letter-spacing:-.1pt}
+.time-table td.content{color:var(--ink-soft)}
+.time-table tr.lunch td{background:var(--paper-3);color:var(--ink-mute);
+  font-style:italic;font-size:8.8pt}
+.time-table tr.lunch td.time{color:var(--ink-mute)}
+
+/* Two column grid (hands-on + deliverables | prep) */
+.tri-col{display:grid;grid-template-columns:1fr 1fr;gap:6mm;margin:0 0 5mm}
+.tri-col .col{min-width:0}
+.tri-col .col h4{font:700 9.5pt/1.3 'Inter','Pretendard',sans-serif;
+  color:var(--ink);margin:0 0 2.5mm;padding-left:2.5mm;
+  border-left:2.5pt solid var(--accent-warm);letter-spacing:-.2px}
+.tri-col .col h4 .en{font:600 7pt/1 'Inter',sans-serif;letter-spacing:2pt;
+  text-transform:uppercase;color:var(--accent);margin-left:2mm}
+.tri-col .col ul{margin:0;padding:0;list-style:none}
+.tri-col .col ul li{position:relative;padding:1.4mm 0 1.4mm 5.5mm;
+  font-size:9.3pt;line-height:1.62;color:var(--ink-soft);
+  border-bottom:.2mm dashed var(--line-soft)}
+.tri-col .col ul li:last-child{border-bottom:none}
+.tri-col .col ul li::before{content:"□";position:absolute;left:0;top:1mm;
+  font-size:9.5pt;color:var(--accent-warm);font-weight:700}
+.tri-col .col ul li b,.tri-col .col ul li strong{color:var(--ink);font-weight:700}
+
+/* ===== ASSIGNMENT OVERVIEW PAGE ===== */
+.sheet.assignment-overview{padding:20mm 18mm 24mm;display:flex;flex-direction:column}
+.assignment-overview .ao-kicker{font:700 9pt/1 'Inter',sans-serif;letter-spacing:3.5pt;
+  text-transform:uppercase;color:var(--accent);margin-bottom:7mm}
+.assignment-overview h1{font-family:'Noto Serif KR',serif;font-weight:700;font-size:24pt;
+  line-height:1.25;letter-spacing:-1pt;color:var(--ink);margin:0 0 5mm}
+.assignment-overview .ao-rule{width:40mm;height:.8mm;background:var(--accent-warm);
+  margin-bottom:6mm}
+.assignment-overview .ao-lede{font-family:'Noto Serif KR',serif;font-weight:400;
+  font-size:10.5pt;font-style:italic;color:var(--ink-soft);line-height:1.7;
+  margin:0 0 4mm;padding:4mm 0;border-top:.3mm solid var(--line);
+  border-bottom:.3mm solid var(--line)}
+.assignment-overview .ao-lede b{color:var(--ink);font-style:normal}
+.ao-grid{display:grid;grid-template-columns:1fr 1fr;gap:3.5mm;margin:6mm 0 0}
+.ao-card{background:var(--paper-2);border-left:3pt solid var(--accent-warm);
+  padding:4mm 5mm 4mm 5.5mm;position:relative;page-break-inside:avoid;
+  display:flex;flex-direction:column}
+.ao-card .ao-num{font:700 8pt/1 'Inter',sans-serif;letter-spacing:2.5pt;
+  color:var(--accent);margin-bottom:1.5mm}
+.ao-card .ao-session{font-family:'Noto Serif KR',serif;font-weight:700;
+  font-size:10.5pt;color:var(--ink);line-height:1.3;margin-bottom:2.5mm;
+  padding-bottom:2mm;border-bottom:.2mm solid rgba(138,61,31,.2);letter-spacing:-.2pt}
+.ao-card .ao-brief{font-size:8.8pt;line-height:1.62;color:var(--ink-soft);
+  margin:0 0 2.5mm;flex:1}
+.ao-card .ao-brief b{color:var(--ink);font-weight:700}
+.ao-card .ao-meta{font:600 7.5pt/1.45 'Inter',sans-serif;letter-spacing:.3pt;
+  color:var(--accent);border-top:.2mm dashed rgba(138,61,31,.25);padding-top:2mm}
+.ao-note{margin-top:6mm;padding:4mm 6mm;background:var(--dark);color:var(--dark-ink);
+  border-left:3pt solid var(--accent-soft);font-size:8.8pt;line-height:1.65}
+.ao-note .ao-note-lbl{font:700 7.5pt/1 'Inter',sans-serif;letter-spacing:2.5pt;
+  text-transform:uppercase;color:var(--accent-soft);margin-bottom:2mm;display:block}
+.ao-note b{color:var(--accent-soft);font-weight:700}
+
+/* ===== TASK BOX (end of each detail page) ===== */
+.task-box{background:var(--dark);color:var(--dark-ink);
+  border-left:4pt solid var(--accent-warm);padding:5mm 7mm;margin:7mm 0 0;
+  page-break-inside:avoid;position:relative}
+.task-box::before{content:"";position:absolute;top:0;right:0;width:22mm;height:.8mm;
+  background:var(--accent-warm)}
+.task-box .tb-label{font:700 7.5pt/1 'Inter',sans-serif;letter-spacing:2.5pt;
+  text-transform:uppercase;color:var(--accent-soft);margin-bottom:3mm;
+  display:flex;align-items:center;gap:3mm}
+.task-box .tb-label::after{content:"";flex:1;height:.2mm;background:rgba(201,98,56,.3)}
+.task-box .tb-title{font-family:'Noto Serif KR',serif;font-weight:700;
+  font-size:11pt;color:var(--dark-ink);margin:0 0 2.5mm;letter-spacing:-.2pt}
+.task-box .tb-desc{font-size:9pt;line-height:1.72;color:var(--paper-2);margin:0 0 3mm}
+.task-box .tb-desc b{color:var(--dark-ink);font-weight:700}
+.task-box .tb-meta{display:grid;grid-template-columns:1.2fr 1fr;gap:4mm;
+  padding-top:2.5mm;border-top:.2mm solid rgba(245,236,214,.18)}
+.task-box .tb-meta .m-label{font:700 6.8pt/1 'Inter',sans-serif;letter-spacing:2pt;
+  text-transform:uppercase;color:var(--accent-soft);margin-bottom:1.2mm;display:block}
+.task-box .tb-meta .m-val{color:var(--paper-2);font-size:8.6pt;line-height:1.55}
+.task-box .tb-meta .m-val b{color:var(--dark-ink);font-weight:700}
+
+/* ===== EDIT MODE ===== */
+[contenteditable="true"]{outline:2px dashed var(--accent-warm) !important;
+  outline-offset:3px !important;background:rgba(255,243,200,.95) !important;
+  color:var(--ink) !important;cursor:text !important;
+  caret-color:var(--accent-warm);border-radius:2px}
+[contenteditable="true"] *{color:var(--ink) !important}
+[contenteditable="true"]:focus{outline-style:solid !important;
+  outline-color:var(--accent) !important;background:rgba(255,236,170,.98) !important}
+/* 다크 영역의 편집 요소도 본문색으로 강제 (가독성) */
+.session h2[contenteditable="true"],
+.session h2[contenteditable="true"] .num,
+.session h2[contenteditable="true"] .sub,
+.dark-panel [contenteditable="true"],
+.dark-panel [contenteditable="true"] *,
+.task-box [contenteditable="true"],
+.task-box [contenteditable="true"] *,
+.ao-note [contenteditable="true"],
+.ao-note [contenteditable="true"] *{color:var(--ink) !important}
+body.edit-mode::after{content:"편집 모드 · 텍스트 클릭 수정 · 완료 후 [HTML 저장] 클릭";
+  position:fixed;bottom:20px;left:50%;transform:translateX(-50%);
+  background:var(--dark);color:var(--dark-ink);padding:10px 20px;border-radius:24px;
+  font:700 11px 'Inter',sans-serif;letter-spacing:1.5px;text-transform:uppercase;
+  box-shadow:0 8px 30px rgba(0,0,0,.3);z-index:100;pointer-events:none;
+  border:1px solid rgba(201,98,56,.5)}
+
+/* ===== PRINT ===== */
+@media print{
+  @page{size:A4 portrait;margin:16mm 15mm 18mm 15mm}
+  @page:first{margin:0}
+  html,body{background:#fff !important}
+  .topbar{display:none !important}
+  .stack{padding:0;gap:0}
+  .sheet{width:auto;min-height:auto;box-shadow:none !important;margin:0;padding:0 0 6mm;
+    page-break-after:always}
+  .sheet:last-child{page-break-after:auto}
+  .sheet.cover{margin:0;padding:0;min-height:297mm;page-break-after:always}
+  .sheet.cover::before{height:5mm}
+  .sheet.session{margin:0;padding:0 0 10mm;page-break-before:always}
+  .session h2{margin:0;padding:14mm 15mm 10mm;page-break-after:avoid}
+  .sheet.title-page{padding:30mm 15mm}
+  .session-body{padding:8mm 15mm 0}
+  .session-body ul li,.callout,.dark-panel,.course-head,
+  .task-box,.ao-card,.ao-note,.objectives,.time-table tr,.tri-col .col{page-break-inside:avoid}
+  .sheet::after{display:none}
+  [contenteditable]{outline:none !important;background:transparent !important}
+  body.edit-mode .sheet{box-shadow:none !important}
+  body.edit-mode::after{display:none !important}
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand">AI·데이터기반행정 전문인재 양성과정</div>
+  <div class="brand-sub">커리큘럼 · 페이지뷰</div>
+  <div class="spacer"></div>
+  <button class="btn-edit" onclick="toggleEditMode()">✎ 편집</button>
+  <button class="btn-save" onclick="saveEditedHTML()">⬇ HTML 저장</button>
+  <button class="btn-pdf" onclick="window.print()">⬇ PDF 저장</button>
+</div>
+
+<div class="stack">
+
+<!-- ===== COVER ===== -->
+<section class="sheet cover">
+  <div class="pc-content">
+    <div class="pc-top">
+      <div class="pc-org-en">
+        <strong>2026 CURRICULUM GUIDEBOOK</strong>
+        AI · Data-Driven Public Administration
+      </div>
+    </div>
+    <div class="pc-center">
+      <div class="pc-year">2026</div>
+      <h1 class="pc-title">AI · 데이터기반행정<br>전문인재 양성과정</h1>
+      <div class="pc-rule"></div>
+      <div class="pc-doc-type">커리큘럼 안내서</div>
+      <div class="pc-subtitle">기획하는 거점리더를 위한 8주 실전 여정의 전체 구성·학습 목표·산출물·운영 방식을 정리한 문서임.</div>
+    </div>
+    <div class="pc-bottom">
+      <div class="pc-meta">
+        <div class="m"><div class="ml">Track</div><div class="mv">Hub Leader</div></div>
+        <div class="m"><div class="ml">Sessions</div><div class="mv">8 회차</div></div>
+        <div class="m"><div class="ml">Hours</div><div class="mv">64 H</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="pc-footer-strip">
+    <img class="pc-fs-logo" src="data:image/jpeg;base64,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" alt="행정안전부 · NIA 한국지능정보원">
+    <div class="pc-fs-meta">2026 AI·데이터기반행정 전문인재 양성과정 커리큘럼 안내서</div>
+  </div>
+</section>
+
+<!-- ===== TITLE PAGE ===== -->
+<section class="sheet title-page">
+  <div class="kicker">Program Overview · 2026</div>
+  <h1>기획하는 거점리더를 위한<br>8주 AI 실전 여정</h1>
+  <div class="rule"></div>
+  <div class="lede">Before the agent can build, the planner must imagine.</div>
+  <p>본 과정은 기술자를 양성하는 과정이 아님. 공공 현장의 <strong>거점리더</strong>, 즉 자기 부서의 문제를 가장 잘 이해하고 동료에게 AI 활용을 코칭·확산할 수 있는 인력을 양성함을 목적으로 함. 수강생은 REST API의 내부나 벡터 DB의 작동 원리를 파고들지 않음. 대신 "어떤 재료를 어떤 순서로 엮으면 이 문제가 풀릴까"를 아키텍처로 그릴 수 있는 역량을 체득함. 구현은 에이전트가 담당함.</p>
+  <p>전체 8회차는 세 개의 구간으로 구성됨. <strong>1~3회차</strong>는 AI 서비스 생태계를 재료 창고로 삼아 워크플로우를 기획하는 구간, <strong>4~5회차</strong>는 외부망 AI 어시스트로 코드를 받아 내부망에서 실행하는 공공 현실 기반의 바이브 코딩 구간, <strong>6~8회차</strong>는 에이전트 도구로 본격 개발에 들어가 RAG·웹서비스·API·MCP를 조합해 풀스택 서비스를 기획·구축하는 구간임.</p>
+  <div class="callout">
+    <div class="label">Design Philosophy</div>
+    <p>· 이론은 개념 수준까지만 다룸. 심층 기술은 에이전트가 담당함.</p>
+    <p>· 9가지 공공 구현 유형을 어시스트 버전과 에이전트 버전으로 두 차례 경험함.</p>
+    <p>· 모든 회차는 문제 제시 → 도구 조합 → 산출물 → 공유·축적 사이클로 종결됨.</p>
+    <p>· 수강생의 최종 목표는 비즈니스 모델 캔버스처럼 AI 아키텍처를 1장에 기획하는 역량임.</p>
+  </div>
+</section>
+
+<!-- ===== ASSIGNMENT OVERVIEW ===== -->
+<section class="sheet assignment-overview">
+  <div class="ao-kicker">Practical Assignments · 실습과제 종합 안내</div>
+  <h1>회차별 실습과제 요약</h1>
+  <div class="ao-rule"></div>
+  <p class="ao-lede">모든 회차는 '산출물 중심'으로 종결됨. 아래 8개 과제는 각 회차의 학습 목표를 현업 맥락으로 변환한 기본 명세임. <b>실습과제 내용은 수강생 수준·현업 이슈·운영 상황에 따라 회차별로 변경될 수 있음.</b></p>
+
+  <div class="ao-grid">
+    <div class="ao-card">
+      <div class="ao-num">Assignment 01</div>
+      <div class="ao-session">거점 미션 선언서</div>
+      <div class="ao-brief">현업 반복 업무 1건을 선정해 <b>9가지 구현 유형</b> 중 적합 유형 2개 이상을 매핑함. 배경·대상·산출물·성공 기준을 1페이지에 정리함.</div>
+      <div class="ao-meta">제출 · 1페이지 선언서 (.md/.docx) &nbsp;│&nbsp; 마감 · 2회차 전</div>
+    </div>
+    <div class="ao-card">
+      <div class="ao-num">Assignment 02</div>
+      <div class="ao-session">즐겨찾기 10선 + 5분 파악 루틴</div>
+      <div class="ao-brief">50선 투어에서 자기 업무 직결 도구 <b>10선 재료 카드</b>를 구성함. 새 AI 서비스 파악 루틴 체크리스트(5~7항)와 로컬 LLM 구동 스크린샷을 첨부함.</div>
+      <div class="ao-meta">제출 · 10선 카드 + 체크리스트 &nbsp;│&nbsp; 마감 · 3회차 전</div>
+    </div>
+    <div class="ao-card">
+      <div class="ao-num">Assignment 03</div>
+      <div class="ao-session">메타 프롬프트 + 워크플로우 레시피</div>
+      <div class="ao-brief">자주 쓰는 업무 프롬프트 2건을 <b>메타 프롬프트로 재생성·교차 검증</b>함. 6타입 중 1개를 현업 과제로 조립해 서비스 체인·단계·결과를 레시피로 정리함.</div>
+      <div class="ao-meta">제출 · 프롬프트 2 + 레시피 카드 1 &nbsp;│&nbsp; 마감 · 4회차 전</div>
+    </div>
+    <div class="ao-card">
+      <div class="ao-num">Assignment 04</div>
+      <div class="ao-session">부서 데이터 시각화 + 자연어 브리핑</div>
+      <div class="ao-brief">자기 부서 공공 데이터 1건(비식별 처리)을 파이썬·Power BI·HTML 중 1개로 시각화함. .ipynb를 AI에 전달해 <b>1페이지 자연어 브리핑</b>으로 자동 변환함.</div>
+      <div class="ao-meta">제출 · 시각화 + 브리핑 + 코드 &nbsp;│&nbsp; 마감 · 5회차 전</div>
+    </div>
+    <div class="ao-card">
+      <div class="ao-num">Assignment 05</div>
+      <div class="ao-session">반복 업무 자동화 + 엑셀 AI 함수</div>
+      <div class="ao-brief">현업 반복 업무 1건을 파이썬·HWP·VBA+Ollama·Node 중 1개로 자동화하고 <b>Before/After 시간을 실측</b>함. 엑셀 AI 함수 3종 이상이 동작하는 .xlsm을 제출함.</div>
+      <div class="ao-meta">제출 · 스크립트 + .xlsm + 실측 노트 &nbsp;│&nbsp; 마감 · 6회차 전</div>
+    </div>
+    <div class="ao-card">
+      <div class="ao-num">Assignment 06</div>
+      <div class="ao-session">에이전트 재구현 + 첫 배포물</div>
+      <div class="ao-brief">4·5회차 산출물 1건을 에이전트로 재구현해 유형 3(.exe) 또는 유형 5(단일 HTML) 배포물을 완성함. <b>어시스트 vs 에이전트 비교표</b>를 함께 제출함.</div>
+      <div class="ao-meta">제출 · 배포물 + 비교표 &nbsp;│&nbsp; 마감 · 7회차 전</div>
+    </div>
+    <div class="ao-card">
+      <div class="ao-num">Assignment 07</div>
+      <div class="ao-session">부서 RAG + 웹서비스 아키텍처</div>
+      <div class="ao-brief">부서 문서 5~10건으로 <b>Ollama 기반 로컬 RAG</b>를 에이전트에 위임 구축함. 청크·top-k 2조합 실험 기록, 웹서비스 아키텍처 1장, 내부망 이관 체크리스트를 제출함.</div>
+      <div class="ao-meta">제출 · RAG 결과 + 그림 + 체크리스트 &nbsp;│&nbsp; 마감 · 8회차 전</div>
+    </div>
+    <div class="ao-card">
+      <div class="ao-num">Assignment 08</div>
+      <div class="ao-session">AI 아키텍처 캔버스 + 최종 발표</div>
+      <div class="ao-brief">1회차 거점 미션을 <b>AI 아키텍처 캔버스 6칸</b>으로 설계하고 에이전트로 구현함. 최종 발표(3분)에서 현업 복귀 후 동료 2~3명 코칭·전파 계획을 선언함.</div>
+      <div class="ao-meta">제출 · 캔버스 + 구현물 + 발표 &nbsp;│&nbsp; 마감 · 종강 당일</div>
+    </div>
+  </div>
+
+  <div class="ao-note">
+    <span class="ao-note-lbl">Note · 운영 안내</span>
+    본 실습과제 명세는 <b>거점리더 양성 목표와 현업 맥락</b>에 맞춰 회차별로 조정될 수 있음. 운영진이 회차 시작 시 최종 과제 내용·제출 형식·마감을 공지하며, 수강생은 공용 아카이브 저장소에 결과물을 등록해 차기 거점리더 기수의 시드 라이브러리로 축적함.
+  </div>
+</section>
+
+<!-- ===== SESSION 1 ===== -->
+<section class="sheet session">
+  <h2><span class="num">Session 01</span>AI 에이전트 시대의 개막과 공공 구현 지형도<span class="sub">공공 AI 거점리더의 기술 지형과 환경 세팅</span></h2>
+  <div class="session-body">
+    <p>과정의 출발점에서 수강생은 두 가지를 얻어야 함. 첫째는 현재 서 있는 기술적 위치에 대한 감각임. Bard·PaLM에서 시작해 GPT 시대를 거쳐 에이전트 시대로 넘어온 진화사를 한 호흡에 정리하고, MicroGPT를 뜯어보며 트랜스포머의 Q·K·V·멀티헤드 구조를 시각적으로 체감함. 프롬프트가 컨텍스트로, 컨텍스트가 하네스로 진화한 맥락도 같은 흐름에서 짚음. 심층 학습은 지양하며, 과정의 필요성을 납득시키는 것이 목적임.</p>
+    <p>둘째는 과정 종료 시점에 만들 수 있는 것에 대한 구체적 지도임. 공공 현장에 도입 가능한 '민첩한 AI' 9가지 구현 유형을 개괄 수준으로 제시하며, 각 유형이 어느 회차에서 어떻게 다뤄지는지 미리 인지하도록 구성함.</p>
+    <h3>이 회차에서 다루는 것</h3>
+    <ul>
+      <li>AI·NLP 트렌드 개괄 — Bard/PaLM → GPT → Agent 진화사</li>
+      <li>MicroGPT로 트랜스포머 개념 터치 (Q·K·V, 멀티헤드)</li>
+      <li>프롬프트의 진화 — 프롬프트 → 컨텍스트 → 하네스</li>
+      <li>프론티어 모델 지형도 (GPT / Claude / Gemini / Grok / 오픈소스)</li>
+      <li><b>공공 도입 9가지 구현 유형 개괄</b> — 이 과정에서 만들 수 있는 것</li>
+      <li>외부망/내부망 현실과 학습 전략</li>
+      <li>환경 세팅 — Git, GitHub, WSL, Vercel, Netlify, Node.js, Python, VS Code, <b>Power BI Desktop</b></li>
+      <li>공용 발굴 노트·아카이브 저장소 개설</li>
+      <li>수강생별 거점 미션 선언 — 현업 과제 1개와 목표 유형 지정</li>
+    </ul>
+    <div class="dark-panel">
+      <div class="lbl">9가지 공공 구현 유형</div>
+      <p>① AI가 준 파이썬 코드를 내부망에서 실행 · ② VBA 업무 자동화 + 로컬 sLLM · ③ 파이썬 + PyInstaller 독립 프로그램 · ④ Electron 앱 · ⑤ HTML+CSS+JS + CDN 로컬화 단일 파일 앱 · ⑥ Node.js 기반 로컬 툴 · ⑦ Ollama 기반 로컬 RAG · ⑧ 백엔드 결합 웹서비스 · ⑨ API/MCP 기반 풀스택 에이전트 서비스</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SESSION 1 · CURRICULUM DETAIL ===== -->
+<section class="sheet session detail">
+  <h2><span class="num">Session 01 · Curriculum Detail</span>커리큘럼 세부 계획<span class="sub">8시간 운영 · 학습 목표 · 산출물 · 사전 준비</span></h2>
+  <div class="detail-body">
+    <p class="intro-line">출발 회차. 기술 지형 감각과 '이 과정에서 만들 수 있는 것'의 지도를 머릿속에 설치하고, 수강생별 거점 미션 선언으로 8주 여정을 개인화함.</p>
+
+    <div class="objectives">
+      <div class="label">Learning Objectives · 학습 목표</div>
+      <ol>
+        <li>AI·NLP의 발전 맥락을 한 호흡으로 재구성하고 본 과정의 필요성을 자신의 언어로 설명할 수 있음</li>
+        <li>프론티어 모델 5종의 위치·성격 차이를 비교표 1장으로 정리할 수 있음</li>
+        <li><b>9가지 공공 구현 유형</b>을 자기 부서 업무와 매핑해 적합 유형 2개 이상을 지정할 수 있음</li>
+        <li>현업 과제 1건을 거점 미션으로 선언하고 8회차 여정의 목표 유형을 지정함</li>
+      </ol>
+    </div>
+
+    <h3>시간 배분 <span class="en">Time Allocation · 8H</span></h3>
+    <table class="time-table">
+      <tr><td class="time">09:30–10:30</td><td class="part">Part A</td><td class="content">AI·NLP 트렌드 개괄 — Bard/PaLM → GPT → Agent 진화사</td></tr>
+      <tr><td class="time">10:40–11:30</td><td class="part">Part B</td><td class="content">MicroGPT로 트랜스포머 체감 — Q·K·V·멀티헤드 시각 투어</td></tr>
+      <tr><td class="time">11:30–12:00</td><td class="part">Part C</td><td class="content">프롬프트 진화 — 프롬프트 · 컨텍스트 · 하네스</td></tr>
+      <tr class="lunch"><td class="time">12:00–13:00</td><td class="part">—</td><td class="content">점심 · Lunch break</td></tr>
+      <tr><td class="time">13:00–14:00</td><td class="part">Part D</td><td class="content">프론티어 모델 지형도 — GPT·Claude·Gemini·Grok·오픈소스</td></tr>
+      <tr><td class="time">14:10–15:30</td><td class="part">Part E</td><td class="content">9가지 공공 구현 유형 개괄 — 유형별 1페이지 카드 리뷰</td></tr>
+      <tr><td class="time">15:40–16:40</td><td class="part">Part F</td><td class="content">환경 세팅 — Git·GitHub·WSL·Vercel·Netlify·Node·Python·VS Code·Power BI</td></tr>
+      <tr><td class="time">16:40–17:30</td><td class="part">Part G</td><td class="content">거점 미션 선언 — 현업 과제 1건 + 목표 유형 지정 · 아카이브 개설</td></tr>
+    </table>
+
+    <h3>핵심 실습 <span class="en">Hands-On</span></h3>
+    <div class="tri-col">
+      <div class="col">
+        <h4>현장 실습 <span class="en">Exercises</span></h4>
+        <ul>
+          <li>환경 세팅 체크리스트 완주 — Git·WSL·Node·Python·VS Code·Power BI Desktop</li>
+          <li>MicroGPT 코드에서 Q·K·V 변수 직접 탐색·마킹</li>
+          <li>9가지 유형 카드에서 자기 부서 적합 유형 2개 선별</li>
+          <li>공용 아카이브 저장소(GitHub Org) 계정 등록 · 첫 커밋</li>
+        </ul>
+      </div>
+      <div class="col">
+        <h4>산출물 <span class="en">Deliverables</span></h4>
+        <ul>
+          <li><b>거점 미션 선언서</b> (1페이지) — 현업 과제 + 목표 유형</li>
+          <li>9가지 유형 × 부서 매핑 매트릭스</li>
+          <li>환경 세팅 체크리스트 완주 인증</li>
+          <li>프론티어 모델 비교표 1장</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3>사전 준비 <span class="en">Preparation</span></h3>
+    <div class="tri-col">
+      <div class="col">
+        <h4>장비 · 계정 <span class="en">Devices &amp; Accounts</span></h4>
+        <ul>
+          <li>노트북 지참 — Windows 10/11, 16GB RAM 권장</li>
+          <li>관리자 권한 계정 · 외부망 접속 환경</li>
+          <li>Google · GitHub 계정 사전 발급</li>
+          <li>ChatGPT · Claude · Gemini 중 1개 이상 유료 플랜 권장</li>
+        </ul>
+      </div>
+      <div class="col">
+        <h4>과제 · 점검 <span class="en">Pre-work</span></h4>
+        <ul>
+          <li>현업 과제 후보 2~3건 메모 지참 (미션 선언용)</li>
+          <li>부서 내부망 가용 도구 목록 사전 파악</li>
+          <li>운영자 사전 공지 — 참여 서약서 · 데이터 비식별화 원칙</li>
+          <li>1회차 후 귀가 과제 — 미션 선언서 최종본 업로드</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="task-box">
+      <div class="tb-label">Assignment 01 · 실습과제</div>
+      <div class="tb-title">거점 미션 선언서 작성</div>
+      <p class="tb-desc">자기 부서의 반복적이며 AI로 해결 가능한 업무 1건을 선정함. <b>9가지 공공 구현 유형</b> 중 해당 과제에 적합한 유형 2개 이상을 매핑하고, 8주 여정에서 최종 달성할 목표 유형 1개를 지정함. 미션의 배경·대상·예상 산출물·성공 기준을 1페이지로 정리해 공용 저장소에 등록함.</p>
+      <div class="tb-meta">
+        <div><span class="m-label">제출물 · Deliverable</span><span class="m-val">거점 미션 선언서 1페이지 (.md 또는 .docx) · 9가지 유형 매핑 매트릭스 1장</span></div>
+        <div><span class="m-label">마감 · Due</span><span class="m-val"><b>2회차 시작 전</b> · 공용 저장소 업로드</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SESSION 2 ===== -->
+<section class="sheet session">
+  <h2><span class="num">Session 02</span>프론티어 모델 심층 탐구와 AI 도구 생태계 50선<span class="sub">재료 창고를 가득 채우는 시간</span></h2>
+  <div class="session-body">
+    <p>거점리더의 무기는 보유 도구의 개수가 아니라 새 서비스 출현 시 당황하지 않는 적응력임. 본 회차는 해당 적응력을 체화하기 위해 두 층위로 구성됨. 앞 절반은 플래그십 모델의 숨은 킥을, 뒤 절반은 50개 AI 도구 사이트를 카테고리별로 훑는 투어임.</p>
+    <p>앞 절반에서는 ChatGPT·Claude·Gemini·Perplexity를 '남들이 잘 모르는 킥' 중심으로 파헤침. Grok·Z.AI 대안도 함께 다룸. DeepSeek·Qwen·MiniMax 등 중국 계열은 '이런 것이 존재함' 수준으로 사이트 접속만 체험하되 공공 데이터 업로드는 엄격 금지함. 이어서 Ollama·LM Studio·AnythingLLM·MSTY를 직접 설치해 한 번씩 구동해봄. 해당 경험은 5회차 VBA 엑셀 AI 함수와 7회차 Ollama RAG로 연결되는 복선임.</p>
+    <p>뒤 절반은 50개 사이트를 10개 카테고리로 투어함. 빠른 호흡으로 쏟아붓되 각 도구의 UI 공통 패턴을 관찰하게 함. '새 서비스 출현 시 5분 이내 파악 루틴'을 체크리스트로 도출하는 것이 본 회차의 실질 목표임.</p>
+    <h3>플래그십 · 오픈소스 모델 (Part A)</h3>
+    <ul>
+      <li><b>ChatGPT</b> — Projects, Custom GPTs, Canvas, o1/o3 추론, 메모리, Agent 모드</li>
+      <li><b>Claude</b> — Projects, Artifacts, Skills, Computer Use, 긴 컨텍스트, Styles</li>
+      <li><b>Gemini</b> — Deep Research, Canvas, Gem, Workspace 통합</li>
+      <li><b>Perplexity</b> — Spaces, Pages, Focus 모드, Labs</li>
+      <li><b>Grok · Z.AI</b> — 실시간 검색, GLM 계열 접근법</li>
+      <li><b>DeepSeek · Qwen · MiniMax</b> — 접속 체험 (데이터 업로드 금지)</li>
+      <li><b>로컬 모델 설치 체험</b> — Ollama, LM Studio, AnythingLLM, MSTY + Llama/Qwen/Gemma 소형 모델</li>
+    </ul>
+    <h3>AI 도구 생태계 50선 카테고리 투어 (Part B)</h3>
+    <ul>
+      <li>문서·슬라이드 생성 — Gamma, Genspark, Napkin, Tome, Beautiful.ai</li>
+      <li>이미지 생성 — Midjourney, Ideogram, Flux, Nano Banana, Recraft</li>
+      <li>이미지 편집·업스케일 — Magnific, Krea, Hikshield</li>
+      <li>영상 생성 — Runway, Kling, Sora, Pika, Hailuo</li>
+      <li>음성·음악 — ElevenLabs, Suno, Udio</li>
+      <li>음성→텍스트·회의록 — Whisper, Clova Note, Otter, Fireflies</li>
+      <li>번역·언어 — DeepL, Lilys AI</li>
+      <li>논문·학술 검색 — Elicit, Consensus, Scite, SciSpace, ResearchRabbit</li>
+      <li>검색·리서치 — Exa, Phind, Felo, Liner</li>
+      <li>데이터·분석 — Julius, Rows AI, Code Interpreter</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ===== SESSION 2 · CURRICULUM DETAIL ===== -->
+<section class="sheet session detail">
+  <h2><span class="num">Session 02 · Curriculum Detail</span>커리큘럼 세부 계획<span class="sub">8시간 운영 · 학습 목표 · 산출물 · 사전 준비</span></h2>
+  <div class="detail-body">
+    <p class="intro-line">재료 창고 회차. 플래그십 모델의 숨은 킥과 50선 투어를 거쳐 '새 서비스 5분 파악 루틴'을 체크리스트로 확보하는 것이 실질 목표임.</p>
+
+    <div class="objectives">
+      <div class="label">Learning Objectives · 학습 목표</div>
+      <ol>
+        <li>ChatGPT·Claude·Gemini·Perplexity의 '남들이 잘 모르는' 핵심 기능 5가지씩을 실연할 수 있음</li>
+        <li>로컬 LLM 4대 도구를 실제 설치·구동해 1개 이상 응답을 확보함</li>
+        <li>50개 AI 도구를 10개 카테고리로 분류하고 자기 업무 맞춤 <b>즐겨찾기 10선</b>을 도출함</li>
+        <li>새 AI 서비스 출현 시 5분 이내 파악 루틴을 체크리스트로 확보함</li>
+      </ol>
+    </div>
+
+    <h3>시간 배분 <span class="en">Time Allocation · 8H</span></h3>
+    <table class="time-table">
+      <tr><td class="time">09:30–10:20</td><td class="part">Part A-1</td><td class="content">ChatGPT 숨은 킥 — Projects · Custom GPTs · Canvas · o1/o3 · Agent</td></tr>
+      <tr><td class="time">10:20–11:10</td><td class="part">Part A-2</td><td class="content">Claude 숨은 킥 — Projects · Artifacts · Skills · Computer Use · Styles</td></tr>
+      <tr><td class="time">11:10–11:50</td><td class="part">Part A-3</td><td class="content">Gemini · Perplexity · Grok · Z.AI</td></tr>
+      <tr><td class="time">11:50–12:10</td><td class="part">Part A-4</td><td class="content">DeepSeek · Qwen · MiniMax 접속 체험 (업로드 금지)</td></tr>
+      <tr class="lunch"><td class="time">12:10–13:10</td><td class="part">—</td><td class="content">점심 · Lunch break</td></tr>
+      <tr><td class="time">13:10–14:30</td><td class="part">Part A-5</td><td class="content">로컬 LLM 설치 실습 — Ollama · LM Studio · AnythingLLM · MSTY</td></tr>
+      <tr><td class="time">14:40–16:00</td><td class="part">Part B-1</td><td class="content">50선 투어 전반 — 문서·이미지·영상·음성·번역 (5개 카테고리)</td></tr>
+      <tr><td class="time">16:10–17:10</td><td class="part">Part B-2</td><td class="content">50선 투어 후반 — 학술·리서치·데이터 등 (5개 카테고리)</td></tr>
+      <tr><td class="time">17:10–17:30</td><td class="part">Part C</td><td class="content">5분 파악 루틴 체크리스트 도출 워크숍</td></tr>
+    </table>
+
+    <h3>핵심 실습 <span class="en">Hands-On</span></h3>
+    <div class="tri-col">
+      <div class="col">
+        <h4>현장 실습 <span class="en">Exercises</span></h4>
+        <ul>
+          <li>Ollama + Llama3.2 (또는 Qwen2.5)로 첫 로컬 응답 수령</li>
+          <li>AnythingLLM에 로컬 문서 업로드 → 간단 Q&amp;A 동작 확인</li>
+          <li>50선 투어 중 실제 1~2회 접속해 핵심 UI 캡처</li>
+          <li>5분 파악 루틴 초안 도출 → 동료 1명과 교차 검토</li>
+        </ul>
+      </div>
+      <div class="col">
+        <h4>산출물 <span class="en">Deliverables</span></h4>
+        <ul>
+          <li>수강생별 <b>즐겨찾기 10선 카드</b></li>
+          <li>5분 파악 루틴 체크리스트 (공용 라이브러리 등록)</li>
+          <li>로컬 LLM 구동 스크린샷 (증빙)</li>
+          <li>플래그십 모델 '숨은 킥' 노트 1건 이상</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3>사전 준비 <span class="en">Preparation</span></h3>
+    <div class="tri-col">
+      <div class="col">
+        <h4>장비 · 계정 <span class="en">Devices &amp; Accounts</span></h4>
+        <ul>
+          <li>디스크 여유 20GB 이상 (로컬 모델 저장)</li>
+          <li>GPU 없어도 무방 — CPU 구동 가능 모델 사용</li>
+          <li>ChatGPT · Claude · Gemini 계정 확보</li>
+          <li>Perplexity · Grok 무료 계정</li>
+        </ul>
+      </div>
+      <div class="col">
+        <h4>과제 · 점검 <span class="en">Pre-work</span></h4>
+        <ul>
+          <li>1회차 환경 세팅 완료 여부 자가 점검</li>
+          <li>자기 부서 반복 작업 3~5건 사전 수집 (50선 매칭용)</li>
+          <li>Ollama 설치 파일 사전 다운로드 (시간 절약)</li>
+          <li>공용 저장소 '50선 투어 노트' 템플릿 확인</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="task-box">
+      <div class="tb-label">Assignment 02 · 실습과제</div>
+      <div class="tb-title">즐겨찾기 10선 카드 + 5분 파악 루틴</div>
+      <p class="tb-desc">2회차 50선 투어를 바탕으로 자기 업무에 직결되는 AI 서비스 10개를 선별함. 각 서비스를 <b>재료 카드</b>(1줄 설명·사용처·강점·제한)로 정리하고, 새 AI 서비스 출현 시 자신이 따를 '5분 파악 루틴' 체크리스트(5~7개 항목)를 개인 매뉴얼로 작성함. Ollama 구동 스크린샷 1장을 증빙으로 첨부함.</p>
+      <div class="tb-meta">
+        <div><span class="m-label">제출물 · Deliverable</span><span class="m-val">즐겨찾기 10선 재료 카드 · 5분 파악 루틴 체크리스트 · 로컬 LLM 구동 스크린샷</span></div>
+        <div><span class="m-label">마감 · Due</span><span class="m-val"><b>3회차 시작 전</b> · 공용 시드 라이브러리 등록</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SESSION 3 ===== -->
+<section class="sheet session">
+  <h2><span class="num">Session 03</span>메타 프롬프트 설계와 AI 서비스 워크플로우 오케스트레이션<span class="sub">프롬프트 기법을 외우지 않고 워크플로우를 조립함</span></h2>
+  <div class="session-body">
+    <p>본 회차 전반부는 메타 프롬프트임. 역할·맥락·제약·예시·검증 같은 전통 기법을 암기하는 방식이 아님. 생성 AI에게 '내 상황·목표·제약을 전달하니 최적 프롬프트를 설계해달라'고 요청해 프롬프트 자체를 AI에게 생성시키는 접근임. 생성된 프롬프트는 다른 모델에 교차 투입해 검증·개선함.</p>
+    <p>핵심은 프롬프트 공유 문화임. 수강생 20~40명이 각자 자주 쓰는 프롬프트 2개씩만 메타 프롬프트로 생성해 공용 저장소에 등록해도 80개 시드 라이브러리가 확보됨. 동료 프롬프트를 자기 부서 맥락에 맞게 변형·재사용하는 훈련, 실패 프롬프트도 실패 사유와 함께 공유하는 훈련이 거점리더 역할의 본질과 직결됨.</p>
+    <p>회차의 메인은 AI 서비스 워크플로우 오케스트레이션임. 본 단계에서는 에이전트 툴을 사용하지 않음. 2회차에서 채운 재료 창고 내의 AI 서비스들을 여러 개 연결해 하나의 과제를 해결하는 경험이 학습 목표임. 강사가 6가지 워크플로우 타입을 전부 시연한 후, 수강생은 그중 하나를 재현하거나 자기 현업 과제를 직접 조립함.</p>
+    <h3>메타 프롬프트 (Part A)</h3>
+    <ul>
+      <li>메타 프롬프트 개념 — 프롬프트를 AI에게 생성시키는 접근</li>
+      <li>교차 검증 — 생성된 프롬프트를 다른 모델에 투입해 개선</li>
+      <li>시스템 프롬프트 · 프로젝트 지침 · Custom GPT 지침 메타 생성</li>
+      <li><b>프롬프트 공유 활동</b> — 1인 2개 × 20~40명 = 80개 시드 라이브러리</li>
+      <li>거점리더의 부서 이식 가이드</li>
+    </ul>
+    <h3>AI 스마트 워크플로우 6가지 타입 (Part B)</h3>
+    <ul>
+      <li><b>문서 취합·변환</b> — HWP 30개 예산표 통합, PDF 100페이지 브리핑, 회의록 요약</li>
+      <li><b>데이터 분석·시각화</b> — CSV 10종 조인 분석, 공공 데이터 대시보드</li>
+      <li><b>문서 변환·재구성</b> — 엑셀→슬라이드 4경로 시연, 정책 문서→주민 안내문→카드뉴스</li>
+      <li><b>논문·리서치</b> — 논문 10편 메타 요약, 정책 벤치마킹, 주간 브리핑 자동화</li>
+      <li><b>이미지·콘텐츠 생성</b> — 보고서 인포그래픽, 캠페인 SNS 카드, 안내문 포스터</li>
+      <li><b>영상 콘텐츠</b> — 보고서→스크립트→TTS→영상 파이프라인</li>
+    </ul>
+    <div class="callout">
+      <div class="label">진행 방식</div>
+      <p>강사가 6개 워크플로우를 시연하며 사용 서비스 체인을 명시함. 수강생은 1개 재현 또는 자기 현업 과제 조립 후 결과물·서비스 체인을 공용 저장소에 등록함. 본 기록이 거점리더 배포용 워크플로우 레시피 라이브러리의 시드가 됨.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SESSION 3 · CURRICULUM DETAIL ===== -->
+<section class="sheet session detail">
+  <h2><span class="num">Session 03 · Curriculum Detail</span>커리큘럼 세부 계획<span class="sub">8시간 운영 · 학습 목표 · 산출물 · 사전 준비</span></h2>
+  <div class="detail-body">
+    <p class="intro-line">조립 회차. 프롬프트를 AI에게 생성시키고, 여러 서비스를 엮어 하나의 과제를 푸는 오케스트레이션 경험으로 거점리더의 조립력을 형성함.</p>
+
+    <div class="objectives">
+      <div class="label">Learning Objectives · 학습 목표</div>
+      <ol>
+        <li>메타 프롬프트 기법으로 자기 업무 프롬프트 2개 이상을 생성·교차 검증함</li>
+        <li>6가지 AI 워크플로우 타입을 구분하고 각 타입별 서비스 체인을 설계할 수 있음</li>
+        <li>현업 과제 1건을 복수 AI 서비스 체인으로 조립해 실제 산출물을 완성함</li>
+        <li>프롬프트·워크플로우를 공용 저장소에 공유해 거점리더 <b>시드 라이브러리</b>를 구성함</li>
+      </ol>
+    </div>
+
+    <h3>시간 배분 <span class="en">Time Allocation · 8H</span></h3>
+    <table class="time-table">
+      <tr><td class="time">09:30–10:30</td><td class="part">Part A-1</td><td class="content">메타 프롬프트 개념 · 작성 실습 (자기 업무 프롬프트 2건)</td></tr>
+      <tr><td class="time">10:40–11:30</td><td class="part">Part A-2</td><td class="content">교차 검증 — 2개 이상 모델에 투입해 결과 비교·개선</td></tr>
+      <tr><td class="time">11:30–12:00</td><td class="part">Part A-3</td><td class="content">프롬프트 공유 활동 — 1인 2개 × 전체 등록 (80개 시드)</td></tr>
+      <tr class="lunch"><td class="time">12:00–13:00</td><td class="part">—</td><td class="content">점심 · Lunch break</td></tr>
+      <tr><td class="time">13:00–14:00</td><td class="part">Part B-1</td><td class="content">타입 1·2 시연 — 문서 취합·변환 · 데이터 분석·시각화</td></tr>
+      <tr><td class="time">14:10–15:10</td><td class="part">Part B-2</td><td class="content">타입 3·4 시연 — 문서 재구성 · 논문 리서치</td></tr>
+      <tr><td class="time">15:20–16:20</td><td class="part">Part B-3</td><td class="content">타입 5·6 시연 — 이미지·콘텐츠 · 영상 파이프라인</td></tr>
+      <tr><td class="time">16:30–17:30</td><td class="part">Part C</td><td class="content">수강생 조립 실습 — 현업 과제 1건 → 체인 설계 → 실행</td></tr>
+    </table>
+
+    <h3>핵심 실습 <span class="en">Hands-On</span></h3>
+    <div class="tri-col">
+      <div class="col">
+        <h4>현장 실습 <span class="en">Exercises</span></h4>
+        <ul>
+          <li>자주 쓰는 프롬프트 2개 → 메타 프롬프트로 재생성 → 교차 검증</li>
+          <li>현업 과제 1건 → 복수 서비스 체인 조립 → 산출물 생성</li>
+          <li>워크플로우 레시피 카드 작성 — 사용 서비스·단계·결과</li>
+          <li>동료 레시피 1건 자기 부서 맥락에 변형해 재실행</li>
+        </ul>
+      </div>
+      <div class="col">
+        <h4>산출물 <span class="en">Deliverables</span></h4>
+        <ul>
+          <li><b>프롬프트 시드 라이브러리</b> 등록 (1인 2개 이상)</li>
+          <li>워크플로우 레시피 카드 1건 이상</li>
+          <li>현업 과제 산출물 파일 (형식 자유)</li>
+          <li>실패 프롬프트 회고 노트 (교훈 포함)</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3>사전 준비 <span class="en">Preparation</span></h3>
+    <div class="tri-col">
+      <div class="col">
+        <h4>장비 · 계정 <span class="en">Devices &amp; Accounts</span></h4>
+        <ul>
+          <li>Gamma · Napkin · Genspark 중 1개 계정 확보</li>
+          <li>Elicit · Consensus 등 학술 도구 계정 (리서치 타입용)</li>
+          <li>ElevenLabs · Clova Note 등 음성 도구 계정 (영상 타입용)</li>
+          <li>Google Drive · Notion 등 공용 저장소 접근</li>
+        </ul>
+      </div>
+      <div class="col">
+        <h4>과제 · 점검 <span class="en">Pre-work</span></h4>
+        <ul>
+          <li>자주 쓰는 업무 프롬프트 2~3개 사전 수집</li>
+          <li>현업 과제 1건 후보 예비 (조립 실습용)</li>
+          <li>2회차 50선 노트에서 체인 후보 5~10개 사전 선별</li>
+          <li>비식별화된 샘플 데이터 1~2건 준비</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="task-box">
+      <div class="tb-label">Assignment 03 · 실습과제</div>
+      <div class="tb-title">메타 프롬프트 2건 + 워크플로우 레시피 1건</div>
+      <p class="tb-desc">자주 사용하는 업무 프롬프트 2개를 <b>메타 프롬프트</b>로 재생성하고 다른 모델(최소 2종)에 투입해 교차 검증함. 6가지 AI 워크플로우 타입 중 1개를 선택해 현업 과제로 조립하고, 사용 서비스 체인·단계별 입출력·최종 결과물을 1장의 <b>레시피 카드</b>로 정리함. 실패 프롬프트의 회고 노트 1건을 함께 공유함.</p>
+      <div class="tb-meta">
+        <div><span class="m-label">제출물 · Deliverable</span><span class="m-val">메타 프롬프트 2건 + 교차 검증 기록 · 워크플로우 레시피 카드 1장 · 실패 회고 노트</span></div>
+        <div><span class="m-label">마감 · Due</span><span class="m-val"><b>4회차 시작 전</b> · 공용 시드 라이브러리 등록</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SESSION 4 ===== -->
+<section class="sheet session">
+  <h2><span class="num">Session 04</span>어시스트 바이브 코딩 ① 데이터 시각화와 분석<span class="sub">외부망에서 코드를 수령해 내부망에서 실행함</span></h2>
+  <div class="session-body">
+    <p>공공 현장에서는 Claude Code·Cursor·Codex 등 에이전트 도구를 내부망에서 자유롭게 활용할 수 없음. 본 현실이 4·5회차의 구조를 결정함. 외부망에서 ChatGPT·Claude·Gemini의 어시스트로 코드를 수령하고, 해당 코드를 검증해 내부망에서 실행하는 루틴이 두 회차의 공통 토대임. 에러 발생 시 로그를 외부망으로 재투입해 수정을 받는 사이클을 체화함. 민감 데이터는 반드시 비식별화 후 질의함.</p>
+    <p>4회차는 해당 루틴 위에서 데이터 시각화와 분석을 다룸. 분량이 많아 강사가 수강생 수준과 관심에 따라 모듈을 선택해 진행하는 구조임. 파이썬 시각화, HTML/JS 시각화, Power BI + DAX, pandas 분석, scikit-learn 머신러닝 맛보기, 약 1시간의 딥러닝 맛보기까지 7개 모듈이 준비됨. 말미에는 .ipynb 분석 결과를 AI에 전달해 자연어 보고서로 변환하는 실습으로 종결함.</p>
+    <h3>외부망↔내부망 바이브 코딩 루틴 (Part A)</h3>
+    <ul>
+      <li>어시스트 선행 학습의 이유 — 공공 내부망 현실</li>
+      <li>AI 요구사항 전달법 — 데이터 구조·기대 출력·제약 명시</li>
+      <li>에러 로그 복붙 → 수정 요청 → 재실행 사이클</li>
+      <li>민감 데이터 비식별화 원칙</li>
+      <li>파이썬 가상환경·패키지·한글 폰트 점검</li>
+    </ul>
+    <h3>강사 선택 모듈 (Part B~H)</h3>
+    <ul>
+      <li><b>파이썬 시각화</b> — matplotlib, seaborn, plotly, 한글 폰트</li>
+      <li><b>HTML · JS 시각화</b> — Chart.js, ECharts, D3, CDN 로컬화 (유형 5 접점)</li>
+      <li><b>Power BI + DAX</b> — Power Query, 측정값, 공공 데이터 대시보드</li>
+      <li><b>pandas 데이터 분석</b> — 읽기·필터·그룹·조인·피벗, EDA</li>
+      <li><b>scikit-learn 머신러닝 맛보기</b> — 회귀·분류·비지도</li>
+      <li><b>딥러닝 맛보기 (약 1시간)</b> — MLP까지 or MicroGPT 심화</li>
+      <li><b>분석 보고서 자동화</b> — .ipynb → AI → 1페이지 브리핑</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ===== SESSION 4 · CURRICULUM DETAIL ===== -->
+<section class="sheet session detail">
+  <h2><span class="num">Session 04 · Curriculum Detail</span>커리큘럼 세부 계획<span class="sub">8시간 운영 · 학습 목표 · 산출물 · 사전 준비</span></h2>
+  <div class="detail-body">
+    <p class="intro-line">어시스트 코딩 첫 회차. 외부망에서 코드를 수령하고 내부망에서 실행하는 공공 현실의 루틴 위에서, 데이터 시각화·분석 역량을 다층으로 쌓는 회차임.</p>
+
+    <div class="objectives">
+      <div class="label">Learning Objectives · 학습 목표</div>
+      <ol>
+        <li>외부망↔내부망 바이브 코딩 루틴을 체화하고 민감 데이터 <b>비식별화 원칙</b>을 준수함</li>
+        <li>파이썬·HTML/JS·Power BI 중 1개 이상으로 실제 데이터 시각화를 구현함</li>
+        <li>pandas로 CSV 데이터를 로드·정제·분석해 핵심 지표를 도출함</li>
+        <li>.ipynb 분석 결과를 AI에 전달해 1페이지 자연어 브리핑으로 자동 변환함</li>
+      </ol>
+    </div>
+
+    <h3>시간 배분 <span class="en">Time Allocation · 8H</span></h3>
+    <table class="time-table">
+      <tr><td class="time">09:30–10:10</td><td class="part">Part A</td><td class="content">외부망↔내부망 루틴 · 비식별화 원칙 · 가상환경 점검</td></tr>
+      <tr><td class="time">10:20–11:30</td><td class="part">Part B</td><td class="content">파이썬 시각화 — matplotlib · seaborn · plotly · 한글 폰트</td></tr>
+      <tr><td class="time">11:30–12:10</td><td class="part">Part C</td><td class="content">HTML · JS 시각화 — Chart.js · ECharts · D3 · CDN 로컬화</td></tr>
+      <tr class="lunch"><td class="time">12:10–13:10</td><td class="part">—</td><td class="content">점심 · Lunch break</td></tr>
+      <tr><td class="time">13:10–14:20</td><td class="part">Part D</td><td class="content">Power BI + DAX — Power Query · 측정값 · 공공 데이터</td></tr>
+      <tr><td class="time">14:30–15:40</td><td class="part">Part E</td><td class="content">pandas 분석 — 읽기·필터·그룹·조인·피벗 · EDA</td></tr>
+      <tr><td class="time">15:50–16:40</td><td class="part">Part F</td><td class="content">scikit-learn 맛보기 — 회귀·분류·비지도 (강사 선택)</td></tr>
+      <tr><td class="time">16:40–17:30</td><td class="part">Part G</td><td class="content">딥러닝 맛보기 (약 1H) · 분석 보고서 자동화 실습</td></tr>
+    </table>
+
+    <h3>핵심 실습 <span class="en">Hands-On</span></h3>
+    <div class="tri-col">
+      <div class="col">
+        <h4>현장 실습 <span class="en">Exercises</span></h4>
+        <ul>
+          <li>자기 부서 공공 데이터 1건을 파이썬 또는 Power BI로 시각화</li>
+          <li>비식별화 처리 전후 데이터 대조 확인</li>
+          <li>CDN 로컬화된 단일 HTML 시각화 파일 생성 (유형 5 접점)</li>
+          <li>.ipynb 분석 결과 → AI → 1페이지 브리핑 문서 자동 생성</li>
+        </ul>
+      </div>
+      <div class="col">
+        <h4>산출물 <span class="en">Deliverables</span></h4>
+        <ul>
+          <li>시각화 결과물 (PNG + 원본 코드)</li>
+          <li><b>1페이지 자연어 분석 브리핑</b> (.docx 또는 .md)</li>
+          <li>비식별화 체크리스트 완주 확인서</li>
+          <li>단일 HTML 시각화 파일 (내부망 배포용)</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3>사전 준비 <span class="en">Preparation</span></h3>
+    <div class="tri-col">
+      <div class="col">
+        <h4>장비 · 계정 <span class="en">Devices &amp; Accounts</span></h4>
+        <ul>
+          <li>파이썬 3.11+ / Jupyter 또는 VS Code 설치</li>
+          <li>Power BI Desktop 최신판 (1회차 설치 확인)</li>
+          <li>한글 폰트 (Pretendard, 나눔고딕) 사전 설치</li>
+          <li>외부망 AI 계정 (ChatGPT/Claude/Gemini)</li>
+        </ul>
+      </div>
+      <div class="col">
+        <h4>과제 · 점검 <span class="en">Pre-work</span></h4>
+        <ul>
+          <li>자기 부서 CSV 1건 사전 확보 (비식별 처리 완료본)</li>
+          <li>Power BI 샘플 대시보드 1건 사전 체험</li>
+          <li>가상환경 생성 · pandas·matplotlib·plotly 설치 확인</li>
+          <li>민감 데이터 비식별화 가이드 사전 숙지</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="task-box">
+      <div class="tb-label">Assignment 04 · 실습과제</div>
+      <div class="tb-title">부서 공공 데이터 시각화 + 1페이지 자연어 브리핑</div>
+      <p class="tb-desc">자기 부서 또는 공공데이터포털에서 데이터 1건을 선정함(<b>반드시 비식별 처리</b>). 파이썬(matplotlib/plotly)·Power BI·HTML(Chart.js/ECharts) 중 1개 이상으로 <b>시각화 2종</b>을 구성하고 핵심 지표 3개 이상을 도출함. 분석 결과(.ipynb 또는 dax)를 AI에 전달해 1페이지 자연어 브리핑으로 자동 변환함. 외부망↔내부망 루틴과 비식별화 원칙을 준수함.</p>
+      <div class="tb-meta">
+        <div><span class="m-label">제출물 · Deliverable</span><span class="m-val">시각화 파일 2종 (PNG/HTML) + 원본 코드 · 1페이지 자연어 브리핑 · 비식별화 체크리스트</span></div>
+        <div><span class="m-label">마감 · Due</span><span class="m-val"><b>5회차 시작 전</b> · 공용 저장소 업로드</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SESSION 5 ===== -->
+<section class="sheet session">
+  <h2><span class="num">Session 05</span>어시스트 바이브 코딩 ② 업무 자동화와 로컬 AI 연동<span class="sub">반복 업무를 체질로 축소하는 기술</span></h2>
+  <div class="session-body">
+    <p>5회차도 여전히 어시스트 모드임. 다만 주제가 업무 자동화로 전환됨. 파일 시스템 제어와 엑셀·PDF·메일 자동화에서 출발해, 공공 현장의 핵심 포맷인 HWP 자동화에 약 2시간을 할애함. pyhwpx·win32com을 통한 HWP OLE 제어, 30개 HWP에서 데이터를 일괄 추출해 통합 문서를 구성하는 실습이 포함됨.</p>
+    <p>본 회차의 하이라이트는 엑셀 AI 함수임. GPT for Sheets and Docs의 <code>=GPT()</code> 수준 함수를 VBA + Ollama로 완전 내부망에서 구동시킴. 2회차에서 설치한 Ollama가 로컬에서 구동 중이면 엑셀 셀에서 <code>=AI_SUMMARIZE(A1)</code>, <code>=AI_CLASSIFY(A1,"긍정/부정/중립")</code>, <code>=AI_EXTRACT(A1,"날짜")</code> 등의 함수를 직접 호출할 수 있게 됨. 외부 API 없이 완전히 부서 PC 내부에서 동작하는 AI 함수임. 이것이 9가지 유형 중 유형 2(VBA + 로컬 sLLM)의 핵심 실습임.</p>
+    <p>회차 말미에는 Node.js 맛보기로 유형 6의 감각을 열어두고, 4·5회차 어시스트 경험을 회고함. '어시스트만으로 어디까지 가능하고 어디서 막히는가'를 수강생이 정리하는 과정이 6회차 에이전트 진입의 자연스러운 브릿지로 작용함.</p>
+    <h3>파이썬 업무 자동화 (Part A)</h3>
+    <ul>
+      <li>파일 시스템 제어 — 폴더 순회·분류·이름 정리·백업</li>
+      <li>엑셀 자동화 — openpyxl, pandas, 다중 시트·피벗</li>
+      <li>PDF 자동화 — 병합·분할·추출·워터마크</li>
+      <li>메일 자동화 — smtplib, Outlook</li>
+      <li>웹 스크래핑 기초 — requests, BeautifulSoup</li>
+    </ul>
+    <h3>HWP 자동화 · 약 2시간 (Part B)</h3>
+    <ul>
+      <li>pyhwpx 기본 / win32com HWP OLE 제어</li>
+      <li>일괄 텍스트 추출·치환, HWP 30개 → 통합 데이터</li>
+      <li>HWP 양식 자동 채우기, 공공 문서 포맷 변환</li>
+    </ul>
+    <h3>엑셀 AI 함수 · VBA + Ollama 연동 (Part C)</h3>
+    <ul>
+      <li>VBA 래퍼 함수 작성 — Ollama API 호출</li>
+      <li><code>=AI_SUMMARIZE</code> · <code>=AI_CLASSIFY</code> · <code>=AI_EXTRACT</code> · <code>=AI_TRANSLATE</code> · <code>=AI_ASK</code></li>
+      <li>완전 내부망 동작 — 외부 API 미사용</li>
+      <li>공공 사례 — 민원 분류, 제목 요약, 카테고리 태깅</li>
+    </ul>
+    <h3>Node.js 맛보기 · 통합 과제 · 회고 (Part D~F)</h3>
+    <ul>
+      <li>Node.js 단일 파일 스크립트 (유형 6 맛보기)</li>
+      <li>수강생별 현업 반복 업무 1건 자동화</li>
+      <li>어시스트 한계 회고 → 6회차 에이전트 진입 브릿지</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ===== SESSION 5 · CURRICULUM DETAIL ===== -->
+<section class="sheet session detail">
+  <h2><span class="num">Session 05 · Curriculum Detail</span>커리큘럼 세부 계획<span class="sub">8시간 운영 · 학습 목표 · 산출물 · 사전 준비</span></h2>
+  <div class="detail-body">
+    <p class="intro-line">어시스트 코딩 두 번째 회차. 업무 자동화와 로컬 AI 연동으로 반복 업무를 체질로 축소하고, 완전 내부망에서 동작하는 엑셀 AI 함수를 구현함.</p>
+
+    <div class="objectives">
+      <div class="label">Learning Objectives · 학습 목표</div>
+      <ol>
+        <li>파이썬·HWP·Node.js 중 1개 이상으로 반복 업무 1건을 자동화해 <b>체감 시간 단축</b>을 실측함</li>
+        <li>pyhwpx·win32com으로 HWP 30개를 일괄 처리하는 스크립트를 완성함</li>
+        <li>VBA + Ollama 연동으로 엑셀 AI 함수 5종을 내부망에서 동작시킴</li>
+        <li>4·5회차 어시스트 경험을 회고해 에이전트 전환이 필요한 영역을 명시함</li>
+      </ol>
+    </div>
+
+    <h3>시간 배분 <span class="en">Time Allocation · 8H</span></h3>
+    <table class="time-table">
+      <tr><td class="time">09:30–10:50</td><td class="part">Part A</td><td class="content">파이썬 업무 자동화 — 파일·엑셀·PDF·메일·웹 스크래핑</td></tr>
+      <tr><td class="time">11:00–12:50</td><td class="part">Part B</td><td class="content"><b>HWP 자동화 · 약 2H</b> — pyhwpx · win32com · 일괄 추출</td></tr>
+      <tr class="lunch"><td class="time">12:50–13:50</td><td class="part">—</td><td class="content">점심 · Lunch break</td></tr>
+      <tr><td class="time">13:50–15:30</td><td class="part">Part C</td><td class="content">엑셀 AI 함수 · VBA + Ollama — 5개 함수 구현 · 배포</td></tr>
+      <tr><td class="time">15:40–16:30</td><td class="part">Part D</td><td class="content">Node.js 맛보기 — 단일 파일 스크립트 (유형 6 감각)</td></tr>
+      <tr><td class="time">16:30–17:10</td><td class="part">Part E</td><td class="content">통합 과제 — 현업 반복 업무 1건 자동화</td></tr>
+      <tr><td class="time">17:10–17:30</td><td class="part">Part F</td><td class="content">어시스트 한계 회고 → 6회차 에이전트 진입 브릿지</td></tr>
+    </table>
+
+    <h3>핵심 실습 <span class="en">Hands-On</span></h3>
+    <div class="tri-col">
+      <div class="col">
+        <h4>현장 실습 <span class="en">Exercises</span></h4>
+        <ul>
+          <li>HWP 30개에서 항목별 데이터 일괄 추출 → 1개 엑셀로 통합</li>
+          <li>엑셀 셀에서 <code>=AI_SUMMARIZE(A1)</code> 호출해 민원 제목 요약</li>
+          <li>엑셀 셀에서 <code>=AI_CLASSIFY(A1,"긍정/부정/중립")</code> 감성 분류</li>
+          <li>현업 반복 업무 1건 자동화 → Before/After 소요 시간 측정</li>
+        </ul>
+      </div>
+      <div class="col">
+        <h4>산출물 <span class="en">Deliverables</span></h4>
+        <ul>
+          <li>업무 자동화 스크립트 (파이썬 · VBA · Node 중 택1)</li>
+          <li><b>엑셀 AI 함수 .xlsm 파일</b> (팀 배포 가능)</li>
+          <li>자동화 Before/After 회고 노트</li>
+          <li>HWP 일괄 추출 결과 통합 엑셀</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3>사전 준비 <span class="en">Preparation</span></h3>
+    <div class="tri-col">
+      <div class="col">
+        <h4>장비 · 계정 <span class="en">Devices &amp; Accounts</span></h4>
+        <ul>
+          <li>Windows + 한컴오피스 설치 (HWP 자동화 필수)</li>
+          <li>Microsoft Excel 정식 버전 (VBA 개발 가능 환경)</li>
+          <li>2회차 Ollama 구동 확인 (VBA 연동용)</li>
+          <li>Node.js 18+ 사전 설치 (Part D 용)</li>
+        </ul>
+      </div>
+      <div class="col">
+        <h4>과제 · 점검 <span class="en">Pre-work</span></h4>
+        <ul>
+          <li>반복 업무 샘플 데이터 3~5건 준비</li>
+          <li>HWP 샘플 문서 30건 (공개 가능본)</li>
+          <li>엑셀 개발자 탭 활성화 확인</li>
+          <li>Ollama 경량 모델(Llama 3.2 3B 등) 사전 다운로드</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="task-box">
+      <div class="tb-label">Assignment 05 · 실습과제</div>
+      <div class="tb-title">반복 업무 자동화 1건 + 엑셀 AI 함수 .xlsm</div>
+      <p class="tb-desc">자기 부서의 반복 업무 1건을 선정해 파이썬·HWP(pyhwpx)·VBA+Ollama·Node 중 <b>1개 방식으로 자동화</b>함. Before(수작업)와 After(자동화) 소요 시간을 실측 기록해 비교 노트로 정리함. VBA+Ollama 연동으로 엑셀 AI 함수 최소 3종(<code>=AI_SUMMARIZE</code> · <code>=AI_CLASSIFY</code> · <code>=AI_EXTRACT</code> 등)이 <b>완전 내부망</b>에서 동작하는 .xlsm 파일을 완성함.</p>
+      <div class="tb-meta">
+        <div><span class="m-label">제출물 · Deliverable</span><span class="m-val">자동화 스크립트 (.py/.vba/.js) · 엑셀 AI 함수 .xlsm · Before/After 실측 비교 노트</span></div>
+        <div><span class="m-label">마감 · Due</span><span class="m-val"><b>6회차 시작 전</b> · 공용 저장소 업로드</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SESSION 6 ===== -->
+<section class="sheet session">
+  <h2><span class="num">Session 06</span>AI 에이전트 툴 마스터리와 에이전트 기반 개발 입문<span class="sub">기획서로 지시하면 에이전트가 구현함</span></h2>
+  <div class="session-body">
+    <p>6회차부터 관점이 전환됨. 지금까지는 AI에게 단건씩 질의하는 조수 모드였다면, 이제부터는 팀원에게 프로젝트를 통째로 위임하는 모드임. 본 차이를 수강생이 체감하는 것이 회차의 출발점임. 루프·도구 호출·자율 반복 같은 개념은 기술 용어 없이 '일하는 방식의 차이'로 설명함.</p>
+    <p>Claude Code, Antigravity, Codex CLI, Cursor, OpenCode 등 에이전트 도구를 한 바퀴 순회함. 설치하고 기본 명령을 체득하는 수준까지만 진행함. Rule, Skill, Sub-agent 등 확장 개념은 '존재 인지, 에이전트가 자율 활용' 수준으로만 터치함. 수강생의 역할은 각 도구의 성격 차이를 감각적으로 구분하는 것임.</p>
+    <p>후반부는 에이전트에게 지시하는 법을 다룸. 요구사항을 코드가 아닌 아키텍처로 그려 전달하는 법, 에이전트가 막혔을 때 단계 관점에서 확인하는 법, 결과물 검수 체크리스트를 체득함. 실습은 4·5회차에서 어시스트로 제작한 것을 에이전트로 재구현해 차이를 체감함.</p>
+    <h3>에이전트 도구 한 바퀴 (Part A~B)</h3>
+    <ul>
+      <li>어시스트 vs 에이전트 — 일하는 방식의 차이</li>
+      <li>Claude Code / Antigravity / Codex CLI / Cursor / OpenCode</li>
+      <li>슬래시 명령어 · Rule · Skill · Sub-agent 개념 감각</li>
+      <li>도구별 성격 차이, 상황별 선택 판단 프레임</li>
+    </ul>
+    <h3>에이전트에게 지시하는 법 (Part C)</h3>
+    <ul>
+      <li>요구사항을 아키텍처로 그려 전달</li>
+      <li>'데이터 → 처리 → 결과물' 흐름으로 진술</li>
+      <li>정체 구간에서 단계 관점으로 점검</li>
+      <li>결과물 검수 체크리스트 — 동작·정확·배포 가능성</li>
+    </ul>
+    <h3>에이전트로 첫 개발 · 유형 3·4·5 (Part D)</h3>
+    <ul>
+      <li><b>유형 3</b> — 파이썬 독립 프로그램 (tkinter/PyQt → PyInstaller)</li>
+      <li><b>유형 4</b> — Electron 앱 맛보기</li>
+      <li><b>유형 5</b> — HTML+CSS+JS 단일 파일 앱</li>
+      <li>4·5회차 어시스트 버전과 비교 — 동일 과제의 상이한 제작 방식 체감</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ===== SESSION 6 · CURRICULUM DETAIL ===== -->
+<section class="sheet session detail">
+  <h2><span class="num">Session 06 · Curriculum Detail</span>커리큘럼 세부 계획<span class="sub">8시간 운영 · 학습 목표 · 산출물 · 사전 준비</span></h2>
+  <div class="detail-body">
+    <p class="intro-line">에이전트 전환 회차. 조수 모드에서 위임 모드로 관점이 바뀌며, 요구사항을 코드가 아닌 아키텍처로 그려 전달하는 거점리더의 핵심 언어가 체화됨.</p>
+
+    <div class="objectives">
+      <div class="label">Learning Objectives · 학습 목표</div>
+      <ol>
+        <li>Claude Code·Antigravity·Codex·Cursor·OpenCode를 설치·구동하고 도구별 성격 차이를 체감함</li>
+        <li>요구사항을 <b>아키텍처로 그려</b> 에이전트에 전달하는 방식을 체화함</li>
+        <li>4·5회차의 어시스트 결과물을 에이전트로 재구현해 소요 시간·품질을 비교 분석함</li>
+        <li>유형 3·4·5(파이썬 독립 프로그램·Electron·단일 파일 HTML 앱)를 각 1개 이상 완성함</li>
+      </ol>
+    </div>
+
+    <h3>시간 배분 <span class="en">Time Allocation · 8H</span></h3>
+    <table class="time-table">
+      <tr><td class="time">09:30–10:30</td><td class="part">Part A</td><td class="content">어시스트 vs 에이전트 — 일하는 방식의 차이 · 위임 모드 감각</td></tr>
+      <tr><td class="time">10:40–12:00</td><td class="part">Part B</td><td class="content">5개 에이전트 도구 순회 — 설치·기본 명령·성격 차이 체감</td></tr>
+      <tr class="lunch"><td class="time">12:00–13:00</td><td class="part">—</td><td class="content">점심 · Lunch break</td></tr>
+      <tr><td class="time">13:00–14:00</td><td class="part">Part C-1</td><td class="content">에이전트에게 지시하는 법 — 아키텍처로 그려 전달</td></tr>
+      <tr><td class="time">14:10–15:10</td><td class="part">Part C-2</td><td class="content">결과물 검수 체크리스트 — 동작·정확·배포 가능성</td></tr>
+      <tr><td class="time">15:20–16:20</td><td class="part">Part D-1</td><td class="content"><b>유형 3 실습</b> — tkinter/PyQt → PyInstaller 독립 프로그램</td></tr>
+      <tr><td class="time">16:30–17:00</td><td class="part">Part D-2</td><td class="content">유형 4 실습 — Electron 앱 맛보기</td></tr>
+      <tr><td class="time">17:00–17:30</td><td class="part">Part D-3</td><td class="content">유형 5 실습 — HTML+CSS+JS 단일 파일 앱</td></tr>
+    </table>
+
+    <h3>핵심 실습 <span class="en">Hands-On</span></h3>
+    <div class="tri-col">
+      <div class="col">
+        <h4>현장 실습 <span class="en">Exercises</span></h4>
+        <ul>
+          <li>4회차 시각화 결과물을 에이전트에 '독립 프로그램으로' 요청 → PyInstaller .exe</li>
+          <li>5회차 자동화 스크립트를 에이전트에 재의뢰 → 프롬프트 수 비교</li>
+          <li>동일 과제 어시스트 vs 에이전트 소요 시간·품질 비교표 작성</li>
+          <li>단일 HTML 앱 1건 완성 → 내부망 배포 테스트</li>
+        </ul>
+      </div>
+      <div class="col">
+        <h4>산출물 <span class="en">Deliverables</span></h4>
+        <ul>
+          <li>유형 3 <b>.exe 독립 프로그램</b> + 소스코드</li>
+          <li>유형 5 단일 HTML 앱 파일</li>
+          <li>어시스트 vs 에이전트 비교표 (공용 저장소)</li>
+          <li>에이전트 결과물 검수 체크리스트 완주본</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3>사전 준비 <span class="en">Preparation</span></h3>
+    <div class="tri-col">
+      <div class="col">
+        <h4>장비 · 계정 <span class="en">Devices &amp; Accounts</span></h4>
+        <ul>
+          <li>Claude Code 또는 Cursor 최소 1개 사전 설치</li>
+          <li>Anthropic/OpenAI API 키 발급 (도구에 따라)</li>
+          <li>Node.js 18+ (Electron 실습용)</li>
+          <li>PyInstaller 최신판 · Python 3.11+</li>
+        </ul>
+      </div>
+      <div class="col">
+        <h4>과제 · 점검 <span class="en">Pre-work</span></h4>
+        <ul>
+          <li>4·5회차 산출물 파일 정리 (재구현 비교용)</li>
+          <li>에이전트 도구 공식 문서 사전 훑기 (설치·기본 명령)</li>
+          <li>거점 미션의 '아키텍처 그림' 초안 연습</li>
+          <li>bash · 터미널 기본 명령 사전 리뷰</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="task-box">
+      <div class="tb-label">Assignment 06 · 실습과제</div>
+      <div class="tb-title">어시스트 vs 에이전트 비교 + 첫 에이전트 배포물</div>
+      <p class="tb-desc">4회차 또는 5회차 산출물 1건을 <b>에이전트 도구</b>(Claude Code/Cursor/Antigravity 등)로 재구현함. 유형 3(Python + PyInstaller .exe) 또는 유형 5(HTML+CSS+JS 단일 파일) 중 <b>1개 이상을 완성</b>해 내부망 배포 가능한 형태로 패키징함. 동일 과제의 어시스트 vs 에이전트 방식에 대해 소요 시간·코드 품질·사용 프롬프트 수를 비교표로 정리함.</p>
+      <div class="tb-meta">
+        <div><span class="m-label">제출물 · Deliverable</span><span class="m-val">배포물 (.exe 또는 .html 단일파일) · 소스코드 · 어시스트 vs 에이전트 비교표</span></div>
+        <div><span class="m-label">마감 · Due</span><span class="m-val"><b>7회차 시작 전</b> · 공용 저장소 업로드</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SESSION 7 ===== -->
+<section class="sheet session">
+  <h2><span class="num">Session 07</span>RAG 파이프라인과 웹서비스 구축<span class="sub">재료로서의 RAG 감각 체득</span></h2>
+  <div class="session-body">
+    <p>RAG를 기술자 버전이 아니라 기획자 버전으로 이해하는 회차임. RAG는 '내 문서 창고를 AI가 탐색해 응답하게 하는 구조'이며, 파이프라인은 4단계로 기억함: 넣기·쪼개기·찾기·답하기. 문서를 넣고(파싱), 의미 단위로 자르고(청킹), 질문과 유사한 조각을 꺼내오고(벡터 검색), 해당 조각을 AI에게 전달해 답을 생성함. 리랭크·하이브리드·GraphRAG 같은 고급 기법은 '정확도 향상 옵션' 수준으로 명칭만 인지함.</p>
+    <p>실습은 에이전트에게 위임함. 'Ollama + 내 PDF 10개로 부서 Q&A 구성해달라'고 요청하고, 완성된 결과물에서 변경 지점별 출력 변화를 실험하는 방식임. 본 경험이 법령 RAG, 민원 매뉴얼 RAG, 회의록 RAG 등 공공 사례 기획으로 확장됨.</p>
+    <p>웹서비스도 재료로 이해함. 프론트(표시)·백엔드(처리)·저장소 3덩어리만 인지하면 충분함. FastAPI·Express 등 프레임워크 선택은 에이전트가 담당함. 수강생의 역할은 프론트+백엔드+RAG 결합을 아키텍처 그림으로 설계하고 에이전트에 구현을 위임하는 것임.</p>
+    <h3>RAG 파이프라인 — 4단계 (Part A)</h3>
+    <ul>
+      <li><b>넣기</b> — DeepSeek-OCR, 한컴 PDF 파서, LangChain 로더</li>
+      <li><b>쪼개기</b> — 의미 단위 청킹, 임베딩은 'AI가 이해하는 지문'</li>
+      <li><b>찾기</b> — 벡터 DB (Chroma, FAISS)로 유사 조각 검색</li>
+      <li><b>답하기</b> — 검색된 조각을 AI에 전달해 답 생성</li>
+      <li>고급 옵션 — 리랭크, 하이브리드, GraphRAG (명칭만)</li>
+    </ul>
+    <h3>에이전트로 RAG 구현 · 유형 7 (Part B)</h3>
+    <ul>
+      <li>Ollama 기반 로컬 RAG — 완전 내부망 동작</li>
+      <li>간단 RAG → 복잡 RAG 단계 확장</li>
+      <li>공공 사례 기획 — 법령 RAG, 민원 매뉴얼 RAG, 회의록 RAG</li>
+      <li>RAG 방식 연구논문 메타분석 과제</li>
+    </ul>
+    <h3>백엔드 결합 웹서비스 · 유형 8 (Part C)</h3>
+    <ul>
+      <li>웹서비스 3덩어리 — 프론트 + 백엔드 + 저장소</li>
+      <li>프론트+백엔드+RAG 결합 아키텍처 설계</li>
+      <li>에이전트 전담 구현</li>
+      <li>외부망 개발 → 내부망 이관 체크리스트</li>
+    </ul>
+    <h3>코드 기반 콘텐츠 자동화 (Part D)</h3>
+    <ul>
+      <li>Remotion 기반 데이터→영상 자동화</li>
+      <li>SVG 생성 자동화 — 데이터 → 차트/인포그래픽</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ===== SESSION 7 · CURRICULUM DETAIL ===== -->
+<section class="sheet session detail">
+  <h2><span class="num">Session 07 · Curriculum Detail</span>커리큘럼 세부 계획<span class="sub">8시간 운영 · 학습 목표 · 산출물 · 사전 준비</span></h2>
+  <div class="detail-body">
+    <p class="intro-line">RAG와 웹서비스를 '재료'로 해석하는 회차. 기술자 버전이 아니라 기획자 버전의 RAG 감각으로, 부서 문서 Q&amp;A를 완전 내부망에서 구동시킴.</p>
+
+    <div class="objectives">
+      <div class="label">Learning Objectives · 학습 목표</div>
+      <ol>
+        <li>RAG 4단계(넣기·쪼개기·찾기·답하기)를 자기 언어로 동료에게 설명할 수 있음</li>
+        <li>Ollama 기반 <b>로컬 RAG</b>를 에이전트에 위임해 완전 내부망에서 구동함</li>
+        <li>프론트·백엔드·저장소 3덩어리로 웹서비스를 설계하고 에이전트에 구현 의뢰함</li>
+        <li>외부망 개발 → 내부망 이관 체크리스트를 확보해 현업 배포 계획을 보유함</li>
+      </ol>
+    </div>
+
+    <h3>시간 배분 <span class="en">Time Allocation · 8H</span></h3>
+    <table class="time-table">
+      <tr><td class="time">09:30–10:30</td><td class="part">Part A</td><td class="content">RAG 파이프라인 4단계 — 넣기·쪼개기·찾기·답하기</td></tr>
+      <tr><td class="time">10:40–12:00</td><td class="part">Part B-1</td><td class="content">에이전트로 로컬 RAG 구현 · 유형 7 — 부서 PDF Q&amp;A 구성</td></tr>
+      <tr class="lunch"><td class="time">12:00–13:00</td><td class="part">—</td><td class="content">점심 · Lunch break</td></tr>
+      <tr><td class="time">13:00–14:00</td><td class="part">Part B-2</td><td class="content">RAG 확장 — 공공 사례 기획 (법령·민원·회의록)</td></tr>
+      <tr><td class="time">14:10–15:10</td><td class="part">Part C-1</td><td class="content">웹서비스 3덩어리 구조 — 프론트 · 백엔드 · 저장소</td></tr>
+      <tr><td class="time">15:20–16:30</td><td class="part">Part C-2</td><td class="content">프론트+백엔드+RAG 결합 · 유형 8 — 에이전트 구현</td></tr>
+      <tr><td class="time">16:40–17:00</td><td class="part">Part C-3</td><td class="content">외부망 → 내부망 <b>이관 체크리스트</b></td></tr>
+      <tr><td class="time">17:00–17:30</td><td class="part">Part D</td><td class="content">Remotion · SVG 자동화 — 데이터 → 콘텐츠 맛보기</td></tr>
+    </table>
+
+    <h3>핵심 실습 <span class="en">Hands-On</span></h3>
+    <div class="tri-col">
+      <div class="col">
+        <h4>현장 실습 <span class="en">Exercises</span></h4>
+        <ul>
+          <li>부서 PDF 10건을 에이전트에 위임 → Ollama 기반 Q&amp;A 웹앱 자동 완성</li>
+          <li>청크 크기 · 검색 top-k 변경해 답변 품질 변화 관찰 실험</li>
+          <li>자기 부서용 RAG 웹서비스 아키텍처 그림 1장 설계</li>
+          <li>외부망 개발 결과물 → 내부망 이관 시뮬레이션</li>
+        </ul>
+      </div>
+      <div class="col">
+        <h4>산출물 <span class="en">Deliverables</span></h4>
+        <ul>
+          <li>로컬 RAG 시스템 (docker-compose 또는 단일 앱)</li>
+          <li><b>웹서비스 아키텍처 1장</b> (프론트+백엔드+RAG)</li>
+          <li>외부망→내부망 이관 체크리스트 (공용 저장소 등록)</li>
+          <li>RAG 방식 연구논문 메타분석 노트 (선택)</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3>사전 준비 <span class="en">Preparation</span></h3>
+    <div class="tri-col">
+      <div class="col">
+        <h4>장비 · 계정 <span class="en">Devices &amp; Accounts</span></h4>
+        <ul>
+          <li>Ollama + 임베딩 모델 사전 설치 (nomic-embed-text 등)</li>
+          <li>부서 PDF 5~10건 (공개 가능본 기준)</li>
+          <li>Docker Desktop 설치 (선택 · 백엔드 실습용)</li>
+          <li>DB 클라이언트 (SQLite Browser 등)</li>
+        </ul>
+      </div>
+      <div class="col">
+        <h4>과제 · 점검 <span class="en">Pre-work</span></h4>
+        <ul>
+          <li>6회차에서 익힌 에이전트 도구 1개 구동 확인</li>
+          <li>RAG 4단계 용어 사전 학습 (청킹·임베딩·벡터DB)</li>
+          <li>자기 부서 Q&amp;A 시나리오 3건 초안 작성</li>
+          <li>내부망 배포 가능 여부 사전 협의 (IT 부서)</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="task-box">
+      <div class="tb-label">Assignment 07 · 실습과제</div>
+      <div class="tb-title">부서 RAG 구축 + 웹서비스 아키텍처 설계</div>
+      <p class="tb-desc">자기 부서의 공개 가능 문서 5~10건을 에이전트에 위임해 <b>Ollama 기반 로컬 RAG</b> 시스템을 구축함. 청크 크기·검색 top-k를 <b>최소 2가지 조합</b>으로 변경해 답변 품질 변화를 기록함. 프론트+백엔드+RAG 결합 웹서비스를 1장의 아키텍처 그림으로 설계하고, 외부망 개발 → 내부망 이관 체크리스트(최소 7개 항목)를 완성함.</p>
+      <div class="tb-meta">
+        <div><span class="m-label">제출물 · Deliverable</span><span class="m-val">RAG 구동 결과 스크린샷·실험 기록 · 웹서비스 아키텍처 그림 1장 · 외부망→내부망 이관 체크리스트</span></div>
+        <div><span class="m-label">마감 · Due</span><span class="m-val"><b>8회차 시작 전</b> · 공용 저장소 업로드</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SESSION 8 ===== -->
+<section class="sheet session">
+  <h2><span class="num">Session 08</span>API · MCP 기반 멀티 에이전트 아키텍처 기획 및 구축<span class="sub">조합의 끝, 기획자로 완성되는 회차</span></h2>
+  <div class="session-body">
+    <p>최종 회차는 아키텍처 기획자로 완성되는 자리임. API와 MCP를 인문학도의 언어로 이해하고, 그 위에서 비즈니스 모델 캔버스와 같은 방식으로 AI 아키텍처를 1장에 설계하는 워크숍이 본 회차의 하이라이트임.</p>
+    <p>API는 '타인이 구축한 기능을 호출해 사용하는 창구'임. 구성 원리는 단순함 — 질의 송신 시 응답 수신. 수강생이 인지해야 할 상식은 세 가지 — 키는 비밀번호이므로 노출 금지, 유료인 경우가 많으므로 쿼터·요금 주의, 간헐적 실패이므로 재시도 필요. REST·헤더·JSON 등 용어는 에이전트가 전담 처리함.</p>
+    <p>MCP는 '에이전트가 외부 도구를 연결하는 표준 콘센트'로 이해함. 기존 MCP 서버 카탈로그를 재료 목록처럼 순회하고, 에이전트에 MCP를 연결하는 작업은 설정 1회 수준으로 시연함. MCP 서버 직접 제작도 에이전트에게 위임하면 됨.</p>
+    <p>이 모든 기반 위에서 AI 아키텍처 캔버스 워크숍이 진행됨. 트리거·재료·처리·시스템 프롬프트·산출물·배포 6칸에 각자의 거점 미션을 1장으로 설계함. 최종 발표는 1회차에 선언한 거점 미션이 어떻게 현실화되었는지 연결하는 자리임.</p>
+    <h3>API를 인문학도의 언어로 (Part A)</h3>
+    <ul>
+      <li>API = 타인이 구축한 기능을 호출해 사용하는 창구</li>
+      <li>상식 3종 — 키 보안, 쿼터·요금, 재시도</li>
+      <li>REST·헤더·JSON은 에이전트가 전담</li>
+      <li>수강생의 실질 질문 — '이 서비스에 API가 존재하는가?'</li>
+    </ul>
+    <h3>공공 API 카탈로그 투어 (Part B)</h3>
+    <ul>
+      <li>OpenWeather · SerpAPI · 국가법령정보 · 기상청 API 허브 · 공공데이터포털 · 행정안전부 표준 API</li>
+      <li>각 API를 재료 카드로 정리 — 제공 데이터 / 활용 영역</li>
+      <li>수강생별 '쓸만한 API 1건 발굴' 공유</li>
+    </ul>
+    <h3>MCP를 인문학도의 언어로 (Part C)</h3>
+    <ul>
+      <li>MCP = 에이전트가 외부 도구를 연결하는 표준 콘센트</li>
+      <li>기존 MCP 서버 카탈로그 투어</li>
+      <li>에이전트에 MCP 연결 — 설정 1회 시연</li>
+      <li>MCP 서버 직접 제작 — 에이전트 위임</li>
+    </ul>
+    <div class="dark-panel">
+      <div class="lbl">AI 아키텍처 캔버스 워크숍</div>
+      <p>비즈니스 모델 캔버스처럼 6칸으로 AI 아키텍처를 1장에 설계함. <b>트리거</b>(무엇이 시작시키나) · <b>재료</b>(어떤 데이터·API·문서·모델) · <b>처리</b>(어떤 순서로 엮나) · <b>시스템 프롬프트</b>(AI에게 무엇을 지시하나) · <b>산출물</b>(최종 결과 형태) · <b>배포</b>(누가 어떻게 사용하나).</p>
+    </div>
+    <h3>워크숍 · 구현 · 최종 발표 (Part D~F)</h3>
+    <ul>
+      <li>강사 시연 — 날씨 API + 재해 API + AI → 주민 안내 문자 → 엑셀 저장</li>
+      <li>강사 시연 — 법령 API + 부서 RAG + AI → 정책 영향 브리핑 슬라이드</li>
+      <li>수강생 워크숍 — 1회차 거점 미션을 캔버스 1장으로, 동료 리뷰, 에이전트 구현</li>
+      <li>단일 에이전트 vs 멀티 에이전트 선택 (기획 관점)</li>
+      <li>멀티 에이전트 7가지 유형을 '조합 패턴 카드'로</li>
+      <li><b>거점리더 최종 발표</b> — 1회차 미션 ↔ 8회차 산출물 연결</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ===== SESSION 8 · CURRICULUM DETAIL ===== -->
+<section class="sheet session detail">
+  <h2><span class="num">Session 08 · Curriculum Detail</span>커리큘럼 세부 계획<span class="sub">8시간 운영 · 학습 목표 · 산출물 · 사전 준비</span></h2>
+  <div class="detail-body">
+    <p class="intro-line">완성 회차. API·MCP를 인문학도의 언어로 번역해 이해하고, AI 아키텍처 캔버스 1장으로 거점 미션을 설계해 8주 여정을 하나의 산출물로 마감함.</p>
+
+    <div class="objectives">
+      <div class="label">Learning Objectives · 학습 목표</div>
+      <ol>
+        <li>API와 MCP를 인문학도의 언어로 동료에게 5분 내 설명할 수 있음</li>
+        <li>공공 API 6종 이상을 '재료 카드'로 정리하고 자기 부서 과제에 매칭함</li>
+        <li><b>AI 아키텍처 캔버스 1장</b>으로 거점 미션을 설계하고 에이전트로 구현함</li>
+        <li>거점리더 최종 발표 — 1회차 미션과 8회차 산출물의 연결을 선언함</li>
+      </ol>
+    </div>
+
+    <h3>시간 배분 <span class="en">Time Allocation · 8H</span></h3>
+    <table class="time-table">
+      <tr><td class="time">09:30–10:20</td><td class="part">Part A</td><td class="content">API를 인문학도의 언어로 — 창구 · 상식 3종</td></tr>
+      <tr><td class="time">10:30–11:30</td><td class="part">Part B</td><td class="content">공공 API 카탈로그 투어 — 6종 이상 재료 카드화</td></tr>
+      <tr><td class="time">11:30–12:20</td><td class="part">Part C</td><td class="content">MCP를 인문학도의 언어로 — 표준 콘센트 · 카탈로그</td></tr>
+      <tr class="lunch"><td class="time">12:20–13:20</td><td class="part">—</td><td class="content">점심 · Lunch break</td></tr>
+      <tr><td class="time">13:20–14:50</td><td class="part">Part D</td><td class="content"><b>AI 아키텍처 캔버스 워크숍</b> — 6칸 개인 작성</td></tr>
+      <tr><td class="time">15:00–16:00</td><td class="part">Part E</td><td class="content">동료 리뷰 · 에이전트에 구현 의뢰</td></tr>
+      <tr><td class="time">16:10–17:00</td><td class="part">Part F-1</td><td class="content">단일 vs 멀티 에이전트 · 7가지 조합 패턴 카드</td></tr>
+      <tr><td class="time">17:00–17:30</td><td class="part">Part F-2</td><td class="content">거점리더 최종 발표 — 현업 복귀 후 코칭·전파 계획</td></tr>
+    </table>
+
+    <h3>핵심 실습 <span class="en">Hands-On</span></h3>
+    <div class="tri-col">
+      <div class="col">
+        <h4>현장 실습 <span class="en">Exercises</span></h4>
+        <ul>
+          <li>공공 API 6종 중 1개 선택 → 에이전트에 '주민 안내 자동화' 위임</li>
+          <li>AI 아키텍처 캔버스 6칸 개인 작성 → 동료 2명 리뷰</li>
+          <li>캔버스를 에이전트에 전달 → 실제 구현 의뢰 → 검수</li>
+          <li>거점리더 최종 발표 3분 (미션 연결 · 전파 계획)</li>
+        </ul>
+      </div>
+      <div class="col">
+        <h4>산출물 <span class="en">Deliverables</span></h4>
+        <ul>
+          <li><b>공공 API 재료 카드 6장</b> (공용 저장소 등록)</li>
+          <li>AI 아키텍처 캔버스 1장 (개인 거점 미션)</li>
+          <li>캔버스 기반 에이전트 구현 결과물</li>
+          <li>거점리더 최종 발표 슬라이드·영상 (3분)</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3>사전 준비 <span class="en">Preparation</span></h3>
+    <div class="tri-col">
+      <div class="col">
+        <h4>장비 · 계정 <span class="en">Devices &amp; Accounts</span></h4>
+        <ul>
+          <li>공공데이터포털 계정 · API 키 1건 이상 발급</li>
+          <li>기상청 API 허브 · 국가법령정보 계정 (선택)</li>
+          <li>MCP 지원 에이전트 도구 1개 구동 환경</li>
+          <li>발표용 슬라이드 템플릿 (Gamma · PPT)</li>
+        </ul>
+      </div>
+      <div class="col">
+        <h4>과제 · 점검 <span class="en">Pre-work</span></h4>
+        <ul>
+          <li>1회차 거점 미션 선언서 재확인 · 최종 갱신</li>
+          <li>2~7회차 산출물 아카이브 정리 (발표 소재)</li>
+          <li>캔버스 6칸 초안 사전 작성 (트리거·재료·처리·프롬프트·산출물·배포)</li>
+          <li>복귀 후 코칭 대상 동료 2~3명 사전 지정</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="task-box">
+      <div class="tb-label">Assignment 08 · 최종 실습과제</div>
+      <div class="tb-title">AI 아키텍처 캔버스 + 거점리더 최종 발표</div>
+      <p class="tb-desc">1회차에 선언한 거점 미션을 <b>AI 아키텍처 캔버스 6칸</b>(트리거·재료·처리·시스템 프롬프트·산출물·배포)에 1장으로 설계함. 해당 캔버스를 에이전트에 전달해 실제 구현물을 도출하고 검수 노트를 작성함. 거점리더 최종 발표(3분) — 1회차 미션과 8회차 산출물의 연결, 현업 복귀 후 동료 2~3명 코칭·전파 계획을 선언함.</p>
+      <div class="tb-meta">
+        <div><span class="m-label">제출물 · Deliverable</span><span class="m-val">AI 아키텍처 캔버스 1장 · 캔버스 기반 에이전트 구현물 · 최종 발표 슬라이드·영상 (3분)</span></div>
+        <div><span class="m-label">마감 · Due</span><span class="m-val"><b>종강 당일</b> · 현장 발표 + 공용 저장소 최종본 등록</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</div>
+
+<script>
+var EDITABLE_TAGS={P:1,H1:1,H2:1,H3:1,H4:1,H5:1,H6:1,TD:1,TH:1,LI:1,
+  SPAN:1,STRONG:1,EM:1,SMALL:1,DIV:1,B:1};
+function isInExcludedArea(el){
+  while(el){
+    if(el.classList && (el.classList.contains('topbar')||el.classList.contains('pc-footer-strip'))) return true;
+    el=el.parentElement;
+  }
+  return false;
+}
+document.addEventListener('dblclick',function(e){
+  var el=e.target;
+  if(!el||!EDITABLE_TAGS[el.tagName])return;
+  if(isInExcludedArea(el))return;
+  if(el.getAttribute('contenteditable')==='true')return;
+  el.setAttribute('contenteditable','true');el.focus();
+  function endEdit(){el.setAttribute('contenteditable','false');}
+  el.addEventListener('blur',endEdit,{once:true});
+  el.addEventListener('keydown',function(ev){if(ev.key==='Escape')el.blur();});
+});
+window.toggleEditMode=function(){
+  var on=document.body.classList.toggle('edit-mode');
+  document.querySelectorAll(
+    '.session h2,.session h2 .num,.session h2 .sub,'+
+    '.session-body p,.session-body h3,.session-body li,'+
+    '.detail-body p,.detail-body h3,.detail-body h4,.detail-body li,'+
+    '.detail-body .intro-line,'+
+    '.objectives .label,.objectives li,'+
+    '.time-table td,'+
+    '.callout .label,.callout p,'+
+    '.dark-panel .lbl,.dark-panel p,'+
+    '.task-box .tb-label,.task-box .tb-title,.task-box .tb-desc,'+
+    '.task-box .m-label,.task-box .m-val,'+
+    '.assignment-overview .ao-kicker,.assignment-overview h1,'+
+    '.assignment-overview .ao-lede,'+
+    '.ao-card .ao-num,.ao-card .ao-session,.ao-card .ao-brief,.ao-card .ao-meta,'+
+    '.ao-note,.ao-note .ao-note-lbl,'+
+    '.title-page p,.title-page h1,.title-page .lede,.title-page .kicker,'+
+    '.pc-title,.pc-doc-type,.pc-subtitle,.pc-year,'+
+    '.pc-meta .ml,.pc-meta .mv,.pc-fs-meta'
+  ).forEach(function(el){
+    el.setAttribute('contenteditable',on?'true':'false');
+  });
+  document.querySelector('.btn-edit').classList.toggle('active',on);
+};
+window.saveEditedHTML=function(){
+  document.querySelectorAll('[contenteditable="true"]').forEach(function(el){
+    el.setAttribute('contenteditable','false');
+  });
+  document.body.classList.remove('edit-mode');
+  document.querySelector('.btn-edit').classList.remove('active');
+  var html='<!doctype html>\n'+document.documentElement.outerHTML;
+  var blob=new Blob([html],{type:'text/html;charset=utf-8'});
+  var url=URL.createObjectURL(blob);
+  var a=document.createElement('a');
+  a.href=url;
+  a.download='AI데이터기반행정 전문인재 양성과정_'+new Date().toISOString().slice(0,10)+'.html';
+  document.body.appendChild(a);a.click();document.body.removeChild(a);
+  setTimeout(function(){URL.revokeObjectURL(url);},1000);
+};
+</script>
+
+<script>/* kg-preview: #<heading> \uc704\uce58\ub85c \uc774\ub3d9 */
+(function(){function norm(t){return (t||'').replace(/\s+/g,'').toLowerCase()}
+function go(){var h=decodeURIComponent(location.hash.slice(1));if(!h)return;var k=norm(h).slice(0,24);if(!k)return;
+var best=null,bl=1e9,els=document.body.querySelectorAll('h1,h2,h3,h4,h5,p,div,span,li,td,text,tspan,section,article');
+for(var i=0;i<els.length;i++){var e=els[i],t=norm(e.textContent);if(t.length<bl&&t.indexOf(k)>-1){best=e;bl=t.length}}
+if(!best)return;var box=best.closest('section,[class*=slide],[class*=page],article')||best;
+box.scrollIntoView({block:'start'});box.style.outline='3px solid #c0504d';box.style.outlineOffset='4px';
+setTimeout(function(){box.style.outline=''},2600)}
+window.addEventListener('load',function(){setTimeout(go,400)});window.addEventListener('hashchange',go)})();</script></body>
+</html>

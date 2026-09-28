@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head><meta name="robots" content="noindex, nofollow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI와 함께 쓰는 구글 스프레드시트 — 강의안</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f2ecdd; --ink:#1a1a1a; --rust:#b1502e;
+    --tan:#f3e7cf; --panel:#f7f2e6; --dark:#141414;
+    --card:#fbf9f2; --brown:#3a2c1e;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  html,body{background:#555;}
+  body{font-family:'Pretendard','Noto Sans KR',sans-serif;color:var(--ink);font-weight:400;}
+  b,strong{font-weight:700;}
+
+  .slide{width:1280px;height:720px;background:var(--bg);margin:24px auto;position:relative;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,.35);display:flex;flex-direction:column;}
+  .topbar{background:#0d0d0d;color:#fff;height:46px;flex:0 0 46px;display:flex;align-items:center;padding:0 28px;}
+  .topbar .brand{font-weight:800;font-size:14px;letter-spacing:.5px;}
+  .topbar .sub{font-weight:300;font-size:11px;color:#9a9a9a;margin-left:10px;}
+
+  .body{flex:1;padding:18px 44px 38px 44px;display:flex;flex-direction:column;min-height:0;}
+
+  .eyebrow{color:var(--rust);font-weight:800;font-size:15px;margin-bottom:3px;}
+  h1.title{font-family:'Noto Serif KR',serif;font-weight:600;font-size:36px;line-height:1.15;padding-bottom:10px;border-bottom:2px solid var(--ink);margin-bottom:13px;}
+  .sec{font-weight:800;font-size:17px;margin:2px 0 7px;}
+  .sec::before{content:'[';} .sec::after{content:']';}
+  .lead{font-size:13.8px;line-height:1.62;text-align:justify;font-weight:400;}
+
+  .row2{display:flex;gap:20px;margin-top:10px;}
+  .grow{flex:1;min-height:0;}
+  .boxL{flex:1.1;border-left:6px solid var(--rust);background:var(--panel);padding:13px 17px;display:flex;flex-direction:column;}
+  .boxL ul{list-style:none;flex:1;display:flex;flex-direction:column;justify-content:space-evenly;}
+  .boxL li{font-size:13px;line-height:1.55;padding:5px 0 5px 13px;position:relative;font-weight:400;}
+  .boxL li::before{content:'•';position:absolute;left:0;top:5px;}
+  .boxT{flex:1;background:var(--tan);padding:13px 17px;border-left:6px solid var(--rust);display:flex;flex-direction:column;}
+  .boxT .bt{font-weight:800;font-size:14px;margin-bottom:4px;}
+  .boxT ul{list-style:none;flex:1;display:flex;flex-direction:column;justify-content:space-evenly;}
+  .boxT li{font-size:12.4px;line-height:1.55;padding:3px 0;font-weight:400;}
+  .boxT li::before{content:'·';margin-right:6px;font-weight:800;}
+
+  table.t{width:100%;border-collapse:collapse;font-size:12.9px;}
+  table.t th{background:#111;color:#fff;font-weight:700;padding:8px 9px;text-align:left;font-size:12.6px;height:34px;vertical-align:middle;}
+  table.t td{padding:6px 9px;border-bottom:1px solid #cdbfa4;vertical-align:middle;line-height:1.5;font-weight:400;height:44px;}
+  table.t tr:nth-child(even) td{background:#ece4d0;}
+  table.t td.k{font-weight:700;}
+
+  .prompt{background:var(--dark);color:#f5f0e4;font-size:12.6px;line-height:1.55;padding:11px 15px;border-radius:6px;margin-top:9px;font-weight:400;}
+  .prompt .pl{color:#e8a883;font-weight:700;font-size:11px;display:block;margin-bottom:3px;}
+
+  .bstrip{margin-top:auto;background:var(--dark);color:#f2ecdd;border-radius:6px;padding:11px 18px;font-size:12.8px;line-height:1.55;font-weight:400;}
+  .bstrip b{color:#fff;font-weight:700;}
+  .bstrip .lab{color:#e8a883;font-weight:800;margin-right:8px;}
+
+  .foot{position:absolute;bottom:11px;right:28px;color:var(--rust);font-weight:800;font-size:15px;}
+  .footL{position:absolute;bottom:11px;left:44px;color:#7a6f58;font-size:11px;font-weight:400;}
+
+  .cover .body{align-items:center;justify-content:center;text-align:center;padding-bottom:18px;}
+  .cover .kicker{color:var(--rust);font-weight:800;font-size:17px;letter-spacing:2px;margin-bottom:16px;}
+  .cover h1{font-family:'Noto Serif KR',serif;font-weight:600;font-size:54px;line-height:1.25;border:none;padding:0;margin-bottom:12px;}
+  .cover .sub2{font-size:18px;font-weight:400;color:#4a4437;margin-bottom:32px;}
+  .cover .meta{display:inline-block;border-top:1.5px solid var(--ink);border-bottom:1.5px solid var(--ink);padding:13px 38px;font-size:14.5px;line-height:1.9;font-weight:400;}
+  .cover .org{margin-top:28px;font-weight:700;font-size:14px;color:#333;}
+
+  /* ===== 실습 모듈카드 ===== */
+  .pcard{background:var(--card);}
+  .pcard .body{padding:20px 40px 34px 40px;}
+  .phead{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+  .pcode{background:var(--brown);color:#fff;font-weight:800;font-size:14px;padding:6px 14px;letter-spacing:1px;}
+  .ptag{border:1.5px solid var(--brown);color:var(--brown);font-weight:600;font-size:12.5px;padding:5px 12px;}
+  .plib{margin-left:auto;color:#8a7a62;font-weight:600;font-size:12px;letter-spacing:1px;}
+  .ptitle{font-weight:800;font-size:32px;line-height:1.15;margin-bottom:5px;}
+  .psub{font-size:13.5px;color:#5a5245;font-weight:400;margin-bottom:6px;}
+  .prule{width:52px;height:3px;background:var(--brown);margin-bottom:12px;}
+
+  .pcols{display:flex;gap:18px;flex:1;min-height:0;margin-bottom:12px;}
+  .pcol{border:1px solid #d8cdb6;background:#fff;padding:14px 16px;display:flex;flex-direction:column;}
+  .pcol .ph{font-weight:800;font-size:12.5px;letter-spacing:4px;color:var(--brown);margin-bottom:8px;}
+  .pc1{flex:0 0 300px;background:var(--tan);border:none;}
+  .pc1 ul{list-style:none;flex:1;display:flex;flex-direction:column;justify-content:space-evenly;}
+  .pc1 li{font-size:13px;line-height:1.55;padding:4px 0 4px 12px;position:relative;font-weight:400;}
+  .pc1 li::before{content:'•';position:absolute;left:0;}
+  .pc2{flex:1;}
+  .pc2 ol{list-style:none;flex:1;display:flex;flex-direction:column;justify-content:space-evenly;}
+  .pc2 li{display:flex;gap:11px;align-items:flex-start;font-size:13px;line-height:1.5;padding:7px 0;border-bottom:1px solid #e5dcc8;font-weight:400;}
+  .pc2 li:last-child{border-bottom:none;}
+  .pc2 .sn{flex:0 0 24px;height:24px;background:#efe7d3;border:1px solid #cdbfa4;color:var(--brown);font-weight:800;font-size:12px;text-align:center;line-height:22px;}
+  .pc2 .sn.d{background:var(--brown);color:#fff;border-color:var(--brown);}
+  .pc3{flex:0 0 300px;}
+  .pc3 ul{list-style:none;flex:1;display:flex;flex-direction:column;justify-content:space-evenly;}
+  .pc3 li{font-size:12.8px;line-height:1.55;padding:4px 0 4px 12px;position:relative;font-weight:400;}
+  .pc3 li::before{content:'·';position:absolute;left:0;font-weight:800;}
+  .pc3 .pt{border-top:1px solid #d8cdb6;margin-top:8px;padding-top:9px;font-size:12px;line-height:1.5;}
+  .pc3 .pt b{font-weight:800;}
+  .pc3 .xcard{margin-top:9px;background:var(--brown);color:#f2ecdd;padding:10px 13px;font-size:12px;line-height:1.55;}
+  .pc3 .xcard .xt{font-weight:800;color:#fff;letter-spacing:3px;font-size:11.5px;display:block;margin-bottom:4px;}
+
+  .pstrip{margin-top:auto;background:var(--brown);color:#f2ecdd;display:flex;gap:16px;padding:12px 18px;border-radius:4px;font-size:12.6px;line-height:1.6;font-weight:400;}
+  .pstrip .plab{flex:0 0 92px;font-weight:800;color:#e8c39a;padding-top:1px;}
+  .pstrip b{color:#fff;font-weight:700;}
+
+  #toolbar{position:fixed;top:14px;right:14px;z-index:99;display:flex;gap:8px;font-family:'Pretendard',sans-serif;}
+  #toolbar button{background:#111;color:#fff;border:none;padding:9px 16px;font-size:13px;font-weight:700;cursor:pointer;border-radius:4px;}
+  #toolbar button:hover{background:var(--rust);}
+  #toolbar button.on{background:var(--rust);}
+
+  @media print{
+    html,body{background:#fff;}
+    #toolbar{display:none;}
+    .slide{margin:0;box-shadow:none;page-break-after:always;}
+    .slide:last-child{page-break-after:auto;}
+  }
+  @page{size:1280px 720px;margin:0;}
+</style>
+</head>
+<body>
+
+<div id="toolbar">
+  <button id="btnEdit" onclick="toggleEdit()">✏️ 편집</button>
+  <button onclick="saveHtml()">💾 저장</button>
+  <button onclick="window.print()">🖨 PDF 인쇄</button>
+</div>
+
+<div id="content">
+
+<!-- 1. 표지 -->
+<div class="slide cover">
+  <div class="topbar"><span class="brand">카카오엔터테인먼트 AI 실무 교육</span><span class="sub">Google Sheets × Generative AI</span></div>
+  <div class="body">
+    <div class="kicker">2026. 7. 24.(금) · 4H</div>
+    <h1>AI와 함께 쓰는<br>구글 스프레드시트</h1>
+    <div class="sub2">구글 전용 함수 심화 · Gemini 연동 · Apps Script 자동화 · 대시보드 제작 실습</div>
+    <div class="meta">
+      <b>M1</b> 기본 이해·서식·공유(압축) &nbsp;→&nbsp; <b>M2</b> 구글 전용 함수 심화 &nbsp;→&nbsp; <b>M3</b> 생성형 AI 연동<br>
+      <b>M4</b> Apps Script 자동화 + 시트 백엔드 사례 &nbsp;→&nbsp; <b>M5</b> [실습] 업무 대시보드 제작
+    </div>
+    <div class="org">한국데이터사이언티스트협회(CDSA) · 신성진</div>
+  </div>
+  <div class="foot">1</div>
+</div>
+
+<!-- 2. 커리큘럼 -->
+<div class="slide">
+  <div class="topbar"><span class="brand">카카오엔터테인먼트 AI 실무 교육</span><span class="sub">Google Sheets × Generative AI</span></div>
+  <div class="body">
+    <div class="eyebrow">과정 전체 구성</div>
+    <h1 class="title">전체 커리큘럼 (4H)</h1>
+    <table class="t">
+      <tr><th style="width:200px">모듈</th><th>학습 목표</th><th style="width:150px">실습 카드</th><th style="width:52px">시간</th></tr>
+      <tr><td class="k">M1. 기본 이해 + 서식·공유<br>(통합 압축)</td><td>엑셀과 구글 시트의 기능·함수 차이를 비교 장표로 이해하고 Gemini 사이드패널 기본 조작을 익힌다</td><td class="k">P-01 Gemini 패널</td><td class="k" style="text-align:center;color:var(--rust)">0.5</td></tr>
+      <tr><td class="k">M2. 구글 전용 함수 심화<br>— Gemini로 수식 생성</td><td>QUERY·IMPORTRANGE·ARRAYFORMULA의 용도를 파악하고, 수식을 Gemini에 자연어로 요청해 생성·수정한다</td><td class="k">P-02 다중 시트 취합</td><td class="k" style="text-align:center;color:var(--rust)">1.0</td></tr>
+      <tr><td class="k">M3. 생성형 AI 연동</td><td>수백 행의 텍스트 요약·분류·번역을 시트 안에서 AI 함수로 일괄 처리한다</td><td class="k">P-03 AI 함수 일괄 처리</td><td class="k" style="text-align:center;color:var(--rust)">0.5</td></tr>
+      <tr><td class="k">M4. Apps Script 자동화<br>+ 시트 백엔드 사례</td><td>Apps Script 코드를 AI로 생성해 자동화하고, 시트를 데이터베이스로 쓰는 웹앱 구조를 파악한다</td><td class="k">P-04 접수 페이지 제작</td><td class="k" style="text-align:center;color:var(--rust)">0.5</td></tr>
+      <tr><td class="k">M5. [실습 프로젝트]<br>업무 대시보드 제작</td><td>현업 데이터로 대시보드를 완성하고 웹에 게시한다 — 교육 종료 시 결과물 URL 확보</td><td class="k">P-05 대시보드 제작</td><td class="k" style="text-align:center;color:var(--rust)">1.5</td></tr>
+    </table>
+    <div class="row2 grow">
+      <div class="boxL">
+        <ul>
+          <li><b>사전 학습자료(PDF) 병행</b> — 기본 조작·서식·FILTER·SORT·UNIQUE는 교육 1주 전 자료로 전달, 당일은 실습에 집중</li>
+          <li><b>실습 카드(P-01~P-05)</b> — 각 모듈 종료 시 카드 단위로 실습 진행. 카드 하단의 복붙 프롬프트를 그대로 사용</li>
+          <li><b>실습 데이터</b> — 제공 예제(콘텐츠 성과 데이터) 또는 참가자 현업 데이터 중 선택</li>
+        </ul>
+      </div>
+      <div class="boxT">
+        <div class="bt">교육 산출물</div>
+        <ul>
+          <li>현업 데이터 대시보드 1개 (웹 게시 완료 상태)</li>
+          <li>Apps Script 자동화 매크로 1개</li>
+          <li>(선택) 구글 시트를 백엔드로 쓰는 미니 웹앱</li>
+          <li>사전 학습자료 PDF + 실습 예제 시트 사본 + 프롬프트 모음</li>
+        </ul>
+      </div>
+    </div>
+    <div class="bstrip"><span class="lab">준비 사항</span>구글 계정(Workspace 권장) · 크롬 브라우저 · 실습용 노트북 — Gemini 사이드패널은 조직 Workspace 정책에 따라 활성화 여부 상이, 미지원 시 GPT for Sheets로 동일 실습 진행</div>
+    <div class="footL">한국데이터사이언티스트협회(CDSA)</div>
+  </div>
+  <div class="foot">2</div>
+</div>
+
+<!-- 3. M1 개념 -->
+<div class="slide">
+  <div class="topbar"><span class="brand">카카오엔터테인먼트 AI 실무 교육</span><span class="sub">Google Sheets × Generative AI</span></div>
+  <div class="body">
+    <div class="eyebrow">M1. 기본 이해 + 서식·공유 (통합 압축) — 0.5H</div>
+    <h1 class="title">엑셀 vs 구글 스프레드시트 — 핵심 차이 통합 데모</h1>
+    <div class="sec">워크플로우 개요</div>
+    <p class="lead">구글 스프레드시트는 파일을 주고받지 않는다. 저장 버튼이 없고(자동 저장), 같은 시트를 여러 명이 동시에 편집하며, 모든 변경이 버전 기록에 남는다. 본 모듈은 기능을 하나씩 나열하지 않는다. <b>실제 엑셀 파일 하나를 업로드해 구글 시트로 변환 → 두 명이 동시 편집 → 버전 기록으로 복원</b>하는 통합 데모로 차이를 한 번에 확인한다. 이어지는 두 장에서 기능·함수 차이를 비교표로 정리한다.</p>
+    <div class="row2 grow">
+      <div class="boxL">
+        <ul>
+          <li><b>자동 저장·버전 기록</b> — Ctrl+S 불필요. 파일 &gt; 버전 기록에서 과거 시점으로 복원 가능</li>
+          <li><b>동시 편집</b> — 여러 명이 같은 시트를 편집. 커서 색으로 편집 위치 표시</li>
+          <li><b>공유 = 링크 권한</b> — 파일 전송 대신 뷰어/댓글/편집자 권한 링크로 협업</li>
+          <li><b>스마트칩</b> — @입력으로 사람·파일·날짜를 셀 안에 객체로 삽입</li>
+          <li><b>웹 게시</b> — 파일 &gt; 공유 &gt; 웹에 게시 — 시트를 URL로 공개 (M5에서 사용)</li>
+        </ul>
+      </div>
+      <div class="boxT">
+        <div class="bt">통합 데모 순서</div>
+        <ul>
+          <li>① 엑셀 파일(.xlsx)을 드라이브에 업로드 → Google Sheets로 열기</li>
+          <li>② 참가자 2명에게 편집 권한 링크 전달 → 동시 편집 확인</li>
+          <li>③ 셀 몇 개를 수정 → 파일 &gt; 버전 기록 → 수정 전 시점 복원</li>
+          <li>④ @입력으로 담당자 스마트칩 삽입</li>
+          <li>⑤ Gemini 사이드패널(✦) 열기 — 다음 실습 카드 P-01로 연결</li>
+        </ul>
+      </div>
+    </div>
+    <div class="bstrip"><span class="lab">사전 학습자료 대체 범위</span>메뉴 구조, 맞춤 서식·조건부 서식 상세, 데이터 검증·드롭다운 생성, 공유 권한 설정표 — 교육 1주 전 PDF 전달, 당일 관련 질문은 실습 중 개별 대응</div>
+    <div class="footL">한국데이터사이언티스트협회(CDSA)</div>
+  </div>
+  <div class="foot">3</div>
+</div>
+
+<!-- 4. 비교 기능편 -->
+<div class="slide">
+  <div class="topbar"><span class="brand">카카오엔터테인먼트 AI 실무 교육</span><span class="sub">Google Sheets × Generative AI</span></div>
+  <div class="body">
+    <div class="eyebrow">M1. 엑셀 vs 구글 스프레드시트 — 비교 ①</div>
+    <h1 class="title">기능 차이 비교표 — 협업 · 저장 · 연결 · 자동화</h1>
+    <table class="t" style="margin-top:2px;">
+      <tr><th style="width:120px">구분</th><th style="width:400px">엑셀</th><th>구글 스프레드시트</th></tr>
+      <tr><td class="k">저장</td><td>Ctrl+S 수동 저장 — 저장 전 종료 시 유실 위험</td><td><b>자동 저장</b> — 저장 버튼 자체가 없음, 모든 변경 즉시 반영</td></tr>
+      <tr><td class="k">협업</td><td>파일을 메일·메신저로 주고받음 — "최종_진짜최종.xlsx" 문제</td><td><b>동시 편집</b> — 원본은 하나, 링크 권한(뷰어/댓글/편집자)으로 협업</td></tr>
+      <tr><td class="k">버전 관리</td><td>사본 파일을 직접 만들어 관리</td><td><b>버전 기록 내장</b> — 파일 &gt; 버전 기록에서 시점별 복원·비교</td></tr>
+      <tr><td class="k">파일 간 연결</td><td>외부 참조 — 파일 이동 시 링크 깨짐 빈번</td><td><b>IMPORTRANGE</b> — URL 기반 연결, 파일 위치와 무관하게 유지</td></tr>
+      <tr><td class="k">외부 공개</td><td>파일 전달 또는 OneDrive 공유</td><td><b>웹에 게시</b> — 시트·차트를 URL로 공개, 데이터 갱신 자동 반영</td></tr>
+      <tr><td class="k">자동화</td><td>VBA — 로컬 PC에서 실행, 파일에 매크로 포함(.xlsm)</td><td><b>Apps Script</b> — 클라우드 실행, 시간·이벤트 트리거, Gmail·캘린더 연동</td></tr>
+      <tr><td class="k">AI 연동</td><td>Copilot — 별도 라이선스 필요</td><td><b>Gemini 사이드패널·AI 함수</b> — Workspace 내장(정책에 따라 활성화)</td></tr>
+    </table>
+    <div class="bstrip"><span class="lab">선택 기준</span>여러 명이 같은 데이터를 보고 고치는 업무·실시간 취합·웹 공개가 필요하면 구글 시트 — 대용량(수십만 행) 연산·복잡한 서식 문서·오프라인 작업은 엑셀이 우위. 두 도구는 대체가 아니라 용도 분담 관계다</div>
+    <div class="footL">한국데이터사이언티스트협회(CDSA)</div>
+  </div>
+  <div class="foot">4</div>
+</div>
+
+<!-- 5. 비교 함수편 -->
+<div class="slide">
+  <div class="topbar"><span class="brand">카카오엔터테인먼트 AI 실무 교육</span><span class="sub">Google Sheets × Generative AI</span></div>
+  <div class="body">
+    <div class="eyebrow">M1. 엑셀 vs 구글 스프레드시트 — 비교 ②</div>
+    <h1 class="title">함수 차이 비교표 — 구글 전용 함수 · 동작 차이</h1>
+    <table class="t" style="margin-top:2px;">
+      <tr><th style="width:170px">함수</th><th style="width:430px">기능</th><th>엑셀 대응 여부</th></tr>
+      <tr><td class="k">QUERY</td><td>SELECT·WHERE·GROUP BY — SQL 방식 추출·집계·정렬</td><td><b>없음</b> — 파워쿼리가 유사하나 수식이 아닌 별도 도구</td></tr>
+      <tr><td class="k">IMPORTRANGE</td><td>다른 스프레드시트 파일의 범위를 실시간으로 가져옴</td><td><b>없음</b> — 외부 참조는 있으나 링크 안정성이 다름</td></tr>
+      <tr><td class="k">ARRAYFORMULA</td><td>수식 하나를 열 전체에 자동 확장</td><td><b>다름</b> — 엑셀 365는 동적 배열이 자동 확산(spill), 구식 버전은 불가</td></tr>
+      <tr><td class="k">IMPORTHTML / IMPORTXML</td><td>웹 페이지의 표·목록을 수식으로 수집</td><td><b>없음</b> — 파워쿼리 웹 연결로만 가능</td></tr>
+      <tr><td class="k">GOOGLETRANSLATE</td><td>셀 값을 지정 언어로 번역 — =GOOGLETRANSLATE(A2,"ko","en")</td><td><b>없음</b></td></tr>
+      <tr><td class="k">GOOGLEFINANCE</td><td>주가·환율을 실시간 수신 — =GOOGLEFINANCE("KRWUSD")</td><td><b>다름</b> — 엑셀은 '주식' 데이터 형식(365 전용)</td></tr>
+      <tr><td class="k">SPARKLINE</td><td>셀 안에 미니 차트 생성(수식으로)</td><td><b>다름</b> — 엑셀은 삽입 메뉴 기능, 수식 아님</td></tr>
+      <tr><td class="k">FILTER / SORT / UNIQUE</td><td>조건 추출·정렬·중복 제거</td><td><b>양쪽 존재</b> — 엑셀 365에도 동일하게 있음</td></tr>
+    </table>
+    <div class="bstrip"><span class="lab">M2 연결</span>본 과정은 엑셀에 없는 3종(QUERY·IMPORTRANGE·ARRAYFORMULA)에 집중한다 — 이 세 함수가 구글 시트를 "취합·집계가 자동으로 도는 시스템"으로 만드는 핵심이다. 수식 작성은 다음 모듈부터 전부 Gemini에 요청한다</div>
+    <div class="footL">한국데이터사이언티스트협회(CDSA)</div>
+  </div>
+  <div class="foot">5</div>
+</div>
+
+<!-- 6. P-01 실습카드 -->
+<div class="slide pcard">
+  <div class="topbar"><span class="brand">카카오엔터테인먼트 AI 실무 교육</span><span class="sub">Google Sheets × Generative AI</span></div>
+  <div class="body">
+    <div class="phead">
+      <span class="pcode">P-01</span>
+      <span class="ptag">M1 실습 워크플로우</span>
+      <span class="ptag">시트 × Gemini</span>
+      <span class="ptag">⏱ 10분</span>
+      <span class="ptag">★ 전원 필수</span>
+      <span class="plib">실습 모듈 카드 · 2026</span>
+    </div>
+    <div class="ptitle">Gemini 사이드패널로 시트 요약·표 생성하기</div>
+    <div class="psub">설치 없이 시트 우측 패널에서 데이터 요약 · 질문 · 표 생성 — 용도: 데이터 파악 · 회의 전 요약 · 빠른 집계</div>
+    <div class="prule"></div>
+    <div class="pcols">
+      <div class="pcol pc1">
+        <div class="ph">핵심 메시지</div>
+        <ul>
+          <li>Gemini 패널은 <b>지금 열려 있는 시트를 읽는다</b> — 데이터를 복사해 옮길 필요가 없다</li>
+          <li>질문은 <b>한국어 평문</b>으로 — 함수 이름을 몰라도 된다</li>
+          <li>이 패널이 M2~M5 전 모듈의 <b>기본 도구</b>다</li>
+        </ul>
+      </div>
+      <div class="pcol pc2">
+        <div class="ph">실습 워크플로우</div>
+        <ol>
+          <li><span class="sn d">D</span><div><b>1분 오프닝 데모</b> — 강사 시트에서 요약·표 생성·차트 제안까지 시연</div></li>
+          <li><span class="sn">1</span><div>실습 예제 시트 사본 열기 → 우측 상단 <b>✦ 아이콘</b> 클릭</div></li>
+          <li><span class="sn">2</span><div>"이 시트를 3줄로 요약해줘" 입력 → 응답과 실제 데이터 대조</div></li>
+          <li><span class="sn">3</span><div>"부서별 합계 표를 만들어줘" → 생성된 표를 <b>시트에 삽입</b></div></li>
+          <li><span class="sn">4</span><div>아래 복붙 프롬프트로 <b>이상치 점검</b> 요청 → 결과 확인</div></li>
+        </ol>
+      </div>
+      <div class="pcol pc3">
+        <div class="ph">결과물</div>
+        <ul>
+          <li>Gemini가 생성해 삽입한 <b>부서별 합계 표 1개</b></li>
+          <li>내 시트 기준으로 수정한 <b>나의 질문 프롬프트 1개</b> (실습 시트 공유 탭에 기록)</li>
+        </ul>
+        <div class="pt"><b>진행 포인트</b> — ✦ 아이콘 미표시 시 Workspace 정책 미활성 → GPT for Sheets로 대체 진행</div>
+        <div class="xcard"><span class="xt">확장 연결 카드</span>M2 수식 생성(P-02) · M3 AI 함수 일괄 처리(P-03) · M5 지표 도출(P-05)</div>
+      </div>
+    </div>
+    <div class="pstrip">
+      <div class="plab">복붙 프롬프트</div>
+      <div>이 시트의 데이터에서 <b>평균과 크게 차이 나는 값(이상치)</b>을 찾아서, 어느 행의 어느 열인지와 그렇게 판단한 이유를 표로 정리해줘. 마지막에 데이터 품질 관점에서 확인해야 할 항목을 3가지 알려줘.</div>
+    </div>
+    <div class="footL">한국데이터사이언티스트협회(CDSA)</div>
+  </div>
+  <div class="foot">6</div>
+</div>
+
+<!-- 7. M2 개념 -->
+<div class="slide">
+  <div class="topbar"><span class="brand">카카오엔터테인먼트 AI 실무 교육</span><span class="sub">Google Sheets × Generative AI</span></div>
+  <div class="body">
+    <div class="eyebrow">M2. 구글 전용 함수 심화 — Gemini로 수식 생성 — 1.0H</div>
+    <h1 class="title">구글 전용 함수 3종 — QUERY · IMPORTRANGE · ARRAYFORMULA</h1>
+    <div class="sec">워크플로우 개요</div>
+    <p class="lead">앞 장 비교표에서 확인한 대로, 세 함수는 엑셀에 대응물이 없거나 동작이 다른 구글 전용 함수다. 본 모듈은 이 세 함수에 집중하되 문법 암기는 하지 않는다 — <b>Gemini에 자연어로 요청해 수식을 받고, 에러가 나면 에러 메시지를 그대로 붙여 수정을 요청</b>한다. 여러분이 익힐 것은 세 함수가 각각 무엇을 할 수 있는지 파악하는 것이다. 그래야 무엇을 요청할지 알 수 있다.</p>
+    <table class="t" style="margin-top:9px;">
+      <tr><th style="width:148px">함수</th><th>기능</th><th>실무 시나리오</th></tr>
+      <tr><td class="k">IMPORTRANGE</td><td>다른 스프레드시트 파일의 데이터를 실시간으로 가져온다 — 파일 간 연결</td><td>팀별로 관리하는 시트 5개를 한 파일로 실시간 취합</td></tr>
+      <tr><td class="k">QUERY</td><td>SELECT·WHERE·GROUP BY — SQL 방식으로 데이터를 추출·집계·정렬한다</td><td>부서별·월별 처리 건수 집계표를 수식 한 줄로 생성</td></tr>
+      <tr><td class="k">ARRAYFORMULA</td><td>수식 하나가 열 전체에 자동 확장 — 행이 늘어나도 수식 복사 불필요</td><td>매일 데이터가 추가되는 시트의 파생 열(등급·구분) 자동 계산</td></tr>
+    </table>
+    <div class="prompt"><span class="pl">[실제 프롬프트 — Gemini 사이드패널에 그대로 입력]</span>'응답' 시트의 A:F 데이터에서, C열(부서)별로 E열(금액)의 합계와 건수를 구하는 QUERY 수식을 만들어줘. 결과는 합계 내림차순으로 정렬해줘.</div>
+    <div class="prompt"><span class="pl">[에러 발생 시 — 에러 메시지를 그대로 붙인다]</span>이 수식에서 "QUERY에서 쿼리를 파싱할 수 없음: NO_COLUMN: C" 에러가 나. 원인을 찾아서 고친 수식을 줘. 내 시트의 헤더는 1행에 있어.</div>
+    <div class="bstrip"><span class="lab">요청 원칙</span>① 시트 이름·열 범위·헤더 위치를 명시한다 ② 원하는 결과의 형태(집계 기준·정렬)를 구체적으로 쓴다 ③ 에러는 메시지 전문을 복사해 붙인다 — 이 세 가지만 지키면 수식 문법을 몰라도 된다</div>
+    <div class="footL">한국데이터사이언티스트협회(CDSA)</div>
+  </div>
+  <div class="foot">7</div>
+</div>
+
+<!-- 8. P-02 실습카드 -->
+<div class="slide pcard">
+  <div class="topbar"><span class="brand">카카오엔터테인먼트 AI 실무 교육</span><span class="sub">Google Sheets × Generative AI</span></div>
+  <div class="body">
+    <div class="phead">
+      <span class="pcode">P-02</span>
+      <span class="ptag">M2 실습 워크플로우</span>
+      <span class="ptag">함수 × Gemini</span>
+      <span class="ptag">⏱ 30분</span>
+      <span class="ptag">★ 전원 필수</span>
+      <span class="plib">실습 모듈 카드 · 2026</span>
+    </div>
+    <div class="ptitle">다중 시트 자동 취합·집계 시스템 만들기</div>
+    <div class="psub">복사·붙여넣기 취합을 IMPORTRANGE + QUERY 수식으로 대체 · 용도: 팀별 시트 통합 · 주간 집계 · 현황 취합</div>
+    <div class="prule"></div>
+    <div class="pcols">
+      <div class="pcol pc1">
+        <div class="ph">핵심 메시지</div>
+        <ul>
+          <li><b>수식을 직접 타이핑하지 않는다</b> — 원하는 결과를 한국어로 설명해 받는다</li>
+          <li>한 번 구성하면 <b>원본 갱신 시 취합 시트가 자동 갱신</b>된다</li>
+          <li>에러는 실패가 아니다 — <b>에러 메시지 전문이 곧 다음 프롬프트</b>다</li>
+        </ul>
+      </div>
+      <div class="pcol pc2">
+        <div class="ph">실습 워크플로우</div>
+        <ol>
+          <li><span class="sn d">D</span><div><b>2분 데모</b> — 원본 시트에 행 추가 → 취합 시트 자동 갱신 확인</div></li>
+          <li><span class="sn">1</span><div>실습 시트 사본 생성 → 원본 파일 URL 복사</div></li>
+          <li><span class="sn">2</span><div>아래 복붙 프롬프트로 <b>IMPORTRANGE + QUERY 수식</b> 요청</div></li>
+          <li><span class="sn">3</span><div>수식 입력 → 최초 1회 <b>"액세스 허용"</b> 클릭 (파일 간 연결 승인)</div></li>
+          <li><span class="sn">4</span><div>집계 기준 변경 요청 — "부서별을 월별로 바꿔줘" 등 2회 반복</div></li>
+          <li><span class="sn">5</span><div><b>심화</b> — 파일 3개 통합(QUERY 중첩) · ARRAYFORMULA 파생 열</div></li>
+        </ol>
+      </div>
+      <div class="pcol pc3">
+        <div class="ph">결과물</div>
+        <ul>
+          <li>원본과 실시간 연동되는 <b>취합·집계 시트 1개</b></li>
+          <li>집계 기준이 다른 <b>QUERY 수식 2개 이상</b> (용도 메모 포함)</li>
+        </ul>
+        <div class="pt"><b>진행 포인트</b> — 액세스 허용 팝업 놓침 · 시트 이름 오타(#REF!) · 헤더 행 위치 미지정이 3대 에러 원인</div>
+        <div class="xcard"><span class="xt">확장 연결 카드</span>M5 대시보드의 데이터 계층(P-05) · 주간 보고 자동화(Apps Script, P-04)</div>
+      </div>
+    </div>
+    <div class="pstrip">
+      <div class="plab">복붙 프롬프트</div>
+      <div>구글 스프레드시트 수식을 만들어줘. (원본 파일 URL)의 '매출' 시트 A:F를 IMPORTRANGE로 가져와서, C열(부서)별로 E열(금액) 합계와 건수를 구하는 QUERY 수식으로 감싸줘. 헤더는 1행이고, 결과는 합계 내림차순 정렬. 수식 하나로 완결해줘.</div>
+    </div>
+    <div class="footL">한국데이터사이언티스트협회(CDSA)</div>
+  </div>
+  <div class="foot">8</div>
+</div>
+
+<!-- 9. M3 개념 -->
+<div class="slide">
+  <div class="topbar"><span class="brand">카카오엔터테인먼트 AI 실무 교육</span><span class="sub">Google Sheets × Generative AI</span></div>
+  <div class="body">
+    <div class="eyebrow">M3. 생성형 AI 연동 — 0.5H</div>
+    <h1 class="title">AI 함수 일괄 처리 — 요약 · 분류 · 번역 · 추출</h1>
+    <div class="sec">워크플로우 개요</div>
+    <p class="lead">챗봇 창에 한 건씩 붙여넣어 처리하던 텍스트 작업을 시트 안에서 함수로 일괄 처리한다. 셀에 <b>=AI("이 리뷰를 한 줄로 요약", A2)</b>를 입력하고 아래로 채우면 수백 행이 한 번에 처리된다. 도구는 두 가지 — Workspace 내장 <b>Gemini in Sheets(AI 함수)</b>, Marketplace 부가 기능 <b>GPT for Sheets</b>.</p>
+    <table class="t" style="margin-top:9px;">
+      <tr><th style="width:120px">작업</th><th style="width:340px">함수 사용 예</th><th>실무 적용</th></tr>
+      <tr><td class="k">요약</td><td>=AI("한 줄로 요약해줘", A2)</td><td>고객 문의·리뷰·회의록 대량 요약</td></tr>
+      <tr><td class="k">분류</td><td>=AI("긍정/부정/중립 중 하나로 분류", A2)</td><td>VOC 감성 분류, 문의 유형 자동 태깅</td></tr>
+      <tr><td class="k">번역</td><td>=AI("자연스러운 영어로 번역", A2)</td><td>글로벌 콘텐츠 메타데이터 일괄 번역</td></tr>
+      <tr><td class="k">추출</td><td>=AI("이 텍스트에서 날짜만 추출", A2)</td><td>비정형 텍스트에서 정형 데이터 추출</td></tr>
+      <tr><td class="k">생성</td><td>=AI("이 제목의 SNS 소개문 작성", A2)</td><td>작품·상품별 홍보 문구 초안 대량 생성</td></tr>
+    </table>
+    <div class="row2 grow">
+      <div class="boxL">
+        <ul>
+          <li><b>일괄 처리 절차</b> — ① 5행 테스트 ② 결과 확인 후 프롬프트 수정 ③ 전체 범위 적용</li>
+          <li><b>결과 고정</b> — AI 함수 결과는 재계산될 수 있다. 확정 후 복사 → 값만 붙여넣기(Ctrl+Shift+V)</li>
+          <li><b>출력 제한</b> — 분류 작업은 허용 값을 명시: "반드시 긍정/부정/중립 중 하나만 출력"</li>
+        </ul>
+      </div>
+      <div class="boxT">
+        <div class="bt">Google Workspace Marketplace</div>
+        <ul>
+          <li>확장 프로그램 &gt; 부가기능 &gt; 부가기능 설치하기</li>
+          <li>GPT for Sheets — GPT 계열 모델을 시트 함수(=GPT)로 사용</li>
+          <li>설치 권한은 조직 정책에 따름 — 강사 계정 시연 후 각자 환경 확인</li>
+        </ul>
+      </div>
+    </div>
+    <div class="bstrip"><span class="lab">비용·한도</span>AI 함수는 호출량 기반 한도가 있다 — 대량 처리 전 소량 테스트로 프롬프트를 확정하고, 동일 작업 반복 시 결과를 값으로 고정해 재호출을 방지한다</div>
+    <div class="footL">한국데이터사이언티스트협회(CDSA)</div>
+  </div>
+  <div class="foot">9</div>
+</div>
+
+<!-- 10. P-03 실습카드 -->
+<div class="slide pcard">
+  <div class="topbar"><span class="brand">카카오엔터테인먼트 AI 실무 교육</span><span class="sub">Google Sheets × Generative AI</span></div>
+  <div class="body">
+    <div class="phead">
+      <span class="pcode">P-03</span>
+      <span class="ptag">M3 실습 워크플로우</span>
+      <span class="ptag">AI 함수 × 텍스트</span>
+      <span class="ptag">⏱ 15분</span>
+      <span class="ptag">★ 전원 필수</span>
+      <span class="plib">실습 모듈 카드 · 2026</span>
+    </div>
+    <div class="ptitle">리뷰 200행 요약·분류 일괄 처리하기</div>
+    <div class="psub">=AI() 함수로 텍스트 열을 요약·감성 분류 · 용도: VOC 분석 · 문의 태깅 · 콘텐츠 메타데이터 정리</div>
+    <div class="prule"></div>
+    <div class="pcols">
+      <div class="pcol pc1">
+        <div class="ph">핵심 메시지</div>
+        <ul>
+          <li>처음부터 전체에 적용하지 않는다 — <b>5행 테스트 → 프롬프트 확정 → 전체 적용</b></li>
+          <li>분류는 <b>허용 값을 명시</b>해야 집계 가능한 결과가 나온다</li>
+          <li>확정된 결과는 <b>값으로 고정</b>해 재호출을 막는다</li>
+        </ul>
+      </div>
+      <div class="pcol pc2">
+        <div class="ph">실습 워크플로우</div>
+        <ol>
+          <li><span class="sn d">D</span><div><b>1분 데모</b> — 리뷰 열에 =AI() 채우기 → 200행 일괄 처리 시연</div></li>
+          <li><span class="sn">1</span><div>실습 시트 '리뷰' 탭 열기 — A열에 리뷰 원문 200행</div></li>
+          <li><span class="sn">2</span><div>B2에 요약 함수 입력 → <b>B2:B6 (5행)만</b> 채워 결과 확인</div></li>
+          <li><span class="sn">3</span><div>C2에 아래 복붙 프롬프트의 분류 함수 입력 → 5행 확인</div></li>
+          <li><span class="sn">4</span><div>결과 이상 없으면 <b>전체 범위(200행)</b> 채우기</div></li>
+          <li><span class="sn">5</span><div>완료 열 복사 → <b>값만 붙여넣기(Ctrl+Shift+V)</b>로 고정</div></li>
+        </ol>
+      </div>
+      <div class="pcol pc3">
+        <div class="ph">결과물</div>
+        <ul>
+          <li>요약 열 + 감성 분류 열이 완성된 <b>리뷰 분석 시트 1개</b></li>
+          <li>분류 결과 <b>COUNTIF 집계표</b> (긍정/부정/중립 건수)</li>
+        </ul>
+        <div class="pt"><b>진행 포인트</b> — 분류 값이 "긍정적입니다" 등으로 흔들리면 프롬프트에 "다른 말 금지" 추가 · 처리 지연 시 범위를 나눠 실행</div>
+        <div class="xcard"><span class="xt">확장 연결 카드</span>GOOGLETRANSLATE 병행 번역 · M5 대시보드의 감성 비중 차트(P-05)</div>
+      </div>
+    </div>
+    <div class="pstrip">
+      <div class="plab">복붙 프롬프트</div>
+      <div>=AI("다음 리뷰를 긍정/부정/중립 중 <b>정확히 하나의 단어로만</b> 분류해줘. 다른 말은 출력하지 마.", A2) — 요약은 =AI("이 리뷰의 핵심 불만 또는 칭찬을 한 문장으로 요약해줘", A2)</div>
+    </div>
+    <div class="footL">한국데이터사이언티스트협회(CDSA)</div>
+  </div>
+  <div class="foot">10</div>
+</div>
+
+<!-- 11. M4 개념 -->
+<div class="slide">
+  <div class="topbar"><span class="brand">카카오엔터테인먼트 AI 실무 교육</span><span class="sub">Google Sheets × Generative AI</span></div>
+  <div class="body">
+    <div class="eyebrow">M4. Apps Script 자동화 + 시트 백엔드 사례 — 0.5H</div>
+    <h1 class="title">Apps Script 자동화 — 기능 범위와 코드 생성 절차</h1>
+    <div class="sec">워크플로우 개요</div>
+    <p class="lead">구글 시트에는 자동화 도구가 내장되어 있다. <b>Apps Script — 엑셀 VBA에 해당하는 구글의 스크립트 환경</b>이다. 별도 설치 없이 확장 프로그램 메뉴에서 열리고, 시트뿐 아니라 Gmail·캘린더·드라이브까지 제어한다. 본 모듈은 코드 문법을 가르치지 않는다. <b>원하는 동작을 한국어로 설명해 Gemini에서 코드를 받고, 스크립트 편집기에 붙여넣어 실행하는 절차</b>를 다룬다.</p>
+    <div class="row2">
+      <div class="boxL">
+        <ul>
+          <li><b>추가 설치 불필요</b> — 확장 프로그램 &gt; Apps Script, 브라우저에서 바로 실행</li>
+          <li><b>코드는 AI가 작성</b> — 동작을 한국어로 설명하면 Gemini가 코드 생성</li>
+          <li><b>구글 서비스 연결</b> — 시트 → Gmail 발송, 캘린더 등록, 드라이브 파일 생성</li>
+          <li><b>트리거 자동 실행</b> — 매일 오전 9시, 폼 제출 시, 시트 수정 시 자동 작동</li>
+          <li><b>사용자 메뉴 배포</b> — 매크로를 시트 상단 메뉴 버튼으로 등록, 팀원 누구나 클릭으로 실행</li>
+        </ul>
+      </div>
+      <div class="boxT">
+        <div class="bt">Apps Script 제어 범위 (VBA와 비교)</div>
+        <ul>
+          <li>시트 — 셀·시트·서식·수식 자동화 (VBA와 동일 영역)</li>
+          <li>Gmail — 시트 데이터 기반 메일 자동 발송 (VBA는 Outlook 연동 필요)</li>
+          <li>캘린더·드라이브·폼 — 구글 서비스 전체 제어</li>
+          <li>실행 위치 — 클라우드 (VBA는 로컬 PC, 파일에 종속)</li>
+          <li>웹앱 배포 — 시트를 읽고 쓰는 HTML 페이지 공개 (VBA에 없음, 다음 장)</li>
+        </ul>
+      </div>
+    </div>
+    <div class="prompt"><span class="pl">[실제 프롬프트 — 이대로 입력하면 실행 가능한 코드가 나온다]</span>구글 Apps Script 코드를 작성해줘. '접수' 시트에서 상태 열(D열)이 "완료"인 행을 '완료' 시트로 옮기고 원본에서 삭제하는 함수. 시트 상단에 "정리 실행" 메뉴 버튼도 만들어줘.</div>
+    <div class="bstrip"><span class="lab">실행 절차</span>① 확장 프로그램 &gt; Apps Script ② 코드 붙여넣기 → 저장 ③ 최초 실행 시 권한 승인(본인 계정 데이터 접근 허용) ④ 시트 새로고침 → 상단 메뉴에 "정리 실행" 버튼 확인 → 클릭 실행</div>
+    <div class="footL">한국데이터사이언티스트협회(CDSA)</div>
+  </div>
+  <div class="foot">11</div>
+</div>
+
+<!-- 12. M4 시트 백엔드 -->
+<div class="slide">
+  <div class="topbar"><span class="brand">카카오엔터테인먼트 AI 실무 교육</span><span class="sub">Google Sheets × Generative AI</span></div>
+  <div class="body">
+    <div class="eyebrow">M4. 시트 백엔드 — 구조 이해</div>
+    <h1 class="title">시트를 백엔드로 쓰는 웹앱 구조 — 4단계</h1>
+    <div class="sec">워크플로우 개요</div>
+    <p class="lead">소규모 웹앱에 별도 서버와 데이터베이스가 필요하지 않은 구조를 다룬다. <b>구글 시트가 데이터 저장소, Apps Script 웹앱 배포가 API 역할</b>을 한다. HTML 페이지에서 입력한 데이터가 시트에 행으로 쌓이고, 시트의 데이터가 HTML 화면에 표시된다. 운영 비용 0원. HTML과 Apps Script 코드는 생성형 AI(Gemini·Claude)로 작성한다.</p>
+    <table class="t" style="margin-top:9px;">
+      <tr><th style="width:60px">단계</th><th style="width:200px">작업</th><th>내용</th></tr>
+      <tr><td class="k" style="text-align:center;color:var(--rust)">①</td><td class="k">시트 준비</td><td>헤더만 있는 빈 시트 생성 (예: 이름 | 부서 | 요청내용 | 시각)</td></tr>
+      <tr><td class="k" style="text-align:center;color:var(--rust)">②</td><td class="k">Apps Script 작성</td><td>doGet(읽기)·doPost(쓰기) 함수를 AI로 생성해 붙여넣기</td></tr>
+      <tr><td class="k" style="text-align:center;color:var(--rust)">③</td><td class="k">웹앱 배포</td><td>배포 &gt; 새 배포 &gt; 웹 앱 → 접속 URL 발급</td></tr>
+      <tr><td class="k" style="text-align:center;color:var(--rust)">④</td><td class="k">HTML 연결</td><td>발급 URL로 fetch하는 HTML 페이지를 AI로 생성 → 완성</td></tr>
+    </table>
+    <div class="row2 grow">
+      <div class="boxL">
+        <ul>
+          <li><b>사례 A — 사내 설문·신청 접수 페이지</b> (★) — 시트 = 응답 저장소</li>
+          <li><b>사례 B — 팀 업무 현황판</b> (★★) — 시트 = 현황 데이터 원본, HTML은 조회 화면</li>
+          <li><b>사례 C — 비품·회의실 예약 미니앱</b> (★★★) — 시트 = 예약 기록 장부</li>
+        </ul>
+      </div>
+      <div class="boxT">
+        <div class="bt">적용 기준</div>
+        <ul>
+          <li>동시 사용자 수십 명 이하 · 사내 소규모 도구 → 시트 백엔드로 충분</li>
+          <li>대외 서비스 · 대용량 · 권한 관리 필요 → 정식 DB(Supabase 등) 사용</li>
+          <li>민감 정보(개인정보·인사)는 시트 공개 범위 설정을 반드시 점검</li>
+        </ul>
+      </div>
+    </div>
+    <div class="bstrip"><span class="lab">P-04 연결</span>다음 실습 카드에서 이 4단계를 그대로 실행해 접수 페이지를 직접 만든다 — 소요 15분, 코드 작성 0줄</div>
+    <div class="footL">한국데이터사이언티스트협회(CDSA)</div>
+  </div>
+  <div class="foot">12</div>
+</div>
+
+<!-- 13. P-04 실습카드 -->
+<div class="slide pcard">
+  <div class="topbar"><span class="brand">카카오엔터테인먼트 AI 실무 교육</span><span class="sub">Google Sheets × Generative AI</span></div>
+  <div class="body">
+    <div class="phead">
+      <span class="pcode">P-04</span>
+      <span class="ptag">M4 실습 워크플로우</span>
+      <span class="ptag">시트 백엔드 × 바이브코딩</span>
+      <span class="ptag">⏱ 15분</span>
+      <span class="ptag">★ 시연 + 희망자 실습</span>
+      <span class="plib">실습 모듈 카드 · 2026</span>
+    </div>
+    <div class="ptitle">시트 백엔드 접수 페이지 만들기</div>
+    <div class="psub">서버 없이 구글 시트 + Apps Script + HTML로 접수 도구(단일 HTML) 제작 · 용도: 설문 접수 · 신청 관리 · 팀 현황판</div>
+    <div class="prule"></div>
+    <div class="pcols">
+      <div class="pcol pc1">
+        <div class="ph">핵심 메시지</div>
+        <ul>
+          <li>시트가 <b>데이터베이스</b>, Apps Script 배포 URL이 <b>API</b>다</li>
+          <li>코드를 몰라도 된다 — <b>무엇을 만들지 말로 설명</b>할 수 있으면 된다</li>
+          <li>운영 비용 0원 · 서버 관리 0분 — <b>사내 소규모 도구의 기본 패턴</b></li>
+        </ul>
+      </div>
+      <div class="pcol pc2">
+        <div class="ph">실습 워크플로우</div>
+        <ol>
+          <li><span class="sn d">D</span><div><b>3분 오프닝 데모</b> — 빈 시트에서 접수 페이지 완성까지, "코드 작성 0줄"</div></li>
+          <li><span class="sn">1</span><div>빈 시트에 헤더 4개 입력 — 이름 | 부서 | 요청내용 | 시각</div></li>
+          <li><span class="sn">2</span><div>아래 복붙 프롬프트 1로 <b>Apps Script(doGet·doPost)</b> 받기 → 붙여넣기</div></li>
+          <li><span class="sn">3</span><div>배포 &gt; 새 배포 &gt; 웹 앱 → <b>URL 복사</b> (권한 승인 1회)</div></li>
+          <li><span class="sn">4</span><div>프롬프트 2로 <b>HTML 접수 페이지</b> 받기 → 메모장에 저장(.html·UTF-8)</div></li>
+          <li><span class="sn">5</span><div>브라우저로 열어 제출 → <b>시트에 행이 실시간 추가</b>되는 것 확인</div></li>
+        </ol>
+      </div>
+      <div class="pcol pc3">
+        <div class="ph">결과물</div>
+        <ul>
+          <li>동작하는 <b>접수 페이지 .html 1개</b> + 데이터가 쌓이는 시트</li>
+          <li>내 업무에 맞게 헤더·항목을 바꾼 <b>나의 프롬프트 기록</b></li>
+        </ul>
+        <div class="pt"><b>진행 포인트</b> — 배포 시 액세스 권한 "모든 사용자" 선택 누락 · 저장 시 인코딩 UTF-8 확인 · 재배포 시 URL 갱신 주의</div>
+        <div class="xcard"><span class="xt">확장 연결 카드</span>P-05 대시보드에 입력 페이지 연결 · 예약 미니앱(사례 C) · Supabase 전환 기준</div>
+      </div>
+    </div>
+    <div class="pstrip">
+      <div class="plab">복붙 프롬프트</div>
+      <div><b>프롬프트 1</b> — 구글 Apps Script를 작성해줘. 이 시트에 이름·부서·요청내용·시각을 행으로 추가하는 doPost와, 전체 데이터를 JSON으로 반환하는 doGet. 웹앱 배포 방법도 세 줄로 알려줘. &nbsp;<b>프롬프트 2</b> — 이 웹앱 URL(붙여넣기)로 이름·부서·요청내용을 제출하는 단일 HTML 파일을 만들어줘. 외부 라이브러리 없이, 제출 완료 메시지 표시 포함.</div>
+    </div>
+    <div class="footL">한국데이터사이언티스트협회(CDSA)</div>
+  </div>
+  <div class="foot">13</div>
+</div>
+
+<!-- 14. P-05 실습카드 -->
+<div class="slide pcard">
+  <div class="topbar"><span class="brand">카카오엔터테인먼트 AI 실무 교육</span><span class="sub">Google Sheets × Generative AI</span></div>
+  <div class="body">
+    <div class="phead">
+      <span class="pcode">P-05</span>
+      <span class="ptag">M5 실습 프로젝트</span>
+      <span class="ptag">대시보드 × 웹 게시</span>
+      <span class="ptag">⏱ 90분</span>
+      <span class="ptag">★ 전원 필수 · 산출물 발표</span>
+      <span class="plib">실습 모듈 카드 · 2026</span>
+    </div>
+    <div class="ptitle">업무 대시보드 제작 · 웹 게시</div>
+    <div class="psub">Gemini 지표 도출 → QUERY 집계 → 피벗·차트 → 웹 게시 URL 발급 · 용도: 주간 보고 · 현황 공유 · 성과 모니터링</div>
+    <div class="prule"></div>
+    <div class="pcols">
+      <div class="pcol pc1">
+        <div class="ph">핵심 메시지</div>
+        <ul>
+          <li>M1~M4의 전 기능을 <b>하나의 산출물</b>로 결합한다</li>
+          <li>완성 기준은 <b>웹 게시 URL 발급</b> — 스크린샷이 아닌 살아있는 화면</li>
+          <li>데이터 갱신 시 <b>게시 화면 자동 반영</b> — 한 번 만들면 계속 쓴다</li>
+        </ul>
+      </div>
+      <div class="pcol pc2">
+        <div class="ph">실습 워크플로우 (90분)</div>
+        <ol>
+          <li><span class="sn">1</span><div><b>10분</b> — 데이터 선택: 제공 예제 또는 본인 현업 데이터</div></li>
+          <li><span class="sn">2</span><div><b>10분</b> — 아래 복붙 프롬프트로 지표 후보 5개 요청 → 3개 선정</div></li>
+          <li><span class="sn">3</span><div><b>25분</b> — 지표별 집계 QUERY 작성 (수식은 Gemini에 요청, P-02 방식)</div></li>
+          <li><span class="sn">4</span><div><b>25분</b> — 피벗테이블 + 차트 4종(추이·비중·비교·순위) + 슬라이서 배치</div></li>
+          <li><span class="sn">5</span><div><b>10분</b> — 파일 &gt; 공유 &gt; 웹에 게시 → URL 상호 교환·피드백</div></li>
+          <li><span class="sn">6</span><div><b>10분</b> — 발표 2~3명: 사용한 프롬프트와 산출 결과 공유</div></li>
+        </ol>
+      </div>
+      <div class="pcol pc3">
+        <div class="ph">결과물</div>
+        <ul>
+          <li>차트 4종 이상의 <b>대시보드 시트 1개 + 웹 게시 URL</b></li>
+          <li>지표 도출·수식 생성에 쓴 <b>프롬프트 기록</b> (공유 탭)</li>
+        </ul>
+        <div class="pt"><b>진행 포인트</b> — 집계 시트와 대시보드 시트 분리 · 차트 데이터 범위는 열 전체로 지정(행 추가 대비)</div>
+        <div class="xcard"><span class="xt">확장 연결 카드</span>조기 완료자 — P-04 접수 페이지를 대시보드에 연결(입력→집계→화면 자동 갱신 파이프라인)</div>
+      </div>
+    </div>
+    <div class="pstrip">
+      <div class="plab">복붙 프롬프트</div>
+      <div>이 시트는 (데이터 설명: 예 — 콘텐츠별 일간 조회수·매출 데이터)야. 이 데이터로 주간 보고 대시보드를 만들려고 해. <b>의사결정에 도움이 되는 지표 5개</b>를 추천하고, 각 지표마다 적합한 차트 유형과 필요한 집계 기준(행·열·계산)을 표로 정리해줘.</div>
+    </div>
+    <div class="footL">한국데이터사이언티스트협회(CDSA)</div>
+  </div>
+  <div class="foot">14</div>
+</div>
+
+<!-- 15. 정리 -->
+<div class="slide">
+  <div class="topbar"><span class="brand">카카오엔터테인먼트 AI 실무 교육</span><span class="sub">Google Sheets × Generative AI</span></div>
+  <div class="body">
+    <div class="eyebrow">과정 정리</div>
+    <h1 class="title">상황별 도구 적용표 · 제공 자료 안내</h1>
+    <table class="t" style="margin-top:2px;">
+      <tr><th style="width:200px">상황</th><th>적용 방법</th><th style="width:170px">관련 카드</th></tr>
+      <tr><td class="k">수식 작성이 필요할 때</td><td>Gemini 사이드패널에 시트 이름·열 범위·원하는 결과를 명시해 요청. 에러 시 메시지 전문을 붙여 수정 요청</td><td>P-01 · P-02</td></tr>
+      <tr><td class="k">텍스트 수백 행 처리</td><td>=AI() 함수로 일괄 처리 — 5행 테스트 → 프롬프트 확정 → 전체 적용 → 값 고정</td><td>P-03</td></tr>
+      <tr><td class="k">매주 반복하는 시트 정리</td><td>Apps Script 코드를 AI로 생성 → 사용자 메뉴 버튼으로 등록해 클릭 실행</td><td>M4 · P-04</td></tr>
+      <tr><td class="k">여러 팀 시트 취합</td><td>복사·붙여넣기 대신 IMPORTRANGE + QUERY로 연결 — 원본 갱신 시 자동 반영</td><td>P-02</td></tr>
+      <tr><td class="k">사내 소규모 입력 도구</td><td>시트 백엔드 + Apps Script 웹앱 + HTML — 서버 없이 접수·조회 페이지 운영</td><td>P-04</td></tr>
+      <tr><td class="k">정기 보고용 화면</td><td>대시보드 시트를 웹에 게시해 URL 공유 — 데이터 갱신 시 화면 자동 반영</td><td>P-05</td></tr>
+    </table>
+    <div class="row2 grow">
+      <div class="boxL">
+        <ul>
+          <li><b>제공 자료</b> — 사전 학습자료 PDF, 실습 예제 시트 사본 링크, 실습 카드 P-01~P-05 프롬프트 모음, Apps Script 코드 템플릿(행 이동·메일 발송·doGet/doPost)</li>
+          <li><b>사후 질문</b> — 실습 시트의 'Q&amp;A' 탭에 작성 시 교육 후 1주간 답변 지원</li>
+        </ul>
+      </div>
+      <div class="boxT">
+        <div class="bt">과정 정보</div>
+        <ul>
+          <li>강사 — 신성진 (한국데이터사이언티스트협회 대표)</li>
+          <li>주관 — 한국데이터사이언티스트협회(CDSA)</li>
+          <li>과정 문의 — 퍼브 강지우 매니저</li>
+        </ul>
+      </div>
+    </div>
+    <div class="bstrip"><span class="lab">자료 전달 일정</span>사전 학습자료 PDF — 교육 1주 전(7/17) · 실습 시트 링크 — 교육 당일 오전 · 프롬프트 모음·코드 템플릿 — 교육 종료 직후 일괄 공유</div>
+    <div class="footL">한국데이터사이언티스트협회(CDSA)</div>
+  </div>
+  <div class="foot">15</div>
+</div>
+
+</div>
+
+<script>
+let editing=false;
+function toggleEdit(){
+  editing=!editing;
+  document.querySelectorAll('.slide').forEach(s=>s.contentEditable=editing);
+  const b=document.getElementById('btnEdit');
+  b.classList.toggle('on',editing);
+  b.textContent=editing?'✅ 편집 중':'✏️ 편집';
+}
+function saveHtml(){
+  const was=editing;
+  if(editing) toggleEdit();
+  const html='<!DOCTYPE html>\n'+document.documentElement.outerHTML;
+  const blob=new Blob([html],{type:'text/html;charset=utf-8'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='카카오엔터_구글시트_강의안.html';
+  a.click();
+  if(was) toggleEdit();
+}
+</script>
+<script>/* kg-preview: #<heading> \uc704\uce58\ub85c \uc774\ub3d9 */
+(function(){function norm(t){return (t||'').replace(/\s+/g,'').toLowerCase()}
+function go(){var h=decodeURIComponent(location.hash.slice(1));if(!h)return;var k=norm(h).slice(0,24);if(!k)return;
+var best=null,bl=1e9,els=document.body.querySelectorAll('h1,h2,h3,h4,h5,p,div,span,li,td,text,tspan,section,article');
+for(var i=0;i<els.length;i++){var e=els[i],t=norm(e.textContent);if(t.length<bl&&t.indexOf(k)>-1){best=e;bl=t.length}}
+if(!best)return;var box=best.closest('section,[class*=slide],[class*=page],article')||best;
+box.scrollIntoView({block:'start'});box.style.outline='3px solid #c0504d';box.style.outlineOffset='4px';
+setTimeout(function(){box.style.outline=''},2600)}
+window.addEventListener('load',function(){setTimeout(go,400)});window.addEventListener('hashchange',go)})();</script></body>
+</html>

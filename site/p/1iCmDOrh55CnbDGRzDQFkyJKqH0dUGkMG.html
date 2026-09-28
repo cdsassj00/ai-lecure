@@ -1,0 +1,1153 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head><meta name="robots" content="noindex, nofollow">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>문서 버전 관리표 - 데스크톱 스타일</title>
+  <style>
+    :root {
+      --white: #ffffff;
+      --glass: rgba(255, 255, 255, 0.16);
+      --glass-strong: rgba(255, 255, 255, 0.24);
+      --glass-dark: rgba(17, 24, 39, 0.46);
+      --line: rgba(255, 255, 255, 0.28);
+      --text: #f8fafc;
+      --muted: rgba(248, 250, 252, 0.72);
+      --dark-text: #172033;
+      --primary: #2563eb;
+      --green: #22c55e;
+      --danger: #ef4444;
+      --amber: #f59e0b;
+      --shadow: 0 24px 80px rgba(0, 0, 0, 0.38);
+      --radius: 28px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Pretendard", "Noto Sans KR", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      color: var(--text);
+      background-image:
+        linear-gradient(180deg, rgba(15, 23, 42, 0.18), rgba(15, 23, 42, 0.36) 42%, rgba(15, 23, 42, 0.66)),
+        url("data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==");
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      overflow-x: hidden;
+    }
+
+    button,
+    input,
+    select,
+    textarea {
+      font-family: inherit;
+    }
+
+    .desktop-top {
+      position: fixed;
+      inset: 0 0 auto 0;
+      z-index: 20;
+      height: 70px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 24px;
+      pointer-events: none;
+    }
+
+    .app-grid-icon {
+      width: 26px;
+      height: 26px;
+      display: grid;
+      grid-template-columns: repeat(3, 4px);
+      grid-template-rows: repeat(3, 4px);
+      gap: 4px;
+      opacity: 0.95;
+    }
+
+    .app-grid-icon span {
+      width: 4px;
+      height: 4px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.92);
+      box-shadow: 0 1px 3px rgba(0,0,0,.25);
+    }
+
+    .weather {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 800;
+      text-shadow: 0 2px 8px rgba(0,0,0,.35);
+      font-size: 15px;
+    }
+
+    .weather .icon {
+      width: 26px;
+      height: 26px;
+      display: grid;
+      place-items: center;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.18);
+      border: 1px solid rgba(255,255,255,.22);
+    }
+
+    .weather .mini-icon {
+      font-size: 24px;
+      line-height: 1;
+    }
+
+    .top-search {
+      position: relative;
+      z-index: 5;
+      width: min(810px, calc(100% - 40px));
+      margin: 118px auto 0;
+    }
+
+    .search-pill {
+      height: 58px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 0 18px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.93);
+      color: #475467;
+      box-shadow: 0 14px 40px rgba(0,0,0,.24);
+      border: 1px solid rgba(255,255,255,.72);
+    }
+
+    .search-pill .magnify {
+      font-size: 26px;
+      line-height: 1;
+      color: #667085;
+    }
+
+    .search-pill input {
+      flex: 1;
+      border: 0;
+      outline: 0;
+      background: transparent;
+      font-size: 16px;
+      color: #111827;
+      height: 100%;
+    }
+
+    .search-pill .ai {
+      width: 36px;
+      height: 36px;
+      border-radius: 14px;
+      background: conic-gradient(from 120deg, #2563eb, #7c3aed, #ec4899, #f59e0b, #22c55e, #2563eb);
+      display: grid;
+      place-items: center;
+      color: white;
+      font-weight: 900;
+      box-shadow: 0 8px 20px rgba(37,99,235,.25);
+    }
+
+    .app {
+      width: min(1260px, calc(100% - 36px));
+      margin: 42px auto 56px;
+      position: relative;
+      z-index: 4;
+    }
+
+    .glass-panel {
+      background: linear-gradient(145deg, rgba(255,255,255,.18), rgba(255,255,255,.09));
+      border: 1px solid var(--line);
+      border-radius: 34px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(22px);
+      overflow: hidden;
+    }
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 20px;
+      padding: 26px 28px 22px;
+      border-bottom: 1px solid rgba(255,255,255,.18);
+      background: rgba(15, 23, 42, 0.18);
+    }
+
+    .title-box h1 {
+      margin: 0;
+      font-size: clamp(28px, 4vw, 44px);
+      line-height: 1.08;
+      letter-spacing: -0.06em;
+      text-shadow: 0 4px 18px rgba(0,0,0,.30);
+    }
+
+    .title-box p {
+      margin: 10px 0 0;
+      color: var(--muted);
+      line-height: 1.55;
+      word-break: keep-all;
+      font-size: 15px;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 9px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .btn {
+      border: 1px solid rgba(255,255,255,.28);
+      border-radius: 999px;
+      padding: 11px 15px;
+      background: rgba(255,255,255,.18);
+      color: white;
+      font-weight: 900;
+      cursor: pointer;
+      transition: .16s ease;
+      box-shadow: 0 8px 20px rgba(0,0,0,.13);
+      white-space: nowrap;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      background: rgba(255,255,255,.27);
+    }
+
+    .btn.primary {
+      color: #102a43;
+      background: rgba(255,255,255,.92);
+      border-color: rgba(255,255,255,.72);
+    }
+
+    .btn.danger {
+      background: rgba(239, 68, 68, .24);
+      color: #fee2e2;
+    }
+
+    .summary {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      padding: 18px 20px;
+      border-bottom: 1px solid rgba(255,255,255,.18);
+    }
+
+    .summary-card {
+      padding: 18px;
+      border-radius: 22px;
+      background: rgba(255,255,255,.18);
+      border: 1px solid rgba(255,255,255,.22);
+      backdrop-filter: blur(12px);
+    }
+
+    .summary-card strong {
+      display: block;
+      font-size: 30px;
+      letter-spacing: -0.05em;
+      margin-bottom: 3px;
+      text-shadow: 0 3px 10px rgba(0,0,0,.22);
+    }
+
+    .summary-card span {
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 0.85fr 1.15fr;
+      gap: 18px;
+      padding: 20px;
+      align-items: start;
+    }
+
+    .card {
+      border-radius: 28px;
+      background: rgba(255, 255, 255, 0.18);
+      border: 1px solid rgba(255,255,255,.24);
+      backdrop-filter: blur(16px);
+      overflow: hidden;
+    }
+
+    .form-card {
+      padding: 22px;
+    }
+
+    .card-title {
+      margin: 0 0 7px;
+      font-size: 22px;
+      letter-spacing: -0.04em;
+      text-shadow: 0 3px 12px rgba(0,0,0,.25);
+    }
+
+    .card-desc {
+      margin: 0 0 18px;
+      color: var(--muted);
+      line-height: 1.55;
+      font-size: 14px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 13px;
+    }
+
+    .full {
+      grid-column: 1 / -1;
+    }
+
+    label {
+      display: grid;
+      gap: 7px;
+      color: rgba(255,255,255,.88);
+      font-size: 13px;
+      font-weight: 900;
+      text-shadow: 0 2px 8px rgba(0,0,0,.25);
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      border: 1px solid rgba(255,255,255,.35);
+      border-radius: 18px;
+      padding: 13px 14px;
+      color: #111827;
+      background: rgba(255,255,255,.90);
+      outline: none;
+      transition: .16s ease;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.6);
+    }
+
+    textarea {
+      min-height: 118px;
+      resize: vertical;
+      line-height: 1.55;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: rgba(255,255,255,.9);
+      box-shadow: 0 0 0 4px rgba(255,255,255,.22);
+      background: white;
+    }
+
+    .form-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .form-actions .btn {
+      flex: 1;
+    }
+
+    .guide {
+      margin-top: 18px;
+      padding: 16px 18px;
+      border-radius: 22px;
+      background: rgba(15,23,42,.38);
+      border: 1px solid rgba(255,255,255,.18);
+      color: var(--muted);
+      line-height: 1.6;
+      font-size: 14px;
+    }
+
+    .guide strong {
+      color: white;
+    }
+
+    .table-card {
+      min-width: 0;
+    }
+
+    .toolbar {
+      display: grid;
+      grid-template-columns: 1.3fr 0.7fr 0.7fr;
+      gap: 10px;
+      padding: 16px;
+      border-bottom: 1px solid rgba(255,255,255,.18);
+      background: rgba(15, 23, 42, 0.18);
+    }
+
+    .toolbar input,
+    .toolbar select {
+      border-radius: 999px;
+    }
+
+    .table-wrap {
+      overflow: auto;
+      max-height: 560px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 860px;
+      color: white;
+    }
+
+    th,
+    td {
+      padding: 14px 15px;
+      text-align: left;
+      border-bottom: 1px solid rgba(255,255,255,.16);
+      vertical-align: top;
+    }
+
+    th {
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      background: rgba(15, 23, 42, 0.72);
+      backdrop-filter: blur(14px);
+      color: rgba(255,255,255,.75);
+      font-size: 13px;
+      cursor: pointer;
+      user-select: none;
+      white-space: nowrap;
+    }
+
+    td {
+      background: rgba(255,255,255,.045);
+      font-size: 14px;
+      line-height: 1.55;
+    }
+
+    tr:hover td {
+      background: rgba(255,255,255,.11);
+    }
+
+    .doc-name {
+      font-weight: 950;
+      color: white;
+      text-shadow: 0 2px 8px rgba(0,0,0,.28);
+    }
+
+    .version {
+      display: inline-flex;
+      min-width: 54px;
+      justify-content: center;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.90);
+      color: #1d4ed8;
+      font-weight: 950;
+      font-size: 12px;
+    }
+
+    .status {
+      display: inline-flex;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-weight: 950;
+      font-size: 12px;
+      white-space: nowrap;
+      border: 1px solid rgba(255,255,255,.28);
+    }
+
+    .status.draft {
+      background: rgba(245,158,11,.22);
+      color: #fef3c7;
+    }
+
+    .status.review {
+      background: rgba(59,130,246,.22);
+      color: #dbeafe;
+    }
+
+    .status.final {
+      background: rgba(34,197,94,.22);
+      color: #dcfce7;
+    }
+
+    .status.archived {
+      background: rgba(148,163,184,.22);
+      color: #f1f5f9;
+    }
+
+    .row-actions {
+      display: flex;
+      gap: 7px;
+      white-space: nowrap;
+    }
+
+    .small-btn {
+      border: 1px solid rgba(255,255,255,.24);
+      border-radius: 12px;
+      padding: 8px 10px;
+      background: rgba(255,255,255,.82);
+      color: #172033;
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    .small-btn.delete {
+      background: rgba(239,68,68,.22);
+      color: #fee2e2;
+    }
+
+    .empty {
+      padding: 46px 20px;
+      text-align: center;
+      color: rgba(255,255,255,.74);
+      line-height: 1.7;
+    }
+
+    .dock {
+      position: fixed;
+      left: 50%;
+      bottom: 18px;
+      transform: translateX(-50%);
+      z-index: 30;
+      display: flex;
+      gap: 10px;
+      padding: 10px;
+      border-radius: 24px;
+      background: rgba(15,23,42,.36);
+      border: 1px solid rgba(255,255,255,.22);
+      backdrop-filter: blur(18px);
+      box-shadow: 0 18px 40px rgba(0,0,0,.28);
+    }
+
+    .dock button {
+      width: 46px;
+      height: 46px;
+      border: 1px solid rgba(255,255,255,.22);
+      border-radius: 16px;
+      background: rgba(255,255,255,.86);
+      cursor: pointer;
+      font-size: 20px;
+      box-shadow: 0 8px 18px rgba(0,0,0,.16);
+    }
+
+    @media (max-width: 1080px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      .toolbar {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .desktop-top {
+        height: 56px;
+        padding: 16px;
+      }
+
+      .weather {
+        font-size: 13px;
+      }
+
+      .top-search {
+        margin-top: 86px;
+      }
+
+      .search-pill {
+        height: 52px;
+      }
+
+      .app {
+        width: calc(100% - 22px);
+        margin-top: 28px;
+        margin-bottom: 100px;
+      }
+
+      .panel-header {
+        display: block;
+        padding: 22px;
+      }
+
+      .header-actions {
+        justify-content: flex-start;
+        margin-top: 16px;
+      }
+
+      .summary,
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .full {
+        grid-column: auto;
+      }
+
+      .layout {
+        padding: 12px;
+      }
+
+      .form-actions,
+      .header-actions {
+        flex-direction: column;
+      }
+
+      .btn {
+        width: 100%;
+      }
+    }
+
+    @media print {
+      body {
+        background: white;
+        color: #111827;
+      }
+
+      .desktop-top,
+      .top-search,
+      .panel-header,
+      .form-card,
+      .toolbar,
+      .dock {
+        display: none;
+      }
+
+      .glass-panel,
+      .card {
+        background: white;
+        color: #111827;
+        box-shadow: none;
+        border: 0;
+      }
+
+      .layout {
+        display: block;
+      }
+
+      th, td {
+        color: #111827;
+        border-color: #d0d5dd;
+      }
+
+      th {
+        background: #f2f4f7;
+      }
+
+      td {
+        background: white;
+      }
+
+      .row-actions {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="desktop-top">
+    <div class="app-grid-icon" aria-hidden="true">
+      <span></span><span></span><span></span>
+      <span></span><span></span><span></span>
+      <span></span><span></span><span></span>
+    </div>
+    <div class="weather">
+      <strong>서울</strong>
+      <span class="mini-icon">🌤️</span>
+      <span>26°C</span>
+      <span class="icon">✎</span>
+      <span class="icon">⚙</span>
+    </div>
+  </div>
+
+  <div class="top-search">
+    <div class="search-pill">
+      <span class="magnify">⌕</span>
+      <input id="heroSearchInput" type="search" placeholder="문서명, 버전, 수정내용을 검색하세요" />
+      <span>🎙</span>
+      <span class="ai">AI</span>
+    </div>
+  </div>
+
+  <main class="app">
+    <section class="glass-panel">
+      <header class="panel-header">
+        <div class="title-box">
+          <h1>문서 버전 관리표</h1>
+          <p>브라우저 시작화면 같은 배경 위에서 문서명, 버전, 수정일, 수정내용을 기록하고 관리합니다.</p>
+        </div>
+        <div class="header-actions">
+          <button class="btn" id="loadSampleBtn">샘플 불러오기</button>
+          <button class="btn" id="exportCsvBtn">CSV 내보내기</button>
+          <button class="btn" id="printBtn">인쇄/PDF</button>
+          <button class="btn danger" id="clearAllBtn">전체 삭제</button>
+        </div>
+      </header>
+
+      <section class="summary">
+        <div class="summary-card">
+          <strong id="totalCount">0</strong>
+          <span>전체 기록</span>
+        </div>
+        <div class="summary-card">
+          <strong id="docCount">0</strong>
+          <span>문서 종류</span>
+        </div>
+        <div class="summary-card">
+          <strong id="finalCount">0</strong>
+          <span>최종본</span>
+        </div>
+        <div class="summary-card">
+          <strong id="recentDate">-</strong>
+          <span>최근 수정일</span>
+        </div>
+      </section>
+
+      <section class="layout">
+        <aside class="card form-card">
+          <h2 class="card-title" id="formTitle">버전 기록 추가</h2>
+          <p class="card-desc">문서가 수정될 때마다 새 버전 기록을 남기면 최종본과 과거 변경사항을 쉽게 추적할 수 있습니다.</p>
+
+          <form id="versionForm">
+            <div class="form-grid">
+              <label class="full">
+                문서명
+                <input id="docName" type="text" placeholder="예: AI 도입전략 보고서" required />
+              </label>
+
+              <label>
+                버전
+                <input id="version" type="text" placeholder="예: v1.0, v1.1, 최종본" required />
+              </label>
+
+              <label>
+                수정일
+                <input id="modifiedDate" type="date" required />
+              </label>
+
+              <label>
+                상태
+                <select id="status">
+                  <option value="draft">초안</option>
+                  <option value="review">검토중</option>
+                  <option value="final">최종본</option>
+                  <option value="archived">보관</option>
+                </select>
+              </label>
+
+              <label>
+                작성자/수정자
+                <input id="editor" type="text" placeholder="예: 신성진" />
+              </label>
+
+              <label class="full">
+                수정내용
+                <textarea id="changeNote" placeholder="예: 3장 추진전략 문구 수정, 예산 산정표 추가, 오탈자 정리" required></textarea>
+              </label>
+            </div>
+
+            <div class="form-actions">
+              <button class="btn primary" type="submit" id="saveBtn">저장</button>
+              <button class="btn" type="button" id="cancelEditBtn">초기화</button>
+            </div>
+          </form>
+
+          <div class="guide">
+            <strong>사용 팁</strong><br />
+            데이터는 브라우저 localStorage에 저장됩니다. 같은 문서명으로 v1.0, v1.1, v2.0처럼 누적하면 문서 변경 이력이 자연스럽게 남습니다.
+          </div>
+        </aside>
+
+        <section class="card table-card">
+          <div class="toolbar">
+            <input id="searchInput" type="search" placeholder="문서명, 버전, 수정내용, 작성자로 검색" />
+            <select id="statusFilter">
+              <option value="all">전체 상태</option>
+              <option value="draft">초안</option>
+              <option value="review">검토중</option>
+              <option value="final">최종본</option>
+              <option value="archived">보관</option>
+            </select>
+            <select id="sortSelect">
+              <option value="dateDesc">수정일 최신순</option>
+              <option value="dateAsc">수정일 오래된순</option>
+              <option value="nameAsc">문서명 가나다순</option>
+              <option value="versionAsc">버전 오름차순</option>
+            </select>
+          </div>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th data-sort="docName">문서명</th>
+                  <th data-sort="version">버전</th>
+                  <th data-sort="modifiedDate">수정일</th>
+                  <th>상태</th>
+                  <th>작성자/수정자</th>
+                  <th>수정내용</th>
+                  <th>관리</th>
+                </tr>
+              </thead>
+              <tbody id="versionTableBody"></tbody>
+            </table>
+          </div>
+        </section>
+      </section>
+    </section>
+  </main>
+
+  <div class="dock" aria-label="빠른 실행">
+    <button id="dockAddBtn" title="기록 추가">＋</button>
+    <button id="dockSearchBtn" title="검색">⌕</button>
+    <button id="dockExportBtn" title="CSV">⇩</button>
+    <button id="dockPrintBtn" title="PDF">⎙</button>
+  </div>
+
+  <script>
+    const STORAGE_KEY = "document-version-manager-edge-style-v1";
+
+    const form = document.getElementById("versionForm");
+    const formTitle = document.getElementById("formTitle");
+    const docName = document.getElementById("docName");
+    const version = document.getElementById("version");
+    const modifiedDate = document.getElementById("modifiedDate");
+    const statusInput = document.getElementById("status");
+    const editor = document.getElementById("editor");
+    const changeNote = document.getElementById("changeNote");
+
+    const heroSearchInput = document.getElementById("heroSearchInput");
+    const searchInput = document.getElementById("searchInput");
+    const statusFilter = document.getElementById("statusFilter");
+    const sortSelect = document.getElementById("sortSelect");
+    const tableBody = document.getElementById("versionTableBody");
+
+    const totalCount = document.getElementById("totalCount");
+    const docCount = document.getElementById("docCount");
+    const finalCount = document.getElementById("finalCount");
+    const recentDate = document.getElementById("recentDate");
+
+    let records = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+    let editingId = null;
+
+    const statusMap = {
+      draft: "초안",
+      review: "검토중",
+      final: "최종본",
+      archived: "보관"
+    };
+
+    const sampleData = [
+      {
+        id: "sample-1",
+        docName: "AI 도입전략 보고서",
+        version: "v1.0",
+        modifiedDate: "2026-06-01",
+        status: "draft",
+        editor: "신성진",
+        changeNote: "전체 목차 구성, 도입 배경과 추진 필요성 초안 작성"
+      },
+      {
+        id: "sample-2",
+        docName: "AI 도입전략 보고서",
+        version: "v1.1",
+        modifiedDate: "2026-06-03",
+        status: "review",
+        editor: "신성진",
+        changeNote: "정책연구 업무 적용 시나리오 추가, 내부망 기반 AI 플랫폼 설명 보완"
+      },
+      {
+        id: "sample-3",
+        docName: "강의 제안서",
+        version: "v2.0",
+        modifiedDate: "2026-06-05",
+        status: "final",
+        editor: "신성진",
+        changeNote: "강의 일정, 교육 목표, 세부 모듈, 견적 조건 최종 반영"
+      }
+    ];
+
+    function today() {
+      const date = new Date();
+      const yyyy = date.getFullYear();
+      const mm = String(date.getMonth() + 1).padStart(2, "0");
+      const dd = String(date.getDate()).padStart(2, "0");
+      return `${yyyy}-${mm}-${dd}`;
+    }
+
+    function save() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
+    }
+
+    function resetForm() {
+      editingId = null;
+      formTitle.textContent = "버전 기록 추가";
+      form.reset();
+      modifiedDate.value = today();
+      statusInput.value = "draft";
+      document.getElementById("saveBtn").textContent = "저장";
+    }
+
+    function escapeHTML(value) {
+      return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function getFilteredRecords() {
+      const keyword = searchInput.value.trim().toLowerCase();
+      const selectedStatus = statusFilter.value;
+      const sortValue = sortSelect.value;
+
+      let result = records.filter((record) => {
+        const text = [
+          record.docName,
+          record.version,
+          record.modifiedDate,
+          record.status,
+          statusMap[record.status],
+          record.editor,
+          record.changeNote
+        ].join(" ").toLowerCase();
+
+        const keywordMatched = !keyword || text.includes(keyword);
+        const statusMatched = selectedStatus === "all" || record.status === selectedStatus;
+
+        return keywordMatched && statusMatched;
+      });
+
+      result.sort((a, b) => {
+        if (sortValue === "dateAsc") return a.modifiedDate.localeCompare(b.modifiedDate);
+        if (sortValue === "dateDesc") return b.modifiedDate.localeCompare(a.modifiedDate);
+        if (sortValue === "nameAsc") return a.docName.localeCompare(b.docName, "ko");
+        if (sortValue === "versionAsc") return a.version.localeCompare(b.version, "ko", { numeric: true });
+        return 0;
+      });
+
+      return result;
+    }
+
+    function renderSummary() {
+      totalCount.textContent = records.length;
+      docCount.textContent = new Set(records.map((record) => record.docName.trim()).filter(Boolean)).size;
+      finalCount.textContent = records.filter((record) => record.status === "final").length;
+
+      if (records.length === 0) {
+        recentDate.textContent = "-";
+      } else {
+        recentDate.textContent = records
+          .map((record) => record.modifiedDate)
+          .sort()
+          .at(-1);
+      }
+    }
+
+    function renderTable() {
+      const list = getFilteredRecords();
+
+      if (list.length === 0) {
+        tableBody.innerHTML = `
+          <tr>
+            <td colspan="7">
+              <div class="empty">
+                표시할 문서 버전 기록이 없습니다.<br />
+                왼쪽 입력폼에서 새 기록을 추가하세요.
+              </div>
+            </td>
+          </tr>
+        `;
+        renderSummary();
+        return;
+      }
+
+      tableBody.innerHTML = list.map((record) => `
+        <tr>
+          <td><span class="doc-name">${escapeHTML(record.docName)}</span></td>
+          <td><span class="version">${escapeHTML(record.version)}</span></td>
+          <td>${escapeHTML(record.modifiedDate)}</td>
+          <td><span class="status ${escapeHTML(record.status)}">${statusMap[record.status] || record.status}</span></td>
+          <td>${escapeHTML(record.editor || "-")}</td>
+          <td>${escapeHTML(record.changeNote)}</td>
+          <td>
+            <div class="row-actions">
+              <button class="small-btn" data-action="edit" data-id="${record.id}">수정</button>
+              <button class="small-btn delete" data-action="delete" data-id="${record.id}">삭제</button>
+            </div>
+          </td>
+        </tr>
+      `).join("");
+
+      renderSummary();
+    }
+
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+
+      const item = {
+        id: editingId || (crypto.randomUUID ? crypto.randomUUID() : String(Date.now())),
+        docName: docName.value.trim(),
+        version: version.value.trim(),
+        modifiedDate: modifiedDate.value,
+        status: statusInput.value,
+        editor: editor.value.trim(),
+        changeNote: changeNote.value.trim()
+      };
+
+      if (!item.docName || !item.version || !item.modifiedDate || !item.changeNote) {
+        alert("문서명, 버전, 수정일, 수정내용은 반드시 입력해야 합니다.");
+        return;
+      }
+
+      if (editingId) {
+        records = records.map((record) => record.id === editingId ? item : record);
+      } else {
+        records.push(item);
+      }
+
+      save();
+      resetForm();
+      renderTable();
+    });
+
+    tableBody.addEventListener("click", (event) => {
+      const button = event.target.closest("button");
+      if (!button) return;
+
+      const id = button.dataset.id;
+      const action = button.dataset.action;
+      const record = records.find((item) => item.id === id);
+
+      if (!record) return;
+
+      if (action === "edit") {
+        editingId = id;
+        formTitle.textContent = "버전 기록 수정";
+        document.getElementById("saveBtn").textContent = "수정 저장";
+
+        docName.value = record.docName;
+        version.value = record.version;
+        modifiedDate.value = record.modifiedDate;
+        statusInput.value = record.status;
+        editor.value = record.editor;
+        changeNote.value = record.changeNote;
+
+        window.scrollTo({ top: document.querySelector(".glass-panel").offsetTop - 20, behavior: "smooth" });
+      }
+
+      if (action === "delete") {
+        const ok = confirm("이 버전 기록을 삭제하시겠습니까?");
+        if (!ok) return;
+
+        records = records.filter((item) => item.id !== id);
+        save();
+        renderTable();
+      }
+    });
+
+    document.getElementById("cancelEditBtn").addEventListener("click", resetForm);
+
+    searchInput.addEventListener("input", () => {
+      heroSearchInput.value = searchInput.value;
+      renderTable();
+    });
+
+    heroSearchInput.addEventListener("input", () => {
+      searchInput.value = heroSearchInput.value;
+      renderTable();
+    });
+
+    statusFilter.addEventListener("change", renderTable);
+    sortSelect.addEventListener("change", renderTable);
+
+    document.getElementById("loadSampleBtn").addEventListener("click", () => {
+      const ok = confirm("샘플 데이터를 추가하시겠습니까? 기존 데이터는 유지됩니다.");
+      if (!ok) return;
+
+      const copied = sampleData.map((item) => ({
+        ...item,
+        id: crypto.randomUUID ? crypto.randomUUID() : String(Date.now() + Math.random())
+      }));
+
+      records = [...records, ...copied];
+      save();
+      renderTable();
+    });
+
+    document.getElementById("clearAllBtn").addEventListener("click", () => {
+      const ok = confirm("모든 문서 버전 기록을 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.");
+      if (!ok) return;
+
+      records = [];
+      save();
+      resetForm();
+      renderTable();
+    });
+
+    document.getElementById("printBtn").addEventListener("click", () => window.print());
+
+    function exportCsv() {
+      if (records.length === 0) {
+        alert("내보낼 데이터가 없습니다.");
+        return;
+      }
+
+      const header = ["문서명", "버전", "수정일", "상태", "작성자/수정자", "수정내용"];
+      const rows = records.map((record) => [
+        record.docName,
+        record.version,
+        record.modifiedDate,
+        statusMap[record.status] || record.status,
+        record.editor,
+        record.changeNote
+      ]);
+
+      const csv = [header, ...rows]
+        .map((row) => row.map((cell) => `"${String(cell ?? "").replaceAll('"', '""')}"`).join(","))
+        .join("\n");
+
+      const blob = new Blob(["\ufeff" + csv], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `문서_버전_관리표_${today()}.csv`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    document.getElementById("exportCsvBtn").addEventListener("click", exportCsv);
+
+    document.querySelectorAll("th[data-sort]").forEach((th) => {
+      th.addEventListener("click", () => {
+        const key = th.dataset.sort;
+
+        if (key === "docName") sortSelect.value = "nameAsc";
+        if (key === "version") sortSelect.value = "versionAsc";
+        if (key === "modifiedDate") {
+          sortSelect.value = sortSelect.value === "dateDesc" ? "dateAsc" : "dateDesc";
+        }
+
+        renderTable();
+      });
+    });
+
+    document.getElementById("dockAddBtn").addEventListener("click", () => {
+      docName.focus();
+      window.scrollTo({ top: document.querySelector(".glass-panel").offsetTop - 20, behavior: "smooth" });
+    });
+
+    document.getElementById("dockSearchBtn").addEventListener("click", () => heroSearchInput.focus());
+    document.getElementById("dockExportBtn").addEventListener("click", exportCsv);
+    document.getElementById("dockPrintBtn").addEventListener("click", () => window.print());
+
+    modifiedDate.value = today();
+    renderTable();
+  </script>
+<script>/* kg-preview: #<heading> \uc704\uce58\ub85c \uc774\ub3d9 */
+(function(){function norm(t){return (t||'').replace(/\s+/g,'').toLowerCase()}
+function go(){var h=decodeURIComponent(location.hash.slice(1));if(!h)return;var k=norm(h).slice(0,24);if(!k)return;
+var best=null,bl=1e9,els=document.body.querySelectorAll('h1,h2,h3,h4,h5,p,div,span,li,td,text,tspan,section,article');
+for(var i=0;i<els.length;i++){var e=els[i],t=norm(e.textContent);if(t.length<bl&&t.indexOf(k)>-1){best=e;bl=t.length}}
+if(!best)return;var box=best.closest('section,[class*=slide],[class*=page],article')||best;
+box.scrollIntoView({block:'start'});box.style.outline='3px solid #c0504d';box.style.outlineOffset='4px';
+setTimeout(function(){box.style.outline=''},2600)}
+window.addEventListener('load',function(){setTimeout(go,400)});window.addEventListener('hashchange',go)})();</script></body>
+</html>

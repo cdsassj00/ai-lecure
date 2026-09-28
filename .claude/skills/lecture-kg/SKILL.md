@@ -14,10 +14,23 @@ description: 신성진(CDSA)의 기존 HTML 강의안 지식그래프(이 저장
 | `graph/documents.json` | 문서 카드: 유형, 고객사, 날짜, 개념 가중치, 목차, 요약, 버전, Drive fileId |
 | `graph/chunks.jsonl` | 슬라이드/섹션 단위 본문 (섹션당 최대 1,200자) |
 | `graph/graph.json` | 노드(문서·개념·분류·고객사·유형)와 엣지(다룸·함께 등장·유사·고객사) |
-| `graph/viewer.html` | 브라우저용 인터랙티브 그래프 |
+| `graph/topics.json` | 내용 주제 지도: 대주제→소주제→슬라이드(중복 제거, 재사용 횟수) |
+| `graph/viewer.html`, `site/index.html` | 강의 콘텐츠 지도 뷰어 (주제별 슬라이드 → 컨텍스트 만들기, 원본 미리보기) |
+| `site/p/<fileId>.html` | 강의안 원본 미리보기 (1.5MB 초과 파일은 이미지 제거본) |
 | `data/drive_manifest.json` | Drive 폴더의 전체 파일 목록(fileId·수정시각·크기) |
 
 ## A. 새 강의안을 쓸 때
+
+**핵심 도구는 내용 주제 지도(`graph/topics.json`)다.** 슬라이드 약 2,800장(중복 제거)을 대주제 7개·소주제 40개로
+묶어 두었다(`kg/content_topics.py`). 새 강의의 주제가 정해지면 먼저 이 지도에서 컨텍스트를 뽑는다.
+
+0. **주제별 컨텍스트 뽑기**
+   ```bash
+   python kg/query.py topics                           # 주제 체계와 슬라이드 수
+   python kg/query.py context "MCP" -n 20 -o /tmp/ctx.md    # 소주제 이름 또는 키워드
+   ```
+   여러 주제가 필요하면 `context`를 주제별로 돌려 합친다. 사용자가 뷰어의 '컨텍스트 만들기'로 복사한 마크다운을
+   붙여 넣으면 그것이 1순위 자료다.
 
 1. **재료팩 만들기** — 주제, 대상, 시간을 한 문장으로 넣는다.
    ```bash
@@ -27,7 +40,7 @@ description: 신성진(CDSA)의 기존 HTML 강의안 지식그래프(이 저장
 2. **더 깊이 보기**
    - `python kg/query.py search "하네스 권한 로그"`: 슬라이드 단위 검색
    - `python kg/query.py doc <fileId 또는 파일명 일부> --full`: 한 문서의 목차와 섹션 본문 전체
-   - `python kg/query.py topic` / `topic 데이터분석`: 강의 주제(11개) 묶음별 이력
+   - `python kg/query.py course` / `course 데이터분석`: 과정 묶음(11개)별 강의안 목록
    - `python kg/query.py concept 바이브코딩` / `client 행정안전부`: 개념별·고객사별 이력
 3. **원본이 필요하면** Drive 커넥터로 연다. `mcp__Google_Drive__download_file_content(fileId)`를 호출한다.
    큰 파일은 결과가 디스크에 저장된다. 그다음 `python kg/drive_sync.py decode /tmp/raw` 후
@@ -67,4 +80,5 @@ description: 신성진(CDSA)의 기존 HTML 강의안 지식그래프(이 저장
 새 주제가 자주 나오는데 개념 노드로 잡히지 않으면 `kg/vocab.py`의 `CONCEPTS`에 한 줄을 추가한다.
 형식은 `"대표명": ("분류", ["동의어", ...])`다. 그다음 `python kg/build.py`를 다시 실행한다.
 원본 없이도 이전 색인 본문으로 개념이 다시 계산된다. 고객사는 `CLIENTS`, 문서 유형은 `DOC_TYPES`,
-강의 주제 묶음(뷰어 첫 화면)은 `TOPICS`에서 고친다. 주제는 파일명 정규식이 먼저 적용되고, 안 맞으면 개념 점수로 정해진다.
+과정 묶음은 `TOPICS`에서 고친다. **내용 주제(소주제)는 `kg/content_topics.py`에서 키워드를 고친다.**
+`#`로 시작하는 키워드는 흔한 말이라 슬라이드 제목에 나올 때만 크게 센다.

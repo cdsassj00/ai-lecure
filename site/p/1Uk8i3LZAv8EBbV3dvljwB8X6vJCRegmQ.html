@@ -1,0 +1,516 @@
+<!doctype html>
+<html lang="ko">
+<head><meta name="robots" content="noindex, nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>기후에너지환경부 AI 프렌즈 발대식 특강</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;900&family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+/* ───────────────────────── tokens ───────────────────────── */
+:root{
+  --deep:#081310;        /* 심야 침엽수 */
+  --pine:#0e211a;
+  --cream:#f2ede1;       /* 본문 크림 */
+  --moss:#9db3a6;        /* 보조 텍스트 */
+  --moss2:#5f7469;
+  --amber:#e6ab52;       /* 1차 강조 — 일출 */
+  --leaf:#57c793;        /* 2차 강조 — 수관 */
+  --line:rgba(242,237,225,.14);
+  --serif:"Noto Serif KR",serif;
+  --sans:"Noto Sans KR",sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:var(--deep);color:var(--cream);font-family:var(--sans);-webkit-font-smoothing:antialiased}
+b{font-weight:900}
+
+/* ─────────────── 고정 무대: 1600×900, 화면에 맞춰 스케일 ─────────────── */
+#stage{position:fixed;left:50%;top:50%;width:1600px;height:900px;overflow:hidden;transform:translate(-50%,-50%) scale(1);transform-origin:center;background:radial-gradient(1100px 700px at 72% 18%,#123227 0%,var(--deep) 58%)}
+/* 등고선 모티프 — 기후·지형의 결 */
+#contour{position:absolute;inset:0;opacity:.05;pointer-events:none;animation:breathe 22s ease-in-out infinite alternate}
+@keyframes breathe{to{transform:scale(1.04) translate(-14px,8px)}}
+.blob{position:absolute;width:980px;height:980px;border-radius:50%;filter:blur(130px);pointer-events:none;will-change:transform}
+#b1{background:radial-gradient(circle,rgba(38,112,80,.5),transparent 62%);left:-260px;top:-320px;animation:drift1 26s ease-in-out infinite alternate}
+#b2{background:radial-gradient(circle,rgba(150,105,40,.34),transparent 62%);right:-320px;bottom:-380px;animation:drift2 34s ease-in-out infinite alternate}
+@keyframes drift1{to{transform:translate(190px,140px) scale(1.16)}}
+@keyframes drift2{to{transform:translate(-170px,-120px) scale(1.12)}}
+@media (prefers-reduced-motion:reduce){#contour,.blob{animation:none!important}}
+
+.scene{position:absolute;inset:0;padding:90px 130px;display:flex;flex-direction:column;justify-content:center;opacity:0;visibility:hidden;transition:opacity .5s ease,visibility .5s}
+.scene.active{opacity:1;visibility:visible}
+
+/* 상단 파트 라벨 */
+.part{position:absolute;left:130px;top:56px;font-size:14px;font-weight:900;letter-spacing:.34em;color:var(--moss2)}
+.part b{color:var(--amber)}
+
+.kicker{font-family:var(--sans);font-size:16px;font-weight:900;letter-spacing:.3em;color:var(--amber);margin-bottom:26px}
+.big{font-family:var(--sans);font-weight:900;font-size:60px;line-height:1.32;letter-spacing:-1.2px;max-width:1300px;word-break:keep-all;text-wrap:balance}
+.big em{font-style:normal;color:var(--leaf)}
+.big .am{color:var(--amber)}
+.mid{font-size:27px;line-height:1.68;font-weight:400;color:var(--moss);margin-top:32px;max-width:1180px;word-break:keep-all}
+.mid b{color:var(--cream);font-weight:700}
+.dimline{font-family:var(--sans);font-size:22px;color:var(--moss2);font-weight:600;margin-top:40px;word-break:keep-all}
+.dimline b{color:var(--amber)}
+.foot{position:absolute;left:130px;bottom:52px;font-size:15px;font-weight:700;letter-spacing:.12em;color:var(--moss2)}
+
+/* ───────────── 등장 애니메이션 ───────────── */
+.rv{opacity:0;transform:translateY(38px)}
+.active .rv{animation:up .85s cubic-bezier(.16,.8,.26,1) forwards;animation-delay:var(--d,0s)}
+@keyframes up{to{opacity:1;transform:none}}
+.rvs{opacity:0;transform:scale(.85)}
+.active .rvs{animation:pop .65s cubic-bezier(.2,.9,.3,1.22) forwards;animation-delay:var(--d,0s)}
+@keyframes pop{to{opacity:1;transform:scale(1)}}
+.rvb{opacity:0;filter:blur(16px)}
+.active .rvb{animation:focus 1.05s ease forwards;animation-delay:var(--d,0s)}
+@keyframes focus{to{opacity:1;filter:blur(0)}}
+@media (prefers-reduced-motion:reduce){.rv,.rvs,.rvb{opacity:1!important;transform:none!important;filter:none!important;animation:none!important}}
+
+/* ───────────── 칩 ───────────── */
+.chips{display:flex;flex-wrap:wrap;gap:14px;margin-top:44px;max-width:1200px}
+.chip{border:1px solid var(--line);background:rgba(242,237,225,.045);border-radius:10px;padding:13px 22px;font-size:22px;font-weight:700;color:var(--cream)}
+.chip.hl{border-color:rgba(87,199,147,.45);color:var(--leaf)}
+.chip.am{border-color:rgba(230,171,82,.45);color:var(--amber)}
+
+/* ───────────── 카드 그리드 ───────────── */
+.cards{display:grid;gap:20px;margin-top:46px}
+.cards.c4{grid-template-columns:repeat(4,1fr)}
+.cards.c3{grid-template-columns:repeat(3,1fr)}
+.card{border:1px solid var(--line);border-radius:12px;background:linear-gradient(180deg,rgba(242,237,225,.05),rgba(242,237,225,.015));padding:24px 24px 20px}
+.card .tag{font-size:12.5px;font-weight:900;letter-spacing:.22em;color:var(--amber);margin-bottom:12px}
+.card h3{margin:0;font-family:var(--sans);font-size:25px;font-weight:900;letter-spacing:-.6px;word-break:keep-all}
+.card p{margin:10px 0 0;font-size:16.5px;line-height:1.55;color:var(--moss);word-break:keep-all}
+.card .res{margin-top:16px;padding-top:12px;border-top:1px solid var(--line);font-family:var(--sans);font-size:19px;font-weight:900;color:var(--leaf)}
+.card .res small{display:block;font-family:var(--sans);font-size:12px;font-weight:700;letter-spacing:.2em;color:var(--moss2);margin-bottom:4px}
+
+/* ───────────── 통계 4연타 ───────────── */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;margin-top:50px}
+.stat .n{font-family:var(--sans);font-size:80px;font-weight:900;line-height:1;letter-spacing:-2.5px;color:var(--amber)}
+.stat:nth-child(2) .n{color:var(--leaf)}.stat:nth-child(4) .n{color:var(--leaf)}
+.stat .src{margin-top:14px;font-size:18px;font-weight:900;color:var(--cream)}
+.stat .lab{margin-top:5px;font-size:14.5px;line-height:1.5;color:var(--moss);word-break:keep-all}
+
+/* ───────────── 55:5 ───────────── */
+.ratio{display:flex;align-items:baseline;gap:36px;margin-top:8px}
+.ratio .n{font-family:var(--sans);font-size:200px;font-weight:900;line-height:1;letter-spacing:-9px}
+.ratio .n.g{color:var(--leaf)}.ratio .n.a{color:var(--amber)}
+.ratio .c{font-size:100px;color:var(--moss2);font-weight:400;font-family:var(--sans)}
+.ratio .lab{font-size:21px;color:var(--moss);font-weight:700;margin-top:18px;letter-spacing:.04em}
+
+/* ───────────── 2단 대비 ───────────── */
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:56px;margin-top:52px;max-width:1340px}
+.duo .cell{border-top:2px solid var(--line);padding-top:26px}
+.duo h3{margin:0;font-family:var(--sans);font-size:33px;font-weight:900;letter-spacing:-.8px;word-break:keep-all}
+.duo h3.g{color:var(--leaf)}.duo h3.a{color:var(--amber)}
+.duo p{font-size:21px;line-height:1.7;color:var(--moss);margin:18px 0 0;word-break:keep-all}
+.duo p b{color:var(--cream)}
+
+/* ───────────── 인용 ───────────── */
+.quotebox{border-left:4px solid var(--amber);padding-left:34px;margin-top:54px;max-width:1150px}
+.quotebox p{font-family:var(--sans);font-size:30px;line-height:1.6;font-weight:900;margin:0;word-break:keep-all}
+.quotebox .who{font-family:var(--sans);font-size:16px;color:var(--moss);font-weight:500;margin-top:18px;letter-spacing:.08em}
+
+/* ───────────── 원리 전이 매핑 ───────────── */
+.map{margin-top:48px;max-width:1240px}
+.map .head{display:grid;grid-template-columns:1fr 70px 1fr;gap:0;font-size:15px;font-weight:900;letter-spacing:.24em;color:var(--amber);padding-bottom:14px}
+.map .row{display:grid;grid-template-columns:1fr 70px 1fr;align-items:center;border-top:1px solid var(--line);padding:17px 0}
+.map .row .l{font-size:22px;font-weight:700;color:var(--moss)}
+.map .row .arr{text-align:center;color:var(--amber);font-size:22px}
+.map .row .r{font-size:22px;font-weight:700;color:var(--cream)}
+
+/* ───────────── 3단계 스테이지 ───────────── */
+.stages{display:grid;grid-template-columns:repeat(3,1fr);gap:26px;margin-top:48px}
+.stg{border:1px solid var(--line);border-radius:12px;padding:26px;background:linear-gradient(180deg,rgba(242,237,225,.045),transparent)}
+.stg .num{font-family:var(--sans);font-size:54px;font-weight:900;color:var(--moss2);line-height:1}
+.stg:last-child{border-color:rgba(230,171,82,.5)}
+.stg:last-child .num{color:var(--amber)}
+.stg h3{margin:14px 0 0;font-family:var(--sans);font-size:26px;font-weight:900;line-height:1.35;letter-spacing:-.5px;word-break:keep-all}
+.stg p{margin:12px 0 0;font-size:16.5px;line-height:1.6;color:var(--moss);word-break:keep-all}
+
+/* ───────────── 레고 카운트 ───────────── */
+.mega{font-family:var(--sans);font-weight:900;font-size:136px;line-height:1;letter-spacing:-5px;color:var(--amber);margin-top:14px}
+.mega small{display:block;font-family:var(--sans);font-size:19px;font-weight:700;letter-spacing:.1em;color:var(--moss);margin-top:20px}
+
+/* ───────────── UI ───────────── */
+#bar{position:fixed;left:0;top:0;height:4px;background:linear-gradient(90deg,var(--leaf),var(--amber));width:0;z-index:9;transition:width .4s}
+#pageno{position:fixed;right:36px;bottom:30px;font-size:13px;font-weight:900;color:var(--moss2);letter-spacing:.22em;z-index:9}
+#hint{position:fixed;right:36px;top:24px;font-size:12px;color:var(--moss2);letter-spacing:.12em;z-index:9;opacity:.75}
+.clickzone{position:fixed;inset:0;z-index:5;cursor:pointer}
+
+/* ───────────── SVG 궤도(장면 2) ───────────── */
+.orbit{margin-top:34px;width:1080px}
+.orbit .core-ring{transform-box:fill-box;transform-origin:center}
+.orbit g.sat{opacity:0;transform:scale(.75);transform-box:fill-box;transform-origin:center}
+.active .orbit g.sat{animation:pop .6s cubic-bezier(.2,.9,.3,1.22) forwards;animation-delay:var(--d,0s)}
+.orbit .link{stroke-dasharray:200;stroke-dashoffset:200}
+.active .orbit .link{animation:draw 1s ease forwards;animation-delay:var(--d,0s)}
+@keyframes draw{to{stroke-dashoffset:0}}
+</style>
+</head>
+<body>
+<div id="bar"></div><div id="pageno"></div><div id="hint">←/→ · 클릭 · F 전체화면 · R 다시재생</div>
+<div class="clickzone" id="cz"></div>
+
+<div id="stage">
+<div class="blob" id="b1"></div><div class="blob" id="b2"></div>
+<svg id="contour" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice">
+  <g fill="none" stroke="#f2ede1" stroke-width="1">
+    <ellipse cx="1240" cy="180" rx="240" ry="130"/><ellipse cx="1240" cy="180" rx="360" ry="205"/><ellipse cx="1240" cy="180" rx="490" ry="290"/><ellipse cx="1240" cy="180" rx="630" ry="385"/><ellipse cx="1240" cy="180" rx="780" ry="490"/>
+    <ellipse cx="140" cy="820" rx="200" ry="110"/><ellipse cx="140" cy="820" rx="330" ry="190"/><ellipse cx="140" cy="820" rx="470" ry="280"/>
+  </g>
+</svg>
+
+<!-- 01 타이틀 -->
+<section class="scene" data-part="OPENING">
+  <div class="kicker rv" style="--d:.1s">기후에너지환경부 AI 프렌즈 발대식 특강</div>
+  <h1 class="big rvb" style="--d:.4s;font-size:80px">작은 문제를 엮는 사람이<br>조직의 AI 전환을 만듭니다</h1>
+  <p class="dimline rv" style="--d:1.3s">문제 <b>→</b> 자료 <b>→</b> 도구 <b>→</b> 검증 <b>→</b> 실행 <b>→</b> 공유</p>
+  <p class="mid rv" style="--d:1.7s;margin-top:20px"><b>신성진</b> · 한국데이터사이언티스트협회(CDSA) 대표</p>
+  <div class="foot rv" style="--d:2s">2026. 7. 8 · 세종</div>
+</section>
+
+<!-- 02 에이전트란 (SVG 궤도) -->
+<section class="scene" data-part="기술 이야기 · 하나">
+  <div class="part">PART 1 · <b>기술</b></div>
+  <div class="kicker rv" style="--d:.05s">에이전트란 무엇인가</div>
+  <h1 class="big rv" style="--d:.2s;font-size:52px">에이전트란, <em>LLM을 둘러싼 도구들의 결합</em>입니다</h1>
+  <svg class="orbit rv" style="--d:.4s" viewBox="0 0 1080 520" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <radialGradient id="coreG" cx="34%" cy="30%" r="80%">
+        <stop offset="0%" stop-color="#8ff0c4"/><stop offset="55%" stop-color="#57c793"/><stop offset="100%" stop-color="#1d7d55"/>
+      </radialGradient>
+      <filter id="glow" x="-60%" y="-60%" width="220%" height="220%">
+        <feGaussianBlur stdDeviation="14" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+      </filter>
+    </defs>
+    <!-- 궤도 링 -->
+    <ellipse cx="540" cy="260" rx="440" ry="190" fill="none" stroke="rgba(242,237,225,.18)" stroke-width="1.5" stroke-dasharray="3 9"/>
+    <!-- 연결선 -->
+    <g stroke="rgba(230,171,82,.35)" stroke-width="1.5">
+      <line class="link" style="--d:.7s"  x1="540" y1="260" x2="540" y2="70"/>
+      <line class="link" style="--d:.85s" x1="540" y1="260" x2="884" y2="143"/>
+      <line class="link" style="--d:1s"   x1="540" y1="260" x2="975" y2="325"/>
+      <line class="link" style="--d:1.15s" x1="540" y1="260" x2="760" y2="442"/>
+      <line class="link" style="--d:1.3s" x1="540" y1="260" x2="320" y2="442"/>
+      <line class="link" style="--d:1.45s" x1="540" y1="260" x2="105" y2="325"/>
+      <line class="link" style="--d:1.6s" x1="540" y1="260" x2="196" y2="143"/>
+    </g>
+    <!-- 코어 -->
+    <g class="core-ring">
+      <circle cx="540" cy="260" r="84" fill="url(#coreG)" filter="url(#glow)"/>
+      <text x="540" y="252" text-anchor="middle" font-family="Noto Sans KR" font-weight="900" font-size="38" fill="#07130d">LLM</text>
+      <text x="540" y="284" text-anchor="middle" font-family="Noto Sans KR" font-weight="700" font-size="15" fill="#0b2a1c">언어 엔진</text>
+    </g>
+    <!-- 위성 7 : (x,y)는 궤도 위 좌표 -->
+    <g transform="translate(540 70)"><g class="sat" style="--d:.7s"><rect x="-86" y="-30" width="172" height="60" rx="12" fill="#0e211a" stroke="rgba(242,237,225,.22)"/><text y="-3" text-anchor="middle" font-family="Noto Sans KR" font-weight="900" font-size="21" fill="#f2ede1">MCP</text><text y="19" text-anchor="middle" font-family="Noto Sans KR" font-size="12.5" fill="#9db3a6">도구·데이터 표준 호출</text></g></g>
+    <g transform="translate(884 143)"><g class="sat" style="--d:.85s"><rect x="-86" y="-30" width="172" height="60" rx="12" fill="#0e211a" stroke="rgba(242,237,225,.22)"/><text y="-3" text-anchor="middle" font-family="Noto Sans KR" font-weight="900" font-size="21" fill="#f2ede1">API</text><text y="19" text-anchor="middle" font-family="Noto Sans KR" font-size="12.5" fill="#9db3a6">외부 서비스 연결</text></g></g>
+    <g transform="translate(975 325)"><g class="sat" style="--d:1s"><rect x="-86" y="-30" width="172" height="60" rx="12" fill="#0e211a" stroke="rgba(242,237,225,.22)"/><text y="-3" text-anchor="middle" font-family="Noto Sans KR" font-weight="900" font-size="21" fill="#f2ede1">DB</text><text y="19" text-anchor="middle" font-family="Noto Sans KR" font-size="12.5" fill="#9db3a6">저장과 기억</text></g></g>
+    <g transform="translate(760 442)"><g class="sat" style="--d:1.15s"><rect x="-86" y="-30" width="172" height="60" rx="12" fill="#0e211a" stroke="rgba(242,237,225,.22)"/><text y="-3" text-anchor="middle" font-family="Noto Sans KR" font-weight="900" font-size="21" fill="#f2ede1">RSS · Web</text><text y="19" text-anchor="middle" font-family="Noto Sans KR" font-size="12.5" fill="#9db3a6">구독 · 검색 · 열람</text></g></g>
+    <g transform="translate(320 442)"><g class="sat" style="--d:1.3s"><rect x="-86" y="-30" width="172" height="60" rx="12" fill="#0e211a" stroke="rgba(242,237,225,.22)"/><text y="-3" text-anchor="middle" font-family="Noto Sans KR" font-weight="900" font-size="21" fill="#f2ede1">File</text><text y="19" text-anchor="middle" font-family="Noto Sans KR" font-size="12.5" fill="#9db3a6">문서 · 엑셀 · PDF</text></g></g>
+    <g transform="translate(105 325)"><g class="sat" style="--d:1.45s"><rect x="-86" y="-30" width="172" height="60" rx="12" fill="#0e211a" stroke="rgba(242,237,225,.22)"/><text y="-3" text-anchor="middle" font-family="Noto Sans KR" font-weight="900" font-size="21" fill="#f2ede1">System</text><text y="19" text-anchor="middle" font-family="Noto Sans KR" font-size="12.5" fill="#9db3a6">OS · bash 실행</text></g></g>
+    <g transform="translate(196 143)"><g class="sat" style="--d:1.6s"><rect x="-86" y="-30" width="172" height="60" rx="12" fill="#0e211a" stroke="rgba(242,237,225,.22)"/><text y="-3" text-anchor="middle" font-family="Noto Sans KR" font-weight="900" font-size="21" fill="#f2ede1">Web</text><text y="19" text-anchor="middle" font-family="Noto Sans KR" font-size="12.5" fill="#9db3a6">브라우저 · 사이트</text></g></g>
+  </svg>
+</section>
+
+<!-- 03 바이브코딩 -->
+<section class="scene" data-part="기술 이야기 · 둘">
+  <div class="part">PART 1 · <b>기술</b></div>
+  <div class="kicker rv" style="--d:.05s">에이전트를 굴리는 힘</div>
+  <h1 class="big rv" style="--d:.2s">LLM은 <em>읽고, 쓰고, 번역</em>합니다.<br>코드도 언어이기에 <span class="am">바이브코딩</span>을 잘합니다.</h1>
+  <p class="mid rv" style="--d:.9s">에이전트는 별도의 마법이 아닙니다. 도구를 부르는 것도, 결과를 읽는 것도, 다음 행동을 쓰는 것도 — <b>전부 언어입니다.</b></p>
+  <div class="chips">
+    <div class="chip rvs" style="--d:1.5s">읽기 — 문서 · 로그 · 데이터</div>
+    <div class="chip rvs" style="--d:1.65s">쓰기 — 코드 · 보고서 · 지시</div>
+    <div class="chip rvs" style="--d:1.8s">번역 — 사람의 말 ↔ 기계의 말</div>
+  </div>
+</section>
+
+<!-- 04 오케스트레이션 -->
+<section class="scene" data-part="기술 이야기 · 셋">
+  <div class="part">PART 1 · <b>기술</b></div>
+  <div class="kicker rv" style="--d:.05s">연결이 곧 기획</div>
+  <h1 class="big rv" style="--d:.2s">에이전트 자체가 <em>오케스트레이션</em>입니다</h1>
+  <p class="mid rv" style="--d:.9s">바이브코딩 역시 오케스트레이션 역량입니다. <b>어떤 MCP, 어떤 API, 어떤 DB를 연결하느냐</b>에 따라 우리의 기획과 상상력이 펼쳐집니다.</p>
+  <div class="chips">
+    <div class="chip hl rvs" style="--d:1.5s">NASA 화성 탐사 데이터</div>
+    <div class="chip hl rvs" style="--d:1.65s">기후 예측 데이터</div>
+    <div class="chip hl rvs" style="--d:1.8s">미 연방은행 경제 데이터</div>
+    <div class="chip am rvs" style="--d:1.95s">그리고 — 우리 부처의 데이터</div>
+  </div>
+</section>
+
+<!-- 05 도구는 하나, N개 풀이 -->
+<section class="scene" data-part="기술 이야기 · 넷">
+  <div class="part">PART 1 · <b>기술</b></div>
+  <div class="kicker rv" style="--d:.05s">같은 도구, 다른 결과</div>
+  <h1 class="big rv" style="--d:.2s;font-size:50px">도구는 하나. 누군가는 <span class="am">N개를 풀어냅니다</span></h1>
+  <p class="mid rv" style="--d:.7s;font-size:24px">NotebookLM이라는 같은 도구를, 누가 어떻게 다르게 쓰고 있나</p>
+  <div class="cards c4">
+    <div class="card rvs" style="--d:1s"><div class="tag">기획 · 마케팅</div><h3>슬라이드 자동 생성</h3><p>기존 보고서 PDF → 발표 슬라이드와 키프레임</p><div class="res"><small>RESULT</small>며칠 → 1시간</div></div>
+    <div class="card rvs" style="--d:1.15s"><div class="tag">정책 · 컴플라이언스</div><h3>정책 변화 비교</h3><p>'23·'24·'25년 정책 문서 → 변화 포인트와 영향 분석</p><div class="res"><small>RESULT</small>2일 → 30분</div></div>
+    <div class="card rvs" style="--d:1.3s"><div class="tag">법무 · 영업</div><h3>계약서 검토</h3><p>상대 계약서 + 우리 표준 → 차이 조항과 관련 법규</p><div class="res"><small>RESULT</small>반나절 → 5분</div></div>
+    <div class="card rvs" style="--d:1.45s"><div class="tag">콘텐츠 · 영상</div><h3>스토리라인 설계</h3><p>대본 · 자료 텍스트 → 장면 분할과 비주얼 시안</p><div class="res"><small>RESULT</small>1주 → 반나절</div></div>
+  </div>
+  <p class="dimline rv" style="--d:1.9s">도구가 같다고 결과가 같지 않습니다. 차이는 <b>"무엇을 풀까"의 기획력</b>입니다.</p>
+</section>
+
+<!-- 06 니즈는 하나, N개의 길 -->
+<section class="scene" data-part="기술 이야기 · 다섯">
+  <div class="part">PART 1 · <b>기술</b></div>
+  <div class="kicker rv" style="--d:.05s">같은 니즈, 다른 길</div>
+  <h1 class="big rv" style="--d:.2s;font-size:50px">니즈는 하나. 누군가는 <span class="am">N개의 길</span>로 풉니다</h1>
+  <p class="mid rv" style="--d:.7s;font-size:24px">'AI 통역'이라는 같은 니즈를, 누가 어떤 길로 푸나</p>
+  <div class="cards c4">
+    <div class="card rvs" style="--d:1s"><div class="tag">WEARABLE</div><h3>스마트 안경</h3><p>상대방 음성 → 렌즈 위 실시간 자막. 글로벌 영업 · 임원.</p></div>
+    <div class="card rvs" style="--d:1.15s"><div class="tag">SAAS</div><h3>자동 회의 기록</h3><p>회의 녹음 → 다국어 회의록 + 액션 아이템.</p></div>
+    <div class="card rvs" style="--d:1.3s"><div class="tag">API</div><h3>시스템에 직접 통합</h3><p>사내 텍스트·음성 → 우리 화면 안에서 통역 결과.</p></div>
+    <div class="card rvs" style="--d:1.45s"><div class="tag" style="color:var(--leaf)">LOCAL SLM</div><h3>로컬 처리</h3><p>민감 정보를 <b>외부로 보내지 않고</b> 내부에서 번역. 폐쇄망의 길.</p></div>
+  </div>
+  <p class="dimline rv" style="--d:1.9s">니즈는 같고, 길은 N개. <b>우리 조직에 맞는 길을 골라내는 안목</b>이 진짜 실력입니다.</p>
+</section>
+
+<!-- 07 레고 -->
+<section class="scene" data-part="기술 이야기 · 여섯">
+  <div class="part">PART 1 · <b>기술</b></div>
+  <div class="kicker rv" style="--d:.05s">2×4 레고 브릭, 단 6개의 조합</div>
+  <div class="mega rv" style="--d:.4s"><span data-count="915103765" data-dur="1600" data-delay="500">0</span><small>가지 — 같은 블록도, 조합에 따라 전혀 다른 결과를 만듭니다 (Søren Eilers 계산)</small></div>
+  <p class="mid rv" style="--d:1.6s">Prompt · 문서 · Data · RAG · Python · API · DB · MCP · 사람 검토 —<br>AI 블록의 조합도 마찬가지로 폭발합니다. <b>여러분의 역할은 도구 하나를 고르는 것이 아니라, 문제에 맞는 조합을 설계하는 것입니다.</b></p>
+</section>
+
+<!-- 08 도구에서 파트너로 -->
+<section class="scene" data-part="기술 이야기 · 일곱">
+  <div class="part">PART 1 · <b>기술</b></div>
+  <div class="kicker rv" style="--d:.05s">같은 "AI"라는 단어, 해마다 다른 생물</div>
+  <h1 class="big rv" style="--d:.2s;font-size:52px">도구에서 <em>파트너</em>로 — AI는 세 단계를 지나왔습니다</h1>
+  <div class="stages">
+    <div class="stg rvs" style="--d:.8s"><div class="num">1</div><h3>질문 하나에<br>답 하나의 시대</h3><p>번역 · 요약 · 초안이 최대치. 사람이 모든 단계를 검수합니다. 이 단계에서 멈춘 조직이 지금도 대부분입니다.</p></div>
+    <div class="stg rvs" style="--d:1.1s"><div class="num">2</div><h3>스스로 계획하고<br>실행한다</h3><p>한 번의 지시에 자료 수집 → 코드 실행 → 검증 → 보고서까지 5~10단계를 스스로. 이미 현업에 들어와 있습니다.</p></div>
+    <div class="stg rvs" style="--d:1.4s"><div class="num">3</div><h3>AI가 대신<br>결정한다</h3><p>비교 · 선택 · 발송 · 조율까지. 사람은 승인과 반려만. 해외 빅테크 내부에서는 이미 일어나는 일입니다.</p></div>
+  </div>
+  <p class="dimline rv" style="--d:1.9s">그렇다면 — <b>우리 조직은 지금 몇 단계에 있습니까?</b></p>
+</section>
+
+<!-- 09 브릿지 -->
+<section class="scene" data-part="전환">
+  <h1 class="big rvb" style="--d:.2s;font-size:74px">여기까지는<br>기술 이야기입니다.</h1>
+  <p class="mid rv" style="--d:1.1s;font-size:30px">그런데 — 기술이 이렇게 쉬워졌는데도<br><b>왜 어떤 것은 쓰이고, 어떤 것은 버려질까요.</b></p>
+</section>
+
+<!-- 10 거시 팩트 4연타 -->
+<section class="scene" data-part="역설 · 하나">
+  <div class="part">PART 2 · <b>역설</b></div>
+  <div class="kicker rv" style="--d:.05s">거시 효과는 이미 검증되고 있습니다</div>
+  <div class="stats">
+    <div class="stat rvs" style="--d:.4s"><div class="n">+<span data-count="7" data-dur="900" data-delay="500">0</span>%</div><div class="src">Goldman Sachs</div><div class="lab">글로벌 GDP · 10년 누적 ≈ $7조</div></div>
+    <div class="stat rvs" style="--d:.65s"><div class="n">$<span data-count="4.4" data-dur="900" data-delay="750">0</span>T</div><div class="src">McKinsey</div><div class="lab">생성형 AI 연간 잠재 가치</div></div>
+    <div class="stat rvs" style="--d:.9s"><div class="n">+<span data-count="40" data-dur="900" data-delay="1000">0</span>%</div><div class="src">Harvard · BCG</div><div class="lab">컨설턴트 결과물 품질 · 758명 통제 실험</div></div>
+    <div class="stat rvs" style="--d:1.15s"><div class="n">−<span data-count="55" data-dur="900" data-delay="1250">0</span>%</div><div class="src">GitHub · MIT</div><div class="lab">개발자 코딩 시간 · 통제 실험</div></div>
+  </div>
+  <h1 class="big rv" style="--d:1.8s;font-size:48px;margin-top:64px">거시는 이미 <em>숫자로 증명</em>되고 있습니다.<br>그런데 — 그 숫자가 <span class="am">우리의 기준</span>이 될 수 있을까요?</h1>
+</section>
+
+
+
+<!-- 네 단어 -->
+<section class="scene" data-part="역설 · 기준">
+  <div style="font-family:var(--sans);font-weight:900;font-size:116px;line-height:1.16;letter-spacing:-3px">
+    <div class="rvb" style="--d:.15s">Faster,</div>
+    <div class="rvb" style="--d:.65s">Better,</div>
+    <div class="rvb" style="--d:1.15s">Cheaper,</div>
+    <div class="rvb" style="--d:1.75s;color:var(--leaf)">+ Easier.</div>
+  </div>
+</section>
+
+<!-- 판정 기준 — 4가지 가치 -->
+<section class="scene" data-part="역설 · 기준">
+  <div class="part">PART 2 · <b>역설</b></div>
+  <div class="kicker rv" style="--d:.05s">혁신의 고객가치 — 판정 기준</div>
+  <h1 class="big rv" style="--d:.2s;font-size:52px">GDP와 논문은 거시를 증명합니다.<br>그러나 우리가 확인할 것은 <em>네 가지 가치</em>입니다.</h1>
+  <div class="cards c4" style="margin-top:52px">
+    <div class="card rvs" style="--d:.9s"><div class="tag">FASTER</div><h3>더 빨라졌는가</h3><p>3시간 걸리던 일이 20분이 됐는가.</p></div>
+    <div class="card rvs" style="--d:1.1s"><div class="tag">BETTER</div><h3>더 좋아졌는가</h3><p>결과물의 품질과 정확도, 근거가 나아졌는가.</p></div>
+    <div class="card rvs" style="--d:1.3s"><div class="tag">CHEAPER</div><h3>더 싸졌는가</h3><p>같은 일을 더 적은 비용과 인력으로 하게 됐는가.</p></div>
+    <div class="card rvs" style="--d:1.5s"><div class="tag" style="color:var(--leaf)">+ EASIER</div><h3>더 쉬워졌는가</h3><p>비전문가도, 다음 담당자도 할 수 있게 됐는가 — AI 시대에 추가된 네 번째 축.</p></div>
+  </div>
+  <p class="dimline rv" style="--d:2s">이 네 가지 중 <b>하나도 바꾸지 못했다면 — 그것은 아직 혁신이 아닙니다.</b></p>
+</section>
+
+<!-- 11 웹 가비지 -->
+<section class="scene" data-part="역설 · 둘">
+  <div class="part">PART 2 · <b>역설</b></div>
+  <div class="kicker rv" style="--d:.05s">공급의 시대 — 그리고 네 가치를 바꾸지 못한 것들</div>
+  <h1 class="big rv" style="--d:.2s;font-size:54px">웹 가비지가 쏟아지고 있습니다.<br><em>만들어도, 팔리지 않습니다.</em></h1>
+  <div class="stats" style="grid-template-columns:repeat(3,1fr);margin-top:44px;max-width:1240px">
+    <div class="stat rvs" style="--d:.7s"><div class="n">5.2<span style="font-size:44px">억+</span></div><div class="src">GitHub 누적 저장소</div><div class="lab">Octoverse 2024 · 매분 새 저장소가 태어납니다</div></div>
+    <div class="stat rvs" style="--d:.95s"><div class="n">230<span style="font-size:44px">만+</span></div><div class="src">구글 플레이 등록 앱</div><div class="lab">Netlify · Vercel에서는 클릭 한 번에 새 사이트가 배포됩니다</div></div>
+    <div class="stat rvs" style="--d:1.2s"><div class="n" style="color:var(--amber)">0</div><div class="src">대부분이 수렴하는 곳</div><div class="lab">조회수 0 · 설치 0 · 별 0 — 공급은 폭발했지만 수요는 그대로입니다</div></div>
+  </div>
+  <p class="mid rv" style="--d:1.7s;margin-top:40px">공공도 예외가 아니었습니다. DB와 플랫폼이 넘치게 등장하던 시절, 아무리 만들어도 <b>조회수가 없었습니다.</b> 기관의 챗봇도 마찬가지입니다.</p>
+</section>
+
+<!-- 12 사용자를 모른다 -->
+<section class="scene" data-part="역설 · 셋">
+  <div class="part">PART 2 · <b>역설</b></div>
+  <div class="kicker rv" style="--d:.05s">이유는 하나</div>
+  <h1 class="big rv" style="--d:.2s"><em>사용자를 모르기</em> 때문입니다</h1>
+  <p class="mid rv" style="--d:.9s">내가 만든 서비스, 내가 만든 프로그램이 <b>누구의 페인포인트를 건드려야 하는지</b> 모르는 것입니다.</p>
+  <p class="mid rv" style="--d:1.6s">기술이 발전할수록 — 역설적이게도 — <span style="color:var(--amber);font-weight:900">기획과 상상력, 진짜 쓸모의 경쟁</span>이 펼쳐집니다.</p>
+</section>
+
+<!-- 13 혁신의 누명 -->
+<section class="scene" data-part="문제정의 · 하나">
+  <div class="part">PART 3 · <b>문제정의</b></div>
+  <div class="kicker rv" style="--d:.05s">혁신의 누명</div>
+  <h1 class="big rv" style="--d:.3s;font-size:52px">혁신을 말하면 — <span class="am">"사례를 보여달라"</span> 합니다.</h1>
+  <h1 class="big rv" style="--d:1.1s;font-size:52px;margin-top:26px">사례를 보여주면 — <span class="am">"그건 혁신이 아니라"</span> 합니다.</h1>
+  <p class="dimline rv" style="--d:2s;font-size:26px">완전히 새로운 혁신이, 존재한 적 있습니까?<br><b>혁신은 무에서 만드는 것이 아니라 — 다른 곳이 푼 원리를 내 문제로 옮기는 것입니다.</b></p>
+</section>
+
+<!-- 14 55:5 + 카파시 -->
+<section class="scene" data-part="문제정의 · 둘">
+  <div class="part">PART 3 · <b>문제정의</b></div>
+  <div class="kicker rv" style="--d:.05s">문제정의에 쓰는 시간</div>
+  <div class="ratio">
+    <div><div class="n g rvs" style="--d:.3s"><span data-count="55" data-dur="900" data-delay="400">0</span></div><div class="lab rv" style="--d:.9s">분 — 무엇이 문제인지 발견</div></div>
+    <div class="c rvs" style="--d:.6s">:</div>
+    <div><div class="n a rvs" style="--d:.75s">5</div><div class="lab rv" style="--d:1.05s">분 — 문제 해결</div></div>
+  </div>
+  <p class="dimline rv" style="--d:1.3s;font-size:19px">— 아인슈타인의 것으로 전해지는 말</p>
+  <div class="quotebox rv" style="--d:1.8s">
+    <p>"내가 겪는 문제를 안다. 풀렸을 때의 모습을 상상할 수 있다.<br>'어떻게' 푸는지는 — <b class="am" style="color:var(--amber)">AI와 함께 찾는다.</b>"</p>
+    <div class="who">안드레이 카파시(Andrej Karpathy) · '바이브 코딩'을 명명하며</div>
+  </div>
+</section>
+
+<!-- 16 오버엔지니어링 -->
+<section class="scene" data-part="문제정의 · 넷">
+  <div class="part">PART 3 · <b>문제정의</b></div>
+  <div class="kicker rv" style="--d:.05s">경계할 것</div>
+  <h1 class="big rv" style="--d:.2s">거창하고 있어 보이는<br><span class="am">오버엔지니어링</span>은<br>혁신을 가져다주지 않습니다</h1>
+  <p class="mid rv" style="--d:1.1s">우리의 문제도 마찬가지입니다. 크게 보이는 것과 <b>실제로 바뀌는 것</b>은 다릅니다.</p>
+</section>
+
+<!-- 17 고속도로와 골목길 -->
+<section class="scene" data-part="문제정의 · 다섯">
+  <div class="part">PART 3 · <b>문제정의</b></div>
+  <div class="kicker rv" style="--d:.05s">소버린 AI의 시대에</div>
+  <h1 class="big rv" style="--d:.2s">차는 고속도로에서만 달리지 않습니다</h1>
+  <div class="duo">
+    <div class="cell rv" style="--d:1s">
+      <h3 class="g">고속도로 — 거시 혁신</h3>
+      <p>소버린 AI가 시대를 바꿔가고 있습니다. 온갖 일상이 다 AI 이야기입니다. <b>중요합니다. 그러나 그것만으로는 부족합니다.</b></p>
+    </div>
+    <div class="cell rv" style="--d:1.4s">
+      <h3 class="a">국도와 골목길 — 미시 혁신</h3>
+      <p>현장의 업무는 골목길을 다닙니다. 한 서식, 한 민원, 한 취합. <b>골목길이 뚫려야 조직이 움직입니다.</b></p>
+    </div>
+  </div>
+</section>
+
+<!-- 18 민첩한 AI -->
+<section class="scene" data-part="문제정의 · 여섯">
+  <div class="part">PART 3 · <b>문제정의</b></div>
+  <div class="kicker rv" style="--d:.05s">민첩한 AI · 미시적 AI</div>
+  <h1 class="big rv" style="--d:.2s">거창한 주제로<br>사람을 현혹하지 마십시오</h1>
+  <p class="mid rv" style="--d:1s">우리의 동료, 우리의 팀과 기관은 아직 DX에서 벗어나지 못했습니다. <b>비싼 노동력으로 비효율을 만들어내는 문제들,</b> 국민과 동료들이 불편해하는 문제를 풀어야 합니다.</p>
+  <p class="dimline rv" style="--d:1.9s">그리고 — 모든 문제를 AI로 풀 수 있는 것도 아닙니다.</p>
+</section>
+
+<!-- 19 발굴력 3렌즈 -->
+<section class="scene" data-part="문제정의 · 일곱">
+  <div class="part">PART 3 · <b>문제정의</b></div>
+  <div class="kicker rv" style="--d:.05s">발굴력 — 결핍과 비대칭을 보는 세 개의 렌즈</div>
+  <h1 class="big rv" style="--d:.2s;font-size:50px">"새로운 것"을 찾지 말고, <em>"있는 것"</em>을 보십시오</h1>
+  <div class="cards c3">
+    <div class="card rvs" style="--d:.9s"><div class="tag">LENS 01 · 사내</div><h3>매주 반복되는 짜증</h3><p>5분이면 될 일에 몇 시간 쓰고 있습니까? 내 책상 위의 반복부터.</p></div>
+    <div class="card rvs" style="--d:1.1s"><div class="tag">LENS 02 · 국민</div><h3>같은 질문 100번</h3><p>100명이 묻는 같은 질문은 무엇입니까? 민원과 전화의 반복 패턴.</p></div>
+    <div class="card rvs" style="--d:1.3s"><div class="tag">LENS 03 · 비대칭</div><h3>우리만 아는 답</h3><p>우리는 알고 바깥은 모르는 것 — 현장의 노하우가 가장 큰 자산입니다.</p></div>
+  </div>
+  <p class="dimline rv" style="--d:1.9s">기술 먼저 보면 못 찾습니다. <b>짜증 먼저 보면 다 보입니다.</b></p>
+</section>
+
+<!-- 20 도그마 vs 공감 -->
+<section class="scene" data-part="문제정의 · 여덟">
+  <div class="part">PART 3 · <b>문제정의</b></div>
+  <div class="kicker rv" style="--d:.05s">그래서 해야 할 일</div>
+  <h1 class="big rv" style="--d:.2s">업무를 <em>분해</em>하고, 문제에 <em>공감</em>하고, 현장을 <em>확인</em>하십시오</h1>
+  <div class="duo">
+    <div class="cell rv" style="--d:1s">
+      <h3 class="a">머릿속의 도그마</h3>
+      <p>내가 만들고 싶은 그 무엇. 그럴듯하지만, 아무도 기다리지 않는 것.</p>
+    </div>
+    <div class="cell rv" style="--d:1.4s">
+      <h3 class="g">사람들의 공감</h3>
+      <p>세상을 바꾸는 서비스와 프로그램, AI의 진짜 활용은 <b>공감과 변화에서</b> 나옵니다.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 21 클로징 -->
+<section class="scene" data-part="CLOSING">
+  <div class="kicker rv" style="--d:.1s">오늘 남길 한 문장</div>
+  <h1 class="big rvb" style="--d:.4s;font-size:66px">거대한 AI를 기다리지 말고,<br>작은 AI를 엮어<br><em>현장의 변화를 시작하십시오</em></h1>
+  <p class="mid rv" style="--d:1.5s;font-size:28px">듣고 — 엮고 — 증명하기.<br><b>작게라도 쓰이는 서비스</b>에서 다시 뵙겠습니다.</p>
+  <div class="foot rv" style="--d:2s">신성진 · 한국데이터사이언티스트협회(CDSA)</div>
+</section>
+
+</div><!-- /stage -->
+
+<script>
+(function(){
+  const stage=document.getElementById("stage");
+  const scenes=[...document.querySelectorAll(".scene")];
+  const bar=document.getElementById("bar"), pn=document.getElementById("pageno");
+  let i=0, timers=[];
+
+  function fit(){const s=Math.min(innerWidth/1600,innerHeight/900);stage.style.transform=`translate(-50%,-50%) scale(${s})`}
+  addEventListener("resize",fit);fit();
+
+  function ease(t){return 1-Math.pow(1-t,3)}
+  function countUps(sc){
+    timers.forEach(clearInterval);timers=[];
+    sc.querySelectorAll("[data-count]").forEach(el=>{
+      const target=parseFloat(el.dataset.count), dur=+el.dataset.dur||1200, delay=+el.dataset.delay||0;
+      const dec=(el.dataset.count.split(".")[1]||"").length;
+      el.textContent=(0).toFixed(dec);
+      setTimeout(()=>{
+        const t0=performance.now();
+        const id=setInterval(()=>{
+          const p=Math.min(1,(performance.now()-t0)/dur), v=target*ease(p);
+          el.textContent=dec?v.toFixed(dec):Math.round(v).toLocaleString("en-US");
+          if(p>=1)clearInterval(id);
+        },16);
+        timers.push(id);
+      },delay);
+    });
+  }
+  function show(n){
+    i=Math.max(0,Math.min(scenes.length-1,n));
+    scenes.forEach((s,k)=>s.classList.toggle("active",k===i));
+    bar.style.width=((i+1)/scenes.length*100)+"%";
+    pn.textContent=String(i+1).padStart(2,"0")+" / "+String(scenes.length).padStart(2,"0")+"  ·  "+scenes[i].dataset.part;
+    countUps(scenes[i]);
+    history.replaceState(null,"","#"+(i+1));
+  }
+  function replay(){const c=i;scenes[c].classList.remove("active");void scenes[c].offsetWidth;scenes[c].classList.add("active");countUps(scenes[c])}
+
+  document.getElementById("cz").addEventListener("click",e=>{show(e.clientX<innerWidth*.18?i-1:i+1)});
+  addEventListener("keydown",e=>{
+    if(e.key==="ArrowRight"||e.key===" "||e.key==="PageDown"){e.preventDefault();show(i+1)}
+    if(e.key==="ArrowLeft"||e.key==="PageUp"){e.preventDefault();show(i-1)}
+    if(e.key==="f"||e.key==="F"){document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen().catch(()=>{})}
+    if(e.key==="r"||e.key==="R")replay();
+  });
+  const h=Number(location.hash.replace("#",""));
+  show(Number.isFinite(h)&&h>=1?h-1:0);
+})();
+</script>
+<script>/* kg-preview: #<heading> \uc704\uce58\ub85c \uc774\ub3d9 */
+(function(){function norm(t){return (t||'').replace(/\s+/g,'').toLowerCase()}
+function go(){var h=decodeURIComponent(location.hash.slice(1));if(!h)return;var k=norm(h).slice(0,24);if(!k)return;
+var best=null,bl=1e9,els=document.body.querySelectorAll('h1,h2,h3,h4,h5,p,div,span,li,td,text,tspan,section,article');
+for(var i=0;i<els.length;i++){var e=els[i],t=norm(e.textContent);if(t.length<bl&&t.indexOf(k)>-1){best=e;bl=t.length}}
+if(!best)return;var box=best.closest('section,[class*=slide],[class*=page],article')||best;
+box.scrollIntoView({block:'start'});box.style.outline='3px solid #c0504d';box.style.outlineOffset='4px';
+setTimeout(function(){box.style.outline=''},2600)}
+window.addEventListener('load',function(){setTimeout(go,400)});window.addEventListener('hashchange',go)})();</script></body>
+</html>

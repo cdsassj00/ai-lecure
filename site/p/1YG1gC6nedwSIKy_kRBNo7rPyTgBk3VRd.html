@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head><meta name="robots" content="noindex, nofollow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>바이브 코딩, 어디까지 활용 가능할까 — 유한킴벌리 특강 | CDSA</title>
+<style id="fontface">@font-face{font-family:'Pretendard';font-style:normal;font-weight:400;font-display:block;src:url(data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==) format('woff2')}
+@font-face{font-family:'Pretendard';font-style:normal;font-weight:600;font-display:block;src:url(data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==) format('woff2')}
+@font-face{font-family:'Pretendard';font-style:normal;font-weight:700;font-display:block;src:url(data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==) format('woff2')}
+@font-face{font-family:'Pretendard';font-style:normal;font-weight:900;font-display:block;src:url(data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==) format('woff2')}</style>
+<style>
+:root{
+  --bg:#f5f6f8; --surface:#ffffff; --tint:#e5e9ef; --line:#d7dee8; --line-strong:#bdc7d4;
+  --ink:#102139; --body:#3d4c60; --muted:#68758a; --faint:#93a1b3;
+  --navy:#101827; --coral:#b94a48; --coral-dark:#943539; --green:#2e7d5b; --gold:#c38424; --blue:#4266a3;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{font-family:'Pretendard','Noto Sans KR',sans-serif;background:#dfe2e7;color:var(--ink);
+  word-break:keep-all;overflow-wrap:break-word;-webkit-text-size-adjust:100%}
+
+#bar{position:fixed;top:0;left:0;right:0;z-index:90;display:flex;gap:8px;align-items:center;
+  padding:9px 16px;background:rgba(245,246,248,.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+#bar .nm{font-size:12.5px;font-weight:700;color:var(--muted);margin-right:auto;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#bar button{font-family:inherit;font-size:12.5px;font-weight:600;color:var(--ink);background:#fff;
+  border:1px solid var(--line-strong);border-radius:7px;padding:6px 12px;cursor:pointer;white-space:nowrap}
+#bar button:hover{border-color:var(--coral);color:var(--coral)}
+#bar button.on{background:var(--coral);border-color:var(--coral);color:#fff}
+#cnt{font-size:12px;font-weight:600;color:var(--muted);font-variant-numeric:tabular-nums}
+
+#wrap{padding:58px 0 40px;overflow:hidden}
+#deck{width:1280px;margin:0 auto}
+.slide{width:1280px;height:720px;position:relative;overflow:hidden;flex:none;
+  background:var(--bg);margin:0 auto 26px;box-shadow:0 6px 18px -12px rgba(16,33,57,.5)}
+body.editing .slide{outline:2px dashed var(--coral);outline-offset:-5px}
+.slide [contenteditable]:focus{outline:none}
+
+/* 공통 골격 — 고밀도 */
+.hd{position:absolute;top:0;left:46px;right:46px;height:148px;display:flex;flex-direction:column;justify-content:flex-end;padding-bottom:20px;border-bottom:3px solid var(--navy)}
+.kick{font-size:15px;font-weight:800;letter-spacing:.08em;color:var(--coral);margin-bottom:8px}
+.hd h2{font-size:40px;font-weight:900;line-height:1.12;letter-spacing:-.02em}
+.hd .ext{position:absolute;right:0;bottom:24px;font-size:15px;font-weight:800;color:#fff;background:var(--blue);
+  border-radius:5px;padding:6px 13px;font-variant-ligatures:none}
+.lead{position:absolute;top:162px;left:46px;right:46px;font-size:18.5px;font-weight:700;color:var(--body)}
+.lead b{color:var(--coral)}
+.bd{position:absolute;left:46px;right:46px;top:158px;bottom:100px}
+.anch{position:absolute;left:46px;right:46px;bottom:34px;height:56px;border-top:3px solid var(--navy);
+  display:flex;align-items:center;gap:14px}
+.anch .tag{flex:none;font-size:13px;font-weight:800;color:#fff;background:var(--navy);border-radius:4px;padding:5px 12px}
+.anch p{font-size:18px;font-weight:800;color:var(--ink)}
+.ft{position:absolute;left:46px;right:46px;bottom:8px;display:flex;justify-content:space-between;
+  font-size:11px;color:var(--faint);font-variant-numeric:tabular-nums}
+.cue{position:absolute;left:46px;right:46px;bottom:100px;height:38px;display:flex;align-items:center;gap:12px;
+  border-left:4px solid var(--coral);padding-left:13px;background:linear-gradient(90deg,rgba(185,74,72,.07),transparent)}
+.cue b{flex:none;font-size:13px;font-weight:800;color:var(--coral)}
+.cue span{font-size:14.5px;font-weight:600;color:var(--body)}
+.nd{position:absolute;background:var(--surface);border:1px solid var(--line-strong);border-radius:8px}
+.nd h4{font-size:16.5px;font-weight:800}
+.nd p{font-size:13.5px;color:var(--muted);line-height:1.48;margin-top:4px}
+.nd .eg{display:block;font-size:12.5px;font-weight:700;color:var(--blue);margin-top:6px}
+svg.wire{position:absolute;inset:0;pointer-events:none}
+svg.wire line,svg.wire path{stroke-linecap:round}
+.code{font-weight:700;color:var(--coral-dark);background:rgba(185,74,72,.08);border-radius:4px;padding:1px 7px;font-variant-ligatures:none}
+.pr{position:absolute;display:flex;align-items:center;gap:10px;background:var(--navy);border-radius:8px;padding:11px 16px}
+.pr b{flex:none;font-size:12px;font-weight:800;color:#e8b4b2;letter-spacing:.06em}
+.pr span{font-size:14.5px;font-weight:600;color:#e8ecf2}
+.chip{display:inline-block;font-size:12.5px;font-weight:700;color:var(--ink);background:var(--surface);border:1px solid var(--line-strong);border-radius:12px;padding:3px 11px;margin:0 4px 6px 0}
+.no{position:absolute;top:-12px;left:13px;width:24px;height:24px;border-radius:50%;background:var(--coral);color:#fff;
+  font-size:13px;font-weight:800;display:flex;align-items:center;justify-content:center}
+
+/* 표지 */
+.cover{background:var(--navy);color:#fff}
+.cover .cv-kick{position:absolute;top:86px;left:76px;font-size:16px;font-weight:800;letter-spacing:.14em;color:#e8b4b2}
+.cover h1{position:absolute;top:126px;left:76px;font-size:82px;font-weight:900;line-height:1.14;letter-spacing:-.02em}
+.cover .cv-sub{position:absolute;top:352px;left:76px;font-size:19px;color:#c7d0dd;line-height:1.75;font-weight:600}
+.cover .cv-meta{position:absolute;top:90px;right:76px;text-align:right;font-size:15px;color:#aeb8c8;line-height:2}
+.cover .cv-ask{position:absolute;top:352px;right:76px;width:330px;border-left:2px solid rgba(232,180,178,.5);padding-left:20px}
+.cover .cv-ask b{display:block;font-size:12.5px;font-weight:800;color:#e8b4b2;letter-spacing:.1em;margin-bottom:10px}
+.cover .cv-ask li{list-style:none;font-size:15.5px;color:#e8ecf2;font-weight:600;padding:5px 0}
+.cover .path{position:absolute;left:76px;right:76px;bottom:96px;display:flex}
+.cover .path .pn{flex:1;border-top:2px solid rgba(255,255,255,.3);padding:14px 18px 0 0}
+.cover .path .pn b{display:block;font-size:13px;font-weight:800;color:#e8b4b2;margin-bottom:6px}
+.cover .path .pn span{font-size:18px;font-weight:800;color:#fff}
+.cover .path .pn i{display:block;font-style:normal;font-size:13.5px;color:#8d9ab0;margin-top:7px;line-height:1.55}
+.cover .cv-ft{position:absolute;left:76px;right:76px;bottom:40px;display:flex;justify-content:space-between;font-size:13px;color:#7d8aa0}
+
+/* S2 open-columns + 타임테이블 */
+.ocol{position:absolute;left:0;right:0;top:0;display:grid;grid-template-columns:1fr 1fr 1fr}
+.ocol>div{padding:16px 24px 10px;border-left:1px solid var(--line-strong)}
+.ocol>div:first-child{border-left:none;padding-left:0}
+.ocol h3{font-size:16px;font-weight:800;color:var(--coral);letter-spacing:.04em;margin-bottom:10px}
+.ocol li{list-style:none;font-size:17px;color:var(--body);line-height:1.55;padding:21px 0;border-bottom:1px solid var(--line)}
+.ocol li b{color:var(--ink);font-weight:800}
+.ocol li:last-child{border-bottom:none}
+.tt{position:absolute;left:0;right:0;bottom:0;height:96px;display:flex;border-top:3px solid var(--navy)}
+.tt>div{padding:12px 16px 0;border-left:1px solid var(--line)}
+.tt>div:first-child{border-left:none}
+.tt b{display:block;font-size:13px;font-weight:800;color:var(--coral);font-variant-numeric:tabular-nums}
+.tt span{display:block;font-size:15.5px;font-weight:800;color:var(--ink);margin-top:4px}
+.tt i{display:block;font-style:normal;font-size:12.5px;color:var(--muted);margin-top:3px}
+
+/* S3 anatomy */
+.llm-c{position:absolute;border-radius:50%;background:var(--navy);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.llm-c .t1{font-size:40px;font-weight:900;letter-spacing:.02em}
+.llm-c .t2{font-size:14.5px;font-weight:700;color:#c7d0dd;margin-top:8px;line-height:1.5}
+.llm-c .t3{font-size:12px;font-weight:800;color:#e8b4b2;margin-top:8px;letter-spacing:.1em}
+
+/* S4 */
+.zone{position:absolute;border:1.5px solid var(--line-strong);border-radius:10px;background:rgba(255,255,255,.55)}
+.zone>b{position:absolute;top:-12px;left:16px;background:var(--bg);padding:0 9px;font-size:14.5px;font-weight:800;color:var(--navy)}
+.band{position:absolute;background:rgba(46,125,91,.14);border:1.5px dashed var(--green);border-radius:8px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px}
+.band b{font-size:23px;font-weight:900;color:var(--green);writing-mode:vertical-rl;letter-spacing:.25em}
+.band span{font-size:11.5px;font-weight:700;color:var(--green);writing-mode:vertical-rl;letter-spacing:.1em}
+
+/* S5 */
+.axis{position:absolute;width:2.5px;background:var(--navy)}
+.axlab{position:absolute;transform:translateX(-50%);font-size:13.5px;font-weight:800;color:#fff;background:var(--navy);border-radius:14px;padding:6px 16px;white-space:nowrap}
+.hstrip{position:absolute;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.hstrip b{font-size:13px;font-weight:800;color:var(--muted)}
+.hstrip span{font-size:13.5px;font-weight:700;color:var(--ink);background:var(--surface);border:1px solid var(--line-strong);border-radius:13px;padding:4px 12px}
+.vs li{list-style:none;font-size:16px;color:var(--body);padding:13px 0;border-bottom:1px solid var(--line);line-height:1.5}
+.vs li b{color:var(--ink);font-weight:800}
+
+/* S6 timeline */
+.tl-line{position:absolute;height:2.5px;background:var(--line-strong)}
+.tl-dot{position:absolute;width:15px;height:15px;border-radius:50%;background:var(--surface);border:3.5px solid var(--navy);transform:translate(-50%,-50%)}
+.tl-it{position:absolute;width:272px}
+.tl-it h4{font-size:20px;font-weight:900;margin-bottom:7px}
+.tl-it p{font-size:14.5px;color:var(--body);line-height:1.55}
+.tl-it .ph{font-size:12.5px;font-weight:800;letter-spacing:.06em;margin-bottom:5px;color:var(--faint)}
+.tl-it .lim{display:block;font-size:13px;font-weight:700;color:var(--coral);margin-top:6px}
+
+/* S7 myth */
+.myth{position:absolute;left:0;right:0;top:0;height:378px;display:grid;grid-template-columns:1fr 44px 1.18fr 44px 1fr}
+.myth .mc{padding:24px 26px;border-radius:10px;display:flex;flex-direction:column;justify-content:center}
+.myth .arr{display:flex;align-items:center;justify-content:center;font-size:24px;color:var(--faint);font-weight:900}
+.myth h3{font-size:14.5px;font-weight:800;letter-spacing:.05em;margin-bottom:12px}
+.myth p{font-size:20px;font-weight:700;line-height:1.62}
+.myth .sub{font-size:14.5px;font-weight:600;line-height:1.6;margin-top:16px;color:var(--muted)}
+.seven{position:absolute;left:0;right:0;bottom:0;display:flex;border-top:3px solid var(--navy)}
+.seven>div{flex:1;padding:13px 4px 6px;text-align:center;border-left:1px solid var(--line)}
+.seven>div:first-child{border-left:none}
+.seven b{display:block;font-size:12.5px;font-weight:800;color:var(--coral);margin-bottom:4px}
+.seven span{display:block;font-size:15.5px;font-weight:800;color:var(--ink)}
+.seven i{display:block;font-style:normal;font-size:12px;font-weight:700;color:var(--blue);margin-top:3px;font-variant-ligatures:none}
+
+/* 표 공통 */
+.strip{width:100%;border-collapse:collapse}
+.strip th{font-size:13.5px;font-weight:800;color:var(--muted);text-align:left;padding:9px 12px;border-bottom:3px solid var(--navy);letter-spacing:.04em}
+.strip td{font-size:16.5px;color:var(--body);padding:19px 12px;border-bottom:1px solid var(--line);vertical-align:top;line-height:1.5}
+.strip td.q{font-weight:800;color:var(--ink)}
+.s8t td{padding:33px 12px;font-size:17px}
+.strip td .sm{display:block;font-size:13px;color:var(--muted);margin-top:5px;font-weight:500}
+.strip td .cd{display:inline-block;font-size:13.5px;font-weight:700;color:var(--coral-dark);background:rgba(185,74,72,.08);border-radius:4px;padding:2px 8px;margin-top:6px;font-variant-ligatures:none}
+
+/* S9 lanes */
+.lane{position:absolute;border-radius:10px;background:var(--surface);border:1px solid var(--line-strong);padding:17px 19px}
+.lane>b{display:block;font-size:15.5px;font-weight:800;color:var(--coral);margin-bottom:10px;letter-spacing:.03em}
+.lane li{list-style:none;font-size:16px;color:var(--body);padding:21px 0;border-bottom:1px solid var(--line);line-height:1.5}
+.lane li:last-child{border-bottom:none}
+.lane li b{color:var(--ink);font-weight:800}
+
+/* S10 staircase */
+.stair{position:absolute;border-top:4px solid var(--navy);padding:11px 14px 0 2px}
+.stair .sn{position:absolute;top:-38px;right:8px;font-size:52px;font-weight:900;color:var(--tint);line-height:1;z-index:0}
+.stair h4{font-size:20px;font-weight:900;margin-bottom:7px;position:relative}
+.stair p{font-size:14px;color:var(--body);line-height:1.55;position:relative}
+.stair .cd2{display:inline-block;font-size:13px;font-weight:700;color:var(--coral-dark);background:rgba(185,74,72,.08);border-radius:4px;padding:2px 8px;margin-top:7px;font-variant-ligatures:none}
+
+/* S12 demo */
+.demo{position:absolute;left:0;top:0;bottom:0;width:590px;background:var(--navy);border-radius:10px;padding:22px 28px;color:#e8ecf2}
+.demo .dt{font-size:14px;font-weight:800;color:#e8b4b2;letter-spacing:.08em;margin-bottom:10px}
+.demo .stp{display:flex;gap:12px;align-items:baseline;padding:13px 0;border-bottom:1px solid rgba(255,255,255,.14);font-size:17.5px}
+.demo .stp b{flex:none;font-size:14px;font-weight:800;color:#e8b4b2;width:22px}
+.demo code{font-family:'Pretendard';font-weight:700;background:rgba(255,255,255,.13);border-radius:4px;padding:2px 8px;font-size:15px;font-variant-ligatures:none}
+.demo .con{margin-top:14px;background:#0a0f18;border-radius:8px;padding:13px 15px;font-size:13.5px;line-height:1.75;color:#9fd0b4;font-variant-ligatures:none}
+.demo .con b{color:#e8b4b2;font-weight:700}
+.obs{position:absolute;left:620px;right:0;top:0}
+.obs h3{font-size:14px;font-weight:800;color:var(--muted);letter-spacing:.05em;margin-bottom:4px}
+.obs li{list-style:none;font-size:16px;color:var(--body);padding:11px 0;border-bottom:1px solid var(--line);line-height:1.5}
+.obs li b{color:var(--ink);font-weight:800}
+
+/* S14 매트릭스 */
+.mx{width:100%;border-collapse:collapse}
+.mx th{font-size:13.5px;font-weight:800;padding:10px 13px;border-bottom:3px solid var(--navy);text-align:left;color:var(--muted);letter-spacing:.04em}
+.mx td{font-size:15.5px;padding:16px 13px;border-bottom:1px solid var(--line);color:var(--body);line-height:1.5;vertical-align:middle}
+.mx td.env{font-size:18px;font-weight:900;color:var(--ink)}
+.mx td.xt{font-weight:800;color:var(--blue);font-variant-ligatures:none;font-size:15px}
+.mx td .sm{display:block;font-size:12.5px;color:var(--muted);margin-top:4px}
+
+/* S16 roadmap */
+.road{position:absolute;inset:0;display:grid;grid-template-columns:1fr 1fr 1fr;gap:24px}
+.road>div{border-top:5px solid var(--line-strong);padding-top:12px;display:flex;flex-direction:column}
+.road>div.now{border-top-color:var(--coral)}
+.road>div.nxt{border-top-color:var(--gold)}
+.road>div.aft{border-top-color:var(--green)}
+.road .ph{font-size:13px;font-weight:800;letter-spacing:.05em;color:var(--muted);margin-bottom:3px}
+.road h3{font-size:24px;font-weight:900;margin-bottom:10px}
+.road li{list-style:none;font-size:15.5px;color:var(--body);line-height:1.55;padding:12px 0;border-bottom:1px solid var(--line);flex:1;display:flex;align-items:center}
+.road li b{color:var(--ink);font-weight:800}
+.road li:last-child{border:none}
+.road .sig{margin-top:auto;padding-bottom:2px;font-size:14.5px;font-weight:800;color:var(--green);border-top:1px dashed var(--line-strong);padding-top:14px}
+
+/* S17 */
+.close{background:var(--navy);color:#fff}
+.close .bigp{position:absolute;top:128px;left:76px;right:76px;font-size:54px;font-weight:900;line-height:1.3;letter-spacing:-.015em}
+.close .ev{position:absolute;top:322px;left:76px;right:76px;display:flex;gap:56px}
+.close .ev div{flex:1;border-top:2px solid rgba(255,255,255,.3);padding-top:15px;font-size:17px;color:#c7d0dd;line-height:1.65}
+.close .ev b{color:#fff}
+.close .qa{position:absolute;bottom:142px;left:76px;font-size:28px;font-weight:900;color:#e8b4b2}
+.close .ct{position:absolute;bottom:44px;left:76px;right:76px;display:flex;justify-content:space-between;font-size:14px;color:#8d9ab0}
+
+/* 사례 리스트 컴포넌트 */
+.gl{position:absolute;left:0;right:0}
+.gl .grp{display:flex;border-top:3px solid var(--navy);padding:15px 0 17px;align-items:center}
+.gl .grp:first-child{border-top:none;padding-top:0}
+.gl .gt{flex:none;width:196px;padding-right:18px}
+.gl .gt b{display:block;font-size:18px;font-weight:900;color:var(--ink)}
+.gl .gt i{display:block;font-style:normal;font-size:13px;font-weight:700;color:var(--coral);margin-top:5px}
+.gl .gi{flex:1;display:grid;grid-template-columns:1fr 1fr;column-gap:30px}
+.gl .gi li{list-style:none;font-size:16.5px;color:var(--body);line-height:1.55;padding:15px 0;border-bottom:1px solid var(--line);display:flex;gap:9px}
+.gl .gi li b{color:var(--ink);font-weight:800}
+.gl .gi li:nth-last-child(-n+2){border-bottom:none}
+.gl .gi li::before{content:'—';color:var(--coral);font-weight:800;flex:none}
+.qd{position:absolute;inset:0;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:0}
+.qd>div{padding:15px 22px 10px;border-left:2px solid var(--line-strong);border-top:2px solid var(--line-strong)}
+.qd>div:nth-child(1),.qd>div:nth-child(2){border-top:none}
+.qd>div:nth-child(1),.qd>div:nth-child(3){border-left:none}
+.qd h3{font-size:19px;font-weight:900;margin-bottom:3px}
+.qd h3 i{font-style:normal;font-size:13px;font-weight:700;color:var(--muted);margin-left:8px}
+.qd li{list-style:none;font-size:15.5px;color:var(--body);line-height:1.5;padding:8px 0;border-bottom:1px solid var(--line);display:flex;gap:8px}
+.qd li:last-child{border-bottom:none}
+.qd li b{color:var(--ink);font-weight:800}
+.qd li::before{content:'—';color:var(--coral);font-weight:800;flex:none}
+.sp-l{position:absolute;left:0;top:0;bottom:0;width:430px}
+.sp-l .row{padding:15px 0;border-bottom:1px solid var(--line)}
+.sp-l .row b{display:block;font-size:17px;font-weight:900;color:var(--ink)}
+.sp-l .row span{display:block;font-size:14px;color:var(--muted);line-height:1.5;margin-top:4px}
+.sp-r{position:absolute;left:474px;right:0;top:0}
+.sp-r h3{font-size:14px;font-weight:800;color:var(--muted);letter-spacing:.05em;margin-bottom:4px}
+.sp-r li{list-style:none;font-size:16px;color:var(--body);line-height:1.5;padding:10px 0;border-bottom:1px solid var(--line);display:flex;gap:9px}
+.sp-r li b{color:var(--ink);font-weight:800}
+.sp-r li::before{content:'—';color:var(--coral);font-weight:800;flex:none}
+
+/* 발표 모드 */
+body.present{overflow:hidden;background:#0b0f16}
+body.present #bar{display:none}
+body.present #wrap{padding:0}
+body.present .slide{display:none;margin:0;box-shadow:none}
+body.present .slide.cur{display:block;position:fixed;top:50%;left:50%;transform-origin:center;transform:translate(-50%,-50%) scale(var(--sc,1))}
+body.present #pcnt{position:fixed;right:18px;bottom:14px;z-index:99;font-size:13px;color:#5d6b80;font-variant-numeric:tabular-nums}
+#pcnt{display:none}
+body.present #pcnt{display:block}
+.rv{transition:opacity .45s ease,transform .45s ease}
+body.present .slide.cur .rv{opacity:0;transform:translateY(8px)}
+body.present .slide.cur.go .rv{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){.rv{transition:none}body.present .slide.cur .rv{opacity:1;transform:none}}
+
+@page{size:1280px 720px;margin:0}
+@media print{
+  body{background:#fff}
+  #bar,#pcnt{display:none!important}
+  #wrap{padding:0}
+  #deck{width:1280px}
+  .slide{margin:0;box-shadow:none;page-break-after:always;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .slide:last-of-type{page-break-after:auto}
+}
+</style>
+</head>
+<body>
+<div id="bar">
+  <span class="nm">바이브 코딩, 어디까지 활용 가능할까 · 유한킴벌리 — 17장</span>
+  <span id="cnt"></span>
+  <button id="b-edit" onclick="tgEdit()">✎ 편집</button>
+  <button onclick="saveHTML()">⬇ HTML 저장</button>
+  <button onclick="doPrint()">⤓ PDF</button>
+  <button onclick="startPresent()">▶ 발표 (P)</button>
+</div>
+<div id="pcnt"></div>
+<div id="wrap"><div id="deck">
+<!-- S1 표지 -->
+<section class="slide cover" data-role="cover" data-layout="cover-stage" data-purpose="특강 정체와 학습 경로 제시">
+  <div class="cv-kick">유한킴벌리 특강 · 2026. 8. 18 (화)</div>
+  <div class="cv-meta">송파 본사 · 온·오프라인 동시<br>120분 · 시연 중심 진행</div>
+  <h1>바이브 코딩,<br>어디까지 활용 가능할까</h1>
+  <div class="cv-sub">웹사이트 제작 기술이 아니라, 내 컴퓨터 전체를 자동화하는 방법론<br><b style="color:#fff">신성진</b> · ㈜한국데이터사이언티스트협회 대표이사 · 행정안전부 AI데이터분석 전문인재 과정 주임교수</div>
+  <div class="cv-ask">
+    <b>오늘 요청받은 세 가지</b>
+    <li>① 체계적으로 바이브 코딩하는 방법</li>
+    <li>② 마케팅·영업·재무·SCM 직무별 사례</li>
+    <li>③ 유한킴벌리 환경에서의 활용법</li>
+  </div>
+  <div class="path">
+    <div class="pn"><b>PART 1 · 20분</b><span>에이전트의 원리</span><i>LLM은 아무것도 못한다 — 도구 · 복붙 · 하네스</i></div>
+    <div class="pn"><b>PART 2 · 10분</b><span>바이브 코딩 다시 보기</span><i>정의 교정 — 웹이 아니라 내 PC 자동화</i></div>
+    <div class="pn"><b>PART 3 · 70분</b><span>7개 실행 영역</span><i>PowerShell · 엑셀 · 파이썬 · 브라우저 · 콘솔 · 연결 · 확장자</i></div>
+    <div class="pn"><b>PART 4 · 20분</b><span>유한킴벌리 적용</span><i>직무별 사례 · 단계별 경로 · Q&amp;A</i></div>
+  </div>
+  <div class="cv-ft"><span>㈜한국데이터사이언티스트협회 · CDSA · cdsa.kr</span><span>공공기관·대기업 150여 곳 AI·AX 교육 수행</span></div>
+</section>
+
+<!-- S2 기준 + 타임테이블 -->
+<section class="slide" data-role="도입" data-layout="open-columns" data-purpose="진행 방식·도구 기준·시간 구조 합의">
+  <div class="hd"><div class="kick">시작 전</div><h2>오늘의 기준 — 위치 · 방식 · 도구</h2></div>
+  <div class="bd" style="top:166px">
+    <div class="ocol">
+      <div class="rv">
+        <h3>지금 위치</h3>
+        <li><b>사례 공유회 300명</b> 참여 — 관심은 이미 확인, 일부는 업무 적용을 시작해 새 사례를 만드는 중</li>
+        <li>오늘의 이동: <b>"무엇인지 안다" → "체계적으로 쓴다"</b></li>
+        <li>방법론 하나로 꿰기 — 도구가 바뀌어도 남는 <b>원리</b> 중심</li>
+      </div>
+      <div class="rv">
+        <h3>진행 방식</h3>
+        <li><b>시연 중심</b> — 범위가 넓어 밀도 있게, 눈으로 확인</li>
+        <li>엑셀 함수 · PowerShell · HTML은 <b>즉석 따라 하기</b> 구간 운영</li>
+        <li>상세 절차·명령 전문은 자료 별도 제공, 질문은 <b>각 영역 끝마다</b></li>
+      </div>
+      <div class="rv">
+        <h3>도구 기준</h3>
+        <li><b>Copilot</b> — 라이선스 보유: Claude Opus / 미보유: GPT-5.5 · <b>Gemini</b> 가능</li>
+        <li>파이썬 = <b>아나콘다</b>(파이썬+패키지 묶음), 지난 교육에서 설치</li>
+        <li>Claude·ChatGPT 직접 사용 불가 — 해당 부분은 <b>강사 화면 시연</b>으로</li>
+      </div>
+    </div>
+    <div class="tt">
+      <div style="flex:1"><b>00 – 20분</b><span>에이전트의 원리</span><i>LLM+도구 · 복붙 · 하네스</i></div>
+      <div style="flex:.8"><b>20 – 30분</b><span>정의 교정</span><i>편견 걷어내기</i></div>
+      <div style="flex:2.4"><b>30 – 100분</b><span>7개 실행 영역 + 시연</span><i>PowerShell → 엑셀 → 파이썬 → 브라우저 → 콘솔 F12 → 연결 → 확장자</i></div>
+      <div style="flex:1"><b>100 – 120분</b><span>직무 적용 + Q&amp;A</span><i>마케팅·영업·재무·SCM</i></div>
+    </div>
+  </div>
+  <div class="anch"><span class="tag">원칙</span><p>코드 생성은 Copilot·Gemini에서, 실행은 내 PC의 도구에서 — 오늘 전체를 관통하는 한 줄.</p></div>
+  <div class="ft"><span>바이브 코딩, 어디까지 활용 가능할까 · 유한킴벌리 · CDSA 신성진</span><span>2 / 17</span></div>
+</section>
+
+<!-- S3 LLM 해부 -->
+<section class="slide" data-role="개념" data-layout="anatomy" data-purpose="LLM 단독의 한계와 도구 결합 원리">
+  <div class="hd"><div class="kick">PART 1 · 에이전트의 원리</div><h2>LLM은 아무것도 못한다 — 도구가 붙어야 에이전트다</h2></div>
+  <div class="bd" style="top:166px;bottom:96px">
+    <svg class="wire" viewBox="0 0 1188 502">
+      <line x1="464" y1="180" x2="384" y2="96" stroke="#bdc7d4" stroke-width="1.5"/>
+      <line x1="446" y1="240" x2="384" y2="240" stroke="#bdc7d4" stroke-width="1.5"/>
+      <line x1="464" y1="300" x2="384" y2="384" stroke="#bdc7d4" stroke-width="1.5"/>
+      <line x1="724" y1="180" x2="804" y2="96" stroke="#bdc7d4" stroke-width="1.5"/>
+      <line x1="742" y1="240" x2="804" y2="240" stroke="#bdc7d4" stroke-width="1.5"/>
+      <line x1="724" y1="300" x2="804" y2="384" stroke="#bdc7d4" stroke-width="1.5"/>
+    </svg>
+    <div class="llm-c" style="left:446px;top:92px;width:296px;height:296px">
+      <div class="t1">LLM</div>
+      <div class="t2">글을 읽고, 글을 쓴다.<br>그게 전부다.</div>
+      <div class="t2" style="font-size:12.5px;color:#8d9ab0;margin-top:10px">파일 하나 못 만들고<br>인터넷 접속도 스스로 못 한다</div>
+      <div class="t3">생성형 AI</div>
+    </div>
+    <div class="nd rv" style="left:56px;top:40px;width:328px;padding:14px 17px"><span class="no">1</span><h4>검색 API</h4><p>인터넷을 대신 보고 결과를 읽어 온다</p><span class="eg">예 — 챗봇의 "웹 검색" 버튼이 이것</span></div>
+    <div class="nd rv" style="left:56px;top:186px;width:328px;padding:14px 17px"><span class="no">2</span><h4>운영체제 — PowerShell·CMD</h4><p>파일을 만들고 옮기고 프로그램을 실행한다</p><span class="eg">예 — 폴더 정리, 일괄 이름 변경</span></div>
+    <div class="nd rv" style="left:56px;top:332px;width:328px;padding:14px 17px"><span class="no">3</span><h4>파이썬</h4><p>계산, 데이터 분석, 문서 생성을 대신한다</p><span class="eg">예 — 엑셀 100개 취합, PDF 변환</span></div>
+    <div class="nd rv" style="left:804px;top:40px;width:328px;padding:14px 17px"><span class="no">4</span><h4>문서 읽기·쓰기 — RAG</h4><p>내 자료를 검색해 읽고 근거로 답한다</p><span class="eg">예 — 사내 규정 찾아 답하는 챗봇</span></div>
+    <div class="nd rv" style="left:804px;top:186px;width:328px;padding:14px 17px"><span class="no">5</span><h4>MCP</h4><p>외부 프로그램을 꽂는 표준 연결 규격</p><span class="eg">예 — 노션·구글드라이브 직접 연결</span></div>
+    <div class="nd rv" style="left:804px;top:332px;width:328px;padding:14px 17px"><span class="no">6</span><h4>웹크롤러</h4><p>웹페이지를 통째로 수집해 넘겨준다</p><span class="eg">예 — 경쟁사 가격 모니터링</span></div>
+  </div>
+  <div class="anch"><span class="tag">정리</span><p>LLM + 도구 = 에이전트. 도구 목록이 곧 에이전트의 능력 범위다 — 이 그림 하나로 오늘 전부가 설명된다.</p></div>
+  <div class="ft"><span>바이브 코딩, 어디까지 활용 가능할까 · 유한킴벌리 · CDSA 신성진</span><span>3 / 17</span></div>
+</section>
+
+<!-- S4 방식1 클라우드+복붙 -->
+<section class="slide" data-role="구조" data-layout="three-lane-wire" data-purpose="클라우드 에이전트와 복붙 경계 구조">
+  <div class="hd"><div class="kick">PART 1 · 에이전트의 원리</div><h2>방식 ① 에이전트는 저쪽 컴퓨터에서 일한다</h2></div>
+  <div class="lead">ChatGPT · Copilot 채팅이 지금 이 구조다 — 실행은 <b>클라우드</b>에서, 내 PC로는 <b>복붙</b>으로 넘어온다.</div>
+  <div class="bd" style="top:200px;bottom:96px">
+    <div class="zone" style="left:0;top:14px;width:610px;height:400px"><b>OpenAI · MS 회사의 클라우드 컴퓨터</b></div>
+    <div class="zone" style="left:762px;top:14px;width:426px;height:400px"><b>내 컴퓨터</b></div>
+    <div class="band" style="left:654px;top:14px;width:68px;height:400px"><b>복붙</b><span>보안망 경계</span></div>
+    <svg class="wire" viewBox="0 0 1188 468">
+      <line x1="348" y1="82" x2="428" y2="168" stroke="#4266a3" stroke-width="1.6"/>
+      <line x1="348" y1="168" x2="428" y2="202" stroke="#4266a3" stroke-width="1.6"/>
+      <line x1="348" y1="254" x2="428" y2="248" stroke="#4266a3" stroke-width="1.6"/>
+      <line x1="348" y1="340" x2="428" y2="284" stroke="#4266a3" stroke-width="1.6"/>
+      <path d="M 580 226 L 800 226" stroke="#b94a48" stroke-width="2.4" stroke-dasharray="8 6" fill="none" marker-end="url(#ar1)"/>
+      <defs><marker id="ar1" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L8,4.5 L0,9" fill="none" stroke="#b94a48" stroke-width="1.7"/></marker></defs>
+    </svg>
+    <div class="nd" style="left:34px;top:52px;width:314px;padding:11px 15px"><h4>웹검색 프로그램</h4><p style="margin-top:2px">검색 키워드를 받아 결과 반환</p></div>
+    <div class="nd" style="left:34px;top:138px;width:314px;padding:11px 15px"><h4>문서 (skill)</h4><p style="margin-top:2px">작업 지침·양식을 읽어 적용</p></div>
+    <div class="nd" style="left:34px;top:224px;width:314px;padding:11px 15px"><h4>윈도우 · 파이썬 코드</h4><p style="margin-top:2px">저쪽 컴퓨터 안에서 코드 실행</p></div>
+    <div class="nd" style="left:34px;top:310px;width:314px;padding:11px 15px"><h4>엑셀 파일 ◇</h4><p style="margin-top:2px">파일을 만들어 다운로드로 제공</p></div>
+    <div class="llm-c" style="left:428px;top:146px;width:152px;height:152px">
+      <div class="t1" style="font-size:28px">LLM</div>
+      <div class="t2" style="font-size:12px">생각 · 계획</div>
+    </div>
+    <div style="position:absolute;left:402px;top:312px;width:206px;text-align:center;font-size:13px;font-weight:800;color:var(--coral)">검색 키워드 · 코드로<br>도구를 호출한다</div>
+    <div class="nd rv" style="left:806px;top:52px;width:342px;padding:11px 15px"><h4>윈도우</h4><p style="margin-top:2px">받은 명령을 내가 붙여넣어 실행</p></div>
+    <div class="nd rv" style="left:806px;top:138px;width:342px;padding:11px 15px"><h4>파이썬 코드</h4><p style="margin-top:2px">받은 코드를 내 실행기에서 구동</p></div>
+    <div class="nd rv" style="left:806px;top:224px;width:342px;padding:11px 15px"><h4>엑셀 프로그램 · 엑셀 파일 ◇</h4><p style="margin-top:2px">받은 VBA·함수를 내 문서에 적용</p></div>
+    <div class="rv" style="position:absolute;left:806px;top:318px;width:342px;font-size:14.5px;color:var(--body);line-height:1.6">코드·결과물은 <b>사람이 손으로</b> 복사해 옮긴다 — 이 한 구간만 수동이다.</div>
+  </div>
+  <div class="anch"><span class="tag">정리</span><p>복붙도 이미 에이전트 사용이다 — 실행 위치가 클라우드일 뿐. 오늘 시연 대부분이 이 방식으로 돌아간다.</p></div>
+  <div class="ft"><span>바이브 코딩, 어디까지 활용 가능할까 · 유한킴벌리 · CDSA 신성진</span><span>4 / 17</span></div>
+</section>
+<!-- S5 하네스 -->
+<section class="slide" data-role="비교" data-layout="before-after" data-purpose="복붙 방식과 하네스 방식의 실행 위치 비교">
+  <div class="hd"><div class="kick">PART 1 · 에이전트의 원리</div><h2>방식 ② 하네스 — 내 컴퓨터에서 직접 실행한다</h2></div>
+  <div class="bd" style="top:166px;bottom:96px">
+    <div class="axis" style="left:396px;top:52px;height:330px"></div>
+    <div class="axlab" style="left:396px;top:16px">차이 = 코드가 실행되는 위치</div>
+    <div style="position:absolute;left:0;top:62px;width:352px" class="vs">
+      <h3 style="font-size:16px;font-weight:800;color:var(--muted);margin-bottom:6px">복붙 방식 (방식 ①)</h3>
+      <li class="rv">실행 위치 — <b>클라우드 컴퓨터</b></li>
+      <li class="rv">전달 — <b>사람 손 복붙</b>, 한 번에 한 조각</li>
+      <li class="rv">연결 범위 — 채팅창 안, 내 파일은 못 봄</li>
+      <li class="rv">장점 — 보안망 안에서 <b>지금 당장</b> 가능</li>
+    </div>
+
+    <!-- 내 컴퓨터 존 -->
+    <div class="zone" style="left:836px;top:16px;width:352px;height:396px"><b>내 컴퓨터</b></div>
+    <div style="position:absolute;left:852px;top:44px;width:52px;height:340px;background:var(--navy);border-radius:8px;display:flex;align-items:center;justify-content:center">
+      <b style="writing-mode:vertical-rl;letter-spacing:.3em;color:#fff;font-size:19px;font-weight:900">하네스</b>
+    </div>
+
+    <svg class="wire" viewBox="0 0 1188 502">
+      <line x1="648" y1="172" x2="638" y2="118" stroke="#4266a3" stroke-width="1.7" marker-end="url(#ar3)"/>
+      <line x1="644" y1="226" x2="638" y2="252" stroke="#4266a3" stroke-width="1.7" marker-end="url(#ar3)"/>
+      <line x1="784" y1="214" x2="844" y2="214" stroke="#b94a48" stroke-width="2.6" marker-end="url(#ar2)"/>
+      <line x1="904" y1="74" x2="916" y2="74" stroke="#b94a48" stroke-width="1.8" marker-end="url(#ar2)"/>
+      <line x1="904" y1="152" x2="916" y2="152" stroke="#b94a48" stroke-width="1.8" marker-end="url(#ar2)"/>
+      <line x1="904" y1="228" x2="928" y2="228" stroke="#b94a48" stroke-width="1.8" marker-end="url(#ar2)"/>
+      <line x1="904" y1="302" x2="928" y2="302" stroke="#b94a48" stroke-width="1.8" marker-end="url(#ar2)"/>
+      <defs>
+        <marker id="ar2" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L8,4.5 L0,9" fill="none" stroke="#b94a48" stroke-width="1.7"/></marker>
+        <marker id="ar3" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L8,4.5 L0,9" fill="none" stroke="#4266a3" stroke-width="1.7"/></marker>
+      </defs>
+    </svg>
+
+    <!-- MCP 외부 박스 — 좌측 열 정렬 -->
+    <div class="nd rv" style="left:432px;top:48px;width:206px;padding:12px 15px"><h4 style="font-size:15px">웹검색 프로그램</h4><p style="margin-top:2px;font-size:12.5px">검색을 대신해 결과 반환</p></div>
+    <div class="nd rv" style="left:432px;top:252px;width:206px;padding:12px 15px"><h4 style="font-size:15px">외부 프로그램</h4><p style="margin-top:2px;font-size:12.5px">노션 · 구글드라이브 — 규격에 꽂으면 도구가 늘어난다</p></div>
+    <div style="position:absolute;left:588px;top:196px;font-size:13.5px;font-weight:800;color:var(--blue)">MCP</div>
+
+    <!-- LLM — 세로 중앙 -->
+    <div class="llm-c" style="left:648px;top:146px;width:136px;height:136px"><div class="t1" style="font-size:26px">LLM</div><div class="t2" style="font-size:11px">생각 · 계획</div></div>
+    <div style="position:absolute;left:634px;top:306px;width:164px;text-align:center;font-size:12.5px;color:var(--muted);line-height:1.5">하네스 = LLM에 손발을<br>채우는 실행 프로그램</div>
+
+    <!-- 내 컴퓨터 안 도구 -->
+    <div class="nd rv" style="left:916px;top:46px;width:256px;padding:10px 14px"><h4 style="font-size:15px">문서 (skill)</h4><p style="margin-top:2px;font-size:12.5px">내 작업 지침을 직접 읽는다</p></div>
+    <div style="position:absolute;left:916px;top:126px;width:256px;height:252px;border:1.5px solid var(--line-strong);border-radius:8px;background:rgba(255,255,255,.5)">
+      <b style="position:absolute;top:10px;left:14px;font-size:15px;font-weight:800;color:var(--ink)">윈도우</b>
+    </div>
+    <div class="nd rv" style="left:930px;top:166px;width:228px;padding:9px 13px"><h4 style="font-size:14.5px">파이썬 코드</h4><p style="margin-top:2px;font-size:12px">쓰고 → 실행 → 오류도 스스로 수정</p></div>
+    <div class="nd rv" style="left:930px;top:240px;width:228px;padding:9px 13px"><h4 style="font-size:14.5px">엑셀 프로그램</h4><p style="margin-top:2px;font-size:12px">문서를 직접 만들고 고친다</p></div>
+    <div class="rv" style="position:absolute;left:930px;top:316px;width:228px;font-size:13px;font-weight:700;color:var(--muted)">◇ 엑셀 파일 — 산출물도 내 PC에</div>
+
+    <div class="hstrip" style="left:432px;right:0;bottom:0">
+      <b>하네스 프로그램</b>
+      <span>Cursor</span><span>Windsurf</span><span>Claude Code</span><span>Codex</span><span>Antigravity</span><span>OpenClaw</span>
+      <span style="border:none;background:none;color:var(--muted);font-weight:600">— 이름은 달라도 구조는 이 그림 하나</span>
+    </div>
+  </div>
+  <div class="anch"><span class="tag">정리</span><p>사람 손(복붙)이 사라진다 — LLM이 하네스를 통해 내 컴퓨터의 도구를 직접 부린다.</p></div>
+  <div class="ft"><span>바이브 코딩, 어디까지 활용 가능할까 · 유한킴벌리 · CDSA 신성진</span><span>5 / 17</span></div>
+</section>
+
+<!-- S6 판도 이동 -->
+<section class="slide" data-role="과정" data-layout="timeline" data-purpose="챗봇에서 에이전트로의 무게중심 이동">
+  <div class="hd"><div class="kick">PART 1 · 에이전트의 원리</div><h2>무게중심이 '답변 생성'에서 '업무 실행'으로 옮겨간다</h2></div>
+  <div class="lead">챗봇의 시대, 프롬프트의 시대가 막을 내리는 중 — 기업 AI팀은 지금 에이전트 시스템을 설계하고 있다.</div>
+  <div class="bd" style="top:194px;bottom:96px">
+    <div class="tl-line" style="left:30px;right:30px;top:236px"></div>
+    <div class="tl-dot" style="left:126px;top:236px"></div>
+    <div class="tl-dot" style="left:436px;top:236px"></div>
+    <div class="tl-dot" style="left:746px;top:236px;border-color:var(--coral);width:20px;height:20px"></div>
+    <div class="tl-dot" style="left:1056px;top:236px;border-color:var(--gold)"></div>
+    <div class="tl-it rv" style="left:14px;top:44px"><div class="ph">1단계 · 2023</div><h4>챗봇</h4><p>질문하면 답변 텍스트를 받는다. 요약·번역·초안까지.</p><span class="lim">한계 — 결과가 대화창을 못 벗어난다</span></div>
+    <div class="tl-it rv" style="left:324px;top:288px"><div class="ph">2단계 · 2024</div><h4>코파일럿</h4><p>문서·시트·메일 안에서 보조한다. 지금 사내 공식 도구가 여기.</p><span class="lim">한계 — 그 프로그램 안에서만 작동</span></div>
+    <div class="tl-it rv" style="left:634px;top:44px"><div class="ph" style="color:var(--coral)">3단계 · 2025~ — 지금 여기</div><h4 style="color:var(--coral)">코딩 에이전트 하네스</h4><p>LLM이 내 PC의 파일·프로그램을 직접 실행한다. 개발자를 넘어 사무직으로 확산 중.</p><span class="lim" style="color:var(--green)">전환 — 판도를 흔드는 중</span></div>
+    <div class="tl-it rv" style="left:944px;top:288px"><div class="ph" style="color:var(--gold)">4단계 · 도입 대기</div><h4>사내 에이전트</h4><p>보안 검토가 관문. 기업 AI팀들이 이 시스템을 구상·상상·개발하고 있다.</p><span class="lim" style="color:var(--gold)">준비 — 먼저 써 본 사람이 기준을 만든다</span></div>
+  </div>
+  <div class="anch"><span class="tag">현실</span><p>직장 적용은 보안이 결정한다 — 그래서 오늘은 보안망 안에서 지금 되는 것부터 다룬다.</p></div>
+  <div class="ft"><span>바이브 코딩, 어디까지 활용 가능할까 · 유한킴벌리 · CDSA 신성진</span><span>6 / 17</span></div>
+</section>
+
+<!-- S7 편견 교정 -->
+<section class="slide" data-role="개념" data-layout="myth-check" data-purpose="바이브 코딩 정의 교정과 7개 영역 예고">
+  <div class="hd"><div class="kick">PART 2 · 바이브 코딩 다시 보기</div><h2>바이브 코딩은 웹사이트 만들기가 아니다</h2></div>
+  <div class="bd" style="top:166px;bottom:96px">
+    <div class="myth">
+      <div class="mc rv" style="background:rgba(185,74,72,.07);border:1px solid rgba(185,74,72,.3)">
+        <h3 style="color:var(--coral)">흔한 생각 ✕</h3>
+        <p>바이브 코딩 = 멋진 웹사이트 개발, 개발자의 복잡한 프로그래밍</p>
+        <div class="sub">"나는 개발자가 아니니까 남의 일" — 이 편견이 시작을 막는 첫 번째 장벽이다.</div>
+      </div>
+      <div class="arr">→</div>
+      <div class="mc rv" style="background:var(--navy)">
+        <h3 style="color:#e8b4b2">실제 정의</h3>
+        <p style="color:#fff">자연어를 컴퓨터 언어로 <b style="color:#e8b4b2">번역</b>하는 LLM에게, <b style="color:#e8b4b2">내 컴퓨터와 디바이스의 자동화</b>를 맡기는 것</p>
+        <div class="sub" style="color:#8d9ab0">코딩을 배우는 게 아니라, 말로 시키고 결과를 검증하는 일이다.</div>
+      </div>
+      <div class="arr">→</div>
+      <div class="mc rv" style="background:rgba(46,125,91,.08);border:1px solid rgba(46,125,91,.3)">
+        <h3 style="color:var(--green)">달라지는 것</h3>
+        <p>대상이 웹이 아니라 <b>내 업무 전부</b> — 파일 · 엑셀 · 문서 · 브라우저 · 메일</p>
+        <div class="sub">평소 어려워서 미뤄둔 일을 LLM으로 쉽게 도전할 수 있게 된다 — 도전 비용의 소멸.</div>
+      </div>
+    </div>
+    <div class="seven">
+      <div><b>영역 1</b><span>PowerShell·CMD</span><i>.ps1</i></div>
+      <div><b>영역 2</b><span>엑셀</span><i>.bas · .xlsx</i></div>
+      <div><b>영역 3</b><span>파이썬</span><i>.py</i></div>
+      <div><b>영역 4</b><span>브라우저</span><i>.html · .js</i></div>
+      <div><b>영역 5</b><span>콘솔</span><i>F12</i></div>
+      <div><b>영역 6</b><span>연결</span><i>API · MCP</i></div>
+      <div><b>영역 7</b><span>확장자</span><i>= 시야</i></div>
+    </div>
+  </div>
+  <div class="anch"><span class="tag">경로</span><p>지금부터 70분, 7개 실행 영역을 시연과 함께 순서대로 — 전부 지금 PC에서 되는 것들이다.</p></div>
+  <div class="ft"><span>바이브 코딩, 어디까지 활용 가능할까 · 유한킴벌리 · CDSA 신성진</span><span>7 / 17</span></div>
+</section>
+
+<!-- S8 영역1 PowerShell -->
+<section class="slide" data-role="사례" data-layout="case-strip" data-purpose="PowerShell·CMD 자동화 사례 리스트">
+  <div class="hd"><div class="kick">PART 3 · 영역 1</div><h2>PowerShell·CMD — 윈도우에서 자동화할 수 있는 것</h2><span class="ext">.ps1</span></div>
+  <div class="lead">말로 요청 → 명령 생성 → 터미널에 붙여넣기 → 실행. <b>설치할 것이 없다</b> — 모든 윈도우 PC가 대상.</div>
+  <div class="bd" style="top:202px;bottom:146px">
+    <div class="gl">
+      <div class="grp rv">
+        <div class="gt"><b>파일 · 폴더</b><i>정리의 자동화</i></div>
+        <div class="gi">
+          <li>다운로드·바탕화면 <b>월별·유형별 자동 정리</b></li>
+          <li>수백 개 파일 <b>이름 일괄 변경</b> — 날짜·거래처 규칙</li>
+          <li>오래된 파일 <b>자동 백업·압축</b></li>
+          <li>흩어진 문서를 <b>한 폴더로 취합</b> 후 목록화</li>
+        </div>
+      </div>
+      <div class="grp rv">
+        <div class="gt"><b>프로그램 · 일과</b><i>동선의 자동화</i></div>
+        <div class="gi">
+          <li><b>아침 업무 세트</b> — 엑셀·메일·브라우저 한 번에 실행</li>
+          <li>메일 작성 창 <b>자동 호출</b> — 수신자·제목 채워서</li>
+          <li><b>정해진 시간에 작업 실행</b> — 스케줄 등록</li>
+          <li>프린터·네트워크 드라이브 <b>연결 상태 점검</b></li>
+        </div>
+      </div>
+      <div class="grp rv">
+        <div class="gt"><b>팀 공용 도구</b><i>도구의 자동화</i></div>
+        <div class="gi">
+          <li>버튼 하나로 백업되는 <b>GUI 프로그램</b> 제작</li>
+          <li>폴더 용량·파일 현황 <b>리포트 자동 생성</b></li>
+          <li>엑셀 시트 구조를 뽑아 <b>AI 싱크용 텍스트</b> 생성</li>
+          <li>프로젝트 표준 <b>폴더 트리 자동 생성</b></li>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="cue"><b>시연 1</b><span>폴더 정리 자동화 — 생성된 명령을 <b>실행 전에 읽고 검증하는 습관</b>까지가 시연 범위</span></div>
+  <div class="anch"><span class="tag">정리</span><p>윈도우에 말을 걸 수 있게 됐다 — 운영체제가 첫 번째 자동화 대상이다.</p></div>
+  <div class="ft"><span>바이브 코딩, 어디까지 활용 가능할까 · 유한킴벌리 · CDSA 신성진</span><span>8 / 17</span></div>
+</section>
+
+<!-- S9 영역2 엑셀 -->
+<section class="slide" data-role="사례" data-layout="three-lane-wire:h" data-purpose="엑셀 함수·VBA·파워쿼리 자동화 사례">
+  <div class="hd"><div class="kick">PART 3 · 영역 2</div><h2>엑셀 — 함수 · VBA · 파워쿼리로 자동화할 수 있는 것</h2><span class="ext">.bas · .xlsx</span></div>
+  <div class="lead">전제는 하나 — <b>구조 싱크</b>. 표 3줄 복붙이든 구조 추출이든, AI가 내 시트 모양을 알아야 코드가 맞는다.</div>
+  <div class="bd" style="top:200px;bottom:146px">
+    <svg class="wire" viewBox="0 0 1188 418">
+      <line x1="368" y1="180" x2="424" y2="180" stroke="#bdc7d4" stroke-width="2" marker-end="url(#ar4)"/>
+      <line x1="788" y1="180" x2="844" y2="180" stroke="#bdc7d4" stroke-width="2" marker-end="url(#ar4)"/>
+      <defs><marker id="ar4" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L8,4.5 L0,9" fill="none" stroke="#bdc7d4" stroke-width="1.7"/></marker></defs>
+    </svg>
+    <div class="lane rv" style="left:0;top:14px;width:368px">
+      <b>함수 — 셀에서 바로</b>
+      <li>다른 시트 값 <b>자동 매칭</b> — 코드·이름으로 찾아오기</li>
+      <li>조건별 <b>합계·건수 집계</b> — 지점·월·품목 기준</li>
+      <li>붙은 텍스트 <b>분리·정리</b> — 이름/코드/날짜 추출</li>
+      <li>오류값·빈칸 <b>일괄 정돈</b></li>
+    </div>
+    <div class="lane rv" style="left:424px;top:14px;width:364px">
+      <b>VBA — 반복 작업 매크로</b>
+      <li>지점·월별 <b>시트 자동 분리·취합</b></li>
+      <li>서식·인쇄 설정 <b>일괄 적용</b> — 문서 표준화</li>
+      <li>전체 시트를 <b>PDF로 일괄 저장</b></li>
+      <li>매일 하는 복붙 루틴을 <b>버튼 하나로</b></li>
+    </div>
+    <div class="lane rv" style="left:844px;top:14px;width:344px">
+      <b>파워쿼리 — 병합·갱신</b>
+      <li>폴더 안 파일 수십 개 <b>자동 병합</b></li>
+      <li>매월 갱신 원본 — <b>새로고침 한 번</b>으로 반영</li>
+      <li>열 정리·형 변환 <b>자동화 파이프라인</b></li>
+      <li>두 표 대사 — <b>불일치 행만 추출</b></li>
+    </div>
+  </div>
+  <div class="cue"><b>시연 2</b><span>표 3줄 복붙 → VBA 생성 → Alt+F11 실행 · 오류가 나면 오류문을 그대로 되물으면 스스로 고친다</span></div>
+  <div class="anch"><span class="tag">정리</span><p>어려워서 미뤄둔 VBA·파워쿼리 — LLM이 있으면 도전 비용이 사라진다.</p></div>
+  <div class="ft"><span>바이브 코딩, 어디까지 활용 가능할까 · 유한킴벌리 · CDSA 신성진</span><span>9 / 17</span></div>
+</section>
+
+<!-- S10 영역3 파이썬 -->
+<section class="slide" data-role="사례" data-layout="quadrant" data-purpose="파이썬 자동화 사례 4분류">
+  <div class="hd"><div class="kick">PART 3 · 영역 3</div><h2>파이썬 — "에이전트는 파이썬이 전부"라고 할 만큼</h2><span class="ext">.py</span></div>
+  <div class="lead">아나콘다는 이미 설치돼 있다 — 라이브러리 추가 → 사례 도출 → <b>복붙 실행</b>(Anaconda Prompt · 파이썬 실행기), 이 순서만 반복.</div>
+  <div class="bd" style="top:200px;bottom:96px">
+    <div class="qd">
+      <div class="rv">
+        <h3>데이터<i>취합과 분석</i></h3>
+        <li>엑셀 <b>수백 개 파일 취합·집계</b> — 폴더째 한 번에</li>
+        <li>엑셀이 버거운 <b>대용량 CSV 분석</b></li>
+        <li>보고서용 <b>차트 자동 생성</b> — 매주 같은 그림</li>
+        <li><b>중복·이상치 검출</b> — 눈으로 못 잡는 오류</li>
+      </div>
+      <div class="rv">
+        <h3>문서<i>대량 생성과 변환</i></h3>
+        <li>데이터를 넣으면 <b>PPT 보고서 자동 생성</b></li>
+        <li>PDF <b>병합·분할·텍스트 추출</b></li>
+        <li>명단으로 <b>수료증·안내문 대량 생성</b> — 워드·한글</li>
+        <li>이미지 <b>일괄 리사이즈·워터마크</b></li>
+      </div>
+      <div class="rv">
+        <h3>파일 · 폴더<i>운영체제 수준 정리</i></h3>
+        <li>규칙 기반 <b>파일명 대량 정리</b></li>
+        <li>폴더 감시 — 새 파일 <b>자동 분류</b></li>
+        <li>매일 밤 <b>자동 백업 스크립트</b></li>
+        <li>압축·해제 <b>일괄 처리</b></li>
+      </div>
+      <div class="rv">
+        <h3>웹 · API<i>밖의 데이터를 안으로</i></h3>
+        <li>환율·날씨·시세 <b>자동 수집 리포트</b></li>
+        <li>웹페이지 <b>표·목록 수집</b> — 경쟁 동향 모니터링</li>
+        <li>결과를 <b>메일로 자동 발송</b></li>
+        <li>뉴스 RSS <b>아침 요약 브리핑</b></li>
+      </div>
+    </div>
+  </div>
+  <div class="anch"><span class="tag">정리</span><p>네 칸 전부 경로는 같다 — 사례 도출 → 코드 복붙 → 실행 → 오류문 되묻기. 시연: 엑셀 일괄 취합 1건.</p></div>
+  <div class="ft"><span>바이브 코딩, 어디까지 활용 가능할까 · 유한킴벌리 · CDSA 신성진</span><span>10 / 17</span></div>
+</section>
+
+<!-- S11 영역4 브라우저 -->
+<section class="slide" data-role="사례" data-layout="split-explain" data-purpose="브라우저 실행 도구 원리와 사례">
+  <div class="hd"><div class="kick">PART 3 · 영역 4</div><h2>브라우저는 프로그램이다 — HTML 한 파일로 만드는 도구들</h2><span class="ext">.html · .css · .js</span></div>
+  <div class="lead">설치 없이, 보안망 안에서 도는 업무 도구 — 파일 저장 → 더블클릭이 배포의 전부다.</div>
+  <div class="bd" style="top:200px;bottom:96px">
+    <div class="sp-l">
+      <h3 style="font-size:14px;font-weight:800;color:var(--muted);letter-spacing:.05em;margin-bottom:2px">원리 — 한 파일 안의 세 언어</h3>
+      <div class="row rv"><b>html — 뼈대</b><span>화면의 구조 — 제목, 표, 입력창, 버튼</span></div>
+      <div class="row rv"><b>css — 모양</b><span>색·배치·서체 — 회사 서식 재현까지 가능</span></div>
+      <div class="row rv"><b>js — 기능</b><span>동작 담당 — 파이썬만큼 방대한 라이브러리 생태계. 어떤 라이브러리를 쓰느냐가 도구의 성격을 정한다</span></div>
+      <div class="row rv" style="border-bottom:none"><b>node.js — 브라우저 밖 실행</b><span>내 컴퓨터에서 js를 직접 구동 — js가 파일탐색·변환 자동화 언어가 된다</span></div>
+    </div>
+    <div style="position:absolute;left:446px;top:8px;bottom:8px;width:2px;background:var(--line-strong)"></div>
+    <div class="sp-r">
+      <h3>사례 — HTML 한 파일로 만든 업무 도구</h3>
+      <li class="rv"><b>문서편집기</b> — 워드 없이 작성·인쇄, 양식 내장</li>
+      <li class="rv"><b>업무 계산기·시뮬레이터</b> — 단가·수수료·재고 규칙을 화면으로</li>
+      <li class="rv"><b>파일 변환기</b> — CSV↔엑셀, 이미지 형식 변환, 텍스트 정리</li>
+      <li class="rv"><b>체크리스트·점검표 앱</b> — 현장 점검을 태블릿으로</li>
+      <li class="rv"><b>견적서·양식 생성기</b> — 입력하면 인쇄용 문서 완성</li>
+      <li class="rv"><b>현황 대시보드</b> — 재고·실적 데이터를 그래프 화면으로</li>
+      <li class="rv"><b>엑셀·PPT 파일 생성기</b> — html이 오피스 문서를 만들어 내려준다</li>
+      <li class="rv" style="border-bottom:none"><b>교육·발표 자료</b> — 지금 보고 있는 이 강의안이 단일 html 파일</li>
+    </div>
+  </div>
+  <div class="anch"><span class="tag">정리</span><p>웹사이트가 아니라 업무 도구를 만들 때 쓴다 — 시연: 도구 1개 즉석 생성 → 저장 → 실행.</p></div>
+  <div class="ft"><span>바이브 코딩, 어디까지 활용 가능할까 · 유한킴벌리 · CDSA 신성진</span><span>11 / 17</span></div>
+</section>
+
+<!-- S12 영역5 콘솔 -->
+<section class="slide" data-role="시연" data-layout="demo-stage" data-purpose="브라우저 콘솔 F12 사례와 시연">
+  <div class="hd"><div class="kick">PART 3 · 영역 5</div><h2>브라우저 콘솔(F12) — 브라우저 자체를 제어한다</h2></div>
+  <div class="bd" style="top:166px;bottom:96px">
+    <div class="demo">
+      <div class="dt">시연 순서 — 준비물 없음, 개발자 도구는 모든 PC에 있다</div>
+      <div class="stp"><b>1</b><span>아무 웹페이지에서 <code>F12</code> 를 누른다</span></div>
+      <div class="stp"><b>2</b><span><code>Console</code> 탭을 연다</span></div>
+      <div class="stp"><b>3</b><span>LLM이 만들어 준 명령을 붙여넣는다</span></div>
+      <div class="stp" style="border:none"><b>4</b><span><code>Enter</code> — 화면이 바뀐다</span></div>
+      <div style="margin-top:16px;font-size:14.5px;color:#aeb8c8;line-height:1.7">여기서도 구조는 같다 — 요청은 말로, 실행은 붙여넣기로.<br>브라우저가 '보는 창'에서 <b style="color:#e8b4b2">'제어하는 프로그램'</b>으로 바뀐다.</div>
+    </div>
+    <div class="obs">
+      <h3>사례 — 콘솔로 자동화할 수 있는 것</h3>
+      <li class="rv"><b>표·목록 통째 추출</b> — 화면의 데이터를 한 번에 복사</li>
+      <li class="rv"><b>제목·링크 일괄 수집</b> — 조사 업무의 수작업 제거</li>
+      <li class="rv"><b>화면 정리 후 인쇄</b> — 배너·메뉴 숨기고 본문만</li>
+      <li class="rv"><b>반복 클릭 자동화</b> — '더보기' 끝까지 자동 전개</li>
+      <li class="rv"><b>반복 입력 자동화</b> — 같은 값 채우기를 명령으로</li>
+      <h3 style="margin-top:16px">중단 지점</h3>
+      <li style="border:none">사내 시스템 적용 전 — <b>보안 정책 확인이 먼저</b>, 오늘은 공개 페이지로만 · 실패 시 결과 화면으로 대체 설명</li>
+    </div>
+  </div>
+  <div class="anch"><span class="tag">정리</span><p>영역 4와 합치면 수집(콘솔)부터 도구(HTML)까지 브라우저 안에서 이어진다.</p></div>
+  <div class="ft"><span>바이브 코딩, 어디까지 활용 가능할까 · 유한킴벌리 · CDSA 신성진</span><span>12 / 17</span></div>
+</section>
+
+<!-- S13 영역6 연결 -->
+<section class="slide" data-role="사례" data-layout="hub-spoke" data-purpose="외부 연결 자동화 사례">
+  <div class="hd"><div class="kick">PART 3 · 영역 6</div><h2>밖과 연결되면 능력이 커진다 — API · MCP · RAG · 데이터 형식</h2></div>
+  <div class="bd" style="top:166px;bottom:96px">
+    <svg class="wire" viewBox="0 0 1188 502">
+      <line x1="478" y1="182" x2="380" y2="120" stroke="#bdc7d4" stroke-width="1.5"/>
+      <line x1="478" y1="284" x2="380" y2="346" stroke="#bdc7d4" stroke-width="1.5"/>
+      <line x1="712" y1="182" x2="810" y2="120" stroke="#bdc7d4" stroke-width="1.5"/>
+      <line x1="712" y1="284" x2="810" y2="346" stroke="#bdc7d4" stroke-width="1.5"/>
+    </svg>
+    <div class="llm-c" style="left:478px;top:116px;width:234px;height:234px"><div class="t1" style="font-size:31px">LLM</div><div class="t2" style="font-size:13.5px">연결 수만큼<br>할 수 있는 일이 는다</div></div>
+    <div class="nd rv" style="left:40px;top:36px;width:340px;padding:15px 17px"><h4>API — 외부 기능 호출</h4><p>다른 프로그램의 기능을 코드로 빌려 쓴다</p><span class="eg">사례 — 환율·날씨·시세를 매일 아침 내 문서로 · 번역·지도·이미지 생성 연결</span></div>
+    <div class="nd rv" style="left:40px;top:316px;width:340px;padding:15px 17px"><h4>MCP — 표준 확장 슬롯</h4><p>도구를 꽂는 연결 규격, 하네스 시대의 핵심</p><span class="eg">사례 — 노션·구글드라이브를 LLM에 직접 연결 · 사내 시스템 연동 설계(AI팀 영역)</span></div>
+    <div class="nd rv" style="left:810px;top:36px;width:340px;padding:15px 17px"><h4>RAG — 문서 읽기</h4><p>내 문서를 검색해 읽고 근거로 답한다</p><span class="eg">사례 — 사규·매뉴얼 질의응답 · 계약서 뭉치에서 조건 찾아 비교</span></div>
+    <div class="nd rv" style="left:810px;top:316px;width:340px;padding:15px 17px"><h4>데이터 형식 — RSS·XML·JSON·ODS</h4><p>프로그램끼리 데이터를 주고받는 그릇</p><span class="eg">사례 — 뉴스 RSS 아침 브리핑 · 공공데이터(XML·JSON) 받아 보고서로</span></div>
+    <div class="rv" style="position:absolute;left:40px;right:40px;bottom:0;display:flex;align-items:center;gap:12px;border-left:4px solid var(--blue);padding-left:14px">
+      <b style="flex:none;font-size:13px;font-weight:800;color:var(--blue)">공통점</b>
+      <span style="font-size:15.5px;color:var(--body)">네 가지 모두 <b>LLM 혼자서는 못 보는 바깥</b>을 보게 해 준다 — 3장의 도구 목록이 여기서 완성된다.</span>
+    </div>
+  </div>
+  <div class="anch"><span class="tag">연결</span><p>연결이 곧 에이전트의 확장이다 — 형식(JSON·XML)은 읽을 줄만 알아도 연동이 보인다.</p></div>
+  <div class="ft"><span>바이브 코딩, 어디까지 활용 가능할까 · 유한킴벌리 · CDSA 신성진</span><span>13 / 17</span></div>
+</section>
+
+<!-- S14 영역7 확장자 매트릭스 -->
+<section class="slide" data-role="비교" data-layout="evidence-matrix" data-purpose="실행 환경별 언어·확장자 지도">
+  <div class="hd"><div class="kick">PART 3 · 영역 7</div><h2>확장자 지도 — 이게 보이면 시야가 넓어진다</h2></div>
+  <div class="bd" style="top:162px;bottom:96px">
+    <table class="mx">
+      <thead><tr><th style="width:11%">실행 환경</th><th style="width:24%">언어 · 기술</th><th style="width:20%">파일 확장자</th><th style="width:23%">대표 업무</th><th>대표 자동화 사례</th></tr></thead>
+      <tbody>
+        <tr class="rv"><td class="env">윈도우</td><td>PowerShell · CMD (bash)<span class="sm">운영체제에 직접 명령</span></td><td class="xt">.ps1 · .bat</td><td>파일·프로그램 제어, 업무 동선 자동화</td><td>폴더 자동 정리 · 아침 업무 세트 · 백업 GUI</td></tr>
+        <tr class="rv"><td class="env">엑셀</td><td>함수 · VBA · 파워쿼리<span class="sm">AI 싱크(구조 전달)가 핵심</span></td><td class="xt">.bas · .xls · .xlsx</td><td>표 계산, 반복 작업 매크로, 파일 병합</td><td>시트 취합 매크로 · 파일 병합 · 표 대사</td></tr>
+        <tr class="rv"><td class="env">파이썬</td><td>파이썬 코드<span class="sm">에이전트의 몸통</span></td><td class="xt">.py</td><td>데이터 분석, 문서 작업, API 호출</td><td>엑셀 100개 취합 · PPT 자동 생성 · API 수집</td></tr>
+        <tr class="rv"><td class="env">브라우저</td><td>html · css · js<span class="sm">설치 없는 실행 환경</span></td><td class="xt">.html · .js · .svg · .json</td><td>업무 도구, 문서, 시각화, 대시보드</td><td>업무 계산기 · 파일 변환기 · 현황 대시보드</td></tr>
+      </tbody>
+    </table>
+    <div class="rv" style="margin-top:18px;display:flex;align-items:center;gap:12px;border-left:4px solid var(--green);padding-left:14px">
+      <b style="flex:none;font-size:13px;font-weight:800;color:var(--green)">교차 생성</b>
+      <span style="font-size:15.5px;color:var(--body)">파이썬(.py)과 브라우저(js)로 <b>엑셀 파일(.xlsx)을 만들 수 있다</b> — 환경은 나뉘어도 산출물은 넘나든다. 만들어보고 열어보는 것이 훈련이다.</span>
+    </div>
+  </div>
+  <div class="anch"><span class="tag">정리</span><p>사무직 PC 사용자의 LLM 활용 폭은 확장자 이해가 결정한다 — 한 주에 하나씩 만들어 볼 것.</p></div>
+  <div class="ft"><span>바이브 코딩, 어디까지 활용 가능할까 · 유한킴벌리 · CDSA 신성진</span><span>14 / 17</span></div>
+</section>
+
+<!-- S15 직무별 -->
+<section class="slide" data-role="사례" data-layout="case-strip:jobs" data-purpose="직무별 입력·도구·산출물 사례">
+  <div class="hd"><div class="kick">PART 4 · 적용</div><h2>직무가 달라도 구조는 같다 — 입력 · 영역 · 산출물</h2></div>
+  <div class="lead">시작점은 언제나 <b>내 데이터</b> — 입력을 정의할 수 있으면 도구는 따라온다.</div>
+  <div class="bd" style="top:200px;bottom:96px">
+    <table class="strip">
+      <thead><tr><th style="width:10%">직무</th><th style="width:24%">입력</th><th style="width:20%">쓰는 영역</th><th style="width:22%">산출물</th><th>자동화되는 장면</th></tr></thead>
+      <tbody>
+        <tr class="rv"><td class="q">마케팅</td><td>캠페인 데이터, 채널별 리포트</td><td>파이썬 · 엑셀 함수</td><td>성과 리포트 자동 생성<span class="sm">주간 보고 시간 회수</span></td><td>채널 리포트 3개가 매주 자동으로 하나의 추이표가 된다</td></tr>
+        <tr class="rv"><td class="q">영업</td><td>실적 시트, 고객 목록</td><td>엑셀 VBA · 함수</td><td>취합·브리핑 시트<span class="sm">지점별 취합을 매크로 하나로</span></td><td>지점 시트 12개 취합이 버튼 한 번으로 끝난다</td></tr>
+        <tr class="rv"><td class="q">재무</td><td>정산 원장, 월마감 자료</td><td>파워쿼리 · 파이썬</td><td>집계와 차이 분석<span class="sm">수작업 대사를 코드로 검증</span></td><td>두 원장의 금액 불일치 행만 자동으로 추려진다</td></tr>
+        <tr class="rv"><td class="q">SCM</td><td>발주·재고·납기 데이터</td><td>파이썬 · HTML 도구</td><td>재고 리포트 · 예외 대시보드<span class="sm">이상치를 먼저 보여주는 화면</span></td><td>안전재고 미달 품목이 화면에 먼저 경고로 뜬다</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="anch"><span class="tag">판정</span><p>네 직무 모두 같은 4열이다 — 오른쪽 장면을 자기 업무의 장면으로 바꿔 보는 것이 첫 과제.</p></div>
+  <div class="ft"><span>바이브 코딩, 어디까지 활용 가능할까 · 유한킴벌리 · CDSA 신성진</span><span>15 / 17</span></div>
+</section>
+
+<!-- S16 로드맵 -->
+<section class="slide" data-role="회수" data-layout="action-roadmap" data-purpose="유한킴벌리 단계별 적용 경로">
+  <div class="hd"><div class="kick">PART 4 · 적용</div><h2>유한킴벌리 적용 경로 — 오늘부터 되는 것, 회사가 여는 것</h2></div>
+  <div class="bd" style="top:166px;bottom:96px">
+    <div class="road">
+      <div class="now rv">
+        <div class="ph" style="color:var(--coral)">지금 — 오늘 오후부터</div>
+        <h3>승인된 도구로 시작</h3>
+        <li><b>Copilot·Gemini로 생성</b> → 함수·VBA·PowerShell·HTML 실행</li>
+        <li>설치 없음 — 지금 PC 그대로, 보안망 안에서</li>
+        <li>내 업무에서 <b>반복 작업 1개</b> 선정</li>
+        <li>생성된 코드는 실행 전에 한 번 읽는다 — <b>검증 습관</b></li>
+        <div class="sig">완료 신호 — 작은 자동화 1개가 실제로 돌아간다</div>
+      </div>
+      <div class="nxt rv">
+        <div class="ph" style="color:var(--gold)">다음 — 이번 분기</div>
+        <h3>파이썬과 공용 도구</h3>
+        <li>아나콘다 환경에서 <b>파이썬 확장</b> — 문서·데이터 자동화</li>
+        <li>부서 공용 <b>HTML 도구</b> 축적 — 만든 사람 이름을 남긴다</li>
+        <li>동료와 사례 교환 — <b>공유회 2라운드</b>의 재료</li>
+        <li>확장자 7종을 한 번씩 직접 만들어 본다</li>
+        <div class="sig">완료 신호 — 팀 안에서 도구가 재사용된다</div>
+      </div>
+      <div class="aft rv">
+        <div class="ph" style="color:var(--green)">이후 — 회사 차원</div>
+        <h3>하네스 · 에이전트</h3>
+        <li><b>보안 검토</b>와 함께 도입 판단 — AI팀 · EX부문의 영역</li>
+        <li>MCP로 사내 시스템 연결 검토 — 확장 슬롯 설계</li>
+        <li>현장의 작은 자동화 사례가 <b>도입의 근거</b>가 된다</li>
+        <li>오늘 녹화본은 사내 교육용으로 활용</li>
+        <div class="sig">완료 신호 — 파일럿 부서에서 에이전트 검증</div>
+      </div>
+    </div>
+  </div>
+  <div class="anch"><span class="tag">정리</span><p>3단계 모두 출발점은 같다 — 오늘 만든 작은 자동화 1개.</p></div>
+  <div class="ft"><span>바이브 코딩, 어디까지 활용 가능할까 · 유한킴벌리 · CDSA 신성진</span><span>16 / 17</span></div>
+</section>
+
+<!-- S17 마무리 -->
+<section class="slide close" data-role="회수" data-layout="proposition" data-purpose="핵심 명제 회수와 질의응답">
+  <div style="position:absolute;top:88px;left:76px;font-size:15px;font-weight:800;letter-spacing:.12em;color:#e8b4b2">오늘의 결론</div>
+  <div class="bigp">LLM이 내 컴퓨터를 제어하고,<br>내 시야를 확장한다.</div>
+  <div class="ev">
+    <div class="rv"><b>오늘 확인한 것</b> — 7개 실행 영역 전부, 사내 승인 도구(Copilot·Gemini)와 이미 있는 프로그램만으로 시작할 수 있다. 준비물은 없었다.</div>
+    <div class="rv"><b>다가오는 것</b> — 판도는 복붙에서 하네스로 이동 중이다. 먼저 써 본 사람이 도입의 기준을 만든다.</div>
+  </div>
+  <div style="position:absolute;top:466px;left:76px;right:76px;display:flex;border-top:1px solid rgba(255,255,255,.2)">
+    <div style="flex:1;padding:15px 6px 0;text-align:center;font-size:13px;color:#aeb8c8">PowerShell<br><b style="color:#e8ecf2;font-size:14px">.ps1</b></div>
+    <div style="flex:1;padding:15px 6px 0;text-align:center;font-size:13px;color:#aeb8c8;border-left:1px solid rgba(255,255,255,.12)">엑셀<br><b style="color:#e8ecf2;font-size:14px">.bas · .xlsx</b></div>
+    <div style="flex:1;padding:15px 6px 0;text-align:center;font-size:13px;color:#aeb8c8;border-left:1px solid rgba(255,255,255,.12)">파이썬<br><b style="color:#e8ecf2;font-size:14px">.py</b></div>
+    <div style="flex:1;padding:15px 6px 0;text-align:center;font-size:13px;color:#aeb8c8;border-left:1px solid rgba(255,255,255,.12)">브라우저<br><b style="color:#e8ecf2;font-size:14px">.html · .js</b></div>
+    <div style="flex:1;padding:15px 6px 0;text-align:center;font-size:13px;color:#aeb8c8;border-left:1px solid rgba(255,255,255,.12)">콘솔<br><b style="color:#e8ecf2;font-size:14px">F12</b></div>
+    <div style="flex:1;padding:15px 6px 0;text-align:center;font-size:13px;color:#aeb8c8;border-left:1px solid rgba(255,255,255,.12)">연결<br><b style="color:#e8ecf2;font-size:14px">API · MCP</b></div>
+    <div style="flex:1;padding:15px 6px 0;text-align:center;font-size:13px;color:#aeb8c8;border-left:1px solid rgba(255,255,255,.12)">확장자<br><b style="color:#e8ecf2;font-size:14px">= 시야</b></div>
+  </div>
+  <div class="qa">Q&amp;A</div>
+  <div class="ct"><span>신성진 · ㈜한국데이터사이언티스트협회 대표이사</span><span>sjshin@cdsa.or.kr · cdsa.kr · @workbyax</span></div>
+</section>
+
+</div></div>
+<script>
+var slides=[].slice.call(document.querySelectorAll('.slide'));
+var editing=false, presenting=false, cur=0, step=0;
+
+/* 편집 */
+function tgEdit(){
+  editing=!editing;
+  document.body.classList.toggle('editing',editing);
+  var b=document.getElementById('b-edit');
+  b.classList.toggle('on',editing);
+  b.textContent=editing?'✓ 편집 완료':'✎ 편집';
+  slides.forEach(function(s){ editing?s.setAttribute('contenteditable','true'):s.removeAttribute('contenteditable'); });
+}
+
+/* 저장 */
+function saveHTML(){
+  if(editing) tgEdit();
+  if(presenting) endPresent();
+  var c=document.documentElement.cloneNode(true);
+  c.querySelectorAll('[contenteditable]').forEach(function(e){e.removeAttribute('contenteditable')});
+  c.querySelectorAll('.slide').forEach(function(e){e.classList.remove('cur','go');e.style.removeProperty('--sc')});
+  var blob=new Blob(['<!DOCTYPE html>\n'+c.outerHTML],{type:'text/html;charset=utf-8'});
+  var a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='유한킴벌리_바이브코딩특강_강의안_20260818.html';
+  document.body.appendChild(a);a.click();a.remove();
+  URL.revokeObjectURL(a.href);
+}
+
+/* PDF */
+function doPrint(){ if(editing) tgEdit(); if(presenting) endPresent(); window.print(); }
+
+/* 발표 */
+function fitCur(){
+  var s=slides[cur];
+  var sc=Math.min(window.innerWidth/1280, window.innerHeight/720);
+  s.style.setProperty('--sc', sc);
+}
+function show(i){
+  slides[cur].classList.remove('cur','go');
+  cur=Math.max(0,Math.min(slides.length-1,i));
+  var s=slides[cur];
+  s.classList.add('cur');
+  fitCur();
+  requestAnimationFrame(function(){requestAnimationFrame(function(){s.classList.add('go')})});
+  document.getElementById('pcnt').textContent=(cur+1)+' / '+slides.length;
+}
+function startPresent(){
+  if(editing) tgEdit();
+  presenting=true;
+  document.body.classList.add('present');
+  show(cur);
+  if(document.documentElement.requestFullscreen) document.documentElement.requestFullscreen().catch(function(){});
+}
+function endPresent(){
+  presenting=false;
+  document.body.classList.remove('present');
+  slides[cur].classList.remove('cur','go');
+  slides[cur].style.removeProperty('--sc');
+  if(document.fullscreenElement) document.exitFullscreen().catch(function(){});
+}
+document.addEventListener('keydown',function(e){
+  if(e.target.isContentEditable) return;
+  if(e.key==='p'||e.key==='P'){ presenting?endPresent():startPresent(); }
+  if(!presenting) return;
+  if(e.key==='ArrowRight'||e.key==='PageDown'||e.key===' ') show(cur+1);
+  if(e.key==='ArrowLeft'||e.key==='PageUp') show(cur-1);
+  if(e.key==='Home') show(0);
+  if(e.key==='End') show(slides.length-1);
+  if(e.key==='Escape') endPresent();
+});
+window.addEventListener('resize',function(){ if(presenting) fitCur(); });
+
+/* ?slide=N 단일 렌더 */
+var q=new URLSearchParams(location.search).get('slide');
+if(q){
+  var n=parseInt(q,10)-1;
+  slides.forEach(function(s,i){ if(i!==n) s.style.display='none'; });
+  document.getElementById('bar').style.display='none';
+  document.getElementById('wrap').style.padding='0';
+}
+
+/* 카운터 */
+document.getElementById('cnt').textContent=slides.length+'장';
+</script>
+
+<style id="type-relief">
+/* ── 전역 타이포 완화: 폰트 축소로 여백 확보 (레이아웃 불변) ── */
+.hd h2{font-size:34px}
+.kick{font-size:13.5px}
+.hd .ext{font-size:13px;padding:5px 11px}
+.lead{font-size:16px}
+.anch p{font-size:15.5px}
+.anch .tag{font-size:12px;padding:4px 11px}
+.cue b{font-size:12px}.cue span{font-size:13.5px}
+.ft{font-size:10.5px}
+.ocol h3{font-size:13.5px}.ocol li{font-size:15px;padding:18px 0}
+.tt b{font-size:12px}.tt span{font-size:14px}.tt i{font-size:11.5px}
+.llm-c .t1{font-size:34px}.llm-c .t2{font-size:13px}.llm-c .t3{font-size:11px}
+.nd h4{font-size:15px}.nd p{font-size:12.5px}.nd .eg{font-size:11.5px}
+.no{width:21px;height:21px;font-size:11.5px}
+.vs li{font-size:14.5px;padding:12px 0}
+.axlab{font-size:12.5px}
+.hstrip b{font-size:11.5px}.hstrip span{font-size:12.5px;padding:4px 11px}
+.tl-it h4{font-size:18px}.tl-it p{font-size:13.5px}.tl-it .ph{font-size:11.5px}.tl-it .lim{font-size:12px}
+.myth h3{font-size:13px}.myth p{font-size:17.5px}.myth .sub{font-size:13px}
+.seven b{font-size:11.5px}.seven span{font-size:14px}.seven i{font-size:11px}
+.strip th{font-size:12.5px}.strip td{font-size:15px;padding:16px 12px}
+.s8t td{font-size:15.5px;padding:29px 12px}
+.strip td .sm{font-size:12px}.strip td .cd{font-size:12px}
+.gl .gt b{font-size:16.5px}.gl .gt i{font-size:12px}
+.gl .gi li{font-size:15px;padding:13px 0}
+.lane>b{font-size:14px}.lane li{font-size:14.5px;padding:19px 0}
+.qd h3{font-size:17px}.qd h3 i{font-size:12px}.qd li{font-size:14px}
+.sp-l .row b{font-size:15.5px}.sp-l .row span{font-size:13px}
+.sp-r li{font-size:14.5px}.sp-l h3,.sp-r h3,.obs h3,.ocol h3{font-size:12.5px}
+.demo .dt{font-size:12px}.demo .stp{font-size:15.5px}.demo code{font-size:13.5px}
+.obs li{font-size:14.5px}
+.mx th{font-size:12.5px}.mx td{font-size:14px;padding:14px 13px}
+.mx td.env{font-size:16px}.mx td.xt{font-size:13px}.mx td .sm{font-size:11.5px}
+.road .ph{font-size:12px}.road h3{font-size:21px}.road li{font-size:14px}.road .sig{font-size:13px}
+.chip{font-size:11.5px}
+.stair h4{font-size:18px}.stair p{font-size:13px}.stair .cd2{font-size:12px}.stair .sn{font-size:44px}
+.cover h1{font-size:72px}
+.cover .cv-kick{font-size:14.5px}.cover .cv-meta{font-size:13.5px}
+.cover .cv-sub{font-size:17px}
+.cover .cv-ask b{font-size:11.5px}.cover .cv-ask li{font-size:14.5px}
+.cover .path .pn b{font-size:12px}.cover .path .pn span{font-size:16.5px}.cover .path .pn i{font-size:12.5px}
+.cover .cv-ft{font-size:12px}
+.close .bigp{font-size:46px}
+.close .ev div{font-size:15.5px}
+.close .qa{font-size:24px}.close .ct{font-size:13px}
+</style>
+
+<script>/* kg-preview: #<heading> \uc704\uce58\ub85c \uc774\ub3d9 */
+(function(){function norm(t){return (t||'').replace(/\s+/g,'').toLowerCase()}
+function go(){var h=decodeURIComponent(location.hash.slice(1));if(!h)return;var k=norm(h).slice(0,24);if(!k)return;
+var best=null,bl=1e9,els=document.body.querySelectorAll('h1,h2,h3,h4,h5,p,div,span,li,td,text,tspan,section,article');
+for(var i=0;i<els.length;i++){var e=els[i],t=norm(e.textContent);if(t.length<bl&&t.indexOf(k)>-1){best=e;bl=t.length}}
+if(!best)return;var box=best.closest('section,[class*=slide],[class*=page],article')||best;
+box.scrollIntoView({block:'start'});box.style.outline='3px solid #c0504d';box.style.outlineOffset='4px';
+setTimeout(function(){box.style.outline=''},2600)}
+window.addEventListener('load',function(){setTimeout(go,400)});window.addEventListener('hashchange',go)})();</script></body>
+</html>

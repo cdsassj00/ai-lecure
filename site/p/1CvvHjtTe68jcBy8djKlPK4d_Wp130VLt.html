@@ -1,0 +1,1358 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta name="robots" content="noindex, nofollow">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2026년 AI챔피언 해커톤 대회 운영지침</title>
+  <style>
+    :root {
+      --paper: #ffffff;
+      --ink: #171717;
+      --muted: #667085;
+      --line: #d7dce8;
+      --soft: #f4f6fb;
+      --blue: #006dea;
+      --blue-2: #215fda;
+      --indigo: #4c39d8;
+      --violet: #70206f;
+      --navy: #103d5c;
+      --green: #0c5b22;
+      --rust: #a24612;
+      --yellow: #ffde52;
+      --page-w: 210mm;
+      --page-h: 297mm;
+      --margin-x: 14mm;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      background: #e8ebf2;
+    }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      font-family: "Paperlogy", "Pretendard", "Noto Sans KR", "Malgun Gothic", Arial, sans-serif;
+      line-height: 1.45;
+      letter-spacing: 0;
+    }
+
+    .toolbar {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 18px;
+      background: rgba(255, 255, 255, 0.94);
+      border-bottom: 1px solid #d8dce8;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 8px 28px rgba(20, 31, 55, 0.08);
+    }
+
+    .toolbar strong {
+      display: block;
+      font-size: 15px;
+      font-weight: 900;
+    }
+
+    .toolbar small {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .toolbar-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .toolbar button {
+      border: 0;
+      border-radius: 7px;
+      padding: 9px 12px;
+      background: #172033;
+      color: #fff;
+      font: inherit;
+      font-size: 13px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .toolbar button.primary {
+      background: linear-gradient(90deg, var(--indigo), var(--blue));
+    }
+
+    .toolbar button.subtle {
+      background: #eef2f8;
+      color: #243047;
+    }
+
+    .status {
+      min-width: 72px;
+      color: var(--muted);
+      font-size: 12px;
+      text-align: right;
+    }
+
+    .document {
+      width: min(100%, calc(var(--page-w) + 40px));
+      margin: 24px auto 60px;
+      outline: none;
+    }
+
+    .document:focus {
+      outline: none;
+    }
+
+    .page {
+      position: relative;
+      width: var(--page-w);
+      height: var(--page-h);
+      margin: 0 auto 24px;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 12% 7%, rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0) 30%),
+        linear-gradient(135deg, #fbfbf8 0%, #ffffff 38%, #f8f9fb 100%);
+      box-shadow: 0 20px 55px rgba(25, 31, 46, 0.16);
+      page-break-after: always;
+    }
+
+    .page::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      width: 4.2mm;
+      background: linear-gradient(180deg, var(--indigo), var(--blue));
+      z-index: 2;
+    }
+
+    .page::after {
+      content: "AI Champion Hackathon 2026";
+      position: absolute;
+      right: 13mm;
+      top: 78mm;
+      transform: rotate(90deg);
+      transform-origin: right top;
+      color: rgba(23, 23, 23, 0.055);
+      font-size: 28px;
+      font-weight: 900;
+      white-space: nowrap;
+      pointer-events: none;
+    }
+
+    .cover::before,
+    .divider::before,
+    .back-cover::before {
+      display: none;
+    }
+
+    .page-header {
+      position: relative;
+      z-index: 4;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 18mm;
+      padding: 0 9mm 0 var(--margin-x);
+      border-bottom: 1.4mm solid rgba(23, 23, 23, 0.23);
+      background: rgba(255, 255, 255, 0.74);
+    }
+
+    .page-header .chapter {
+      display: inline-block;
+      min-width: 13mm;
+      margin-right: 6mm;
+      font-size: 18px;
+      font-weight: 950;
+    }
+
+    .page-header .header-title {
+      font-size: 24px;
+      font-weight: 950;
+    }
+
+    .doc-label {
+      text-align: right;
+      color: #111827;
+      font-size: 8px;
+      font-weight: 700;
+      line-height: 1.15;
+    }
+
+    .doc-label strong {
+      color: var(--blue-2);
+      font-size: 9px;
+      font-weight: 950;
+    }
+
+    .doc-label span {
+      display: inline-block;
+      margin-top: 2px;
+      padding: 1px 6px;
+      border-radius: 2px;
+      background: linear-gradient(90deg, var(--indigo), var(--blue));
+      color: #fff;
+      font-size: 7px;
+    }
+
+    .page-main {
+      position: relative;
+      z-index: 4;
+      padding: 13mm var(--margin-x) 13mm calc(var(--margin-x) + 1mm);
+    }
+
+    .section-no {
+      margin: 0;
+      color: #3a3a3a;
+      font-size: 18px;
+      font-weight: 950;
+      line-height: 1;
+    }
+
+    .headline {
+      position: relative;
+      display: flex;
+      align-items: flex-end;
+      margin: 2mm 0 4mm;
+      min-height: 15mm;
+    }
+
+    .headline h1,
+    .headline h2 {
+      margin: 0;
+      color: var(--blue);
+      font-size: 34px;
+      font-weight: 950;
+      letter-spacing: 0;
+      line-height: 0.92;
+      white-space: normal;
+    }
+
+    .headline .rule {
+      flex: 1;
+      height: 10.4mm;
+      margin-left: 3mm;
+      border: 2px solid currentColor;
+      border-left: 0;
+      color: var(--blue);
+    }
+
+    .lead {
+      margin: 0 0 7mm;
+      font-size: 16px;
+      font-weight: 850;
+      line-height: 1.35;
+    }
+
+    p {
+      margin: 0 0 4mm;
+      font-size: 12.8px;
+      line-height: 1.58;
+      word-break: keep-all;
+    }
+
+    .reason {
+      margin: 4mm 0 6mm;
+      padding: 5mm 6mm;
+      border-left: 5px solid var(--blue);
+      background: linear-gradient(90deg, rgba(0, 109, 234, 0.08), rgba(255, 255, 255, 0.62));
+      border-radius: 0 8px 8px 0;
+    }
+
+    .reason strong {
+      display: block;
+      margin-bottom: 2mm;
+      color: var(--blue);
+      font-size: 12px;
+      font-weight: 950;
+    }
+
+    .reason p {
+      margin-bottom: 0;
+      font-size: 12.4px;
+    }
+
+    .article-list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      counter-reset: clause;
+    }
+
+    .article-list li {
+      position: relative;
+      min-height: 12mm;
+      margin: 0 0 3.2mm;
+      padding: 3.4mm 4mm 3.4mm 15mm;
+      border: 1px solid #e2e5ec;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.8);
+      font-size: 12.2px;
+      line-height: 1.48;
+      word-break: keep-all;
+    }
+
+    .article-list li::before {
+      counter-increment: clause;
+      content: counter(clause, decimal-leading-zero);
+      position: absolute;
+      left: 3.6mm;
+      top: 3.6mm;
+      width: 8mm;
+      height: 8mm;
+      border-radius: 50%;
+      background: var(--blue);
+      color: #fff;
+      font-size: 10px;
+      font-weight: 950;
+      line-height: 8mm;
+      text-align: center;
+    }
+
+    .chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2mm;
+      margin: 4mm 0 6mm;
+      padding: 3mm;
+      border: 1px solid #dde2eb;
+      border-radius: 8px;
+      background: rgba(245, 247, 250, 0.86);
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      min-height: 8mm;
+      padding: 1.5mm 3.2mm;
+      border-radius: 999px;
+      background: #5c5f66;
+      color: #fff;
+      font-size: 10.8px;
+      font-weight: 850;
+      white-space: nowrap;
+    }
+
+    .chip strong {
+      margin-right: 2mm;
+      padding: 0.5mm 2mm;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.18);
+      font-size: 9px;
+    }
+
+    .label {
+      display: inline-block;
+      margin: 0 0 3mm;
+      padding: 1.6mm 3mm;
+      border-radius: 0 7px 7px 0;
+      background: linear-gradient(90deg, var(--indigo), var(--blue));
+      color: #fff;
+      font-size: 13px;
+      font-weight: 950;
+      line-height: 1;
+    }
+
+    .label-line {
+      position: relative;
+      margin: 6mm 0 4mm;
+      border-top: 1px solid color-mix(in srgb, var(--accent, var(--blue)) 56%, #c8d0de);
+    }
+
+    .label-line .label {
+      transform: translateY(-50%);
+      margin: 0;
+      background: var(--accent, var(--blue));
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3mm;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 3mm;
+    }
+
+    .card {
+      min-height: 33mm;
+      padding: 4mm;
+      border: 1px solid #dfe4ed;
+      border-radius: 9px;
+      background: rgba(255, 255, 255, 0.84);
+    }
+
+    .card-title {
+      display: flex;
+      align-items: center;
+      gap: 2mm;
+      margin: 0 0 2mm;
+      font-size: 15px;
+      font-weight: 950;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 9mm;
+      height: 9mm;
+      border-radius: 50%;
+      background: var(--accent, var(--blue));
+      color: #fff;
+      font-size: 11px;
+      font-weight: 950;
+      flex: 0 0 auto;
+    }
+
+    .card p,
+    .note-box p {
+      margin-bottom: 0;
+      font-size: 12px;
+      line-height: 1.56;
+    }
+
+    .tool-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 2mm;
+      overflow: hidden;
+      border-radius: 7px;
+      font-size: 11.2px;
+    }
+
+    .tool-table th {
+      padding: 2.6mm;
+      background: var(--accent, var(--blue));
+      color: #fff;
+      font-weight: 950;
+      text-align: left;
+    }
+
+    .tool-table td {
+      padding: 2.4mm 2.6mm;
+      border-bottom: 1px solid #dfe4ed;
+      background: rgba(255, 255, 255, 0.88);
+      vertical-align: top;
+      line-height: 1.42;
+    }
+
+    .timeline {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 3mm;
+      margin: 5mm 0 6mm;
+    }
+
+    .step {
+      position: relative;
+      min-height: 29mm;
+      border: 1px solid #a9c6ff;
+      border-radius: 7px;
+      background: #fff;
+      box-shadow: 0 8px 18px rgba(0, 78, 234, 0.12);
+    }
+
+    .step:not(:last-child)::after {
+      content: "+";
+      position: absolute;
+      right: -5.1mm;
+      top: 13mm;
+      width: 7mm;
+      height: 7mm;
+      border-radius: 50%;
+      border: 1px solid #9ebdf7;
+      background: #fff;
+      color: #8baeea;
+      font-size: 17px;
+      font-weight: 950;
+      line-height: 6.5mm;
+      text-align: center;
+      z-index: 5;
+    }
+
+    .step strong {
+      display: block;
+      padding: 1.6mm 2mm;
+      border-radius: 6px 6px 0 0;
+      background: linear-gradient(90deg, var(--indigo), var(--blue));
+      color: #fff;
+      font-size: 11px;
+      font-weight: 950;
+      text-align: center;
+    }
+
+    .step p {
+      padding: 3mm;
+      margin: 0;
+      font-size: 11.2px;
+      line-height: 1.45;
+    }
+
+    .note-box {
+      padding: 4mm 5mm;
+      border-radius: 8px;
+      background: #f2f4f7;
+      border-left: 5px solid var(--accent, var(--blue));
+    }
+
+    .amount-band {
+      display: grid;
+      grid-template-columns: 44mm 1fr;
+      align-items: stretch;
+      margin: 5mm 0;
+      overflow: hidden;
+      border-radius: 8px;
+      background: linear-gradient(90deg, #0f245f, var(--blue));
+      color: #fff;
+    }
+
+    .amount-band strong {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 5mm;
+      font-size: 28px;
+      font-weight: 950;
+      color: var(--yellow);
+    }
+
+    .amount-band span {
+      padding: 5mm;
+      font-size: 13px;
+      font-weight: 800;
+      line-height: 1.5;
+      border-left: 1px solid rgba(255, 255, 255, 0.32);
+    }
+
+    .callout {
+      margin-top: 5mm;
+      padding: 4mm 5mm;
+      border-radius: 8px;
+      background: linear-gradient(90deg, rgba(255, 222, 82, 0.25), rgba(255, 255, 255, 0.8));
+      border: 1px solid rgba(255, 222, 82, 0.72);
+      font-size: 12px;
+      font-weight: 800;
+      line-height: 1.5;
+    }
+
+    .page-num {
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      z-index: 6;
+      width: 9mm;
+      height: 9mm;
+      background: linear-gradient(180deg, var(--indigo), var(--blue));
+      color: #fff;
+      font-size: 10px;
+      font-weight: 900;
+      line-height: 9mm;
+      text-align: center;
+    }
+
+    .cover {
+      padding: 26mm 16mm 18mm;
+      background:
+        radial-gradient(circle at 78% 60%, rgba(0, 109, 234, 0.12), transparent 33%),
+        radial-gradient(circle at 23% 12%, rgba(255, 255, 255, 0.9), transparent 24%),
+        linear-gradient(135deg, #fafaf7, #ffffff 45%, #f3f6fb);
+    }
+
+    .cover-mark {
+      position: absolute;
+      left: 16mm;
+      top: 23mm;
+      color: #3a3a3a;
+      font-size: 28px;
+      font-weight: 600;
+    }
+
+    .cover-title {
+      position: relative;
+      z-index: 5;
+      margin-top: 22mm;
+      max-width: 130mm;
+    }
+
+    .cover-title h1 {
+      margin: 0;
+      font-size: 43px;
+      line-height: 1.06;
+      font-weight: 950;
+      letter-spacing: 0;
+    }
+
+    .cover-title .gradient-text,
+    .divider .gradient-text {
+      background: linear-gradient(90deg, var(--indigo), var(--blue));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .cover-title .dark {
+      color: #3a3a3a;
+    }
+
+    .cover-pill {
+      display: inline-block;
+      margin-top: 9mm;
+      padding: 2.5mm 5mm;
+      border-radius: 4px;
+      background: linear-gradient(90deg, var(--indigo), var(--blue));
+      color: #fff;
+      font-size: 17px;
+      font-weight: 900;
+    }
+
+    .cover-copy {
+      position: relative;
+      z-index: 5;
+      width: 112mm;
+      margin-top: 11mm;
+      color: #313743;
+      font-size: 14px;
+      font-weight: 750;
+      line-height: 1.55;
+      word-break: keep-all;
+    }
+
+    .isometric {
+      position: absolute;
+      right: 14mm;
+      bottom: 21mm;
+      width: 118mm;
+      height: 92mm;
+      opacity: 0.98;
+    }
+
+    .iso-base {
+      position: absolute;
+      right: 8mm;
+      bottom: 11mm;
+      width: 90mm;
+      height: 44mm;
+      transform: skewX(-25deg) rotate(-4deg);
+      border-radius: 8px;
+      background: linear-gradient(135deg, #f7f7f7, #cfd5de);
+      box-shadow: 0 24px 35px rgba(31, 46, 71, 0.22);
+    }
+
+    .iso-chip,
+    .iso-tower,
+    .iso-cube {
+      position: absolute;
+      border-radius: 4px;
+      background: linear-gradient(135deg, #f7fbff, #3c8bff 48%, #183fb7);
+      box-shadow: 0 12px 22px rgba(0, 78, 234, 0.22);
+    }
+
+    .iso-chip {
+      right: 29mm;
+      bottom: 28mm;
+      width: 47mm;
+      height: 22mm;
+    }
+
+    .iso-chip::before {
+      content: "AI";
+      position: absolute;
+      inset: 5mm;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(255, 255, 255, 0.62);
+      color: #fff;
+      font-size: 27px;
+      font-weight: 950;
+    }
+
+    .iso-tower {
+      right: 74mm;
+      bottom: 49mm;
+      width: 19mm;
+      height: 33mm;
+      background: linear-gradient(135deg, #ffffff, #b8c2d1 50%, #56657b);
+    }
+
+    .iso-cube {
+      width: 9mm;
+      height: 9mm;
+      opacity: 0.9;
+    }
+
+    .cube-a { right: 94mm; bottom: 19mm; }
+    .cube-b { right: 82mm; bottom: 17mm; background: linear-gradient(135deg, #ffffff, #82b6ff, #005bc8); }
+    .cube-c { right: 99mm; bottom: 32mm; background: linear-gradient(135deg, #ffffff, #dce5f2, #88a0bf); }
+    .cube-d { right: 17mm; bottom: 58mm; background: linear-gradient(135deg, #ffffff, #8bc4ff, #006dea); }
+
+    .cover-footer,
+    .back-footer {
+      position: absolute;
+      left: 16mm;
+      bottom: 12mm;
+      display: flex;
+      gap: 5mm;
+      align-items: center;
+      color: #164e98;
+      font-size: 13px;
+      font-weight: 950;
+    }
+
+    .symbol {
+      width: 8mm;
+      height: 8mm;
+      border-radius: 50%;
+      background: conic-gradient(#005bac 0 34%, #fff 34% 48%, #e3312d 48% 82%, #fff 82% 100%);
+      border: 1px solid #d7dce8;
+    }
+
+    .intro-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4mm;
+      margin-top: 6mm;
+    }
+
+    .principle {
+      padding: 5mm;
+      border-radius: 9px;
+      background: #fff;
+      border: 1px solid #dce2ed;
+      box-shadow: 0 10px 22px rgba(34, 48, 72, 0.07);
+    }
+
+    .principle strong {
+      display: block;
+      color: var(--blue);
+      font-size: 15px;
+      font-weight: 950;
+      margin-bottom: 2mm;
+    }
+
+    .principle p {
+      margin: 0;
+      font-size: 12px;
+    }
+
+    .divider {
+      padding: 30mm 18mm;
+      background:
+        radial-gradient(circle at 76% 66%, rgba(0, 109, 234, 0.13), transparent 36%),
+        linear-gradient(135deg, #fbfbf8, #fff 52%, #f1f4f8);
+    }
+
+    .divider-brand {
+      position: absolute;
+      left: 17mm;
+      top: 19mm;
+      font-size: 15px;
+      font-weight: 950;
+      line-height: 1.25;
+    }
+
+    .divider-brand span {
+      color: var(--blue);
+    }
+
+    .divider-main {
+      position: relative;
+      z-index: 3;
+      margin-top: 65mm;
+    }
+
+    .divider-main .roman {
+      margin-bottom: 9mm;
+      font-size: 34px;
+      font-weight: 950;
+    }
+
+    .divider-main h2 {
+      margin: 0;
+      max-width: 145mm;
+      font-size: 42px;
+      line-height: 1.04;
+      font-weight: 950;
+    }
+
+    .divider-main ul {
+      margin: 8mm 0 0;
+      padding-left: 0;
+      list-style: none;
+      border-left: 7px solid var(--blue);
+    }
+
+    .divider-main li {
+      margin: 1.8mm 0;
+      padding-left: 5mm;
+      color: #333;
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .back-cover {
+      padding: 27mm 16mm;
+      background:
+        radial-gradient(circle at 72% 59%, rgba(0, 109, 234, 0.12), transparent 36%),
+        linear-gradient(135deg, #fafaf7, #ffffff 45%, #f3f6fb);
+    }
+
+    .back-cover h2 {
+      position: relative;
+      z-index: 5;
+      margin: 0;
+      max-width: 105mm;
+      font-size: 34px;
+      line-height: 1.1;
+      font-weight: 950;
+    }
+
+    .back-cover .closing {
+      position: relative;
+      z-index: 5;
+      width: 112mm;
+      margin-top: 8mm;
+      color: #313743;
+      font-size: 14px;
+      font-weight: 750;
+      line-height: 1.6;
+    }
+
+    .accent-violet {
+      --accent: var(--violet);
+    }
+
+    .accent-green {
+      --accent: var(--green);
+    }
+
+    .accent-navy {
+      --accent: var(--navy);
+    }
+
+    .accent-rust {
+      --accent: var(--rust);
+    }
+
+    .accent-violet .headline h1,
+    .accent-violet .headline h2,
+    .accent-violet .headline .rule {
+      color: var(--violet);
+    }
+
+    .accent-green .headline h1,
+    .accent-green .headline h2,
+    .accent-green .headline .rule {
+      color: var(--green);
+    }
+
+    .accent-navy .headline h1,
+    .accent-navy .headline h2,
+    .accent-navy .headline .rule {
+      color: var(--navy);
+    }
+
+    .accent-rust .headline h1,
+    .accent-rust .headline h2,
+    .accent-rust .headline .rule {
+      color: var(--rust);
+    }
+
+    .accent-violet .article-list li::before,
+    .accent-violet .badge,
+    .accent-violet .label,
+    .accent-violet .tool-table th {
+      background: var(--violet);
+    }
+
+    .accent-green .article-list li::before,
+    .accent-green .badge,
+    .accent-green .label,
+    .accent-green .tool-table th {
+      background: var(--green);
+    }
+
+    .accent-navy .article-list li::before,
+    .accent-navy .badge,
+    .accent-navy .label,
+    .accent-navy .tool-table th {
+      background: var(--navy);
+    }
+
+    .accent-rust .article-list li::before,
+    .accent-rust .badge,
+    .accent-rust .label,
+    .accent-rust .tool-table th {
+      background: var(--rust);
+    }
+
+    @media screen {
+      [contenteditable="true"] .page:hover {
+        box-shadow: 0 24px 60px rgba(25, 31, 46, 0.22);
+      }
+
+      [contenteditable="true"] .page:focus-within {
+        outline: 2px solid rgba(0, 109, 234, 0.34);
+        outline-offset: 4px;
+      }
+    }
+
+    @media print {
+      html,
+      body {
+        width: var(--page-w);
+        background: #fff;
+      }
+
+      .toolbar {
+        display: none;
+      }
+
+      .document {
+        width: var(--page-w);
+        margin: 0;
+      }
+
+      .page {
+        margin: 0;
+        box-shadow: none;
+        break-after: page;
+        page-break-after: always;
+      }
+
+      .page:last-child {
+        page-break-after: auto;
+        break-after: auto;
+      }
+
+      * {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+    }
+
+    @page {
+      size: A4 portrait;
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="toolbar">
+    <div>
+      <strong>2026년 AI챔피언 해커톤 대회 운영지침</strong>
+      <small>본문을 직접 수정한 뒤 HTML로 저장하거나 브라우저 인쇄에서 PDF로 저장할 수 있습니다.</small>
+    </div>
+    <div class="toolbar-actions">
+      <button class="subtle" type="button" data-action="save-local">브라우저 저장</button>
+      <button class="primary" type="button" data-action="download">HTML 저장</button>
+      <button type="button" data-action="print">PDF 저장</button>
+      <button class="subtle" type="button" data-action="reset">초기화</button>
+      <span class="status" id="status">초기화</span>
+    </div>
+  </div>
+
+  <div class="document" contenteditable="true" spellcheck="false">
+    <section class="page cover">
+      <div class="cover-mark">2026</div>
+      <div class="cover-title">
+        <h1><span class="gradient-text">AI챔피언</span><br><span class="dark">해커톤 대회</span><br>운영지침</h1>
+        <div class="cover-pill">당일 제작 원칙과 공정 운영 기준</div>
+      </div>
+      <p class="cover-copy">코드를 잘 짜는 사람만이 아니라, 문제를 제대로 정의하고 AI와 도구를 잘 부려 국민에게 쓸모 있는 결과물을 만들어내는 역량을 평가하기 위한 대회 운영 기준입니다.</p>
+      <div class="isometric" aria-hidden="true">
+        <div class="iso-base"></div>
+        <div class="iso-chip"></div>
+        <div class="iso-tower"></div>
+        <div class="iso-cube cube-a"></div>
+        <div class="iso-cube cube-b"></div>
+        <div class="iso-cube cube-c"></div>
+        <div class="iso-cube cube-d"></div>
+      </div>
+      <div class="cover-footer"><span class="symbol"></span><span>AI Champion Hackathon</span><span>운영지침</span></div>
+    </section>
+
+    <section class="page divider">
+      <div class="divider-brand">2026<br><span>AI챔피언 해커톤</span><br>운영지침</div>
+      <div class="divider-main">
+        <div class="roman">I</div>
+        <h2><span class="gradient-text">들어가며</span></h2>
+        <ul>
+          <li>도구 제한보다 당일 제작 여부를 중시</li>
+          <li>AI 활용은 정상적인 실력 행위로 인정</li>
+          <li>완전 차단이 어려운 영역은 검증과 평가로 관리</li>
+        </ul>
+      </div>
+      <div class="isometric" aria-hidden="true">
+        <div class="iso-base"></div>
+        <div class="iso-chip"></div>
+        <div class="iso-cube cube-a"></div>
+        <div class="iso-cube cube-b"></div>
+        <div class="iso-cube cube-d"></div>
+      </div>
+      <div class="cover-footer"><span class="symbol"></span><span>AI Champion Hackathon</span></div>
+    </section>
+
+    <section class="page">
+      <header class="page-header">
+        <div><span class="chapter">I</span><span class="header-title">들어가며</span></div>
+        <div class="doc-label">2026 <strong>AI챔피언 해커톤</strong><br><span>운영지침</span></div>
+      </header>
+      <main class="page-main">
+        <p class="section-no">00</p>
+        <div class="headline"><h1>운영지침의 전제</h1><div class="rule"></div></div>
+        <p class="lead">이 대회는 코드를 잘 짜는 사람을 가리는 자리가 아니라, 문제를 제대로 정의하고 AI와 도구를 잘 부려 국민에게 쓸모 있는 결과물을 그 자리에서 만들어내는 사람을 가리는 자리입니다.</p>
+        <p>이 전제 때문에 통제 방식이 일반 대회와 다릅니다. 바이브코딩에서는 오픈소스를 가져다 쓰고 AI가 만들어 준 코드를 활용하는 것이 부정행위가 아니라 정상적인 실력 행위입니다.</p>
+        <p>그래서 이 지침은 어떤 도구를 쓰는지, 외부 코드를 얼마나 활용하는지를 제한하지 않습니다. 통제의 기준을 "무엇을 썼는가"가 아니라 "언제, 누가 만들었는가"에 둡니다.</p>
+        <div class="intro-grid">
+          <div class="principle"><strong>허용의 원칙</strong><p>도구 사용, 오픈소스 활용, AI 코드 생성은 대회가 평가하려는 역량의 일부입니다.</p></div>
+          <div class="principle"><strong>통제의 기준</strong><p>사전 제작 결과물 반입과 등록 팀원 외 제3자 개입만 공정성을 깨뜨리는 행위로 봅니다.</p></div>
+          <div class="principle"><strong>검증의 방식</strong><p>모든 도구에 같은 기준을 적용하기 위해 작업 이력의 시작 시각을 확인합니다.</p></div>
+          <div class="principle"><strong>평가의 관점</strong><p>완벽히 차단하기 어려운 영역은 검증 절차와 심사 구조로 다룹니다.</p></div>
+        </div>
+        <div class="callout">아래 각 조는 그렇게 정한 이유를 먼저 밝히고 조문을 두는 방식으로 구성합니다.</div>
+      </main>
+      <div class="page-num">3</div>
+    </section>
+
+    <section class="page">
+      <header class="page-header">
+        <div><span class="chapter">II</span><span class="header-title">기본 원칙</span></div>
+        <div class="doc-label">2026 <strong>AI챔피언 해커톤</strong><br><span>운영지침</span></div>
+      </header>
+      <main class="page-main">
+        <p class="section-no">01</p>
+        <div class="headline"><h1>제1조 기본 원칙</h1><div class="rule"></div></div>
+        <div class="reason">
+          <strong>이유</strong>
+          <p>이 대회는 도구와 자료를 폭넓게 활용하는 것을 정상적인 역량으로 봅니다. 무엇을 활용했는지가 아니라 그것으로 당일 문제를 어떻게 풀어냈는지를 평가합니다.</p>
+        </div>
+        <div class="chip-row">
+          <span class="chip"><strong>허용</strong>도구 사용</span>
+          <span class="chip"><strong>허용</strong>오픈소스 활용</span>
+          <span class="chip"><strong>허용</strong>AI 코드 생성</span>
+          <span class="chip"><strong>금지</strong>사전 제작 반입</span>
+          <span class="chip"><strong>금지</strong>제3자 개입</span>
+        </div>
+        <ol class="article-list">
+          <li>도구 사용, 오픈소스 활용, AI를 통한 코드 생성은 전면 허용하며 제한 대상이 아니다.</li>
+          <li>금지하는 행위는 두 가지로, 당일 미션이 공개되기 전에 미리 제작한 결과물을 반입하는 것과, 등록된 팀원 2인 외 제3자가 제작·설계·프롬프트 작성에 관여하는 것이다.</li>
+          <li>위 두 가지 외의 영역은 별도 사전신고나 사용 도구 제한 없이 자유롭게 진행한다.</li>
+          <li>기술적으로 완전 적발이 어려운 영역이 있으며, 이는 완전 차단이 아니라 검증 절차와 평가 방식으로 다룬다.</li>
+        </ol>
+      </main>
+      <div class="page-num">4</div>
+    </section>
+
+    <section class="page accent-violet">
+      <header class="page-header">
+        <div><span class="chapter">III</span><span class="header-title">도구와 계정</span></div>
+        <div class="doc-label">2026 <strong>AI챔피언 해커톤</strong><br><span>운영지침</span></div>
+      </header>
+      <main class="page-main">
+        <p class="section-no">02</p>
+        <div class="headline"><h1>제2조 사용 도구와 계정 준비</h1><div class="rule"></div></div>
+        <div class="reason">
+          <strong>이유</strong>
+          <p>도구 선택은 자유입니다. 다만 결과물이 계정에 쌓이는 정도가 다르므로, 모든 팀이 같은 출발선에서 시작하도록 당일 계정 준비 방식만 구분합니다.</p>
+        </div>
+        <table class="tool-table">
+          <thead>
+            <tr><th>도구 묶음</th><th>예시</th><th>당일 준비 기준</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>풀스택 바이브코딩 웹서비스</td><td>v0, Replit, Base44, Google AI Studio+GCP, Bolt, Lovable 등</td><td>운영진 확인 하에 신규 계정을 만들고 신규 프로젝트를 생성해 시작한다.</td></tr>
+            <tr><td>코딩 에이전트</td><td>opencode, OpenClaw, Cursor, VSCode+Copilot, Windsurf, Claude Code, Goose, Antigravity, Codex 등</td><td>운영진 확인 하에 비어 있는 신규 저장소를 만들고 작업 중 주기적으로 커밋한다.</td></tr>
+            <tr><td>LLM 챗 웹서비스</td><td>ChatGPT, Gemini, Microsoft Copilot, Grok, Claude 등</td><td>결과물이 계정에 축적되지 않고 전화번호 인증을 요구하므로 기존 계정 사용을 허용한다.</td></tr>
+          </tbody>
+        </table>
+        <div class="label-line"><span class="label">조문</span></div>
+        <ol class="article-list">
+          <li>참가팀은 도구를 자유롭게 선택하며, 어떤 도구를 쓸지 사전에 신고할 의무는 없다.</li>
+          <li>세 묶음을 자유롭게 혼용할 수 있으며, 어떤 도구로 만들었든 최종 결과물은 심사위원이 직접 사용할 수 있는 형태여야 한다.</li>
+        </ol>
+      </main>
+      <div class="page-num">5</div>
+    </section>
+
+    <section class="page accent-green">
+      <header class="page-header">
+        <div><span class="chapter">IV</span><span class="header-title">당일 제작</span></div>
+        <div class="doc-label">2026 <strong>AI챔피언 해커톤</strong><br><span>운영지침</span></div>
+      </header>
+      <main class="page-main">
+        <p class="section-no">03</p>
+        <div class="headline"><h1>제3조 당일 제작 원칙</h1><div class="rule"></div></div>
+        <div class="reason">
+          <strong>이유</strong>
+          <p>모든 팀이 당일 공개된 같은 문제를 같은 출발선에서 푸는 것이 대회의 전제입니다. 검증 기준은 특정 도구가 아니라 사용한 도구에 남는 작업 이력의 시작 시각입니다.</p>
+        </div>
+        <div class="timeline">
+          <div class="step"><strong>STEP 01</strong><p>본선 시작 전 운영진 확인</p></div>
+          <div class="step"><strong>STEP 02</strong><p>신규 계정 또는 신규 저장소 생성</p></div>
+          <div class="step"><strong>STEP 03</strong><p>당일 미션 공개 후 제작 시작</p></div>
+          <div class="step"><strong>STEP 04</strong><p>종료 후 생성 시각과 작업 이력 확인</p></div>
+        </div>
+        <ol class="article-list">
+          <li>모든 결과물은 당일 공개된 미션을 대회 시작 이후 제작한 것이어야 한다.</li>
+          <li>본선 시작 시 운영진 확인 하에 신규 계정 또는 신규 저장소를 생성하며, 그 생성 시각을 작업 시작 기준으로 한다.</li>
+          <li>결선 종료 후, 사용한 도구의 프로젝트 생성 시각과 작업 이력을 운영진에게 화면으로 확인시킨다.</li>
+          <li>검증 기준은 특정 도구에 한정하지 않으며, 사용한 도구에 남는 작업 이력으로 동일하게 적용한다.</li>
+          <li>본선과 결선은 각각 별도의 문제를 정해진 시간 안에 새로 푸는 구조이며, 본선·결선 점수 격차가 비정상적으로 큰 팀에는 운영진이 추가 소명을 요청할 수 있다.</li>
+        </ol>
+      </main>
+      <div class="page-num">6</div>
+    </section>
+
+    <section class="page accent-navy">
+      <header class="page-header">
+        <div><span class="chapter">V</span><span class="header-title">인력 통제</span></div>
+        <div class="doc-label">2026 <strong>AI챔피언 해커톤</strong><br><span>운영지침</span></div>
+      </header>
+      <main class="page-main">
+        <p class="section-no">04</p>
+        <div class="headline"><h1>제4조 팀원 외 인력 및 원격 지원 금지</h1><div class="rule"></div></div>
+        <div class="reason">
+          <strong>이유</strong>
+          <p>이 대회는 등록된 팀원 2인의 역량을 평가합니다. 막는 것은 AI의 도움이 아니라 사람의 외부 개입입니다.</p>
+        </div>
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-title"><span class="badge">허용</span>AI와 팀 내 협업</div>
+            <p>AI 도구의 도움은 전면 허용하며, 팀원 2인 간의 소통과 협업은 자유입니다.</p>
+          </div>
+          <div class="card">
+            <div class="card-title"><span class="badge">금지</span>외부 사람의 개입</div>
+            <p>등록된 팀원 외 제3자가 코드, 설계, 프롬프트 작성에 관여하는 행위를 금지합니다.</p>
+          </div>
+        </div>
+        <div class="label-line"><span class="label">조문</span></div>
+        <ol class="article-list">
+          <li>대회는 등록된 팀원 2인의 역량을 평가하며, 제3자가 코드·설계·프롬프트 작성에 관여하는 것을 금지한다.</li>
+          <li>AI 도구의 도움은 전면 허용한다.</li>
+          <li>메신저 등으로 외부에서 코드를 전달받거나, 원격 접속 도구로 비참가 인원이 작업에 참여하는 행위를 금지한다.</li>
+          <li>본선과 결선은 지정 장소에서 진행하며, 작업석에는 팀원 2인만 위치하고 운영진이 진행 상황을 상시 확인한다.</li>
+          <li>팀원 2인 간의 소통과 협업은 자유다.</li>
+        </ol>
+      </main>
+      <div class="page-num">7</div>
+    </section>
+
+    <section class="page accent-rust">
+      <header class="page-header">
+        <div><span class="chapter">VI</span><span class="header-title">지원금 운영</span></div>
+        <div class="doc-label">2026 <strong>AI챔피언 해커톤</strong><br><span>운영지침</span></div>
+      </header>
+      <main class="page-main">
+        <p class="section-no">05</p>
+        <div class="headline"><h1>제5조 지원금 운영</h1><div class="rule"></div></div>
+        <div class="amount-band"><strong>30만원</strong><span>지원금은 모든 팀에게 동일하게 제공되며, 본선과 결선을 통합한 총액으로 운영합니다.</span></div>
+        <p>이 규칙으로 모든 차이를 없앨 수는 없습니다. 자비를 추가로 들여 더 좋은 환경에서 작업하는 것을 기술적으로 완전히 막을 방법은 없기 때문입니다.</p>
+        <p>그래서 두 가지를 구분합니다. 이번 대회를 위해 지원금을 넘겨 자비를 추가로 들이는 행위는 무기 불평등이므로 금지합니다. 반면 참가자가 평소 개인적으로 써 오던 유료 구독까지는 통제하지 않습니다.</p>
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-title"><span class="badge">인정</span>기존 보유 구독</div>
+            <p>대회 이전부터 개인적으로 보유 중이던 유료 구독은 그대로 사용할 수 있습니다.</p>
+          </div>
+          <div class="card">
+            <div class="card-title"><span class="badge">금지</span>초과 신규 지출</div>
+            <p>이번 대회 결과물 제작을 위해 지원금 30만원을 초과하여 추가 결제·투입하는 행위는 금지합니다.</p>
+          </div>
+        </div>
+        <div class="label-line"><span class="label">조문 1-3항</span></div>
+        <ol class="article-list">
+          <li>팀당 지원금은 30만원이며, 본선과 결선을 통합한 총액으로 결선에 추가 지급은 없다.</li>
+          <li>지원금은 모든 팀에게 동일하게 제공되며, 본선과 결선 사이의 예산 배분은 팀의 전략 역량의 일부로 본다.</li>
+          <li>참가자가 대회 이전부터 개인적으로 보유 중이던 유료 구독은 그대로 사용할 수 있으며, 그 구독료는 정산 대상이 아니다. 다만 그 구독을 이번 대회를 위해 상위 요금제로 올리거나 추가 결제하는 것은 신규 지출에 해당한다.</li>
+        </ol>
+      </main>
+      <div class="page-num">8</div>
+    </section>
+
+    <section class="page accent-rust">
+      <header class="page-header">
+        <div><span class="chapter">VI</span><span class="header-title">지원금 운영</span></div>
+        <div class="doc-label">2026 <strong>AI챔피언 해커톤</strong><br><span>운영지침</span></div>
+      </header>
+      <main class="page-main">
+        <p class="section-no">05</p>
+        <div class="headline"><h1>지원금 정산과 제재</h1><div class="rule"></div></div>
+        <div class="reason">
+          <strong>운영 기준</strong>
+          <p>평소에 도구를 익혀 둔 것은 이 대회가 평가하려는 역량의 일부입니다. 이를 금지하면 지킨 사람만 손해 보는 규칙이 되므로, 평소 환경의 차이는 지원금 규칙이 아니라 평가 방식으로 다룹니다.</p>
+        </div>
+        <div class="timeline">
+          <div class="step"><strong>01</strong><p>대회 기간 중 사용</p></div>
+          <div class="step"><strong>02</strong><p>결선 종료 후 제출</p></div>
+          <div class="step"><strong>03</strong><p>영수증 및 카드 내역 확인</p></div>
+          <div class="step"><strong>04</strong><p>인정 금액 정산 및 미사용분 회수</p></div>
+        </div>
+        <ol class="article-list">
+          <li>정산은 사후 방식으로, 결선 종료 후 정해진 기한 내에 접수 대표가 결제 영수증과 카드 사용내역 전체를 제출하며, 대회 기간 내 지원금으로 발생한 사용료만 인정하고 미사용분은 회수한다.</li>
+          <li>기존 보유 구독을 제외하고, 이번 대회 결과물 제작을 위해 지원금 30만원을 초과하여 자비로 추가 결제·투입하는 행위는 금지하며, 신청서에 이에 관한 서약을 포함한다.</li>
+          <li>지원금 초과 신규 지출 위반이 확인될 경우 수상 취소 및 상금 환수와 함께 소속기관에 통보한다.</li>
+        </ol>
+      </main>
+      <div class="page-num">9</div>
+    </section>
+
+    <section class="page">
+      <header class="page-header">
+        <div><span class="chapter">VII</span><span class="header-title">제출 기준</span></div>
+        <div class="doc-label">2026 <strong>AI챔피언 해커톤</strong><br><span>운영지침</span></div>
+      </header>
+      <main class="page-main">
+        <p class="section-no">06</p>
+        <div class="headline"><h1>제6조 결과물 제출 기준</h1><div class="rule"></div></div>
+        <div class="reason">
+          <strong>이유</strong>
+          <p>심사위원이 결과물을 직접 써보고 채점하므로, 결과물이 심사 시점에 실제로 동작해야 합니다. 이는 기술 스택을 제한하는 것이 아니라 심사가 이뤄지기 위한 최소 조건입니다.</p>
+        </div>
+        <div class="grid-3">
+          <div class="card"><div class="card-title"><span class="badge">URL</span>원칙</div><p>결과물은 외부에서 접속 가능한 URL 형태로 제출하는 것을 원칙으로 합니다.</p></div>
+          <div class="card"><div class="card-title"><span class="badge">동작</span>필수</div><p>심사 시점에 접속되지 않는 결과물은 심사에서 제외합니다.</p></div>
+          <div class="card"><div class="card-title"><span class="badge">시연</span>대체</div><p>URL 제출이 불가한 경우 현장 시연으로 심사 가능한 상태를 갖춰야 합니다.</p></div>
+        </div>
+        <div class="label-line"><span class="label">조문</span></div>
+        <ol class="article-list">
+          <li>결과물은 외부에서 접속 가능한 URL 형태로 제출하는 것을 원칙으로 한다.</li>
+          <li>심사 시점에 접속되지 않는 결과물은 심사에서 제외한다.</li>
+          <li>URL 제출이 불가한 형태의 결과물은 현장 시연으로 심사 가능한 상태를 갖춰야 한다.</li>
+        </ol>
+      </main>
+      <div class="page-num">10</div>
+    </section>
+
+    <section class="page accent-violet">
+      <header class="page-header">
+        <div><span class="chapter">VIII</span><span class="header-title">위반 제재</span></div>
+        <div class="doc-label">2026 <strong>AI챔피언 해커톤</strong><br><span>운영지침</span></div>
+      </header>
+      <main class="page-main">
+        <p class="section-no">07</p>
+        <div class="headline"><h1>제7조 위반 시 제재</h1><div class="rule"></div></div>
+        <div class="reason">
+          <strong>이유</strong>
+          <p>위반의 무게가 다르므로 제재도 차등합니다. 대회의 출발선과 심사 가능성을 훼손하는 행위는 심사 제외 또는 수상 취소의 사유가 됩니다.</p>
+        </div>
+        <ol class="article-list">
+          <li>당일 제작 원칙 위반 또는 팀원 외 인력·원격 지원이 확인될 경우, 심사 제외 또는 수상 취소한다.</li>
+          <li>제5조 제5항에 해당하는 지원금 초과 신규 지출 위반이 확인될 경우, 수상 취소·상금 환수와 함께 소속기관에 통보한다.</li>
+          <li>심사 시점에 결과물에 접속하거나 시연할 수 없는 경우, 심사에서 제외한다.</li>
+        </ol>
+        <div class="label-line"><span class="label">핵심 판단 기준</span></div>
+        <div class="grid-2">
+          <div class="note-box"><p><strong>공정성 침해</strong><br>사전 제작 반입, 제3자 참여, 원격 지원은 대회의 평가 단위를 훼손합니다.</p></div>
+          <div class="note-box"><p><strong>심사 불가</strong><br>결과물이 접속 또는 시연되지 않으면 심사위원이 직접 사용해 평가할 수 없습니다.</p></div>
+        </div>
+        <div class="callout">이 지침은 도구를 막기 위한 문서가 아니라, AI 활용형 대회의 공정한 출발선과 검증 가능한 결과물을 보장하기 위한 운영 기준입니다.</div>
+      </main>
+      <div class="page-num">11</div>
+    </section>
+
+    <section class="page back-cover">
+      <h2><span class="gradient-text">2026년 AI챔피언</span><br>해커톤 대회 운영지침</h2>
+      <p class="closing">문제 정의, AI 활용, 도구 운용, 당일 구현, 실사용 가능한 결과물을 함께 평가하는 대회를 위한 운영 기준입니다.</p>
+      <div class="isometric" aria-hidden="true">
+        <div class="iso-base"></div>
+        <div class="iso-chip"></div>
+        <div class="iso-tower"></div>
+        <div class="iso-cube cube-a"></div>
+        <div class="iso-cube cube-b"></div>
+        <div class="iso-cube cube-c"></div>
+        <div class="iso-cube cube-d"></div>
+      </div>
+      <div class="back-footer"><span class="symbol"></span><span>AI Champion Hackathon</span><span>운영지침</span></div>
+    </section>
+  </div>
+
+  <script>
+    (() => {
+      const storageKey = "ai-champion-hackathon-guidelines-v1";
+      const doc = document.querySelector(".document");
+      const status = document.querySelector("#status");
+      const original = doc.innerHTML;
+
+      const setStatus = (text) => {
+        status.textContent = text;
+        window.clearTimeout(setStatus.timer);
+        setStatus.timer = window.setTimeout(() => {
+          status.textContent = "편집 가능";
+        }, 1800);
+      };
+
+      const saved = window.localStorage.getItem(storageKey);
+      if (saved) {
+        doc.innerHTML = saved;
+        setStatus("불러옴");
+      } else {
+        setStatus("편집 가능");
+      }
+
+      doc.addEventListener("input", () => {
+        window.localStorage.setItem(storageKey, doc.innerHTML);
+        setStatus("자동 저장");
+      });
+
+      const downloadHtml = () => {
+        window.localStorage.setItem(storageKey, doc.innerHTML);
+        const html = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
+        const blob = new Blob([html], { type: "text/html;charset=utf-8" });
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = "2026_AI챔피언_해커톤_대회_운영지침.html";
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(a.href);
+        setStatus("HTML 저장");
+      };
+
+      document.querySelector(".toolbar").addEventListener("click", (event) => {
+        const button = event.target.closest("button[data-action]");
+        if (!button) return;
+        const action = button.dataset.action;
+        if (action === "print") {
+          window.localStorage.setItem(storageKey, doc.innerHTML);
+          window.print();
+        }
+        if (action === "download") {
+          downloadHtml();
+        }
+        if (action === "save-local") {
+          window.localStorage.setItem(storageKey, doc.innerHTML);
+          setStatus("저장됨");
+        }
+        if (action === "reset") {
+          if (window.confirm("편집한 내용을 초기 상태로 되돌릴까요?")) {
+            doc.innerHTML = original;
+            window.localStorage.removeItem(storageKey);
+            setStatus("초기화");
+          }
+        }
+      });
+    })();
+  </script>
+
+
+<script>/* kg-preview: #<heading> \uc704\uce58\ub85c \uc774\ub3d9 */
+(function(){function norm(t){return (t||'').replace(/\s+/g,'').toLowerCase()}
+function go(){var h=decodeURIComponent(location.hash.slice(1));if(!h)return;var k=norm(h).slice(0,24);if(!k)return;
+var best=null,bl=1e9,els=document.body.querySelectorAll('h1,h2,h3,h4,h5,p,div,span,li,td,text,tspan,section,article');
+for(var i=0;i<els.length;i++){var e=els[i],t=norm(e.textContent);if(t.length<bl&&t.indexOf(k)>-1){best=e;bl=t.length}}
+if(!best)return;var box=best.closest('section,[class*=slide],[class*=page],article')||best;
+box.scrollIntoView({block:'start'});box.style.outline='3px solid #c0504d';box.style.outlineOffset='4px';
+setTimeout(function(){box.style.outline=''},2600)}
+window.addEventListener('load',function(){setTimeout(go,400)});window.addEventListener('hashchange',go)})();</script></body></html>

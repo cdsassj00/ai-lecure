@@ -1,0 +1,3778 @@
+<!doctype html>
+<html lang="ko">
+<head><meta name="robots" content="noindex, nofollow">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AI 에이전트와 바이브 코딩 실무</title>
+  <style>
+    :root {
+      --paper:#faf4e6;
+      --paper-2:#f1e8d2;
+      --paper-3:#e9dcc0;
+      --ink:#1f1810;
+      --ink-soft:#3a2e20;
+      --ink-mute:#6a5a44;
+      --dark:#2b2015;
+      --dark-2:#1a1208;
+      --dark-ink:#f5ecd6;
+      --dark-mute:#c8b895;
+      --accent:#8a3d1f;
+      --accent-warm:#c96238;
+      --accent-soft:#e07a4a;
+      --line:#c8b898;
+      --line-soft:#e5d9bf;
+      --code-bg:#ede0c3;
+      --shadow-1:0 1px 2px rgba(0,0,0,.08);
+      --shadow-2:0 18px 56px rgba(0,0,0,.26);
+      --shadow-3:0 40px 100px rgba(0,0,0,.14);
+      --body-font-size:11pt;
+      --body-line-height:1.82;
+      --table-font-size:9.6pt;
+      --table-line-height:1.62;
+      --table-head-font-size:8pt;
+      --sheet-pad-top:16mm;
+      --sheet-pad-x:20mm;
+      --sheet-pad-bottom:20mm;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--ink-soft);
+      background:
+        radial-gradient(
+          circle at top left,
+          rgba(255,255,255,.45),
+          transparent 30%
+        ),
+        linear-gradient(160deg, #c9bfa8 0%, #b8ac92 48%, #b0a284 100%);
+      font:
+        400
+        var(--body-font-size)
+        /var(--body-line-height)
+        'Inter','Pretendard','Noto Sans KR',sans-serif;
+      counter-reset: page;
+    }
+
+    .topbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      padding: 14px 20px;
+      color: var(--dark-ink);
+      background: rgba(26,18,8,.78);
+      backdrop-filter: blur(12px);
+      box-shadow: 0 8px 30px rgba(0,0,0,.18);
+    }
+
+    .brand {
+      font: 700 11px/1.2 'Inter','Pretendard','Noto Sans KR',sans-serif;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--accent-soft);
+    }
+
+    .brand-sub {
+      font: 400 12px/1.2 'Inter','Pretendard','Noto Sans KR',sans-serif;
+      color: var(--dark-ink);
+      max-width: 38vw;
+      opacity: .88;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .spacer { flex: 1; }
+
+    .topbar button {
+      height: 34px;
+      padding: 0 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(245,236,214,.24);
+      background: transparent;
+      color: var(--dark-ink);
+      font: 700 11px/1 'Inter','Pretendard','Noto Sans KR',sans-serif;
+      letter-spacing: 1.4px;
+      text-transform: uppercase;
+      cursor: pointer;
+    }
+
+    .topbar .btn-pdf {
+      background: #111;
+      border-color: #111;
+      color: #fff;
+    }
+
+    .meta-panel {
+      position: fixed;
+      top: 78px;
+      right: 18px;
+      z-index: 19;
+      width: min(420px, calc(100vw - 36px));
+      max-height: calc(100vh - 96px);
+      overflow: auto;
+      padding: 18px;
+      border: 1px solid rgba(43,32,21,.12);
+      border-radius: 24px;
+      background: rgba(250,244,230,.96);
+      backdrop-filter: blur(14px);
+      box-shadow: 0 18px 48px rgba(43,32,21,.18);
+      transform: translateX(calc(100% + 24px));
+      opacity: 0;
+      pointer-events: none;
+      transition: transform .24s ease, opacity .24s ease;
+    }
+
+    body.meta-panel-open .meta-panel {
+      transform: translateX(0);
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .meta-panel-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .meta-panel-head strong {
+      display: block;
+      margin-bottom: 4px;
+      font: 700 15px/1.3 'Noto Serif KR',serif;
+      color: var(--ink);
+    }
+
+    .meta-panel-head p {
+      margin: 0;
+      color: var(--ink-mute);
+      font-size: 9pt;
+      line-height: 1.55;
+    }
+
+    .meta-close {
+      flex: 0 0 auto;
+      height: 34px;
+      padding: 0 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(43,32,21,.14);
+      background: rgba(255,255,255,.72);
+      color: var(--ink-soft);
+      font: 700 11px/1 'Inter','Pretendard','Noto Sans KR',sans-serif;
+      letter-spacing: 1.2px;
+      cursor: pointer;
+    }
+
+    .meta-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .meta-field {
+      display: grid;
+      gap: 6px;
+    }
+
+    .meta-field.wide {
+      grid-column: 1 / -1;
+    }
+
+    .meta-field span {
+      color: var(--ink-mute);
+      font: 700 10.5px/1.2 'Inter','Pretendard','Noto Sans KR',sans-serif;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .meta-field input {
+      width: 100%;
+      height: 40px;
+      padding: 0 12px;
+      border: 1px solid rgba(43,32,21,.12);
+      border-radius: 12px;
+      background: rgba(255,255,255,.78);
+      color: var(--ink);
+      font: 500 10pt/1.2 'Inter','Pretendard','Noto Sans KR',sans-serif;
+    }
+
+    .meta-field input:focus {
+      outline: 2px solid rgba(201,98,56,.22);
+      border-color: var(--accent-warm);
+    }
+
+    .meta-note {
+      margin: 14px 0 0;
+      color: var(--ink-mute);
+      font-size: 8.7pt;
+      line-height: 1.6;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 260px minmax(0, 1fr) 250px;
+      gap: 24px;
+      width: min(1540px, calc(100vw - 40px));
+      margin: 0 auto;
+      padding: 88px 0 60px;
+    }
+
+    .sidenav, .toc {
+      position: sticky;
+      top: 90px;
+      align-self: start;
+      max-height: calc(100vh - 110px);
+      overflow: auto;
+      padding: 18px;
+      border: 1px solid rgba(43,32,21,.08);
+      border-radius: 22px;
+      background: rgba(250,244,230,.85);
+      backdrop-filter: blur(8px);
+      box-shadow: 0 8px 34px rgba(43,32,21,.10);
+    }
+
+    .sidenav h3,
+    .toc h3 {
+      margin: 0 0 10px;
+      color: var(--accent);
+      font: 700 11px/1.4 'Inter','Pretendard','Noto Sans KR',sans-serif;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    .sidenav p {
+      margin: 0 0 12px;
+      font-size: 9pt;
+      color: var(--ink-mute);
+    }
+
+    .toc ol {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 8px;
+    }
+
+    .toc a {
+      display: grid;
+      grid-template-columns: 32px 1fr;
+      gap: 8px;
+      align-items: start;
+      padding: 8px 10px;
+      border-radius: 14px;
+      color: var(--ink-soft);
+      text-decoration: none;
+      transition: background .2s ease, transform .2s ease;
+    }
+
+    .toc a:hover {
+      background: rgba(201,98,56,.08);
+      transform: translateX(2px);
+    }
+
+    .toc-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      height: 24px;
+      border-radius: 999px;
+      background: var(--dark);
+      color: var(--dark-ink);
+      font: 700 10px/1 'Inter','Pretendard','Noto Sans KR',sans-serif;
+      letter-spacing: 1px;
+    }
+
+    .toc-text {
+      font-size: 9pt;
+      line-height: 1.45;
+    }
+
+    .main {
+      display: grid;
+      gap: 16mm;
+      justify-items: center;
+    }
+
+    #paper-pages {
+      display: grid;
+      gap: 16mm;
+      justify-items: center;
+      width: 100%;
+    }
+
+    .paper-source {
+      display: none !important;
+    }
+
+    .sheet,
+    .print-cover,
+    .pagination-probe {
+      position: relative;
+      width: 210mm;
+      height: 297mm;
+      padding:
+        var(--sheet-pad-top)
+        var(--sheet-pad-x)
+        var(--sheet-pad-bottom);
+      background: var(--paper);
+      box-shadow: var(--shadow-1), var(--shadow-2), var(--shadow-3);
+      overflow: hidden;
+    }
+
+    .sheet,
+    .pagination-probe {
+      display: flex;
+      flex-direction: column;
+      gap: 4.5mm;
+    }
+
+    .pagination-probe {
+      position: absolute;
+      top: 0;
+      left: -9999px;
+      visibility: hidden;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .sheet-header,
+    .sheet-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8mm;
+      flex: 0 0 auto;
+    }
+
+    .sheet-header {
+      padding-bottom: 2.8mm;
+      border-bottom: .4mm solid var(--line-soft);
+    }
+
+    .sheet-running-title {
+      min-width: 0;
+      color: var(--accent);
+      font: 700 8.8pt/1.3 'Noto Serif KR',serif;
+      letter-spacing: .3px;
+    }
+
+    .sheet-running-section {
+      min-width: 0;
+      max-width: 48%;
+      color: var(--ink-mute);
+      font: 600 7.8pt/1.4 'Inter','Pretendard','Noto Sans KR',sans-serif;
+      letter-spacing: 1.2px;
+      text-align: right;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .sheet-footer {
+      margin-top: auto;
+      padding-top: 2.4mm;
+      border-top: .4mm solid var(--line-soft);
+      min-height: 9mm;
+    }
+
+    .sheet-footer-meta {
+      min-width: 0;
+      color: var(--ink-mute);
+      font: 600 7.2pt/1.4 'Inter','Pretendard','Noto Sans KR',sans-serif;
+      letter-spacing: 1.4px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .sheet-footer-page {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--ink-soft);
+      font: 600 7.5pt/1.2 'Inter','Pretendard','Noto Sans KR',sans-serif;
+      letter-spacing: 1.2px;
+      white-space: nowrap;
+    }
+
+    .sheet-footer-page-num::before {
+      counter-increment: page;
+      content: counter(page, decimal-leading-zero);
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    .sheet-body {
+      flex: 1 1 auto;
+      min-height: 0;
+      overflow: hidden;
+      padding-bottom: 1.5mm;
+    }
+
+    .print-cover {
+      display: flex;
+      flex-direction: column;
+      padding: 0 !important;
+      background: var(--dark) !important;
+      color: var(--dark-ink);
+    }
+
+    .print-cover::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 5mm;
+      background: var(--accent-warm);
+    }
+
+    .pc-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 24mm 22mm 12mm;
+    }
+
+    .pc-org-en {
+      display: grid;
+      gap: 6px;
+      color: var(--dark-mute);
+      font: 500 10pt/1.4 'Inter','Pretendard','Noto Sans KR',sans-serif;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    .pc-org-en strong {
+      color: var(--accent-soft);
+      font-weight: 700;
+    }
+
+    .pc-year {
+      color: var(--accent-soft);
+      font: 600 22pt/1 'Pretendard','Noto Sans KR',sans-serif;
+      margin-bottom: 12mm;
+    }
+
+    .pc-title {
+      margin: 0;
+      color: var(--dark-ink);
+      font: 800 34pt/1.18 'Pretendard','Noto Sans KR',sans-serif;
+      letter-spacing: -.3px;
+    }
+
+    .pc-rule {
+      width: 48mm;
+      height: 1.2mm;
+      margin: 10mm 0 8mm;
+      background: var(--accent-warm);
+    }
+
+    .pc-doc-type {
+      color: var(--paper-2);
+      font: 700 24pt/1.2 'Pretendard','Noto Sans KR',sans-serif;
+      margin-bottom: 5mm;
+    }
+
+    .pc-subtitle {
+      max-width: 136mm;
+      color: var(--paper-2);
+      font: 500 12pt/1.8 'Pretendard','Noto Sans KR',sans-serif;
+    }
+
+    .pc-topics {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10mm;
+    }
+
+    .topic-chip {
+      display: inline-flex;
+      align-items: center;
+      padding: 5px 10px;
+      border-radius: 999px;
+      background: rgba(245,236,214,.10);
+      border: 1px solid rgba(245,236,214,.16);
+      color: var(--paper-2);
+      font: 600 8pt/1 'Inter','Pretendard','Noto Sans KR',sans-serif;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .pc-meta {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10mm;
+      border-top: .4mm solid rgba(245,236,214,.25);
+      padding-top: 6mm;
+    }
+
+    .pc-meta .ml {
+      color: var(--accent-soft);
+      font: 700 7pt/1.3 'Inter','Pretendard','Noto Sans KR',sans-serif;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 2mm;
+    }
+
+    .pc-meta .mv {
+      color: var(--dark-ink);
+      font: 600 10pt/1.5 'Inter','Pretendard','Noto Sans KR',sans-serif;
+    }
+
+    .pc-footer-strip {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 9mm 22mm 11mm;
+      background: #fff;
+      color: var(--dark);
+    }
+
+    .pc-footer-strip::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: .8mm;
+      background: var(--accent-warm);
+    }
+
+    .pc-fs-wordmark {
+      font: 700 16pt/1 'Noto Serif KR',serif;
+      color: var(--dark);
+    }
+
+    .pc-fs-meta {
+      text-align: right;
+      color: var(--ink-mute);
+      font: 600 7.5pt/1.6 'Inter','Pretendard','Noto Sans KR',sans-serif;
+      letter-spacing: 1.8px;
+      text-transform: uppercase;
+    }
+
+    h1, h2, h3, h4, h5 {
+      color: var(--ink);
+      margin: 0 0 10px;
+    }
+
+    h1 {
+      font: 700 22pt/1.28 'Noto Serif KR',serif;
+      letter-spacing: -.2px;
+      margin-bottom: 6mm;
+    }
+
+    h2 {
+      margin: 0 0 7mm;
+      padding: 5.8mm 8.5mm 5.2mm;
+      background: var(--dark);
+      color: var(--dark-ink);
+      border-left: 3pt solid var(--accent-warm);
+      font: 700 17pt/1.35 'Noto Serif KR',serif;
+      page-break-before: always;
+    }
+
+    h3 {
+      margin-top: 6mm;
+      font: 700 11.5pt/1.5 'Inter','Pretendard','Noto Sans KR',sans-serif;
+    }
+
+    h4 {
+      margin-top: 4.5mm;
+      font: 700 10.5pt/1.5 'Inter','Pretendard','Noto Sans KR',sans-serif;
+      color: var(--accent);
+    }
+
+    p { margin: 0 0 4.6mm; }
+    ul, ol { margin: 0 0 4.6mm 5mm; padding-left: 5mm; }
+    li { margin-bottom: 2mm; }
+
+    .toc-list {
+      margin: 0 0 3.2mm 0;
+      padding-left: 4.6mm;
+      font-size: 9.4pt;
+      line-height: 1.5;
+    }
+
+    .toc-list li {
+      margin-bottom: 1.1mm;
+      break-inside: avoid;
+    }
+
+    .toc-list.compact {
+      column-count: 2;
+      column-gap: 6mm;
+      column-fill: balance;
+    }
+
+    blockquote {
+      margin: 6mm 0;
+      padding: 4mm 4.5mm;
+      background: var(--paper-2);
+      border-left: 3pt solid var(--accent-warm);
+      color: var(--ink);
+    }
+
+    .sheet-body img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+      border-radius: 9px;
+    }
+
+    .doc-figure {
+      margin: 3.8mm 0 4.8mm;
+      padding: 2.6mm;
+      background: linear-gradient(
+        180deg,
+        rgba(255,255,255,.94),
+        rgba(245,236,214,.56)
+      );
+      border: 1px solid rgba(49,79,79,.11);
+      border-radius: 10px;
+      box-shadow: 0 6px 14px rgba(25,31,38,.06);
+      page-break-inside: avoid;
+      break-inside: avoid;
+    }
+
+    .doc-figure img {
+      width: 100%;
+      max-height: 82mm;
+      object-fit: contain;
+      background: #fff;
+      border: 1px solid rgba(49,79,79,.08);
+    }
+
+    .figure-context {
+      margin: 0 0 2.2mm;
+      padding: 2.2mm 2.6mm;
+      background: rgba(255,255,255,.78);
+      border: 1px solid rgba(166,98,56,.18);
+      border-left: 3px solid var(--accent-warm);
+      border-radius: 8px;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.72);
+    }
+
+    .figure-context-label {
+      margin: 0 0 .7mm;
+      color: var(--accent-warm);
+      font: 700 7.1pt/1.2 'Inter','Pretendard','Noto Sans KR',sans-serif;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+    }
+
+    .figure-context-body {
+      color: var(--ink);
+      font: 600 8.1pt/1.58 'Inter','Pretendard','Noto Sans KR',sans-serif;
+      word-break: keep-all;
+    }
+
+    .doc-figure.compact,
+    .doc-figure.figure-small {
+      max-width: 84mm;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .doc-figure.figure-medium {
+      max-width: 128mm;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .doc-figure.wide,
+    .doc-figure.figure-wide {
+      margin-left: 0;
+      margin-right: 0;
+    }
+
+    .doc-figure.figure-small img {
+      max-height: 58mm;
+    }
+
+    .doc-figure.figure-medium img {
+      max-height: 70mm;
+    }
+
+    .doc-figure.figure-wide img {
+      max-height: 86mm;
+    }
+
+    .doc-figure.full-slide-figure img {
+      max-height: 128mm;
+    }
+
+    .doc-figure.media-pair {
+      display: grid;
+      grid-template-columns: minmax(48mm, 70mm) 1fr;
+      gap: 3.5mm;
+      align-items: center;
+    }
+
+    .doc-figure.media-pair img {
+      max-height: 62mm;
+    }
+
+    .doc-figure.media-pair .figure-context {
+      grid-column: 1 / -1;
+      margin-bottom: 1mm;
+    }
+
+    .doc-figure figcaption {
+      margin-top: 2mm;
+      color: var(--ink-mute);
+      font: 600 8pt/1.55 'Inter','Pretendard','Noto Sans KR',sans-serif;
+      letter-spacing: 0;
+      word-break: keep-all;
+    }
+
+    .figure-guide-label {
+      color: var(--ink);
+      font-weight: 800;
+    }
+
+    .doc-figure.media-pair figcaption {
+      margin-top: 0;
+      padding-left: 3mm;
+      border-left: 1px solid rgba(49,79,79,.16);
+    }
+
+    .media-note {
+      margin: 3.2mm 0 4.6mm;
+      padding: 3mm 3.6mm;
+      background: rgba(255,255,255,.68);
+      border: 1px solid rgba(166,98,56,.18);
+      border-left: 3px solid var(--accent-warm);
+      border-radius: 8px;
+      color: var(--ink);
+      font-size: 9.4pt;
+      line-height: 1.65;
+      page-break-inside: avoid;
+      break-inside: avoid;
+    }
+
+    .media-note strong {
+      color: var(--accent);
+      font-weight: 800;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: auto;
+      margin: 5mm 0 6mm;
+      page-break-inside: avoid;
+      font-size: var(--table-font-size);
+      line-height: var(--table-line-height);
+      background: rgba(255,255,255,.25);
+    }
+
+    th, td {
+      border: 1px solid var(--line-soft);
+      padding: 3mm 3.2mm;
+      vertical-align: top;
+      word-break: normal;
+      overflow-wrap: anywhere;
+      line-height: var(--table-line-height);
+    }
+
+    th {
+      background: var(--dark);
+      color: var(--dark-ink);
+      font:
+        700
+        var(--table-head-font-size)
+        /1.5
+        'Inter','Pretendard','Noto Sans KR',sans-serif;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+    }
+
+    pre {
+      margin: 5mm 0 6mm;
+      padding: 4mm 4.2mm;
+      overflow: auto;
+      background: var(--dark-2);
+      color: var(--dark-ink);
+      border-radius: 14px;
+      border: 1px solid rgba(245,236,214,.08);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.03);
+      page-break-inside: avoid;
+    }
+
+    code {
+      font: 500 8.8pt/1.6 'JetBrains Mono',monospace;
+      background: var(--code-bg);
+      padding: 1px 4px;
+      border-radius: 6px;
+    }
+
+    pre code {
+      background: transparent;
+      padding: 0;
+      border-radius: 0;
+      color: inherit;
+    }
+
+    hr {
+      border: 0;
+      height: 1px;
+      background: linear-gradient(
+        to right,
+        transparent,
+        var(--line),
+        transparent
+      );
+      margin: 7mm 0;
+    }
+
+    strong { color: var(--ink); }
+
+    .sheet-body > h2:first-child { margin-top: 0; }
+
+    .sheet-body > h2 + p,
+    .sheet-body > h2 + ul,
+    .sheet-body > h2 + ol,
+    .sheet-body > h2 + table {
+      margin-top: 5mm;
+    }
+
+    .topbar .btn-edit.active,
+    .topbar .btn-meta.active {
+      background: var(--accent-warm);
+      border-color: var(--accent-warm);
+      color: #fff;
+    }
+
+    [contenteditable="true"] {
+      outline: 2px dashed var(--accent-warm) !important;
+      outline-offset: 3px !important;
+      background: rgba(255,243,200,.55) !important;
+      cursor: text !important;
+      caret-color: var(--accent-warm);
+      border-radius: 2px;
+    }
+
+    [contenteditable="true"]:focus {
+      outline-style: solid !important;
+      outline-color: var(--accent) !important;
+      background: rgba(255,236,170,.75) !important;
+    }
+
+    body.edit-mode .sheet {
+      box-shadow:
+        var(--shadow-1),
+        var(--shadow-2),
+        0 0 0 3px rgba(201,98,56,.25) !important;
+    }
+
+    body.edit-mode::after {
+      content: '편집 모드 · 텍스트를 클릭하여 수정 · 완료 후 [HTML 저장] 클릭';
+      position: fixed;
+      left: 50%;
+      bottom: 20px;
+      transform: translateX(-50%);
+      padding: 10px 20px;
+      border: 1px solid rgba(201,98,56,.5);
+      border-radius: 24px;
+      background: var(--dark);
+      color: var(--dark-ink);
+      font: 700 12px/1 'Inter','Pretendard','Noto Sans KR',sans-serif;
+      letter-spacing: 1.5px;
+      box-shadow: 0 8px 30px rgba(0,0,0,.3);
+      z-index: 100;
+      pointer-events: none;
+    }
+
+    .source-note {
+      margin-top: 12px;
+      color: var(--ink-mute);
+      font-size: 8.5pt;
+    }
+
+    :root {
+      --paper:#ffffff;
+      --paper-2:#ffffff;
+      --paper-3:#ffffff;
+      --ink:#1a3445;
+      --ink-soft:#2e4a5c;
+      --ink-mute:#708696;
+      --dark:#316d83;
+      --dark-2:#254f61;
+      --dark-ink:#f8fdfe;
+      --dark-mute:#dcecf0;
+      --accent:#4d8da5;
+      --accent-warm:#73bdcd;
+      --accent-soft:#b8e1e1;
+      --line:#c9dce1;
+      --line-soft:#dfebee;
+      --code-bg:#edf6f8;
+      --shadow-1:0 1px 2px rgba(30,64,82,.05);
+      --shadow-2:0 14px 38px rgba(30,64,82,.10);
+      --shadow-3:0 24px 56px rgba(30,64,82,.08);
+    }
+
+    body {
+      color: var(--ink-soft);
+      background:
+        radial-gradient(
+          circle at top left,
+          rgba(184,225,225,.32),
+          transparent 26%
+        ),
+        linear-gradient(180deg, #f7fbfb 0%, #eef5f4 100%);
+    }
+
+    .topbar {
+      color: var(--ink);
+      background: rgba(255,255,255,.92);
+      box-shadow: 0 10px 32px rgba(30,64,82,.10);
+      border-bottom: 1px solid rgba(77,141,165,.12);
+    }
+
+    .brand {
+      color: var(--accent);
+      font: 700 11px/1.2 'Pretendard','Noto Sans KR',sans-serif;
+      letter-spacing: 1.4px;
+      text-transform: none;
+    }
+
+    .brand-sub {
+      color: var(--ink-soft);
+      opacity: .92;
+    }
+
+    .topbar button {
+      border: 1px solid rgba(77,141,165,.18);
+      background: rgba(255,255,255,.94);
+      color: var(--ink-soft);
+      letter-spacing: .2px;
+      text-transform: none;
+    }
+
+    .topbar .btn-pdf {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+    }
+
+    .meta-panel {
+      border: 1px solid rgba(77,141,165,.14);
+      border-radius: 22px;
+      background: rgba(255,253,248,.98);
+      box-shadow: 0 18px 44px rgba(30,64,82,.14);
+    }
+
+    .meta-panel-head strong {
+      color: var(--ink);
+    }
+
+    .meta-close,
+    .meta-field input {
+      border-color: rgba(77,141,165,.16);
+      background: rgba(255,255,255,.96);
+    }
+
+    .meta-field span,
+    .sidenav h3,
+    .toc h3 {
+      color: var(--accent);
+      letter-spacing: .08em;
+      text-transform: none;
+    }
+
+    .layout {
+      gap: 22px;
+      width: min(1560px, calc(100vw - 36px));
+    }
+
+    .sidenav,
+    .toc {
+      border: 1px solid rgba(77,141,165,.10);
+      background: rgba(255,255,255,.90);
+      box-shadow: 0 10px 30px rgba(30,64,82,.08);
+    }
+
+    .toc a {
+      border: 1px solid transparent;
+      border-radius: 14px;
+    }
+
+    .toc a:hover {
+      background: rgba(115,189,205,.10);
+      border-color: rgba(115,189,205,.12);
+      transform: none;
+    }
+
+    .toc-num {
+      background: var(--paper-3);
+      border: 1px solid rgba(77,141,165,.16);
+      color: var(--accent);
+    }
+
+    .sheet-header {
+      border-bottom-color: rgba(77,141,165,.16);
+    }
+
+    .sheet-running-title {
+      color: var(--accent);
+      font: 700 8.6pt/1.3 'Pretendard','Noto Sans KR',sans-serif;
+    }
+
+    .sheet-running-section {
+      color: var(--ink-mute);
+      letter-spacing: .2px;
+    }
+
+    .sheet-footer {
+      align-items: flex-end;
+      min-height: 12mm;
+      padding-top: 2.8mm;
+      border-top-color: rgba(77,141,165,.16);
+    }
+
+    .sheet-footer-meta {
+      flex: 1 1 auto;
+      display: grid;
+      gap: .6mm;
+      color: var(--ink-mute);
+      white-space: normal;
+      overflow: visible;
+      text-overflow: clip;
+      letter-spacing: 0;
+    }
+
+    .sheet-footer-meta-text {
+      color: var(--ink-mute);
+      font: 600 7pt/1.35 'Pretendard','Noto Sans KR',sans-serif;
+    }
+
+    .sheet-footer-notice {
+      color: var(--ink-mute);
+      font: 500 6.5pt/1.42 'Pretendard','Noto Sans KR',sans-serif;
+    }
+
+    .sheet-footer-page {
+      color: var(--ink-soft);
+      letter-spacing: .2px;
+    }
+
+    .print-cover {
+      background: #ffffff !important;
+      color: var(--ink);
+    }
+
+    .print-cover::before {
+      height: 7mm;
+      background: linear-gradient(90deg, var(--accent-soft), var(--accent-warm));
+    }
+
+    .pc-content {
+      padding: 28mm 22mm 14mm;
+    }
+
+    .pc-org-en {
+      color: var(--ink-mute);
+      font: 600 9pt/1.5 'Pretendard','Noto Sans KR',sans-serif;
+      letter-spacing: .04em;
+      text-transform: none;
+    }
+
+    .pc-org-en strong,
+    .pc-year,
+    .pc-doc-type {
+      color: var(--accent);
+    }
+
+    .pc-year {
+      font: 700 18pt/1 'Pretendard','Noto Sans KR',sans-serif;
+      margin-bottom: 10mm;
+    }
+
+    .pc-title {
+      color: var(--ink);
+      font: 800 30pt/1.24 'Pretendard','Noto Sans KR',sans-serif;
+    }
+
+    .pc-rule {
+      width: 58mm;
+      margin: 9mm 0 7mm;
+      background: linear-gradient(90deg, var(--accent), var(--accent-soft));
+    }
+
+    .pc-doc-type {
+      font: 700 18pt/1.3 'Pretendard','Noto Sans KR',sans-serif;
+      margin-bottom: 4mm;
+    }
+
+    .pc-subtitle {
+      color: var(--ink-soft);
+      max-width: 140mm;
+      font: 500 11pt/1.8 'Pretendard','Noto Sans KR',sans-serif;
+    }
+
+    .topic-chip {
+      background: rgba(255,255,255,.94);
+      border-color: rgba(77,141,165,.16);
+      color: var(--accent);
+      text-transform: none;
+      letter-spacing: .02em;
+    }
+
+    .pc-meta {
+      gap: 8mm;
+      border-top-color: rgba(77,141,165,.18);
+    }
+
+    .pc-meta .ml {
+      color: var(--ink-mute);
+      text-transform: none;
+      letter-spacing: .06em;
+    }
+
+    .pc-meta .mv {
+      color: var(--ink);
+    }
+
+    .pc-footer-strip {
+      align-items: flex-end;
+      padding: 8mm 22mm 10mm;
+      background: rgba(255,255,255,.94);
+      color: var(--ink);
+    }
+
+    .pc-footer-strip::before {
+      height: .6mm;
+      background: linear-gradient(90deg, var(--accent), var(--accent-soft));
+    }
+
+    .pc-footer-main {
+      display: grid;
+      gap: 1.8mm;
+    }
+
+    .pc-fs-wordmark {
+      font: 700 13pt/1 'Noto Serif KR',serif;
+      color: var(--ink);
+    }
+
+    .pc-fs-notice {
+      color: var(--ink-mute);
+      font: 500 6.8pt/1.45 'Pretendard','Noto Sans KR',sans-serif;
+    }
+
+    .pc-fs-meta {
+      max-width: 58mm;
+      color: var(--ink-mute);
+      font: 600 7pt/1.55 'Pretendard','Noto Sans KR',sans-serif;
+      letter-spacing: .04em;
+      text-transform: none;
+    }
+
+    h2 {
+      padding: 5.4mm 8mm 5mm;
+      background: linear-gradient(
+        90deg,
+        rgba(115,189,205,.18),
+        rgba(115,189,205,.07)
+      );
+      color: var(--ink);
+      border-left: 3pt solid var(--accent);
+      border-radius: 0 12px 12px 0;
+      font: 700 16pt/1.35 'Noto Serif KR',serif;
+    }
+
+    h3 {
+      color: var(--ink);
+      font: 700 11.3pt/1.55 'Pretendard','Noto Sans KR',sans-serif;
+    }
+
+    h4 {
+      color: var(--accent);
+    }
+
+    blockquote {
+      background: var(--paper-2);
+      border-left-color: var(--accent);
+      border-radius: 0 10px 10px 0;
+    }
+
+    .doc-figure {
+      background: rgba(255,255,255,.96);
+      border-color: rgba(77,141,165,.14);
+      box-shadow: 0 6px 16px rgba(30,64,82,.07);
+    }
+
+    .doc-figure img {
+      border-color: rgba(77,141,165,.12);
+    }
+
+    .figure-context {
+      background: var(--paper-2);
+      border-color: rgba(77,141,165,.18);
+      border-left-color: var(--accent);
+      box-shadow: none;
+    }
+
+    .figure-context-label,
+    .media-note strong {
+      color: var(--accent);
+      text-transform: none;
+      letter-spacing: .02em;
+    }
+
+    .media-note {
+      background: var(--paper-2);
+      border-color: rgba(77,141,165,.18);
+      border-left-color: var(--accent);
+    }
+
+    table {
+      background: rgba(255,255,255,.96);
+    }
+
+    th {
+      background: var(--paper-3);
+      color: var(--ink);
+      letter-spacing: .04em;
+      text-transform: none;
+    }
+
+    pre {
+      background: #f4f8fa;
+      color: var(--ink);
+      border-color: rgba(77,141,165,.12);
+      box-shadow: none;
+    }
+
+    code {
+      background: var(--code-bg);
+    }
+
+    .topbar .btn-edit.active,
+    .topbar .btn-meta.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+    }
+
+    [contenteditable="true"] {
+      outline-color: var(--accent) !important;
+      background: rgba(184,225,225,.34) !important;
+      caret-color: var(--accent);
+    }
+
+    [contenteditable="true"]:focus {
+      outline-color: var(--accent) !important;
+      background: rgba(184,225,225,.48) !important;
+    }
+
+    body.edit-mode .sheet {
+      box-shadow:
+        var(--shadow-1),
+        var(--shadow-2),
+        0 0 0 3px rgba(77,141,165,.18) !important;
+    }
+
+    body.edit-mode::after {
+      border-color: rgba(77,141,165,.28);
+      background: rgba(255,255,255,.96);
+      color: var(--ink);
+      letter-spacing: .04em;
+      box-shadow: 0 10px 28px rgba(30,64,82,.12);
+      content: '편집 모드 · 텍스트를 클릭하여 수정한 뒤 HTML 저장을 실행합니다';
+    }
+
+    .sheet-toc,
+    .sheet-divider,
+    .sheet-notice {
+      background: #ffffff;
+    }
+
+    .sheet-divider .sheet-header,
+    .sheet-notice .sheet-header {
+      border-bottom-color: transparent;
+    }
+
+    .toc-page-intro {
+      display: grid;
+      gap: 2.4mm;
+      margin-bottom: 5mm;
+    }
+
+    .toc-page-kicker,
+    .section-divider-kicker {
+      margin: 0;
+      color: var(--accent);
+      font: 700 8pt/1.2 'Pretendard','Noto Sans KR',sans-serif;
+      letter-spacing: .14em;
+    }
+
+    .toc-page-title {
+      margin: 0;
+      font: 700 24pt/1.2 'Noto Serif KR',serif;
+      color: var(--ink);
+    }
+
+    .toc-page-summary {
+      margin: 0;
+      max-width: 132mm;
+      color: var(--ink-mute);
+      font: 500 9.8pt/1.7 'Pretendard','Noto Sans KR',sans-serif;
+    }
+
+    .toc-page-list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      column-count: 2;
+      column-gap: 7mm;
+    }
+
+    .toc-page-list li {
+      margin-bottom: 2.4mm;
+      break-inside: avoid;
+    }
+
+    .toc-page-link {
+      display: grid;
+      grid-template-columns: 12mm 1fr;
+      gap: 3mm;
+      align-items: start;
+      padding: 2.8mm 3mm;
+      border: 1px solid rgba(77,141,165,.12);
+      border-radius: 10px;
+      background: rgba(255,255,255,.96);
+      color: var(--ink-soft);
+      text-decoration: none;
+    }
+
+    .toc-page-item-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 7mm;
+      border-radius: 999px;
+      background: var(--paper-3);
+      color: var(--accent);
+      font: 700 8.6pt/1 'Pretendard','Noto Sans KR',sans-serif;
+    }
+
+    .toc-page-item-text {
+      font: 600 9pt/1.55 'Pretendard','Noto Sans KR',sans-serif;
+      word-break: keep-all;
+    }
+
+    .sheet-divider .sheet-body {
+      display: flex;
+      align-items: flex-start;
+    }
+
+    .section-divider {
+      width: 100%;
+      margin-top: 16mm;
+      display: grid;
+      gap: 4mm;
+      align-content: start;
+    }
+
+    .section-divider-number {
+      color: var(--accent);
+      font: 700 28pt/1 'Noto Serif KR',serif;
+    }
+
+    .section-divider-title {
+      margin: 0;
+      max-width: 128mm;
+      color: var(--ink);
+      font: 700 29pt/1.28 'Noto Serif KR',serif;
+      letter-spacing: -.02em;
+    }
+
+    .section-divider-desc {
+      margin: 0;
+      max-width: 120mm;
+      color: var(--ink-mute);
+      font: 500 10pt/1.8 'Pretendard','Noto Sans KR',sans-serif;
+    }
+
+    .section-divider-rule {
+      width: 72mm;
+      height: 1.2mm;
+      margin-top: 3mm;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-soft));
+    }
+
+    .sheet-notice .sheet-body {
+      display: flex;
+      flex-direction: column;
+      gap: 6mm;
+    }
+
+    .notice-page-header {
+      color: var(--ink-mute);
+      font: 600 8.4pt/1.45 'Pretendard','Noto Sans KR',sans-serif;
+    }
+
+    .notice-page-header::after {
+      content: '';
+      display: block;
+      margin-top: 2.8mm;
+      height: .45mm;
+      background: var(--line);
+    }
+
+    .notice-card {
+      margin: auto 0 4mm;
+      padding: 10mm 11mm;
+      border: 1px solid rgba(46,74,92,.7);
+      background: rgba(255,255,255,.98);
+      box-shadow: 0 8px 18px rgba(30,64,82,.07);
+    }
+
+    .notice-card h1 {
+      margin: 0 0 6mm;
+      text-align: center;
+      font: 700 18pt/1.3 'Noto Serif KR',serif;
+      color: var(--ink);
+    }
+
+    .notice-list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 3.8mm;
+    }
+
+    .notice-item {
+      display: grid;
+      grid-template-columns: 10mm 1fr;
+      gap: 3mm;
+      align-items: start;
+    }
+
+    .notice-num {
+      color: var(--ink);
+      font: 700 12pt/1.4 'Pretendard','Noto Sans KR',sans-serif;
+    }
+
+    .notice-body {
+      color: var(--ink-soft);
+      font: 500 10pt/1.75 'Pretendard','Noto Sans KR',sans-serif;
+      word-break: keep-all;
+    }
+
+    .notice-contact {
+      margin: 3mm 0 0 13mm;
+      color: var(--ink-soft);
+      font: 500 9.6pt/1.7 'Pretendard','Noto Sans KR',sans-serif;
+    }
+
+    .notice-org {
+      margin: 0;
+      color: var(--ink-mute);
+      font: 600 8.4pt/1.45 'Pretendard','Noto Sans KR',sans-serif;
+    }
+
+    @media print {
+      .print-cover .pc-content {
+        padding: 28mm 22mm 14mm !important;
+      }
+    }
+
+    @media (max-width: 1480px) {
+      .layout { grid-template-columns: 240px minmax(0, 1fr); }
+      .toc { display: none; }
+      .meta-panel { right: 14px; }
+    }
+
+    @media (max-width: 1120px) {
+      .layout {
+        grid-template-columns: 1fr;
+        width: min(100vw - 24px, 920px);
+      }
+      .sidenav, .toc { display: none; }
+      .sheet, .print-cover { width: min(100%, 210mm); }
+      .meta-panel {
+        top: 72px;
+        right: 12px;
+        width: calc(100vw - 24px);
+      }
+      .meta-grid { grid-template-columns: 1fr; }
+    }
+
+    @page { size: A4 portrait; margin: 0; }
+
+    @media print {
+      html, body { background: #fff !important; }
+      .topbar, .sidenav, .toc, .meta-panel { display: none !important; }
+      .layout { display: block; width: auto; padding: 0; margin: 0; }
+      .main { display: block; }
+      #paper-pages { display: block; }
+    .sheet, .print-cover {
+      width: 210mm;
+      height: 297mm;
+      min-height: 297mm;
+      margin: 0;
+      padding:
+        var(--sheet-pad-top)
+        var(--sheet-pad-x)
+        var(--sheet-pad-bottom);
+      box-shadow: none !important;
+      overflow: hidden;
+      page-break-after: always;
+      break-after: page;
+    }
+    .print-cover { min-height: 297mm; padding: 0 !important; }
+    .print-cover .pc-content { padding: 24mm 22mm 12mm; }
+    .sheet {
+      display: flex;
+      flex-direction: column;
+      gap: 4.5mm;
+    }
+    .sheet-body {
+      flex: 1 1 auto;
+      min-height: 0;
+      overflow: hidden;
+      padding-bottom: 1.5mm;
+    }
+      h2 { page-break-before: auto; break-before: auto; }
+      tr, table, pre, blockquote { page-break-inside: avoid; }
+      [contenteditable] {
+        outline: none !important;
+        background: transparent !important;
+      }
+      body.edit-mode .sheet { box-shadow: none !important; }
+      body.edit-mode::after { display: none !important; }
+      .paper-source { display: none !important; }
+      * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    }
+  </style>
+<body
+  data-save-name="AI 에이전트와 바이브 코딩 실무"
+  data-doc-title="AI 에이전트와 바이브 코딩 실무"
+  data-doc-meta="2026 · 1일 과정 · 교재"
+  data-meta-title="AI 에이전트와 바이브 코딩 실무"
+  data-meta-subtitle="2026년 10월 7일 1일 과정 · 프롬프트에서 하네스까지, 그리고 간이 서비스 구현까지"
+  data-meta-year="2026"
+  data-meta-track="실무 과정"
+  data-meta-module="1일 6시간"
+  data-meta-course-code="AG-01"
+  data-meta-document-type="교재"
+  data-meta-cover-line="코딩 에이전트 실무 활용"
+  data-meta-cover-wordmark="에이전트 실무 교재"
+>
+  <div class="topbar">
+    <div class="brand">교재 보기</div>
+    <div class="brand-sub" data-meta-text="subtitle"></div>
+    <div class="spacer"></div>
+    <button class="btn-meta" onclick="toggleMetaPanel()">요소 편집</button>
+    <button class="btn-edit" onclick="toggleEditMode()">✎ 편집</button>
+    <button class="btn-save" onclick="saveEditedHTML()">HTML 저장</button>
+    <button class="btn-pdf" onclick="window.print()">PDF 저장</button>
+    <button onclick="window.scrollTo({ top: 0, behavior: 'smooth' })">맨 위</button>
+  </div>
+
+  <aside class="meta-panel" id="meta-panel" aria-hidden="true">
+    <div class="meta-panel-head">
+      <div>
+        <strong>공통 요소 편집</strong>
+        <p>표지, 머릿글, 바닥글에 반복되는 정보를 한 번에 수정합니다.</p>
+      </div>
+      <button type="button" class="meta-close" onclick="toggleMetaPanel(false)">닫기</button>
+    </div>
+    <div class="meta-grid">
+      <label class="meta-field wide"><span>교재명</span><input type="text" data-meta-input="title" value="AI 에이전트와 바이브 코딩 실무"></label>
+      <label class="meta-field wide"><span>부제</span><input type="text" data-meta-input="subtitle" value="2026년 10월 7일 1일 과정 · 프롬프트에서 하네스까지, 그리고 간이 서비스 구현까지"></label>
+      <label class="meta-field"><span>연도</span><input type="text" data-meta-input="year" value="2026"></label>
+      <label class="meta-field"><span>문서구분</span><input type="text" data-meta-input="documentType" value="교재"></label>
+      <label class="meta-field"><span>과정코드</span><input type="text" data-meta-input="courseCode" value="AG-01"></label>
+      <label class="meta-field"><span>트랙</span><input type="text" data-meta-input="track" value="실무 과정"></label>
+      <label class="meta-field"><span>모듈</span><input type="text" data-meta-input="module" value="1일 6시간"></label>
+      <label class="meta-field wide"><span>표지 상단 문구</span><input type="text" data-meta-input="coverLine" value="코딩 에이전트 실무 활용"></label>
+      <label class="meta-field wide"><span>표지 하단 워드마크</span><input type="text" data-meta-input="coverWordmark" value="에이전트 실무 교재"></label>
+    </div>
+    <p class="meta-note">변경값은 즉시 화면에 반영되며 HTML 저장 시 그대로 재사용할 수 있습니다.</p>
+  </aside>
+
+  <div class="layout">
+    <aside class="sidenav">
+      <h3>문서 정보</h3>
+      <p data-meta-text="title">AI 에이전트와 바이브 코딩 실무</p>
+      <p data-meta-text="subtitle"></p>
+      <p class="source-note">교육일 2026년 10월 7일 · 10:00~17:00(점심 12:00~13:00)</p>
+    </aside>
+
+    <main class="main">
+      <section class="print-cover" data-page-label="cover">
+        <div class="pc-content">
+          <div class="pc-top">
+            <div class="pc-org-en">
+              <strong data-meta-derived="guideLabel">2026년 AI 에이전트 실무 교육 교재</strong>
+              <span data-meta-text="coverLine"></span>
+            </div>
+          </div>
+          <div class="pc-center">
+            <div class="pc-year" data-meta-text="year">2026</div>
+            <h1 class="pc-title" data-meta-text="title">AI 에이전트와 바이브 코딩 실무</h1>
+            <div class="pc-rule"></div>
+            <div class="pc-doc-type" data-meta-text="documentType">교재</div>
+            <div class="pc-subtitle" data-meta-text="subtitle"></div>
+            <div class="pc-topics"><span class="topic-chip">프롬프트와 컨텍스트</span><span class="topic-chip">에이전트와 하네스</span><span class="topic-chip">하네스 도구 비교</span><span class="topic-chip">안티그래비티 실습</span><span class="topic-chip">스킬 문서 자동화</span><span class="topic-chip">MCP 프로그램 연동</span><span class="topic-chip">바이브 코딩</span><span class="topic-chip">간이 프로젝트 실습</span></div>
+          </div>
+          <div class="pc-bottom">
+            <div class="pc-meta">
+              <div class="m"><div class="ml">교육일</div><div class="mv">2026. 10. 7.</div></div>
+              <div class="m"><div class="ml">시간</div><div class="mv">6시간(1일)</div></div>
+              <div class="m"><div class="ml">교육방법</div><div class="mv">대면 실습</div></div>
+            </div>
+          </div>
+        </div>
+        <div class="pc-footer-strip">
+          <div class="pc-footer-main">
+            <div class="pc-fs-wordmark" data-meta-text="coverWordmark"></div>
+            <div class="pc-fs-notice">본 자료는 교육용으로 제작되었으며 무단 배포 및 재가공을 금합니다.</div>
+          </div>
+          <div class="pc-fs-meta" data-meta-text="title">AI 에이전트와 바이브 코딩 실무</div>
+        </div>
+      </section>
+      <div id="paper-pages"></div>
+    </main>
+
+    <aside class="toc">
+      <h3>목차</h3>
+      <ol>
+<li><a href="#section-01"><span class="toc-num">01</span><span class="toc-text">교육 개요와 하루 운영 설계</span></a></li>
+<li><a href="#section-02"><span class="toc-num">02</span><span class="toc-text">프롬프트에서 하네스까지</span></a></li>
+<li><a href="#section-03"><span class="toc-num">03</span><span class="toc-text">에이전트의 구조와 도식</span></a></li>
+<li><a href="#section-04"><span class="toc-num">04</span><span class="toc-text">에이전트 하네스 비교</span></a></li>
+<li><a href="#section-05"><span class="toc-num">05</span><span class="toc-text">코딩 에이전트 활용법</span></a></li>
+<li><a href="#section-06"><span class="toc-num">06</span><span class="toc-text">에이전트 문서 자동화와 스킬</span></a></li>
+<li><a href="#section-07"><span class="toc-num">07</span><span class="toc-text">에이전트 프로그램 연동과 MCP</span></a></li>
+<li><a href="#section-08"><span class="toc-num">08</span><span class="toc-text">에이전트 바이브 코딩</span></a></li>
+<li><a href="#section-09"><span class="toc-num">09</span><span class="toc-text">서비스 기획과 간이 프로젝트 실습</span></a></li>
+<li><a href="#section-10"><span class="toc-num">10</span><span class="toc-text">프롬프트 패턴 모음</span></a></li>
+<li><a href="#section-11"><span class="toc-num">11</span><span class="toc-text">실습 워크시트와 용어 정리</span></a></li>
+      </ol>
+    </aside>
+  </div>
+
+  <div class="paper-source" id="paper-source" aria-hidden="true">
+<article class="page-source-section" data-section-index="01" data-section-title="제01장 교육 개요와 하루 운영 설계" data-section-label="제01장" data-section-name="교육 개요와 하루 운영 설계">
+<h1>AI 에이전트와 바이브 코딩 실무</h1>
+<h2>제01장 교육 개요와 하루 운영 설계</h2>
+<p>이 교재는 2026년 10월 7일 하루 동안 진행되는 「AI 에이전트와 바이브 코딩 실무」 과정을 책형 원고로 재구성한 문서다. 이 과정은 생성형 AI를 이미 한 번쯤 써 본 실무자가, 채팅창에 질문을 던지는 단계에서 벗어나 에이전트에게 일을 맡기고 결과를 검수하는 단계로 넘어가도록 설계되었다. 따라서 본 교재는 도구의 버튼 위치를 나열하는 매뉴얼이 아니라, 왜 지금 에이전트라는 구조가 등장했는지, 그 구조 안에서 사람이 남겨야 할 판단은 무엇인지, 하루 여섯 시간 안에 어떤 산출물까지 손에 쥐어야 하는지를 문장으로 풀어 설명한다.</p>
+<p>이 과정의 전제는 두 문장으로 요약된다. 첫째, 이제 중요한 능력은 코드를 외워서 타이핑하는 능력이 아니라 무엇을 만들지 정확히 말하고 받은 결과를 검수하는 능력이다. 둘째, 에이전트의 성능 차이는 모델의 똑똑함보다 하네스 설정에서 더 크게 벌어진다. 같은 모델을 쓰더라도 어떤 도구를 쥐여 주었는지, 어떤 맥락 문서를 읽게 했는지, 어디에서 사람의 승인을 요구하도록 정해 두었는지에 따라 결과물의 품질과 안전성이 완전히 달라진다. 오늘 하루의 목표는 그 설정 능력의 기초를 손으로 익히는 것이다.</p>
+<p>교육은 개념에서 출발해 도구 비교를 거쳐 실습으로 수렴한다. 오전에는 프롬프트·컨텍스트·에이전트·하네스라는 네 개념의 관계를 정리하고, 에이전트의 내부 동작을 도식으로 분해한 뒤, 시중의 여러 에이전트 하네스를 같은 기준으로 비교한다. 오후에는 안티그래비티를 중심으로 코딩 에이전트를 직접 다루고, 스킬을 만들어 문서 작업을 자동화하며, MCP로 외부 프로그램을 연결하고, 마지막으로 각자의 업무 문제 하나를 골라 간이 서비스로 만들어 본다. 즉 오전은 언어를 배우는 시간이고, 오후는 그 언어로 말해 보는 시간이다.</p>
+<h3>학습 대상</h3>
+<ul>
+<li>챗봇 사용 경험은 있으나 에이전트·하네스·MCP 같은 용어 앞에서 멈춰 본 실무 담당자</li>
+<li>반복되는 문서 작성, 엑셀 정리, 자료 조사, 보고서 초안 작업을 스스로 줄이고 싶은 기획·행정 담당자</li>
+<li>개발 조직에 요구사항을 전달하기 전에 직접 프로토타입을 만들어 보고 싶은 사업 담당자</li>
+<li>조직에 코딩 에이전트를 도입할지 판단해야 하며 보안·비용·거버넌스 기준을 세워야 하는 관리자</li>
+<li>코드를 읽을 줄은 모르지만 결과물을 검수하고 책임져야 하는 위치에 있는 모든 구성원</li>
+</ul>
+<h3>학습 이후 기대 성과</h3>
+<ul>
+<li>프롬프트, 컨텍스트, 에이전트, 하네스를 각각의 역할로 구분해 설명하고 문제에 맞게 선택할 수 있다.</li>
+<li>에이전트의 반복 루프(판단 · 도구 선택 · 실행 · 결과 회수)를 도식으로 그려 동료에게 설명할 수 있다.</li>
+<li>안티그래비티, 클로드 코드, ChatGPT 데스크톱, Cline, Pi, Kilo Code, OpenCode 등 주요 하네스를 같은 기준표로 비교하고 조직 환경에 맞는 도구를 고를 수 있다.</li>
+<li>안티그래비티를 설치해 첫 프로젝트를 열고, 자연어 지시만으로 동작하는 결과물을 만들 수 있다.</li>
+<li>반복 업무 하나를 스킬 문서로 정리해 저장하고, 다음에 같은 품질로 재사용할 수 있다.</li>
+<li>MCP 서버를 한 개 이상 연결해 에이전트가 외부 자료와 프로그램을 호출하도록 구성할 수 있다.</li>
+<li>윈도우 환경에서 파이썬 스크립트, 단일 HTML 도구, 외부 API 호출 중 하나 이상을 바이브 코딩으로 완성할 수 있다.</li>
+<li>자신의 업무 문제 하나를 서비스 기획 문장으로 바꾸고 간이 프로토타입까지 만들어 설명할 수 있다.</li>
+</ul>
+<h3>하루 운영 시간표</h3>
+<p>표 1. 2026년 10월 7일 교육 시간표와 세션별 산출물</p>
+<table>
+<thead>
+<tr><th>시간</th><th>세션</th><th>다루는 내용</th><th>세션 산출물</th></tr>
+</thead>
+<tbody>
+<tr><td>10:00 ~ 10:20</td><td>오리엔테이션</td><td>과정 목표, 환경 점검, 실습 폴더 준비</td><td>실습 폴더와 도구 설치 확인</td></tr>
+<tr><td>10:20 ~ 11:00</td><td>제1세션 · 개념</td><td>프롬프트 → 컨텍스트 → 에이전트 → 하네스의 흐름</td><td>네 개념 구분 요약 메모</td></tr>
+<tr><td>11:00 ~ 11:50</td><td>제2세션 · 구조</td><td>에이전트 도식과 반복 루프 해부</td><td>손으로 그린 에이전트 구조도</td></tr>
+<tr><td>11:50 ~ 12:00</td><td>정리</td><td>오전 내용 질의응답</td><td>오후 실습 주제 예약</td></tr>
+<tr><td>12:00 ~ 13:00</td><td>점심</td><td>휴식</td><td>-</td></tr>
+<tr><td>13:00 ~ 13:40</td><td>제3세션 · 비교</td><td>주요 에이전트 하네스 비교와 선택 기준</td><td>기관 적합 도구 선정표</td></tr>
+<tr><td>13:40 ~ 14:30</td><td>제4세션 · 실습</td><td>코딩 에이전트 활용법(안티그래비티 중심)</td><td>첫 프로젝트 실행 결과</td></tr>
+<tr><td>14:30 ~ 15:00</td><td>제5세션 · 실습</td><td>에이전트 문서 자동화(스킬)</td><td>내 업무용 스킬 문서 1종</td></tr>
+<tr><td>15:00 ~ 15:10</td><td>휴식</td><td>-</td><td>-</td></tr>
+<tr><td>15:10 ~ 15:45</td><td>제6세션 · 실습</td><td>에이전트 프로그램 연동(MCP)</td><td>MCP 서버 1종 연결 기록</td></tr>
+<tr><td>15:45 ~ 16:25</td><td>제7세션 · 실습</td><td>바이브 코딩(윈도우 · 파이썬 · HTML · API)</td><td>동작하는 미니 도구 1종</td></tr>
+<tr><td>16:25 ~ 17:00</td><td>제8세션 · 종합</td><td>서비스 기획과 간이 프로젝트, 상호 시연</td><td>서비스 기획 캔버스와 프로토타입</td></tr>
+</tbody>
+</table>
+<h3>실습 준비물</h3>
+<p>표 2. 사전 준비 항목과 확인 방법</p>
+<table>
+<thead>
+<tr><th>항목</th><th>권장 환경</th><th>확인 방법</th></tr>
+</thead>
+<tbody>
+<tr><td>운영체제</td><td>Windows 10 또는 11, 관리자 권한 가능 계정</td><td>설정 화면에서 버전과 계정 권한 확인</td></tr>
+<tr><td>코딩 에이전트</td><td>Google Antigravity(무료) 설치 완료</td><td>실행 후 프로젝트 폴더 열기가 되는지 확인</td></tr>
+<tr><td>보조 에이전트</td><td>Claude Code 또는 ChatGPT 데스크톱 중 1종</td><td>로그인 후 첫 명령 실행 확인</td></tr>
+<tr><td>실행 환경</td><td>Python 3.11 이상, Node.js 18 이상</td><td>명령창에서 <code>python --version</code>, <code>node -v</code></td></tr>
+<tr><td>브라우저</td><td>Chrome 또는 Edge 최신 버전</td><td>단일 HTML 파일이 열리는지 확인</td></tr>
+<tr><td>실습 자료</td><td>부서 양식, 예시 엑셀·CSV, PDF 보고서 각 1부</td><td>민감정보가 제거된 사본인지 확인</td></tr>
+<tr><td>기록 도구</td><td>메모장, 노션, 워드 중 편한 것</td><td>프롬프트와 오류 메시지를 남길 위치 확보</td></tr>
+</tbody>
+</table>
+<h3>학습 원칙</h3>
+<blockquote>
+<p>핵심 메시지: 오늘의 목표는 도구의 기능을 외우는 것이 아니라, 작은 결과물을 빠르게 만들어 보고 검수하며, 그 과정을 다시 쓸 수 있는 문서로 남기는 습관을 얻는 것이다.</p>
+</blockquote>
+<ul>
+<li>모든 실습은 작게 만들고 즉시 실행해 눈으로 확인하는 방식으로 진행한다. 완성도보다 실행 여부를 먼저 본다.</li>
+<li>외부 모델에는 실제 민감 데이터를 보내지 않고 구조와 샘플만 설명하는 것을 기본 원칙으로 삼는다.</li>
+<li>에이전트가 만든 결과는 언제나 초안이며, 최종 책임은 결과를 검수하고 배포하는 사람이 진다.</li>
+<li>같은 문제를 두 가지 이상의 도구로 풀어 보며 무엇이 더 빠르고 안전하며 유지 가능한지 비교한다.</li>
+<li>잘 작동한 지시문은 반드시 파일로 남긴다. 기억에 의존하면 다음에 같은 품질이 나오지 않는다.</li>
+</ul>
+<h3>이 교재를 읽는 방법</h3>
+<p>본 교재는 제02장부터 제04장까지를 개념편, 제05장부터 제08장까지를 실습편, 제09장을 종합편, 제10장 이후를 부록으로 구성했다. 개념편은 강의 중 설명을 따라가며 읽고, 실습편은 실제로 화면을 띄워 놓은 상태에서 절차를 따라 읽는 것을 전제로 썼다. 각 장의 끝에는 자가 점검 질문이 붙어 있으며, 이 질문에 막힘 없이 답할 수 있다면 다음 장으로 넘어가도 좋다.</p>
+<p>또한 각 실습 장에는 그대로 복사해 사용할 수 있는 지시문 예시가 포함되어 있다. 이 예시는 정답이 아니라 출발점이다. 자신의 업무 용어와 자료 이름으로 바꾸어 쓸 때 비로소 쓸모 있는 지시가 된다. 교육이 끝난 뒤에도 이 교재를 프롬프트 사전처럼 곁에 두고, 잘 작동한 문장을 여백에 덧붙여 나가기를 권한다.</p>
+<h4>자가 점검</h4>
+<ul>
+<li>오늘 내가 가장 줄이고 싶은 반복 업무는 무엇이며, 그 업무는 한 달에 몇 시간을 차지하는가?</li>
+<li>그 업무에 들어가는 입력 자료와 최종 산출물의 형식을 한 문장으로 적을 수 있는가?</li>
+<li>그 자료 중 외부 모델에 보내면 안 되는 항목은 무엇인가?</li>
+</ul>
+</article>
+<article class="page-source-section" data-section-index="02" data-section-title="제02장 프롬프트에서 하네스까지" data-section-label="제02장" data-section-name="프롬프트에서 하네스까지">
+<h2>제02장 프롬프트에서 하네스까지</h2>
+<p>생성형 AI를 둘러싼 용어는 해마다 늘어나지만, 실무자가 반드시 구분해야 할 개념은 네 개로 압축된다. 프롬프트, 컨텍스트, 에이전트, 하네스다. 이 네 개는 서로 경쟁하는 유행어가 아니라, 하나의 흐름 위에 순서대로 놓이는 단계다. 프롬프트는 무엇을 원하는지 말하는 단계이고, 컨텍스트는 그 말을 판단할 근거를 함께 건네는 단계이며, 에이전트는 그 판단을 실제 행동으로 옮기는 단계이고, 하네스는 그 행동이 어디까지 허용되는지를 정하는 단계다.</p>
+<p>많은 조직이 AI 도입에 실패하는 이유는 이 네 단계 중 앞의 하나만 다루고 나머지를 생략하기 때문이다. 프롬프트 교육만 하면 사람마다 결과가 들쭉날쭉해지고, 컨텍스트를 붙이지 않으면 모델이 우리 기관의 규정 대신 일반론을 답하며, 에이전트 구조가 없으면 결과를 사람이 다시 옮겨 붙여야 하고, 하네스를 설계하지 않으면 권한과 보안이 통제되지 않는다. 네 단계를 함께 보아야 비로소 업무에 붙는다.</p>
+<h3>네 개념의 한 줄 정의</h3>
+<p>표 3. 프롬프트 · 컨텍스트 · 에이전트 · 하네스의 역할 구분</p>
+<table>
+<thead>
+<tr><th>개념</th><th>한 줄 정의</th><th>핵심 질문</th><th>없을 때 생기는 문제</th></tr>
+</thead>
+<tbody>
+<tr><td>프롬프트</td><td>무엇을 원하는지 모델에게 전달하는 지시문</td><td>무엇을 만들어 달라고 말했는가</td><td>결과가 사람마다 다르고 재현되지 않는다</td></tr>
+<tr><td>컨텍스트</td><td>그 판단에 필요한 근거 자료와 배경을 함께 건네는 것</td><td>무엇을 근거로 판단하게 했는가</td><td>우리 기관 규정 대신 일반론을 답한다</td></tr>
+<tr><td>에이전트</td><td>도구를 골라 실행하고 결과를 다시 읽어 일을 이어 가는 구조</td><td>누가 실제로 일을 수행하는가</td><td>모든 실행과 복사·붙여넣기를 사람이 한다</td></tr>
+<tr><td>하네스</td><td>도구·권한·실행 환경·중단 규칙을 묶어 에이전트를 돌리는 작업대</td><td>어디까지 하도록 허용했는가</td><td>권한이 통제되지 않고 결과가 감사되지 않는다</td></tr>
+</tbody>
+</table>
+<h3>프롬프트 · 요구를 언어로 고정하는 단계</h3>
+<p>프롬프트는 흔히 '질문'으로 소개되지만, 업무에서는 질문이라기보다 업무 지시서에 가깝다. 좋은 프롬프트는 대상, 목적, 입력 자료, 출력 형식, 금지 사항의 다섯 요소를 담는다. 예를 들어 "보고서 써 줘"는 프롬프트가 아니라 감탄사에 가깝다. 반면 "첨부한 세 개의 회의록을 근거로, 팀장 보고용 A4 한 장 요약을 작성하라. 결정사항·미결사항·담당자를 표로 분리하고, 회의록에 없는 내용은 추측해 쓰지 말라"는 문장은 실행 가능한 지시다.</p>
+<p>실무에서 프롬프트의 품질을 좌우하는 것은 문장의 화려함이 아니라 판단 기준의 명시 여부다. 무엇을 좋은 결과로 볼 것인지 사람이 먼저 정의하지 않으면, 모델은 가장 무난한 평균값을 내놓는다. 그래서 프롬프트를 쓸 때는 "이 결과물이 잘 나왔다고 판단하는 기준은 무엇인가"를 먼저 적고, 그 기준을 지시문 안에 그대로 옮겨 넣는 순서를 권한다.</p>
+<blockquote>
+<p>핵심 메시지: 프롬프트는 예술이 아니라 명세다. 완료 조건을 적지 않은 지시는 완료될 수 없다.</p>
+</blockquote>
+<h4>프롬프트 다섯 요소 점검표</h4>
+<ul>
+<li><strong>대상</strong> — 누가 읽을 결과물인가. 팀장인가, 외부 기관인가, 나 자신인가.</li>
+<li><strong>목적</strong> — 이 결과물로 무엇을 결정하거나 보고할 것인가.</li>
+<li><strong>입력</strong> — 어떤 자료를 근거로 삼아야 하는가. 파일명과 범위까지 적는다.</li>
+<li><strong>출력</strong> — 분량, 형식, 파일 종류, 표의 열 이름까지 지정한다.</li>
+<li><strong>금지</strong> — 추측 금지, 외부 검색 금지, 특정 표현 금지 등 하지 말아야 할 것을 적는다.</li>
+</ul>
+<h3>컨텍스트 · 판단의 근거를 건네는 단계</h3>
+<p>모델은 훈련 시점까지의 일반 지식을 갖고 있지만, 우리 기관의 출장비 규정 7조나 이번 분기 실적표는 모른다. 컨텍스트란 바로 그 빈칸을 채워 주는 행위다. 파일을 첨부하는 것, 규정 조항을 붙여 넣는 것, 프로젝트 설명 문서를 자동으로 읽게 하는 것, 검색 결과 상위 다섯 건을 전달하는 것이 모두 컨텍스트 공급에 해당한다.</p>
+<p>여기서 초심자가 가장 많이 오해하는 지점이 있다. "AI가 똑똑하니 알아서 찾겠지"라는 기대다. 그러나 모델은 스스로 우리 서버의 PDF를 열 수 없다. 누군가 그 PDF를 읽어 텍스트로 바꾸고, 질문에 맞는 조항을 찾아 건네주어야 비로소 근거 있는 답이 나온다. 그래서 실무형 AI 구축의 절반 이상은 모델을 고르는 일이 아니라 컨텍스트를 만드는 일이다.</p>
+<p>컨텍스트를 설계할 때는 양보다 적합성이 중요하다. 문서 전체를 통째로 밀어 넣으면 비용이 커지고 정확도가 오히려 떨어진다. 질문과 관련된 부분만 골라 건네는 것이 핵심이며, 그 선별 과정을 검색이라고 부른다. 검색 방식으로는 키워드 기반의 BM25나 SQLite FTS5, 의미 기반의 임베딩 검색이 있으며, 문서량과 질문 유형에 따라 선택이 달라진다.</p>
+<p>표 4. 컨텍스트 공급 방식의 비교</p>
+<table>
+<thead>
+<tr><th>방식</th><th>동작</th><th>적합한 상황</th><th>주의점</th></tr>
+</thead>
+<tbody>
+<tr><td>직접 첨부</td><td>파일이나 텍스트를 대화에 붙여 넣는다</td><td>문서가 몇 건이고 1회성 분석일 때</td><td>민감정보가 그대로 외부로 전송된다</td></tr>
+<tr><td>맥락 문서 자동 로딩</td><td>에이전트가 시작할 때 규칙 문서를 자동으로 읽는다</td><td>매번 같은 기준을 적용해야 할 때</td><td>문서가 길어지면 토큰 비용이 늘어난다</td></tr>
+<tr><td>키워드 검색</td><td>BM25·FTS5로 관련 조항을 찾아 전달한다</td><td>용어가 정확히 정해진 규정·법령</td><td>동의어·유사 표현을 놓칠 수 있다</td></tr>
+<tr><td>의미 검색</td><td>임베딩 유사도로 관련 문단을 찾는다</td><td>표현이 제각각인 민원·상담 기록</td><td>임베딩 생성 비용과 저장소가 필요하다</td></tr>
+<tr><td>도구 호출</td><td>API·DB를 실시간 조회해 최신값을 가져온다</td><td>재고·일정·환율처럼 계속 변하는 값</td><td>연결 실패 시 대체 동작을 정해야 한다</td></tr>
+</tbody>
+</table>
+<h3>에이전트 · 판단을 행동으로 옮기는 단계</h3>
+<p>챗봇은 한 번 답하고 끝난다. 에이전트는 다르다. 질문을 받으면 무엇을 해야 할지 판단하고, 필요한 도구를 고르고, 실행하고, 그 결과를 다시 읽어 다음 행동을 결정한다. 이 반복이 에이전트의 본질이다. 예를 들어 "이 폴더의 PDF 300개를 읽고 표가 깨진 파일만 다시 처리하라"는 지시는 챗봇이 수행할 수 없다. 파일 목록을 읽고, 파서를 실행하고, 결과를 점검하고, 실패한 것만 골라 다른 방법으로 다시 처리하는 판단이 반복되어야 하기 때문이다.</p>
+<p>중요한 것은 에이전트가 새로운 종류의 AI 모델이 아니라는 점이다. 에이전트는 모델을 감싸는 프로그램 구조에 가깝다. 같은 모델이라도 도구를 쥐여 주고 루프를 돌리면 에이전트가 되고, 도구 없이 한 번만 부르면 챗봇이 된다. 그래서 "어떤 모델이 더 똑똑한가"라는 질문보다 "이 모델에게 어떤 도구와 어떤 반복 구조를 주었는가"라는 질문이 실무에서 더 유효하다.</p>
+<h4>규칙형 작업과 에이전트형 작업의 구분</h4>
+<ul>
+<li><strong>규칙형</strong> — 입력이 정해져 있고 처리 순서가 늘 같은 작업. 예: 엑셀 A열 합계 계산, 정해진 양식에 값 채우기. 이런 일은 매크로나 스크립트가 더 빠르고 저렴하며 안정적이다.</li>
+<li><strong>에이전트형</strong> — 중간 결과에 따라 다음 행동이 달라지는 작업. 예: 파일 형식을 보고 파서를 바꾸기, 검색 결과가 빈약하면 다른 키워드로 재검색하기, 오류 메시지를 읽고 코드를 수정하기.</li>
+<li>판단 기준은 간단하다. "중간에 사람이 보고 판단해야 하는 지점이 있는가"라고 물었을 때 그렇다면 에이전트형이다.</li>
+</ul>
+<h3>하네스 · 행동의 경계를 정하는 단계</h3>
+<p>하네스는 원래 말이나 낙하산을 몸에 고정하는 장비를 뜻한다. AI 분야에서는 모델이라는 엔진에 손과 발을 붙이고, 그 손발이 어디까지 움직일 수 있는지 정해 주는 실행 환경을 가리킨다. 구체적으로는 모델에게 어떤 도구 목록을 보여 줄지, 어떤 폴더까지 접근을 허용할지, 어떤 명령은 사람의 승인을 받게 할지, 몇 번 반복한 뒤 멈출지, 실패하면 무엇을 하게 할지를 정하는 층이다.</p>
+<p>실무에서 하네스가 중요한 이유는 두 가지다. 첫째, 성능이 여기서 결정된다. 같은 모델이라도 프로젝트 규칙 문서를 자동으로 읽게 하고, 잘 정리된 스킬을 붙여 주고, 필요한 MCP 서버를 연결해 두면 결과물의 품질이 눈에 띄게 올라간다. 둘째, 안전이 여기서 결정된다. 파일 삭제나 외부 전송 같은 되돌리기 어려운 동작에 승인 단계를 걸어 두지 않으면, 잘못된 판단 한 번이 그대로 사고가 된다.</p>
+<blockquote>
+<p>핵심 메시지: "AI가 똑똑한가"는 모델의 문제이고, "AI가 내 컴퓨터에서 무엇을 할 수 있는가"는 하네스의 문제다. 조직 도입의 승패는 대부분 두 번째 질문에서 갈린다.</p>
+</blockquote>
+<p>표 5. 하네스를 구성하는 다섯 가지 설정 요소</p>
+<table>
+<thead>
+<tr><th>요소</th><th>내용</th><th>대표 구현</th><th>확인 질문</th></tr>
+</thead>
+<tbody>
+<tr><td>맥락 문서</td><td>세션 시작 시 자동으로 읽는 프로젝트 규칙</td><td>CLAUDE.md, AGENTS.md, 규칙 파일</td><td>매번 반복 설명하는 내용을 적어 두었는가</td></tr>
+<tr><td>도구</td><td>파일 읽기·쓰기, 터미널, 브라우저, 검색</td><td>내장 도구 목록, 확장 설치</td><td>필요한 도구만 켜져 있는가</td></tr>
+<tr><td>외부 연동</td><td>표준 규격으로 외부 자료·프로그램 호출</td><td>MCP 서버</td><td>연결 대상과 권한 범위가 명시되었는가</td></tr>
+<tr><td>작업법</td><td>반복 업무의 절차·형식·검증 기준</td><td>스킬, 서브에이전트, 템플릿</td><td>잘 된 지시가 파일로 저장되어 있는가</td></tr>
+<tr><td>통제</td><td>승인 지점, 금지 명령, 반복 한도, 로그</td><td>권한 설정, 훅, 감사 기록</td><td>되돌리기 어려운 동작에 승인이 걸려 있는가</td></tr>
+</tbody>
+</table>
+<h3>네 단계를 한 흐름으로 잇기</h3>
+<p>정리하면 흐름은 이렇게 이어진다. 사람이 무엇을 원하는지 프롬프트로 고정한다. 그 판단에 필요한 근거를 컨텍스트로 공급한다. 에이전트가 도구를 골라 실행하고 결과를 회수하며 반복한다. 하네스가 그 반복의 범위와 권한, 중단 조건을 통제한다. 마지막으로 사람이 결과를 검수하고 책임을 진다. 이 다섯 번째 단계가 빠지면 앞의 네 단계는 위험한 자동화가 된다.</p>
+<p>오늘 오후의 실습은 모두 이 흐름 위에 놓인다. 제05장의 안티그래비티 실습은 에이전트와 하네스를 손으로 만지는 시간이고, 제06장의 스킬은 작업법을 문서로 고정하는 시간이며, 제07장의 MCP는 외부 연동을 붙이는 시간이고, 제08장의 바이브 코딩은 그 전체를 하나의 결과물로 수렴시키는 시간이다.</p>
+<h4>자가 점검</h4>
+<ul>
+<li>내가 지금 쓰는 AI 활용 방식은 네 단계 중 어디까지 와 있는가?</li>
+<li>같은 지시를 동료가 내렸을 때 같은 결과가 나오는가? 아니라면 무엇이 빠졌는가?</li>
+<li>우리 조직에서 되돌리기 어려운 동작은 무엇이며, 거기에 승인 단계가 있는가?</li>
+</ul>
+</article>
+<article class="page-source-section" data-section-index="03" data-section-title="제03장 에이전트의 구조와 도식" data-section-label="제03장" data-section-name="에이전트의 구조와 도식">
+<h2>제03장 에이전트의 구조와 도식</h2>
+<p>앞 장에서 에이전트를 "도구를 골라 실행하고 결과를 다시 읽어 일을 이어 가는 구조"로 정의했다. 이 장에서는 그 구조를 도식으로 분해한다. 도식을 외우자는 것이 아니라, 에이전트가 멈추거나 엉뚱한 일을 했을 때 어느 지점에서 문제가 생겼는지 짚을 수 있는 눈을 갖자는 것이다. 실제로 현장에서 발생하는 대부분의 문제는 모델의 지능 부족이 아니라 이 구조의 특정 칸이 비어 있기 때문에 생긴다.</p>
+<h3>가장 작은 형태 · 챗봇의 단일 왕복</h3>
+<p>먼저 비교 대상을 세워 두자. 채팅형 LLM의 동작은 한 번의 왕복으로 끝난다. 사람이 문장을 보내면 모델이 문장을 돌려준다. 모델은 파일을 열지도, 명령을 실행하지도, 결과를 확인하지도 않는다. 따라서 결과물을 실제 파일로 남기거나 외부 시스템에 반영하는 일은 전부 사람의 손으로 이루어진다. 이 구조는 빠르고 안전하지만, 반복 업무를 줄이는 데는 한계가 분명하다.</p>
+<figure class="doc-figure figure-wide">
+<div class="figure-context"><p class="figure-context-label">그림 해설</p><div class="figure-context-body">챗봇은 입력과 출력 사이에 단 한 번의 모델 호출만 존재한다. 실행과 검증은 모두 사람의 몫으로 남는다.</div></div>
+<svg viewBox="0 0 900 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block;background:#fff">
+<defs><marker id="ar1" markerWidth="9" markerHeight="9" refX="8" refY="4" orient="auto"><path d="M0,0 L9,4 L0,8 z" fill="#4d8da5"/></marker></defs>
+<rect x="40" y="62" width="180" height="76" rx="12" fill="#f4f8fa" stroke="#4d8da5" stroke-width="1.5"/>
+<text x="130" y="95" text-anchor="middle" font-family="Pretendard,sans-serif" font-size="17" font-weight="700" fill="#1a3445">사람</text>
+<text x="130" y="118" text-anchor="middle" font-family="Pretendard,sans-serif" font-size="13" fill="#708696">질문 · 자료 첨부</text>
+<rect x="360" y="52" width="180" height="96" rx="12" fill="#316d83" stroke="#316d83"/>
+<text x="450" y="90" text-anchor="middle" font-family="Pretendard,sans-serif" font-size="17" font-weight="700" fill="#ffffff">LLM</text>
+<text x="450" y="114" text-anchor="middle" font-family="Pretendard,sans-serif" font-size="13" fill="#dcecf0">문장 생성</text>
+<rect x="680" y="62" width="180" height="76" rx="12" fill="#f4f8fa" stroke="#4d8da5" stroke-width="1.5"/>
+<text x="770" y="95" text-anchor="middle" font-family="Pretendard,sans-serif" font-size="17" font-weight="700" fill="#1a3445">답변 문장</text>
+<text x="770" y="118" text-anchor="middle" font-family="Pretendard,sans-serif" font-size="13" fill="#708696">실행은 사람이</text>
+<line x1="222" y1="100" x2="352" y2="100" stroke="#4d8da5" stroke-width="2" marker-end="url(#ar1)"/>
+<line x1="542" y1="100" x2="672" y2="100" stroke="#4d8da5" stroke-width="2" marker-end="url(#ar1)"/>
+<text x="450" y="182" text-anchor="middle" font-family="Pretendard,sans-serif" font-size="13" fill="#708696">한 번의 왕복 · 도구 없음 · 상태 없음</text>
+</svg>
+<figcaption><span class="figure-guide-label">그림 1.</span> 채팅형 LLM의 단일 왕복 구조</figcaption>
+</figure>
+<h3>에이전트의 네 단계 반복 루프</h3>
+<p>에이전트는 여기에 세 가지를 더한다. 도구 목록, 실행 환경, 그리고 반복이다. 동작을 네 단계로 나누면 이렇게 된다. 첫째, 하네스가 모델에게 현재 상황과 사용 가능한 도구 목록을 함께 보내며 지금 무엇을 할지 묻는다. 둘째, 모델이 특정 도구를 특정 인자로 쓰겠다고 답한다. 셋째, 하네스가 권한을 확인한 뒤 그 도구를 실제로 실행한다. 넷째, 실행 결과를 다시 모델에게 돌려준다. 모델이 완료를 선언할 때까지 이 네 단계가 반복된다.</p>
+<p>이 루프를 이해하면 실무에서 흔한 현상들이 설명된다. 에이전트가 같은 명령을 계속 반복한다면 3단계의 실행 결과가 모델에게 제대로 전달되지 않는 것이고, 엉뚱한 도구를 고른다면 1단계에서 제공된 도구 설명이 모호한 것이며, 아무 행동도 하지 않는다면 애초에 도구가 연결되지 않은 것이다. 즉 문제의 원인을 모델이 아니라 구조에서 찾는 습관이 생긴다.</p>
+<figure class="doc-figure figure-wide">
+<div class="figure-context"><p class="figure-context-label">그림 해설</p><div class="figure-context-body">에이전트의 핵심은 반복이다. 모델은 판단만 하고, 실제 실행과 권한 확인은 하네스가 맡으며, 그 결과가 다시 모델의 입력으로 돌아간다.</div></div>
+<svg viewBox="0 0 900 380" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block;background:#fff">
+<defs><marker id="ar2" markerWidth="9" markerHeight="9" refX="8" refY="4" orient="auto"><path d="M0,0 L9,4 L0,8 z" fill="#4d8da5"/></marker></defs>
+<rect x="300" y="24" width="300" height="60" rx="12" fill="#f4f8fa" stroke="#4d8da5" stroke-width="1.5"/>
+<text x="450" y="50" text-anchor="middle" font-family="Pretendard,sans-serif" font-size="15" font-weight="700" fill="#1a3445">사람의 목표 지시</text>
+<text x="450" y="70" text-anchor="middle" font-family="Pretendard,sans-serif" font-size="12" fill="#708696">이 폴더의 보고서를 표로 정리하라</text>
+<rect x="60" y="130" width="200" height="86" rx="12" fill="#316d83"/>
+<text x="160" y="160" text-anchor="middle" font-family="Pretendard,sans-serif" font-size="15" font-weight="700" fill="#fff">① 묻기</text>
+<text x="160" y="182" text-anchor="middle" font-family="Pretendard,sans-serif" font-size="12" fill="#dcecf0">상황과 도구 목록을</text>
+<text x="160" y="200" text-anchor="middle" font-family="Pretendard,sans-serif" font-size="12" fill="#dcecf0">모델에게 전달</text>
+<rect x="300" y="130" width="200" height="86" rx="12" fill="#4d8da5"/>
+<text x="400" y="160" text-anchor="middle" font-family="Pretendard,sans-serif" font-size="15" font-weight="700" fill="#fff">② 고르기</text>
+<text x="400" y="182" text-anchor="middle" font-family="Pretendard,sans-serif" font-size="12" fill="#eaf5f8">모델이 도구와</text>
+<text x="400" y="200" text-anchor="middle" font-family="Pretendard,sans-serif" font-size="12" fill="#eaf5f8">인자를 결정</text>
+<rect x="540" y="130" width="200" height="86" rx="12" fill="#73bdcd"/>
+<text x="640" y="160" text-anchor="middle" font-family="Pretendard,sans-serif" font-size="15" font-weight="700" fill="#14313f">③ 확인·실행</text>
+<text x="640" y="182" text-anchor="middle" font-family="Pretendard,sans-serif" font-size="12" fill="#14313f">권한 확인 후</text>
+<text x="640" y="200" text-anchor="middle" font-family="Pretendard,sans-serif" font-size="12" fill="#14313f">도구를 실제 실행</text>
+<rect x="540" y="256" width="200" height="72" rx="12" fill="#b8e1e1"/>
+<text x="640" y="284" text-anchor="middle" font-family="Pretendard,sans-serif" font-size="15" font-weight="700" fill="#14313f">④ 알려주기</text>
+<text x="640" y="306" text-anchor="middle" font-family="Pretendard,sans-serif" font-size="12" fill="#14313f">실행 결과를 모델에게 반환</text>
+<line x1="450" y1="86" x2="450" y2="126" stroke="#4d8da5" stroke-width="2" marker-end="url(#ar2)"/>
+<line x1="262" y1="173" x2="294" y2="173" stroke="#4d8da5" stroke-width="2" marker-end="url(#ar2)"/>
+<line x1="502" y1="173" x2="534" y2="173" stroke="#4d8da5" stroke-width="2" marker-end="url(#ar2)"/>
+<line x1="640" y1="218" x2="640" y2="250" stroke="#4d8da5" stroke-width="2" marker-end="url(#ar2)"/>
+<path d="M540 292 L160 292 L160 222" fill="none" stroke="#4d8da5" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#ar2)"/>
+<text x="350" y="286" text-anchor="middle" font-family="Pretendard,sans-serif" font-size="12" font-weight="700" fill="#4d8da5">↺ 끝날 때까지 반복</text>
+<rect x="60" y="340" width="780" height="30" rx="8" fill="#f4f8fa" stroke="#dfebee"/>
+<text x="450" y="360" text-anchor="middle" font-family="Pretendard,sans-serif" font-size="12.5" fill="#2e4a5c">종료 조건 · 모델이 완료 선언 / 반복 한도 도달 / 사람이 중단 / 오류로 중단</text>
+</svg>
+<figcaption><span class="figure-guide-label">그림 2.</span> 에이전트의 네 단계 반복 루프와 종료 조건</figcaption>
+</figure>
+<h3>하네스를 포함한 전체 실행 구조</h3>
+<p>실제 코딩 에이전트를 열면 화면에는 대화창 하나만 보이지만, 그 뒤에는 여러 층이 겹쳐 있다. 클라우드에는 판단을 담당하는 모델이 있고, 내 컴퓨터에는 그 판단을 실행하는 하네스가 있다. 하네스는 파일 시스템, 터미널, 브라우저, MCP 서버 같은 도구를 쥐고 있으며, 프로젝트 폴더의 규칙 문서와 스킬 파일을 읽어 모델에게 맥락으로 전달한다. 결과물은 내 컴퓨터의 파일로 남고, 필요하면 배포 단계에서 외부로 나간다.</p>
+<p>이 그림에서 가장 중요한 경계는 점선으로 표시된 구간, 즉 내 컴퓨터와 외부 클라우드 사이다. 어떤 데이터가 이 경계를 넘는지 아는 것이 보안 판단의 출발점이다. 파일 내용 전체가 넘어가는지, 파일 이름만 넘어가는지, 요약만 넘어가는지는 도구와 설정에 따라 다르며, 조직 도입 시 반드시 확인해야 할 항목이다.</p>
+<figure class="doc-figure figure-wide">
+<div class="figure-context"><p class="figure-context-label">그림 해설</p><div class="figure-context-body">판단은 클라우드의 모델이, 실행은 내 컴퓨터의 하네스가 담당한다. 점선은 데이터가 외부로 나가는 경계이며 보안 검토의 기준선이 된다.</div></div>
+<svg viewBox="0 0 900 420" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block;background:#fff">
+<defs><marker id="ar3" markerWidth="9" markerHeight="9" refX="8" refY="4" orient="auto"><path d="M0,0 L9,4 L0,8 z" fill="#4d8da5"/></marker></defs>
+<rect x="250" y="16" width="400" height="80" rx="14" fill="#316d83"/>
+<text x="450" y="46" text-anchor="middle" font-family="Pretendard,sans-serif" font-size="16" font-weight="700" fill="#fff">클라우드 · LLM</text>
+<text x="450" y="70" text-anchor="middle" font-family="Pretendard,sans-serif" font-size="12.5" fill="#dcecf0">무엇을 할지 판단 · 도구 선택 · 문장 생성</text>
+<text x="450" y="86" text-anchor="middle" font-family="Pretendard,sans-serif" font-size="11.5" fill="#b8e1e1">사내망 운영 시에는 로컬 SLM으로 대체 가능</text>
+<line x1="60" y1="122" x2="840" y2="122" stroke="#73bdcd" stroke-width="2" stroke-dasharray="8 6"/>
+<text x="840" y="116" text-anchor="end" font-family="Pretendard,sans-serif" font-size="11.5" font-weight="700" fill="#4d8da5">데이터 경계</text>
+<rect x="60" y="146" width="780" height="180" rx="14" fill="#f4f8fa" stroke="#4d8da5" stroke-width="1.5"/>
+<text x="84" y="172" font-family="Pretendard,sans-serif" font-size="13.5" font-weight="700" fill="#1a3445">내 컴퓨터 · 하네스(코딩 에이전트)</text>
+<rect x="84" y="186" width="168" height="62" rx="10" fill="#fff" stroke="#c9dce1"/>
+<text x="168" y="210" text-anchor="middle" font-family="Pretendard,sans-serif" font-size="13" font-weight="700" fill="#1a3445">맥락 문서</text>
+<text x="168" y="230" text-anchor="middle" font-family="Pretendard,sans-serif" font-size="11.5" fill="#708696">규칙 · 금지 · 용어</text>
+<rect x="268" y="186" width="168" height="62" rx="10" fill="#fff" stroke="#c9dce1"/>
+<text x="352" y="210" text-anchor="middle" font-family="Pretendard,sans-serif" font-size="13" font-weight="700" fill="#1a3445">스킬</text>
+<text x="352" y="230" text-anchor="middle" font-family="Pretendard,sans-serif" font-size="11.5" fill="#708696">반복 업무 작업법</text>
+<rect x="452" y="186" width="168" height="62" rx="10" fill="#fff" stroke="#c9dce1"/>
+<text x="536" y="210" text-anchor="middle" font-family="Pretendard,sans-serif" font-size="13" font-weight="700" fill="#1a3445">권한 규칙</text>
+<text x="536" y="230" text-anchor="middle" font-family="Pretendard,sans-serif" font-size="11.5" fill="#708696">승인 · 금지 · 한도</text>
+<rect x="636" y="186" width="180" height="62" rx="10" fill="#fff" stroke="#c9dce1"/>
+<text x="726" y="210" text-anchor="middle" font-family="Pretendard,sans-serif" font-size="13" font-weight="700" fill="#1a3445">반복 루프</text>
+<text x="726" y="230" text-anchor="middle" font-family="Pretendard,sans-serif" font-size="11.5" fill="#708696">실행 순서 관리</text>
+<rect x="84" y="262" width="168" height="50" rx="10" fill="#b8e1e1"/>
+<text x="168" y="292" text-anchor="middle" font-family="Pretendard,sans-serif" font-size="13" font-weight="700" fill="#14313f">파일 읽기·쓰기</text>
+<rect x="268" y="262" width="168" height="50" rx="10" fill="#b8e1e1"/>
+<text x="352" y="292" text-anchor="middle" font-family="Pretendard,sans-serif" font-size="13" font-weight="700" fill="#14313f">터미널 실행</text>
+<rect x="452" y="262" width="168" height="50" rx="10" fill="#b8e1e1"/>
+<text x="536" y="292" text-anchor="middle" font-family="Pretendard,sans-serif" font-size="13" font-weight="700" fill="#14313f">브라우저</text>
+<rect x="636" y="262" width="180" height="50" rx="10" fill="#73bdcd"/>
+<text x="726" y="292" text-anchor="middle" font-family="Pretendard,sans-serif" font-size="13" font-weight="700" fill="#14313f">MCP 서버</text>
+<line x1="420" y1="100" x2="420" y2="142" stroke="#4d8da5" stroke-width="2" marker-end="url(#ar3)"/>
+<line x1="480" y1="142" x2="480" y2="100" stroke="#4d8da5" stroke-width="2" marker-end="url(#ar3)"/>
+<text x="332" y="138" font-family="Pretendard,sans-serif" font-size="11.5" fill="#708696">맥락 전송</text>
+<text x="492" y="138" font-family="Pretendard,sans-serif" font-size="11.5" fill="#708696">도구 호출 지시</text>
+<rect x="60" y="344" width="780" height="60" rx="12" fill="#fff" stroke="#c9dce1"/>
+<text x="84" y="368" font-family="Pretendard,sans-serif" font-size="13" font-weight="700" fill="#1a3445">산출물</text>
+<text x="84" y="390" font-family="Pretendard,sans-serif" font-size="12" fill="#2e4a5c">코드 파일 · 문서 · 데이터베이스 · 웹 화면 · 배포된 서비스 — 최종 검수와 책임은 사람에게 남는다</text>
+</svg>
+<figcaption><span class="figure-guide-label">그림 3.</span> 클라우드 모델과 로컬 하네스를 포함한 전체 실행 구조</figcaption>
+</figure>
+<h3>에이전트를 구성하는 다섯 부품</h3>
+<p>도식을 부품 단위로 다시 정리하면 다섯 개가 남는다. 이 다섯 개가 갖춰져야 비로소 에이전트라고 부를 수 있으며, 시중의 모든 코딩 에이전트는 이름과 화면만 다를 뿐 같은 다섯 부품으로 구성되어 있다. 도구를 새로 접할 때 이 표를 기준으로 확인하면 화면이 낯설어도 금세 구조가 보인다.</p>
+<p>표 6. 에이전트를 구성하는 다섯 부품과 점검 항목</p>
+<table>
+<thead>
+<tr><th>부품</th><th>역할</th><th>비어 있으면 생기는 증상</th><th>점검 방법</th></tr>
+</thead>
+<tbody>
+<tr><td>모델(LLM)</td><td>상황을 읽고 다음 행동을 판단한다</td><td>판단이 얕고 복잡한 작업에서 헤맨다</td><td>어려운 작업에 상위 모델을 지정했는가</td></tr>
+<tr><td>도구·함수</td><td>파일·터미널·검색 등 실제 행동 수단</td><td>계획만 세우고 아무것도 실행하지 않는다</td><td>도구 목록이 화면에 표시되는가</td></tr>
+<tr><td>컨텍스트</td><td>판단 근거가 되는 자료와 규칙</td><td>우리 기관 사정을 모르는 일반론을 낸다</td><td>규칙 문서를 자동으로 읽는가</td></tr>
+<tr><td>반복 루프</td><td>실행 결과를 보고 다음 행동을 이어 간다</td><td>한 번 실패하면 그대로 멈춘다</td><td>오류 후 스스로 재시도하는가</td></tr>
+<tr><td>권한·검증</td><td>승인 지점과 금지 동작, 완료 기준</td><td>위험한 동작이 무확인으로 실행된다</td><td>삭제·전송에 확인 단계가 있는가</td></tr>
+</tbody>
+</table>
+<h3>단일 에이전트와 다중 에이전트</h3>
+<p>작업이 커지면 하나의 에이전트가 모든 맥락을 들고 있기 어려워진다. 이때 쓰는 방식이 역할 분담이다. 조사를 담당하는 에이전트, 작성을 담당하는 에이전트, 검수를 담당하는 에이전트를 나누고, 앞 단계의 결과를 다음 단계의 입력으로 넘긴다. 이렇게 하면 각 에이전트가 들고 있어야 할 맥락이 줄어들어 품질이 안정되고, 검수 단계를 별도 역할로 분리하기 때문에 스스로 만든 결과를 스스로 승인하는 문제도 줄어든다.</p>
+<ul>
+<li><strong>순차형</strong> — 조사에서 초안, 검수로 차례로 넘긴다. 보고서와 제안서 작성에 적합하다.</li>
+<li><strong>병렬형</strong> — 같은 자료를 여러 관점으로 동시에 분석한 뒤 합친다. 경쟁사 조사나 리스크 점검에 적합하다.</li>
+<li><strong>감독형</strong> — 관리 에이전트가 하위 작업을 배분하고 결과를 모은다. 파일 수백 건 처리처럼 반복이 많은 작업에 적합하다.</li>
+</ul>
+<blockquote>
+<p>핵심 메시지: 작성과 검수는 반드시 다른 단계에서 분리한다. 같은 맥락 안에서 스스로 만든 결과를 스스로 승인하면 오류가 걸러지지 않는다.</p>
+</blockquote>
+<h3>에이전트가 잘 작동하지 않을 때의 진단 순서</h3>
+<p>현장에서 에이전트가 기대와 다르게 동작할 때는 모델을 바꾸기 전에 아래 순서로 점검한다. 대부분의 문제는 첫 세 항목에서 해결된다.</p>
+<ol>
+<li>지시문에 완료 조건이 적혀 있는가. 무엇이 되면 끝인지 적지 않으면 에이전트는 임의로 멈춘다.</li>
+<li>필요한 자료가 맥락으로 전달되었는가. 파일 경로만 말하고 읽기 권한을 주지 않은 경우가 흔하다.</li>
+<li>필요한 도구가 켜져 있는가. 터미널이나 브라우저 권한이 꺼져 있으면 계획만 세우고 끝난다.</li>
+<li>중간 결과가 모델에게 돌아가고 있는가. 실행 로그가 비어 있다면 루프가 끊긴 것이다.</li>
+<li>반복 한도나 토큰 한도에 걸리지 않았는가. 긴 작업은 단계를 나누어 지시하는 편이 안정적이다.</li>
+<li>마지막으로 모델 등급을 올려 본다. 이 단계는 앞의 다섯 가지를 확인한 뒤에 시도한다.</li>
+</ol>
+<h4>자가 점검</h4>
+<ul>
+<li>네 단계 반복 루프를 종이에 그려 동료에게 30초 안에 설명할 수 있는가?</li>
+<li>내가 쓰는 도구에서 데이터 경계선은 어디이며, 무엇이 그 선을 넘는가?</li>
+<li>다섯 부품 중 지금 내 환경에서 비어 있는 것은 무엇인가?</li>
+</ul>
+</article>
+<article class="page-source-section" data-section-index="04" data-section-title="제04장 에이전트 하네스 비교" data-section-label="제04장" data-section-name="에이전트 하네스 비교">
+<h2>제04장 에이전트 하네스 비교</h2>
+<p>시장에는 코딩 에이전트가 빠르게 늘고 있다. 안티그래비티, 클로드 코드, ChatGPT 데스크톱과 Codex, Cline, Pi, Kilo Code, OpenCode, 커서, 윈드서프까지 이름만 나열해도 열 개를 넘는다. 이 상황에서 실무자가 저지르는 흔한 실수는 가장 유명한 것을 고르거나, 가장 최근에 나온 것을 고르는 것이다. 그러나 도구는 유행이 아니라 조건으로 골라야 한다. 조건이란 우리 조직의 망 환경, 비용 구조, 사용자의 기술 수준, 다루는 데이터의 민감도다.</p>
+<p>다행히 비교 자체는 어렵지 않다. 앞 장에서 정리한 다섯 부품이 그대로 비교 기준이 되기 때문이다. 어떤 모델을 쓸 수 있는가, 어떤 도구가 기본 제공되는가, 맥락 문서를 어떻게 읽는가, 외부 연동을 지원하는가, 권한 통제는 얼마나 세밀한가. 여기에 실무 관점의 두 가지를 더한다. 비용은 어떻게 발생하는가, 그리고 비개발자가 쓸 수 있는가.</p>
+<h3>형태에 따른 네 갈래</h3>
+<p>수많은 도구를 형태로 묶으면 네 갈래가 된다. 이 분류를 먼저 머리에 넣어 두면 새로운 도구가 나와도 어느 자리에 놓을지 금세 판단할 수 있다.</p>
+<ul>
+<li><strong>에이전트 환경형</strong> — 에이전트 실행을 전면에 둔 독립 애플리케이션. 브라우저·파일·터미널을 에이전트가 자율적으로 오가며, 작업 계획과 실행 기록을 화면에서 보여 준다. 안티그래비티가 대표적이다.</li>
+<li><strong>AI 편집기형</strong> — 코드 편집기 안에 에이전트를 통합한 형태. 코드를 보면서 부분 수정과 자율 실행을 오갈 수 있다. 커서와 윈드서프가 여기에 속한다.</li>
+<li><strong>CLI 에이전트형</strong> — 터미널에서 실행하며 프로젝트 폴더 전체를 다룬다. 설정 파일 기반의 세밀한 제어가 강점이다. 클로드 코드, Codex CLI, OpenCode가 여기에 속한다.</li>
+<li><strong>확장·플러그인형</strong> — 기존 편집기에 설치해 쓰는 형태. 기존 작업 환경을 바꾸지 않아도 되는 것이 장점이다. Cline, Kilo Code, Roo Code 등이 여기에 속한다.</li>
+</ul>
+<h3>주요 하네스 한눈에 보기</h3>
+<p>표 7. 주요 에이전트 하네스의 형태와 특징</p>
+<table>
+<thead>
+<tr><th>도구</th><th>제공</th><th>형태</th><th>핵심 특징</th></tr>
+</thead>
+<tbody>
+<tr><td>Antigravity</td><td>Google</td><td>에이전트 환경</td><td>무료 사용 가능, VS Code 계열 화면, 브라우저·파일·터미널 자율 실행, 작업 계획을 화면에 시각화</td></tr>
+<tr><td>Claude Code</td><td>Anthropic</td><td>CLI 에이전트</td><td>터미널 기반, 프로젝트 전체 자율 편집, 맥락 문서·스킬·MCP·서브에이전트·훅 지원</td></tr>
+<tr><td>ChatGPT Desktop</td><td>OpenAI</td><td>데스크톱 앱</td><td>대화 중심 화면에 파일·앱 연동 추가, 비개발자 접근성이 가장 높은 편</td></tr>
+<tr><td>Codex</td><td>OpenAI</td><td>CLI · 클라우드</td><td>터미널 실행과 클라우드 샌드박스 병행, 이슈 단위 자율 처리와 병렬 실행</td></tr>
+<tr><td>Cline</td><td>오픈소스</td><td>편집기 확장</td><td>VS Code 확장, 모델 자유 선택(API 키 직접 연결), 계획과 실행 모드 분리</td></tr>
+<tr><td>Pi</td><td>오픈소스 계열</td><td>경량 에이전트</td><td>가볍게 설치해 쓰는 실험적 에이전트, 로컬 모델 연결과 커스터마이즈에 강점</td></tr>
+<tr><td>Kilo Code</td><td>오픈소스</td><td>편집기 확장</td><td>Cline·Roo 계열의 확장, 모드 전환과 오케스트레이션 기능을 확대</td></tr>
+<tr><td>OpenCode</td><td>오픈소스</td><td>CLI 에이전트</td><td>터미널 기반 오픈소스 에이전트, 모델 제공자를 자유롭게 교체 가능</td></tr>
+<tr><td>Cursor</td><td>Anysphere</td><td>AI 편집기</td><td>VS Code 포크, 에이전트 모드와 코드베이스 인덱싱, 개발자 대상 점유율이 높음</td></tr>
+<tr><td>Windsurf</td><td>Codeium</td><td>AI 편집기</td><td>자율 코딩 흐름에 특화, 커서와 유사한 구조</td></tr>
+</tbody>
+</table>
+<h3>같은 기준으로 다시 세우기</h3>
+<p>도구별 소개만 읽으면 모두 좋아 보인다. 그래서 같은 기준표에 올려 비교해야 한다. 아래 표는 실무 도입 판단에 직접 쓰이는 여섯 가지 축으로 재정리한 것이다. 각 항목의 세부 사양은 제품 업데이트에 따라 달라지므로, 표는 선택의 틀로 쓰고 최종 확인은 도입 시점에 공식 문서로 다시 하는 것을 전제로 한다.</p>
+<p>표 8. 실무 도입 관점의 비교 기준</p>
+<table>
+<thead>
+<tr><th>기준</th><th>확인 질문</th><th>유리한 유형</th></tr>
+</thead>
+<tbody>
+<tr><td>진입 장벽</td><td>터미널을 쓰지 않고도 첫 결과를 낼 수 있는가</td><td>에이전트 환경형 · 데스크톱 앱형</td></tr>
+<tr><td>자율성</td><td>여러 파일을 한 번에 수정하고 스스로 검증하는가</td><td>CLI 에이전트형 · 에이전트 환경형</td></tr>
+<tr><td>설정 정밀도</td><td>맥락 문서·스킬·권한을 파일로 관리할 수 있는가</td><td>CLI 에이전트형</td></tr>
+<tr><td>모델 선택권</td><td>모델 제공자를 바꾸거나 로컬 모델을 붙일 수 있는가</td><td>오픈소스 확장형 · 오픈소스 CLI형</td></tr>
+<tr><td>비용 구조</td><td>구독인가 사용량 과금인가, 무료 한도가 있는가</td><td>무료 한도 제공 도구로 먼저 시작</td></tr>
+<tr><td>보안 통제</td><td>어떤 데이터가 외부로 나가며 로그가 남는가</td><td>로컬 모델 연결이 가능한 오픈소스 계열</td></tr>
+</tbody>
+</table>
+<h3>안티그래비티를 실습 도구로 고른 이유</h3>
+<p>이 교육의 실습 도구로 안티그래비티를 선택한 이유는 세 가지다. 첫째, 무료로 쓸 수 있어 참가자 전원이 같은 환경에서 동시에 시작할 수 있다. 둘째, VS Code 계열의 익숙한 화면 위에 에이전트 실행이 얹혀 있어, 터미널 경험이 없는 참가자도 첫 결과까지 도달하는 시간이 짧다. 셋째, 에이전트가 세운 계획과 실행 단계를 화면에 그대로 보여 주기 때문에, 앞 장에서 배운 네 단계 반복 루프를 눈으로 확인하기에 가장 적합하다.</p>
+<p>다만 안티그래비티가 모든 상황에서 최선이라는 뜻은 아니다. 조직 표준 설정을 파일로 배포하고 세밀한 권한 규칙을 걸어야 하는 단계에 이르면 클로드 코드 같은 CLI 계열이 유리하고, 외부망 접속이 제한된 환경이라면 로컬 모델을 붙일 수 있는 오픈소스 계열이 유리하다. 오늘은 개념을 손으로 익히는 것이 목적이므로 진입 장벽이 가장 낮은 도구로 시작하고, 확장 경로는 마지막 장에서 다룬다.</p>
+<blockquote>
+<p>핵심 메시지: 도구 선택의 첫 질문은 "어느 것이 가장 좋은가"가 아니라 "우리 환경에서 무엇이 허용되는가"다. 허용 범위 안에서 가장 진입 장벽이 낮은 것으로 시작한다.</p>
+</blockquote>
+<h3>같은 모델, 다른 접근 범위</h3>
+<p>하나 더 구분해야 할 것이 있다. 같은 회사의 제품이라도 파일 접근 범위와 작업 단위가 다르면 완전히 다른 도구가 된다. 대화형 웹 서비스, 데스크톱 앱, 터미널 에이전트를 비교해 보면 이 차이가 분명해진다. 모델은 같아도 자율도가 다르고, 자율도가 다르면 필요한 통제 수준도 달라진다.</p>
+<p>표 9. 접근 범위에 따른 제품 유형 구분</p>
+<table>
+<thead>
+<tr><th>유형</th><th>작업 단위</th><th>파일 접근</th><th>주로 쓰는 일</th></tr>
+</thead>
+<tbody>
+<tr><td>대화형 웹</td><td>질문 한 번에 답변 한 번</td><td>업로드한 파일만 처리</td><td>조사, 문서 초안, 코드 조각 생성</td></tr>
+<tr><td>데스크톱 앱</td><td>파일·작업 단위 자동화</td><td>허용한 폴더의 파일 읽기·쓰기</td><td>파일 정리, 반복 문서 작업, 보고서 작성</td></tr>
+<tr><td>CLI 에이전트</td><td>프로젝트 전체</td><td>작업 폴더 전체 자율 접근·수정</td><td>코드 작성·수정, 바이브 코딩, 대량 문서 처리</td></tr>
+</tbody>
+</table>
+<p>접근 범위가 넓어질수록 자율도가 높아지고, 동시에 사고의 파급 범위도 넓어진다. 그래서 자율도가 높은 도구일수록 권한 확인이 더 명시적으로 설계되어 있다. 도입 단계에서는 대화형으로 감각을 익히고, 데스크톱 앱으로 파일 작업을 넘기고, 필요해지면 CLI로 옮겨 가는 순서가 안전하다.</p>
+<h3>2021년 이후의 흐름</h3>
+<p>도구 비교의 맥락을 이해하려면 흐름을 짚어 두는 편이 좋다. 2021년 코드 자동완성이 등장했을 때만 해도 AI는 사람이 쓰던 문장을 이어 받는 보조 도구였다. 2022년에는 대화로 목적을 말하면 코드를 만들어 주는 단계로 넘어갔고, 2023년부터 2024년 사이에는 AI가 편집기 안으로 들어와 여러 파일을 다루기 시작했다. 2025년을 지나며 스스로 계획하고 실행하고 검증하는 자율 에이전트가 자리를 잡았고, 이제는 하네스와 MCP처럼 에이전트를 설정으로 제어하는 구조가 업계 공통 언어가 되었다.</p>
+<p>이 흐름이 실무자에게 주는 의미는 분명하다. 코드를 읽고 쓰는 능력보다 무엇을 원하는지 설명하는 능력이 더 중요해졌고, 조직 도입의 관건은 에이전트를 쓸 수 있느냐가 아니라 조직 환경에 맞게 구성하고 통제할 수 있느냐로 옮겨 갔다. 오늘 오후의 실습이 스킬과 MCP에 상당한 시간을 할애하는 이유가 여기에 있다.</p>
+<h3>실습 · 우리 기관에 맞는 도구 선정표 작성</h3>
+<p>제3세션의 마무리 활동으로 아래 항목을 채워 본다. 정답을 맞히는 활동이 아니라, 우리 조직의 제약 조건을 문장으로 드러내는 활동이다.</p>
+<ol>
+<li>우리 조직에서 외부 클라우드 모델 사용이 허용되는가. 허용된다면 어떤 데이터까지인가.</li>
+<li>참가자 대다수가 터미널을 쓸 수 있는가. 아니라면 진입 장벽이 낮은 유형으로 좁힌다.</li>
+<li>비용은 개인 구독인가 기관 단위 계약인가. 무료 한도로 시작할 수 있는 도구가 있는가.</li>
+<li>결과물의 검수 책임자는 누구이며, 어떤 기록이 남아야 하는가.</li>
+<li>위 답을 근거로 1순위와 2순위 도구를 각각 한 줄 이유와 함께 적는다.</li>
+</ol>
+<h4>자가 점검</h4>
+<ul>
+<li>네 가지 형태 분류에 각 도구를 배치할 수 있는가?</li>
+<li>우리 조직의 제약 조건 중 도구 선택을 가장 크게 좌우하는 항목은 무엇인가?</li>
+<li>지금 고른 도구에서 데이터가 외부로 나가는 지점을 설명할 수 있는가?</li>
+</ul>
+</article>
+<article class="page-source-section" data-section-index="05" data-section-title="제05장 코딩 에이전트 활용법" data-section-label="제05장" data-section-name="코딩 에이전트 활용법">
+<h2>제05장 코딩 에이전트 활용법</h2>
+<p>이 장부터 실습이다. 개념 설명은 최소로 줄이고, 화면을 띄워 놓은 상태에서 절차를 따라가는 것을 전제로 썼다. 실습 도구는 안티그래비티를 기준으로 서술하지만, 다른 코딩 에이전트를 쓰더라도 절차의 뼈대는 동일하다. 폴더를 열고, 목표를 말하고, 권한을 승인하고, 결과를 확인하고, 말로 고친다. 이 다섯 동작이 코딩 에이전트 사용의 전부다.</p>
+<blockquote>
+<p>핵심 메시지: 코딩 에이전트를 배운다는 것은 명령어를 외우는 일이 아니라, 폴더 단위로 일을 맡기고 결과를 확인하는 습관을 들이는 일이다.</p>
+</blockquote>
+<h3>실습 전 환경 준비</h3>
+<p>가장 먼저 헷갈리는 것은 어느 폴더에서 작업하느냐다. 코딩 에이전트는 자신이 열어 둔 폴더 안의 파일만 인식하고 수정한다. 따라서 바탕화면에 실습용 폴더를 하나 만들고, 오늘 쓸 예시 자료를 그 안에 넣어 두는 것부터 시작한다. 폴더 이름과 파일 이름에는 공백과 특수문자를 피하고 영문 또는 간단한 한글을 쓰는 편이 오류를 줄인다.</p>
+<ol>
+<li>바탕화면에 <code>agent-lab</code> 폴더를 만든다.</li>
+<li>그 안에 <code>data</code>, <code>output</code>, <code>docs</code> 하위 폴더를 만든다.</li>
+<li><code>data</code>에는 실습용 엑셀·CSV·PDF 사본을 넣는다. 반드시 민감정보를 지운 사본을 쓴다.</li>
+<li>안티그래비티를 실행하고 <code>agent-lab</code> 폴더를 연다.</li>
+<li>에이전트 패널에서 현재 열린 폴더 경로가 맞는지 확인한다.</li>
+</ol>
+<h3>첫 지시 · 폴더를 읽게 한다</h3>
+<p>첫 명령은 무언가를 만드는 명령이 아니라 상황을 파악하게 하는 명령이어야 한다. 에이전트가 폴더 구조와 파일 내용을 먼저 파악하면 이후 지시의 정확도가 크게 올라간다. 또한 이 과정에서 에이전트가 파일 읽기 권한을 요청하므로, 권한 확인 화면이 어떻게 생겼는지 자연스럽게 익히게 된다.</p>
+<pre><code>이 폴더의 구조를 먼저 파악해 줘.
+data 폴더에 어떤 파일이 있는지, 각 파일이 어떤 형식이고
+몇 행짜리 데이터인지 표로 정리해 줘.
+파일을 수정하지는 말고 읽기만 해.</code></pre>
+<p>이 지시에는 세 가지 장치가 들어 있다. 대상 폴더를 명시했고, 출력 형식을 표로 지정했으며, 금지 사항으로 수정을 막았다. 제02장에서 다룬 프롬프트 다섯 요소가 그대로 적용된 것이다. 에이전트가 파일을 읽겠다고 승인을 요청하면 허용하고, 결과 표가 실제 파일 내용과 맞는지 눈으로 확인한다.</p>
+<h3>권한 확인 · 무엇을 승인하고 무엇을 막을 것인가</h3>
+<p>코딩 에이전트는 파일 생성, 파일 수정, 명령 실행 전에 확인을 요청한다. 이 확인 단계는 귀찮은 절차가 아니라 하네스의 핵심 안전장치다. 실습 초반에는 모든 동작을 한 건씩 확인하며 무엇을 하려는지 읽어 보는 것을 권한다. 익숙해진 뒤에 반복되는 안전한 동작만 자동 허용으로 바꾼다.</p>
+<p>표 10. 권한 승인 판단 기준</p>
+<table>
+<thead>
+<tr><th>동작 유형</th><th>예시</th><th>권장 처리</th></tr>
+</thead>
+<tbody>
+<tr><td>읽기</td><td>폴더 목록 조회, 파일 내용 읽기</td><td>자동 허용해도 무방</td></tr>
+<tr><td>새 파일 생성</td><td>output 폴더에 결과 파일 만들기</td><td>대상 경로를 확인한 뒤 허용</td></tr>
+<tr><td>기존 파일 수정</td><td>원본 엑셀 덮어쓰기</td><td>사본을 만들게 지시한 뒤 허용</td></tr>
+<tr><td>명령 실행</td><td>패키지 설치, 스크립트 실행</td><td>명령문을 읽고 한 건씩 확인</td></tr>
+<tr><td>삭제·이동</td><td>파일 삭제, 폴더 정리</td><td>원칙적으로 수동 처리, 자동 허용 금지</td></tr>
+<tr><td>외부 전송</td><td>업로드, 메일 발송, 저장소 푸시</td><td>반드시 사람이 최종 승인</td></tr>
+</tbody>
+</table>
+<h3>맥락 문서 만들기</h3>
+<p>같은 지시를 매번 반복해서 쓰고 있다면, 그것은 맥락 문서에 들어가야 할 내용이다. 프로젝트 폴더 안에 규칙 문서를 두면 에이전트가 세션을 시작할 때 자동으로 읽는다. 문서의 파일명은 도구마다 다르지만 역할은 같다. 프로젝트의 목적, 폴더 구조, 사용할 용어, 출력 형식, 금지 사항을 적어 둔다.</p>
+<pre><code># 프로젝트 규칙
+
+## 목적
+부서 반복 문서 업무를 자동화하는 실습 폴더다.
+
+## 폴더 구조
+- data/   : 원본 자료. 절대 수정하지 않는다.
+- output/ : 생성 결과물. 모든 산출물은 여기에 저장한다.
+- docs/   : 규칙과 스킬 문서.
+
+## 출력 규칙
+- 문서는 한국어로 작성한다. 문장은 간결한 서술체로 쓴다.
+- 숫자는 천 단위 콤마를 표기한다.
+- 표에는 반드시 단위를 명시한다.
+
+## 금지 사항
+- data 폴더의 원본 파일을 수정하거나 삭제하지 않는다.
+- 자료에 없는 내용을 추측해 채우지 않는다. 모르면 모른다고 적는다.
+- 외부로 파일을 전송하지 않는다.</code></pre>
+<p>이 문서를 만들어 둔 뒤 같은 지시를 다시 내려 보면 결과가 달라진다. 특히 "자료에 없는 내용을 추측해 채우지 않는다"는 한 줄이 실무에서 가장 큰 효과를 낸다. 모델은 빈칸을 그럴듯하게 채우려는 경향이 있으므로, 그 경향을 명시적으로 막아 두는 것이다.</p>
+<h3>바이브 코딩의 네 단계</h3>
+<p>바이브 코딩은 코드를 직접 작성하지 않고 원하는 결과를 자연어로 설명해 에이전트가 만들게 하는 방식이다. 처음부터 완벽한 지시를 쓸 필요가 없다. 대략 만든 뒤 말로 다듬어 가는 것이 이 방식의 본질이며, 반복 과정에서 지시 능력이 자연스럽게 향상된다.</p>
+<p>표 11. 바이브 코딩 진행 절차</p>
+<table>
+<thead>
+<tr><th>단계</th><th>사람이 하는 일</th><th>에이전트가 하는 일</th><th>확인할 것</th></tr>
+</thead>
+<tbody>
+<tr><td>① 설명</td><td>무엇을, 어떤 내용으로, 어떻게 보이게 할지 적는다</td><td>요구를 해석하고 계획을 세운다</td><td>계획이 내 의도와 맞는가</td></tr>
+<tr><td>② 생성</td><td>권한 요청을 확인하고 승인한다</td><td>코드를 작성하고 파일로 저장한다</td><td>파일이 output 폴더에 생겼는가</td></tr>
+<tr><td>③ 확인</td><td>결과물을 실제로 열어 본다</td><td>필요하면 스스로 오류를 수정한다</td><td>눈으로 보이는 결과가 동작하는가</td></tr>
+<tr><td>④ 수정</td><td>고칠 부분을 말로 다시 요청한다</td><td>해당 부분만 고쳐 다시 보여 준다</td><td>의도한 부분만 바뀌었는가</td></tr>
+</tbody>
+</table>
+<p>③과 ④를 원하는 모습이 될 때까지 반복하는 것이 진행 방식이다. 한 번에 완성하려고 긴 지시문을 쓰는 것보다, 짧게 지시하고 자주 확인하는 편이 결과적으로 더 빠르다. 특히 초보 단계에서는 한 번에 한 가지만 바꾸도록 요청해야 무엇이 원인인지 추적할 수 있다.</p>
+<h3>실습 A · 자료 정리 도구 만들기</h3>
+<p>첫 실습은 data 폴더의 엑셀 또는 CSV를 읽어 요약표를 만드는 작업이다. 아래 지시문을 자신의 파일명과 항목으로 바꾸어 사용한다.</p>
+<pre><code>data 폴더의 [파일명.csv]를 읽어 다음을 수행해 줘.
+
+1. 전체 행 수와 열 이름을 먼저 보여 줘.
+2. [기준열]별로 건수와 [금액열] 합계를 집계해 줘.
+3. 결과를 output 폴더에 summary.html 파일로 저장해 줘.
+   - 표는 읽기 쉽게 스타일을 넣어 줘.
+   - 금액은 천 단위 콤마를 표기해 줘.
+4. 원본 파일은 수정하지 마.
+
+집계 결과가 원본 합계와 일치하는지 마지막에 검증해서 알려 줘.</code></pre>
+<p>마지막 줄의 검증 요청이 중요하다. 에이전트에게 스스로 확인하게 만들면, 계산 누락이나 열 이름 오인 같은 실수가 상당 부분 걸러진다. 다만 자기 검증만으로 충분하지 않으므로, 사람이 한두 개 값을 직접 대조해 보는 절차를 반드시 병행한다.</p>
+<h3>실습 B · 결과를 말로 다듬기</h3>
+<p>생성된 파일을 브라우저로 열어 본 뒤, 아래와 같은 방식으로 수정을 요청한다. 한 번에 한 가지씩 요청하는 것이 원칙이다.</p>
+<ul>
+<li>"표 머리글 배경을 진한 남색으로 바꾸고 글씨를 흰색으로 해 줘."</li>
+<li>"합계 행을 맨 아래에 추가하고 굵게 표시해 줘."</li>
+<li>"건수가 0인 행은 표에서 빼 줘."</li>
+<li>"인쇄했을 때 A4 한 장에 들어가도록 글자 크기를 조정해 줘."</li>
+<li>"파일 맨 위에 생성 일시를 표시해 줘."</li>
+</ul>
+<h3>자주 겪는 문제와 대처</h3>
+<p>표 12. 실습 중 자주 발생하는 상황과 대처</p>
+<table>
+<thead>
+<tr><th>증상</th><th>원인</th><th>대처</th></tr>
+</thead>
+<tbody>
+<tr><td>파일을 찾지 못한다</td><td>열린 폴더가 다르거나 경로 표기가 틀렸다</td><td>폴더를 다시 열고 파일명을 그대로 복사해 붙인다</td></tr>
+<tr><td>한글이 깨진다</td><td>파일 인코딩이 CP949이거나 UTF-8이 아니다</td><td>인코딩을 명시해 다시 읽게 지시한다</td></tr>
+<tr><td>계획만 세우고 멈춘다</td><td>실행 권한이 꺼져 있거나 승인 요청을 놓쳤다</td><td>권한 요청 항목을 확인하고 허용한다</td></tr>
+<tr><td>같은 오류를 반복한다</td><td>실행 결과가 모델에게 제대로 돌아가지 않는다</td><td>세션을 정리하고 오류 메시지를 직접 붙여 넣는다</td></tr>
+<tr><td>엉뚱한 파일을 고친다</td><td>지시가 모호해 대상이 특정되지 않았다</td><td>파일 경로를 정확히 적고 금지 범위를 명시한다</td></tr>
+<tr><td>응답이 점점 느려진다</td><td>대화가 길어져 맥락이 비대해졌다</td><td>대화를 정리하거나 요약한 뒤 새로 시작한다</td></tr>
+</tbody>
+</table>
+<h3>대화 관리 요령</h3>
+<p>에이전트는 지금까지의 대화를 맥락으로 들고 다닌다. 대화가 길어지면 비용이 올라가고 판단도 흐려진다. 따라서 작업 단위가 바뀌면 대화를 정리하는 습관이 필요하다. 하나의 작업이 끝나면 결과와 남은 과제를 짧게 정리해 파일로 남기고, 새 작업은 새 대화에서 시작한다. 이 습관 하나로 비용과 품질이 동시에 개선된다.</p>
+<ul>
+<li>작업이 끝나면 "지금까지 한 일과 남은 일을 <code>docs/progress.md</code>에 정리해 줘"라고 지시한다.</li>
+<li>새 작업은 새 대화에서 시작하고, 필요하면 그 정리 파일을 읽게 한다.</li>
+<li>같은 지시를 세 번 이상 반복했다면 맥락 문서나 스킬로 옮긴다.</li>
+</ul>
+<h4>자가 점검</h4>
+<ul>
+<li>에이전트가 지금 어느 폴더를 보고 있는지 즉시 답할 수 있는가?</li>
+<li>내가 만든 맥락 문서에 금지 사항이 최소 세 줄 이상 적혀 있는가?</li>
+<li>오늘 만든 결과물의 값 두 개를 원본과 직접 대조해 보았는가?</li>
+</ul>
+</article>
+<article class="page-source-section" data-section-index="06" data-section-title="제06장 에이전트 문서 자동화와 스킬" data-section-label="제06장" data-section-name="에이전트 문서 자동화와 스킬">
+<h2>제06장 에이전트 문서 자동화와 스킬</h2>
+<p>앞 장의 실습에서 잘 작동한 지시문이 하나쯤 생겼을 것이다. 문제는 그 지시문이 대화창에 흘러가 버린다는 점이다. 다음 주에 같은 일을 할 때 사람은 다시 처음부터 설명하게 되고, 동료가 같은 일을 하면 또 다른 문장으로 지시해 다른 결과를 얻는다. 이 문제를 푸는 장치가 스킬이다. 스킬은 반복 업무의 지침, 입력 조건, 출력 형식, 검증 기준을 한 묶음으로 저장해 둔 재사용 작업법이다.</p>
+<blockquote>
+<p>핵심 메시지: 프롬프트는 한 번 쓰고 사라지는 말이고, 스킬은 조직에 남는 문서다. 잘 된 지시는 반드시 파일로 옮긴다.</p>
+</blockquote>
+<h3>맥락 문서와 스킬의 차이</h3>
+<p>둘 다 문서지만 역할이 다르다. 맥락 문서는 항상 적용되는 기준이고, 스킬은 특정 업무를 할 때만 불러 쓰는 절차다. 맥락 문서에 모든 업무 절차를 몰아넣으면 문서가 비대해져 매 세션마다 불필요한 내용을 읽게 되고, 반대로 스킬 없이 맥락 문서만 쓰면 업무별 세부 규칙을 담을 곳이 없어진다.</p>
+<p>표 13. 맥락 문서와 스킬의 역할 구분</p>
+<table>
+<thead>
+<tr><th>구분</th><th>맥락 문서</th><th>스킬</th></tr>
+</thead>
+<tbody>
+<tr><td>적용 시점</td><td>세션 시작 시 항상 자동 로딩</td><td>해당 업무를 지시할 때만 호출</td></tr>
+<tr><td>담는 내용</td><td>톤, 형식, 용어, 금지 사항, 폴더 규칙</td><td>특정 업무의 입력·절차·출력·검증</td></tr>
+<tr><td>분량</td><td>짧게 유지한다. 한 화면 분량이 적당하다</td><td>업무별로 상세해도 무방하다</td></tr>
+<tr><td>예시</td><td>숫자는 천 단위 콤마, 추측 금지</td><td>월간 실적 보고서 작성 절차</td></tr>
+<tr><td>관리 주체</td><td>프로젝트 또는 팀 단위로 한 개</td><td>업무 단위로 여러 개</td></tr>
+</tbody>
+</table>
+<h3>스킬의 구성 요소</h3>
+<p>좋은 스킬은 프롬프트 한 문장보다 넓은 업무 수행 규칙으로 구성된다. 다섯 가지 요소를 갖추면 대부분의 반복 업무를 담을 수 있다.</p>
+<ul>
+<li><strong>지침</strong> — 역할, 수행 순서, 예외 처리, 금지 행동. 어떤 판단 순서로 수행하는가를 정한다.</li>
+<li><strong>입출력</strong> — 필요한 입력 자료, 완료 형식, 파일명 규칙. 무엇을 받아 무엇을 남기는가를 정한다.</li>
+<li><strong>참고 자료</strong> — 양식, 기준표, 예시, 용어 정의. 어떤 기준을 근거로 사용하는가를 정한다.</li>
+<li><strong>도구</strong> — 파일 처리, 계산, 변환, 연결에 필요한 실행 수단. 자동화 범위를 정한다.</li>
+<li><strong>검증</strong> — 정확성, 누락 여부, 형식 일치, 사람 승인 지점. 무엇을 확인해야 완료인가를 정한다.</li>
+</ul>
+<h3>문서 자동화가 바로 닿는 네 영역</h3>
+<p>실무에서 스킬로 만들면 효과가 가장 빠르게 나타나는 영역은 네 가지다. 오늘 실습에서는 이 중 본인 업무와 가장 가까운 하나를 골라 실제 자료로 진행한다.</p>
+<p>표 14. 문서 자동화 네 영역과 지시 예시</p>
+<table>
+<thead>
+<tr><th>영역</th><th>입력</th><th>지시 예시</th><th>산출물</th></tr>
+</thead>
+<tbody>
+<tr><td>보고서 초안</td><td>회의 메모, 요점, 참고 자료</td><td>이 자료로 팀장 보고용 초안을 목차 포함해 작성하라</td><td>검토 가능한 보고서 초안 한 편</td></tr>
+<tr><td>회의록 정리</td><td>받아쓴 회의 내용 또는 음성 전사</td><td>결정사항·할 일·담당자를 표로 분리하라</td><td>바로 발송 가능한 회의록</td></tr>
+<tr><td>데이터 표 분석</td><td>엑셀·CSV 표 또는 복사한 숫자</td><td>전월 대비 증감과 주목할 지표를 요약하라</td><td>표·차트와 한 줄 해석 문서</td></tr>
+<tr><td>자료 조사 요약</td><td>조사 주제, 참고 출처 목록</td><td>이 주제로 최근 동향 세 건을 출처와 함께 요약하라</td><td>출처가 붙은 요약 리포트</td></tr>
+</tbody>
+</table>
+<p>네 영역 모두 지시, 생성, 확인, 수정이라는 같은 흐름을 따른다. 자료를 붙여 넣거나 파일 경로를 알려 주면 에이전트가 작업을 처리하고, 사람은 결과를 검수한다. 다른 점은 검증 기준뿐이다. 보고서는 논리의 일관성을, 회의록은 사실의 정확성을, 데이터 분석은 숫자의 일치를, 자료 조사는 출처의 실재 여부를 확인해야 한다.</p>
+<h3>실습 · 내 업무용 스킬 문서 작성</h3>
+<p>아래 틀을 <code>docs/skills/</code> 폴더에 업무 이름으로 저장한다. 파일 형식은 마크다운을 권장하며, 도구에 따라 지정된 폴더 위치와 파일명 규칙이 다를 수 있으므로 해당 도구의 문서를 함께 확인한다.</p>
+<pre><code># 스킬 · 월간 실적 보고서 작성
+
+## 언제 쓰는가
+매월 첫 주, 전월 실적 데이터로 팀장 보고용 요약을 만들 때 사용한다.
+
+## 입력
+- data/실적_YYYYMM.csv : 부서별 월간 실적 원본
+- docs/기준표.md       : 목표치와 판정 기준
+
+## 수행 절차
+1. 입력 파일의 행 수와 열 이름을 먼저 확인하고 사용자에게 보고한다.
+2. 부서별 실적 합계와 목표 대비 달성률을 계산한다.
+3. 달성률이 90% 미만인 부서를 별도로 표시한다.
+4. 전월 데이터가 있으면 증감을 함께 계산한다.
+5. 결과를 output/월간실적_YYYYMM.html 로 저장한다.
+
+## 출력 형식
+- 제목, 요약 세 줄, 부서별 표, 특이사항, 다음 달 점검 항목 순서로 구성한다.
+- 금액은 천 단위 콤마, 비율은 소수점 첫째 자리까지 표기한다.
+- 표에는 단위를 반드시 명시한다.
+
+## 금지 사항
+- 원본 CSV를 수정하지 않는다.
+- 데이터에 없는 항목을 추정해 채우지 않는다. 결측은 "자료 없음"으로 표기한다.
+- 부서명을 임의로 축약하거나 변경하지 않는다.
+
+## 완료 검증
+- 부서별 합계의 총합이 원본 전체 합계와 일치하는지 확인해 결과를 보고한다.
+- 결측값이 있으면 그 목록을 별도로 보고한다.
+- 사람이 최종 확인하기 전에는 외부로 전송하지 않는다.</code></pre>
+<h3>스킬을 쓰는 방법</h3>
+<p>스킬 문서를 만든 뒤에는 에이전트에게 그 문서를 따르도록 지시한다. 도구에 따라 스킬을 자동으로 인식하기도 하고, 경로를 지정해 읽게 해야 하기도 한다. 어느 쪽이든 아래처럼 짧은 호출 문장으로 시작하면 된다.</p>
+<pre><code>docs/skills/월간실적보고서.md 를 읽고 그 절차대로 수행해 줘.
+입력 파일은 data/실적_202609.csv 이고,
+전월 파일 data/실적_202608.csv 도 함께 참고해 줘.</code></pre>
+<p>이 방식의 효과는 두 번째 사용부터 드러난다. 긴 설명 없이 한 줄 호출만으로 지난번과 같은 품질의 결과가 나온다. 팀 전체가 같은 스킬을 공유하면 사람마다 들쭉날쭉하던 결과물의 기준이 하나로 맞춰진다. 이것이 스킬의 진짜 가치이며, 개인의 생산성이 아니라 조직의 표준화에 기여하는 지점이다.</p>
+<h3>스킬을 다듬는 순환</h3>
+<p>처음 만든 스킬이 완벽할 수는 없다. 실제로 써 보면 빠진 조건과 애매한 표현이 드러난다. 그때마다 스킬 문서를 고쳐 나가는 것이 정석이다. 특히 아래 세 가지 신호가 보이면 스킬을 수정할 때다.</p>
+<ul>
+<li>같은 보정 지시를 두 번 이상 반복했다면, 그 보정 내용을 스킬의 출력 형식이나 금지 사항에 추가한다.</li>
+<li>결과물에서 같은 종류의 오류가 반복된다면, 검증 항목을 한 줄 추가한다.</li>
+<li>동료가 같은 스킬로 다른 결과를 얻었다면, 절차 중 해석의 여지가 있는 문장을 더 구체적으로 고친다.</li>
+</ul>
+<h3>플러그인 · 커넥터 · 스킬의 구분</h3>
+<p>도구 화면에서 자주 마주치는 세 용어를 정리해 둔다. 이 셋은 서로 대체 관계가 아니라 다른 업무 단위를 담당한다. 무엇을 추가하는가는 플러그인, 무엇에 접근하는가는 커넥터, 어떻게 수행하는가는 스킬이다.</p>
+<p>표 15. 플러그인 · 커넥터 · 스킬의 역할</p>
+<table>
+<thead>
+<tr><th>구분</th><th>담당</th><th>설치·연결 대상</th><th>설정 전 확인</th></tr>
+</thead>
+<tbody>
+<tr><td>플러그인</td><td>기능의 설치와 배포</td><td>스킬·MCP 서버·앱 기능 묶음</td><td>제공자, 포함 구성, 요구 권한</td></tr>
+<tr><td>커넥터</td><td>외부 자료와 기능 접근</td><td>문서 저장소, 일정, 협업 도구</td><td>계정, 범위, 읽기·쓰기 권한</td></tr>
+<tr><td>스킬</td><td>업무 수행 방식의 재사용</td><td>지침, 템플릿, 예시, 검증 기준</td><td>입력, 절차, 산출물, 완료 조건</td></tr>
+</tbody>
+</table>
+<p>여기서 놓치기 쉬운 원칙이 하나 있다. 설치는 접근 권한을 자동으로 만들어 주지 않으며, 스킬은 허용된 범위를 넘어 실행하지 않는다. 즉 기능을 설치했다고 해서 자료에 접근할 수 있는 것이 아니고, 스킬에 절차를 적었다고 해서 권한 밖의 동작이 수행되는 것도 아니다. 세 층을 각각 설정해야 비로소 원하는 자동화가 완성된다.</p>
+<h4>자가 점검</h4>
+<ul>
+<li>오늘 만든 스킬 문서에 완료 검증 항목이 들어 있는가?</li>
+<li>그 스킬을 동료가 그대로 실행했을 때 같은 결과가 나올 것 같은가?</li>
+<li>맥락 문서에 들어가야 할 내용과 스킬에 들어가야 할 내용을 구분해 배치했는가?</li>
+</ul>
+</article>
+<article class="page-source-section" data-section-index="07" data-section-title="제07장 에이전트 프로그램 연동과 MCP" data-section-label="제07장" data-section-name="에이전트 프로그램 연동과 MCP">
+<h2>제07장 에이전트 프로그램 연동과 MCP</h2>
+<p>여기까지의 실습에서 에이전트는 내 폴더 안의 파일만 다루었다. 그러나 실제 업무는 폴더 하나로 끝나지 않는다. 사내 문서 저장소, 일정, 데이터베이스, 사내 시스템, 외부 공개 데이터가 함께 얽힌다. 이 자료들을 에이전트가 표준화된 방식으로 호출할 수 있게 해 주는 규격이 MCP다. 이름은 낯설지만 개념은 단순하다. 서로 다른 프로그램마다 제각각 연결 코드를 쓰는 대신, 하나의 공통 규격으로 연결하자는 약속이다.</p>
+<h3>MCP를 왜 만들었는가</h3>
+<p>MCP가 없던 시절에는 에이전트가 새로운 시스템을 쓸 때마다 전용 연결 코드를 만들어야 했다. 에이전트 도구가 다섯 개이고 연결할 시스템이 열 개라면 오십 벌의 연결 코드가 필요하다는 뜻이다. MCP는 이 조합 폭발을 없앤다. 시스템 쪽에서 MCP 서버를 한 번 만들어 두면, MCP를 지원하는 어떤 에이전트든 그 서버를 붙여 쓸 수 있다.</p>
+<figure class="doc-figure figure-wide">
+<div class="figure-context"><p class="figure-context-label">그림 해설</p><div class="figure-context-body">왼쪽은 도구마다 전용 연결을 만드는 방식이고, 오른쪽은 MCP라는 공통 규격을 거쳐 연결하는 방식이다. 연결 지점의 수가 곱셈에서 덧셈으로 줄어든다.</div></div>
+<svg viewBox="0 0 900 300" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block;background:#fff">
+<text x="210" y="28" text-anchor="middle" font-family="Pretendard,sans-serif" font-size="14" font-weight="700" fill="#708696">MCP 이전 · 전용 연결</text>
+<text x="680" y="28" text-anchor="middle" font-family="Pretendard,sans-serif" font-size="14" font-weight="700" fill="#4d8da5">MCP 이후 · 공통 규격</text>
+<rect x="60" y="52" width="110" height="38" rx="8" fill="#316d83"/><text x="115" y="76" text-anchor="middle" font-family="Pretendard,sans-serif" font-size="12.5" fill="#fff">에이전트 A</text>
+<rect x="60" y="112" width="110" height="38" rx="8" fill="#316d83"/><text x="115" y="136" text-anchor="middle" font-family="Pretendard,sans-serif" font-size="12.5" fill="#fff">에이전트 B</text>
+<rect x="60" y="172" width="110" height="38" rx="8" fill="#316d83"/><text x="115" y="196" text-anchor="middle" font-family="Pretendard,sans-serif" font-size="12.5" fill="#fff">에이전트 C</text>
+<rect x="250" y="52" width="110" height="38" rx="8" fill="#e8eef1" stroke="#c9dce1"/><text x="305" y="76" text-anchor="middle" font-family="Pretendard,sans-serif" font-size="12.5" fill="#2e4a5c">문서 저장소</text>
+<rect x="250" y="112" width="110" height="38" rx="8" fill="#e8eef1" stroke="#c9dce1"/><text x="305" y="136" text-anchor="middle" font-family="Pretendard,sans-serif" font-size="12.5" fill="#2e4a5c">데이터베이스</text>
+<rect x="250" y="172" width="110" height="38" rx="8" fill="#e8eef1" stroke="#c9dce1"/><text x="305" y="196" text-anchor="middle" font-family="Pretendard,sans-serif" font-size="12.5" fill="#2e4a5c">사내 시스템</text>
+<g stroke="#b9c6cd" stroke-width="1.2">
+<line x1="172" y1="71" x2="248" y2="71"/><line x1="172" y1="71" x2="248" y2="131"/><line x1="172" y1="71" x2="248" y2="191"/>
+<line x1="172" y1="131" x2="248" y2="71"/><line x1="172" y1="131" x2="248" y2="131"/><line x1="172" y1="131" x2="248" y2="191"/>
+<line x1="172" y1="191" x2="248" y2="71"/><line x1="172" y1="191" x2="248" y2="131"/><line x1="172" y1="191" x2="248" y2="191"/>
+</g>
+<text x="210" y="248" text-anchor="middle" font-family="Pretendard,sans-serif" font-size="12.5" fill="#708696">연결 지점 3 × 3 = 9벌</text>
+<line x1="430" y1="40" x2="430" y2="260" stroke="#dfebee" stroke-width="2"/>
+<rect x="490" y="52" width="110" height="38" rx="8" fill="#316d83"/><text x="545" y="76" text-anchor="middle" font-family="Pretendard,sans-serif" font-size="12.5" fill="#fff">에이전트 A</text>
+<rect x="490" y="112" width="110" height="38" rx="8" fill="#316d83"/><text x="545" y="136" text-anchor="middle" font-family="Pretendard,sans-serif" font-size="12.5" fill="#fff">에이전트 B</text>
+<rect x="490" y="172" width="110" height="38" rx="8" fill="#316d83"/><text x="545" y="196" text-anchor="middle" font-family="Pretendard,sans-serif" font-size="12.5" fill="#fff">에이전트 C</text>
+<rect x="640" y="94" width="80" height="74" rx="10" fill="#73bdcd"/><text x="680" y="126" text-anchor="middle" font-family="Pretendard,sans-serif" font-size="13" font-weight="700" fill="#14313f">MCP</text><text x="680" y="146" text-anchor="middle" font-family="Pretendard,sans-serif" font-size="11.5" fill="#14313f">공통 규격</text>
+<rect x="760" y="52" width="110" height="38" rx="8" fill="#e8eef1" stroke="#c9dce1"/><text x="815" y="76" text-anchor="middle" font-family="Pretendard,sans-serif" font-size="12.5" fill="#2e4a5c">문서 저장소</text>
+<rect x="760" y="112" width="110" height="38" rx="8" fill="#e8eef1" stroke="#c9dce1"/><text x="815" y="136" text-anchor="middle" font-family="Pretendard,sans-serif" font-size="12.5" fill="#2e4a5c">데이터베이스</text>
+<rect x="760" y="172" width="110" height="38" rx="8" fill="#e8eef1" stroke="#c9dce1"/><text x="815" y="196" text-anchor="middle" font-family="Pretendard,sans-serif" font-size="12.5" fill="#2e4a5c">사내 시스템</text>
+<g stroke="#4d8da5" stroke-width="1.6">
+<line x1="602" y1="71" x2="638" y2="112"/><line x1="602" y1="131" x2="638" y2="131"/><line x1="602" y1="191" x2="638" y2="150"/>
+<line x1="722" y1="112" x2="758" y2="71"/><line x1="722" y1="131" x2="758" y2="131"/><line x1="722" y1="150" x2="758" y2="191"/>
+</g>
+<text x="680" y="248" text-anchor="middle" font-family="Pretendard,sans-serif" font-size="12.5" fill="#4d8da5">연결 지점 3 + 3 = 6벌</text>
+</svg>
+<figcaption><span class="figure-guide-label">그림 4.</span> 전용 연결 방식과 MCP 공통 규격 방식의 비교</figcaption>
+</figure>
+<h3>MCP 서버가 제공하는 세 가지</h3>
+<p>MCP 서버는 에이전트에게 크게 세 가지를 제공한다. 도구, 자원, 프롬프트다. 도구는 실행할 수 있는 동작이고, 자원은 읽을 수 있는 자료이며, 프롬프트는 미리 준비된 지시 틀이다. 실무에서 가장 많이 쓰는 것은 도구와 자원이다.</p>
+<ul>
+<li><strong>도구</strong> — 데이터베이스 조회, 문서 검색, 메일 초안 작성, 일정 등록처럼 에이전트가 호출해 실행할 수 있는 동작.</li>
+<li><strong>자원</strong> — 문서 본문, 테이블 스키마, 설정 값처럼 에이전트가 읽어 맥락으로 쓸 수 있는 자료.</li>
+<li><strong>프롬프트</strong> — 해당 시스템을 다룰 때 권장되는 지시 틀. 사용자가 명령어처럼 불러 쓸 수 있다.</li>
+</ul>
+<h3>연결 전에 확인할 것</h3>
+<p>MCP 연결은 기술적으로는 설정 파일 몇 줄이지만, 업무적으로는 권한을 부여하는 행위다. 따라서 연결 전에 아래 항목을 확인해야 한다. 특히 기관 자료를 다루는 경우 이 확인 없이 연결하는 것은 위험하다.</p>
+<p>표 16. MCP 서버 연결 전 점검표</p>
+<table>
+<thead>
+<tr><th>점검 항목</th><th>확인 내용</th><th>위험 신호</th></tr>
+</thead>
+<tbody>
+<tr><td>제공자</td><td>누가 만들었고 어디서 배포되는가</td><td>출처가 불분명하거나 개인 저장소만 있는 경우</td></tr>
+<tr><td>접근 대상</td><td>어떤 계정·폴더·기간에 접근하는가</td><td>범위 지정 없이 전체 접근을 요구하는 경우</td></tr>
+<tr><td>행동 권한</td><td>읽기만인가, 쓰기·삭제도 가능한가</td><td>읽기만 필요한데 쓰기 권한을 요구하는 경우</td></tr>
+<tr><td>데이터 이동</td><td>자료가 외부 서버로 전송되는가</td><td>전송 경로와 보관 정책이 문서에 없는 경우</td></tr>
+<tr><td>기록</td><td>호출 내역이 로그로 남는가</td><td>감사 기록을 확인할 수 없는 경우</td></tr>
+<tr><td>해제</td><td>연결을 되돌릴 수 있는가</td><td>제거 절차가 안내되지 않는 경우</td></tr>
+</tbody>
+</table>
+<blockquote>
+<p>핵심 메시지: MCP 연결은 기능 추가가 아니라 권한 부여다. 필요한 최소 범위만, 되돌릴 수 있는 방식으로 연결한다.</p>
+</blockquote>
+<h3>실습 · MCP 서버 한 개 연결하기</h3>
+<p>실습에서는 위험이 낮은 서버부터 연결한다. 파일 시스템 서버나 공개 문서 검색 서버가 적당하다. 연결 절차는 도구마다 화면이 다르지만 공통적으로 아래 순서를 따른다.</p>
+<ol>
+<li>도구의 설정 화면에서 MCP 또는 커넥터 항목을 찾는다.</li>
+<li>연결할 서버를 선택하거나 설정 파일에 서버 정보를 추가한다.</li>
+<li>접근 범위를 지정한다. 폴더 기반이라면 실습 폴더만 지정한다.</li>
+<li>도구를 재시작하고, 에이전트 화면에서 해당 서버의 도구 목록이 표시되는지 확인한다.</li>
+<li>가벼운 명령으로 실제 호출이 되는지 시험한다.</li>
+</ol>
+<pre><code>{
+  "mcpServers": {
+    "agent-lab-files": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-filesystem",
+        "C:/Users/사용자명/Desktop/agent-lab"
+      ]
+    }
+  }
+}</code></pre>
+<p>위 설정은 실습 폴더 하나만 읽고 쓸 수 있도록 범위를 제한한 예시다. 경로를 바탕화면 전체나 사용자 폴더 전체로 지정하면 위험 범위가 급격히 넓어지므로, 반드시 필요한 하위 폴더만 지정한다. 설정 파일의 위치와 키 이름은 도구마다 다르므로 해당 도구의 공식 문서를 확인한다.</p>
+<h3>연결 확인 명령</h3>
+<p>연결이 끝나면 아래와 같이 확인한다. 도구 목록이 보이는지, 실제 호출이 되는지, 권한 범위 밖은 거부되는지를 차례로 시험하는 것이 핵심이다.</p>
+<pre><code>1. 지금 사용할 수 있는 MCP 도구 목록을 보여 줘.
+2. agent-lab 폴더의 파일 목록을 MCP 도구로 읽어 줘.
+3. agent-lab 바깥의 상위 폴더를 읽어 보고, 거부되면 그 사실을 알려 줘.</code></pre>
+<p>세 번째 명령이 중요하다. 권한 범위 밖 접근이 실제로 차단되는지 확인하는 절차이며, 이 확인을 거쳐야 비로소 설정이 의도대로 되었다고 말할 수 있다. 확인 결과는 도입 검토 문서에 기록해 둔다.</p>
+<h3>업무별 연결 조합</h3>
+<p>표 17. 업무 유형별 MCP 연결 조합 예시</p>
+<table>
+<thead>
+<tr><th>업무</th><th>연결 대상</th><th>에이전트가 하는 일</th><th>사람이 남기는 판단</th></tr>
+</thead>
+<tbody>
+<tr><td>문서 정리</td><td>파일 시스템</td><td>폴더 정리, 형식 변환, 목록 생성</td><td>삭제와 이동의 최종 승인</td></tr>
+<tr><td>실적 분석</td><td>데이터베이스</td><td>조회 질의 작성, 집계, 표 생성</td><td>지표 정의와 해석의 타당성</td></tr>
+<tr><td>일정 조율</td><td>일정 서비스</td><td>가능 시간 탐색, 초안 작성</td><td>실제 발송과 참석자 확정</td></tr>
+<tr><td>자료 조사</td><td>웹 검색·문서 저장소</td><td>수집, 요약, 출처 정리</td><td>출처 신뢰도와 인용 적절성</td></tr>
+<tr><td>고객 응대</td><td>티켓 시스템</td><td>분류, 유사 사례 검색, 초안</td><td>발송 전 내용 확인과 책임</td></tr>
+</tbody>
+</table>
+<p>표의 마지막 열을 유심히 볼 필요가 있다. MCP를 연결하면 에이전트가 할 수 있는 일이 늘어나지만, 사람이 남겨야 할 판단은 오히려 더 명확해진다. 자동화의 범위가 넓어질수록 어디서 사람이 개입하는지를 문서로 정해 두어야 하며, 그 지점이 곧 조직의 통제 지점이 된다.</p>
+<h3>연결 후 운영 원칙</h3>
+<ul>
+<li>사용하지 않는 서버는 연결을 해제한다. 켜 둔 연결은 그 자체로 위험 표면이다.</li>
+<li>쓰기 권한이 필요한 서버는 별도 목록으로 관리하고 정기적으로 재검토한다.</li>
+<li>연결 설정 파일은 버전 관리 대상에 포함하되, 접속 정보와 키는 파일에 직접 쓰지 않는다.</li>
+<li>서버가 업데이트되면 도구 목록과 권한이 바뀔 수 있으므로 변경 내역을 확인한다.</li>
+<li>연결 목록과 담당자, 승인 근거를 한 장짜리 문서로 유지한다.</li>
+</ul>
+<h4>자가 점검</h4>
+<ul>
+<li>내가 연결한 MCP 서버가 접근할 수 있는 범위를 한 문장으로 말할 수 있는가?</li>
+<li>권한 범위 밖 접근이 실제로 차단되는 것을 시험해 보았는가?</li>
+<li>이 연결을 해제하는 방법을 알고 있는가?</li>
+</ul>
+</article>
+<article class="page-source-section" data-section-index="08" data-section-title="제08장 에이전트 바이브 코딩" data-section-label="제08장" data-section-name="에이전트 바이브 코딩">
+<h2>제08장 에이전트 바이브 코딩</h2>
+<p>이 장에서는 네 가지 실행 환경을 다룬다. 윈도우 환경 설정, 파이썬 스크립트, 단일 HTML 웹 도구, 그리고 외부 API 연동이다. 네 가지를 모두 익히자는 것이 아니라, 문제의 성격에 따라 어떤 환경이 적합한지 판단하는 감각을 갖자는 것이 목적이다. 같은 문제라도 어떤 환경에 담느냐에 따라 만드는 시간, 배포 난이도, 유지보수 부담이 크게 달라진다.</p>
+<h3>어떤 환경을 고를 것인가</h3>
+<p>표 18. 네 가지 실행 환경의 선택 기준</p>
+<table>
+<thead>
+<tr><th>환경</th><th>적합한 문제</th><th>장점</th><th>주의점</th></tr>
+</thead>
+<tbody>
+<tr><td>윈도우 자동화</td><td>폴더 정리, 파일명 일괄 변경, 예약 실행</td><td>설치 없이 바로 실행, 사내 PC 환경과 일치</td><td>되돌리기 어려운 동작에 주의</td></tr>
+<tr><td>파이썬 스크립트</td><td>엑셀·CSV 처리, 문서 변환, 대량 반복</td><td>라이브러리가 풍부하고 처리량이 크다</td><td>실행 환경 설치와 버전 관리 필요</td></tr>
+<tr><td>단일 HTML</td><td>입력 화면, 계산기, 대시보드, 공유용 도구</td><td>파일 하나로 배포, 설치 불필요</td><td>대용량 데이터 처리에는 부적합</td></tr>
+<tr><td>외부 API 연동</td><td>공공데이터, 지도, 날씨, 환율, 번역</td><td>직접 만들지 않고 기능을 빌려 온다</td><td>키 관리와 호출 제한, 장애 대비 필요</td></tr>
+</tbody>
+</table>
+<h3>윈도우 환경에서의 자동화</h3>
+<p>사내 PC는 대부분 윈도우다. 따라서 가장 빠르게 효과를 보는 자동화는 윈도우에서 바로 도는 것들이다. 폴더의 파일명을 규칙에 맞게 일괄 변경하거나, 매일 받는 첨부파일을 날짜별 폴더로 옮기거나, 특정 시각에 스크립트를 실행하도록 예약하는 작업이 여기에 해당한다.</p>
+<p>다만 윈도우 자동화에는 특유의 함정이 있다. 한글 경로와 공백이 포함된 폴더명, 파일 인코딩, 관리자 권한, 백신 프로그램의 차단이 대표적이다. 에이전트에게 지시할 때 이런 조건을 미리 알려 주면 오류가 크게 줄어든다.</p>
+<pre><code>윈도우 11 환경에서 실행할 스크립트를 만들어 줘.
+
+조건:
+- 경로에 한글과 공백이 포함될 수 있으니 따옴표 처리를 확실히 해 줘.
+- 파일 인코딩은 UTF-8로 읽고 쓰되, CP949 파일도 자동 감지해 처리해 줘.
+- 파일을 삭제하거나 덮어쓰지 말고, 항상 output 폴더에 새로 만들어 줘.
+- 실행 전에 처리 대상 파일 목록을 먼저 출력하고 확인을 받도록 해 줘.
+
+작업 내용: data 폴더의 파일명을 [부서]_[날짜]_[제목] 형식으로 바꾼 사본을
+output 폴더에 만들어 줘.</code></pre>
+<p>마지막 조건이 실무에서 가장 중요하다. 원본을 건드리지 않고 사본을 만드는 방식으로 설계하면, 잘못되더라도 원본이 남아 있으므로 언제든 다시 시작할 수 있다. 자동화 설계의 첫 원칙은 되돌릴 수 있게 만드는 것이다.</p>
+<h3>파이썬으로 업무 데이터 처리하기</h3>
+<p>엑셀로 반나절 걸리던 정리 작업이 파이썬 스크립트로는 몇 초에 끝나는 경우가 많다. 특히 파일이 여러 개이거나, 매달 같은 처리를 반복하거나, 행이 수만 건을 넘어가면 파이썬이 압도적으로 유리하다. 코드를 직접 쓸 필요는 없다. 무엇을 어떻게 처리할지 설명하면 에이전트가 만들어 준다.</p>
+<pre><code>data 폴더 안의 월별 엑셀 파일을 모두 읽어 하나로 합치는
+파이썬 스크립트를 만들어 줘.
+
+- 각 파일의 시트 이름은 다를 수 있으니 첫 번째 시트를 사용해 줘.
+- 파일명에서 연월을 추출해 '기준월' 열로 추가해 줘.
+- 열 이름이 파일마다 조금씩 다를 수 있으니, 먼저 각 파일의 열 이름을
+  출력해서 보여 주고 매핑 방법을 제안해 줘.
+- 합친 결과를 output/통합데이터.xlsx 로 저장해 줘.
+- 합계 행 수가 각 파일 행 수의 총합과 맞는지 검증해서 출력해 줘.
+
+필요한 라이브러리 설치 명령도 함께 알려 줘.</code></pre>
+<p>이 지시의 핵심은 세 번째 항목이다. 바로 코드를 만들게 하지 않고 먼저 상황을 보고하게 한 뒤 매핑 방법을 제안받는 방식이다. 데이터 처리에서 가장 흔한 실패는 열 이름의 불일치이며, 이 단계를 건너뛰면 그럴듯하지만 틀린 결과가 나온다.</p>
+<h4>업무에서 자주 쓰이는 파이썬 작업 유형</h4>
+<ul>
+<li>여러 엑셀 파일 통합과 피벗 집계, 중복 제거와 결측 처리</li>
+<li>PDF와 워드 문서에서 표와 본문을 추출해 검색 가능한 형태로 변환</li>
+<li>정해진 양식에 값을 채워 문서 수백 건을 일괄 생성</li>
+<li>폴더 감시와 예약 실행으로 주기적 처리 자동화</li>
+<li>결과를 그래프로 그려 이미지나 HTML 보고서로 저장</li>
+</ul>
+<h3>단일 HTML로 만드는 업무 도구</h3>
+<p>파일 하나로 끝나는 HTML 도구는 공공과 기업 환경에서 특히 유용하다. 설치가 필요 없고, 메일로 보내면 그대로 열리며, 인터넷 연결 없이도 동작한다. 간단한 계산기, 체크리스트, 입력 양식, 현황 대시보드는 대부분 단일 HTML로 충분하다.</p>
+<pre><code>단일 HTML 파일 하나로 동작하는 출장비 계산 도구를 만들어 줘.
+
+화면 구성:
+- 상단에 출장 구분(국내·국외), 기간, 인원 입력란
+- 중단에 교통비·숙박비·식비 입력 표. 행 추가와 삭제가 가능해야 해.
+- 하단에 합계와 1인당 금액을 자동 계산해 표시
+
+요구 사항:
+- 외부 라이브러리를 쓰지 말고 순수 HTML·CSS·JavaScript로만 만들어 줘.
+- 입력값은 브라우저에 저장해서 새로고침해도 유지되게 해 줘.
+- 인쇄 버튼을 넣고, 인쇄 시 A4 한 장에 깔끔하게 들어가게 해 줘.
+- 금액은 천 단위 콤마로 표시해 줘.
+- 한글 폰트가 깨지지 않게 시스템 폰트를 지정해 줘.</code></pre>
+<p>외부 라이브러리를 쓰지 말라는 조건은 폐쇄망 환경을 고려한 것이다. 인터넷에서 스크립트를 불러오는 방식으로 만들면 사내망에서 화면이 깨지거나 기능이 동작하지 않는다. 배포 환경을 지시문에 명시하는 것만으로 이런 문제를 미리 막을 수 있다.</p>
+<h3>외부 API를 붙이기</h3>
+<p>바이브 코딩에서 가장 먼저 익혀야 할 습관 중 하나는 직접 만들기 전에 API가 있는지 찾는 것이다. 지도, 날씨, 법령, 통계, 환율처럼 이미 잘 관리되는 데이터는 직접 수집하는 것보다 공식 API를 쓰는 편이 훨씬 효율적이다. API는 요청을 보내면 정해진 형식의 결과를 돌려주는 약속이며, 대개 JSON 형태로 응답한다.</p>
+<pre><code>내가 만들려는 기능은 [기능 설명]이다.
+직접 구현하기 전에 사용할 수 있는 공식 API를 찾아 줘.
+
+비교해 줄 항목:
+- 제공 기관과 공식 문서 주소
+- 무료 여부와 호출 제한
+- 인증키 필요 여부와 발급 절차
+- 응답 형식(JSON·XML)과 예시
+- 상업적 사용 가능 여부와 라이선스
+- 브라우저에서 직접 호출 가능한지 여부
+
+표로 정리하고, 우리 상황에 가장 적합한 것을 하나 추천해 줘.</code></pre>
+<h4>API를 쓸지 직접 만들지 판단하는 기준</h4>
+<p>API가 있다고 무조건 써야 하는 것은 아니다. 외부에 보내면 안 되는 민감한 데이터인지, 호출 비용이 큰지, 인터넷이 끊겨도 작동해야 하는지를 확인해야 한다. 판단의 기준은 하나의 질문으로 압축된다. 이 기능은 우리만의 핵심 기술인가, 아니면 이미 잘 만들어진 서비스를 빌려도 되는 주변 기능인가.</p>
+<p>표 19. API 키 관리 원칙</p>
+<table>
+<thead>
+<tr><th>상황</th><th>키를 두는 위치</th><th>이유</th></tr>
+</thead>
+<tbody>
+<tr><td>내 PC에서만 쓰는 스크립트</td><td>환경변수 또는 별도 설정 파일</td><td>코드에 직접 쓰면 공유 시 함께 유출된다</td></tr>
+<tr><td>단일 HTML을 남에게 배포</td><td>키가 필요한 기능은 넣지 않는다</td><td>브라우저로 내려가는 코드는 누구나 볼 수 있다</td></tr>
+<tr><td>여러 사람이 쓰는 웹 서비스</td><td>서버 측 환경변수</td><td>키를 서버에 두고 화면에는 결과만 내려보낸다</td></tr>
+<tr><td>저장소에 코드를 올릴 때</td><td>설정 파일을 제외 목록에 등록</td><td>한 번 올라간 키는 삭제해도 기록에 남는다</td></tr>
+</tbody>
+</table>
+<blockquote>
+<p>핵심 메시지: 브라우저로 내려가는 코드에 비밀키를 넣지 않는다. 개발자 도구를 열면 누구나 볼 수 있다.</p>
+</blockquote>
+<h3>로컬에서 먼저 완성하고 나중에 옮긴다</h3>
+<p>처음부터 배포까지 한 번에 하려고 하면 코드 오류와 배포 오류가 섞여 원인을 찾기 어려워진다. 권장하는 순서는 세 단계다. 먼저 내 컴퓨터에서 기능이 되는지 확인하고, 그 다음 화면과 처리와 저장의 역할을 나누고, 마지막에 각 역할에 맞는 위치로 옮긴다. 배포는 마지막 단계의 이사라고 생각하면 이해하기 쉽다.</p>
+<ul>
+<li><strong>1단계 · 로컬 확인</strong> — 파일 하나 또는 스크립트 하나로 기능이 동작하는지 눈으로 확인한다.</li>
+<li><strong>2단계 · 역할 분리</strong> — 사용자가 보는 화면, 실제 처리, 데이터 저장을 구분한다.</li>
+<li><strong>3단계 · 배포</strong> — 다른 사람도 써야 할 때만 진행한다. 혼자 쓰는 도구는 굳이 배포하지 않아도 된다.</li>
+</ul>
+<h3>실습 · 미니 도구 한 개 완성하기</h3>
+<p>제7세션에서는 위 네 환경 중 하나를 골라 실제로 동작하는 도구 하나를 완성한다. 완성의 기준은 화려함이 아니라 아래 네 가지다.</p>
+<ol>
+<li>다른 사람의 PC에서도 열리거나 실행되는가.</li>
+<li>잘못된 입력을 넣어도 프로그램이 멈추지 않고 안내 메시지를 보여 주는가.</li>
+<li>결과가 원본 자료와 대조했을 때 맞는가.</li>
+<li>사용 방법을 세 줄로 적은 설명이 함께 있는가.</li>
+</ol>
+<p>네 번째 항목을 빠뜨리기 쉽다. 사용 설명이 없는 도구는 만든 사람만 쓸 수 있고, 그 사람이 자리를 비우면 그대로 사장된다. 에이전트에게 "이 도구의 사용법을 비개발자 기준으로 세 줄 요약해 줘"라고 한 줄 더 요청하면 끝나는 일이다.</p>
+<h4>자가 점검</h4>
+<ul>
+<li>내가 만든 도구를 옆자리 동료가 설명 없이 열어 쓸 수 있는가?</li>
+<li>잘못된 값을 넣었을 때 어떻게 동작하는지 시험해 보았는가?</li>
+<li>이 도구에 비밀키나 민감정보가 포함되어 있지 않은가?</li>
+</ul>
+</article>
+<article class="page-source-section" data-section-index="09" data-section-title="제09장 서비스 기획과 간이 프로젝트 실습" data-section-label="제09장" data-section-name="서비스 기획과 간이 프로젝트 실습">
+<h2>제09장 서비스 기획과 간이 프로젝트 실습</h2>
+<p>마지막 세션은 하루의 내용을 하나의 결과물로 수렴시키는 시간이다. 지금까지 배운 것은 개별 기술이었다. 그러나 실무에서 가치를 만드는 것은 기술이 아니라 문제를 정확히 정의하고 그에 맞는 최소 결과물을 만들어 내는 능력이다. 이 장은 그 과정을 세 단계로 나누어 진행한다. 문제를 한 문장으로 만들고, 캔버스로 구조를 잡고, 45분 안에 프로토타입을 완성한다.</p>
+<blockquote>
+<p>핵심 메시지: 기술명을 먼저 고르지 않는다. 누가, 어떤 화면에서, 어떤 자료를 가지고, 어떤 결과를 얻고 싶은지를 먼저 한 문장으로 적는다.</p>
+</blockquote>
+<h3>1단계 · 문제를 한 문장으로 만들기</h3>
+<p>좋은 기획 문장은 다음 형태를 갖는다. "누가 어떤 상황에서 무엇을 하려 할 때, 지금은 어떤 불편이 있으므로, 이러이러한 도구로 어떤 결과를 얻게 한다." 이 한 문장이 나오면 필요한 데이터와 화면과 기능이 자연스럽게 따라온다. 반대로 이 문장이 나오지 않으면 아무리 좋은 도구를 써도 결과물이 흐려진다.</p>
+<p>표 20. 기획 문장 작성 예시</p>
+<table>
+<thead>
+<tr><th>구분</th><th>흐린 문장</th><th>선명한 문장</th></tr>
+</thead>
+<tbody>
+<tr><td>예시 1</td><td>AI로 문서 업무를 자동화한다</td><td>팀장이 매주 월요일 주간보고를 쓸 때, 지금은 팀원 5명의 메일을 하나씩 읽어 옮겨야 하므로, 메일 본문을 붙여 넣으면 담당자별 표로 정리해 주는 HTML 도구를 만든다</td></tr>
+<tr><td>예시 2</td><td>규정 검색 챗봇을 만든다</td><td>담당자가 출장비 기준을 확인할 때, 지금은 PDF 규정을 열어 찾아야 하므로, 질문을 입력하면 해당 조항 번호와 원문을 함께 보여 주는 검색 도구를 만든다</td></tr>
+<tr><td>예시 3</td><td>데이터를 시각화한다</td><td>사업 담당자가 월말 실적을 보고할 때, 지금은 엑셀 차트를 매번 새로 만들어야 하므로, 실적 CSV를 넣으면 부서별 달성률 그래프가 포함된 보고서를 생성하는 스크립트를 만든다</td></tr>
+</tbody>
+</table>
+<h3>2단계 · 서비스 설계 캔버스 채우기</h3>
+<p>기획 문장이 나오면 아홉 칸 캔버스로 구조를 잡는다. 이 캔버스는 개발 문서가 아니라 판단 기록이다. 나중에 개발 조직과 협의할 때나 다음 담당자에게 넘길 때 그대로 쓸 수 있다.</p>
+<p>표 21. 서비스 설계 캔버스</p>
+<table>
+<thead>
+<tr><th>칸</th><th>질문</th><th>작성 요령</th></tr>
+</thead>
+<tbody>
+<tr><td>① 사용자</td><td>누가 쓰는가</td><td>직책과 상황까지 구체적으로 적는다</td></tr>
+<tr><td>② 문제</td><td>지금 무엇이 불편한가</td><td>소요 시간이나 빈도를 숫자로 적는다</td></tr>
+<tr><td>③ 입력</td><td>어떤 자료가 들어가는가</td><td>파일 형식과 출처, 민감도를 적는다</td></tr>
+<tr><td>④ 처리</td><td>무엇을 계산하거나 변환하는가</td><td>판단 기준과 예외 처리를 적는다</td></tr>
+<tr><td>⑤ 출력</td><td>무엇이 나오는가</td><td>형식, 분량, 파일 종류를 적는다</td></tr>
+<tr><td>⑥ 화면</td><td>사용자가 무엇을 보는가</td><td>버튼과 입력란 수준으로 적는다</td></tr>
+<tr><td>⑦ 환경</td><td>어디서 실행되는가</td><td>내 PC, 사내망, 인터넷 중 어디인지 적는다</td></tr>
+<tr><td>⑧ 위험</td><td>무엇이 잘못될 수 있는가</td><td>데이터 유출, 계산 오류, 사용 중단을 적는다</td></tr>
+<tr><td>⑨ 성공 기준</td><td>무엇이 되면 성공인가</td><td>측정 가능한 조건으로 적는다</td></tr>
+</tbody>
+</table>
+<h3>3단계 · 45분 프로토타입</h3>
+<p>캔버스가 채워졌으면 곧바로 만들기로 넘어간다. 제한 시간은 45분이며, 이 시간 안에 완벽한 제품을 만들 수는 없다. 목표는 가장 위험한 가정 하나를 검증하는 최소 결과물을 만드는 것이다. 예를 들어 규정 검색 도구라면 검색 정확도가 가장 위험한 가정이므로, 화면 디자인은 뒤로 미루고 검색이 되는지부터 확인한다.</p>
+<ol>
+<li><strong>0~5분</strong> — 캔버스를 에이전트에게 그대로 전달하고 구현 계획을 받는다. 계획이 내 의도와 다르면 이 단계에서 바로잡는다.</li>
+<li><strong>5~20분</strong> — 가장 핵심 기능 하나만 만들게 한다. 디자인과 부가 기능은 요청하지 않는다.</li>
+<li><strong>20~30분</strong> — 실제 자료를 넣어 동작을 확인한다. 값 두세 개를 직접 대조한다.</li>
+<li><strong>30~40분</strong> — 눈에 띄는 문제를 말로 고친다. 한 번에 한 가지씩 요청한다.</li>
+<li><strong>40~45분</strong> — 사용법 세 줄과 남은 과제를 파일로 정리하게 한다.</li>
+</ol>
+<h4>계획 요청 지시문 예시</h4>
+<pre><code>아래는 내가 만들려는 도구의 설계 캔버스다.
+
+사용자: [①]
+문제: [②]
+입력: [③]
+처리: [④]
+출력: [⑤]
+화면: [⑥]
+실행 환경: [⑦]
+위험: [⑧]
+성공 기준: [⑨]
+
+바로 코드를 쓰지 말고 먼저 다음을 알려 줘.
+1. 이 요구를 구현하는 가장 단순한 방법 두 가지와 각각의 장단점
+2. 45분 안에 만들 수 있는 최소 범위는 어디까지인지
+3. 내 설명에서 빠져 있어 확인이 필요한 항목
+
+내가 방법을 고르면 그때 만들기 시작해 줘.</code></pre>
+<p>세 번째 항목이 특히 유용하다. 사람은 자기 업무의 전제를 당연하게 여겨 설명에서 빠뜨리는 경우가 많다. 에이전트에게 빠진 항목을 먼저 물어보게 하면, 만들기 시작한 뒤에 발견했을 문제를 미리 잡을 수 있다.</p>
+<h3>상호 시연과 피드백</h3>
+<p>프로토타입이 완성되면 두 명씩 짝을 지어 서로의 도구를 3분간 시연한다. 시연할 때는 기능 설명이 아니라 문제 설명부터 시작한다. 무엇이 불편했고, 이 도구로 그 불편이 어떻게 줄었는지를 말한 다음 화면을 보여 준다.</p>
+<p>듣는 쪽은 아래 세 가지만 묻는다. 칭찬이나 평가가 아니라 다음 단계를 찾기 위한 질문이다.</p>
+<ul>
+<li>이 도구가 잘못된 답을 냈다면 사용자가 그것을 알아차릴 수 있는가?</li>
+<li>만든 사람 없이 다른 사람이 이어서 쓸 수 있는가?</li>
+<li>다음에 한 가지만 고친다면 무엇을 고치겠는가?</li>
+</ul>
+<h3>교육 이후 4주 실행 계획</h3>
+<p>하루 교육의 효과는 이후 4주에 갈린다. 오늘 만든 것을 방치하면 한 달 뒤에는 도구도 감각도 남지 않는다. 아래 계획을 각자의 일정표에 옮겨 적기를 권한다.</p>
+<p>표 22. 교육 이후 4주 실행 계획</p>
+<table>
+<thead>
+<tr><th>주차</th><th>목표</th><th>구체 활동</th><th>확인 지표</th></tr>
+</thead>
+<tbody>
+<tr><td>1주차</td><td>오늘의 프로토타입 완성</td><td>미완성 기능 보완, 사용 설명 작성, 실제 업무 자료로 1회 사용</td><td>실제 업무에 한 번 써 보았는가</td></tr>
+<tr><td>2주차</td><td>스킬 문서 두 개 확보</td><td>반복 업무 두 가지를 스킬로 정리, 동료 한 명에게 공유해 시험</td><td>동료가 같은 결과를 얻었는가</td></tr>
+<tr><td>3주차</td><td>연동 범위 확장</td><td>MCP 서버 한 개 추가 연결, 권한 범위 문서화</td><td>연결 목록과 승인 근거가 문서로 있는가</td></tr>
+<tr><td>4주차</td><td>팀 단위 정리와 공유</td><td>산출물 정리, 절감 시간 측정, 팀 공유 세션 30분 진행</td><td>월 몇 시간을 줄였는지 숫자로 말할 수 있는가</td></tr>
+</tbody>
+</table>
+<h3>조직 확산 시 점검할 네 가지</h3>
+<p>개인 실습을 넘어 팀이나 기관 단위로 확산할 때 관리자가 짚어야 할 지점은 네 가지다. 기술의 깊이가 아니라 판단의 기준에 해당한다.</p>
+<ul>
+<li><strong>보안</strong> — 어떤 자료가 외부로 전송되는가. 민감 자료 처리 규칙이 있는가. 사내 전용 또는 격리 환경이 필요한가.</li>
+<li><strong>비용</strong> — 사용량 기반 과금 구조를 이해하고 있는가. 인원과 빈도에 따른 월 비용을 예측했는가. 절감 효과와 비교했는가.</li>
+<li><strong>거버넌스</strong> — 결과물 검수 책임이 명시되어 있는가. 공통 규칙과 스킬의 관리 주체가 정해져 있는가. 정기 점검 체계가 있는가.</li>
+<li><strong>시작점</strong> — 위험이 낮고 반복이 많은 업무부터 시작하는가. 소규모 팀에서 2~4주 효과를 측정한 뒤 확대하는가.</li>
+</ul>
+<p>전면 도입을 서두르기보다, 위험이 낮고 반복이 많은 업무 한두 가지를 작은 팀에서 먼저 시험해 효과를 확인하는 방식을 권한다. 오늘 실습한 문서 자동화와 미니 도구 제작이 그 출발점으로 적합하다.</p>
+<h3>하루를 닫으며</h3>
+<p>오늘 다룬 내용을 한 문장으로 줄이면 이렇게 된다. 에이전트는 새로운 종류의 지능이 아니라 모델에 도구와 반복과 권한을 붙인 구조이며, 그 구조를 설정하는 능력이 곧 실무 역량이다. 프롬프트로 요구를 고정하고, 컨텍스트로 근거를 건네고, 에이전트로 실행하고, 하네스로 범위를 통제하고, 사람이 검수한다. 이 다섯 단계를 몸에 익히면 어떤 도구가 새로 나와도 당황하지 않는다.</p>
+<p>마지막으로 한 가지만 당부한다. 오늘 잘 작동한 지시문과 스킬 문서를 반드시 파일로 남기고, 다음 주에 한 번 더 열어 보라. 한 번 더 쓰는 순간 그것은 개인의 요령이 아니라 조직의 자산이 된다.</p>
+<h4>자가 점검</h4>
+<ul>
+<li>내 기획 문장을 동료에게 읽어 주었을 때 무엇을 만드는지 바로 이해되는가?</li>
+<li>오늘 만든 프로토타입에서 가장 위험한 가정은 무엇이며 그것을 검증했는가?</li>
+<li>4주 계획의 1주차 활동을 이번 주 일정표에 적어 두었는가?</li>
+</ul>
+</article>
+<article class="page-source-section" data-section-index="10" data-section-title="부록 A 프롬프트 패턴 모음" data-section-label="부록 A" data-section-name="프롬프트 패턴 모음">
+<h2>부록 A 프롬프트 패턴 모음</h2>
+<p>이 부록은 교육 이후에도 곁에 두고 쓰도록 만든 프롬프트 사전이다. 여기 실린 문장은 정답이 아니라 출발점이며, 대괄호 부분을 자신의 업무 용어와 파일 이름으로 바꾸어 써야 비로소 쓸모 있는 지시가 된다. 잘 작동한 문장은 여백에 표시해 두고, 자주 쓰는 것은 스킬 문서로 옮긴다.</p>
+<h3>A-1. 상황 파악 패턴</h3>
+<p>작업을 시작하기 전에 에이전트가 현재 상태를 먼저 파악하게 하는 패턴이다. 이 한 단계를 거치면 이후 지시의 정확도가 크게 올라간다.</p>
+<pre><code>작업을 시작하기 전에 현재 상황부터 파악해 줘.
+
+- 이 폴더의 구조와 각 파일의 형식, 크기를 표로 정리해 줘.
+- 데이터 파일은 첫 5행과 열 이름을 보여 줘.
+- 지금 상태에서 내가 요청한 작업을 하기 위해
+  추가로 필요한 정보가 있으면 먼저 물어봐 줘.
+
+아직 아무것도 수정하지 마.</code></pre>
+<h3>A-2. 계획 먼저 요청 패턴</h3>
+<pre><code>[작업 설명]을 하려고 한다.
+
+바로 실행하지 말고 먼저 다음을 알려 줘.
+1. 어떤 순서로 진행할 계획인지 단계별로
+2. 각 단계에서 만들거나 수정할 파일 목록
+3. 되돌리기 어려운 동작이 있다면 그 지점
+4. 내 설명에서 빠져 있어 확인이 필요한 항목
+
+내가 승인하면 그때 진행해 줘.</code></pre>
+<h3>A-3. 문서 작성 패턴</h3>
+<pre><code>첨부한 [자료 종류]를 근거로 [읽는 사람]용 [문서 종류]를 작성해 줘.
+
+구성:
+- 요약 3줄
+- 본문 [섹션 이름 나열]
+- 결론과 다음 단계
+
+규칙:
+- 분량은 A4 [N]장 이내
+- 문장은 간결한 서술체로 작성
+- 자료에 없는 내용은 추측하지 말고 "확인 필요"로 표시
+- 숫자는 반드시 원문과 일치시키고 단위를 명시
+
+작성 후 자료에 근거가 없는 문장이 있는지 스스로 점검해서 알려 줘.</code></pre>
+<h3>A-4. 데이터 분석 패턴</h3>
+<pre><code>[파일 경로]를 분석해 줘.
+
+1단계 — 먼저 행 수, 열 이름, 결측값 현황을 보고해 줘.
+2단계 — 내가 확인하면 [기준열]별 집계를 수행해 줘.
+3단계 — 결과를 [출력 형식]으로 저장해 줘.
+
+검증:
+- 집계 합계가 원본 전체 합계와 일치하는지 확인해 보고해 줘.
+- 결측값이나 이상값이 있으면 목록을 별도로 알려 줘.
+- 계산에 사용한 전제가 있으면 명시해 줘.</code></pre>
+<h3>A-5. 도구 제작 패턴</h3>
+<pre><code>[도구 이름]을 만들어 줘.
+
+목적: [누가 어떤 상황에서 무엇을 하기 위해]
+입력: [자료 형식과 예시]
+출력: [결과 형식]
+실행 환경: [윈도우 / 브라우저 / 사내망 여부]
+
+제약:
+- 외부 인터넷 연결 없이 동작해야 한다
+- 외부 라이브러리를 쓰지 않는다
+- 원본 파일을 수정하지 않는다
+- 잘못된 입력이 들어와도 멈추지 않고 안내 메시지를 보여 준다
+
+완성 후 비개발자 기준 사용법을 3줄로 요약해 줘.</code></pre>
+<h3>A-6. 오류 해결 패턴</h3>
+<pre><code>아래 오류가 발생했다.
+
+[오류 메시지 전체를 그대로 붙여 넣기]
+
+1. 이 오류가 무슨 뜻인지 한 문장으로 설명해 줘.
+2. 가능한 원인을 가능성이 높은 순서로 3가지 알려 줘.
+3. 각 원인을 확인하는 방법을 알려 줘.
+4. 가장 가능성이 높은 원인부터 하나씩 고쳐 줘.
+
+한 번에 여러 곳을 고치지 말고 하나씩 고쳐 가며 확인해 줘.</code></pre>
+<h3>A-7. 라이브러리와 API 조사 패턴</h3>
+<pre><code>[하고 싶은 일]을 처음부터 코딩하지 않고 해결할 수 있는
+오픈소스 라이브러리 또는 공식 API를 [N]개 찾아 줘.
+
+비교 항목:
+- 윈도우 지원 여부
+- 라이선스와 상업적 사용 가능 여부
+- 설치 난이도
+- 최근 유지보수 상태
+- 입력과 출력 형식
+- 호출 제한과 비용
+
+표로 정리하고, 우리 상황에 가장 적합한 것을 하나 추천하고
+그 이유를 두 문장으로 적어 줘.</code></pre>
+<h3>A-8. 검수 요청 패턴</h3>
+<p>작성과 검수는 반드시 분리한다. 같은 대화에서 스스로 만든 결과를 스스로 승인하면 오류가 걸러지지 않으므로, 새 대화에서 검수만 요청하는 방식을 권한다.</p>
+<pre><code>아래 결과물을 검수해 줘. 너는 이 문서를 작성하지 않았다고 가정하고,
+비판적인 검토자의 입장에서 확인해 줘.
+
+확인 항목:
+1. 원본 자료에 근거가 없는 주장이 있는가
+2. 숫자와 단위가 원본과 일치하는가
+3. 논리적으로 비약이 있는 문단이 있는가
+4. 읽는 사람이 오해할 수 있는 표현이 있는가
+
+발견한 문제를 심각도 순으로 나열하고, 고치지는 말고 지적만 해 줘.</code></pre>
+<h3>A-9. 정리와 인수인계 패턴</h3>
+<pre><code>지금까지의 작업을 정리해 줘.
+
+docs/progress.md 파일에 다음을 작성해 줘.
+- 무엇을 만들었는지 (파일 목록과 각 역할)
+- 어떤 결정을 왜 내렸는지
+- 아직 해결하지 못한 문제
+- 다음에 이어서 할 때 먼저 읽어야 할 것
+
+이 문서만 읽으면 다른 사람이 이어받을 수 있게 작성해 줘.</code></pre>
+<h3>A-10. 지시문을 고치는 요령</h3>
+<p>원하는 결과가 나오지 않을 때 문장을 더 길게 쓰는 것은 대개 효과가 없다. 아래 순서로 고치는 편이 빠르다.</p>
+<ul>
+<li>완료 조건을 한 줄 추가한다. 무엇이 되면 끝인지 적는다.</li>
+<li>금지 사항을 한 줄 추가한다. 하지 말아야 할 것을 적는다.</li>
+<li>예시를 하나 붙인다. 원하는 출력의 예시가 설명 열 줄보다 효과적이다.</li>
+<li>한 번에 한 가지만 요청하도록 지시를 쪼갠다.</li>
+<li>중간 보고를 요청한다. 단계마다 결과를 보여 달라고 적는다.</li>
+</ul>
+</article>
+<article class="page-source-section" data-section-index="11" data-section-title="부록 B 실습 워크시트와 용어 정리" data-section-label="부록 B" data-section-name="실습 워크시트와 용어 정리">
+<h2>부록 B 실습 워크시트와 용어 정리</h2>
+<p>이 부록은 교육 중 직접 작성하는 워크시트와, 교육 이후 혼자 읽을 때 참고할 용어 정리로 구성된다. 워크시트는 인쇄해 손으로 채워도 좋고, 파일로 복사해 채워도 좋다. 중요한 것은 빈칸을 남기지 않는 것이다.</p>
+<h3>워크시트 1 · 내 업무 진단</h3>
+<p>표 23. 반복 업무 진단표</p>
+<table>
+<thead>
+<tr><th>항목</th><th>기록란</th></tr>
+</thead>
+<tbody>
+<tr><td>가장 자주 반복하는 업무</td><td>&nbsp;</td></tr>
+<tr><td>1회 소요 시간</td><td>&nbsp;</td></tr>
+<tr><td>월 발생 횟수</td><td>&nbsp;</td></tr>
+<tr><td>월 총 소요 시간</td><td>&nbsp;</td></tr>
+<tr><td>입력 자료의 형식과 출처</td><td>&nbsp;</td></tr>
+<tr><td>산출물의 형식과 수신자</td><td>&nbsp;</td></tr>
+<tr><td>외부로 보내면 안 되는 항목</td><td>&nbsp;</td></tr>
+<tr><td>자동화하면 줄어들 시간</td><td>&nbsp;</td></tr>
+<tr><td>자동화 후에도 사람이 판단할 지점</td><td>&nbsp;</td></tr>
+</tbody>
+</table>
+<h3>워크시트 2 · 도구 선정표</h3>
+<p>표 24. 우리 조직 도구 선정 기록</p>
+<table>
+<thead>
+<tr><th>질문</th><th>우리 조직의 답</th></tr>
+</thead>
+<tbody>
+<tr><td>외부 클라우드 모델 사용이 허용되는가</td><td>&nbsp;</td></tr>
+<tr><td>허용된다면 어떤 데이터까지인가</td><td>&nbsp;</td></tr>
+<tr><td>참가자 대다수가 터미널을 쓸 수 있는가</td><td>&nbsp;</td></tr>
+<tr><td>비용은 개인 구독인가 기관 계약인가</td><td>&nbsp;</td></tr>
+<tr><td>무료 한도로 시작 가능한 도구가 있는가</td><td>&nbsp;</td></tr>
+<tr><td>결과물 검수 책임자는 누구인가</td><td>&nbsp;</td></tr>
+<tr><td>어떤 기록이 남아야 하는가</td><td>&nbsp;</td></tr>
+<tr><td>1순위 도구와 이유</td><td>&nbsp;</td></tr>
+<tr><td>2순위 도구와 이유</td><td>&nbsp;</td></tr>
+</tbody>
+</table>
+<h3>워크시트 3 · 서비스 설계 캔버스</h3>
+<p>표 25. 간이 프로젝트 설계 캔버스 작성란</p>
+<table>
+<thead>
+<tr><th>칸</th><th>작성 내용</th></tr>
+</thead>
+<tbody>
+<tr><td>① 사용자</td><td>&nbsp;</td></tr>
+<tr><td>② 문제</td><td>&nbsp;</td></tr>
+<tr><td>③ 입력</td><td>&nbsp;</td></tr>
+<tr><td>④ 처리</td><td>&nbsp;</td></tr>
+<tr><td>⑤ 출력</td><td>&nbsp;</td></tr>
+<tr><td>⑥ 화면</td><td>&nbsp;</td></tr>
+<tr><td>⑦ 환경</td><td>&nbsp;</td></tr>
+<tr><td>⑧ 위험</td><td>&nbsp;</td></tr>
+<tr><td>⑨ 성공 기준</td><td>&nbsp;</td></tr>
+</tbody>
+</table>
+<h3>워크시트 4 · 세션별 산출물 점검</h3>
+<p>표 26. 하루 산출물 체크리스트</p>
+<table>
+<thead>
+<tr><th>세션</th><th>산출물</th><th>완료</th><th>저장 위치</th></tr>
+</thead>
+<tbody>
+<tr><td>제1세션</td><td>네 개념 구분 요약 메모</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+<tr><td>제2세션</td><td>손으로 그린 에이전트 구조도</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+<tr><td>제3세션</td><td>기관 적합 도구 선정표</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+<tr><td>제4세션</td><td>첫 프로젝트 실행 결과와 맥락 문서</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+<tr><td>제5세션</td><td>내 업무용 스킬 문서 1종</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+<tr><td>제6세션</td><td>MCP 서버 연결 기록과 권한 범위</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+<tr><td>제7세션</td><td>동작하는 미니 도구 1종</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+<tr><td>제8세션</td><td>설계 캔버스와 프로토타입</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+</tbody>
+</table>
+<h3>운영·보안 체크리스트</h3>
+<p>교육 이후 도구를 실제 업무에 쓰기 시작할 때 매번 확인할 항목이다. 처음에는 하나씩 짚어 보고, 익숙해지면 습관으로 자리 잡는다.</p>
+<ul>
+<li>이 작업에 쓰는 자료에 개인정보나 미공개 정보가 포함되어 있는가. 포함되었다면 사본에서 해당 항목을 제거했는가.</li>
+<li>에이전트가 접근할 수 있는 폴더 범위가 필요한 최소 범위로 제한되어 있는가.</li>
+<li>되돌리기 어려운 동작(삭제, 덮어쓰기, 외부 전송)에 승인 단계가 걸려 있는가.</li>
+<li>원본 파일은 수정하지 않고 사본을 만드는 방식으로 설계되어 있는가.</li>
+<li>결과물의 숫자와 사실을 원본과 대조해 확인했는가.</li>
+<li>사용 설명과 남은 과제가 문서로 남아 있는가.</li>
+<li>연결된 외부 서버 목록과 각각의 권한 범위를 설명할 수 있는가.</li>
+<li>이 도구가 잘못된 결과를 냈을 때 사용자가 알아차릴 수 있는 장치가 있는가.</li>
+</ul>
+<h3>용어 정리</h3>
+<p>표 27. 교육에서 사용한 주요 용어</p>
+<table>
+<thead>
+<tr><th>용어</th><th>뜻</th><th>기억할 점</th></tr>
+</thead>
+<tbody>
+<tr><td>LLM</td><td>대규모 언어 모델. 문장을 이해하고 생성하는 판단 엔진</td><td>스스로 파일을 열거나 명령을 실행하지 못한다</td></tr>
+<tr><td>프롬프트</td><td>모델에게 전달하는 지시문</td><td>질문이 아니라 완료 조건이 있는 업무 지시서다</td></tr>
+<tr><td>컨텍스트</td><td>판단 근거로 함께 건네는 자료와 배경</td><td>양보다 적합성이 중요하다</td></tr>
+<tr><td>에이전트</td><td>도구를 골라 실행하고 결과를 회수해 반복하는 구조</td><td>새로운 모델이 아니라 모델을 감싼 프로그램이다</td></tr>
+<tr><td>하네스</td><td>도구·권한·실행 환경·중단 규칙을 묶은 작업대</td><td>성능과 안전이 여기서 결정된다</td></tr>
+<tr><td>맥락 문서</td><td>세션 시작 시 자동으로 읽히는 프로젝트 규칙 문서</td><td>짧게 유지하고 금지 사항을 명시한다</td></tr>
+<tr><td>스킬</td><td>반복 업무의 절차·형식·검증을 저장한 작업법</td><td>잘 된 지시는 반드시 파일로 남긴다</td></tr>
+<tr><td>MCP</td><td>에이전트가 외부 자료·프로그램을 호출하는 공통 규격</td><td>연결은 기능 추가가 아니라 권한 부여다</td></tr>
+<tr><td>커넥터</td><td>외부 서비스의 자료와 기능에 접근하도록 연결하는 설정</td><td>계정·범위·읽기쓰기 권한을 확인한다</td></tr>
+<tr><td>플러그인</td><td>스킬·MCP 서버·앱 기능을 묶어 설치하는 단위</td><td>설치가 접근 권한을 자동 생성하지 않는다</td></tr>
+<tr><td>바이브 코딩</td><td>코드를 직접 쓰지 않고 말로 설명해 만들게 하는 방식</td><td>짧게 지시하고 자주 확인하는 편이 빠르다</td></tr>
+<tr><td>서브에이전트</td><td>역할을 나눈 하위 에이전트</td><td>작성과 검수를 분리하는 데 쓴다</td></tr>
+<tr><td>API</td><td>다른 서비스의 기능을 네트워크로 빌려 쓰는 통로</td><td>키는 브라우저로 내려가는 코드에 넣지 않는다</td></tr>
+<tr><td>라이브러리</td><td>내 프로그램 안에서 재사용하는 코드 부품</td><td>유명함보다 내 환경과 라이선스가 중요하다</td></tr>
+<tr><td>로컬 실행</td><td>내 컴퓨터 안에서만 동작하는 상태</td><td>먼저 로컬에서 성공시킨 뒤 배포한다</td></tr>
+</tbody>
+</table>
+<h3>더 공부할 방향</h3>
+<p>오늘 다루지 못했지만 다음 단계에서 이어 볼 만한 주제를 정리해 둔다. 각 주제는 오늘 배운 다섯 단계 위에 얹히는 확장이며, 순서대로 접근하면 무리가 없다.</p>
+<ul>
+<li><strong>서브에이전트와 오케스트레이션</strong> — 조사·작성·검수를 분리해 품질을 높이는 구조.</li>
+<li><strong>훅과 권한 정책</strong> — 특정 단계에서 자동으로 검증을 끼워 넣는 설정.</li>
+<li><strong>로컬 모델 운영</strong> — 폐쇄망 환경에서 외부 전송 없이 에이전트를 돌리는 방법.</li>
+<li><strong>검색 품질 개선</strong> — 문서 파싱과 색인 설계로 근거 제시 정확도를 높이는 방법.</li>
+<li><strong>배포와 운영</strong> — 만든 도구를 팀이 쓰도록 배포하고 버전을 관리하는 방법.</li>
+<li><strong>비용 관리</strong> — 토큰 사용량을 측정하고 모델 등급을 작업별로 배분하는 방법.</li>
+</ul>
+<blockquote>
+<p>핵심 메시지: 도구는 계속 바뀌지만 구조는 바뀌지 않는다. 오늘 익힌 다섯 단계를 기준으로 삼으면 새 도구도 하루면 익힐 수 있다.</p>
+</blockquote>
+</article>
+  </div>
+
+  <script>
+    (function() {
+      var EDITABLE_TAGS = {
+        P:1,H1:1,H2:1,H3:1,H4:1,H5:1,H6:1,
+        TD:1,TH:1,LI:1,SPAN:1,STRONG:1,EM:1,SMALL:1,DIV:1
+      };
+      var EDITABLE_SELECTOR = [
+        '.sheet p',
+        '.sheet h1',
+        '.sheet h2',
+        '.sheet h3',
+        '.sheet h4',
+        '.sheet h5',
+        '.sheet h6',
+        '.sheet td',
+        '.sheet th',
+        '.sheet li',
+        '.sheet span',
+        '.sheet strong',
+        '.sheet em',
+        '.sheet small',
+        '.sheet blockquote'
+      ].join(', ');
+      var META_DATASET_KEYS = {
+        title: 'metaTitle',
+        subtitle: 'metaSubtitle',
+        year: 'metaYear',
+        track: 'metaTrack',
+        module: 'metaModule',
+        courseCode: 'metaCourseCode',
+        documentType: 'metaDocumentType',
+        coverLine: 'metaCoverLine',
+        coverWordmark: 'metaCoverWordmark'
+      };
+      var repaginateTimer = null;
+
+      function isInExcludedArea(el) {
+        return !!el.closest(
+          '.topbar, .sidenav, .toc, .paper-source, .meta-panel, '
+          + '.sheet-header, .sheet-footer'
+        );
+      }
+
+      function readMetaFromDataset() {
+        return {
+          title: (
+            document.body.dataset.metaTitle
+            || document.body.dataset.docTitle
+            || '문서'
+          ),
+          subtitle: document.body.dataset.metaSubtitle || '',
+          year: document.body.dataset.metaYear || '',
+          track: document.body.dataset.metaTrack || '',
+          module: document.body.dataset.metaModule || '',
+          courseCode: document.body.dataset.metaCourseCode || '',
+          documentType: document.body.dataset.metaDocumentType || '',
+          coverLine: document.body.dataset.metaCoverLine || '',
+          coverWordmark: document.body.dataset.metaCoverWordmark || ''
+        };
+      }
+
+      function buildGuideLabel(meta) {
+        var prefix = meta.year ? meta.year + '년 ' : '';
+        return (prefix + 'AI 에이전트 실무 교육 교재').trim();
+      }
+
+      function buildDistributionNotice() {
+        return '본 자료는 교육용으로 제작되었으며 무단 배포 및 재가공을 금합니다.';
+      }
+
+      function buildClosingHeader(meta) {
+        var year = meta.year || '2026';
+        return year + '년 AI 에이전트·바이브 코딩 실무 교육';
+      }
+
+      function buildFooterMeta(meta) {
+        return [meta.year, meta.courseCode, meta.documentType]
+          .filter(function(part) {
+            return !!part;
+          })
+          .join(' · ');
+      }
+
+      function setMetaTextTargets(key, value) {
+        document
+          .querySelectorAll('[data-meta-text="' + key + '"]')
+          .forEach(function(el) {
+            el.textContent = value;
+          });
+      }
+
+      function setMetaDerivedTargets(key, value) {
+        document
+          .querySelectorAll('[data-meta-derived="' + key + '"]')
+          .forEach(function(el) {
+            el.textContent = value;
+          });
+      }
+
+      function syncMetaInputs(meta) {
+        document
+          .querySelectorAll('[data-meta-input]')
+          .forEach(function(field) {
+          var key = field.getAttribute('data-meta-input');
+          var value = meta[key] || '';
+          field.value = value;
+          field.setAttribute('value', value);
+        });
+      }
+
+      function applyMeta(meta, options) {
+        var settings = options || {};
+        var displayTitle = meta.title || '문서';
+        var footerMeta = buildFooterMeta(meta) || displayTitle;
+
+        Object.keys(META_DATASET_KEYS).forEach(function(key) {
+          document.body.dataset[META_DATASET_KEYS[key]] = meta[key] || '';
+        });
+
+        document.body.dataset.docTitle = displayTitle;
+        document.body.dataset.docMeta = footerMeta;
+        document.body.dataset.saveName = displayTitle;
+        document.title = displayTitle;
+
+        var titleTag = document.querySelector('title');
+        if (titleTag) {
+          titleTag.textContent = displayTitle;
+        }
+
+        setMetaTextTargets('title', displayTitle);
+        setMetaTextTargets('subtitle', meta.subtitle || '');
+        setMetaTextTargets('year', meta.year || '');
+        setMetaTextTargets('track', meta.track || '');
+        setMetaTextTargets('module', meta.module || '');
+        setMetaTextTargets('courseCode', meta.courseCode || '');
+        setMetaTextTargets('documentType', meta.documentType || '');
+        setMetaTextTargets('coverLine', meta.coverLine || '');
+        setMetaTextTargets('coverWordmark', meta.coverWordmark || '');
+        setMetaDerivedTargets('guideLabel', buildGuideLabel(meta));
+
+        if (settings.syncFields !== false) {
+          syncMetaInputs(meta);
+        }
+
+        if (settings.repaginate) {
+          repaginateSoon();
+        }
+      }
+
+      function readMetaFromForm() {
+        var meta = readMetaFromDataset();
+
+        document
+          .querySelectorAll('[data-meta-input]')
+          .forEach(function(field) {
+          var key = field.getAttribute('data-meta-input');
+          meta[key] = field.value.trim();
+        });
+
+        return meta;
+      }
+
+      function getEditableElements() {
+        return Array.prototype.slice.call(
+          document.querySelectorAll(EDITABLE_SELECTOR)
+        ).filter(function(el) {
+          return !isInExcludedArea(el);
+        });
+      }
+
+      function syncEditedElement(el) {
+        var blockId = el.getAttribute('data-block-id');
+        if (!blockId) return;
+        var sourceBlock = document.querySelector(
+          '.paper-source [data-block-id="' + blockId + '"]'
+        );
+        if (!sourceBlock) return;
+        sourceBlock.innerHTML = el.innerHTML;
+      }
+
+      function syncAllEditedElements() {
+        getEditableElements().forEach(syncEditedElement);
+      }
+
+      function fitsPage(body) {
+        return body.scrollHeight <= body.clientHeight + 1;
+      }
+
+      function createSheet(
+        container,
+        sectionTitle,
+        sectionIndex,
+        partIndex,
+        options
+      ) {
+        var settings = options || {};
+        var sheet = document.createElement('section');
+        var header = document.createElement('div');
+        var runningTitle = document.createElement('div');
+        var runningSection = document.createElement('div');
+        var body = document.createElement('div');
+        var footer = document.createElement('div');
+        var footerMeta = document.createElement('div');
+        var footerMetaText = document.createElement('div');
+        var footerNotice = document.createElement('div');
+        var footerPage = document.createElement('div');
+        var footerPageNum = document.createElement('span');
+        var footerPageLabel = document.createElement('span');
+        var suffix = partIndex > 1 ? ' · ' + partIndex : '';
+        var pageLabel = settings.pageLabel || (sectionTitle + suffix);
+        var docTitle = document.body.dataset.docTitle || '문서';
+        var docMeta = document.body.dataset.docMeta || docTitle;
+        sheet.className = settings.className
+          ? 'sheet ' + settings.className
+          : 'sheet';
+        sheet.dataset.pageLabel = pageLabel;
+        sheet.id = settings.sheetId || (
+          partIndex === 1
+            ? 'section-' + sectionIndex
+            : (
+                'section-' + sectionIndex + '-p'
+                + String(partIndex).padStart(2, '0')
+              )
+        );
+        header.className = 'sheet-header';
+        runningTitle.className = 'sheet-running-title';
+        runningSection.className = 'sheet-running-section';
+        runningTitle.textContent = docTitle;
+        runningSection.textContent = pageLabel;
+        header.appendChild(runningTitle);
+        header.appendChild(runningSection);
+        body.className = 'sheet-body';
+        footer.className = 'sheet-footer';
+        footerMeta.className = 'sheet-footer-meta';
+        footerMetaText.className = 'sheet-footer-meta-text';
+        footerNotice.className = 'sheet-footer-notice';
+        footerPage.className = 'sheet-footer-page';
+        footerPageNum.className = 'sheet-footer-page-num';
+        footerPageLabel.className = 'sheet-footer-page-label';
+        footerMetaText.textContent = docMeta;
+        footerNotice.textContent = buildDistributionNotice();
+        footerPageLabel.textContent = pageLabel;
+        footerMeta.appendChild(footerMetaText);
+        footerMeta.appendChild(footerNotice);
+        footerPage.appendChild(footerPageNum);
+        footerPage.appendChild(footerPageLabel);
+        footer.appendChild(footerMeta);
+        footer.appendChild(footerPage);
+        sheet.appendChild(header);
+        sheet.appendChild(body);
+        sheet.appendChild(footer);
+        container.appendChild(sheet);
+        return {
+          sheet: sheet,
+          body: body,
+          sectionTitle: sectionTitle,
+          sectionIndex: sectionIndex,
+          partIndex: partIndex
+        };
+      }
+
+      function buildContentsSheets(container, sections) {
+        if (!sections.length) return;
+
+        var state = createSheet(container, '목차', 'toc', 1, {
+          pageLabel: '목차',
+          sheetId: 'toc-page',
+          className: 'sheet-toc'
+        });
+        var intro = document.createElement('div');
+        var kicker = document.createElement('p');
+        var title = document.createElement('h1');
+        var summary = document.createElement('p');
+        var list = document.createElement('ol');
+
+        intro.className = 'toc-page-intro';
+        kicker.className = 'toc-page-kicker';
+        title.className = 'toc-page-title';
+        summary.className = 'toc-page-summary';
+        list.className = 'toc-page-list';
+
+        kicker.textContent = '학습 안내';
+        title.textContent = '이 교재의 구성';
+        summary.textContent = (
+          '아래 목차를 따라 개념편과 실습편의 흐름을 순서대로 학습합니다.'
+        );
+
+        intro.appendChild(kicker);
+        intro.appendChild(title);
+        intro.appendChild(summary);
+        state.body.appendChild(intro);
+
+        sections.forEach(function(section) {
+          var item = document.createElement('li');
+          var link = document.createElement('a');
+          var num = document.createElement('span');
+          var text = document.createElement('span');
+
+          link.className = 'toc-page-link';
+          num.className = 'toc-page-item-num';
+          text.className = 'toc-page-item-text';
+
+          link.href = '#section-' + section.index;
+          num.textContent = section.number;
+          text.textContent = section.title;
+
+          link.appendChild(num);
+          link.appendChild(text);
+          item.appendChild(link);
+          list.appendChild(item);
+        });
+
+        appendListBlock(container, state, list, '목차', 'toc');
+      }
+
+      function createSectionDividerPage(container, section) {
+        var state = createSheet(container, section.displayTitle, section.index, 1, {
+          pageLabel: section.displayTitle,
+          sheetId: 'section-' + section.index,
+          className: 'sheet-divider'
+        });
+        var wrapper = document.createElement('div');
+        var kicker = document.createElement('p');
+        var number = document.createElement('div');
+        var title = document.createElement('h1');
+        var desc = document.createElement('p');
+        var rule = document.createElement('div');
+
+        wrapper.className = 'section-divider';
+        kicker.className = 'section-divider-kicker';
+        number.className = 'section-divider-number';
+        title.className = 'section-divider-title';
+        desc.className = 'section-divider-desc';
+        rule.className = 'section-divider-rule';
+
+        kicker.textContent = '학습 단계';
+        number.textContent = section.label;
+        title.textContent = section.title;
+        desc.textContent = (
+          section.title
+          + '의 핵심 개념과 실무 적용 흐름을 차례대로 정리합니다.'
+        );
+
+        wrapper.appendChild(kicker);
+        wrapper.appendChild(number);
+        wrapper.appendChild(title);
+        wrapper.appendChild(desc);
+        wrapper.appendChild(rule);
+        state.body.appendChild(wrapper);
+      }
+
+      function createClosingNoticePage(container, meta) {
+        var state = createSheet(container, '교재 활용 유의사항', 'closing', 1, {
+          pageLabel: '교재 활용 유의사항',
+          sheetId: 'closing-notice',
+          className: 'sheet-notice'
+        });
+        var header = document.createElement('div');
+        var card = document.createElement('div');
+        var title = document.createElement('h1');
+        var list = document.createElement('ol');
+        var contact = document.createElement('p');
+        var org = document.createElement('p');
+        var year = meta.year || '2026';
+        var items = [
+          year + '년 10월 7일 「AI 에이전트와 바이브 코딩 실무」 1일 과정의 교육용 자료로 개발되었습니다.',
+          '본 교재의 내용을 인용할 때에는 출처가 본 교육 과정의 자료임을 밝혀야 합니다.',
+          '영리적 활용(유료 판매, 외부 강의 제공 등)은 금지되며, 제3자에게 제공하거나 재배포할 수 없습니다.',
+          '수록된 내용이나 자료 요청 등의 문의처는 아래와 같습니다.'
+        ];
+
+        header.className = 'notice-page-header';
+        card.className = 'notice-card';
+        title.textContent = '교재 활용 유의사항';
+        list.className = 'notice-list';
+        contact.className = 'notice-contact';
+        org.className = 'notice-org';
+
+        header.textContent = buildClosingHeader(meta);
+        contact.textContent = '- 교육 운영 담당자에게 문의하시기 바랍니다.';
+        org.textContent = '교육 운영 주관';
+
+        items.forEach(function(itemText, index) {
+          var item = document.createElement('li');
+          var num = document.createElement('div');
+          var body = document.createElement('div');
+
+          item.className = 'notice-item';
+          num.className = 'notice-num';
+          body.className = 'notice-body';
+
+          num.textContent = String(index + 1).padStart(2, '0');
+          body.textContent = itemText;
+
+          item.appendChild(num);
+          item.appendChild(body);
+          list.appendChild(item);
+        });
+
+        card.appendChild(title);
+        card.appendChild(list);
+        card.appendChild(contact);
+        state.body.appendChild(header);
+        state.body.appendChild(card);
+        state.body.appendChild(org);
+      }
+
+      function applySectionAnchor(clone, state, sectionTitle, sectionIndex) {
+        if (!clone.dataset || !clone.dataset.sectionAnchor) return;
+        if (!document.getElementById(clone.dataset.sectionAnchor)) {
+          clone.id = clone.dataset.sectionAnchor;
+        }
+        state.sectionTitle = sectionTitle;
+        state.sectionIndex = sectionIndex;
+        state.partIndex = 1;
+      }
+
+      function appendWholeBlock(
+        container,
+        state,
+        sourceNode,
+        sectionTitle,
+        sectionIndex,
+      ) {
+        var clone = sourceNode.cloneNode(true);
+        state.body.appendChild(clone);
+        if (fitsPage(state.body)) {
+          applySectionAnchor(clone, state, sectionTitle, sectionIndex);
+          return state;
+        }
+
+        state.body.removeChild(clone);
+        if (!state.body.children.length) {
+          state.body.appendChild(clone);
+          applySectionAnchor(clone, state, sectionTitle, sectionIndex);
+          state.sheet.dataset.oversize = 'true';
+          return state;
+        }
+
+        state = createSheet(
+          container,
+          sectionTitle,
+          sectionIndex,
+          state.sectionIndex === sectionIndex ? state.partIndex + 1 : 1,
+        );
+        clone = sourceNode.cloneNode(true);
+        state.body.appendChild(clone);
+        applySectionAnchor(clone, state, sectionTitle, sectionIndex);
+        if (!fitsPage(state.body)) {
+          state.sheet.dataset.oversize = 'true';
+        }
+        return state;
+      }
+
+      function appendListBlock(
+        container,
+        state,
+        sourceList,
+        sectionTitle,
+        sectionIndex,
+      ) {
+        var items = Array.prototype.slice.call(sourceList.children);
+        var listClone = sourceList.cloneNode(false);
+        state.body.appendChild(listClone);
+
+        items.forEach(function(item) {
+          var itemClone = item.cloneNode(true);
+          listClone.appendChild(itemClone);
+          if (fitsPage(state.body)) {
+            return;
+          }
+
+          listClone.removeChild(itemClone);
+          if (!listClone.children.length) {
+            if (
+              state.body.children.length > 1
+              || state.body.firstElementChild !== listClone
+            ) {
+              state.body.removeChild(listClone);
+              state = createSheet(
+                container,
+                sectionTitle,
+                sectionIndex,
+                state.partIndex + 1,
+              );
+              listClone = sourceList.cloneNode(false);
+              state.body.appendChild(listClone);
+              listClone.appendChild(itemClone);
+              if (!fitsPage(state.body)) {
+                state.sheet.dataset.oversize = 'true';
+              }
+              return;
+            }
+
+            listClone.appendChild(itemClone);
+            state.sheet.dataset.oversize = 'true';
+            return;
+          }
+
+          state = createSheet(
+            container,
+            sectionTitle,
+            sectionIndex,
+            state.partIndex + 1,
+          );
+          listClone = sourceList.cloneNode(false);
+          state.body.appendChild(listClone);
+          listClone.appendChild(itemClone);
+          if (!fitsPage(state.body)) {
+            state.sheet.dataset.oversize = 'true';
+          }
+        });
+
+        return state;
+      }
+
+      function createTableClone(sourceTable) {
+        var tableClone = sourceTable.cloneNode(false);
+        var header = sourceTable.querySelector('thead');
+        var body = sourceTable.querySelector('tbody');
+        Array.prototype.slice.call(sourceTable.children).forEach(function(child) {
+          var tagName = child.tagName;
+          if (tagName === 'THEAD' || tagName === 'TBODY') return;
+          tableClone.appendChild(child.cloneNode(true));
+        });
+        if (header) {
+          tableClone.appendChild(header.cloneNode(true));
+        }
+        var bodyClone = body
+          ? body.cloneNode(false)
+          : document.createElement('tbody');
+        tableClone.appendChild(bodyClone);
+        return { table: tableClone, body: bodyClone };
+      }
+
+      function appendTableBlock(
+        container,
+        state,
+        sourceTable,
+        sectionTitle,
+        sectionIndex,
+      ) {
+        var body = sourceTable.querySelector('tbody');
+        var rows = body
+          ? Array.prototype.slice.call(body.children)
+          : Array.prototype.slice.call(sourceTable.querySelectorAll('tr'))
+              .filter(function(row) {
+                return !row.closest('thead');
+              });
+
+        if (!rows.length) {
+          return appendWholeBlock(
+            container,
+            state,
+            sourceTable,
+            sectionTitle,
+            sectionIndex,
+          );
+        }
+
+        var current = createTableClone(sourceTable);
+        state.body.appendChild(current.table);
+
+        rows.forEach(function(row) {
+          var rowClone = row.cloneNode(true);
+          current.body.appendChild(rowClone);
+          if (fitsPage(state.body)) {
+            return;
+          }
+
+          current.body.removeChild(rowClone);
+          if (!current.body.children.length) {
+            if (
+              state.body.children.length > 1
+              || state.body.firstElementChild !== current.table
+            ) {
+              state.body.removeChild(current.table);
+              state = createSheet(
+                container,
+                sectionTitle,
+                sectionIndex,
+                state.partIndex + 1,
+              );
+              current = createTableClone(sourceTable);
+              state.body.appendChild(current.table);
+              current.body.appendChild(rowClone);
+              if (!fitsPage(state.body)) {
+                state.sheet.dataset.oversize = 'true';
+              }
+              return;
+            }
+
+            current.body.appendChild(rowClone);
+            state.sheet.dataset.oversize = 'true';
+            return;
+          }
+
+          state = createSheet(
+            container,
+            sectionTitle,
+            sectionIndex,
+            state.partIndex + 1,
+          );
+          current = createTableClone(sourceTable);
+          state.body.appendChild(current.table);
+          current.body.appendChild(rowClone);
+          if (!fitsPage(state.body)) {
+            state.sheet.dataset.oversize = 'true';
+          }
+        });
+
+        if (!current.body.children.length) {
+          state.body.removeChild(current.table);
+        }
+
+        return state;
+      }
+
+      function paginatePaperView() {
+        var paperPages = document.getElementById('paper-pages');
+        var sourceSections = Array.prototype.slice.call(
+          document.querySelectorAll('.page-source-section')
+        );
+        if (!paperPages || !sourceSections.length) return;
+
+        paperPages.innerHTML = '';
+
+        buildContentsSheets(
+          paperPages,
+          sourceSections.map(function(section) {
+            return {
+              index: section.dataset.sectionIndex || '00',
+              number: section.dataset.sectionIndex || '00',
+              label: section.dataset.sectionLabel || '',
+              title: section.dataset.sectionName || section.dataset.sectionTitle || '',
+              displayTitle: section.dataset.sectionTitle || ''
+            };
+          })
+        );
+
+        createClosingNoticePage(paperPages, readMetaFromDataset());
+
+        var state = null;
+
+        sourceSections.forEach(function(section) {
+          var sectionTitle = section.dataset.sectionTitle || 'SECTION';
+          var sectionIndex = section.dataset.sectionIndex || '00';
+          var sectionLabel = section.dataset.sectionLabel || '';
+          var sectionName = section.dataset.sectionName || sectionTitle;
+          var blocks = Array.prototype.slice.call(section.children);
+
+          createSectionDividerPage(paperPages, {
+            index: sectionIndex,
+            label: sectionLabel,
+            title: sectionName,
+            displayTitle: sectionTitle
+          });
+
+          blocks.forEach(function(block, blockIndex) {
+            if (!block.dataset.blockId) {
+              block.dataset.blockId = (
+                sectionIndex + '-b' + String(blockIndex).padStart(3, '0')
+              );
+            }
+            if (blockIndex === 0) {
+              block.dataset.sectionAnchor = 'section-' + sectionIndex;
+            }
+          });
+          if (!state) {
+            state = createSheet(paperPages, sectionTitle, sectionIndex, 1);
+          } else if (state.body.children.length) {
+            state = createSheet(paperPages, sectionTitle, sectionIndex, 1);
+          }
+
+          blocks.forEach(function(block) {
+            if (block.tagName === 'UL' || block.tagName === 'OL') {
+              state = appendListBlock(
+                paperPages,
+                state,
+                block,
+                sectionTitle,
+                sectionIndex,
+              );
+              return;
+            }
+            if (block.tagName === 'TABLE') {
+              state = appendTableBlock(
+                paperPages,
+                state,
+                block,
+                sectionTitle,
+                sectionIndex,
+              );
+              return;
+            }
+            state = appendWholeBlock(
+              paperPages,
+              state,
+              block,
+              sectionTitle,
+              sectionIndex,
+            );
+          });
+        });
+
+        if (document.body.classList.contains('edit-mode')) {
+          getEditableElements().forEach(function(el) {
+            el.setAttribute('contenteditable', 'true');
+          });
+        }
+      }
+
+      function repaginateSoon() {
+        window.clearTimeout(repaginateTimer);
+        repaginateTimer = window.setTimeout(paginatePaperView, 120);
+      }
+
+      window.toggleMetaPanel = function(force) {
+        var next = typeof force === 'boolean'
+          ? force
+          : !document.body.classList.contains('meta-panel-open');
+        var panel = document.getElementById('meta-panel');
+        var button = document.querySelector('.btn-meta');
+
+        document.body.classList.toggle('meta-panel-open', next);
+
+        if (panel) {
+          panel.setAttribute('aria-hidden', next ? 'false' : 'true');
+        }
+
+        if (button) {
+          button.classList.toggle('active', next);
+        }
+
+        if (next && panel) {
+          syncMetaInputs(readMetaFromDataset());
+          var firstInput = panel.querySelector('input');
+          if (firstInput) {
+            firstInput.focus();
+            firstInput.select();
+          }
+        }
+      };
+
+      window.toggleEditMode = function() {
+        var on = document.body.classList.toggle('edit-mode');
+        getEditableElements().forEach(function(el) {
+          el.setAttribute('contenteditable', on ? 'true' : 'false');
+        });
+        document.querySelector('.btn-edit').classList.toggle('active', on);
+        if (!on) {
+          syncAllEditedElements();
+          paginatePaperView();
+        }
+      };
+
+      window.saveEditedHTML = function() {
+        window.toggleMetaPanel(false);
+
+        if (document.body.classList.contains('edit-mode')) {
+          window.toggleEditMode();
+        } else {
+          syncAllEditedElements();
+          paginatePaperView();
+        }
+
+        syncMetaInputs(readMetaFromDataset());
+
+        document
+          .querySelectorAll('[contenteditable="true"]')
+          .forEach(function(el) {
+          el.setAttribute('contenteditable', 'false');
+          });
+
+        var html = '<!doctype html>\n' + document.documentElement.outerHTML;
+        var blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement('a');
+        var baseName = document.body.getAttribute('data-save-name') || '문서';
+        a.href = url;
+        a.download = (
+          baseName
+          + '_편집본_'
+          + new Date().toISOString().slice(0, 10)
+          + '.html'
+        );
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.setTimeout(function() {
+          URL.revokeObjectURL(url);
+        }, 1000);
+      };
+
+      document.addEventListener('dblclick', function(e) {
+        var el = e.target;
+        if (!el || !EDITABLE_TAGS[el.tagName]) return;
+        if (isInExcludedArea(el)) return;
+        if (document.body.classList.contains('edit-mode')) return;
+        if (el.getAttribute('contenteditable') === 'true') return;
+
+        el.setAttribute('contenteditable', 'true');
+        el.focus();
+
+        function endEdit() {
+          syncEditedElement(el);
+          el.setAttribute('contenteditable', 'false');
+          repaginateSoon();
+        }
+
+        el.addEventListener('blur', endEdit, { once: true });
+        el.addEventListener('keydown', function(ev) {
+          if (ev.key === 'Escape') {
+            ev.preventDefault();
+            el.blur();
+          }
+        }, { once: true });
+      });
+
+      document.addEventListener('input', function(e) {
+        var el = e.target;
+        if (el && el.matches && el.matches('[data-meta-input]')) {
+          el.setAttribute('value', el.value);
+          applyMeta(readMetaFromForm(), {
+            repaginate: true,
+            syncFields: false
+          });
+          return;
+        }
+        if (!el || !el.matches || !el.matches(EDITABLE_SELECTOR)) return;
+        syncEditedElement(el);
+      });
+
+      document.addEventListener('keydown', function(e) {
+        if (e.key !== 'Escape') return;
+        if (!document.body.classList.contains('meta-panel-open')) return;
+        window.toggleMetaPanel(false);
+      });
+
+      applyMeta(readMetaFromDataset(), {
+        syncFields: true,
+        repaginate: false
+      });
+      paginatePaperView();
+      window.addEventListener('resize', repaginateSoon);
+      window.addEventListener('DOMContentLoaded', function() {
+        applyMeta(readMetaFromDataset(), {
+          syncFields: true,
+          repaginate: false
+        });
+        paginatePaperView();
+      });
+    })();
+  </script>
+<script>/* kg-preview: #<heading> \uc704\uce58\ub85c \uc774\ub3d9 */
+(function(){function norm(t){return (t||'').replace(/\s+/g,'').toLowerCase()}
+function go(){var h=decodeURIComponent(location.hash.slice(1));if(!h)return;var k=norm(h).slice(0,24);if(!k)return;
+var best=null,bl=1e9,els=document.body.querySelectorAll('h1,h2,h3,h4,h5,p,div,span,li,td,text,tspan,section,article');
+for(var i=0;i<els.length;i++){var e=els[i],t=norm(e.textContent);if(t.length<bl&&t.indexOf(k)>-1){best=e;bl=t.length}}
+if(!best)return;var box=best.closest('section,[class*=slide],[class*=page],article')||best;
+box.scrollIntoView({block:'start'});box.style.outline='3px solid #c0504d';box.style.outlineOffset='4px';
+setTimeout(function(){box.style.outline=''},2600)}
+window.addEventListener('load',function(){setTimeout(go,400)});window.addEventListener('hashchange',go)})();</script></body>
+</html>

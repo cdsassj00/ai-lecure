@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head><meta name="robots" content="noindex, nofollow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LLM 에이전트 · 툴 호출 · 하네스 · 클라우드/로컬 실행구조</title>
+<style>
+:root{
+  --paper:#f7f8fa; --surface:#ffffff; --band:#e8edf3; --line:#cfdae8; --line2:#b8c7da;
+  --ink:#0f1f36; --body:#40516a; --muted:#6f8097; --navy:#10213c;
+  --blue:#2564b1; --blue2:#174b8d; --blue-bg:#eef5ff;
+  --coral:#ef554d; --coral2:#c83431; --coral-bg:#fff2f0;
+  --green:#2c8a62; --green2:#176542; --green-bg:#eef8f2;
+  --orange:#ee8a2d; --orange2:#b86112; --orange-bg:#fff7ed;
+  --shadow:0 14px 44px rgba(26,43,67,.18);
+  --font:'Pretendard Variable',Pretendard,'Noto Sans CJK KR','Noto Sans KR','Malgun Gothic',sans-serif;
+}
+*{box-sizing:border-box}
+html,body{width:100%;height:100%;margin:0;background:#c9ced6;font-family:var(--font);color:var(--ink);-webkit-font-smoothing:antialiased}
+body{overflow:hidden}
+.viewport{position:fixed;inset:0;display:grid;place-items:center}
+.sheet{width:1600px;height:900px;position:relative;overflow:hidden;background:
+  radial-gradient(850px 330px at 77% -8%,rgba(37,100,177,.045),transparent 62%),
+  radial-gradient(620px 280px at 16% 108%,rgba(239,85,77,.035),transparent 62%),var(--paper);
+  box-shadow:var(--shadow);padding:16px 20px 10px;display:flex;flex-direction:column;gap:8px;transform-origin:center center}
+.sheet::before{content:'';position:absolute;left:0;right:0;top:0;height:5px;background:linear-gradient(90deg,var(--green) 0 33.33%,var(--blue) 33.33% 66.66%,var(--navy) 66.66%)}
+.header{height:76px;display:grid;grid-template-columns:1fr 390px;gap:24px;align-items:center;flex:none}
+.title h1{font-size:38px;line-height:1.06;letter-spacing:-1.8px;margin:5px 0 4px;font-weight:950;color:#0d1829}
+.title h1 em{font-style:normal;color:var(--blue2)}
+.title p{margin:0;font-size:16px;font-weight:650;color:#385578;letter-spacing:-.25px}
+.question{height:64px;border:1.5px solid #f0aaa6;background:linear-gradient(135deg,#fff9f8,#fff1ef);border-radius:12px;padding:10px 14px;display:grid;grid-template-columns:38px 1fr;gap:10px;align-items:center}
+.question svg{width:31px;height:31px;color:var(--coral)}
+.question b{font-size:16px;line-height:1.42;color:#e4322d;letter-spacing:-.25px}
+.architecture{width:1540px;height:596px;margin:0 auto;position:relative;display:grid;grid-template-columns:175px 330px 325px 425px 245px;gap:10px;flex:none}
+.connectors{position:absolute;inset:0;width:1540px;height:596px;z-index:1;pointer-events:none;overflow:visible}
+.panel{position:relative;z-index:2;min-width:0;height:596px;background:rgba(255,255,255,.93);border:1.2px solid var(--line);border-radius:12px;overflow:hidden;box-shadow:0 4px 12px rgba(26,53,88,.045)}
+.panel-head{height:37px;color:white;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:900;letter-spacing:-.2px;padding:0 8px;white-space:nowrap}
+.panel-head.blue{background:linear-gradient(90deg,#1a58a0,#2f71bf)}
+.panel-head.coral{background:linear-gradient(90deg,#df443d,#f0655e)}
+.panel-head.green{background:linear-gradient(90deg,#217750,#3b9a70)}
+.panel-head.orange{background:linear-gradient(90deg,#d97119,#f39b3f)}
+.panel-sub{height:28px;display:flex;align-items:center;justify-content:center;font-size:11.5px;color:#31537c;font-weight:800}
+.panel-body{padding:8px 10px 10px}
+.icon{width:28px;height:28px;display:inline-block;vertical-align:middle;flex:none}
+.icon.sm{width:21px;height:21px}.icon.lg{width:44px;height:44px}
+.icon.blue{color:var(--blue)}.icon.coral{color:var(--coral)}.icon.green{color:var(--green)}.icon.orange{color:var(--orange)}
+/* User */
+.entry{height:151px;background:#fbfdff;border:1.4px solid #82a8db;border-radius:9px;margin-bottom:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:7px}
+.entry:last-child{margin-bottom:0}
+.entry .icon{width:55px;height:55px;color:#245ea6}
+.entry b{font-size:16px;color:#1d4f92;letter-spacing:-.3px}
+.entry span{font-size:11px;color:#274567;font-weight:650;line-height:1.35}
+/* Agent */
+.agent-body{padding:4px 10px 8px}
+.agent-map{position:relative;width:308px;height:280px;margin:0 auto}
+.agent-map>svg.arrows{position:absolute;inset:0;width:308px;height:280px;z-index:1;overflow:visible}
+.agent-core{position:absolute;left:99px;top:84px;width:110px;height:110px;border-radius:50%;z-index:3;background:radial-gradient(circle at 35% 28%,#fff8f7,#f9dcd9 75%);border:1.8px solid #f17a72;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#ef4139;box-shadow:0 7px 18px rgba(239,85,77,.12)}
+.agent-core .network{width:38px;height:38px;margin-bottom:1px}
+.agent-core strong{font-size:21px;line-height:1.03;text-align:center;letter-spacing:-.45px}
+.agent-node{position:absolute;width:102px;height:54px;z-index:3;border:1.25px solid #ef9c68;background:#fffaf5;border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:5px}
+.agent-node b{font-size:12px;color:#583a27;margin-bottom:2px}.agent-node span{font-size:9.5px;color:#684f40;line-height:1.25;font-weight:600}
+.agent-node.plan{left:103px;top:0}.agent-node.understand{left:0;top:70px}.agent-node.select{right:0;top:70px}.agent-node.review{left:0;top:183px}.agent-node.execute{right:0;top:183px}.agent-node.repeat{left:103px;bottom:0}
+.agent-def,.tool-call{height:46px;border-radius:8px;display:flex;align-items:center;justify-content:center;text-align:center;padding:5px 9px;font-size:11.5px;font-weight:850;line-height:1.35}
+.agent-def{background:#fff2f0;border:1px solid #f2beb9;color:#e53932;margin-bottom:7px}
+.tool-call{background:#fff8f6;border:1px solid #f1c2bd;color:#df3933;display:grid;grid-template-columns:35px 1fr;gap:5px}
+.tool-call .icon{width:30px;height:30px}
+.cloud-scope{margin-top:8px;height:149px;border:1.3px solid #9bb9e0;background:#f7fbff;border-radius:9px;padding:8px 9px;display:grid;grid-template-columns:1.1fr .9fr;gap:8px}
+.scope-main h4{margin:0 0 5px;font-size:12px;color:#1e4e8d;display:flex;align-items:center;gap:5px}
+.scope-main ul{margin:0;padding-left:16px;font-size:9.8px;line-height:1.48;color:#253a55;font-weight:650}
+.caution{border:1px solid #d2deed;border-radius:7px;background:white;padding:8px 7px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center}
+.caution .tri{font-size:22px;color:#e98517;line-height:1}.caution b{font-size:10.5px;margin:3px 0;color:#4b3a2b}.caution span{font-size:9.5px;line-height:1.4;color:#34455b;font-weight:650}
+/* Harness */
+.harness-body{padding:9px 12px}
+.harness-def{height:54px;text-align:center;font-size:12px;line-height:1.45;color:#276249;font-weight:800;display:flex;align-items:center;justify-content:center;padding:0 8px}
+.tool-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.tool-card{height:73px;border:1px solid #b9d8c5;border-radius:8px;background:linear-gradient(145deg,#fbfefc,#f0f8f3);display:grid;grid-template-columns:42px 1fr;gap:7px;align-items:center;padding:7px}
+.tool-card .icon{width:35px;height:35px;color:#167051}
+.tool-card .term-icon{width:37px;height:31px;background:#23282d;color:white;border-radius:4px;display:grid;place-items:center;font:800 15px ui-monospace,monospace;box-shadow:inset 0 0 0 1px #0005}
+.py-badge{width:37px;height:37px;border-radius:9px;background:linear-gradient(135deg,#2d71b8 0 49%,#f2c84b 50%);display:grid;place-items:center;color:white;font-weight:950;font-size:12px;text-shadow:0 1px 2px #0005}
+.tool-card b{display:block;font-size:12.5px;white-space:nowrap;color:#17613f;margin-bottom:2px}.tool-card span{font-size:9.5px;color:#3c614f;line-height:1.25;font-weight:650}
+.security{height:73px;margin-top:9px;border:1px solid #acd0ba;background:#eaf5ee;border-radius:8px;display:grid;grid-template-columns:48px 1fr;gap:8px;align-items:center;padding:8px 11px}
+.security .icon{width:40px;height:40px;color:#2f9b69}.security b{font-size:13px;color:#17613f}.security span{display:block;font-size:9.8px;color:#416657;margin-top:3px}
+.sandbox-note{text-align:center;font-size:10.5px;color:#31516a;font-weight:750;margin-top:9px}
+/* Execution */
+.exec-body{padding:8px 10px}
+.exec-card{border:1.5px solid #5e8dcc;background:#fbfdff;border-radius:10px;padding:8px 10px}
+.exec-card.cloud{height:245px}.exec-card.local{height:244px}
+.exec-title{height:43px;display:flex;align-items:center;gap:9px;border-bottom:1px solid #d7e2f0;padding-bottom:6px}
+.exec-title .icon{width:42px;height:42px;color:#2468b5}
+.exec-title b{display:block;font-size:20px;color:#1354a0;letter-spacing:-.5px;line-height:1.05}.exec-title span{font-size:10px;color:#405d81;font-weight:700}
+.exec-content{display:grid;grid-template-columns:1.05fr .95fr;gap:9px;padding-top:7px}
+.runtime-list{display:grid;gap:3px}
+.runtime-row{display:grid;grid-template-columns:24px 61px 1fr;align-items:center;min-height:20px;font-size:9.8px;color:#263b58}
+.runtime-row .icon{width:18px;height:18px;color:#205da4}.runtime-row b{font-size:10.5px;color:#183e72}.runtime-row span{font-weight:650}
+.service-box{border:1px solid #aec5e5;background:#f4f8ff;border-radius:7px;padding:6px}
+.service-box h5{margin:0 0 5px;text-align:center;font-size:10px;color:#1f579c}
+.chip{height:26px;border:1px solid #b8cbe8;background:white;border-radius:6px;margin-bottom:4px;display:flex;align-items:center;justify-content:center;font-size:10.5px;font-weight:900;color:#1354a0}
+.cloud-role{height:54px;margin-top:7px;background:#eef5ff;border:1px solid #b9cce8;border-radius:7px;padding:7px 9px;display:grid;grid-template-columns:1fr 112px;gap:7px}
+.cloud-role b{font-size:10.5px;color:#195397}.cloud-role p{margin:3px 0 0;font-size:8.9px;line-height:1.25;color:#274568;font-weight:650}.cloud-role .strength{border-left:1px solid #c7d5e9;display:flex;align-items:center;text-align:center;font-size:9.3px;color:#215aa0;font-weight:850;padding-left:7px}
+.boundary{height:28px;margin:5px 0;border:1.4px solid #3975bc;background:white;border-radius:8px;text-align:center;color:#154f94;font-weight:900;font-size:10.5px;display:flex;flex-direction:column;justify-content:center;line-height:1.3}
+.boundary small{font-size:8.1px;font-weight:750;color:#3f5f85}
+.local .exec-title{height:39px}.local .exec-title b{font-size:18px}.local .exec-title .icon{width:35px;height:35px}
+.local .exec-content{grid-template-columns:1.02fr .78fr .9fr;gap:6px;padding-top:6px}
+.local .runtime-row{grid-template-columns:21px 50px 1fr;min-height:17px;font-size:8.9px}.local .runtime-row b{font-size:9.4px}.local .runtime-row .icon{width:16px;height:16px}
+.local .service-box{padding:5px}.local .service-box h5{font-size:9px}.local .chip{height:21px;font-size:9px;margin-bottom:3px}
+.local-role{border:1px solid #c0d2e8;background:#f6f9fd;border-radius:7px;padding:6px 7px}.local-role b{display:block;font-size:10px;color:#1c5798;margin-bottom:4px}.local-role ul{margin:0;padding-left:14px;font-size:9px;line-height:1.43;color:#263f5f;font-weight:650}
+.local-note{height:45px;margin-top:7px;border:1px solid #a8bee0;background:#eef4fd;border-radius:7px;display:flex;flex-direction:column;justify-content:center;text-align:center;font-size:10.5px;color:#1d4f90;font-weight:900;line-height:1.35}.local-note small{font-size:8.8px;color:#3b587b;font-weight:700}
+/* External */
+.ext-body{padding:9px 10px}
+.ext-card{height:67px;border:1px solid #ead4ba;background:linear-gradient(145deg,#fffdfa,#fff7ed);border-radius:8px;margin-bottom:7px;display:grid;grid-template-columns:42px 1fr;gap:8px;align-items:center;padding:7px 9px}
+.ext-card:last-child{margin-bottom:0}.ext-card .icon{width:35px;height:35px;color:#24805d}.ext-card.rss .icon,.ext-card.external-llm .icon{color:var(--orange)}.ext-card.link .icon{color:#3a66ad}.ext-card b{font-size:15px;color:#23583f}.ext-card span{display:block;font-size:9.7px;color:#4e5e68;margin-top:2px;font-weight:650}
+/* Bottom */
+.bottom{width:1540px;height:145px;margin:0 auto;display:grid;grid-template-columns:875px 330px 315px;gap:10px;flex:none}
+.bottom-card{height:145px;background:rgba(255,255,255,.93);border:1.2px solid var(--line);border-radius:10px;padding:8px 10px;overflow:hidden}
+.bottom-card h3{height:23px;margin:0;text-align:center;font-size:13.5px;color:#164985;letter-spacing:-.2px}
+.lifecycle{position:relative;display:grid;grid-template-columns:repeat(7,1fr);gap:17px;align-items:center;height:103px}
+.lifecycle::after{content:'';position:absolute;left:52px;right:52px;bottom:0;border-bottom:1.8px dashed #ef554d;opacity:.8}.lifecycle::before{content:'↶';position:absolute;left:37px;bottom:-7px;color:#ef554d;font-size:17px;font-weight:900}
+.life{position:relative;height:93px;border:1px solid #d2deeb;background:#fafcff;border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:4px}
+.life:not(:last-child)::after{content:'→';position:absolute;right:-15px;top:32px;color:#235a9e;font-size:21px;font-weight:950}
+.life .icon{width:32px;height:32px;margin-bottom:2px}.life b{font-size:10.5px;color:#21456f}.life span{font-size:8.8px;color:#50647d;line-height:1.25;font-weight:650}
+.glossary{display:grid;gap:4px;padding-top:1px}.gloss-row{height:24px;display:grid;grid-template-columns:28px 39px 1fr;gap:4px;align-items:center;font-size:9.7px;color:#354a64}.gloss-row .icon{width:21px;height:21px}.gloss-row b{font-size:10.5px;color:#193e70}.gloss-row span{font-weight:650}
+.role-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;height:104px}.role-col{border-radius:8px;padding:6px 7px}.role-col.cloud{background:#eef5ff;border:1px solid #c0d2e9}.role-col.local{background:#eef8f2;border:1px solid #bddbc9}.role-col h4{margin:0 0 5px;text-align:center;font-size:10.5px;line-height:1.25}.role-col.cloud h4{color:#18559a}.role-col.local h4{color:#216847}.role-col ul{margin:0;padding-left:14px;font-size:9px;line-height:1.48;color:#293d57;font-weight:650}
+.footer{height:17px;display:flex;align-items:center;justify-content:space-between;color:#8995a5;font-size:9.5px;flex:none;padding:0 2px}
+.controls{position:fixed;right:15px;bottom:12px;display:flex;gap:7px;z-index:100;opacity:.16;transition:.18s}
+.controls:hover{opacity:1}.controls button{border:0;border-radius:18px;padding:8px 12px;background:rgba(16,33,60,.94);color:white;font-family:var(--font);font-size:11px;font-weight:850;cursor:pointer;box-shadow:0 6px 18px rgba(0,0,0,.18)}.controls button.edit{background:var(--coral2)}
+body.editing .sheet{outline:3px dashed var(--coral);outline-offset:-6px}
+body.shot .controls{display:none}
+@page{size:1600px 900px;margin:0}
+@media print{html,body{width:1600px;height:900px;background:white;overflow:hidden}.viewport{position:static;display:block}.sheet{width:1600px;height:900px;transform:none!important;box-shadow:none}.controls{display:none}}
+</style>
+</head>
+<body>
+<!-- SVG icon sprite: all graphics are inline HTML/SVG, no embedded screenshot -->
+<svg width="0" height="0" style="position:absolute;overflow:hidden" aria-hidden="true">
+<defs>
+  <symbol id="i-browser" viewBox="0 0 64 64"><rect x="5" y="8" width="54" height="47" rx="5" fill="none" stroke="currentColor" stroke-width="3"/><path d="M5 18h54" stroke="currentColor" stroke-width="3"/><circle cx="13" cy="13" r="1.8" fill="currentColor"/><circle cx="20" cy="13" r="1.8" fill="currentColor"/><circle cx="32" cy="36" r="13" fill="none" stroke="currentColor" stroke-width="2.5"/><path d="M19 36h26M32 23c5 5 5 21 0 26M32 23c-5 5-5 21 0 26" fill="none" stroke="currentColor" stroke-width="2"/></symbol>
+  <symbol id="i-desktop" viewBox="0 0 64 64"><rect x="7" y="8" width="50" height="37" rx="4" fill="none" stroke="currentColor" stroke-width="3"/><path d="M25 53h14M32 45v8" stroke="currentColor" stroke-width="3" stroke-linecap="round"/><rect x="13" y="15" width="12" height="10" rx="2" fill="currentColor" opacity=".25"/><rect x="29" y="15" width="21" height="10" rx="2" fill="currentColor" opacity=".25"/><rect x="13" y="29" width="37" height="9" rx="2" fill="currentColor" opacity=".18"/></symbol>
+  <symbol id="i-terminal" viewBox="0 0 64 64"><rect x="5" y="8" width="54" height="47" rx="6" fill="#22272e" stroke="currentColor" stroke-width="2"/><path d="M17 23l9 8-9 8M31 40h14" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-network" viewBox="0 0 64 64"><path d="M20 19l12 12 12-12M20 45l12-14 12 14M20 19v26M44 19v26" fill="none" stroke="currentColor" stroke-width="2.5"/><circle cx="20" cy="19" r="5" fill="none" stroke="currentColor" stroke-width="2.5"/><circle cx="44" cy="19" r="5" fill="none" stroke="currentColor" stroke-width="2.5"/><circle cx="32" cy="31" r="5" fill="none" stroke="currentColor" stroke-width="2.5"/><circle cx="20" cy="45" r="5" fill="none" stroke="currentColor" stroke-width="2.5"/><circle cx="44" cy="45" r="5" fill="none" stroke="currentColor" stroke-width="2.5"/></symbol>
+  <symbol id="i-wrench" viewBox="0 0 64 64"><path d="M38 10a14 14 0 0 0-16 18L8 42a7 7 0 0 0 10 10l14-14a14 14 0 0 0 18-16l-9 9-8-2-2-8z" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round"/><circle cx="14" cy="47" r="2.5" fill="currentColor"/></symbol>
+  <symbol id="i-code" viewBox="0 0 64 64"><path d="M24 17L10 32l14 15M40 17l14 15-14 15M36 11L28 53" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-doc" viewBox="0 0 64 64"><path d="M16 7h23l10 10v40H16z" fill="none" stroke="currentColor" stroke-width="3"/><path d="M39 7v12h10M23 29h19M23 37h19M23 45h14" stroke="currentColor" stroke-width="2.5"/></symbol>
+  <symbol id="i-db" viewBox="0 0 64 64"><ellipse cx="32" cy="13" rx="20" ry="8" fill="none" stroke="currentColor" stroke-width="3"/><path d="M12 13v37c0 4 9 8 20 8s20-4 20-8V13M12 25c0 4 9 8 20 8s20-4 20-8M12 38c0 4 9 8 20 8s20-4 20-8" fill="none" stroke="currentColor" stroke-width="3"/></symbol>
+  <symbol id="i-api" viewBox="0 0 64 64"><path d="M18 44H13a10 10 0 0 1-1-20 14 14 0 0 1 27-4 11 11 0 0 1 13 11 11 11 0 0 1-11 11h-4" fill="none" stroke="currentColor" stroke-width="3"/><text x="32" y="39" text-anchor="middle" font-size="17" font-weight="900" fill="currentColor">API</text></symbol>
+  <symbol id="i-globe" viewBox="0 0 64 64"><circle cx="32" cy="32" r="24" fill="none" stroke="currentColor" stroke-width="3"/><path d="M8 32h48M32 8c9 9 9 39 0 48M32 8c-9 9-9 39 0 48" fill="none" stroke="currentColor" stroke-width="2.5"/></symbol>
+  <symbol id="i-rocket" viewBox="0 0 64 64"><path d="M37 12c10-6 16-4 16-4s2 6-4 16L35 38l-9-9z" fill="none" stroke="currentColor" stroke-width="3"/><circle cx="41" cy="20" r="4" fill="none" stroke="currentColor" stroke-width="2.5"/><path d="M28 29l-10 2-8 8 14 1 1 14 8-8 2-10M18 46l-6 6M22 50l-5 5" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 64 64"><path d="M32 7l21 8v15c0 14-9 23-21 28C20 53 11 44 11 30V15z" fill="none" stroke="currentColor" stroke-width="3"/><path d="M22 32l7 7 14-16" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-cloud" viewBox="0 0 64 64"><path d="M18 48H14a11 11 0 0 1-1-22 16 16 0 0 1 31-4 13 13 0 0 1 6 25z" fill="none" stroke="currentColor" stroke-width="3"/></symbol>
+  <symbol id="i-server" viewBox="0 0 64 64"><rect x="10" y="8" width="44" height="14" rx="3" fill="none" stroke="currentColor" stroke-width="3"/><rect x="10" y="25" width="44" height="14" rx="3" fill="none" stroke="currentColor" stroke-width="3"/><rect x="10" y="42" width="44" height="14" rx="3" fill="none" stroke="currentColor" stroke-width="3"/><circle cx="18" cy="15" r="2" fill="currentColor"/><circle cx="18" cy="32" r="2" fill="currentColor"/><circle cx="18" cy="49" r="2" fill="currentColor"/><path d="M27 15h18M27 32h18M27 49h18" stroke="currentColor" stroke-width="2"/></symbol>
+  <symbol id="i-rss" viewBox="0 0 64 64"><circle cx="16" cy="48" r="5" fill="currentColor"/><path d="M12 31a21 21 0 0 1 21 21M12 17a35 35 0 0 1 35 35" fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round"/></symbol>
+  <symbol id="i-link" viewBox="0 0 64 64"><path d="M26 38l-5 5a10 10 0 0 1-14-14l10-10a10 10 0 0 1 14 0M38 26l5-5a10 10 0 1 1 14 14L47 45a10 10 0 0 1-14 0M22 42l20-20" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></symbol>
+  <symbol id="i-building" viewBox="0 0 64 64"><path d="M7 25h50L32 8zM11 52h42M15 25v27M25 25v27M39 25v27M49 25v27M8 57h48" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round"/></symbol>
+  <symbol id="i-user" viewBox="0 0 64 64"><circle cx="32" cy="20" r="11" fill="none" stroke="currentColor" stroke-width="3"/><path d="M12 56c2-15 10-22 20-22s18 7 20 22z" fill="none" stroke="currentColor" stroke-width="3"/></symbol>
+  <symbol id="i-check" viewBox="0 0 64 64"><rect x="13" y="7" width="38" height="50" rx="4" fill="none" stroke="currentColor" stroke-width="3"/><path d="M22 28l7 7 14-16M22 45h20" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-windows" viewBox="0 0 64 64"><path d="M8 12l21-3v21H8zM35 8l21-3v25H35zM8 35h21v21L8 53zM35 35h21v24l-21-3z" fill="currentColor"/></symbol>
+</defs>
+</svg>
+<div class="viewport"><main class="sheet" id="sheet">
+  <header class="header">
+    <div class="title"><h1>LLM 에이전트 · 툴 호출 · 하네스 = <em>클라우드/로컬 실행구조</em></h1><p>ChatGPT, Claude Code, Codex, Desktop App, CLI를 한눈에 이해하는 구조도</p></div>
+    <div class="question"><svg><use href="#i-network"/></svg><b>핵심 질문: 누가 생각하고,<br>어디서 실행하고, 어떤 자원을 쓰는가?</b></div>
+  </header>
+
+  <section class="architecture">
+    <svg class="connectors" viewBox="0 0 1540 596" aria-hidden="true">
+      <defs>
+        <marker id="arrB" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0L8 4L0 8z" fill="#2564b1"/></marker>
+        <marker id="arrR" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0L8 4L0 8z" fill="#ef554d"/></marker>
+        <marker id="arrG" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0L8 4L0 8z" fill="#2c8a62"/></marker>
+        <marker id="arrO" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0L8 4L0 8z" fill="#ee8a2d"/></marker>
+      </defs>
+      <path d="M175 145H191" stroke="#2564b1" stroke-width="3" fill="none" marker-end="url(#arrB)"/>
+      <path d="M175 307H191" stroke="#2564b1" stroke-width="3" fill="none" marker-end="url(#arrB)"/>
+      <path d="M175 468H191" stroke="#2564b1" stroke-width="3" fill="none" marker-end="url(#arrB)"/>
+      <path d="M515 277H533" stroke="#ef554d" stroke-width="4" fill="none" marker-end="url(#arrR)"/>
+      <text x="505" y="261" font-size="11" font-family="sans-serif" font-weight="900" fill="#ef554d">툴 호출</text>
+      <path d="M850 220H858V141H865" stroke="#2c8a62" stroke-width="4" fill="none" marker-end="url(#arrG)"/>
+      <path d="M850 354H858V447H865" stroke="#2564b1" stroke-width="4" fill="none" marker-end="url(#arrB)"/>
+      <path d="M1285 164H1290V80M1290 80V524" stroke="#ee8a2d" stroke-width="2.5" fill="none"/>
+      <path d="M1285 458H1290" stroke="#ee8a2d" stroke-width="2.5" fill="none"/>
+      <path d="M1290 80H1295M1290 151H1295M1290 222H1295M1290 293H1295M1290 364H1295M1290 435H1295M1290 506H1295" stroke="#ee8a2d" stroke-width="2.3" fill="none" marker-end="url(#arrO)"/>
+    </svg>
+
+    <article class="panel">
+      <div class="panel-head blue">1. 사용자 화면</div><div class="panel-sub">사용자가 접근하는 창구</div>
+      <div class="panel-body">
+        <div class="entry"><svg class="icon"><use href="#i-browser"/></svg><b>브라우저</b><span>웹 화면</span></div>
+        <div class="entry"><svg class="icon"><use href="#i-desktop"/></svg><b>데스크톱 앱</b><span>내 PC에<br>설치된 화면</span></div>
+        <div class="entry"><svg class="icon"><use href="#i-terminal"/></svg><b>CLI</b><span>명령어 입력창</span></div>
+      </div>
+    </article>
+
+    <article class="panel">
+      <div class="panel-head coral">2. LLM 에이전트(생각하는 부분)</div>
+      <div class="agent-body">
+        <div class="agent-map">
+          <svg class="arrows" viewBox="0 0 308 280"><defs><marker id="loopR" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto"><path d="M0 0L7 3.5L0 7z" fill="#ef554d"/></marker></defs>
+            <path d="M153 54C235 52 264 82 257 113" fill="none" stroke="#ef554d" stroke-width="2.1" marker-end="url(#loopR)"/>
+            <path d="M258 124C274 160 269 190 252 208" fill="none" stroke="#ef554d" stroke-width="2.1" marker-end="url(#loopR)"/>
+            <path d="M218 234C202 254 183 263 164 262" fill="none" stroke="#ef554d" stroke-width="2.1" marker-end="url(#loopR)"/>
+            <path d="M142 262C103 263 75 247 58 226" fill="none" stroke="#ef554d" stroke-width="2.1" marker-end="url(#loopR)"/>
+            <path d="M49 206C30 177 31 143 48 119" fill="none" stroke="#ef554d" stroke-width="2.1" marker-end="url(#loopR)"/>
+            <path d="M59 94C81 65 111 54 142 54" fill="none" stroke="#ef554d" stroke-width="2.1" marker-end="url(#loopR)"/>
+          </svg>
+          <div class="agent-node plan"><b>계획</b><span>무엇을 할지 정리</span></div>
+          <div class="agent-node understand"><b>질문 이해</b><span>사용자 의도 파악</span></div>
+          <div class="agent-node select"><b>도구 선택</b><span>필요한 도구 고르기</span></div>
+          <div class="agent-node review"><b>결과 검토</b><span>결과를 보고 점검</span></div>
+          <div class="agent-node execute"><b>실행 지시</b><span>툴 호출 보내기</span></div>
+          <div class="agent-node repeat"><b>반복</b><span>필요하면 다시 수행</span></div>
+          <div class="agent-core"><svg class="network"><use href="#i-network"/></svg><strong>LLM<br>Agent</strong></div>
+        </div>
+        <div class="agent-def">에이전트 = LLM이 단계적으로<br>이해·계획·선택·검토하는 흐름</div>
+        <div class="tool-call"><svg class="icon coral"><use href="#i-wrench"/></svg><b>툴 호출 = 필요한 기능을<br>외부 도구에 시키는 것</b></div>
+        <div class="cloud-scope"><div class="scope-main"><h4><svg class="icon sm blue"><use href="#i-cloud"/></svg>클라우드 에이전트가 어디까지 담당?</h4><ul><li>질문 이해</li><li>계획 세우기</li><li>도구 선택</li><li>웹 조사 / 정보 수집</li><li>작업 순서 오케스트레이션</li><li>결과 정리</li></ul></div><div class="caution"><div class="tri">⚠</div><b>주의</b><span>데스크톱 앱을 써도<br>‘생각’ 자체는 보통<br>클라우드 LLM이 담당</span></div></div>
+      </div>
+    </article>
+
+    <article class="panel">
+      <div class="panel-head green">3. 하네스(Harness) = 일을 연결하는 작업대</div>
+      <div class="harness-body">
+        <div class="harness-def">하네스 = LLM, 코드, 파일, 도구, 실행환경을<br>안전하게 연결하는 실행 틀</div>
+        <div class="tool-grid">
+          <div class="tool-card"><svg class="icon"><use href="#i-code"/></svg><div><b>코드</b><span>코드 작성·실행</span></div></div>
+          <div class="tool-card"><div class="py-badge">Py</div><div><b>Python</b><span>파이썬 실행</span></div></div>
+          <div class="tool-card"><div class="term-icon">&gt;_</div><div><b>Bash</b><span>명령어 실행</span></div></div>
+          <div class="tool-card"><svg class="icon"><use href="#i-doc"/></svg><div><b>문서</b><span>파일 읽기·쓰기</span></div></div>
+          <div class="tool-card"><svg class="icon"><use href="#i-db"/></svg><div><b>DB</b><span>데이터베이스 접근</span></div></div>
+          <div class="tool-card"><svg class="icon"><use href="#i-api"/></svg><div><b>API</b><span>HTTP 호출</span></div></div>
+          <div class="tool-card"><svg class="icon"><use href="#i-globe"/></svg><div><b>브라우저 자동화</b><span>웹 제어·스크랩</span></div></div>
+          <div class="tool-card"><svg class="icon"><use href="#i-rocket"/></svg><div><b>배포</b><span>서버 실행·배포</span></div></div>
+        </div>
+        <div class="security"><svg class="icon"><use href="#i-shield"/></svg><div><b>인증 · 권한 · 샌드박스 · 로깅</b><span>작업을 안전하게 제한하고 기록</span></div></div>
+        <div class="sandbox-note">샌드박스 = 제한된 안전 실험공간</div>
+      </div>
+    </article>
+
+    <article class="panel">
+      <div class="panel-head blue">4. 실행환경(실제로 일하는 곳)</div>
+      <div class="exec-body">
+        <section class="exec-card cloud">
+          <div class="exec-title"><svg class="icon"><use href="#i-cloud"/></svg><div><b>클라우드 하네스</b><span>클라우드 실행환경</span></div></div>
+          <div class="exec-content">
+            <div class="runtime-list">
+              <div class="runtime-row"><svg class="icon"><use href="#i-globe"/></svg><b>웹</b><span>웹 접근·조사</span></div>
+              <div class="runtime-row"><div class="py-badge" style="width:18px;height:18px;border-radius:4px;font-size:6px">Py</div><b>Python</b><span>원격 파이썬 실행</span></div>
+              <div class="runtime-row"><svg class="icon"><use href="#i-doc"/></svg><b>문서</b><span>문서 생성·처리</span></div>
+              <div class="runtime-row"><svg class="icon"><use href="#i-db"/></svg><b>데이터베이스</b><span>DB 접근·쿼리</span></div>
+              <div class="runtime-row"><svg class="icon"><use href="#i-terminal"/></svg><b>OS</b><span>리눅스 환경 등</span></div>
+            </div>
+            <div class="service-box"><h5>예시 서비스(클라우드)</h5><div class="chip">ChatGPT Web</div><div class="chip">Work</div><div class="chip">Cloud Agent</div></div>
+          </div>
+          <div class="cloud-role"><div><b>클라우드가 주로 하는 일</b><p>조사 · 계획 · 도구 오케스트레이션<br>원격 Python/문서 · 클라우드 작업 실행</p></div><div class="strength">클라우드 에이전트는<br>‘생각/조정’에 강함</div></div>
+        </section>
+        <div class="boundary">클라우드 vs 로컬, 어디까지?<small>클라우드 = 생각·계획·선택·원격작업　/　로컬 = 내 PC 자원 실행·파일·앱·코드 처리</small></div>
+        <section class="exec-card local">
+          <div class="exec-title"><svg class="icon"><use href="#i-desktop"/></svg><div><b>로컬 하네스(내 PC)</b><span>내 PC 로컬 실행환경</span></div></div>
+          <div class="exec-content">
+            <div class="runtime-list">
+              <div class="runtime-row"><svg class="icon"><use href="#i-code"/></svg><b>코드</b><span>코드 작성·실행</span></div>
+              <div class="runtime-row"><div class="py-badge" style="width:16px;height:16px;border-radius:4px;font-size:5px">Py</div><b>Python</b><span>내 Python 실행</span></div>
+              <div class="runtime-row"><svg class="icon"><use href="#i-terminal"/></svg><b>Bash</b><span>내 Bash 실행</span></div>
+              <div class="runtime-row"><svg class="icon"><use href="#i-doc"/></svg><b>문서</b><span>내 파일 읽고 쓰기</span></div>
+              <div class="runtime-row"><svg class="icon"><use href="#i-db"/></svg><b>DB</b><span>로컬 DB 다루기</span></div>
+              <div class="runtime-row"><svg class="icon"><use href="#i-windows"/></svg><b>OS</b><span>Windows/macOS/Linux</span></div>
+            </div>
+            <div class="service-box"><h5>예시 도구(로컬)</h5><div class="chip">Codex</div><div class="chip">Claude Code</div><div class="chip">Antigravity</div><div class="chip">Cursor</div><div class="chip">Windsurf</div></div>
+            <div class="local-role"><b>로컬이 주로 하는 일</b><ul><li>내 파일 다루기</li><li>내 Python 실행</li><li>내 Bash 실행</li><li>내 앱/문서 사용</li><li>테스트 · 배포</li></ul></div>
+          </div>
+          <div class="local-note">데스크톱 앱·CLI는 보통 내 PC의 로컬 런타임을 많이 사용<small>로컬 런타임 = 내 컴퓨터 안에서 실제로 돌아가는 Python·Bash·앱 환경</small></div>
+        </section>
+      </div>
+    </article>
+
+    <article class="panel">
+      <div class="panel-head orange">5. 기관서버 / 공공데이터 / 외부 API</div>
+      <div class="ext-body">
+        <div class="ext-card"><svg class="icon"><use href="#i-db"/></svg><div><b>DB</b><span>기관 데이터베이스</span></div></div>
+        <div class="ext-card"><svg class="icon"><use href="#i-api"/></svg><div><b>API</b><span>외부 서비스 API</span></div></div>
+        <div class="ext-card"><svg class="icon"><use href="#i-server"/></svg><div><b>Edge Server</b><span>엣지 서버</span></div></div>
+        <div class="ext-card rss"><svg class="icon"><use href="#i-rss"/></svg><div><b>RSS</b><span>뉴스·피드</span></div></div>
+        <div class="ext-card link"><svg class="icon"><use href="#i-link"/></svg><div><b>Links</b><span>웹 링크·사이트</span></div></div>
+        <div class="ext-card external-llm"><svg class="icon"><use href="#i-network"/></svg><div><b>LLM</b><span>외부 LLM 모델</span></div></div>
+        <div class="ext-card"><svg class="icon"><use href="#i-building"/></svg><div><b>공공데이터</b><span>공공 데이터</span></div></div>
+      </div>
+    </article>
+  </section>
+
+  <section class="bottom">
+    <article class="bottom-card"><h3>에이전트 작업 생명주기</h3><div class="lifecycle">
+      <div class="life"><svg class="icon blue"><use href="#i-user"/></svg><b>사용자 요청</b><span>질문·작업 요청</span></div>
+      <div class="life"><svg class="icon coral"><use href="#i-network"/></svg><b style="color:#e7433c">LLM Agent</b><span>이해·계획·판단</span></div>
+      <div class="life"><svg class="icon blue"><use href="#i-wrench"/></svg><b>툴 호출</b><span>필요한 도구 선택</span></div>
+      <div class="life"><svg class="icon green"><use href="#i-link"/></svg><b>하네스</b><span>도구 연결·실행 준비</span></div>
+      <div class="life"><svg class="icon blue"><use href="#i-cloud"/></svg><b>클라우드/로컬</b><span>실제 작업 수행</span></div>
+      <div class="life"><svg class="icon green"><use href="#i-check"/></svg><b>결과 검토</b><span>검토·정리·개선</span></div>
+      <div class="life"><svg class="icon blue"><use href="#i-user"/></svg><b>사용자</b><span>결과 제공</span></div>
+    </div></article>
+    <article class="bottom-card"><h3>용어 쉽게 이해하기</h3><div class="glossary">
+      <div class="gloss-row"><svg class="icon blue"><use href="#i-windows"/></svg><b>WSL</b><span>= 윈도우 안의 리눅스 작업공간</span></div>
+      <div class="gloss-row"><svg class="icon"><use href="#i-terminal"/></svg><b>SSH</b><span>= 다른 컴퓨터에 원격 접속하는 방식</span></div>
+      <div class="gloss-row"><svg class="icon green"><use href="#i-shield"/></svg><b>샌드박스</b><span>= 제한된 안전 실험공간</span></div>
+      <div class="gloss-row"><svg class="icon green"><use href="#i-link"/></svg><b>하네스</b><span>= 에이전트와 도구를 연결하는 작업대</span></div>
+    </div></article>
+    <article class="bottom-card"><h3>역할 비교</h3><div class="role-grid"><div class="role-col cloud"><h4>클라우드 에이전트가<br>주로 하는 일</h4><ul><li>계획 세우기</li><li>도구 선택</li><li>웹 조사</li><li>클라우드 작업</li><li>결과 정리</li></ul></div><div class="role-col local"><h4>로컬 하네스가<br>주로 하는 일</h4><ul><li>내 파일 읽기</li><li>내 Python 실행</li><li>내 Bash 실행</li><li>내 앱·문서 다루기</li><li>테스트·배포</li></ul></div></div></article>
+  </section>
+  <footer class="footer"><span>LLM Agent Architecture · HTML/CSS/SVG editable report</span><span>개념적 구조도 — 제품별 권한·실행 방식은 버전과 설정에 따라 달라질 수 있음</span></footer>
+</main></div>
+<div class="controls"><button class="edit" id="editBtn">✏ 편집</button><button id="saveBtn">💾 저장 HTML</button><button id="pdfBtn">📄 PDF</button><button id="fullBtn">⛶ 전체화면</button></div>
+<script>
+const sheet=document.getElementById('sheet');
+let editing=false;
+function fit(){const s=Math.min(innerWidth/1600,innerHeight/900);sheet.style.transform=`scale(${s})`;}
+addEventListener('resize',fit);fit();
+if(new URLSearchParams(location.search).has('shot'))document.body.classList.add('shot');
+document.getElementById('editBtn').onclick=()=>{editing=!editing;document.body.classList.toggle('editing',editing);sheet.contentEditable=editing?'true':'false';document.getElementById('editBtn').textContent=editing?'✔ 편집 완료':'✏ 편집';};
+document.getElementById('saveBtn').onclick=()=>{if(editing){editing=false;document.body.classList.remove('editing');sheet.removeAttribute('contenteditable');document.getElementById('editBtn').textContent='✏ 편집';}const clone=document.documentElement.cloneNode(true);clone.querySelectorAll('.controls').forEach(x=>x.remove());clone.querySelector('#sheet')?.removeAttribute('contenteditable');const blob=new Blob(['<!DOCTYPE html>\n'+clone.outerHTML],{type:'text/html;charset=utf-8'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='LLM_에이전트_하네스_실행구조_수정본.html';a.click();URL.revokeObjectURL(a.href);};
+document.getElementById('pdfBtn').onclick=()=>window.print();
+document.getElementById('fullBtn').onclick=async()=>{if(!document.fullscreenElement)await sheet.requestFullscreen();else await document.exitFullscreen();};
+</script>
+<script>/* kg-preview: #<heading> \uc704\uce58\ub85c \uc774\ub3d9 */
+(function(){function norm(t){return (t||'').replace(/\s+/g,'').toLowerCase()}
+function go(){var h=decodeURIComponent(location.hash.slice(1));if(!h)return;var k=norm(h).slice(0,24);if(!k)return;
+var best=null,bl=1e9,els=document.body.querySelectorAll('h1,h2,h3,h4,h5,p,div,span,li,td,text,tspan,section,article');
+for(var i=0;i<els.length;i++){var e=els[i],t=norm(e.textContent);if(t.length<bl&&t.indexOf(k)>-1){best=e;bl=t.length}}
+if(!best)return;var box=best.closest('section,[class*=slide],[class*=page],article')||best;
+box.scrollIntoView({block:'start'});box.style.outline='3px solid #c0504d';box.style.outlineOffset='4px';
+setTimeout(function(){box.style.outline=''},2600)}
+window.addEventListener('load',function(){setTimeout(go,400)});window.addEventListener('hashchange',go)})();</script></body>
+</html>

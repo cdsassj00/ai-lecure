@@ -1,0 +1,1367 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head><meta name="robots" content="noindex, nofollow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Session 04 · 어시스트 바이브 코딩 ① — 데이터 시각화와 분석</title>
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700;9..144,800&family=Noto+Serif+KR:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f5efe4;--bg2:#ede4d3;--ink:#2b2015;--ink2:#5a4a38;--ink3:#8a7659;--acc:#b8532a;--acc3:#d49575;--ln:#d8c8ae;--ln2:#e6d9bf;--dk:#1a1612;--dk2:#241e17;--on:#ede4d3;--on2:#a89172;--serif:'Fraunces','Noto Serif KR',Georgia,serif;--sans:'Pretendard Variable',Pretendard,sans-serif;--mono:'JetBrains Mono',ui-monospace,Consolas,monospace}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{margin:0;padding:0;overflow:hidden;height:100vh;width:100vw;background:#0e0a06;font-family:var(--sans);-webkit-font-smoothing:antialiased}
+.deck{height:100vh;overflow-y:scroll;scroll-snap-type:y mandatory;scroll-behavior:smooth;scrollbar-width:none;-ms-overflow-style:none;background:#0e0a06}
+.deck::-webkit-scrollbar{display:none}
+.stage{width:100vw;min-height:100vh;display:flex;align-items:center;justify-content:center;scroll-snap-align:start;padding:0;background:#0e0a06}
+.slide{width:1600px;height:900px;background:var(--bg);position:relative;overflow:hidden;transform-origin:center;box-shadow:0 40px 90px -30px rgba(0,0,0,0.7);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' seed='3'/%3E%3CfeColorMatrix values='0 0 0 0 0.16  0 0 0 0 0.12  0 0 0 0 0.08  0 0 0 0.025 0'/%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E")}
+
+.hbar{position:absolute;top:0;left:0;right:0;height:52px;background:var(--dk);display:flex;align-items:center;justify-content:space-between;padding:0 80px}
+.hbar-l{display:flex;align-items:center;gap:12px;font-family:var(--mono);font-size:10.5px;color:#fff;letter-spacing:2.5px;font-weight:600}
+.hbar-l::before{content:"";width:22px;height:8px;background:var(--acc)}
+.hbar-r{font-family:var(--mono);font-size:10.5px;color:#bbb;letter-spacing:1.5px}
+.hl{position:absolute;left:80px;right:80px;top:86px}
+.hl-kicker{font-family:var(--mono);font-size:12px;color:var(--ink3);letter-spacing:2.5px;font-weight:700;margin-bottom:14px}
+.hl-title{font-family:var(--serif);font-weight:700;font-size:36px;line-height:1.22;letter-spacing:-0.5px;color:var(--ink)}
+.hl-sub{font-size:15.5px;color:var(--ink2);margin-top:12px;line-height:1.6}
+.hl-bar{width:60px;height:3px;background:var(--ink);margin-top:16px}
+.hl-rule{position:absolute;left:80px;right:80px;top:248px;height:1px;background:var(--ln2)}
+.fbar{position:absolute;bottom:0;left:0;right:0;height:52px;background:#f0e8d8;border-top:3px solid var(--ln);display:flex;align-items:center;justify-content:space-between;padding:0 80px}
+.fbar-l,.fbar-r{display:flex;flex-direction:column;gap:2px}.fbar-r{align-items:flex-end}
+.fbar-label{font-family:var(--mono);font-size:10px;color:var(--ink3);letter-spacing:2.5px;font-weight:700}
+.fbar-title{font-size:13px;color:var(--ink)}
+
+.bd{position:absolute;left:80px;right:80px;top:264px;bottom:72px;display:grid;gap:1px;background:var(--ln2)}
+.bd.col3{grid-template-columns:1fr 1fr 1fr}
+.bd.col2{grid-template-columns:1fr 1fr}
+.bd.col2w{grid-template-columns:1.25fr 1fr}
+.bd.col2n{grid-template-columns:1fr 1.3fr}
+.col{background:var(--bg);padding:30px 34px;display:flex;flex-direction:column;overflow:hidden;min-width:0;gap:14px}
+.col > .grow{flex:1;min-height:0;display:flex;flex-direction:column;justify-content:flex-end;gap:10px}
+
+.card{background:var(--bg);padding:34px 36px;display:flex;flex-direction:column;gap:16px;overflow:hidden;min-width:0}
+.card.dk{background:var(--dk);color:var(--on)}
+.card-k{font-family:var(--mono);font-size:11px;color:var(--acc);letter-spacing:2.5px;font-weight:700}
+.card.dk .card-k{color:var(--acc3)}
+.card-anchor{font-family:var(--serif);font-size:26px;font-weight:700;line-height:1.22;color:var(--ink);letter-spacing:-0.4px}
+.card.dk .card-anchor{color:var(--on)}
+.card-anchor em{color:var(--acc);font-style:normal}
+.card.dk .card-anchor em{color:var(--acc3)}
+.card-body{font-size:14px;line-height:1.75;color:var(--ink2)}
+.card.dk .card-body{color:var(--on2)}
+.card-body strong{color:var(--ink);font-weight:700}
+.card.dk .card-body strong{color:var(--on)}
+.card-spacer{flex:1;min-height:8px}
+.card-note{font-size:12.5px;color:var(--ink3);font-style:italic;line-height:1.6}
+.card.dk .card-note{color:var(--on2)}
+
+.sh{display:flex;align-items:baseline;gap:12px;margin-bottom:3px}
+.sh-n{font-family:var(--mono);font-size:11px;color:var(--ink3);letter-spacing:2.5px;font-weight:700;white-space:nowrap}
+.sh-t{font-size:12.5px;color:var(--ink2)}
+.sh-line{height:1px;background:var(--ln2);margin-bottom:10px}
+
+.mtbl{width:100%;border-collapse:collapse;font-size:12.5px}
+.mtbl thead th{font-family:var(--mono);font-size:10px;color:var(--ink3);letter-spacing:1.5px;font-weight:700;text-align:left;padding:9px 9px;border-bottom:1.5px solid var(--ink);background:var(--bg2)}
+.mtbl tbody td{padding:10px 9px;border-bottom:1px solid var(--ln2);color:var(--ink2);vertical-align:top;line-height:1.6}
+.mtbl tbody tr:last-child td{border-bottom:0}
+.mtbl tbody td:first-child{color:var(--ink);font-weight:700;font-family:var(--mono);font-size:10.5px;letter-spacing:1px;white-space:nowrap}
+.mtbl tbody td.q{color:var(--ink);font-weight:600;font-family:var(--sans);font-size:12.5px;letter-spacing:0}
+
+.co{background:var(--bg2);border-left:3px solid var(--acc);padding:14px 18px}
+.co-lb{font-family:var(--mono);font-size:10.5px;color:var(--acc);letter-spacing:2px;font-weight:700;margin-bottom:5px}
+.co-main{font-size:14.5px;color:var(--ink);font-weight:700;line-height:1.5}
+.co p{font-size:12.5px;color:var(--ink2);line-height:1.7;margin-top:5px}
+
+.next{background:var(--dk);padding:16px 20px;color:var(--on)}
+.next-k{font-family:var(--mono);font-size:10.5px;color:var(--acc3);letter-spacing:2px;font-weight:700;margin-bottom:5px}
+.next-t{font-size:13.5px;line-height:1.65;color:var(--on2)}
+.next-t strong{color:var(--on);font-weight:700}
+
+.pit{border-left:3px solid var(--ink);padding:11px 15px;background:var(--bg2)}
+.pit-lb{font-family:var(--mono);font-size:10px;color:var(--ink3);letter-spacing:2px;font-weight:700;margin-bottom:5px}
+.pit-h{font-size:13px;color:var(--ink);font-weight:700;line-height:1.45}
+.pit-d{font-size:12px;color:var(--ink2);line-height:1.65;margin-top:4px}
+
+.smap{display:flex;flex-direction:column;gap:7px}
+.smap-i{display:grid;grid-template-columns:50px 1fr;gap:12px;align-items:start;padding:9px 13px;background:var(--bg2);border-left:2px solid var(--ln)}
+.smap-i.on{border-left-color:var(--acc);background:#f0e7d6}
+.smap-n{font-family:var(--mono);font-size:11px;color:var(--acc);letter-spacing:1.5px;font-weight:700;padding-top:2px}
+.smap-t{font-size:13px;color:var(--ink);font-weight:600;line-height:1.5}
+
+.qex{background:var(--bg2);border-left:3px solid var(--ink);padding:20px 26px;font-family:var(--serif);font-size:19px;line-height:1.75;color:var(--ink)}
+.qex .hot{background:var(--ink);color:var(--on);padding:2px 7px;border-radius:2px;font-weight:700;font-family:var(--sans);font-size:16px;letter-spacing:-0.2px}
+.qex .dim{color:var(--ink3);font-style:italic;font-size:16px}
+
+.draft{padding:14px 18px}
+.draft.weak{background:var(--bg2);border-left:3px solid var(--ln)}
+.draft.strong{background:var(--dk);color:var(--on);border-left:3px solid var(--acc3)}
+.draft-k{font-family:var(--mono);font-size:10px;letter-spacing:1.8px;font-weight:700;color:var(--ink3);margin-bottom:5px}
+.draft.strong .draft-k{color:var(--acc3)}
+.draft-t{font-size:13.5px;line-height:1.7;color:var(--ink)}
+.draft.strong .draft-t{color:var(--on)}
+.draft-note{font-size:11px;color:var(--ink3);margin-top:7px;line-height:1.55;font-style:italic}
+.draft.strong .draft-note{color:var(--on2)}
+
+.cmp2{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--ln2)}
+.cmp2c{padding:18px 22px;display:flex;flex-direction:column;gap:9px;background:var(--bg2)}
+.cmp2c.dk{background:var(--dk);color:var(--on)}
+.cmp2c-k{font-family:var(--mono);font-size:10.5px;color:var(--acc);letter-spacing:2px;font-weight:700}
+.cmp2c.dk .cmp2c-k{color:var(--acc3)}
+.cmp2c-h{font-family:var(--serif);font-size:19px;font-weight:700;color:var(--ink);line-height:1.3;letter-spacing:-0.3px}
+.cmp2c.dk .cmp2c-h{color:var(--on)}
+.cmp2c-d{font-size:12.5px;color:var(--ink2);line-height:1.7}
+.cmp2c.dk .cmp2c-d{color:var(--on2)}
+.cmp2c-list{display:flex;flex-direction:column;gap:4px;font-size:12px;line-height:1.65;color:var(--ink2)}
+.cmp2c.dk .cmp2c-list{color:var(--on2)}
+.cmp2c-list li{list-style:none;padding-left:14px;position:relative}
+.cmp2c-list li::before{content:"—";position:absolute;left:0;color:var(--ink3);font-family:var(--mono)}
+.cmp2c.dk .cmp2c-list li::before{color:var(--on2)}
+.cmp2c-fig{font-family:var(--mono);font-size:10px;color:var(--ink3);letter-spacing:1.5px;font-weight:700;padding-top:7px;border-top:1px solid var(--ln);margin-top:auto}
+.cmp2c.dk .cmp2c-fig{color:var(--acc3);border-top-color:#3a2f24}
+
+.hybrid{background:#f0e7d6;border-left:4px solid var(--acc);padding:18px 24px;display:flex;flex-direction:column;gap:8px}
+.hybrid-k{font-family:var(--mono);font-size:11px;color:var(--acc);letter-spacing:2.5px;font-weight:700}
+.hybrid-h{font-family:var(--serif);font-size:21px;font-weight:700;color:var(--ink);line-height:1.3;letter-spacing:-0.3px}
+.hybrid-d{font-size:13px;color:var(--ink2);line-height:1.7}
+.hybrid-d strong{color:var(--ink);font-weight:700}
+
+.tline{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--ln2);width:100%}
+.tblock{background:var(--bg2);padding:18px 20px;display:flex;flex-direction:column;gap:8px;position:relative}
+.tblock.dk{background:var(--dk);color:var(--on)}
+.tblock-w{font-family:var(--mono);font-size:11px;color:var(--acc);letter-spacing:2px;font-weight:700}
+.tblock.dk .tblock-w{color:var(--acc3)}
+.tblock-h{font-family:var(--serif);font-size:21px;font-weight:700;line-height:1.25;color:var(--ink);letter-spacing:-0.3px}
+.tblock.dk .tblock-h{color:var(--on)}
+.tblock-sess{font-size:11.5px;color:var(--ink2);line-height:1.6;font-family:var(--mono);letter-spacing:0.3px}
+.tblock.dk .tblock-sess{color:var(--on2)}
+.tblock-d{font-size:12px;color:var(--ink2);line-height:1.7}
+.tblock.dk .tblock-d{color:var(--on2)}
+
+/* 추가 컴포넌트 */
+.flow{display:grid;gap:10px;align-items:center}
+.flow.h4{grid-template-columns:1fr auto 1fr auto 1fr auto 1fr}
+.flow.h3{grid-template-columns:1fr auto 1fr auto 1fr}
+.flow-box{background:var(--bg2);border:1px solid var(--ln);padding:12px 14px;text-align:center;display:flex;flex-direction:column;gap:4px}
+.flow-box.dk{background:var(--dk);color:var(--on);border-color:var(--dk)}
+.flow-box.on{background:#f0e7d6;border-color:var(--acc);border-width:2px}
+.flow-box-k{font-family:var(--mono);font-size:9.5px;color:var(--ink3);letter-spacing:1.5px;font-weight:700}
+.flow-box.dk .flow-box-k{color:var(--acc3)}
+.flow-box.on .flow-box-k{color:var(--acc)}
+.flow-box-t{font-size:12.5px;color:var(--ink);font-weight:700;line-height:1.4}
+.flow-box.dk .flow-box-t{color:var(--on)}
+.flow-arrow{font-family:var(--mono);font-size:22px;color:var(--acc);font-weight:700;text-align:center}
+
+.grid2x2{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:1px;background:var(--ln2)}
+.qd{background:var(--bg2);padding:16px 20px;display:flex;flex-direction:column;gap:6px}
+.qd.dk{background:var(--dk);color:var(--on)}
+.qd-k{font-family:var(--mono);font-size:10px;color:var(--ink3);letter-spacing:2px;font-weight:700}
+.qd.dk .qd-k{color:var(--acc3)}
+.qd-h{font-size:14px;color:var(--ink);font-weight:700;line-height:1.35;font-family:var(--serif)}
+.qd.dk .qd-h{color:var(--on)}
+.qd-d{font-size:12px;color:var(--ink2);line-height:1.65}
+.qd.dk .qd-d{color:var(--on2)}
+.qd-d strong{color:var(--ink);font-weight:700}
+.qd.dk .qd-d strong{color:var(--on)}
+
+.ladder{display:flex;flex-direction:column;gap:1px;background:var(--ln2)}
+.ladder-step{background:var(--bg);padding:14px 18px;display:grid;grid-template-columns:56px 1fr auto;gap:16px;align-items:center}
+.ladder-step.dk{background:var(--dk);color:var(--on)}
+.ladder-step.on{background:#f0e7d6}
+.ladder-n{font-family:var(--serif);font-size:28px;color:var(--acc);font-weight:700;letter-spacing:-0.03em}
+.ladder-step.dk .ladder-n{color:var(--acc3)}
+.ladder-b{display:flex;flex-direction:column;gap:3px;min-width:0}
+.ladder-h{font-size:14px;color:var(--ink);font-weight:700;line-height:1.4}
+.ladder-step.dk .ladder-h{color:var(--on)}
+.ladder-d{font-size:12px;color:var(--ink2);line-height:1.6}
+.ladder-step.dk .ladder-d{color:var(--on2)}
+.ladder-tag{font-family:var(--mono);font-size:9.5px;color:var(--ink3);letter-spacing:1.5px;font-weight:700;text-align:right;white-space:nowrap}
+.ladder-step.dk .ladder-tag{color:var(--acc3)}
+
+.code{background:var(--dk2);padding:14px 18px;font-family:var(--mono);font-size:11.5px;line-height:1.75;color:var(--on);white-space:pre-wrap;border-left:3px solid var(--acc3)}
+.code .cm{color:var(--on2)}
+.code .kw{color:var(--acc3);font-weight:600}
+
+.typelist{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--ln2);flex:1}
+.type{background:var(--bg2);padding:16px 18px;display:flex;flex-direction:column;gap:6px}
+.type.dk{background:var(--dk);color:var(--on)}
+.type-n{font-family:var(--serif);font-size:32px;color:var(--acc);font-weight:700;line-height:1;letter-spacing:-0.03em}
+.type.dk .type-n{color:var(--acc3)}
+.type-h{font-size:13px;color:var(--ink);font-weight:700;line-height:1.35}
+.type.dk .type-h{color:var(--on)}
+.type-d{font-size:11.5px;color:var(--ink2);line-height:1.6}
+.type.dk .type-d{color:var(--on2)}
+.type-tag{font-family:var(--mono);font-size:9.5px;color:var(--ink3);letter-spacing:1.5px;font-weight:700;margin-top:auto;padding-top:6px;border-top:1px solid var(--ln)}
+.type.dk .type-tag{color:var(--acc3);border-top-color:#3a2f24}
+
+.toolbar{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:center;justify-content:center;gap:6px;padding:6px 20px;background:rgba(14,10,6,0.92);backdrop-filter:blur(10px);border-bottom:1px solid rgba(255,255,255,0.08)}
+.toolbar button{background:rgba(255,255,255,0.08);color:#ccc;border:1px solid rgba(255,255,255,0.12);padding:5px 14px;font-family:var(--mono);font-size:10px;letter-spacing:1.5px;cursor:pointer;border-radius:3px;text-transform:uppercase;font-weight:600}
+.toolbar button:hover{background:var(--acc);color:#fff;border-color:var(--acc)}
+.toolbar .pg{color:rgba(255,255,255,0.55);font-size:11px;padding:5px 10px;min-width:80px;text-align:center;font-family:var(--mono);letter-spacing:1px}
+@media print{@page{size:423.33mm 237.5mm;margin:0}*{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}html,body{overflow:visible!important;height:auto!important;background:#fff!important}.deck{overflow:visible!important;height:auto!important;scroll-snap-type:none!important;background:#fff!important}.stage{min-height:0!important;height:auto!important;page-break-after:always;page-break-inside:avoid;padding:0!important;margin:0!important;background:#fff!important;display:block!important}.stage:last-child{page-break-after:avoid}.slide{transform:none!important;box-shadow:none!important;width:1600px!important;height:900px!important}.toolbar{display:none!important}}
+
+/* === S04 ORIGINAL COMPONENTS === */
+.bd.col1{grid-template-columns:1fr;background:transparent;gap:0}
+.bth{font-size:15px;color:var(--ink);font-weight:600;margin-bottom:7px;line-height:1.4}
+.bt{font-size:13.5px;line-height:1.78;color:var(--ink2);margin-bottom:8px}
+.bt strong{color:var(--ink);font-weight:600}
+.cod{background:var(--dk);padding:12px 15px;margin:8px 0;position:relative;overflow:hidden}
+.cod::before{content:"";position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='nd'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' seed='5'/%3E%3CfeColorMatrix values='0 0 0 0 1  0 0 0 0 0.92  0 0 0 0 0.78  0 0 0 0.04 0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23nd)'/%3E%3C/svg%3E");opacity:0.6;pointer-events:none}
+.cod>*{position:relative}
+.cod-lb{font-family:var(--mono);font-size:10px;color:var(--on2);letter-spacing:2px;font-weight:700;margin-bottom:6px}
+.cod-main{font-size:15.5px;color:var(--on);font-weight:700;line-height:1.35;margin-bottom:6px}
+.cod p{font-size:12.5px;color:var(--on2);line-height:1.7}
+.dstrip{background:var(--dk);padding:9px 16px;margin:8px 0;display:grid;grid-template-columns:repeat(3,1fr);position:relative;overflow:hidden}
+.dstrip::before{content:"";position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='ns'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' seed='7'/%3E%3CfeColorMatrix values='0 0 0 0 1  0 0 0 0 0.92  0 0 0 0 0.78  0 0 0 0.04 0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23ns)'/%3E%3C/svg%3E");opacity:0.6;pointer-events:none}
+.dstrip>*{position:relative}
+.ds-c:not(:first-child){border-left:1px solid rgba(255,255,255,0.12);padding-left:16px}
+.ds-a{font-family:var(--mono);font-size:9.5px;color:var(--on2);letter-spacing:1.5px;font-weight:700}
+.ds-n{font-size:22px;color:var(--on);font-weight:800;margin-top:3px}
+.ds-d{font-size:10px;color:var(--on2);margin-top:2px}
+.quote{border-left:3px solid var(--ink);padding:11px 15px;margin:8px 0}
+.quote-src{font-family:var(--mono);font-size:10px;color:var(--ink3);letter-spacing:2px;font-weight:700;margin-bottom:5px}
+.quote-q{font-family:var(--serif);font-size:14px;color:var(--ink);font-weight:700;font-style:italic;line-height:1.45}
+.quote-a{font-size:11.5px;color:var(--ink2);margin-top:3px}
+.cblk{background:var(--dk);color:var(--on);padding:11px 14px;font-family:var(--mono);font-size:11.5px;line-height:1.7;border-left:2px solid var(--acc);margin:8px 0;white-space:pre-wrap}
+.cblk .cm{color:var(--acc3);opacity:0.8}.cblk .kw{color:var(--acc3);font-weight:600}
+.cblk .cap{font-size:10px;color:var(--on2);margin-top:5px;letter-spacing:0.1em;white-space:normal}
+.icard{background:var(--bg2);border:1px solid var(--ln);padding:11px 14px;margin-bottom:7px}
+.icard-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:5px}
+.icard-lb{font-family:var(--mono);font-size:9.5px;color:var(--acc);letter-spacing:2px;font-weight:700}
+.icard-sess{font-family:var(--mono);font-size:9.5px;color:var(--ink3);letter-spacing:1.5px;font-weight:600}
+.icard.dark{background:var(--dk);border-color:var(--dk)}
+.icard.dark .icard-lb{color:var(--acc3)}.icard.dark .icard-sess{color:var(--on2)}
+.icard.dark .bth{color:var(--on)}.icard.dark .bt{color:var(--on2)}.icard.dark .bt strong{color:var(--on)}
+.fig{font-family:var(--mono);font-size:10.5px;color:var(--ink3);letter-spacing:1.5px;font-weight:700;margin:8px 0 5px}
+.hero{display:flex;flex-direction:column;justify-content:center;padding:56px 90px}
+.hero-k{font-family:var(--mono);font-size:11.5px;color:var(--acc3);letter-spacing:3px;font-weight:700;margin-bottom:18px}
+.hero-t{font-family:var(--serif);font-size:52px;line-height:1.18;font-weight:700;color:var(--on);letter-spacing:-0.02em}
+.hero-s{font-size:17px;color:var(--on2);line-height:1.7;margin-top:22px;max-width:1100px;font-style:italic}
+.hero-q{border-left:3px solid var(--acc3);padding:16px 24px;margin-top:26px;max-width:1000px}
+.hero-q-q{font-family:var(--serif);font-size:21px;color:var(--on);font-weight:700;font-style:italic;line-height:1.5}
+.hero-q-a{font-size:12px;color:var(--on2);letter-spacing:2px;margin-top:10px;font-family:var(--mono);font-weight:700}
+
+</style>
+</head>
+<body>
+<div class="deck" id="deck">
+<div class="stage"><div class="slide" data-title="Cover">
+  <div class="hbar"><div class="hbar-l">SESSION 04 · ASSIST VIBE CODING ①</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 04</div></div>
+  <div style="position:absolute;top:56px;left:80px;display:flex;align-items:center;gap:14px;font-family:var(--mono);font-size:10px;color:var(--acc);letter-spacing:2.5px;font-weight:600"><div style="width:22px;height:8px;background:var(--acc)"></div>PUBLIC AI EXPERT PROGRAM · 2026</div>
+  <div style="position:absolute;top:56px;right:80px;font-family:var(--mono);font-size:10px;color:var(--ink3);letter-spacing:2px;text-align:right;line-height:1.6">Module 04 / Session 04<br>Hub Leader Track · Stage B</div>
+  <div style="position:absolute;top:140px;right:80px;font-family:var(--serif);font-size:260px;line-height:1;color:var(--acc);font-weight:300;opacity:0.07;letter-spacing:-0.06em;pointer-events:none;font-style:italic">04</div>
+  <div style="position:absolute;top:180px;left:80px;right:80px;bottom:140px;display:grid;grid-template-columns:1fr 380px;gap:60px">
+    <div>
+      <div style="font-family:var(--mono);font-size:10px;color:var(--acc);letter-spacing:3px;font-weight:700;margin-bottom:14px">SESSION 04 · LECTURE COVER</div>
+      <div style="font-family:var(--serif);font-weight:700;font-size:56px;line-height:1.08;letter-spacing:-0.03em;color:var(--ink)">어시스트 바이브 코딩 ①</div>
+      <div style="width:60px;height:2px;background:var(--acc);margin:22px 0 16px"></div>
+      <div style="font-family:var(--serif);font-size:19px;color:var(--ink);font-weight:600;line-height:1.5">데이터 시각화와 분석 — 외부에서 설계, 내부에서 실행</div>
+      <p style="margin-top:18px;font-size:14px;color:var(--ink2);line-height:1.8;max-width:640px"><strong style="color:var(--ink)">Part A.</strong> 어시스트 루틴 — 외부망 설계 ↔ 내부망 실행 5단계. <strong style="color:var(--ink)">Part B~H.</strong> Python 시각화(matplotlib·seaborn·plotly) / HTML·JS(Chart.js·ECharts·D3) / Power BI + DAX / pandas 분석 / scikit-learn ML / DL 입문 / 보고서 자동화. <strong style="color:var(--ink)">Part I.</strong> 내 업무 데이터 하나를 실제 시각화·보고서로 완성.</p>
+    </div>
+    <div style="align-self:end;border-top:1px solid var(--ink);padding-top:16px">
+      <div style="display:grid;grid-template-columns:90px 1fr;gap:12px;padding:8px 0;border-bottom:1px solid var(--ln);font-size:13px"><span style="font-family:var(--mono);font-size:9.5px;letter-spacing:2px;color:var(--ink3);font-weight:700">PROGRAM</span><span style="font-family:var(--serif);color:var(--ink);font-weight:600">공공 AI 전문인재 양성과정</span></div>
+      <div style="display:grid;grid-template-columns:90px 1fr;gap:12px;padding:8px 0;border-bottom:1px solid var(--ln);font-size:13px"><span style="font-family:var(--mono);font-size:9.5px;letter-spacing:2px;color:var(--ink3);font-weight:700">STAGE</span><span style="font-family:var(--serif);color:var(--ink);font-weight:600">B · 어시스트 바이브 (S04–05)</span></div>
+      <div style="display:grid;grid-template-columns:90px 1fr;gap:12px;padding:8px 0;border-bottom:1px solid var(--ln);font-size:13px"><span style="font-family:var(--mono);font-size:9.5px;letter-spacing:2px;color:var(--ink3);font-weight:700">SESSION</span><span style="font-family:var(--serif);color:var(--ink);font-weight:600">04 / 08 · Stage B 첫 번째</span></div>
+      <div style="display:grid;grid-template-columns:90px 1fr;gap:12px;padding:8px 0;border-bottom:1px solid var(--ln);font-size:13px"><span style="font-family:var(--mono);font-size:9.5px;letter-spacing:2px;color:var(--ink3);font-weight:700">GOAL</span><span style="font-family:var(--serif);color:var(--ink);font-weight:600">분석 코드 + 차트 + 브리핑 3종 세트</span></div>
+      <div style="display:grid;grid-template-columns:90px 1fr;gap:12px;padding:8px 0;border-bottom:1px solid var(--ln);font-size:13px"><span style="font-family:var(--mono);font-size:9.5px;letter-spacing:2px;color:var(--ink3);font-weight:700">FORMAT</span><span style="font-family:var(--serif);color:var(--ink);font-weight:600">루틴 30m + 선택 모듈 120m + 보고서 30m</span></div>
+      <div style="display:grid;grid-template-columns:90px 1fr;gap:12px;padding:8px 0;border-bottom:1px solid var(--ln);font-size:13px"><span style="font-family:var(--mono);font-size:9.5px;letter-spacing:2px;color:var(--ink3);font-weight:700">SLIDES</span><span style="font-family:var(--serif);color:var(--ink);font-weight:600">32 pages</span></div>
+      <div style="display:grid;grid-template-columns:90px 1fr;gap:12px;padding:8px 0;font-size:13px"><span style="font-family:var(--mono);font-size:9.5px;letter-spacing:2px;color:var(--ink3);font-weight:700">PREREQ</span><span style="font-family:var(--serif);color:var(--ink);font-weight:600">Python venv + Ollama + VS Code + 비식별 CSV 1개</span></div>
+    </div>
+  </div>
+  <div style="position:absolute;bottom:64px;left:80px;font-family:var(--mono);font-size:10px;color:var(--ink3);letter-spacing:2px">— Editorial Warm Edition · Roomy Lecture Format</div>
+  <div style="position:absolute;bottom:64px;right:80px;font-size:13px;color:var(--ink2);text-align:right;line-height:1.7;max-width:520px">3차시까지는 코드 없이 서비스 체인만으로 워크플로우를 짰다.<br>4차시부터는 같은 워크플로우를 코드로 자동화한다.</div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">04 · 어시스트 바이브 코딩 ① — 데이터 시각화와 분석</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">001 / 032</span></div></div>
+</div></div>
+
+<!-- 02 HERO · 외부에서 설계, 내부에서 실행 -->
+<div class="stage"><div class="slide" data-title="Hero One Sentence">
+  <div class="hbar"><div class="hbar-l">MODULE 04 · SESSION KEY MESSAGE</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 04</div></div>
+  <div class="bd col1"><div class="col hero" style="background:var(--dk);color:var(--on)">
+    <div class="hero-k">SESSION 04 · ONE SENTENCE</div>
+    <div class="hero-t" style="font-size:52px">외부에서 <span style="color:var(--acc3)">설계</span>하고,<br>내부에서 <span style="color:var(--acc3)">실행</span>한다.</div>
+    <div class="hero-s">공공 내부망에서는 Claude Code·Cursor를 자유롭게 쓸 수 없다. 이 현실이 "어시스트 모드"의 구조를 결정한다. 외부망 AI에게 코드 설계를 맡기고, 사람이 그 코드를 내부망으로 옮겨 실행한다. 불편하지만 재현 가능하고, 감사 가능하며, 보안 안전하다.</div>
+    <div class="hero-q"><div class="hero-q-q">"거점리더는 코드를 직접 쓰지 않는다. AI에 정확히 요청해서 받고, 내부망에서 실행하고, 그 결과를 판단한다 — 그 세 가지가 4차시의 기본 구조다."</div><div class="hero-q-a">— 커리큘럼 설계 원칙</div></div>
+  </div></div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">04 · 어시스트 바이브 코딩 ① — 데이터 시각화와 분석</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">002 / 032</span></div></div>
+</div></div>
+
+<!-- 03 PART A · 어시스트 루틴 소개 -->
+<div class="stage"><div class="slide" data-title="A Routine Intro">
+  <div class="hbar"><div class="hbar-l">MODULE 04 · PART A · ASSIST ROUTINE INTRO</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 04</div></div>
+  <div class="hl"><div class="hl-kicker">PART A · 어시스트 바이브 코딩 루틴 — 왜 이 루틴이 필요한가 · 10MIN</div><div class="hl-title">어시스트 모드의 도입 배경</div><div class="hl-sub">공공 내부망은 네트워크 차단이 기본. 에이전트 도구(Claude Code·Cursor·Codex)는 외부 서버 통신이 전제라 쓸 수 없다. 이 현실이 4·5차시의 구조를 결정한다.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col3">
+    <div class="col">
+      <div class="sh"><span class="sh-n">WHY</span><span class="sh-t">왜 어시스트인가</span></div><div class="sh-line"></div>
+      <div class="bth">내부망에서 에이전트 도구는 쓸 수 없다</div>
+      <p class="bt">Claude Code·Cursor·Codex는 <strong>외부 서버에 코드를 전송</strong>해 결과를 받는 구조. 공공 내부망은 외부 통신이 원천 차단되므로 사용 불가. 이 한계가 Stage B 설계의 출발점.</p>
+      <div class="icard dark"><div class="icard-top"><span class="icard-lb">어시스트 정의</span><span class="icard-sess">4·5차시</span></div><div class="bth">AI가 코드를 "쓰고", 사람이 "옮기고 실행"한다</div><p class="bt">ChatGPT·Claude·Gemini 채팅창에 요구사항 입력 → 코드 수령 → 복사해서 내부망 실행. <strong>AI는 실행하지 않는다.</strong> 에러가 나면 로그를 다시 외부망에 보내 수정 요청.</p></div>
+      <div class="co"><div class="co-lb">6차시와의 대조</div><div class="co-main">어시스트: 사람이 옮긴다 / 에이전트: AI가 직접 실행한다</div><p>같은 과제를 4차시(어시스트) → 6차시(에이전트) 두 번 수행하면서 차이를 체감하는 것이 Stage B→C 설계.</p></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">WHAT</span><span class="sh-t">오늘의 3층 구조</span></div><div class="sh-line"></div>
+      <div class="bth">4차시 = 루틴 + 7개 선택 모듈 + 종합 실습</div>
+      <table class="mtbl"><thead><tr><th>층</th><th>내용</th><th>시간</th></tr></thead><tbody>
+        <tr><td>① 루틴</td><td>외부↔내부 코드 이관 5단계</td><td>30m</td></tr>
+        <tr><td>② 모듈 B</td><td>Python 시각화 3종</td><td>20m</td></tr>
+        <tr><td>③ 모듈 C</td><td>HTML/JS 시각화 3종</td><td>20m</td></tr>
+        <tr><td>④ 모듈 D</td><td>Power BI + DAX</td><td>15m</td></tr>
+        <tr><td>⑤ 모듈 E</td><td>pandas 분석 심화</td><td>20m</td></tr>
+        <tr><td>⑥ 모듈 F</td><td>scikit-learn ML</td><td>20m</td></tr>
+        <tr><td>⑦ 모듈 G</td><td>Deep Learning 입문</td><td>15m</td></tr>
+        <tr><td>⑧ 모듈 H</td><td>보고서 자동화</td><td>15m</td></tr>
+        <tr><td>⑨ Part I</td><td>통합 실습 + 아카이브</td><td>30m</td></tr>
+      </tbody></table>
+      <div class="pit"><div class="pit-lb">학습자 선택</div><div class="pit-h">▸ B~H 중 관심 모듈 2~3개 집중</div><div class="pit-d">모두 따라갈 필요 없음. 거점 미션 카드 유형에 맞춰 선택.</div></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">OUTCOME</span><span class="sh-t">오늘의 산출물</span></div><div class="sh-line"></div>
+      <div class="bth">분석 코드 + 시각화 파일 + 1페이지 브리핑 3종 세트</div>
+      <p class="bt">모든 수강생이 수업 종료 시점에 <strong>본인 업무 CSV 1개</strong>로 아래 3종을 완성해 아카이브에 등록:</p>
+      <table class="mtbl"><thead><tr><th>산출물</th><th>형식</th></tr></thead><tbody>
+        <tr><td>① 분석 코드</td><td>.ipynb 또는 .py</td></tr>
+        <tr><td>② 시각화</td><td>PNG / HTML / .pbix</td></tr>
+        <tr><td>③ 1페이지 브리핑</td><td>.docx / .hwp</td></tr>
+      </tbody></table>
+      <div class="co"><div class="co-lb">재사용 가치</div><div class="co-main">동일 업무 반복 시 코드만 재실행 → 보고서까지 자동</div><p>이것이 "어시스트 코딩"이 엑셀 수작업보다 근본적으로 우월한 이유 — <strong>재현 가능성</strong>.</p></div>
+      <div class="dstrip"><div class="ds-c"><div class="ds-a">LUXURY</div><div class="ds-n">3종</div><div class="ds-d">아카이브 등록</div></div><div class="ds-c"><div class="ds-a">REUSE</div><div class="ds-n">∞</div><div class="ds-d">다음 달 그대로</div></div><div class="ds-c"><div class="ds-a">SHARE</div><div class="ds-n">팀</div><div class="ds-d">동료 재사용</div></div></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">04 · 어시스트 바이브 코딩 ① — 데이터 시각화와 분석</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">003 / 032</span></div></div>
+</div></div>
+
+<!-- 04 외부→내부 코드 이관 5단계 -->
+<div class="stage"><div class="slide" data-title="5 Step Cycle">
+  <div class="hbar"><div class="hbar-l">MODULE 04 · PART A · 5-STEP CYCLE</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 04</div></div>
+  <div class="hl"><div class="hl-kicker">PART A · 외부망 ↔ 내부망 코드 이관 5단계 — 절차와 체크리스트 · 10MIN</div><div class="hl-title">외부망·내부망 코드 이관 5단계</div><div class="hl-sub">이 5단계가 4·5차시의 공통 기반. 처음엔 느리지만 10번 반복하면 15분 사이클로 정착된다.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col2">
+    <div class="col">
+      <div class="sh"><span class="sh-n">5 STEPS</span><span class="sh-t">이관 절차</span></div><div class="sh-line"></div>
+      <div class="bth">① 요구사항 전달 (외부망)</div>
+      <p class="bt">AI에 넘길 정보: <strong>데이터 구조</strong>(컬럼명·타입·샘플 3행) + <strong>기대 출력</strong>(차트 종류·형식) + <strong>제약</strong>(오프라인 실행·금지 라이브러리·한글 폰트). 민감 데이터는 반드시 비식별화 후에만 전달.</p>
+      <div class="bth">② 코드 수령 + 검증</div>
+      <p class="bt">AI가 생성한 코드를 <strong>읽고 검증</strong>: 외부 통신(requests·urllib) 유무, 파일 경로 타당성, 내부망 라이브러리 가용성. 이해 안 가는 구간은 "이 3~5줄을 설명해줘"로 역질문.</p>
+      <div class="bth">③ 내부망 반입 + 실행</div>
+      <p class="bt">코드를 .py / .ipynb / .html로 저장 → USB 또는 승인 경로로 이동 → <code style="font-family:var(--mono);font-size:11px;background:var(--bg2);padding:1px 4px">python script.py</code> 실행. 결과 확인.</p>
+      <div class="bth">④ 에러 대응 사이클</div>
+      <p class="bt">에러 메시지 복사(내부 경로 비식별화) → 외부망 AI에 붙여넣기 → "수정해줘" → 수정 코드 수령 → 다시 ③. 숙달될 때까지 반복.</p>
+      <div class="bth">⑤ 아카이브 등록</div>
+      <p class="bt">완성 코드 + 요구사항 원문 + 에러 이력 + 산출물(PNG/HTML) 묶음 등록. 동일 업무 반복 시 재사용 가능.</p>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">CHECKLIST</span><span class="sh-t">각 단계별 점검 항목</span></div><div class="sh-line"></div>
+      <div class="fig">STEP 1 · 요구사항 전달 전</div>
+      <table class="mtbl"><thead><tr><th>점검</th><th>O/X</th></tr></thead><tbody>
+        <tr><td>샘플 3행에 실명·주민번호·연락처가 없는가</td><td>□</td></tr>
+        <tr><td>내부 시스템명이 일반화되었는가</td><td>□</td></tr>
+        <tr><td>출력 형식이 명시되었는가 (PNG/HTML/표)</td><td>□</td></tr>
+        <tr><td>실행 환경 제약(오프라인·한글 폰트)이 있는가</td><td>□</td></tr>
+      </tbody></table>
+      <div class="fig">STEP 2 · 코드 수령 후</div>
+      <table class="mtbl"><thead><tr><th>점검</th><th>O/X</th></tr></thead><tbody>
+        <tr><td>requests / urllib / socket 코드가 있는가</td><td>□</td></tr>
+        <tr><td>pip install 대상이 내부망에 있는가</td><td>□</td></tr>
+        <tr><td>파일 경로가 상대경로인가 (절대경로 금지)</td><td>□</td></tr>
+        <tr><td>한글 폰트 설정이 포함되었는가</td><td>□</td></tr>
+      </tbody></table>
+      <div class="fig">STEP 4 · 에러 보고 전</div>
+      <table class="mtbl"><thead><tr><th>점검</th><th>O/X</th></tr></thead><tbody>
+        <tr><td>에러 로그의 C:\Users\... 같은 경로 제거</td><td>□</td></tr>
+        <tr><td>환경변수·API 키 노출 제거</td><td>□</td></tr>
+      </tbody></table>
+      <div class="co"><div class="co-lb">시간 가이드</div><div class="co-main">첫 사이클 30분 → 10회 반복 후 평균 15분</div><p>숙달되면 "어시스트 루틴"은 코딩이 아니라 <strong>업무 프로토콜</strong>로 인식된다.</p></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">04 · 어시스트 바이브 코딩 ① — 데이터 시각화와 분석</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">004 / 032</span></div></div>
+</div></div>
+
+<!-- 05 보안·비식별 처리 -->
+<div class="stage"><div class="slide" data-title="Security Deidentify">
+  <div class="hbar"><div class="hbar-l">MODULE 04 · PART A · SECURITY & DE-IDENTIFICATION</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 04</div></div>
+  <div class="hl"><div class="hl-kicker">PART A · 보안과 비식별화 — 외부 AI에 넘기기 전 반드시 · 10MIN</div><div class="hl-title">민감 데이터 비식별화 원칙</div><div class="hl-sub">전체 데이터는 절대 외부로 나가지 않는다. 구조만 보여주는 "샘플 3행"과 컬럼 스키마 설명으로 충분히 AI가 코드를 생성한다. 이 원칙을 숙지하는 것이 4차시의 보안 바탕.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col2w">
+    <div class="col">
+      <div class="sh"><span class="sh-n">RULES</span><span class="sh-t">비식별화 규칙</span></div><div class="sh-line"></div>
+      <div class="bth">외부 AI에 보내도 되는 것 / 보내면 안 되는 것</div>
+      <table class="mtbl"><thead><tr><th>항목</th><th>비식별화 방법</th><th>대체 예시</th></tr></thead><tbody>
+        <tr><td>주민번호</td><td>뒷자리 마스킹</td><td>900101-1******</td></tr>
+        <tr><td>이름</td><td>초성 치환 / 가명화</td><td>홍○동 / 민원인A</td></tr>
+        <tr><td>연락처</td><td>가운데 4자리 마스킹</td><td>010-****-1234</td></tr>
+        <tr><td>주소</td><td>구·동 단위까지만</td><td>서울시 ○○구 △△동</td></tr>
+        <tr><td>내부 시스템명</td><td>일반 명칭으로 치환</td><td>"민원시스템"</td></tr>
+        <tr><td>부서 코드</td><td>구조만 공유</td><td>DEPT_A, DEPT_B</td></tr>
+        <tr><td>실 데이터량</td><td>샘플 3행만</td><td>.head(3).to_csv()</td></tr>
+        <tr><td>파일 경로</td><td>상대경로·더미경로</td><td>./data/sample.csv</td></tr>
+      </tbody></table>
+      <div class="co"><div class="co-lb">원칙 한 줄</div><div class="co-main">"같은 내용을 옆 사람에게 카톡으로 보낼 수 있는가?" — 그 기준으로 외부 AI도 판단</div><p>같은 수준 이상으로 민감하다면 외부 전송 금지. 내부 전용 도구(Ollama + pandas 로컬 실행)로 처리.</p></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">PITFALLS</span><span class="sh-t">자주 새는 곳</span></div><div class="sh-line"></div>
+      <div class="pit"><div class="pit-lb">PITFALL 1</div><div class="pit-h">▸ 에러 로그에 내부 경로·환경변수 유출</div><div class="pit-d">Traceback에 <code>C:\Users\홍길동\업무\2025예산\...</code> 같은 경로가 박혀 있다. 외부 AI에 붙이기 전에 반드시 치환.</div></div>
+      <div class="pit"><div class="pit-lb">PITFALL 2</div><div class="pit-h">▸ DataFrame .head() 출력의 실명</div><div class="pit-d">df.head()를 스크린샷으로 올리면 실명·주민번호가 그대로. 비식별 df 별도 생성 후 공유.</div></div>
+      <div class="pit"><div class="pit-lb">PITFALL 3</div><div class="pit-h">▸ 엑셀 내부 메타데이터</div><div class="pit-d">작성자·수정자·회사명이 속성에 저장됨. 파일 전체를 외부에 올리지 말고 CSV 변환 + 3행만.</div></div>
+      <div class="cod"><div class="cod-lb">DO / DON'T</div><div class="cod-main">DO: 스키마 + 샘플 3행 / DON'T: 원본 파일 업로드</div><p>스키마는 "컬럼명·타입·대략 범위·예시값" 4가지면 충분. AI는 이것만으로 정확한 코드를 생성한다.</p></div>
+      <div class="dstrip"><div class="ds-c"><div class="ds-a">샘플</div><div class="ds-n">3행</div><div class="ds-d">원본 업로드 금지</div></div><div class="ds-c"><div class="ds-a">실명</div><div class="ds-n">마스킹</div><div class="ds-d">예외 없이</div></div><div class="ds-c"><div class="ds-a">경로</div><div class="ds-n">상대</div><div class="ds-d">로컬경로 제거</div></div></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">04 · 어시스트 바이브 코딩 ① — 데이터 시각화와 분석</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">005 / 032</span></div></div>
+</div></div>
+
+<!-- 06 HERO · 코드는 AI가 쓴다 -->
+<div class="stage"><div class="slide" data-title="Hero AI Writes">
+  <div class="hbar"><div class="hbar-l">MODULE 04 · KEY INSIGHT</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 04</div></div>
+  <div class="bd col1"><div class="col hero" style="background:var(--bg2);padding:60px 90px;justify-content:center">
+    <div style="font-family:var(--mono);font-size:11.5px;color:var(--acc);letter-spacing:3px;font-weight:700;margin-bottom:18px">KEY INSIGHT · 4차시의 태도</div>
+    <div style="font-family:var(--serif);font-weight:700;font-size:54px;line-height:1.18;letter-spacing:-0.02em;color:var(--ink)">코드는 <span style="color:var(--acc)">AI가 쓴다</span>.<br>판단은 <span style="color:var(--acc)">사람이 한다</span>.</div>
+    <div style="width:60px;height:3px;background:var(--acc);margin:22px 0 18px"></div>
+    <p style="font-size:18px;color:var(--ink2);line-height:1.7;max-width:1200px;font-style:italic">거점리더의 역할은 matplotlib 문법을 외우는 것이 아니다. <strong style="color:var(--ink)">"이 업무에 시각화가 필요한가 · 어떤 차트가 적합한가 · 결과가 정확한가 · 동료가 이해할 수 있는가"</strong>를 판단하는 것이다. 4차시의 모든 실습은 그 판단 역량을 확보하기 위한 실습이다.</p>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:28px">
+      <div style="border:1px solid var(--ln);padding:14px;background:var(--bg)"><div style="font-family:var(--mono);font-size:10px;color:var(--acc);letter-spacing:2px;font-weight:700">AI의 일</div><div style="font-size:14px;color:var(--ink);font-weight:600;margin-top:6px;line-height:1.5">문법 · 구현 · 디버깅 제안</div></div>
+      <div style="border:1px solid var(--ln);padding:14px;background:var(--bg)"><div style="font-family:var(--mono);font-size:10px;color:var(--acc);letter-spacing:2px;font-weight:700">사람의 일</div><div style="font-size:14px;color:var(--ink);font-weight:600;margin-top:6px;line-height:1.5">요구사항 · 검증 · 결과 해석</div></div>
+      <div style="border:1px solid var(--ln);padding:14px;background:var(--bg)"><div style="font-family:var(--mono);font-size:10px;color:var(--acc);letter-spacing:2px;font-weight:700">공통</div><div style="font-size:14px;color:var(--ink);font-weight:600;margin-top:6px;line-height:1.5">반복·재현·공유의 코드화</div></div>
+    </div>
+  </div></div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">04 · 어시스트 바이브 코딩 ① — 데이터 시각화와 분석</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">006 / 032</span></div></div>
+</div></div>
+
+<!-- 07 PART B · Python 시각화 개관 -->
+<div class="stage"><div class="slide" data-title="B Python Viz Overview">
+  <div class="hbar"><div class="hbar-l">MODULE 04 · PART B · PYTHON VISUALIZATION</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 04</div></div>
+  <div class="hl"><div class="hl-kicker">PART B · Python 시각화 3종 개관 — matplotlib · seaborn · plotly · 20MIN</div><div class="hl-title">파이썬 시각화 도구 비교</div><div class="hl-sub">"어떤 라이브러리가 좋냐"는 질문에 단일 답은 없다. 보고서 삽입은 matplotlib, 탐색적 분포는 seaborn, 대시보드는 plotly — 용도가 곧 선택 기준이다.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col3">
+    <div class="col">
+      <div class="sh"><span class="sh-n">MATPLOTLIB</span><span class="sh-t">정적 · 보고서 삽입</span></div><div class="sh-line"></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">MATPLOTLIB</span><span class="icard-sess">PNG/PDF 저장</span></div><div class="bth">모든 Python 시각화의 기반 — 세밀 제어</div><p class="bt">한글 공문서에 삽입할 PNG/PDF 고정 이미지가 목적이면 matplotlib이 가장 안정적. <strong>plt.rcParams['font.family']='NanumGothic'</strong> 한 줄로 한글 해결.</p></div>
+      <table class="mtbl"><thead><tr><th>차트</th><th>공공 예시</th></tr></thead><tbody>
+        <tr><td>bar</td><td>부서별 민원 건수</td></tr>
+        <tr><td>line</td><td>월별 집행률 추이</td></tr>
+        <tr><td>pie</td><td>유형별 비율</td></tr>
+        <tr><td>hist</td><td>처리시간 분포</td></tr>
+        <tr><td>scatter</td><td>예산 vs 성과</td></tr>
+      </tbody></table>
+      <div class="co"><div class="co-lb">강점</div><div class="co-main">오프라인 설치만 하면 어디서든 작동</div><p>PyPI 오프라인 휠(.whl)만 있으면 내부망 100% 가동.</p></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">SEABORN</span><span class="sh-t">통계 시각화</span></div><div class="sh-line"></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">SEABORN</span><span class="icard-sess">matplotlib 래퍼</span></div><div class="bth">분포·상관·범주 비교를 한 줄 함수로</div><p class="bt">통계적 분석에 특화. matplotlib 위에서 동작하므로 <strong>폰트 설정·내부망 호환성은 동일</strong>. 기본 테마가 깔끔해 보고서 품질이 자동 확보.</p></div>
+      <table class="mtbl"><thead><tr><th>함수</th><th>용도</th></tr></thead><tbody>
+        <tr><td>boxplot</td><td>부서별 처리시간 분포</td></tr>
+        <tr><td>heatmap</td><td>예산 항목 상관</td></tr>
+        <tr><td>countplot</td><td>유형별 빈도</td></tr>
+        <tr><td>regplot</td><td>인구 vs 민원 회귀</td></tr>
+        <tr><td>pairplot</td><td>다변량 관계</td></tr>
+      </tbody></table>
+      <div class="co"><div class="co-lb">사용 지점</div><div class="co-main">"뭔가 이상하다" 감각이 드는 1단계 EDA</div><p>박스플롯만 봐도 이상치·편향이 드러난다.</p></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">PLOTLY</span><span class="sh-t">인터랙티브</span></div><div class="sh-line"></div>
+      <div class="icard dark"><div class="icard-top"><span class="icard-lb">PLOTLY EXPRESS ★</span><span class="icard-sess">HTML 산출물</span></div><div class="bth">인터랙티브 HTML — 호버·확대·필터</div><p class="bt">fig.write_html("dash.html")로 <strong>단일 HTML 파일</strong> 저장 → 내부망 브라우저 더블클릭. 1차시에서 소개한 <strong>유형 ⑤(HTML 단일파일)</strong>의 실전 구현.</p></div>
+      <div class="pit"><div class="pit-lb">주의</div><div class="pit-h">▸ 내부망 plotly 미설치 대비</div><div class="pit-d">사전에 pip download plotly -d ./wheels 로 오프라인 휠 반입.</div><div class="pit-h">▸ HTML 파일 크기</div><div class="pit-d">데이터 5만 건 이상이면 수 MB. 샘플링 또는 ECharts 고려.</div></div>
+      <div class="dstrip"><div class="ds-c"><div class="ds-a">MPL</div><div class="ds-n">PNG</div><div class="ds-d">보고서 삽입</div></div><div class="ds-c"><div class="ds-a">SNS</div><div class="ds-n">통계</div><div class="ds-d">탐색적 EDA</div></div><div class="ds-c"><div class="ds-a">PLY</div><div class="ds-n">HTML</div><div class="ds-d">대시보드 공유</div></div></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">04 · 어시스트 바이브 코딩 ① — 데이터 시각화와 분석</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">007 / 032</span></div></div>
+</div></div>
+
+<!-- 08 Python Pandas + 시각화 실습 -->
+<div class="stage"><div class="slide" data-title="B Python Practice">
+  <div class="hbar"><div class="hbar-l">MODULE 04 · PART B · PYTHON PRACTICE</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 04</div></div>
+  <div class="hl"><div class="hl-kicker">PART B · pandas + 시각화 실습 가이드 — AI 요청 프롬프트 4요소 · 15MIN</div><div class="hl-title">AI 차트 요청의 4가지 요소</div><div class="hl-sub">모호한 요청은 수정 사이클을 5번으로 늘린다. 명확한 요청은 1~2번으로 끝낸다. 이 슬라이드의 템플릿을 아카이브에 고정.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col2">
+    <div class="col">
+      <div class="sh"><span class="sh-n">4-ELEMENT</span><span class="sh-t">AI 요청 필수 4요소</span></div><div class="sh-line"></div>
+      <table class="mtbl"><thead><tr><th>#</th><th>항목</th><th>좋은 예시</th></tr></thead><tbody>
+        <tr><td>①</td><td>데이터 구조</td><td>"CSV, 컬럼: 부서명(str)·민원유형(str)·건수(int)·접수일(date)"</td></tr>
+        <tr><td>②</td><td>차트 요구</td><td>"부서별 가로 막대, 건수 높은 순, 상위 10개"</td></tr>
+        <tr><td>③</td><td>실행 제약</td><td>"오프라인·한글 폰트 NanumGothic·Windows 경로"</td></tr>
+        <tr><td>④</td><td>출력 형식</td><td>"PNG 300dpi + plt.show() + 경로 ./out/"</td></tr>
+      </tbody></table>
+      <div class="cod"><div class="cod-lb">REQUEST TEMPLATE</div><div class="cod-main">"아래 CSV 샘플 3행으로 부서별 민원 건수 가로 막대를 matplotlib로 그려줘. 조건: 한글 폰트 NanumGothic, 건수 높은 순, 상위 10개, PNG 300dpi ./out/bar.png 저장, plt.show() 포함. 외부 통신 코드는 절대 넣지 말 것."</div><p>이 길이가 길어 보이지만 <strong>수정 사이클을 줄여 총 시간은 단축</strong>된다.</p></div>
+      <div class="co"><div class="co-lb">TIP</div><div class="co-main">샘플은 pd.DataFrame({...}) 코드로 직접 붙여라</div><p>CSV 파일을 올리지 말고, 비식별 3행을 dict로 만들어 AI에 전달. 깨끗한 방식.</p></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">PANDAS CORE</span><span class="sh-t">분석 7패턴</span></div><div class="sh-line"></div>
+      <table class="mtbl"><thead><tr><th>패턴</th><th>AI 요청 예시</th></tr></thead><tbody>
+        <tr><td>로드</td><td>"CSV 읽고 처음 5행 + dtypes"</td></tr>
+        <tr><td>필터</td><td>"2025년 3월 이후 행만"</td></tr>
+        <tr><td>그룹 집계</td><td>"부서별 건수·평균 처리일"</td></tr>
+        <tr><td>피벗</td><td>"부서×유형 교차표"</td></tr>
+        <tr><td>정렬</td><td>"처리일 긴 순 top 10"</td></tr>
+        <tr><td>파생열</td><td>"접수일·완료일→처리일수"</td></tr>
+        <tr><td>결측치</td><td>"빈 칸 확인·중앙값 대체"</td></tr>
+      </tbody></table>
+      <div class="bth">자주 쓰는 조합 — "그룹+시각화 한 번에"</div>
+      <p class="bt">"부서별 평균 처리일을 계산하고 matplotlib 가로 막대로 그려줘. 긴 순. 한글 폰트." → AI가 <strong>groupby + sort_values + barh</strong>를 한 덩어리 코드로 반환.</p>
+      <div class="pit"><div class="pit-lb">PITFALL · pandas</div><div class="pit-h">▸ CP949 vs UTF-8 인코딩</div><div class="pit-d">pd.read_csv("f.csv", encoding="cp949") / "euc-kr". AI에 "인코딩 자동 감지 코드 포함"도 OK.</div><div class="pit-h">▸ 날짜 dtype 미변환</div><div class="pit-d">groupby가 문자열로 정렬. pd.to_datetime()을 초반에 명시.</div></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">04 · 어시스트 바이브 코딩 ① — 데이터 시각화와 분석</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">008 / 032</span></div></div>
+</div></div>
+
+<!-- 09 Python 오프라인 패키지 재확인 -->
+<div class="stage"><div class="slide" data-title="Offline Packages">
+  <div class="hbar"><div class="hbar-l">MODULE 04 · PART B · OFFLINE PACKAGING</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 04</div></div>
+  <div class="hl"><div class="hl-kicker">PART B · 오프라인 패키지 재확인 — 1차시 환경 복습 + 업무별 묶음 · 8MIN</div><div class="hl-title">내부망 파이썬 패키지 반입 절차</div><div class="hl-sub">1차시 A-4에서 언급한 오프라인 환경을 4차시 실습용으로 구체화한다. "시각화 번들"·"ML 번들"·"HWP 번들"을 사전에 만들어 USB로 반입.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col2">
+    <div class="col">
+      <div class="sh"><span class="sh-n">PROCEDURE</span><span class="sh-t">오프라인 휠 생성·반입</span></div><div class="sh-line"></div>
+      <div class="bth">외부망에서 휠을 받아 내부망에서 설치</div>
+      <div class="cblk"><span class="cm"># 외부망 (인터넷 가능)</span>
+python -m pip download <span class="kw">matplotlib seaborn plotly pandas openpyxl</span> \
+  -d ./wheels --platform win_amd64 \
+  --python-version 3.11 --only-binary=:all:
+
+<span class="cm"># USB로 내부망 이동</span>
+
+<span class="cm"># 내부망 (오프라인)</span>
+python -m pip install --no-index \
+  --find-links=./wheels matplotlib seaborn plotly pandas openpyxl<span class="cap">외부망 휠 다운로드 → USB 이동 → 내부망 오프라인 설치</span></div>
+      <div class="co"><div class="co-lb">핵심 옵션</div><div class="co-main">--no-index + --find-links 로 오프라인 설치 강제</div><p>이 옵션이 없으면 pip가 PyPI에 접근 시도 → 내부망에서 실패. <strong>반드시 명시.</strong></p></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">BUNDLES</span><span class="sh-t">업무별 사전 묶음</span></div><div class="sh-line"></div>
+      <div class="bth">세 개 번들을 미리 만들어 팀 공유</div>
+      <table class="mtbl"><thead><tr><th>번들</th><th>포함 패키지</th><th>용량</th></tr></thead><tbody>
+        <tr><td>VIZ</td><td>matplotlib·seaborn·plotly·pandas·openpyxl</td><td>~140MB</td></tr>
+        <tr><td>ML</td><td>scikit-learn·numpy·scipy·ydata-profiling</td><td>~180MB</td></tr>
+        <tr><td>OFFICE</td><td>python-docx·openpyxl·pyhwpx·pdfplumber</td><td>~90MB</td></tr>
+      </tbody></table>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">폰트 번들</span><span class="icard-sess">한글 필수</span></div><div class="bth">NanumGothic·NanumBarunGothic TTF</div><p class="bt">matplotlib은 OS 폰트 못 찾으면 사각형 깨짐. <strong>TTF 파일을 ./fonts/에 두고</strong> fm.fontManager.addfont()로 등록. AI에 "TTF 경로에서 폰트 로드하는 코드"로 요청하면 자동 생성.</p></div>
+      <div class="pit"><div class="pit-lb">주의</div><div class="pit-h">▸ 플랫폼·파이썬 버전 일치</div><div class="pit-d">외부망 다운로드 시 --platform win_amd64 --python-version 3.11 등 내부망과 정확히 일치시켜야 설치 실패 없음.</div></div>
+      <div class="dstrip"><div class="ds-c"><div class="ds-a">VIZ</div><div class="ds-n">140MB</div><div class="ds-d">시각화 번들</div></div><div class="ds-c"><div class="ds-a">ML</div><div class="ds-n">180MB</div><div class="ds-d">머신러닝</div></div><div class="ds-c"><div class="ds-a">OFFICE</div><div class="ds-n">90MB</div><div class="ds-d">문서 자동화</div></div></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">04 · 어시스트 바이브 코딩 ① — 데이터 시각화와 분석</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">009 / 032</span></div></div>
+</div></div>
+
+<!-- 10 PART C · HTML/JS 시각화 3종 -->
+<div class="stage"><div class="slide" data-title="C HTML JS Viz">
+  <div class="hbar"><div class="hbar-l">MODULE 04 · PART C · HTML/JS VISUALIZATION</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 04</div></div>
+  <div class="hl"><div class="hl-kicker">PART C · HTML/JS 시각화 3종 — Chart.js · ECharts · D3 · 15MIN</div><div class="hl-title">HTML 시각화 도구 비교</div><div class="hl-sub">HTML 단일 파일이면 Python 설치 없이 더블클릭 실행. 1차시 유형 ⑤의 실전 구현. 내부망 배포 최강 포맷.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col3">
+    <div class="col">
+      <div class="sh"><span class="sh-n">CHART.JS</span><span class="sh-t">가장 쉬운 진입</span></div><div class="sh-line"></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">CHART.JS</span><span class="icard-sess">chartjs.org</span></div><div class="bth">기본 차트 5종을 한 HTML에</div><p class="bt">bar·line·pie·doughnut·radar. AI 요청: <strong>"Chart.js로 부서별 민원 대시보드 HTML, CDN 인라인, 오프라인 동작, 한글 지원."</strong></p></div>
+      <table class="mtbl"><thead><tr><th>타입</th><th>공공 예시</th></tr></thead><tbody>
+        <tr><td>bar</td><td>부서별 예산 비교</td></tr>
+        <tr><td>line</td><td>월별 민원 추이</td></tr>
+        <tr><td>doughnut</td><td>유형별 비율</td></tr>
+        <tr><td>radar</td><td>부서 역량 비교</td></tr>
+        <tr><td>mixed</td><td>막대+선 동시</td></tr>
+      </tbody></table>
+      <div class="co"><div class="co-lb">CDN 로컬화</div><div class="co-main">script src URL → 인라인 코드 삽입</div><p>AI에 "CDN 링크 대신 Chart.js 전체 스크립트를 &lt;script&gt; 블록에 인라인으로 넣어줘" 요청하면 HTML 파일 하나로 완전 자립.</p></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">ECHARTS</span><span class="sh-t">대용량·지도</span></div><div class="sh-line"></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">ECHARTS</span><span class="icard-sess">Apache</span></div><div class="bth">10만+ 데이터 + 한국 행정구역 지도</div><p class="bt">Alibaba(Apache)가 개발. <strong>대용량 성능 + 고급 시각화</strong>(산키·트리맵·캘린더 히트맵·3D). 한국 시·군·구 GeoJSON 지도도 기본 지원.</p></div>
+      <div class="bth">공공 활용 사례</div>
+      <ul style="font-size:13px;color:var(--ink2);line-height:1.78;padding-left:22px;margin:6px 0"><li>시·군·구별 민원 건수 → 지도 히트맵</li><li>10만 건 민원 스캐터 (Chart.js는 멈춤)</li><li>예산 흐름 → 산키 다이어그램</li><li>부서별 업무량 → 캘린더 히트맵</li></ul>
+      <div class="pit"><div class="pit-lb">주의</div><div class="pit-h">▸ 지도 데이터 용량</div><div class="pit-d">한국 전체 지도 GeoJSON은 1~3MB. 시·군 단위만 남기는 최적화 필수.</div></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">D3.js</span><span class="sh-t">자유도 최대</span></div><div class="sh-line"></div>
+      <div class="icard dark"><div class="icard-top"><span class="icard-lb">D3.js</span><span class="icard-sess">d3js.org</span></div><div class="bth">네트워크·산키·포스·트리 — 커스텀 전부</div><p class="bt">가장 강력하지만 가장 복잡. <strong>AI 어시스트 덕에 "D3 직접 쓰기"가 실용화</strong>됨. "D3.js로 부서 간 협업 네트워크 그래프"로 요청하면 완성 코드 수령.</p></div>
+      <div class="co"><div class="co-lb">판단</div><div class="co-main">Chart.js로 안 되는 것만 D3로</div><p>기본 차트는 Chart.js가 10배 빠르다. D3는 <strong>독창적 시각화가 필요할 때만</strong> 꺼내라.</p></div>
+      <div class="dstrip"><div class="ds-c"><div class="ds-a">CH.JS</div><div class="ds-n">쉬움</div><div class="ds-d">기본 5종</div></div><div class="ds-c"><div class="ds-a">ECHARTS</div><div class="ds-n">대용량</div><div class="ds-d">+지도</div></div><div class="ds-c"><div class="ds-a">D3</div><div class="ds-n">자유도</div><div class="ds-d">커스텀</div></div></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">04 · 어시스트 바이브 코딩 ① — 데이터 시각화와 분석</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">010 / 032</span></div></div>
+</div></div>
+
+<!-- 11 HTML 단일파일 + 대시보드 예시 -->
+<div class="stage"><div class="slide" data-title="HTML Dashboard">
+  <div class="hbar"><div class="hbar-l">MODULE 04 · PART C · HTML DASHBOARD</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 04</div></div>
+  <div class="hl"><div class="hl-kicker">PART C · HTML 단일파일 대시보드 — "민원 CSV 드래그&드롭" 예시 · 12MIN</div><div class="hl-title">HTML 단일 파일 대시보드 구축</div><div class="hl-sub">동료가 엑셀을 열듯이 HTML을 더블클릭하고, CSV를 던지면 차트가 뜬다. 설치 0 · 네트워크 0 · 관리자권한 0.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col2">
+    <div class="col">
+      <div class="sh"><span class="sh-n">SCENARIO</span><span class="sh-t">민원 CSV 대시보드 워크플로우</span></div><div class="sh-line"></div>
+      <table class="mtbl"><thead><tr><th>단계</th><th>내용</th><th>망</th></tr></thead><tbody>
+        <tr><td>① 데이터 준비</td><td>민원.csv 비식별화</td><td>내부망</td></tr>
+        <tr><td>② AI 요청</td><td>샘플 3행 + "Chart.js CSV 드래그&드롭 대시보드"</td><td>외부망</td></tr>
+        <tr><td>③ HTML 수령</td><td>dashboard.html 파일 하나</td><td>외부→내부</td></tr>
+        <tr><td>④ 검증</td><td>외부 URL · fetch 제거 확인</td><td>내부망</td></tr>
+        <tr><td>⑤ 실행</td><td>더블클릭 → CSV 드래그</td><td>내부망</td></tr>
+        <tr><td>⑥ 배포</td><td>동료에게 메일/공유폴더</td><td>내부망</td></tr>
+      </tbody></table>
+      <div class="co"><div class="co-lb">핵심 포인트</div><div class="co-main">네 경계(내부·외부·외부→내부·내부) 구분이 보안 감사 근거</div><p>각 단계의 망 표시가 사후 감사 로그 역할. 이관 경로가 명확해야 사고 대응도 빠르다.</p></div>
+      <div class="cod"><div class="cod-lb">REQUEST · 프롬프트 예시</div><div class="cod-main">"HTML 단일 파일 대시보드를 만들어줘. 요구: ① FileReader로 CSV 드래그&드롭 입력 ② Chart.js 인라인 (CDN 없음) ③ 4개 차트 (부서별 막대·월별 선·유형별 도넛·요일별 히트맵) ④ 한글 폰트 시스템 기본 ⑤ 오프라인 동작 ⑥ IE11 제외 Chrome/Edge 대상."</div><p>이 수준으로 요청하면 AI가 400~600줄 HTML을 한 번에 반환.</p></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">EXTENSION</span><span class="sh-t">확장·운영 팁</span></div><div class="sh-line"></div>
+      <div class="bth">같은 HTML을 템플릿화해 부서 전체에 배포</div>
+      <p class="bt">CSV 컬럼명만 바꾸면 다른 업무에도 재사용. "민원" → "예산" → "인력"으로 순차 확장. 이것이 <strong>어시스트 코딩의 재사용 가치</strong>.</p>
+      <div class="icard dark"><div class="icard-top"><span class="icard-lb">분석 + 시각화 결합</span></div><div class="bth">HTML 안에 필터·그룹핑 로직까지 JS로</div><p class="bt">"접수일 범위 필터 + 부서 다중 선택 + 상위 N개 설정" UI를 추가하면 <strong>Power BI에 근접한 대시보드</strong>가 HTML 하나로 완성. AI에 "필터 UI 추가해줘"로 요청.</p></div>
+      <div class="pit"><div class="pit-lb">PITFALL · HTML 대시보드</div><div class="pit-h">▸ 1만 행 이상에서 렌더 지연</div><div class="pit-d">Chart.js는 1만↑ 데이터에 느려짐. ECharts로 교체 or 서버측 집계 후 표시.</div><div class="pit-h">▸ IE 전용 내부망</div><div class="pit-d">행정망 일부가 IE. ES5 변환 요청 + 폴리필 포함. 또는 Chrome 설치 공식 요청.</div></div>
+      <div class="dstrip"><div class="ds-c"><div class="ds-a">설치</div><div class="ds-n">0</div><div class="ds-d">더블클릭</div></div><div class="ds-c"><div class="ds-a">네트워크</div><div class="ds-n">0</div><div class="ds-d">완전 로컬</div></div><div class="ds-c"><div class="ds-a">권한</div><div class="ds-n">0</div><div class="ds-d">일반 PC OK</div></div></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">04 · 어시스트 바이브 코딩 ① — 데이터 시각화와 분석</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">011 / 032</span></div></div>
+</div></div>
+
+<!-- 12 PART D · Power BI + DAX 소개 -->
+<div class="stage"><div class="slide" data-title="D Power BI Intro">
+  <div class="hbar"><div class="hbar-l">MODULE 04 · PART D · POWER BI + DAX</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 04</div></div>
+  <div class="hl"><div class="hl-kicker">PART D · Power BI Desktop + DAX 소개 — GUI 기반 BI 도구 · 15MIN</div><div class="hl-title">Power BI와 AI 어시스트 활용</div><div class="hl-sub">Power BI는 Windows 전용이지만 공공기관 기본 설치도구가 많다. 이 슬라이드 세트는 "어떻게 쓰는가"보다 "AI에 무엇을 요청할 것인가"에 초점.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col3">
+    <div class="col">
+      <div class="sh"><span class="sh-n">POWER QUERY</span><span class="sh-t">GUI 기반 ETL</span></div><div class="sh-line"></div>
+      <div class="bth">CSV·엑셀·폴더·DB를 클릭으로 정제</div>
+      <p class="bt">Power Query는 <strong>정제 단계를 모두 기록</strong>하기 때문에 데이터가 바뀌어도 자동 재실행. 이 특성이 "매월 새 CSV 교체 → 대시보드 갱신" 루틴의 핵심.</p>
+      <table class="mtbl"><thead><tr><th>작업</th><th>조작</th></tr></thead><tbody>
+        <tr><td>빈 행 제거</td><td>홈 → 행 제거 → 빈 행</td></tr>
+        <tr><td>날짜 변환</td><td>변환 → 데이터 형식</td></tr>
+        <tr><td>폴더 CSV 합치기</td><td>홈 → 결합 → 폴더</td></tr>
+        <tr><td>피벗/언피벗</td><td>변환 → 열 피벗</td></tr>
+        <tr><td>조건 열</td><td>열 추가 → 조건 열</td></tr>
+      </tbody></table>
+      <div class="co"><div class="co-lb">FIT</div><div class="co-main">GUI에 익숙한 동료에게 첫 추천</div><p>"파이썬 어렵다"는 팀원에게 Power BI 30분 교육이 가장 빠른 성과.</p></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">DAX</span><span class="sh-t">AI가 쓰는 수식</span></div><div class="sh-line"></div>
+      <div class="bth">DAX = Power BI 전용 측정값 언어</div>
+      <p class="bt">DAX를 직접 배우지 않는다. <strong>AI에 "Power BI DAX로 전년 대비 증감률을 측정"</strong>이라고 요청하면 SAMEPERIODLASTYEAR 함수 수식이 나온다. 복사 → 붙여넣기.</p>
+      <table class="mtbl"><thead><tr><th>목적</th><th>요청 키워드</th></tr></thead><tbody>
+        <tr><td>전년비</td><td>SAMEPERIODLASTYEAR</td></tr>
+        <tr><td>누적</td><td>TOTALYTD</td></tr>
+        <tr><td>랭킹</td><td>RANKX</td></tr>
+        <tr><td>조건 합계</td><td>CALCULATE+FILTER</td></tr>
+        <tr><td>이동 평균</td><td>AVERAGEX+DATESINPERIOD</td></tr>
+      </tbody></table>
+      <div class="icard dark"><div class="icard-top"><span class="icard-lb">KEY</span><span class="icard-sess">문법 생략</span></div><div class="bth">거점리더는 DAX 문법을 외우지 않는다</div><p class="bt">"전년 대비 증감률" 개념만 알면 AI에 맡길 수 있다. 문법은 AI의 일, 분석 의도는 사람의 일.</p></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">DASHBOARD</span><span class="sh-t">시각화·공유</span></div><div class="sh-line"></div>
+      <div class="bth">슬라이서·차트·KPI 카드의 조합</div>
+      <p class="bt">Power BI는 <strong>상호작용(interaction)</strong>이 자동. 지도를 클릭하면 그 지역의 차트만 변하는 식. 보고회에서 즉석 대응 가능.</p>
+      <div class="co"><div class="co-lb">공공 적합 구성</div><div class="co-main">KPI 4개 + 추이 선 + 부서별 막대 + 지도</div><p>1페이지 대시보드로 <strong>과장/국장 브리핑 표준 포맷</strong>이 된다. 매월 데이터만 교체.</p></div>
+      <div class="pit"><div class="pit-lb">PITFALL · Power BI</div><div class="pit-h">▸ Windows 전용</div><div class="pit-d">Mac/Linux는 Web 버전 or Python plotly로 대체.</div><div class="pit-h">▸ 내부망 게시 서버 없음</div><div class="pit-d">.pbix 파일 공유만 가능. 정기 자동 배포는 Power BI Report Server 별도 구매.</div></div>
+      <div class="dstrip"><div class="ds-c"><div class="ds-a">GUI</div><div class="ds-n">Power Query</div><div class="ds-d">정제</div></div><div class="ds-c"><div class="ds-a">수식</div><div class="ds-n">DAX</div><div class="ds-d">AI 작성</div></div><div class="ds-c"><div class="ds-a">결과</div><div class="ds-n">.pbix</div><div class="ds-d">대시보드</div></div></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">04 · 어시스트 바이브 코딩 ① — 데이터 시각화와 분석</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">012 / 032</span></div></div>
+</div></div>
+
+<!-- 13 Power BI 공공 적용 사례 -->
+<div class="stage"><div class="slide" data-title="D Power BI Cases">
+  <div class="hbar"><div class="hbar-l">MODULE 04 · PART D · PUBLIC CASES</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 04</div></div>
+  <div class="hl"><div class="hl-kicker">PART D · Power BI 공공 적용 사례 — 예산 집행·민원 처리·통계 모니터링 · 10MIN</div><div class="hl-title">공공기관 Power BI 적용 사례</div><div class="hl-sub">이미 많은 공공기관이 쓰는 구조. AI 어시스트와 결합하면 구축 시간이 1/5로 줄어든다.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col2w">
+    <div class="col">
+      <div class="sh"><span class="sh-n">CASE</span><span class="sh-t">공공 사례 3선</span></div><div class="sh-line"></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">CASE 1</span><span class="icard-sess">예산 집행</span></div><div class="bth">부서×분기 예산 집행률 대시보드</div><p class="bt">입력: 재정정보시스템 CSV 월별. 구성: <strong>KPI(총집행률)·추이선·부서별 막대·미집행 경고 카드</strong>. DAX: "분기 누적 집행률 = TOTALQTD(SUM(집행)) / SUM(예산)". 매월 CSV만 교체 → 대시보드 자동 갱신.</p></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">CASE 2</span><span class="icard-sess">민원 처리</span></div><div class="bth">유형×부서×기간 3차원 분석</div><p class="bt">입력: 민원시스템 export. 구성: <strong>슬라이서(기간·부서·유형) + 평균 처리일 KPI + 지도(지역별)</strong>. DAX: "초과 처리 건수 = CALCULATE(COUNTROWS, FILTER(처리일&gt;14))". 보고서에 그대로 삽입.</p></div>
+      <div class="icard dark"><div class="icard-top"><span class="icard-lb">CASE 3 ★</span><span class="icard-sess">공공데이터</span></div><div class="bth">data.go.kr CSV → Power BI → 웹 게시</div><p class="bt">공공데이터포털에서 "인구", "사업체", "복지수급" CSV 직접 가져오기 + <strong>연간 트렌드 자동 업데이트</strong>. 매년 같은 URL이면 스케줄링 가능. 시각화는 공개용으로도 활용.</p></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">COMPARE</span><span class="sh-t">Python vs HTML vs Power BI</span></div><div class="sh-line"></div>
+      <table class="mtbl"><thead><tr><th>기준</th><th>Python</th><th>HTML/JS</th><th>Power BI</th></tr></thead><tbody>
+        <tr><td>코딩</td><td>필요(AI)</td><td>필요(AI)</td><td>불필요</td></tr>
+        <tr><td>배포</td><td>Python 설치</td><td>더블클릭 ★</td><td>PBIx 공유</td></tr>
+        <tr><td>자동갱신</td><td>스크립트</td><td>수동</td><td>폴더 자동 ★</td></tr>
+        <tr><td>인터랙티브</td><td>plotly만</td><td>전부</td><td>전부</td></tr>
+        <tr><td>한글</td><td>폰트 설정</td><td>자동</td><td>자동</td></tr>
+        <tr><td>OS</td><td>모두</td><td>모두</td><td>Win만</td></tr>
+      </tbody></table>
+      <div class="co"><div class="co-lb">선택 가이드</div><div class="co-main">빠른 공유 → HTML · 정기 보고 → Power BI · 분석 자동화 → Python</div><p><strong>상황에 맞는 선택이 거점리더의 판단.</strong> 세 개를 모두 익히려 하지 말고, 본인 업무에 최적인 하나를 깊게 + 나머지를 조금 아는 정도.</p></div>
+      <div class="dstrip"><div class="ds-c"><div class="ds-a">HTML</div><div class="ds-n">공유</div><div class="ds-d">더블클릭 배포</div></div><div class="ds-c"><div class="ds-a">PBIX</div><div class="ds-n">보고</div><div class="ds-d">정기 갱신</div></div><div class="ds-c"><div class="ds-a">PYTHON</div><div class="ds-n">자동화</div><div class="ds-d">반복 작업</div></div></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">04 · 어시스트 바이브 코딩 ① — 데이터 시각화와 분석</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">013 / 032</span></div></div>
+</div></div>
+
+<!-- 14 PART E · Pandas 분석 심화 -->
+<div class="stage"><div class="slide" data-title="E Pandas Deep">
+  <div class="hbar"><div class="hbar-l">MODULE 04 · PART E · PANDAS DEEP DIVE</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 04</div></div>
+  <div class="hl"><div class="hl-kicker">PART E · pandas 분석 심화 — 읽기·필터·그룹·조인·피벗·EDA 자동화 · 20MIN</div><div class="hl-title">pandas 데이터 분석 심화</div><div class="hl-sub">pandas는 데이터 분석의 기본 언어. 공공 업무 대부분이 pandas 한 덩어리로 처리된다. EDA 자동화 도구(ydata-profiling)까지 묶어 소개한다.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col3">
+    <div class="col">
+      <div class="sh"><span class="sh-n">CORE 7</span><span class="sh-t">핵심 분석 7패턴</span></div><div class="sh-line"></div>
+      <table class="mtbl"><thead><tr><th>작업</th><th>AI 요청</th></tr></thead><tbody>
+        <tr><td>읽기</td><td>"CSV 읽고 5행+dtypes"</td></tr>
+        <tr><td>필터</td><td>"2025-03 이후"</td></tr>
+        <tr><td>그룹</td><td>"부서별 평균 처리일"</td></tr>
+        <tr><td>피벗</td><td>"부서×유형 교차표"</td></tr>
+        <tr><td>조인</td><td>"3 CSV merge (부서코드 기준)"</td></tr>
+        <tr><td>파생열</td><td>"접수→완료 처리일수"</td></tr>
+        <tr><td>결측</td><td>"빈 칸 확인·중앙값 채움"</td></tr>
+      </tbody></table>
+      <div class="bth">7패턴 조합이 대부분의 공공 분석을 커버</div>
+      <p class="bt">현업 CSV 업무의 80%는 <strong>로드→필터→그룹→피벗</strong> 네 단계로 끝난다. 조인·파생열·결측 처리는 선택지. 한 덩어리 요청으로 AI가 코드 한 셀에 묶어 반환.</p>
+      <div class="co"><div class="co-lb">판단의 예</div><div class="co-main">"결측치 제거 vs 대체" — 사람이 결정</div><p>결측이 무작위인지 구조적인지에 따라 다르다. AI는 옵션을 제시할 뿐, 선택은 사람.</p></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">AUTO EDA</span><span class="sh-t">ydata-profiling</span></div><div class="sh-line"></div>
+      <div class="bth">한 줄로 수십 페이지 EDA 리포트</div>
+      <div class="cblk"><span class="kw">from</span> ydata_profiling <span class="kw">import</span> ProfileReport
+ProfileReport(df).to_file(<span class="cm">"report.html"</span>)<span class="cap">CSV → HTML 리포트 — 유형 ⑤로 공유</span></div>
+      <table class="mtbl"><thead><tr><th>자동 생성</th><th>내용</th></tr></thead><tbody>
+        <tr><td>기본 통계</td><td>describe + info</td></tr>
+        <tr><td>결측</td><td>결측 비율 + 위치</td></tr>
+        <tr><td>분포</td><td>히스토그램·박스</td></tr>
+        <tr><td>상관</td><td>상관계수 히트맵</td></tr>
+        <tr><td>이상치</td><td>IQR·Z-score</td></tr>
+        <tr><td>범주형</td><td>value_counts + 차트</td></tr>
+      </tbody></table>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">활용</span><span class="icard-sess">첫 만남</span></div><div class="bth">데이터를 처음 받은 날 20분 사용</div><p class="bt">이 리포트 하나가 "질문 목록"을 만들어준다. "이 컬럼은 왜 결측이 35%인가?" 같은 질문이 자연스럽게 생긴다.</p></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">JUPYTER</span><span class="sh-t">.ipynb 분석 노트북</span></div><div class="sh-line"></div>
+      <div class="bth">코드 + 결과 + 설명을 한 파일에</div>
+      <p class="bt">셀 단위 실행 · 결과 즉시 표시. 마크다운 셀로 해설 추가 → <strong>"분석 보고서가 곧 코드 파일"</strong>. Part H에서 이 .ipynb를 AI에 전달해 브리핑으로 변환.</p>
+      <div class="co"><div class="co-lb">베스트 프랙티스</div><div class="co-main">제목(H1) → 목적 → 데이터 로드 → EDA → 분석 → 결론 — 순서 고정</div><p>이 템플릿을 아카이브에 고정하면 모든 분석이 같은 골격을 갖게 되어 동료가 즉시 이해.</p></div>
+      <div class="pit"><div class="pit-lb">PITFALL · pandas</div><div class="pit-h">▸ CP949 인코딩 에러</div><div class="pit-d">"한글 CSV 인코딩 자동 감지 코드"로 AI 요청.</div><div class="pit-h">▸ 100만 행↑ 메모리 부족</div><div class="pit-d">chunksize 옵션. 또는 polars 고려.</div></div>
+      <div class="dstrip"><div class="ds-c"><div class="ds-a">CORE</div><div class="ds-n">7패턴</div><div class="ds-d">읽기→결측</div></div><div class="ds-c"><div class="ds-a">EDA</div><div class="ds-n">원클릭</div><div class="ds-d">HTML 리포트</div></div><div class="ds-c"><div class="ds-a">ARTIFACT</div><div class="ds-n">.ipynb</div><div class="ds-d">재실행 가능</div></div></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">04 · 어시스트 바이브 코딩 ① — 데이터 시각화와 분석</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">014 / 032</span></div></div>
+</div></div>
+
+<!-- 15 Pandas + AI 어시스트 패턴 -->
+<div class="stage"><div class="slide" data-title="E Pandas AI Pattern">
+  <div class="hbar"><div class="hbar-l">MODULE 04 · PART E · PANDAS + AI ASSIST PATTERN</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 04</div></div>
+  <div class="hl"><div class="hl-kicker">PART E · pandas + AI 어시스트 패턴 — AI가 코드를 쓰는 4가지 문장형 · 10MIN</div><div class="hl-title">pandas 요청 문장의 4가지 전형</div><div class="hl-sub">pandas 문법을 외우지 않는다. 요청 문장의 형태를 외우면 AI가 대부분을 쓴다.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col2">
+    <div class="col">
+      <div class="sh"><span class="sh-n">4 PATTERNS</span><span class="sh-t">문장형 4종</span></div><div class="sh-line"></div>
+      <div class="bth">① 집계 문장</div>
+      <p class="bt">"[CSV]에서 [기준]별 [집계함수]를 구하고 [정렬]해서 [상위 N개]만 보여줘." → groupby + agg + sort_values + head. AI가 3줄 코드로 반환.</p>
+      <div class="bth">② 필터+집계</div>
+      <p class="bt">"[조건]을 만족하는 행만 남기고, [기준]별 [집계]를 해줘." → 조건 필터 후 groupby. "조건"은 일·부서·유형·범위 조합 가능.</p>
+      <div class="bth">③ 피벗·교차</div>
+      <p class="bt">"[행기준]×[열기준] 교차표로 [값]을 집계해줘." → pd.pivot_table. 엑셀 피벗과 동일한 구조를 자연어로 즉시.</p>
+      <div class="bth">④ 조인·통합</div>
+      <p class="bt">"[A.csv]와 [B.csv]를 [공통 키]로 합치고, [새 분석]을 해줘." → merge + 후속 분석. 부서코드·민원ID·접수일자 등 키가 명확해야.</p>
+      <div class="co"><div class="co-lb">포인트</div><div class="co-main">"기준 · 집계함수 · 필터 · 정렬" 4요소를 문장에 담아라</div><p>이 4요소가 빠지면 AI가 임의 판단 → 틀린 결과. 명시만으로 정확도 90%↑.</p></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">SAMPLE</span><span class="sh-t">실제 문장 → 코드 예시</span></div><div class="sh-line"></div>
+      <div class="cod"><div class="cod-lb">예시 1 · 집계</div><div class="cod-main">"민원.csv에서 부서별 평균 처리일수를 구하고, 긴 순으로 정렬해서 상위 10개만 보여줘."</div><p>→ df.groupby('부서')['처리일수'].mean().sort_values(ascending=False).head(10)</p></div>
+      <div class="cod"><div class="cod-lb">예시 2 · 필터+집계</div><div class="cod-main">"2025년 3월~5월 민원 중 '환경'·'도로' 유형만 남기고 부서별 건수를 구해줘."</div><p>→ df[(df.접수일 &gt;= '2025-03') &amp; (df.접수일 &lt; '2025-06') &amp; (df.유형.isin(['환경','도로']))].groupby('부서').size()</p></div>
+      <div class="cod"><div class="cod-lb">예시 3 · 피벗</div><div class="cod-main">"부서×유형 교차표로 건수와 평균 처리일 두 값을 보여줘."</div><p>→ pd.pivot_table(df, index='부서', columns='유형', values='처리일', aggfunc=['count','mean'])</p></div>
+      <div class="icard dark"><div class="icard-top"><span class="icard-lb">TIP</span><span class="icard-sess">역질문</span></div><div class="bth">"이 3줄을 사람 언어로 설명해줘"</div><p class="bt">수령 코드의 의도를 AI에 되물으면 코드 읽는 법이 빠르게 향상된다. <strong>이해하지 않고 실행하는 습관을 경계하라.</strong></p></div>
+      <div class="dstrip"><div class="ds-c"><div class="ds-a">SPEED</div><div class="ds-n">1~2m</div><div class="ds-d">문장→코드</div></div><div class="ds-c"><div class="ds-a">ACCURACY</div><div class="ds-n">90%+</div><div class="ds-d">4요소 명시</div></div><div class="ds-c"><div class="ds-a">REUSE</div><div class="ds-n">템플릿</div><div class="ds-d">아카이브</div></div></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">04 · 어시스트 바이브 코딩 ① — 데이터 시각화와 분석</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">015 / 032</span></div></div>
+</div></div>
+
+<!-- 16 PART F · Scikit-learn ML 개요 -->
+<div class="stage"><div class="slide" data-title="F ML Overview">
+  <div class="hbar"><div class="hbar-l">MODULE 04 · PART F · SCIKIT-LEARN ML</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 04</div></div>
+  <div class="hl"><div class="hl-kicker">PART F · scikit-learn 머신러닝 개요 — 회귀·분류·클러스터 3축 · 12MIN</div><div class="hl-title">머신러닝 판단 프레임</div><div class="hl-sub">ML을 직접 구현하지 않는다. AI가 생성한 scikit-learn 코드를 실행하고, 결과의 정확도·특성 중요도·오류를 해석하는 능력이 목표.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col2">
+    <div class="col">
+      <div class="sh"><span class="sh-n">3 AXIS</span><span class="sh-t">ML 3축 개요</span></div><div class="sh-line"></div>
+      <table class="mtbl"><thead><tr><th>축</th><th>질문</th><th>대표 모델</th></tr></thead><tbody>
+        <tr><td>회귀</td><td>"얼마?"</td><td>Linear / Random Forest / GBM</td></tr>
+        <tr><td>분류</td><td>"어느 부류?"</td><td>Logistic / SVM / Tree</td></tr>
+        <tr><td>클러스터</td><td>"어떻게 묶이나?"</td><td>K-Means / DBSCAN</td></tr>
+      </tbody></table>
+      <div class="bth">거점리더 판단 프레임 3단계</div>
+      <p class="bt"><strong>① 데이터 양</strong> — 수백 건↑? <strong>② 패턴 존재</strong> — 변수 간 상관이 있나? <strong>③ 예측 필요</strong> — 미래 값을 알아야 하나? 세 질문에 모두 YES면 ML 후보.</p>
+      <div class="co"><div class="co-lb">WARNING</div><div class="co-main">"엑셀 피벗으로 충분한 문제에 ML은 과잉"</div><p>규칙이 명확하면 if-else가 ML보다 정확·빠르다. ML은 <strong>규칙이 불분명한 패턴</strong>에만 쓴다.</p></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">WORKFLOW</span><span class="sh-t">ML 프로젝트 표준 흐름</span></div><div class="sh-line"></div>
+      <table class="mtbl"><thead><tr><th>단계</th><th>AI에 요청할 것</th></tr></thead><tbody>
+        <tr><td>① 데이터 준비</td><td>"train/test 분할 + 스케일링"</td></tr>
+        <tr><td>② 모델 학습</td><td>"Random Forest 회귀, 100 트리"</td></tr>
+        <tr><td>③ 평가</td><td>"R² · RMSE · MAE 출력"</td></tr>
+        <tr><td>④ 해석</td><td>"특성 중요도 막대"</td></tr>
+        <tr><td>⑤ 교차검증</td><td>"5-fold CV 점수"</td></tr>
+        <tr><td>⑥ 튜닝</td><td>"GridSearchCV로 하이퍼"</td></tr>
+        <tr><td>⑦ 저장</td><td>"joblib.dump로 모델 저장"</td></tr>
+      </tbody></table>
+      <div class="icard dark"><div class="icard-top"><span class="icard-lb">KEY</span><span class="icard-sess">해석 가능성</span></div><div class="bth">공공에서는 정확도보다 "왜 그런가"가 더 중요</div><p class="bt">블랙박스 모델(DL)보다 <strong>해석 가능한 모델(Random Forest 특성 중요도·Decision Tree 규칙)</strong>이 보고서·감사에 유리.</p></div>
+      <div class="pit"><div class="pit-lb">PITFALL</div><div class="pit-h">▸ 과적합 (train 99% / test 60%)</div><div class="pit-d">교차검증 없이 단일 분할만 보면 착각. 반드시 CV.</div></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">04 · 어시스트 바이브 코딩 ① — 데이터 시각화와 분석</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">016 / 032</span></div></div>
+</div></div>
+
+<!-- 17 Scikit-learn 공공 사례 -->
+<div class="stage"><div class="slide" data-title="F ML Public Cases">
+  <div class="hbar"><div class="hbar-l">MODULE 04 · PART F · PUBLIC ML CASES</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 04</div></div>
+  <div class="hl"><div class="hl-kicker">PART F · 공공 ML 사례 — 민원 처리시간 예측·민원 자동 분류·수급자 클러스터링 · 10MIN</div><div class="hl-title">머신러닝 공공 적용 사례</div><div class="hl-sub">거점리더가 실제 만날 수 있는 ML 시나리오. 각 사례의 데이터·입출력·경계조건을 본다.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col3">
+    <div class="col">
+      <div class="sh"><span class="sh-n">회귀</span><span class="sh-t">처리시간 예측</span></div><div class="sh-line"></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">CASE · 회귀</span></div><div class="bth">민원 처리시간 예측 — Random Forest</div><p class="bt"><strong>입력</strong>: 유형·부서·접수 시간대·계절. <strong>출력</strong>: 예상 처리일수. <strong>목적</strong>: 장기지연 민원 사전 알림, 인력 배치 최적화.</p></div>
+      <table class="mtbl"><thead><tr><th>지표</th><th>의미</th></tr></thead><tbody>
+        <tr><td>R²</td><td>설명력 (1에 가까울수록 좋음)</td></tr>
+        <tr><td>MAE</td><td>평균 절대 오차(일)</td></tr>
+        <tr><td>특성 중요도</td><td>유형 38% · 부서 22% · 계절 15%</td></tr>
+      </tbody></table>
+      <div class="co"><div class="co-lb">가치</div><div class="co-main">"유형이 가장 큰 요인"을 근거로 제시</div><p>특성 중요도가 정책 보고의 근거가 된다.</p></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">분류</span><span class="sh-t">민원 자동 태깅</span></div><div class="sh-line"></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">CASE · 분류</span></div><div class="bth">민원 텍스트 → 유형 자동 분류</div><p class="bt"><strong>입력</strong>: 민원 본문(한국어). <strong>전처리</strong>: TF-IDF(문장 특성화). <strong>모델</strong>: SVM 또는 Logistic. <strong>출력</strong>: 환경/도로/복지/세무 등 라벨.</p></div>
+      <table class="mtbl"><thead><tr><th>지표</th><th>해석</th></tr></thead><tbody>
+        <tr><td>정확도</td><td>"전체 맞춘 비율"</td></tr>
+        <tr><td>confusion</td><td>"어디서 헷갈렸나"</td></tr>
+        <tr><td>F1</td><td>정밀+재현 균형</td></tr>
+      </tbody></table>
+      <div class="pit"><div class="pit-lb">주의</div><div class="pit-h">▸ "자동 분류 100% 신뢰 금지"</div><div class="pit-d">정확도 92%라도 8%는 오분류. <strong>사람 검수 단계 유지</strong>.</div></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">클러스터</span><span class="sh-t">패턴 발견</span></div><div class="sh-line"></div>
+      <div class="icard dark"><div class="icard-top"><span class="icard-lb">CASE · 클러스터</span></div><div class="bth">K-Means로 수급자 5개 그룹화</div><p class="bt">레이블 없이 자동 그룹핑. "지원 빈도·연령·가구·금액" 4변수로 5개 군집 → 각 군집을 해석해 새 지원 유형 설계.</p></div>
+      <div class="co"><div class="co-lb">쓰임</div><div class="co-main">"분류 체계를 데이터에서 발견"</div><p>기존 행정 분류가 아닌, 실제 수혜 패턴에 기반한 새 분류. 제도 개편의 근거.</p></div>
+      <div class="dstrip"><div class="ds-c"><div class="ds-a">회귀</div><div class="ds-n">예측</div><div class="ds-d">처리일</div></div><div class="ds-c"><div class="ds-a">분류</div><div class="ds-n">태깅</div><div class="ds-d">유형</div></div><div class="ds-c"><div class="ds-a">클러스터</div><div class="ds-n">발견</div><div class="ds-d">그룹</div></div></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">04 · 어시스트 바이브 코딩 ① — 데이터 시각화와 분석</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">017 / 032</span></div></div>
+</div></div>
+
+<!-- 18 PART G · Deep Learning 입문 -->
+<div class="stage"><div class="slide" data-title="G Deep Learning">
+  <div class="hbar"><div class="hbar-l">MODULE 04 · PART G · DEEP LEARNING INTRO</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 04</div></div>
+  <div class="hl"><div class="hl-kicker">PART G · Deep Learning 입문 — 개념 · 실무 접점 · MLP 실행 체험 · 12MIN</div><div class="hl-title">딥러닝 입문과 체감 실습</div><div class="hl-sub">거점리더가 DL을 쓰는 경우는 드물다. 다만 "이 모델은 PyTorch 기반이라 ONNX로 변환해야" 같은 대화를 이해하는 수준이면 충분하다.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col2">
+    <div class="col">
+      <div class="sh"><span class="sh-n">CONCEPT</span><span class="sh-t">개념</span></div><div class="sh-line"></div>
+      <div class="bth">신경망의 3가지 구성</div>
+      <p class="bt"><strong>① 레이어</strong> — 입력→은닉→출력의 노드 묶음. <strong>② 가중치</strong> — 연결 강도. 학습으로 조정. <strong>③ 활성 함수</strong> — 비선형성 부여. ReLU·Sigmoid·Softmax.</p>
+      <table class="mtbl"><thead><tr><th>구조</th><th>용도</th><th>예시 모델</th></tr></thead><tbody>
+        <tr><td>MLP</td><td>정형 데이터</td><td>sklearn MLPClassifier</td></tr>
+        <tr><td>CNN</td><td>이미지</td><td>ResNet · YOLO</td></tr>
+        <tr><td>RNN/LSTM</td><td>시계열·문장</td><td>초기 번역 모델</td></tr>
+        <tr><td>Transformer</td><td>언어·멀티모달</td><td>GPT · BERT · Claude</td></tr>
+      </tbody></table>
+      <div class="co"><div class="co-lb">KEY</div><div class="co-main">"Transformer가 사실상 표준"</div><p>2017 논문 이후 언어뿐 아니라 이미지·음성·멀티모달까지 Transformer가 주류. 1차시 MicroGPT의 구조.</p></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">HANDS-ON</span><span class="sh-t">실무 접점</span></div><div class="sh-line"></div>
+      <div class="bth">sklearn MLPClassifier — 한 줄로 DL 체험</div>
+      <div class="cblk"><span class="kw">from</span> sklearn.neural_network <span class="kw">import</span> MLPClassifier
+m = MLPClassifier(hidden_layer_sizes=(100,50), max_iter=500)
+m.fit(X_train, y_train)
+<span class="kw">print</span>(m.score(X_test, y_test))<span class="cap">SVM 결과와 비교 — 정확도 차이 관찰</span></div>
+      <div class="icard dark"><div class="icard-top"><span class="icard-lb">MICROGPT 심화</span><span class="icard-sess">1차시 연결</span></div><div class="bth">학습 과정을 눈으로 관찰</div><p class="bt">1차시 243줄 MicroGPT를 실제로 돌리면서 <strong>epoch별 loss · 생성 텍스트 품질</strong>을 확인. hidden·head·layer를 바꿨을 때 차이를 체감 → "환각이 구조적" 의미를 몸으로.</p></div>
+      <div class="pit"><div class="pit-lb">PITFALL</div><div class="pit-h">▸ 데이터가 적은데 DL을 쓴다</div><div class="pit-d">샘플 수백 건에 DL 과도. ML이 더 정확.</div><div class="pit-h">▸ GPU 없이 큰 모델 훈련</div><div class="pit-d">학습 시간 현실적이지 않음. CPU는 작은 MLP·체험용만.</div></div>
+      <div class="dstrip"><div class="ds-c"><div class="ds-a">MLP</div><div class="ds-n">체험</div><div class="ds-d">sklearn 1줄</div></div><div class="ds-c"><div class="ds-a">microGPT</div><div class="ds-n">관찰</div><div class="ds-d">학습 과정</div></div><div class="ds-c"><div class="ds-a">판단</div><div class="ds-n">ML vs DL</div><div class="ds-d">데이터로 결정</div></div></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">04 · 어시스트 바이브 코딩 ① — 데이터 시각화와 분석</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">018 / 032</span></div></div>
+</div></div>
+
+<!-- 19 DL vs ML 선택 기준 -->
+<div class="stage"><div class="slide" data-title="ML vs DL">
+  <div class="hbar"><div class="hbar-l">MODULE 04 · PART G · ML vs DL JUDGMENT</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 04</div></div>
+  <div class="hl"><div class="hl-kicker">PART G · ML vs DL 선택 기준 — 공공 맥락 · 8MIN</div><div class="hl-title">ML과 DL의 선택 기준</div><div class="hl-sub">공공 업무의 대부분은 CSV·엑셀. ML이 더 적합한 경우가 많다. DL은 비정형 + 데이터가 많은 때만.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col2w">
+    <div class="col">
+      <div class="sh"><span class="sh-n">DECISION TABLE</span><span class="sh-t">공공 업무 판단표</span></div><div class="sh-line"></div>
+      <table class="mtbl"><thead><tr><th>상황</th><th>데이터</th><th>선택</th><th>이유</th></tr></thead><tbody>
+        <tr><td>처리시간 예측</td><td>CSV 수천 건</td><td>ML(RF)</td><td>해석 가능성</td></tr>
+        <tr><td>민원 유형 분류</td><td>텍스트 수만 건</td><td>ML(SVM)</td><td>정확도 충분</td></tr>
+        <tr><td>수급자 그룹</td><td>정형</td><td>ML(KMeans)</td><td>빠르고 설명 가능</td></tr>
+        <tr><td>CCTV 분석</td><td>이미지</td><td>DL(CNN)</td><td>비정형</td></tr>
+        <tr><td>음성 민원 전사</td><td>음성</td><td>DL(Whisper)</td><td>비정형</td></tr>
+        <tr><td>한국어 생성·요약</td><td>자연어</td><td>LLM(GPT·Claude)</td><td>비정형+대형</td></tr>
+        <tr><td>이상 탐지</td><td>시계열</td><td>ML(IsolationForest)</td><td>설명 가능</td></tr>
+        <tr><td>얼굴 식별</td><td>이미지</td><td>DL(CNN)</td><td>공공에선 보수적으로</td></tr>
+      </tbody></table>
+      <div class="bth">판단표의 읽는 법</div>
+      <p class="bt">상황(문제)→데이터(형식)→선택(도구)→이유(근거) 순서 고정. <strong>이유 열이 보고서 문구</strong>로 바로 쓰이도록 설계했다.</p>
+      <div class="co"><div class="co-lb">원칙</div><div class="co-main">"정형·해석·감사" 세 요건이면 ML로 충분</div><p>공공 맥락은 결과만큼 근거가 중요. <strong>해석 불가능한 DL은 보고 리스크.</strong></p></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">NOTES</span><span class="sh-t">특기 사항</span></div><div class="sh-line"></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">LLM은 별도 카테고리</span></div><div class="bth">LLM = DL이지만 API로 쓰니 별개 취급</div><p class="bt">GPT·Claude는 공공에서 API로 사용. "모델을 훈련"하지 않는다. <strong>프롬프트·RAG·에이전트</strong> 관점의 작업 — 7·8차시 주제.</p></div>
+      <div class="pit"><div class="pit-lb">주의</div><div class="pit-h">▸ 정확도는 만능이 아니다</div><div class="pit-d">DL 95% · ML 92% 차이보다, <strong>누구에게 설명 가능한가</strong>가 공공에서 결정적.</div><div class="pit-h">▸ 데이터 편향</div><div class="pit-d">과거 민원이 편향되면 DL은 편향을 증폭. 공공에선 이중 검증.</div></div>
+      <div class="cod"><div class="cod-lb">KEY MESSAGE</div><div class="cod-main">거점리더는 모델을 만들지 않는다 — 적합성을 판단한다</div><p>"이 문제에 ML이 필요한가 · 데이터는 충분한가 · 결과를 설명할 수 있나" — 이 세 질문이 도구 선택의 핵심 기준.</p></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">04 · 어시스트 바이브 코딩 ① — 데이터 시각화와 분석</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">019 / 032</span></div></div>
+</div></div>
+
+<!-- 20 PART H · 보고서 자동화 개요 -->
+<div class="stage"><div class="slide" data-title="H Report Auto">
+  <div class="hbar"><div class="hbar-l">MODULE 04 · PART H · REPORT AUTOMATION</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 04</div></div>
+  <div class="hl"><div class="hl-kicker">PART H · 분석 보고서 자동화 개요 — pandas→matplotlib→AI→브리핑 · 12MIN</div><div class="hl-title">보고서 자동화 파이프라인 개요</div><div class="hl-sub">분석은 수단, 보고는 목적. 4차시의 모든 기법은 결국 "과장·국장이 읽을 한 페이지"로 귀결된다.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col3">
+    <div class="col">
+      <div class="sh"><span class="sh-n">PIPELINE</span><span class="sh-t">5단계 흐름</span></div><div class="sh-line"></div>
+      <table class="mtbl"><thead><tr><th>단계</th><th>도구</th><th>산출물</th></tr></thead><tbody>
+        <tr><td>① 로딩</td><td>pandas</td><td>DataFrame</td></tr>
+        <tr><td>② EDA</td><td>ydata-profiling</td><td>HTML 리포트</td></tr>
+        <tr><td>③ 시각화</td><td>matplotlib/plotly</td><td>차트 PNG/HTML</td></tr>
+        <tr><td>④ ML (선택)</td><td>sklearn</td><td>예측·중요도</td></tr>
+        <tr><td>⑤ 브리핑</td><td>AI</td><td>1페이지 문서</td></tr>
+      </tbody></table>
+      <div class="co"><div class="co-lb">3차시 연결</div><div class="co-main">3차시 서비스 체인을 코드로 재구성</div><p>3차시: Julius→NotebookLM→Gamma. 4차시: pandas→matplotlib→ChatGPT. <strong>같은 결과, 다른 방법.</strong></p></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">TEMPLATE</span><span class="sh-t">1페이지 브리핑 양식</span></div><div class="sh-line"></div>
+      <div class="cod"><div class="cod-lb">BRIEFING</div><div class="cod-main">○○과 민원 데이터 분석 결과 보고</div>
+        <p style="border-bottom:1px solid rgba(255,255,255,0.1);padding-bottom:4px;margin-bottom:4px"><strong style="color:var(--acc3)">1. 핵심 발견</strong> — 3개</p>
+        <p style="border-bottom:1px solid rgba(255,255,255,0.1);padding-bottom:4px;margin-bottom:4px"><strong style="color:var(--acc3)">2. 데이터 근거</strong> — 기간·건수·주요 수치</p>
+        <p style="border-bottom:1px solid rgba(255,255,255,0.1);padding-bottom:4px;margin-bottom:4px"><strong style="color:var(--acc3)">3. 제안 사항</strong> — 2개 (실행·검토)</p>
+        <p><strong style="color:var(--acc3)">4. 첨부</strong> — 차트 N개 + .ipynb</p></div>
+      <div class="icard dark"><div class="icard-top"><span class="icard-lb">AI 프롬프트</span></div><div class="bth">"이 분석 결과를 과장 보고용 1페이지 브리핑으로"</div><p class="bt">구조: 발견 3 · 근거 · 제안 2. 톤: 공문서체. 길이: A4 1면. 차트 캡션 3줄. <strong>이 템플릿을 아카이브에 고정.</strong></p></div>
+      <div class="co"><div class="co-lb">포맷 고정의 이점</div><div class="co-main">매월 동일 구조 → 보는 사람의 인지 부담 최소</div><p>첫 회차에 템플릿을 확정하면 <strong>월별 비교가 자동</strong>으로 가능하다. 과장·국장이 숫자 위치를 외우기 시작한다.</p></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">FORMAT</span><span class="sh-t">최종 포맷 2가지</span></div><div class="sh-line"></div>
+      <div class="bth">docx 또는 hwp로 산출</div>
+      <p class="bt">AI가 생성한 1페이지 텍스트를 <strong>python-docx</strong>(Word) 또는 <strong>pyhwpx</strong>(한글)로 실제 문서로 변환. 차트 이미지까지 자동 삽입 가능.</p>
+      <table class="mtbl"><thead><tr><th>도구</th><th>포맷</th><th>특기</th></tr></thead><tbody>
+        <tr><td>python-docx</td><td>.docx</td><td>Word 표준</td></tr>
+        <tr><td>pyhwpx</td><td>.hwp</td><td>5차시 상세</td></tr>
+        <tr><td>reportlab</td><td>.pdf</td><td>최종 PDF</td></tr>
+      </tbody></table>
+      <div class="co"><div class="co-lb">5차시 예고</div><div class="co-main">HWP 자동화 2시간은 다음 차시 본격</div><p>pyhwpx · win32com · 올레 구조. 보고서 자동화의 결승선은 5차시에.</p></div>
+      <div class="dstrip"><div class="ds-c"><div class="ds-a">분석</div><div class="ds-n">.ipynb</div><div class="ds-d">재실행 가능</div></div><div class="ds-c"><div class="ds-a">차트</div><div class="ds-n">PNG/HTML</div><div class="ds-d">삽입용</div></div><div class="ds-c"><div class="ds-a">문서</div><div class="ds-n">docx/hwp</div><div class="ds-d">보고 최종</div></div></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">04 · 어시스트 바이브 코딩 ① — 데이터 시각화와 분석</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">020 / 032</span></div></div>
+</div></div>
+
+<!-- 21 보고서 자동화 파이프라인 예시 -->
+<div class="stage"><div class="slide" data-title="H Pipeline Example">
+  <div class="hbar"><div class="hbar-l">MODULE 04 · PART H · PIPELINE EXAMPLE</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 04</div></div>
+  <div class="hl"><div class="hl-kicker">PART H · 파이프라인 예시 — "민원 월간 보고서" 자동화 실제 코드 흐름 · 10MIN</div><div class="hl-title">월간 보고서 자동 생성 파이프라인</div><div class="hl-sub">한 번 세팅하면 매월 CSV만 교체. 코드 재실행으로 보고서가 완성된다. "어시스트 코딩이 엑셀보다 근본적으로 우월한 이유."</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col2">
+    <div class="col">
+      <div class="sh"><span class="sh-n">FLOW</span><span class="sh-t">코드 흐름 6단계</span></div><div class="sh-line"></div>
+      <div class="cblk"><span class="cm"># 1. 데이터 로드</span>
+df = pd.read_csv(<span class="cm">"민원_2025_10.csv"</span>, encoding=<span class="cm">"cp949"</span>)
+
+<span class="cm"># 2. 집계</span>
+by_dept = df.groupby(<span class="cm">"부서"</span>)[<span class="cm">"처리일"</span>].agg([<span class="cm">"count"</span>,<span class="cm">"mean"</span>])
+
+<span class="cm"># 3. 차트 PNG</span>
+fig, ax = plt.subplots(figsize=(8,5))
+by_dept[<span class="cm">"mean"</span>].sort_values().plot.barh(ax=ax)
+plt.savefig(<span class="cm">"./out/bar.png"</span>, dpi=300)
+
+<span class="cm"># 4. 핵심 지표 텍스트화</span>
+findings = f<span class="cm">"평균 처리일 {df.처리일.mean():.1f}일, 초과율 {..}%"</span>
+
+<span class="cm"># 5. AI에 브리핑 요청 (외부망 단계)</span>
+<span class="cm"># → 결과 텍스트를 body 변수에 저장</span>
+
+<span class="cm"># 6. docx 생성</span>
+<span class="kw">from</span> docx <span class="kw">import</span> Document
+doc = Document()
+doc.add_heading(<span class="cm">"민원 처리 월간 보고"</span>, 0)
+doc.add_paragraph(body)
+doc.add_picture(<span class="cm">"./out/bar.png"</span>, width=Inches(6))
+doc.save(<span class="cm">"./out/report_2025_10.docx"</span>)<span class="cap">매월 CSV만 교체 → 실행 1회로 보고서 완성</span></div>
+      <div class="bth">6단계가 모두 AI에 요청 가능한 작업</div>
+      <p class="bt">사람이 직접 쓰는 코드는 단 한 줄도 없다. <strong>각 단계를 개별 프롬프트로 나눠 AI에 요청</strong>해 합치거나, 전체를 한 번에 요청해도 된다. 첫 회에 권장: 분할.</p>
+      <div class="co"><div class="co-lb">디버깅 팁</div><div class="co-main">단계별로 print() 출력 → 끊기는 지점 즉시 식별</div><p>6단계를 한 번에 돌리지 말고 셀 단위로 실행. <strong>문제 발생 지점</strong>을 5초 안에 특정.</p></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">VALUE</span><span class="sh-t">재사용 가치</span></div><div class="sh-line"></div>
+      <div class="bth">"코드 자산화"의 실제 효과</div>
+      <table class="mtbl"><thead><tr><th>항목</th><th>수작업</th><th>코드화</th></tr></thead><tbody>
+        <tr><td>첫 보고서</td><td>4시간</td><td>6시간 (코드 + AI 요청 포함)</td></tr>
+        <tr><td>2회차</td><td>4시간</td><td>10분</td></tr>
+        <tr><td>12개월</td><td>48시간</td><td>8시간</td></tr>
+        <tr><td>재현성</td><td>기억 의존</td><td>코드 그 자체</td></tr>
+        <tr><td>공유</td><td>수작업 설명</td><td>코드 전달</td></tr>
+      </tbody></table>
+      <div class="co"><div class="co-lb">의미</div><div class="co-main">"처음만 느리고, 두 번째부터 빠르다"</div><p>엑셀은 첫 번째도 두 번째도 같은 속도. 코드는 <strong>투자 회수</strong>가 큰 폭으로.</p></div>
+      <div class="icard dark"><div class="icard-top"><span class="icard-lb">ARCHIVE</span><span class="icard-sess">아카이브 3종</span></div><div class="bth">코드(.py) + 차트(PNG) + 템플릿(.docx)</div><p class="bt">이 세 개를 함께 묶어 저장. 동료가 그대로 재실행 가능. <strong>"코드 자산"이 누적되는 회차.</strong></p></div>
+      <div class="pit"><div class="pit-lb">PITFALL</div><div class="pit-h">▸ 첫 회차에 포기한다</div><div class="pit-d">첫 투자가 커서 중간에 엑셀로 돌아감. <strong>두 번째 실행에 도달해야 효과가 발생한다.</strong></div></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">04 · 어시스트 바이브 코딩 ① — 데이터 시각화와 분석</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">021 / 032</span></div></div>
+</div></div>
+
+<!-- 22 HERO · 시각화의 목적 -->
+<div class="stage"><div class="slide" data-title="Hero Visual Purpose">
+  <div class="hbar"><div class="hbar-l">MODULE 04 · VISUALIZATION PRINCIPLE</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 04</div></div>
+  <div class="bd col1"><div class="col hero" style="background:var(--dk);color:var(--on)">
+    <div class="hero-k">DESIGN PRINCIPLE · 시각화의 철학</div>
+    <div class="hero-t" style="font-size:56px">시각화의 목적은<br><span style="color:var(--acc3)">아름다움이 아니라</span> <span style="color:var(--acc3)">이해</span>다.</div>
+    <div class="hero-s">화려한 차트가 보기 좋을 수 있다. 그러나 보는 사람이 3초 안에 핵심을 파악할 수 없다면 실패한 시각화다. 공공 업무의 시각화는 "보기 좋은 것"보다 "의사결정이 가능한 것"이 목표다. 색이 적을수록, 라벨이 명확할수록, 주석이 짧을수록, 이해는 빨라진다.</div>
+    <div class="hero-q"><div class="hero-q-q">"과장이 1분 안에 핵심을 파악하지 못하면, 그 차트는 아무리 예뻐도 보고에 실패한 것이다."</div><div class="hero-q-a">— 공공 보고 관행</div></div>
+  </div></div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">04 · 어시스트 바이브 코딩 ① — 데이터 시각화와 분석</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">022 / 032</span></div></div>
+</div></div>
+
+<!-- 23 시각화 설계 원칙 5가지 -->
+<div class="stage"><div class="slide" data-title="Viz Principles">
+  <div class="hbar"><div class="hbar-l">MODULE 04 · VISUAL DESIGN · 5 PRINCIPLES</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 04</div></div>
+  <div class="hl"><div class="hl-kicker">시각화 설계 원칙 5가지 — 색·레이아웃·라벨·범례·주석 · 8MIN</div><div class="hl-title">공공 보고용 시각화 5대 원칙</div><div class="hl-sub">"차트 그려줘"가 아니라 "이 원칙을 지켜서 그려줘"로 요청하면 산출물 품질이 크게 향상된다.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col3">
+    <div class="col">
+      <div class="sh"><span class="sh-n">① 색</span><span class="sh-t">COLOR</span></div><div class="sh-line"></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">① COLOR</span></div><div class="bth">색은 의미를 가질 때만 쓴다</div><p class="bt">카테고리가 3개 이상이면 <strong>기관 공식 2~3색 팔레트</strong>로 통일. 강조는 하나만 짙은 색. 나머지는 회색 톤. <strong>빨강은 경고·예산 초과·지연</strong>에만.</p></div>
+      <div class="co"><div class="co-lb">AI 요청</div><div class="co-main">"색은 acc=#b8532a, 보조=#8a7659, 나머지는 회색 톤"</div><p>팔레트를 명시하면 일관된 브랜드.</p></div>
+      <div class="bth">② 레이아웃</div>
+      <p class="bt">정보 위계: <strong>큰 숫자(KPI) → 추이 → 비교 → 상세</strong>. 좌→우, 위→아래. 한 화면에 4블록 이내.</p>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">③ 라벨 · ④ 범례</span><span class="sh-t">LABEL · LEGEND</span></div><div class="sh-line"></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">③ LABEL</span></div><div class="bth">축 제목·단위·기간·출처 4가지 필수</div><p class="bt"><strong>X: "접수월 (2025)"</strong>, <strong>Y: "건수 (천 건)"</strong>, <strong>제목: "부서별 민원 건수 · 2025년 1~9월 · 출처: 민원시스템"</strong>. 빠지면 차트 독립성 상실.</p></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">④ LEGEND</span></div><div class="bth">범례는 데이터 순서로 정렬</div><p class="bt">알파벳 순이 아니라 <strong>값 큰 순</strong>(막대)·<strong>최근 순</strong>(시계열). 범례 위치는 오른쪽 상단(공간 적을 때) 또는 차트 하단.</p></div>
+      <div class="co"><div class="co-lb">AI 요청</div><div class="co-main">"축 제목·단위·기간·출처 포함, 범례는 값 큰 순 정렬"</div><p>한 줄로 보고 수준 상승.</p></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">⑤ 주석</span><span class="sh-t">ANNOTATION</span></div><div class="sh-line"></div>
+      <div class="icard dark"><div class="icard-top"><span class="icard-lb">⑤ ANNOTATION</span></div><div class="bth">이상점·변곡점에 짧은 설명</div><p class="bt">차트 안에 <strong>"2025-06 시스템 교체"</strong>, <strong>"+38% 증가"</strong> 같은 1줄 주석을 직접 표기. 보는 사람이 설명문을 찾지 않아도 된다.</p></div>
+      <div class="co"><div class="co-lb">AI 요청 통합</div><div class="co-main">"5대 원칙 포함해서 그려줘"</div><p>"① 기관 색상 ② 4블록 레이아웃 ③ 라벨 4종 ④ 값 순 범례 ⑤ 이상점 주석" — 프롬프트에 항상 끼워라.</p></div>
+      <div class="pit"><div class="pit-lb">PITFALL</div><div class="pit-h">▸ 3D 차트 금지</div><div class="pit-d">공공 보고에서 3D 막대·파이는 <strong>왜곡</strong> 원인. 2D만 사용.</div></div>
+      <div class="dstrip"><div class="ds-c"><div class="ds-a">색</div><div class="ds-n">2~3</div><div class="ds-d">팔레트</div></div><div class="ds-c"><div class="ds-a">라벨</div><div class="ds-n">4요소</div><div class="ds-d">축·단위·기간·출처</div></div><div class="ds-c"><div class="ds-a">주석</div><div class="ds-n">1줄</div><div class="ds-d">변곡점</div></div></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">04 · 어시스트 바이브 코딩 ① — 데이터 시각화와 분석</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">023 / 032</span></div></div>
+</div></div>
+
+<!-- 24 자주 하는 실수 5가지 -->
+<div class="stage"><div class="slide" data-title="Viz Mistakes">
+  <div class="hbar"><div class="hbar-l">MODULE 04 · VISUAL MISTAKES · 5</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 04</div></div>
+  <div class="hl"><div class="hl-kicker">자주 하는 실수 5가지 — 왜곡 · 과도 · 혼잡 · 부정확 · 무근거 · 8MIN</div><div class="hl-title">차트 제작의 5대 실수</div><div class="hl-sub">실수 자체가 학습 자료다. AI가 기본 생성한 차트에 이 5가지가 흔히 남는다.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col3">
+    <div class="col">
+      <div class="sh"><span class="sh-n">① 왜곡</span><span class="sh-t">DISTORTION</span></div><div class="sh-line"></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">① 왜곡</span></div><div class="bth">Y축 0부터 시작하지 않은 막대</div><p class="bt">Y축을 95~100 범위로 자르면 <strong>작은 차이가 크게 보임</strong>. 막대 차트는 반드시 0부터. 선 차트는 범위 조정 가능하지만 명시 필요.</p></div>
+      <div class="bth">② 과도 (Overload)</div>
+      <p class="bt">한 차트에 12개 시리즈, 8색, 범례 길이 5줄. 보는 사람은 해독 포기. <strong>3개 이하 시리즈 / 2~3색 / 범례 1줄</strong>.</p>
+      <div class="co"><div class="co-lb">FIX</div><div class="co-main">"상위 5개 + 기타"로 통합</div><p>나머지는 회색 "기타"로 합친다.</p></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">③ 혼잡 · ④ 부정확</span><span class="sh-t">CLUTTER · INACCURATE</span></div><div class="sh-line"></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">③ 혼잡</span></div><div class="bth">격자·테두리·그림자가 많아 데이터를 가린다</div><p class="bt">차트의 잉크는 <strong>"데이터-잉크 비율"</strong> 개념. 격자·축 표시·범례 테두리·그림자는 삭제. matplotlib에서 <code style="font-family:var(--mono);font-size:11px;background:var(--bg2);padding:1px 4px">sns.despine()</code>.</p></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">④ 부정확</span></div><div class="bth">반올림·단위·누락이 섞인 숫자</div><p class="bt">"예산 1,234" — 원? 천원? 백만원? <strong>단위와 반올림 규칙을 캡션에</strong>. 데이터 누락 기간도 주석으로 명시(점선).</p></div>
+      <div class="pit"><div class="pit-lb">AI 요청 시</div><div class="pit-h">▸ "누락 데이터 구간은 점선으로"</div><div class="pit-d">AI가 기본으론 공란 처리. 명시해야 주석 추가.</div></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">⑤ 무근거</span><span class="sh-t">UNSOURCED</span></div><div class="sh-line"></div>
+      <div class="icard dark"><div class="icard-top"><span class="icard-lb">⑤ 무근거</span></div><div class="bth">출처가 없는 차트는 보고에 못 쓴다</div><p class="bt">공공 보고에서 <strong>"출처: ○○시스템, 2025-10-20 추출"</strong>가 없으면 차트의 공식성이 사라진다. 제목·캡션·푸터 셋 중 하나에 반드시 명시.</p></div>
+      <div class="co"><div class="co-lb">체크리스트</div><div class="co-main">AI 수령 후 5분 점검</div><p>① Y축 0 ② 시리즈 3이하 ③ 격자 제거 ④ 단위 표시 ⑤ 출처 명기. 5가지 점검이 안 되면 보고 불가.</p></div>
+      <div class="cod"><div class="cod-lb">INTEGRATED</div><div class="cod-main">"5대 원칙 + 5대 실수 방지"를 한 프롬프트에</div><p>"Y축 0부터, 시리즈 3개 이하, 격자 제거, 단위 명시, 출처 캡션 포함" — 매 차트 요청에.</p></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">04 · 어시스트 바이브 코딩 ① — 데이터 시각화와 분석</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">024 / 032</span></div></div>
+</div></div>
+
+<!-- 25 PART I · 통합 실습 가이드 -->
+<div class="stage"><div class="slide" data-title="Integrated Practice">
+  <div class="hbar"><div class="hbar-l">MODULE 04 · PART I · INTEGRATED PRACTICE</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 04</div></div>
+  <div class="hl"><div class="hl-kicker">PART I · 통합 실습 — "내 업무 데이터 하나" 시각화 + 브리핑 · 30MIN</div><div class="hl-title">통합 실습 3종 세트 완성</div><div class="hl-sub">실습의 핵심은 완성도가 아니라 "루틴을 한 번 끝까지 돌려보는 것". 오늘 완성한 3종 세트가 아카이브의 첫 코드 자산이 된다.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col3">
+    <div class="col">
+      <div class="sh"><span class="sh-n">MISSION</span><span class="sh-t">오늘의 과제</span></div><div class="sh-line"></div>
+      <div class="bth">미션 카드 속 "데이터 분석" 요소를 파이프라인으로</div>
+      <p class="bt">1차시에서 작성한 <strong>거점 미션 카드</strong>를 꺼낸다. 그 안에 "분석·통계·시각화" 언급이 있는 과제를 고른다. 없으면 공공데이터포털 CSV로 대체.</p>
+      <table class="mtbl"><thead><tr><th>단계</th><th>선택지</th></tr></thead><tbody>
+        <tr><td>① 데이터</td><td>비식별 CSV 1개</td></tr>
+        <tr><td>② 분석</td><td>pandas 그룹·피벗</td></tr>
+        <tr><td>③ 시각화</td><td>matplotlib / plotly / Chart.js / Power BI 中 택1</td></tr>
+        <tr><td>④ ML (선택)</td><td>sklearn 분류/회귀 (시간 여유 시)</td></tr>
+        <tr><td>⑤ 브리핑</td><td>AI로 1페이지</td></tr>
+      </tbody></table>
+      <div class="co"><div class="co-lb">산출물 3종</div><div class="co-main">.ipynb + PNG/HTML + .docx</div><p>완성 제출 후 2명이 발표. 5분 × 2 = 10분.</p></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">SCENARIO</span><span class="sh-t">부서별 시나리오 6개</span></div><div class="sh-line"></div>
+      <table class="mtbl"><thead><tr><th>부서</th><th>데이터</th><th>체인</th></tr></thead><tbody>
+        <tr><td>민원실</td><td>접수 CSV</td><td>pandas→plotly→브리핑</td></tr>
+        <tr><td>기획재정</td><td>예산 엑셀</td><td>pandas→matplotlib→Power BI</td></tr>
+        <tr><td>인사과</td><td>인력 현황</td><td>pandas→seaborn→회귀</td></tr>
+        <tr><td>환경과</td><td>대기질 API</td><td>pandas→ECharts 지도</td></tr>
+        <tr><td>복지과</td><td>수급 데이터</td><td>pandas→profiling</td></tr>
+        <tr><td>관광과</td><td>방문 통계</td><td>pandas→plotly→회귀</td></tr>
+      </tbody></table>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">공공데이터 대체</span><span class="icard-sess">data.go.kr</span></div><div class="bth">현업 CSV가 없으면 공공데이터 활용</div><p class="bt">"민원 통계", "예산 집행", "인구 현황" 검색 → CSV 다운. <strong>실습 코드는 그대로 현업 데이터에 적용 가능.</strong></p></div>
+      <div class="co"><div class="co-lb">시나리오 선택 기준</div><div class="co-main">본인 부서와 가장 가까운 1개 선택</div><p>6개 모두 체인 형태가 달라서, 어느 것을 고르느냐가 <strong>오늘의 학습 모듈</strong>을 결정한다. 낯선 체인보다 익숙한 업무부터.</p></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">DECISION</span><span class="sh-t">도구 선택 트리</span></div><div class="sh-line"></div>
+      <p class="bt"><strong>Q1. 코딩 가능?</strong><br>No → Power BI (GUI)<br>Yes → Q2</p>
+      <p class="bt"><strong>Q2. 동료 공유?</strong><br>파일 공유 → HTML (유형 ⑤)<br>나만 사용 → .ipynb<br>정기 갱신 → .pbix</p>
+      <p class="bt"><strong>Q3. 인터랙티브?</strong><br>Yes → plotly · Chart.js<br>No → matplotlib PNG</p>
+      <p class="bt"><strong>Q4. 내부망 전용?</strong><br>Yes → CDN 인라인 · 오프라인 휠<br>외부 OK → Julius · ChatGPT CI</p>
+      <div class="cod"><div class="cod-lb">KEY MESSAGE</div><div class="cod-main">"도구를 많이 아는 것보다 상황에 맞게 고르는 판단"이 거점리더</div><p>4차시의 7개 모듈은 모두 <strong>"같은 문제를 다른 도구로"</strong>. 각각의 적합 지점을 익히는 것이 오늘의 요지.</p></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">04 · 어시스트 바이브 코딩 ① — 데이터 시각화와 분석</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">025 / 032</span></div></div>
+</div></div>
+
+<!-- 26 아카이브 등록 절차 -->
+<div class="stage"><div class="slide" data-title="Archive Procedure">
+  <div class="hbar"><div class="hbar-l">MODULE 04 · ARCHIVE REGISTRATION</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 04</div></div>
+  <div class="hl"><div class="hl-kicker">실습 결과물 아카이브 등록 — 코드 자산이 쌓이는 첫 회차 · 8MIN</div><div class="hl-title">산출물 아카이브 등록 절차</div><div class="hl-sub">1~3차시는 텍스트 자산(프롬프트·레시피·설계서). 4차시부터 코드 자산(.ipynb·.html·.py)이 누적된다.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col2">
+    <div class="col">
+      <div class="sh"><span class="sh-n">META</span><span class="sh-t">등록 메타데이터 7항</span></div><div class="sh-line"></div>
+      <table class="mtbl"><thead><tr><th>항목</th><th>예시</th></tr></thead><tbody>
+        <tr><td>제목</td><td>민원 월간 분석 v1</td></tr>
+        <tr><td>작성자</td><td>○○과 홍길동</td></tr>
+        <tr><td>데이터</td><td>민원시스템 CSV(비식별)</td></tr>
+        <tr><td>도구</td><td>pandas · plotly · GPT</td></tr>
+        <tr><td>재실행 절차</td><td>CSV 교체 후 실행 1회</td></tr>
+        <tr><td>의존 패키지</td><td>requirements.txt 첨부</td></tr>
+        <tr><td>참고·변형</td><td>예산 집행 분석으로 응용 가능</td></tr>
+      </tbody></table>
+      <div class="co"><div class="co-lb">WHY</div><div class="co-main">동료가 같은 코드를 10분 안에 본인 데이터로 재실행할 수 있어야 한다</div><p>이 3가지 조건 — <strong>설명 · 의존성 · 재실행 절차</strong> — 가 코드 자산의 가치를 결정.</p></div>
+      <div class="pit"><div class="pit-lb">주의</div><div class="pit-h">▸ 비식별 실패 파일 등록 금지</div><div class="pit-d">등록 전 샘플 데이터·결과 PNG 모두 재확인. 실명·주소·연락처 흔적 0.</div></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">FOLDER</span><span class="sh-t">폴더 구조 표준</span></div><div class="sh-line"></div>
+      <div class="cblk">/archive/S04/
+  ├── 001_민원_월간_홍길동/
+  │   ├── README.md
+  │   ├── requirements.txt
+  │   ├── analyze.ipynb
+  │   ├── sample_data.csv
+  │   ├── out/bar.png
+  │   ├── out/dashboard.html
+  │   └── out/report_2025_10.docx
+  └── 002_예산_집행_김○○/
+      └── ...<span class="cap">번호_주제_작성자 폴더 하나에 산출물 묶음</span></div>
+      <div class="bth">운영 원칙 3</div>
+      <p class="bt"><strong>① 한 폴더 = 한 주제</strong>. <strong>② README.md에 맥락</strong>(왜·어디서·어떻게). <strong>③ 의존 파일은 requirements.txt</strong>. 이 3가지가 "재현 가능한 자산"을 보장.</p>
+      <div class="icard dark"><div class="icard-top"><span class="icard-lb">공유 루틴</span><span class="icard-sess">월 1회</span></div><div class="bth">"이번 달 좋았던 분석 3개" 내부 뉴스레터</div><p class="bt">거점리더가 월말 아카이브를 훑어 우수 사례 3개를 선정. 공유하면 자산이 쓰이는 문화가 자리 잡는다.</p></div>
+      <div class="dstrip"><div class="ds-c"><div class="ds-a">포맷</div><div class="ds-n">3종</div><div class="ds-d">ipynb·png·docx</div></div><div class="ds-c"><div class="ds-a">META</div><div class="ds-n">7항</div><div class="ds-d">재실행 보장</div></div><div class="ds-c"><div class="ds-a">운영</div><div class="ds-n">월 1회</div><div class="ds-d">우수 사례 공유</div></div></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">04 · 어시스트 바이브 코딩 ① — 데이터 시각화와 분석</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">026 / 032</span></div></div>
+</div></div>
+
+<!-- 27 어시스트 한계 — 6차시 브릿지 -->
+<div class="stage"><div class="slide" data-title="Assist Limits Bridge">
+  <div class="hbar"><div class="hbar-l">MODULE 04 · ASSIST LIMITS → AGENT BRIDGE</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 04</div></div>
+  <div class="hl"><div class="hl-kicker">AI 어시스트의 한계 5가지 — 왜 6차시 에이전트로 가야 하나 · 10MIN</div><div class="hl-title">어시스트의 한계와 에이전트 전환점</div><div class="hl-sub">처음부터 에이전트를 쓰면 "당연한 것"이 된다. 어시스트의 한계를 직접 경험해야 에이전트의 가치를 안다.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col3">
+    <div class="col">
+      <div class="sh"><span class="sh-n">한계 ①②③</span><span class="sh-t">세 가지 불편</span></div><div class="sh-line"></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">한계 ①</span></div><div class="bth">복사→붙여넣기→실행 수동 반복</div><p class="bt">10번 반복하면 지친다. 사이클이 길어질수록 <strong>집중력·품질 모두 저하</strong>.</p></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">한계 ②</span></div><div class="bth">AI가 내 파일 시스템을 모른다</div><p class="bt">경로·폴더 구조·관련 파일을 매번 설명. AI가 ls·cat을 할 수 없다.</p></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">한계 ③</span></div><div class="bth">에러 디버깅이 비효율적</div><p class="bt">에러 로그 복사 → 붙여넣기 → 수정 코드 → 재실행. <strong>에이전트라면 자동 재시도.</strong></p></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">한계 ④⑤</span><span class="sh-t">두 가지 구조적 한계</span></div><div class="sh-line"></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">한계 ④</span></div><div class="bth">여러 파일 동시 수정 불가</div><p class="bt">프로젝트가 커지면 5~10개 파일이 엮인다. 어시스트는 "한 파일씩" 생성. 일관성은 사람이 맞춰야.</p></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">한계 ⑤</span></div><div class="bth">테스트·검증을 사람이 수동</div><p class="bt">에이전트는 테스트 코드를 <strong>생성 · 실행 · 통과 확인 · 실패 시 수정</strong>까지. 어시스트는 단계마다 사람이 필요.</p></div>
+      <div class="cod"><div class="cod-lb">6차시가 해결하는 것</div><div class="cod-main">직접 실행 · 파일시스템 접근 · 자동 디버그 · 멀티파일 · 자동 테스트</div><p>Claude Code · Cursor · Antigravity · Codex — <strong>어시스트의 한계 5가지를 전부 해소.</strong></p></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">DESIGN</span><span class="sh-t">순서의 의도</span></div><div class="sh-line"></div>
+      <div class="bth">왜 4→6차시 순서인가</div>
+      <p class="bt">에이전트의 가치는 <strong>"없었을 때의 불편함"</strong>을 겪어야 정확히 이해된다. 처음부터 자동화를 쓰면 감사·가치·위험 판단 감각이 생기지 않는다.</p>
+      <div class="quote"><div class="quote-src">커리큘럼 설계</div><div class="quote-q">"어시스트로 10번 복붙하고 나서 에이전트를 쓰면, 아, 이게 이렇게 편해지는구나가 체득된다."</div><div class="quote-a">— Stage B → Stage C 설계 의도</div></div>
+      <div class="pit"><div class="pit-lb">주의</div><div class="pit-h">▸ 어시스트를 건너뛰지 말 것</div><div class="pit-d">내부망 환경·감사·비식별화 감각은 어시스트 단계에서만 형성. 에이전트로 갔다가 돌아와야 할 수도.</div></div>
+      <div class="dstrip"><div class="ds-c"><div class="ds-a">복붙</div><div class="ds-n">수동</div><div class="ds-d">5가지 한계</div></div><div class="ds-c"><div class="ds-a">AGENT</div><div class="ds-n">6차시</div><div class="ds-d">자동 해소</div></div><div class="ds-c"><div class="ds-a">DESIGN</div><div class="ds-n">순차</div><div class="ds-d">경험 후 자동화</div></div></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">04 · 어시스트 바이브 코딩 ① — 데이터 시각화와 분석</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">027 / 032</span></div></div>
+</div></div>
+
+<!-- 28 HERO · 어시스트는 빠르지만, 에이전트는 재현 가능하다 -->
+<div class="stage"><div class="slide" data-title="Hero Assist vs Agent">
+  <div class="hbar"><div class="hbar-l">MODULE 04 · ASSIST vs AGENT</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 04</div></div>
+  <div class="bd col1"><div class="col hero" style="background:#241e17;color:var(--on)">
+    <div class="hero-k">STAGE B → C · BRIDGE</div>
+    <div class="hero-t" style="font-size:52px">어시스트는 <span style="color:var(--acc3)">빠르다</span>.<br>에이전트는 <span style="color:var(--acc3)">재현 가능하다</span>.</div>
+    <div class="hero-s">어시스트는 오늘 당장 결과를 낸다. 그러나 같은 일을 다음 달에 다시 하려면 사람이 같은 사이클을 반복해야 한다. 에이전트는 설정만 정확하면 내일도 내달도 같은 품질로 돌아간다. 거점리더의 목표는 속도가 아니라 재현성이다. 4차시의 불편함이 6차시의 필요성을 인식하게 한다.</div>
+    <div class="hero-q"><div class="hero-q-q">"한 번 잘 돌린 분석은 다시 돌릴 수 있어야 진짜 자산이다. 그것이 어시스트에서 에이전트로 가는 이유다."</div><div class="hero-q-a">— Stage B → Stage C 설계 원칙</div></div>
+  </div></div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">04 · 어시스트 바이브 코딩 ① — 데이터 시각화와 분석</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">028 / 032</span></div></div>
+</div></div>
+
+<!-- 29 4차시 체크리스트 -->
+<div class="stage"><div class="slide" data-title="Session Checklist">
+  <div class="hbar"><div class="hbar-l">MODULE 04 · SESSION CHECKLIST</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 04</div></div>
+  <div class="hl"><div class="hl-kicker">4차시 체크리스트 — 운영 관점 · 5MIN</div><div class="hl-title">4차시 체화 점검 10가지</div><div class="hl-sub">정답이 아니라 기준선. 4차시 · 5차시가 합쳐서 완성되는 체크리스트다.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col2">
+    <div class="col">
+      <div class="sh"><span class="sh-n">루틴 · 보안</span><span class="sh-t">기반 5</span></div><div class="sh-line"></div>
+      <table class="mtbl"><thead><tr><th>#</th><th>항목</th><th>O/X</th></tr></thead><tbody>
+        <tr><td>01</td><td>외부→내부 5단계 사이클을 1회 이상 완주</td><td>□</td></tr>
+        <tr><td>02</td><td>비식별 샘플 3행 방식으로 AI에 요청</td><td>□</td></tr>
+        <tr><td>03</td><td>에러 로그에서 내부 경로 제거 습관</td><td>□</td></tr>
+        <tr><td>04</td><td>오프라인 휠(.whl) 반입 절차 숙지</td><td>□</td></tr>
+        <tr><td>05</td><td>한글 폰트 설정 코드 경험</td><td>□</td></tr>
+      </tbody></table>
+      <div class="co"><div class="co-lb">의미</div><div class="co-main">이 5개가 안 되면 5차시 HWP 자동화에서 막힌다</div><p>Stage B의 공통 토대. 5차시 시작 전에 복습 권장.</p></div>
+      <div class="pit"><div class="pit-lb">주의</div><div class="pit-h">▸ "한 번 해본 것"과 "할 수 있는 것" 다르다</div><div class="pit-d">체크 항목은 <strong>다음 주에 혼자 재현 가능</strong>한 수준이 기준.</div></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">도구 · 산출물</span><span class="sh-t">적용 5</span></div><div class="sh-line"></div>
+      <table class="mtbl"><thead><tr><th>#</th><th>항목</th><th>O/X</th></tr></thead><tbody>
+        <tr><td>06</td><td>Python 시각화 3종 중 1개 실행 완료</td><td>□</td></tr>
+        <tr><td>07</td><td>HTML 단일 파일 대시보드 생성 경험</td><td>□</td></tr>
+        <tr><td>08</td><td>pandas 4가지 문장형으로 분석 수행</td><td>□</td></tr>
+        <tr><td>09</td><td>시각화 5원칙·5실수 체크리스트 보관</td><td>□</td></tr>
+        <tr><td>10</td><td>.ipynb + 차트 + 1페이지 브리핑 3종 등록</td><td>□</td></tr>
+      </tbody></table>
+      <div class="cod"><div class="cod-lb">PASS LINE</div><div class="cod-main">10개 중 7개 이상이면 Stage B 1/2 합격</div><p>8개 이상이면 5차시 시작 시 시간 여유 확보. 6개 이하라면 해당 항목 관련 아카이브 자료 1개 자습 권장.</p></div>
+      <div class="icard dark"><div class="icard-top"><span class="icard-lb">운영</span></div><div class="bth">강사·조교가 체크 돕기</div><p class="bt">실습 마무리 30분 전에 조교가 순회하며 "어디서 막혔나" 1인당 1분 체크. 막힌 항목을 내일 복습 영상으로 제공.</p></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">04 · 어시스트 바이브 코딩 ① — 데이터 시각화와 분석</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">029 / 032</span></div></div>
+</div></div>
+
+<!-- 30 CLOSING · 요약 -->
+<div class="stage"><div class="slide" data-title="Closing Summary">
+  <div class="hbar"><div class="hbar-l">MODULE 04 · CLOSING ①</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 04</div></div>
+  <div class="hl"><div class="hl-kicker">CLOSING ① · 4차시 정리 · 5MIN</div><div class="hl-title">4차시 시각화와 분석 정리</div><div class="hl-sub">Stage A(재료 창고)에서 Stage B(어시스트 코딩)로 전환했다. 코드가 처음 쌓이기 시작한 회차.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col2">
+    <div class="col">
+      <div class="sh"><span class="sh-n">SUMMARY</span><span class="sh-t">오늘의 3가지</span></div><div class="sh-line"></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">01</span></div><div class="bth">어시스트 루틴 체화</div><p class="bt">외부망 설계 → 내부망 실행 5단계. 비식별 샘플 3행. 에러 보고 전 경로 마스킹. 이 루틴이 4·5차시 공통 기반.</p></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">02</span></div><div class="bth">시각화·분석 7개 모듈 체험</div><p class="bt">Python 3종(matplotlib·seaborn·plotly) · HTML/JS 3종(Chart.js·ECharts·D3) · Power BI + DAX · pandas 심화 · sklearn ML · DL 입문 · 보고서 자동화. <strong>"상황에 맞는 도구 선택"</strong>이 핵심.</p></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">03</span></div><div class="bth">어시스트 한계 5가지 체감</div><p class="bt">복붙 반복 · 파일시스템 무지 · 비효율 디버깅 · 단일 파일 · 수동 테스트. <strong>이 불편함이 6차시 에이전트의 출발점.</strong></p></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">CORE</span><span class="sh-t">핵심 메시지</span></div><div class="sh-line"></div>
+      <div class="co"><div class="co-lb">CORE MESSAGE</div><div class="co-main">코드는 AI가 쓴다 · 판단은 사람이 한다 · 산출물은 재사용된다</div><p>거점리더는 matplotlib 문법을 외우지 않는다. "이 분석이 적합한가 · 결과가 정확한가 · 다시 돌릴 수 있는가" 세 질문을 던진다.</p></div>
+      <div class="cod"><div class="cod-lb">STAGE B · 위치</div><div class="cod-main">4~5차시는 "어시스트 코딩" — 6차시부터 에이전트</div><p>Stage A(1~3차시): 재료·기획. <strong>Stage B(4~5차시): 어시스트로 코드 수령·실행 — 오늘이 절반.</strong> Stage C(6~8차시): 에이전트·RAG·아키텍처. 같은 과제를 세 스테이지로 재경험.</p></div>
+      <div class="dstrip"><div class="ds-c"><div class="ds-a">텍스트</div><div class="ds-n">S01–03</div><div class="ds-d">프롬프트·레시피</div></div><div class="ds-c"><div class="ds-a">코드</div><div class="ds-n">S04~</div><div class="ds-d">첫 자산 누적</div></div><div class="ds-c"><div class="ds-a">PASS</div><div class="ds-n">7/10</div><div class="ds-d">Stage B 1/2</div></div></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">04 · 어시스트 바이브 코딩 ① — 데이터 시각화와 분석</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">030 / 032</span></div></div>
+</div></div>
+
+<!-- 31 Next Session -->
+<div class="stage"><div class="slide" data-title="Next Session">
+  <div class="hbar"><div class="hbar-l">MODULE 04 · CLOSING ②</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 04</div></div>
+  <div class="hl"><div class="hl-kicker">CLOSING ② · 5차시 안내 · 4MIN</div><div class="hl-title">5차시 어시스트 코딩 후반전 예고</div><div class="hl-sub">시각화·분석에서 "문서·엑셀·HWP·메일·로컬 AI 함수"로 축을 옮긴다. Stage B의 후반전.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col2w">
+    <div class="col">
+      <div class="sh"><span class="sh-n">NEXT</span><span class="sh-t">5차시 미리보기</span></div><div class="sh-line"></div>
+      <div class="icard dark"><div class="icard-top"><span class="icard-lb">SESSION 05</span></div><div class="bth">어시스트 바이브 코딩 ② — 업무 자동화와 로컬 AI 연동</div><p class="bt">① <strong>파일·엑셀·PDF·메일 자동화</strong> — openpyxl · pdfplumber · imaplib. ② <strong>HWP 자동화 2시간</strong> — pyhwpx · win32com · 올레 구조 분석. ③ 하이라이트: <strong>VBA + Ollama 엑셀 AI 함수</strong> — =AI_SUMMARIZE, =AI_CLASSIFY 구현. ④ Node.js 맛보기 — 웹 자동화 관점. ⑤ 어시스트 한계 최종 회고 → 6차시 에이전트 브릿지.</p></div>
+      <div class="co"><div class="co-lb">5차시 준비물</div><div class="co-main">자동화하고 싶은 HWP 파일 1개 + 엑셀 파일 1개</div><p>둘 다 비식별화. 실제 업무 파일 패턴으로 실습하면 학습 효율이 크게 향상된다.</p></div>
+      <div class="pit"><div class="pit-lb">PREREQ</div><div class="pit-h">▸ Ollama + 로컬 모델 다운로드 미리</div><div class="pit-d">5차시 VBA+Ollama 실습 시간 절약. ollama pull gemma2:2b 정도면 충분.</div></div>
+    </div>
+    <div class="col" style="background:var(--dk);color:var(--on)">
+      <div class="sh"><span class="sh-n" style="color:var(--acc3)">QUOTE</span><span class="sh-t" style="color:var(--on2)">5차시 핵심 메시지</span></div><div class="sh-line" style="background:rgba(255,255,255,0.15)"></div>
+      <div style="border-left:3px solid var(--acc3);padding:18px 20px;margin:12px 0">
+        <div style="font-family:var(--mono);font-size:10px;color:var(--on2);letter-spacing:2px;font-weight:700;margin-bottom:10px">커리큘럼 설계 철학</div>
+        <div style="font-family:var(--serif);font-size:22px;color:var(--on);font-weight:700;font-style:italic;line-height:1.5">"엑셀 함수처럼 AI를 호출한다. =AI_SUMMARIZE 한 줄이 LLM을 업무로 끌어들이는 가장 짧은 거리다."</div>
+        <div style="font-size:12px;color:var(--on2);margin-top:12px">— 5차시 하이라이트</div>
+      </div>
+      <div style="font-family:var(--serif);font-size:34px;color:var(--acc3);font-style:italic;margin-top:20px;text-align:right">— 수고하셨습니다</div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">04 · 어시스트 바이브 코딩 ① — 데이터 시각화와 분석</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">031 / 032</span></div></div>
+</div></div>
+
+<!-- 32 STAGE MAP -->
+<div class="stage"><div class="slide" data-title="Stage Map">
+  <div class="hbar"><div class="hbar-l">MODULE 04 · 8-WEEK STAGE MAP</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 04</div></div>
+  <div class="hl"><div class="hl-kicker">8주 로드맵 · 현재 위치 · 3MIN</div><div class="hl-title">8주 로드맵의 현재 위치</div><div class="hl-sub">Stage A(재료 창고) 완료. Stage B(어시스트 코딩) 절반. 6차시부터 Stage C(에이전트·RAG·아키텍처)로 진입.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col2w">
+    <div class="col">
+      <div class="sh"><span class="sh-n">TABLE</span><span class="sh-t">8주 로드맵</span></div><div class="sh-line"></div>
+      <table class="mtbl"><thead><tr><th>회차</th><th>주제</th><th>상태</th></tr></thead><tbody>
+        <tr><td>S01</td><td>AI 에이전트 시대 · 지형도</td><td>완료</td></tr>
+        <tr><td>S02</td><td>프론티어 + 도구 50선</td><td>완료</td></tr>
+        <tr><td>S03</td><td>메타 프롬프트 · 워크플로우</td><td>완료</td></tr>
+        <tr><td><strong>S04</strong></td><td><strong>어시스트 바이브 ① 시각화·분석</strong></td><td><strong>오늘</strong></td></tr>
+        <tr><td>S05</td><td>어시스트 바이브 ② 업무 자동화 + VBA·Ollama</td><td>다음</td></tr>
+        <tr><td>S06</td><td>에이전트 도구 마스터리</td><td>—</td></tr>
+        <tr><td>S07</td><td>RAG 파이프라인 · 웹서비스</td><td>—</td></tr>
+        <tr><td>S08</td><td>API·MCP · 아키텍처 캔버스</td><td>—</td></tr>
+      </tbody></table>
+      <div class="co"><div class="co-lb">진척 지표</div><div class="co-main">3/8 완료 · 1/8 진행 중 · 4/8 대기</div><p>전체 과정의 <strong>절반 지점</strong>에 거의 도달. Stage B 두 회차가 가장 코드 밀도가 높은 구간.</p></div>
+      <div class="pit"><div class="pit-lb">복습 권장</div><div class="pit-h">▸ 막힌 회차가 있으면 다음 회차 전에 되돌아가기</div><div class="pit-d">Stage는 누적 구조. S04 3종 세트가 안 만들어졌다면 S05 HWP 자동화에서 재료 부족.</div></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">STAGE</span><span class="sh-t">구분</span></div><div class="sh-line"></div>
+      <div class="cod"><div class="cod-lb">STAGE B · 1/2 진행</div><div class="cod-main">4~5차시 = 어시스트 코드 수령·실행, 코드 자산 누적 시작</div><p>Stage A(1~3차시): 프롬프트·레시피·설계서 텍스트 자산. <strong>Stage B(4~5차시): .ipynb·.html·.docx 코드 자산 — 오늘이 시작.</strong> Stage C(6~8차시): 에이전트 자동화 자산. 3스테이지에 걸쳐 자산의 성격이 바뀐다.</p></div>
+      <div class="dstrip"><div class="ds-c"><div class="ds-a">STAGE A</div><div class="ds-n">완료</div><div class="ds-d">재료 창고</div></div><div class="ds-c"><div class="ds-a">STAGE B</div><div class="ds-n">1/2</div><div class="ds-d">어시스트 (진행중)</div></div><div class="ds-c"><div class="ds-a">NEXT</div><div class="ds-n">S05</div><div class="ds-d">HWP+VBA+Ollama</div></div></div>
+      <div class="quote"><div class="quote-src">커리큘럼 설계</div><div class="quote-q">"같은 과제를 어시스트·에이전트로 두 번 만들어라. 그래야 두 방식의 가치와 한계가 몸에 새겨진다."</div><div class="quote-a">— Stage B–C 설계 원칙</div></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">04 · 어시스트 바이브 코딩 ① — 데이터 시각화와 분석</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">032 / 032</span></div></div>
+</div></div>
+</div>
+
+<script>
+(function(){
+  document.querySelectorAll('.toolbar,.deck-nav').forEach(e=>e.remove());
+  const tb = document.createElement('div');
+  tb.className = 'toolbar';
+  tb.innerHTML = `<button onclick="pNav(-1)">◀</button><span class="pg" id="pgInd">1 / 1</span><button onclick="pNav(1)">▶</button><button onclick="window.print()">⬇ PDF</button><button onclick="tFull()">⛶ FULL</button><button id="editBtn" onclick="tEdit()">✎ EDIT</button>`;
+  document.body.appendChild(tb);
+})();
+
+const allSlides = document.querySelectorAll('.slide');
+const allStages = document.querySelectorAll('.stage');
+const deck = document.getElementById('deck');
+
+function fitSlides(){const vw=innerWidth,vh=innerHeight;const r=Math.min(vw/1600,vh/900);allSlides.forEach(s=>{s.style.transform=`scale(${r})`;s.style.transformOrigin='center center'})}
+addEventListener('resize',fitSlides);fitSlides();
+
+function curIdx(){let i=0,m=1e9;allStages.forEach((s,x)=>{const d=Math.abs(s.getBoundingClientRect().top+s.getBoundingClientRect().height/2-innerHeight/2);if(d<m){m=d;i=x}});return i}
+function pNav(dir){const i=curIdx()+dir;if(i>=0&&i<allStages.length)allStages[i].scrollIntoView({behavior:'smooth'})}
+function updPg(){document.getElementById('pgInd').textContent=`${curIdx()+1} / ${allStages.length}`}
+deck.addEventListener('scroll',updPg);updPg();
+function tFull(){if(document.fullscreenElement)document.exitFullscreen();else document.documentElement.requestFullscreen().catch(()=>{})}
+
+let editMode=false;
+function tEdit(){
+  editMode=!editMode;
+  const btn=document.getElementById('editBtn'),tb=document.querySelector('.toolbar');
+  const SEL='.bth,.bt,.cod-lb,.cod-main,.cod p,.ds-n,.ds-d,.hero-k,.hero-t,.hero-s,.hero-q-q,.hero-q-a,.icard-lb,.icard-sess,.quote-q,.quote-a,.quote-src,.fig,.hl-kicker,.hl-title,.hl-sub,.card-k,.card-anchor,.card-body,.card-note,.co-lb,.co-main,.co p,.next-k,.next-t,.pit-lb,.pit-h,.pit-d,.sh-n,.sh-t,.hybrid-k,.hybrid-h,.hybrid-d,.draft-k,.draft-t,.draft-note,.cmp2c-k,.cmp2c-h,.cmp2c-d,.cmp2c-fig,.qd-k,.qd-h,.qd-d,.ladder-h,.ladder-d,.ladder-tag,.tblock-w,.tblock-h,.tblock-d,.tblock-sess,.type-h,.type-d,.type-tag,.flow-box-t,.hbar-l,.hbar-r,.fbar-title,.mtbl td,.mtbl th,h1,p';
+  if(editMode){
+    btn.textContent='✎ EDITING';btn.style.background='#b8532a';btn.style.color='#fff';tb.style.borderBottom='2px solid #b8532a';
+    document.querySelectorAll(SEL).forEach(el=>{el.contentEditable='true';el.style.outline='1px dashed rgba(184,83,42,0.3)';el.style.cursor='text'});
+    deck.style.scrollSnapType='none';
+    sToast('EDIT ON — 텍스트 클릭 수정 · Ctrl+S 저장 · E 또는 ESC로 종료');
+  }else{
+    btn.textContent='✎ EDIT';btn.style.background='';btn.style.color='';tb.style.borderBottom='';
+    document.querySelectorAll('[contenteditable="true"]').forEach(el=>{el.contentEditable='false';el.style.outline='';el.style.cursor=''});
+    deck.style.scrollSnapType='y mandatory';
+    sToast('EDIT OFF — 프레젠테이션 모드');
+  }
+}
+function sToast(m){let t=document.getElementById('toast');if(!t){t=document.createElement('div');t.id='toast';t.style.cssText='position:fixed;bottom:60px;left:50%;transform:translateX(-50%);background:rgba(14,10,6,0.92);color:#ede4d3;font-family:var(--mono,monospace);font-size:11px;letter-spacing:1.5px;padding:10px 24px;border-radius:4px;z-index:300;pointer-events:none;opacity:0;transition:opacity 0.4s';document.body.appendChild(t)}t.textContent=m;t.style.opacity='1';clearTimeout(t._tid);t._tid=setTimeout(()=>{t.style.opacity='0'},3000)}
+
+document.addEventListener('keydown',e=>{
+  if(editMode){
+    if(e.key==='s'&&(e.ctrlKey||e.metaKey)){e.preventDefault();const b=new Blob(['<!DOCTYPE html>\n'+document.documentElement.outerHTML],{type:'text/html'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=document.title.replace(/[^a-zA-Z0-9가-힣\s·_-]/g,'')+'.html';a.click();URL.revokeObjectURL(a.href);sToast('HTML 파일 저장 완료')}
+    if(e.key==='Escape'||e.key==='e'||e.key==='E'){if(!document.activeElement||document.activeElement===document.body)tEdit()}
+    return;
+  }
+  if(e.key==='ArrowRight'||e.key==='ArrowDown'||e.key===' '||e.key==='PageDown'){e.preventDefault();pNav(1)}
+  else if(e.key==='ArrowLeft'||e.key==='ArrowUp'||e.key==='PageUp'){e.preventDefault();pNav(-1)}
+  else if(e.key==='Home'){e.preventDefault();allStages[0].scrollIntoView({behavior:'smooth'})}
+  else if(e.key==='End'){e.preventDefault();allStages[allStages.length-1].scrollIntoView({behavior:'smooth'})}
+  else if(e.key==='f'||e.key==='F11'){e.preventDefault();tFull()}
+  else if(e.key==='Escape'){if(document.fullscreenElement)document.exitFullscreen()}
+  else if(e.key==='e'||e.key==='E'){tEdit()}
+});
+</script>
+<script>/* kg-preview: #<heading> \uc704\uce58\ub85c \uc774\ub3d9 */
+(function(){function norm(t){return (t||'').replace(/\s+/g,'').toLowerCase()}
+function go(){var h=decodeURIComponent(location.hash.slice(1));if(!h)return;var k=norm(h).slice(0,24);if(!k)return;
+var best=null,bl=1e9,els=document.body.querySelectorAll('h1,h2,h3,h4,h5,p,div,span,li,td,text,tspan,section,article');
+for(var i=0;i<els.length;i++){var e=els[i],t=norm(e.textContent);if(t.length<bl&&t.indexOf(k)>-1){best=e;bl=t.length}}
+if(!best)return;var box=best.closest('section,[class*=slide],[class*=page],article')||best;
+box.scrollIntoView({block:'start'});box.style.outline='3px solid #c0504d';box.style.outlineOffset='4px';
+setTimeout(function(){box.style.outline=''},2600)}
+window.addEventListener('load',function(){setTimeout(go,400)});window.addEventListener('hashchange',go)})();</script></body>
+</html>

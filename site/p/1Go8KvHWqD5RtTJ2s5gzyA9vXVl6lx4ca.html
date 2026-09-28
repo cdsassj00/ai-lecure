@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head><meta name="robots" content="noindex, nofollow">
+<meta charset="UTF-8">
+<title>AI챔피언 교육 방향성 및 체계 — 국가공무원인재원 (10분 키노트 · v2)</title>
+<style>
+  :root{
+    --bg:#f5f6f8; --surf:#ffffff; --tint:#e5e9ef; --tint2:#d7dde6;
+    --hair:#d7dee8; --hair2:#c3cedb;
+    --ink:#102139; --body:#3d4c60; --mut:#68758a; --faint:#93a1b3;
+    --blue:#b94a48; --cyan:#943539; --green:#2e7d5b; --amber:#c38424;
+    --coral:#b94a48; --navy:#101827;
+    --gG:#2e8a5c; --gB:#4266a3; --gK:#141b28;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{background:#c8ccd3}
+  body{font-family:'Pretendard Variable',Pretendard,'Noto Sans KR','Malgun Gothic',sans-serif;
+       color:var(--ink);-webkit-font-smoothing:antialiased}
+  .deck{display:flex;flex-direction:column;align-items:center;gap:28px;padding:28px 0}
+  body.shot .deck{padding:0;gap:0}
+
+  /* ---------- slide frame ---------- */
+  .slide{width:1280px;height:720px;position:relative;overflow:hidden;flex:none;
+    background:
+      radial-gradient(760px 380px at 88% -10%, rgba(185,74,72,.05), transparent 60%),
+      var(--bg);
+    display:grid;grid-template-rows:auto 1fr auto auto;row-gap:14px;
+    padding:28px 48px 0}
+  .slide::before{content:'';position:absolute;inset:0 0 auto 0;height:4px;pointer-events:none;
+    background:linear-gradient(90deg,var(--gG) 0 33.3%,var(--gB) 33.3% 66.6%,var(--gK) 66.6% 100%)}
+
+  /* ---------- header ---------- */
+  .head{display:grid;grid-template-columns:1fr auto;column-gap:24px;align-items:end;
+    margin:-28px -48px 0;padding:24px 48px 14px;
+    background:linear-gradient(180deg,#e5e9ef 0%,#eef1f5 100%);
+    border-bottom:2px solid #bdc7d4}
+  .slide{word-break:keep-all;overflow-wrap:break-word}
+  .kick{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+  .kick .no{font-weight:900;font-size:12px;letter-spacing:.1em;color:#fff;
+    background:var(--blue);padding:3px 9px;border-radius:3px}
+  .kick .lb{font-weight:800;font-size:12.5px;letter-spacing:.2em;color:var(--blue);text-transform:uppercase}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1.2px;line-height:1.16;color:#102139}
+  h1 em{font-style:normal;color:var(--blue)}
+  h1 em.g{color:var(--green)} h1 em.a{color:var(--amber)} h1 em.c{color:var(--coral)} h1 em.f{color:var(--faint)}
+  .headsub{margin-top:7px;font-size:15px;color:var(--body);font-weight:500}
+  .headsub b{color:var(--ink);font-weight:800}
+  .brand{text-align:right;padding-bottom:3px}
+  .brand .t1{font-weight:900;font-size:13px;letter-spacing:.08em;color:var(--ink)}
+  .brand .t1 span{color:var(--blue)}
+  .brand .t2{font-size:11px;color:var(--mut);margin-top:3px;letter-spacing:.04em}
+
+  /* ---------- open sections (no boxes) ---------- */
+  .main{display:grid;row-gap:14px;min-height:0}
+  .sec{display:grid;grid-template-rows:auto 1fr;min-height:0;row-gap:9px}
+  .sl{display:flex;align-items:center;gap:10px}
+  .sl .tx{flex:none;font-weight:900;font-size:13.5px;letter-spacing:.02em;color:var(--ink)}
+  .sl .tx i{font-style:normal;color:var(--blue)}
+  .sl .sx{flex:none;font-size:12px;color:var(--mut);font-weight:500}
+  .sl .ln{flex:1;border-top:1px solid var(--hair2)}
+  .sl .tag{flex:none;font-size:11px;font-weight:800;color:var(--coral);
+    border:1px solid rgba(185,74,72,.42);border-radius:20px;padding:2.5px 11px;letter-spacing:.03em;background:#faeeed}
+
+  /* open step (typography-led, no border) */
+  .flow{display:grid;min-height:0}
+  .step{display:flex;flex-direction:column;min-height:0;padding:4px 2px 0;position:relative}
+  .step .cno{font-size:11px;font-weight:900;letter-spacing:.12em;color:var(--mut);margin-bottom:5px}
+  .step .ct{font-weight:800;font-size:16.5px;letter-spacing:-.4px;line-height:1.28;color:var(--ink)}
+  .step .cs{font-size:13px;color:var(--body);line-height:1.55;margin-top:7px}
+  .step .cs b{color:var(--ink);font-weight:800}
+  .step .cf{margin-top:auto;padding-top:9px;font-size:11.5px;color:var(--mut)}
+  .step .cf b{color:var(--blue);font-weight:800}
+  .stepno{position:absolute;top:0;right:6px;font-size:30px;font-weight:900;color:var(--hair2);line-height:1}
+  .arrow{align-self:center;justify-self:center;color:var(--hair2);font-size:22px;font-weight:900}
+
+  /* highlighted step = only these get a surface */
+  .step.hot{background:linear-gradient(180deg,#f8ecea,#fbf4f3);border-radius:12px;
+    padding:12px 14px 12px;border:1px solid #e5c8c5}
+  .step.hot .cno{color:var(--blue)} .step.hot .stepno{color:#e8cfcc;top:8px;right:12px}
+  .step.hotg{background:linear-gradient(180deg,#e8f0ea,#f4f8f5);border-radius:12px;
+    padding:12px 14px 12px;border:1px solid #c8dcce}
+  .step.hotg .cno{color:var(--green)} .step.hotg .stepno{color:#bfd8c8;top:8px;right:12px}
+
+  .chips{display:flex;flex-wrap:wrap;gap:7px}
+  .chip{font-size:12px;font-weight:700;color:var(--body);background:var(--tint);
+    border:1px solid var(--hair);border-radius:20px;padding:4px 12px;white-space:nowrap}
+  .chip.on{color:#fff;background:var(--blue);border-color:var(--blue);font-weight:800}
+
+  /* ---------- anchor bar (single strong element) ---------- */
+  .anchor{height:54px;border-radius:11px;display:flex;align-items:center;gap:14px;padding:0 20px;
+    background:linear-gradient(92deg,var(--navy),#1d2940);color:#fff;
+    box-shadow:0 8px 20px -10px rgba(16,28,51,.45)}
+  .anchor .k{flex:none;font-size:11px;font-weight:900;letter-spacing:.16em;color:var(--navy);
+    background:#ffc9c5;border-radius:4px;padding:4px 10px}
+  .anchor .t{font-size:16.5px;font-weight:800;letter-spacing:-.2px}
+  .anchor .t b{color:#ffc9c5}
+  .anchor .r{margin-left:auto;font-size:12px;color:#aab6ca;font-weight:600;text-align:right}
+  .anchor.coral{background:linear-gradient(92deg,#B23A24,var(--coral))}
+  .anchor.coral .k{background:#FFD9CF;color:#8F2D1B}
+  .anchor.coral .t b{color:#FFE1B8}
+  .anchor.coral .r{color:#FFD3C7}
+
+  /* ---------- footer ---------- */
+  .foot{height:34px;display:flex;align-items:center;gap:12px;border-top:1px solid var(--hair);
+    font-size:10.5px;color:var(--faint);letter-spacing:.04em}
+  .foot .pg{margin-left:auto;font-weight:900;color:var(--mut);font-size:11.5px}
+  .foot .pg b{color:var(--blue)}
+
+  /* ============ KEYNOTE v2 (s1~s5) — 편집본 V3 디자인 시스템 ============ */
+  .slide.key{display:flex;flex-direction:column;padding:0}
+  .slide.key::before{display:none}
+  .key .ktop{height:44px;flex:none;display:flex;align-items:center;justify-content:space-between;
+    padding:0 46px;background:var(--navy)}
+  .key .kt1{font-size:12.5px;font-weight:700;color:#f3ede2;letter-spacing:.2px}
+  .key .kt1 small{font-size:10px;color:rgba(243,237,226,.42);font-weight:600;letter-spacing:1px;margin-left:7px}
+  .key .kt2{font-size:10.5px;font-weight:600;letter-spacing:1.2px;color:rgba(243,237,226,.55)}
+  .key .khdr{flex:none;background:var(--tint);padding:20px 50px 18px;border-bottom:1.5px solid var(--hair2)}
+  .key .keyebrow{font-size:10.5px;font-weight:900;letter-spacing:1.7px;color:var(--cyan);
+    margin-bottom:6px;text-transform:uppercase}
+  .key .ktitle{font-size:30px;font-weight:900;color:#102139;letter-spacing:-1.15px;line-height:1.16}
+  .key .kbody{flex:1;display:flex;align-items:center;padding:0 96px 30px 50px;min-height:0}
+  .key .krow{display:grid;grid-template-columns:240px 1fr;align-items:start;width:100%}
+  .key .knum{font-size:110px;font-weight:900;color:#d3dae4;line-height:.9;text-align:center;
+    padding-top:6px;letter-spacing:-5px}
+  .key .ktxt{display:flex;flex-direction:column;gap:18px;max-width:880px}
+  .key .ktxt h2{font-size:33px;font-weight:900;color:#102139;line-height:1.38;letter-spacing:-1.2px}
+  .key .ktxt h2 em{font-style:normal;color:var(--blue)}
+  .key .ktxt h2 .h2tag{display:block;font-size:16px;font-weight:800;letter-spacing:-.3px;
+    color:#2e7d5b;margin-top:12px}
+  .key .ktxt h2 .h2tag i{font-style:normal;color:var(--mut);font-weight:600}
+  .key .ktxt h2 em.g{color:#2e7d5b} .key .ktxt h2 em.a{color:var(--amber)} .key .ktxt h2 em.c{color:var(--cyan)}
+  .key .ktxt p{font-size:15px;color:var(--body);line-height:1.8;font-weight:400}
+  .key .ktxt p b{color:var(--cyan);font-weight:700}
+  .key .kpg{position:absolute;right:30px;bottom:13px;font-size:13.5px;font-weight:700;color:var(--blue)}
+
+  /* ============ SLIDE 06 · 전수 현황 ============ */
+  .s6x-main{grid-template-rows:.66fr 1fr}
+  .s6x-top{display:grid;grid-template-columns:.9fr 1.15fr .8fr 1.5fr 1.45fr;gap:12px}
+  .stat6{background:var(--surf);border:1px solid var(--hair);border-radius:10px;display:flex;
+    flex-direction:column;align-items:center;justify-content:center;gap:7px;text-align:center;
+    box-shadow:0 4px 12px -9px rgba(16,33,57,.16)}
+  .stat6 .n{font-size:26px;font-weight:900;letter-spacing:-1px;color:#4266a3}
+  .stat6.g .n{color:#2e8a5c}.stat6.a .n{color:#c38424}
+  .stat6 .l{font-size:11.8px;color:var(--mut);font-weight:600;padding:0 8px}
+  .role{background:var(--tint);border:1px solid var(--hair);border-radius:10px;padding:11px 15px;
+    display:flex;flex-direction:column;gap:6px;justify-content:center}
+  .role .rt{font-size:14px;font-weight:800;color:var(--ink)}
+  .role .rt small{font-size:11px;color:var(--mut);font-weight:700;margin-left:6px}
+  .role .ri{font-size:11.8px;line-height:1.62;color:var(--body)}
+  .s6x-rows{display:grid;grid-template-rows:repeat(5,1fr);row-gap:8px;min-height:0}
+  .agrow{display:grid;grid-template-columns:158px 132px 1.18fr 1.12fr;gap:14px;align-items:center;
+    background:var(--surf);border:1px solid var(--hair);border-left:4px solid #4266a3;border-radius:8px;
+    padding:4px 16px;min-height:0;box-shadow:0 3px 10px -8px rgba(16,33,57,.14)}
+  .agrow .ag{font-size:15px;font-weight:900;letter-spacing:-.3px;color:var(--ink)}
+  .agrow .sz{font-size:13px;font-weight:800}
+  .agrow .cfg{font-size:12.4px;color:var(--body);line-height:1.4}
+  .agrow .sch{font-size:11.8px;color:var(--mut);line-height:1.4}
+
+  /* ============ SLIDE 08 · 도구 오케스트레이션 맵 ============ */
+  .s7x-main{display:grid;grid-template-columns:1fr 1fr 1fr;grid-template-rows:1fr 1fr;
+    column-gap:16px;row-gap:16px;position:relative;min-height:0}
+  .s7x-main::before{content:'';position:absolute;inset:-6px;border-radius:10px;
+    background-image:radial-gradient(#c3cddd 1.1px,transparent 1.1px);background-size:24px 24px;opacity:.55}
+  .npanel{background:rgba(255,255,255,.92);border:1px solid var(--hair);border-radius:11px;padding:11px 14px;
+    display:flex;flex-direction:column;gap:8px;min-height:0;z-index:2;
+    box-shadow:0 4px 12px -9px rgba(16,33,57,.18)}
+  .npanel .nh{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:900;letter-spacing:-.2px;color:var(--ink)}
+  .npanel .nh .dot{width:9px;height:9px;border-radius:50%;flex:none}
+  .npanel .nh small{margin-left:auto;font-size:9.5px;color:var(--mut);font-weight:700}
+  .npanel .nchips{display:flex;flex-wrap:wrap;gap:6px;flex:1;align-content:center;min-height:0}
+  .npanel .chip{font-size:11.4px;font-weight:700;padding:3.5px 10px;border-radius:15px;
+    background:var(--tint);border:1px solid var(--hair2);color:var(--body);white-space:nowrap}
+  .nmidcol{grid-column:2;grid-row:1/3;display:flex;flex-direction:column;justify-content:space-between;min-height:0;z-index:2}
+  .nmidcol .npanel{flex:0 0 33.5%}
+  .nhubwrap{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;z-index:4}
+  .nethub{width:212px;height:212px;border-radius:50%;display:flex;flex-direction:column;align-items:center;
+    justify-content:center;text-align:center;gap:6px;padding:20px;
+    background:radial-gradient(circle at 36% 28%,#22314f,#0d1626 72%);
+    box-shadow:0 16px 36px -12px rgba(16,24,39,.6),0 0 0 9px rgba(16,24,39,.07),0 0 0 1px rgba(16,24,39,.3)}
+  .nethub .k{font-size:9px;font-weight:900;letter-spacing:2.2px;color:#ffc9c5}
+  .nethub .t{font-size:16.5px;font-weight:900;letter-spacing:-.5px;color:#fff;line-height:1.3}
+  .nethub .s{font-size:10px;color:#b9c2d4;line-height:1.5}
+  .nethub .s b{color:#e8b571;font-weight:800}
+
+  /* ============ COVER ============ */
+  .slide.cover{grid-template-rows:auto 1fr auto auto}
+  .cover .head{margin:0;padding:0;background:none;border-bottom:none}
+  .cover h1{font-size:70px;letter-spacing:-2.4px;line-height:1.12}
+  .cv-mid{display:flex;flex-direction:column;justify-content:center;gap:20px}
+  .cv-sub{font-size:19px;color:var(--body);font-weight:500;line-height:1.6;max-width:980px}
+  .cv-sub b{color:var(--ink);font-weight:800}
+  .cv-agenda{display:grid;grid-template-columns:1fr 1fr 1fr 1.12fr;gap:12px}
+  .cv-item{background:var(--surf);border:1px solid var(--hair);border-radius:12px;
+    padding:16px 18px;display:flex;flex-direction:column;gap:6px;
+    box-shadow:0 6px 18px -12px rgba(16,28,51,.18)}
+  .cv-item .k{font-size:11px;font-weight:900;letter-spacing:.14em;color:var(--blue)}
+  .cv-item .t{font-size:17.5px;font-weight:800;letter-spacing:-.3px;color:var(--ink)}
+  .cv-item .s{font-size:12px;color:var(--mut);line-height:1.45}
+  .cv-item.ask{background:linear-gradient(160deg,#faeeed,#FFFFFF);border-color:rgba(185,74,72,.5)}
+  .cv-item.ask .k{color:var(--coral)}
+  .cv-stats{display:flex;gap:40px;padding-top:6px}
+  .cv-stats .st{display:flex;flex-direction:column;gap:4px;padding-left:16px;border-left:2px solid var(--hair2)}
+  .cv-stats .n{font-size:27px;font-weight:900;letter-spacing:-.5px;color:var(--blue)}
+  .cv-stats .n i{font-style:normal;font-size:15px;color:var(--body);font-weight:800}
+  .cv-stats .l{font-size:12px;color:var(--mut);font-weight:600}
+
+  /* ============ SLIDE 1 ============ */
+  .s1-main{grid-template-rows:1.04fr 1fr}
+  .s1-models{display:flex;align-items:center;gap:9px;border-bottom:1px solid var(--hair);padding-bottom:2px}
+  .s1-models .lb{font-weight:800;font-size:13.5px;flex:none;color:var(--ink)}
+  .s1-models .lb i{font-style:normal;color:var(--blue)}
+  .s1-models .note{margin-left:auto;font-size:12px;color:var(--mut);font-weight:600;flex:none}
+  .s1-steps{grid-template-columns:1fr 34px 1fr 34px 1.14fr;column-gap:0}
+  .s1-steps .step:not(.hot):not(.hotg){border-top:2px solid var(--hair2);padding-top:10px}
+
+  /* ============ SLIDE 2 ============ */
+  .s2-main{grid-template-rows:1fr 1.02fr}
+  .s2-eq{grid-template-columns:1fr 40px 1fr 40px 1.3fr 46px .74fr}
+  .s2-eq .step:not(.hotg){border-top:2px solid var(--hair2);padding-top:10px}
+  .op{align-self:center;justify-self:center;font-size:28px;font-weight:900;color:var(--hair2)}
+  .s2-sum{background:linear-gradient(165deg,var(--green),#1f5c42);border-radius:12px;color:#fff;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:12px;
+    box-shadow:0 10px 22px -12px rgba(46,125,91,.45)}
+  .s2-sum .b{font-size:20px;font-weight:900;letter-spacing:-.3px}
+  .s2-sum .s{font-size:11.5px;color:#d5ead9;margin-top:6px;line-height:1.45;font-weight:600}
+  .s2-low{grid-template-columns:1.18fr 1fr 1fr;column-gap:24px}
+
+  /* ============ SLIDE 3 ============ */
+  .s3-main{grid-template-rows:1.12fr 1fr}
+  .s3-cycle{grid-template-columns:1fr 26px 1fr 26px 1fr 26px 1fr 26px 1.08fr}
+  .s3-cycle .step:not(.hot){border-top:2px solid var(--hair2);padding-top:10px}
+  .s3-cycle .step .ct{font-size:15px}
+  .s3-cycle .step .cs{font-size:12.2px;margin-top:5px}
+  .loopnote{grid-column:1 / -1;display:flex;align-items:center;gap:10px;font-size:12px;
+    color:var(--mut);font-weight:600;padding-top:8px}
+  .loopnote .ln{flex:1;border-top:1.5px dashed var(--hair2);position:relative}
+  .loopnote .ln::before{content:'◀';position:absolute;left:-2px;top:-8px;color:var(--faint);font-size:10px}
+  .s3-low{grid-template-columns:1fr 1fr;column-gap:24px}
+  .s3-low .step:not(.hot){border-top:2px solid var(--hair2);padding-top:10px}
+
+  /* ============ SLIDE 4 ============ */
+  .s4-main{grid-template-rows:1fr 1.05fr}
+  .s4-domains{grid-template-columns:1fr 1fr 1fr;column-gap:24px}
+  .s4-domains .step:not(.hot){border-top:2px solid var(--hair2);padding-top:10px}
+  .s4-verify{grid-template-columns:1fr 28px 1fr 28px 1fr 28px 1fr}
+  .s4-verify .step:not(.hot){border-top:2px solid var(--hair2);padding-top:10px}
+  .s4-trend{display:flex;align-items:center;gap:11px;border-top:1px solid var(--hair);padding-top:10px}
+  .s4-trend .lb{font-weight:800;font-size:13px;flex:none}
+  .s4-trend .lb i{font-style:normal;color:var(--green)}
+
+  /* ============ SLIDE 5 ============ */
+  .s5-main{grid-template-rows:1.55fr .45fr}
+  .s5-cases{grid-template-columns:1fr 1fr 1fr;column-gap:16px}
+  .case{display:grid;grid-template-rows:auto 1fr 1.3fr auto;background:var(--surf);
+    border:1px solid var(--hair);border-radius:14px;padding:14px 17px;gap:6px;min-height:0;
+    box-shadow:0 6px 18px -12px rgba(16,28,51,.18)}
+  .case .nm{display:flex;align-items:baseline;gap:9px;padding-bottom:8px;border-bottom:1px solid var(--hair)}
+  .case .nm .t{font-size:19px;font-weight:900;letter-spacing:-.4px}
+  .case .nm .e{font-size:11px;color:var(--mut);font-weight:700}
+  .case .row{display:grid;grid-template-columns:40px 1fr;gap:10px;align-items:center;min-height:0}
+  .case .row .k{font-size:11px;font-weight:900;letter-spacing:.05em;align-self:center}
+  .case .row.pb .k{color:var(--coral)} .case .row.sv .k{color:var(--green)} .case .row.hm .k{color:var(--amber)}
+  .case .row .v{font-size:12.8px;color:var(--body);line-height:1.5;
+    border-left:1px solid var(--hair);padding-left:11px}
+  .case .row .v b{color:var(--ink);font-weight:800}
+  .case .tech{display:flex;align-items:center;gap:6px;font-size:10.8px;color:var(--mut);font-weight:700;
+    padding-top:9px;border-top:1px solid var(--hair);flex-wrap:wrap}
+  .case .tech b{color:var(--blue);font-weight:800}
+  .s5-demo{grid-template-columns:1fr 1fr 1fr;column-gap:24px}
+  .s5-demo .dm{display:flex;align-items:center;gap:15px;border-top:2px solid var(--hair2);padding-top:12px}
+  .s5-demo .dn{font-size:30px;font-weight:900;color:var(--blue);flex:none;line-height:1}
+  .s5-demo .dt{font-size:14px;font-weight:600;line-height:1.5;color:var(--body)}
+  .s5-demo .dt b{color:var(--ink);font-size:15.5px;font-weight:800}
+
+  /* ============ SLIDE 6 ============ */
+  .s6-main{grid-template-columns:330px 30px 1fr 30px 296px;position:relative;min-height:0}
+  .col{display:grid;grid-template-rows:26px 1fr;min-height:0;row-gap:9px}
+  .colh{display:flex;align-items:center;gap:8px;font-weight:900;font-size:13px;letter-spacing:.02em;
+    border-bottom:2px solid var(--ink);padding-bottom:7px}
+  .colh .dot{width:8px;height:8px;border-radius:50%;background:var(--blue)}
+  .colh small{color:var(--mut);font-weight:600;font-size:11px;margin-left:auto}
+  .colbody{display:grid;row-gap:0;min-height:0}
+  .cap{display:flex;flex-direction:column;justify-content:center;min-height:0;
+    border-bottom:1px solid var(--hair);padding:2px 2px}
+  .cap:last-child{border-bottom:none}
+  .cap .t{font-size:12.8px;font-weight:800;letter-spacing:-.3px;line-height:1.22;color:var(--ink)}
+  .cap .t i{font-style:normal;color:var(--blue);font-weight:900;font-size:10px;letter-spacing:.06em;margin-right:6px}
+  .cap .s{font-size:9.8px;color:var(--mut);margin-top:1px;line-height:1.3}
+  .colbody.trks{row-gap:9px}
+  .trk{background:var(--surf);border:1px solid var(--hair);border-radius:11px;
+    display:grid;grid-template-columns:96px 1fr;min-height:0;overflow:hidden;
+    box-shadow:0 4px 12px -9px rgba(16,28,51,.16)}
+  .trk .tl{display:flex;flex-direction:column;justify-content:center;gap:2px;padding:8px 12px;
+    border-right:1px solid var(--hair)}
+  .trk .tl .t{font-size:13.5px;font-weight:900;letter-spacing:-.2px}
+  .trk .tl .s{font-size:9.8px;color:var(--mut);font-weight:700;line-height:1.32}
+  .trk .tr{display:grid;gap:6px;padding:8px 10px;align-content:center}
+  .sub3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+  .sub2{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+  .subj{background:var(--tint);border-radius:8px;padding:6px 9px;min-width:0}
+  .subj .c{font-size:9.6px;font-weight:900;color:var(--blue);letter-spacing:.06em}
+  .subj .t{font-size:11.8px;font-weight:800;line-height:1.24;letter-spacing:-.2px;margin-top:1px;
+    word-break:keep-all;color:var(--ink)}
+  .subj .r{font-size:9.4px;color:var(--mut);margin-top:2px;font-weight:700}
+  .subj .r b{color:var(--amber)}
+  .colbody.grds{row-gap:9px}
+  .grade{border-radius:12px;padding:12px 15px;display:flex;flex-direction:column;min-height:0;color:#fff}
+  .grade .g{font-size:19px;font-weight:900;letter-spacing:.02em;line-height:1}
+  .grade .r{font-size:12px;font-weight:800;margin-top:4px;opacity:.92}
+  .grade .d{font-size:11.4px;line-height:1.45;margin-top:6px;opacity:.88}
+  .grade .ev{margin-top:auto;padding-top:7px;border-top:1px solid rgba(255,255,255,.3);
+    font-size:10.8px;font-weight:800;letter-spacing:.01em}
+  .grade.G{background:linear-gradient(160deg,#2e8a5c,#1f6644);box-shadow:0 10px 22px -13px rgba(46,138,92,.4)}
+  .grade.B{background:linear-gradient(160deg,#4266a3,#2f4c85);box-shadow:0 10px 22px -13px rgba(66,102,163,.4)}
+  .grade.K{background:linear-gradient(160deg,#1c2331,#0d1320);box-shadow:0 10px 22px -13px rgba(20,27,40,.5)}
+  svg.wires{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:3;overflow:visible}
+
+  /* ============ SLIDE 7 ============ */
+  .s7-main{grid-template-rows:48px 1fr 64px}
+  .s7-score{display:grid;grid-template-columns:210px 96px 186px 186px 210px 1fr;align-items:stretch;
+    border-radius:11px;overflow:hidden;background:var(--navy);color:#fff;
+    box-shadow:0 8px 20px -12px rgba(16,28,51,.5)}
+  .s7-score>div{display:flex;flex-direction:column;justify-content:center;padding:0 15px;
+    border-right:1px solid rgba(255,255,255,.14)}
+  .s7-score .h{background:rgba(255,255,255,.08);font-weight:900;font-size:13.5px}
+  .s7-score .h small{font-size:10px;color:#9aa8c0;font-weight:700}
+  .s7-score .p .n{font-size:15.5px;font-weight:900}
+  .s7-score .p .l{font-size:10px;color:#9aa8c0;font-weight:700}
+  .s7-score .p.i .n{color:#cdd6e4} .s7-score .p.a .n{color:#ffc9c5}
+  .s7-score .p.b .n{color:#a8d8b9} .s7-score .p.c .n{color:#e7c17c}
+  .s7-score .cond{border-right:none;align-items:flex-end}
+  .s7-score .cond .n{font-size:14.5px;font-weight:900}
+  .s7-score .cond .l{font-size:10px;color:#9aa8c0;font-weight:700}
+  .mtx{display:grid;grid-template-columns:116px 1.18fr 1.18fr 1.18fr 1.02fr;
+    grid-template-rows:24px 1fr 1fr 1fr;column-gap:14px;row-gap:0;min-height:0}
+  .mh{display:flex;align-items:center;font-size:11px;font-weight:900;letter-spacing:.06em;color:var(--mut)}
+  .mrow-line{border-bottom:1px solid var(--hair)}
+  .mg{display:flex;flex-direction:column;justify-content:center;min-height:0;padding:6px 0}
+  .mg .g{font-size:17px;font-weight:900;letter-spacing:.02em}
+  .mg .s{font-size:10px;font-weight:700;margin-top:3px;line-height:1.35;color:var(--mut)}
+  .mg.G .g{color:var(--gG)} .mg.B .g{color:var(--gB)} .mg.K .g{color:var(--gK)}
+  .mc{display:flex;flex-direction:column;justify-content:center;min-height:0;padding:6px 0}
+  .mc .t{font-size:13px;font-weight:800;letter-spacing:-.2px;line-height:1.32;color:var(--ink)}
+  .mc .s{font-size:11px;color:var(--mut);line-height:1.4;margin-top:3px}
+  .mc .m{font-size:10.2px;font-weight:800;color:var(--faint);margin-top:5px;letter-spacing:.01em}
+  .mc .m b{color:var(--amber)}
+  .mc.ev .t{color:var(--amber);font-size:12.2px}
+  .mc.ev{border-left:1px solid var(--hair);padding-left:14px}
+  .s7-relay{display:grid;grid-template-columns:1.3fr 28px 1fr 28px 1.2fr;min-height:0}
+  .relay{display:flex;flex-direction:column;justify-content:center;border-top:2px solid var(--hair2);padding-top:9px}
+  .relay .t{font-size:14px;font-weight:900;letter-spacing:-.2px;color:var(--ink)}
+  .relay .t b{color:var(--green)}
+  .relay .s{font-size:11.5px;color:var(--mut);margin-top:3px;line-height:1.35;font-weight:600}
+
+  /* ---------- presentation mode ---------- */
+  .ptools{position:fixed;right:18px;bottom:16px;z-index:60;display:flex;align-items:center;gap:8px;user-select:none}
+  .ptools .hintxt{font-size:11px;color:#7d8698;font-weight:700;margin-right:4px;letter-spacing:.02em;
+    background:rgba(255,255,255,.8);border-radius:14px;padding:4px 10px}
+  .ptools button{appearance:none;border:none;cursor:pointer;font-family:inherit;
+    display:flex;align-items:center;gap:6px;border-radius:22px;padding:10px 16px;
+    font-size:12.5px;font-weight:800;letter-spacing:.02em;
+    background:rgba(16,28,51,.9);color:#fff;box-shadow:0 8px 24px rgba(0,0,0,.28)}
+  .ptools button:hover{background:#1d2940}
+  .ptools button.primary{background:#b94a48}
+  .ptools button.primary:hover{background:#943539}
+  .ptools button.on{background:#B23A24}
+  body.shot .ptools,body.present .ptools{display:none}
+  @media print{.ptools{display:none}}
+  body.editing .slide{outline:2px dashed #b94a48;outline-offset:-3px;cursor:text}
+  body.editing .slide:focus{outline:2px dashed #b94a48}
+  body.present{overflow:hidden;background:#070d18}
+  body.present .phint{display:none}
+  body.present .deck{padding:0;gap:0}
+  body.present .slide{display:none}
+  body.present .slide.cur{display:grid;position:fixed;left:50%;top:50%;margin:0;
+    transform:translate(-50%,-50%) scale(var(--sc,1));box-shadow:0 30px 80px rgba(0,0,0,.5)}
+  body.present .slide.cur .a-el{opacity:0;transform:translateY(16px)}
+  body.present .slide.cur .a-el.anchor{transform:translateY(24px)}
+  body.present .slide.cur.reveal .a-el{opacity:1;transform:none;
+    transition:opacity .55s ease,transform .55s cubic-bezier(.2,.75,.25,1);
+    transition-delay:var(--d,0ms)}
+
+  /* ---------- print / PDF ---------- */
+  @page{size:1280px 720px;margin:0}
+  @media print{
+    html,body{background:var(--bg)}
+    .deck{padding:0;gap:0}
+    .slide{page-break-after:always;break-inside:avoid;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  }
+</style>
+</head>
+<body>
+<div class="deck">
+
+<!-- ================= COVER ================= -->
+<section class="slide cover" id="s0">
+  <div class="head">
+    <div>
+      <div class="kick"><span class="no">보고</span><span class="lb">국가공무원인재원장 보고 · 10분 키노트 · 시연 포함</span></div>
+    </div>
+    <div class="brand"><div class="t1">AI <span>CHAMPION</span></div><div class="t2">행정안전부 AI·데이터 역량강화</div></div>
+  </div>
+  <div class="cv-mid">
+    <h1>AI챔피언 <em>교육 방향성</em> 및 <em class="c">체계</em></h1>
+    <div class="cv-sub">공무원이 자기 업무의 문제를 <b>AI로 직접 해결</b>하게 만드는 교육입니다.<br>교육의 방향과 내용, 현장이 달라진 사례 시연, 그리고 <b>인재원에 드리는 한 가지 건의</b>를 보고드립니다.</div>
+    <div class="cv-stats">
+      <div class="st"><span class="n">8과목 <i>+ 전문과정</i></span><span class="l">교육 체계</span></div>
+      <div class="st"><span class="n">3등급</span><span class="l">Green · Blue · Black 인증</span></div>
+      <div class="st"><span class="n">5개 기관</span><span class="l">기관맞춤형 전수 운영 중</span></div>
+      <div class="st"><span class="n">18회 · 560명</span><span class="l">2026년 자체 양성 계획</span></div>
+    </div>
+  </div>
+  <div class="cv-agenda">
+    <div class="cv-item"><span class="k">WHY · 전환</span><span class="t">무엇이 바뀌었나</span><span class="s">질문 → 업무 실행 → 소버린 AI</span></div>
+    <div class="cv-item"><span class="k">WHAT · 교육</span><span class="t">무엇을 가르치나</span><span class="s">문서·콘텐츠·바이브코딩 × 4단계 검증</span></div>
+    <div class="cv-item"><span class="k">PROOF · 사례</span><span class="t">무엇이 달라졌나</span><span class="s">현장 도구 3종 시연 · 역량→과목→인증</span></div>
+    <div class="cv-item ask"><span class="k">ASK · 건의</span><span class="t">인재원 직접 운영</span><span class="s">기관맞춤형 전수 컨설팅 · 8월경 모집</span></div>
+  </div>
+  <div class="foot"><span>AI챔피언 교육 방향성 및 체계</span><span>행정안전부 · NIA · 2026</span><span class="pg">표지</span></div>
+</section>
+
+<!-- ================= SLIDE 1 ================= -->
+<section class="slide key" id="s1">
+  <div class="ktop">
+    <span class="kt1">AI챔피언 교육 방향성 및 체계<small>AI CHAMPION KEYNOTE</small></span>
+    <span class="kt2">행정안전부 · NIA · 국가공무원인재원장 보고</span>
+  </div>
+  <div class="khdr">
+    <div class="keyebrow">S1. AI Shift · 지금 무엇이 바뀌었나</div>
+    <div class="ktitle">AI 활용 방식은 어디까지 왔는가</div>
+  </div>
+  <div class="kbody"><div class="krow">
+    <div class="knum">01</div>
+    <div class="ktxt">
+      <h2>프롬프트에서 컨텍스트로,<br>컨텍스트에서 <em>하네스</em>로</h2>
+      <p>한 번 묻고 한 번 답을 받는 프롬프트의 시대는 지났다. 업무의 원문·규정·예외를 통째로 제공하는 컨텍스트 단계를 지나, 이제는 에이전트·스킬·API·DB를 연결해 <b>AI가 스스로 일하고, 검증하고, 틀리면 재실행까지 하게 만드는 하네스</b>의 단계다. 같은 AI라도 쓰는 방식이 결과를 가른다.</p>
+      <p>적용 단위도 함께 커진다. 개인의 PoC에서 부서·기관의 표준 업무방식으로, 그리고 공직사회 전체의 소버린 AI 역량으로 — <b>AI챔피언 교육은 이 전환에 맞춰 설계된 교육</b>이다.</p>
+    </div>
+  </div></div>
+  <span class="kpg">01</span>
+</section>
+
+<!-- ================= SLIDE 2 ================= -->
+<section class="slide key" id="s2">
+  <div class="ktop">
+    <span class="kt1">AI챔피언 교육 방향성 및 체계<small>AI CHAMPION KEYNOTE</small></span>
+    <span class="kt2">행정안전부 · NIA · 국가공무원인재원장 보고</span>
+  </div>
+  <div class="khdr">
+    <div class="keyebrow">S2. Orchestration · 조합의 시대</div>
+    <div class="ktitle">기술이 평준화된 시대의 경쟁력</div>
+  </div>
+  <div class="kbody"><div class="krow">
+    <div class="knum">02</div>
+    <div class="ktxt">
+      <h2>이제는 무엇을 조합해 만들지,<br><em class="a">오케스트레이션</em> 능력이 경쟁력이다</h2>
+      <p>누구나 같은 모델을 쓸 수 있게 되었다. 차이를 만드는 것은 모델 자체가 아니라 API·MCP·스킬·DB·로컬 AI(Ollama)를 엮어 <b>어떤 문제에 어떤 조합으로 답할지 설계하는 힘</b>, 곧 오케스트레이션 역량이다. 특정 도구에 의존하는 순간 도구와 함께 낡는다.</p>
+      <p>그래서 AI챔피언 교육은 메뉴 사용법을 가르치지 않는다. <b>문제를 정의하고, 도구를 조합하고, 결과를 검증하는 힘</b> — 도구가 바뀌어도 남는 역량을 가르친다.</p>
+    </div>
+  </div></div>
+  <span class="kpg">02</span>
+</section>
+
+<!-- ================= SLIDE 3 ================= -->
+<section class="slide key" id="s3">
+  <div class="ktop">
+    <span class="kt1">AI챔피언 교육 방향성 및 체계<small>AI CHAMPION KEYNOTE</small></span>
+    <span class="kt2">행정안전부 · NIA · 국가공무원인재원장 보고</span>
+  </div>
+  <div class="khdr">
+    <div class="keyebrow">S3. Sovereign AI · 마지막 조각</div>
+    <div class="ktitle">소버린 AI는 어디서 시작되는가</div>
+  </div>
+  <div class="kbody"><div class="krow">
+    <div class="knum">03</div>
+    <div class="ktxt">
+      <h2>문제 정의는<br><em class="g">현장</em>에서 시작된다<span class="h2tag">— 거시적 혁신과 미시적 혁신의 만남 <i>(소버린 AI 인프라 × 현장의 문제 해결)</i></span></h2>
+      <p>소버린 AI는 거대한 인프라와 모델 위에 서 있지만, '무엇을 만들지'는 결국 <b>의사결정자와 현장의 문제</b>에서 출발한다. Claude Code 해커톤 수상자 5명 중 4명이 비개발자였다 — 건축허가 병목을 아는 변호사, 퇴원 환자의 어려움을 아는 의사. <b>코드가 아니라 문제를 아는 사람이 이긴다.</b></p>
+      <p>그리고 소버린은 흥선대원군식 쇄국이 아니다. <b>빅테크의 앞선 기술과 오픈소스 혁신을 계속 주시하고 흡수</b>하되, 적용과 채택은 우리가 결정하는 것 — 그것이 소버린의 실체이며, 행정의 병목을 가장 잘 아는 공무원이 그 주인공이다.</p>
+    </div>
+  </div></div>
+  <span class="kpg">03</span>
+</section>
+
+<!-- ================= SLIDE 4 ================= -->
+<section class="slide key" id="s4">
+  <div class="ktop">
+    <span class="kt1">AI챔피언 교육 방향성 및 체계<small>AI CHAMPION KEYNOTE</small></span>
+    <span class="kt2">행정안전부 · NIA · 국가공무원인재원장 보고</span>
+  </div>
+  <div class="khdr">
+    <div class="keyebrow">S4. Agile · 우리가 일하는 방식</div>
+    <div class="ktitle">기술이 계획보다 빠를 때</div>
+  </div>
+  <div class="kbody"><div class="krow">
+    <div class="knum">04</div>
+    <div class="ktxt">
+      <h2>급변하는 AI를 따라잡으려면,<br><em>교육도 애자일</em>이 되어야 한다</h2>
+      <p>완벽한 계획 대신 작게 만들어 바로 써보는 <b>Try &amp; Error</b>. 업무 한 장면을 골라 당일 최소 버전을 만들고, 실제 파일로 검증하고, 예외를 반영해 다시 돈다. 올해 등장한 <b>컨텍스트·하네스·코딩에이전트가 이미 교육과정에 반영</b>되어 있다 — 계획을 기다리지 않는다.</p>
+      <p>경계도 넘는다. <b>행정직이 Python·VBA에 도전하고, 개발직이 기획·콘텐츠를 만든다.</b> AI가 있으면 '해보지 않은 일'이 도전 가능한 일이 되고, 직무의 경계가 역량의 한계가 아니게 된다.</p>
+    </div>
+  </div></div>
+  <span class="kpg">04</span>
+</section>
+
+<!-- ================= SLIDE 5 ================= -->
+<section class="slide key" id="s5">
+  <div class="ktop">
+    <span class="kt1">AI챔피언 교육 방향성 및 체계<small>AI CHAMPION KEYNOTE</small></span>
+    <span class="kt2">행정안전부 · NIA · 국가공무원인재원장 보고</span>
+  </div>
+  <div class="khdr">
+    <div class="keyebrow">S5. Proof · 비판과 검증, 그리고 현장의 증거</div>
+    <div class="ktitle">AI의 답을 어디까지 믿을 것인가</div>
+  </div>
+  <div class="kbody"><div class="krow">
+    <div class="knum">05</div>
+    <div class="ktxt">
+      <h2>AI의 첫 답은<br>정답이 아니라 <em class="c">초안</em>이다</h2>
+      <p>AI에게는 비판과 검증이 필요하다. 에이전트끼리 <b>교차검증</b>해 누락과 과장을 찾고, 결과를 <b>원문·수치·규정과 문장 단위로 대조</b>하고, 채택 여부는 마지막에 <b>비판적 사고를 가진 사람</b>이 판단한다 — 검증까지가 업무의 완성이다.</p>
+      <p>이렇게 배운 담당자들이 자기 문제를 직접 해결했다. 인수인계 지식베이스 <b>서무실록</b>, 여비 정산 도우미 <b>AI 여비몬</b>, 한글문서 자동화 <b>범피스</b> — 오늘 이 세 가지를 시연한다.</p>
+    </div>
+  </div></div>
+  <span class="kpg">05</span>
+</section>
+
+<!-- ================= SLIDE 06 · 전수 현황 ================= -->
+<section class="slide" id="s5x">
+  <div class="head">
+    <div>
+      <div class="kick"><span class="no">06</span><span class="lb">Transfer Status · 기관맞춤형 전수 현황</span></div>
+      <h1>기관 맞춤형 AI챔피언 — <em>5개 기관</em>이 이미 운영하고 있습니다</h1>
+      <div class="headsub">‘교육은 기관 자율, 인증은 행안부 표준’ — 기관이 자체 교육으로 양성하고, 인증평가는 행안부·NIA가 협업 지원합니다.</div>
+    </div>
+    <div class="brand"><div class="t1">AI <span>CHAMPION</span></div><div class="t2">행정안전부 AI·데이터 역량강화</div></div>
+  </div>
+  <div class="main s6x-main">
+    <div class="s6x-top">
+      <div class="stat6"><div class="n">5개 기관</div><div class="l">’26년 기관 맞춤형 운영</div></div>
+      <div class="stat6 g"><div class="n">18회 · 560여 명</div><div class="l">자체 교육 양성 (대면)</div></div>
+      <div class="stat6 a"><div class="n">월 1회</div><div class="l">인증평가 행안부 협업 지원</div></div>
+      <div class="role"><div class="rt">행정안전부 · NIA<small>표준</small></div>
+        <div class="ri">· 표준 8과목·종합과정 예시 제공<br>· 인증평가 적합성·결과 검토 후 <b>행안부 명의 인증서 발급</b></div></div>
+      <div class="role"><div class="rt">운영 기관<small>5개 부처 · 자율</small></div>
+        <div class="ri">· 일정·인원·강사·콘텐츠 자율 결정<br>· 자체 교육 운영 + <b>도메인 특화 콘텐츠 편성</b></div></div>
+    </div>
+    <div class="sec">
+      <div class="sl"><span class="tx">5개 기관 운영 현황</span><span class="sx">’26.7.14. 기준</span><span class="ln"></span></div>
+      <div class="s6x-rows">
+        <div class="agrow" style="border-left-color:#4266a3"><b class="ag">문화체육관광부</b><span class="sz" style="color:#4266a3">총 55명 · 대면</span><span class="cfg">그린(디딤) 30명 · 블루(나래) 25명</span><span class="sch">8.31~9.11 / 행안부 정기 인증평가 참여</span></div>
+        <div class="agrow" style="border-left-color:#2e8a5c"><b class="ag">보건복지부</b><span class="sz" style="color:#2e8a5c">총 270명 · 대면</span><span class="cfg">복지부·질병청·식약처 그린/블루 다회차</span><span class="sch">6월~10월 순차 / 기관별 실습·평가 데이터 자체 개발</span></div>
+        <div class="agrow" style="border-left-color:#c38424"><b class="ag">농촌진흥청</b><span class="sz" style="color:#c38424">총 50명 · 대면</span><span class="cfg">공통·특화·심화 3과정 (특화·심화 그린 연계)</span><span class="sch">6.9~7.30 / 과정 중 1회 별도 테스트 예정</span></div>
+        <div class="agrow" style="border-left-color:#141b28"><b class="ag">해양수산부</b><span class="sz" style="color:#141b28">총 128명 · 대면</span><span class="cfg">그린 32명×2회 · 블루 32명×2회</span><span class="sch">6.22~9.17 / 행안부 정기 인증평가 참여</span></div>
+        <div class="agrow" style="border-left-color:#6f5aa8"><b class="ag">방위사업청</b><span class="sz" style="color:#6f5aa8">총 70명 · 대면</span><span class="cfg">1회차 그린 30명 · 2회차 40명(과정 미정)</span><span class="sch">6.16~9.10 / 1회차 정기평가, 2회차 자체문제 검토</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="anchor"><span class="k">FIELD</span>
+    <span class="t">교육은 <b>기관 자율</b>, 인증은 <b>행안부 표준</b> — 검증된 전수 모델이 이미 현장에서 돌고 있습니다</span>
+    <span class="r">행안부 명의 인증서 · 월 1회 표준 인증평가</span>
+  </div>
+  <div class="foot"><span>AI챔피언 교육 방향성 및 체계 · 국가공무원인재원장 보고</span><span>행정안전부 · NIA · 2026</span><span class="pg"><b>06</b> / 09</span></div>
+</section>
+
+<!-- ================= SLIDE 6 ================= -->
+<section class="slide" id="s6">
+  <div class="head">
+    <div>
+      <div class="kick"><span class="no">07</span><span class="lb">Competency Architecture · 역량 → 과목 → 등급</span></div>
+      <h1>10가지 행동역량 <em class="f">→</em> <em>8개 과목·전문과정</em> <em class="f">→</em> <em class="g">Green</em>·<em>Blue</em>·<em style="color:var(--gK)">Black</em> 인증</h1>
+      <div class="headsub">공공에 필요한 역량을 <b>10가지 행동</b>으로 정의했습니다(공식 4대 역량군·48개 세부역량 압축) — 과목에서 훈련하고, 등급 산출물로 검증합니다.</div>
+    </div>
+    <div class="brand"><div class="t1">AI <span>CHAMPION</span></div><div class="t2">행정안전부 AI·데이터 역량강화</div></div>
+  </div>
+
+  <div class="main s6-main" id="wiremap">
+    <svg class="wires" id="wires6"></svg>
+
+    <div class="col">
+      <div class="colh"><span class="dot"></span>10대 행동역량 <small>무엇을 할 수 있어야 하나</small></div>
+      <div class="colbody" style="grid-template-rows:repeat(10,1fr)">
+        <div class="cap" id="cap1"><span class="t"><i>01</i>AI 기술변화에 대한 적응력</span><span class="s">코딩에이전트·하네스·스킬 등 최신 트렌드 감지</span></div>
+        <div class="cap" id="cap2"><span class="t"><i>02</i>기술의 실전 적용 역량</span><span class="s">내 업무의 불편을 AI 과제로 확장</span></div>
+        <div class="cap" id="cap3"><span class="t"><i>03</i>직무 경계 도전 역량</span><span class="s">행정직→Python·VBA · 개발직→기획·콘텐츠</span></div>
+        <div class="cap" id="cap4"><span class="t"><i>04</i>업무 컨텍스트 설계 역량</span><span class="s">원문·규정·예외를 AI가 일할 맥락으로 구조화</span></div>
+        <div class="cap" id="cap5"><span class="t"><i>05</i>AI 비판·검증 역량</span><span class="s">에이전트 교차검증 · 결과를 원문·규정과 대조</span></div>
+        <div class="cap" id="cap6"><span class="t"><i>06</i>도구 조합·활용 역량</span><span class="s">API·MCP·스킬·DB·Ollama — 특정 도구 비의존</span></div>
+        <div class="cap" id="cap7"><span class="t"><i>07</i>데이터 기반 판단 역량</span><span class="s">정제·분석·모델링으로 판단의 근거를 만든다</span></div>
+        <div class="cap" id="cap8"><span class="t"><i>08</i>문서·콘텐츠 표현 역량</span><span class="s">상대가 이해하는 산출물로 설명한다</span></div>
+        <div class="cap" id="cap9"><span class="t"><i>09</i>바이브코딩 문제해결 역량</span><span class="s">내 문제를 내가 직접 구현해 해결</span></div>
+        <div class="cap" id="cap10"><span class="t"><i>10</i>개방적 확산 역량</span><span class="s">소버린 ≠ 쇄국 · 오픈소스·빅테크 주시, 안전한 확산</span></div>
+      </div>
+    </div>
+    <div></div>
+
+    <div class="col">
+      <div class="colh"><span class="dot" style="background:var(--amber)"></span>교육과정 <small>어느 과목에서 훈련하나 · 배지 = 훈련 역량번호</small></div>
+      <div class="colbody trks" style="grid-template-rows:1fr 1fr 1fr 1fr">
+        <div class="trk" id="trk1">
+          <div class="tl"><span class="t">AI 활용</span><span class="s">공통 기반<br>전 등급 출발점</span></div>
+          <div class="tr"><div class="sub3">
+            <div class="subj"><span class="c">C01</span><div class="t">AI 리터러시와 업무활용</div><div class="r">역량 <b>01·02·04</b></div></div>
+            <div class="subj"><span class="c">C02</span><div class="t">데이터 리터러시</div><div class="r">역량 <b>07</b></div></div>
+            <div class="subj"><span class="c">C03</span><div class="t">관리자 AI 리더십</div><div class="r">역량 <b>01·10</b></div></div>
+          </div></div>
+        </div>
+        <div class="trk" id="trk2">
+          <div class="tl"><span class="t" style="color:var(--gG)">AI 융합</span><span class="s">현업 기획·구현<br>GREEN 연계</span></div>
+          <div class="tr"><div class="sub3">
+            <div class="subj"><span class="c">C04</span><div class="t">생성형 AI 노코드 데이터분석</div><div class="r">역량 <b>03·07</b></div></div>
+            <div class="subj"><span class="c">C05</span><div class="t">AI 행정 융합 기획</div><div class="r">역량 <b>02·04·08</b></div></div>
+            <div class="subj"><span class="c">C06</span><div class="t">노코드 AI서비스 구현</div><div class="r">역량 <b>03·09</b></div></div>
+          </div></div>
+        </div>
+        <div class="trk" id="trk3">
+          <div class="tl"><span class="t" style="color:var(--gB)">AI 개발</span><span class="s">코드·서비스<br>BLUE 연계</span></div>
+          <div class="tr"><div class="sub2">
+            <div class="subj"><span class="c">C07</span><div class="t">생성형 AI 데이터분석 심화</div><div class="r">역량 <b>05·07</b></div></div>
+            <div class="subj"><span class="c">C08</span><div class="t">바이브코딩 LLM서비스 개발</div><div class="r">역량 <b>06·09·10</b></div></div>
+          </div></div>
+        </div>
+        <div class="trk" id="trk4">
+          <div class="tl"><span class="t" style="color:var(--gK)">전문인재</span><span class="s">거점리더 양성<br>BLACK 연계</span></div>
+          <div class="tr"><div class="sub2">
+            <div class="subj"><span class="c">9모듈</span><div class="t">생성AI · Excel/Python · 모델링 · 멀티모달 · 웹앱 · 코딩에이전트 · RAG</div><div class="r">역량 <b>05·06·09·10</b></div></div>
+            <div class="subj"><span class="c">프로젝트</span><div class="t">개인·팀 프로젝트 수행과 발표</div><div class="r">역량 <b>02·09·10</b></div></div>
+          </div></div>
+        </div>
+      </div>
+    </div>
+    <div></div>
+
+    <div class="col">
+      <div class="colh"><span class="dot" style="background:var(--gG)"></span>인증등급 <small>어느 수준까지 해내나</small></div>
+      <div class="colbody grds" style="grid-template-rows:1fr 1fr 1fr">
+        <div class="grade G" id="grdG"><span class="g">GREEN</span><span class="r">기본 실행력 — 한 업무를 끝낸다</span>
+          <span class="d">문서 비교·정리 / 단일 데이터 분석 / 정적 웹서비스 구현·배포</span>
+          <span class="ev">평가 이론 10 + 수행 90 · 90분 · 75점↑</span></div>
+        <div class="grade B" id="grdB"><span class="g">BLUE</span><span class="r">복합 해결력 — 흐름을 연결한다</span>
+          <span class="d">다문서 검토 / Python·모델링 / DB·자동화 서비스 연결</span>
+          <span class="ev">평가 이론 10 + 수행 90 · 90분 · 75점↑</span></div>
+        <div class="grade K" id="grdK"><span class="g">BLACK</span><span class="r">전문 운영력 — 조직을 이끈다</span>
+          <span class="d">컨텍스트·에이전트·로컬 AI 운영 / 프로젝트 리딩·기관 전수</span>
+          <span class="ev">2026 교육기반 인증 · 출석 20 + 과제 40 + 발표 40</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="anchor"><span class="k">AXIS</span>
+    <span class="t"><b>이 10가지가 공공에 필요한 역량</b>입니다 — 등급이 오를수록 자료 복잡도 ↑ · 도구 조합 ↑ · 책임 범위 ↑</span>
+    <span class="r">Green·Blue = 수행형 CBT · Black = 교육기반 인증</span>
+  </div>
+  <div class="foot"><span>AI챔피언 교육 방향성 및 체계 · 국가공무원인재원장 보고</span><span>행정안전부 · NIA · 2026</span><span class="pg"><b>07</b> / 09</span></div>
+</section>
+
+<!-- ================= SLIDE 08 · 도구 오케스트레이션 맵 ================= -->
+<section class="slide" id="s7x">
+  <div class="head">
+    <div>
+      <div class="kick"><span class="no">08</span><span class="lb">Tool Orchestration Map · 교육과정 도구 지도</span></div>
+      <h1>특정 도구가 아니라, <em>조합</em>을 가르칩니다</h1>
+      <div class="headsub">교육과정(C01~C08·전문과정)에서 실제로 다루는 도구들 — 정답 도구는 없고, 문제에 맞춰 <b>모델·에이전트·코드·연결·로컬 스택을 엮는 오케스트레이션</b>을 훈련합니다.</div>
+    </div>
+    <div class="brand"><div class="t1">AI <span>CHAMPION</span></div><div class="t2">행정안전부 AI·데이터 역량강화</div></div>
+  </div>
+  <div class="main s7x-main" id="netmap">
+    <svg class="wires" id="wires8" style="z-index:1"></svg>
+    <div class="npanel" id="np1" style="grid-column:1;grid-row:1">
+      <div class="nh"><span class="dot" style="background:#b94a48"></span>AI 모델 · 서비스<small>골라 쓰고 교차검증</small></div>
+      <div class="nchips"><span class="chip" style="background:#f6e7e6;border-color:rgba(185,74,72,.5);color:#943539;font-weight:800">Claude</span><span class="chip">ChatGPT</span><span class="chip">Gemini</span><span class="chip">Perplexity</span><span class="chip">Grok</span><span class="chip">MS Copilot</span><span class="chip">HyperCLOVA X</span><span class="chip">뤼튼</span></div>
+    </div>
+    <div class="npanel" id="np2" style="grid-column:1;grid-row:2">
+      <div class="nh"><span class="dot" style="background:#4266a3"></span>코딩 에이전트 · 앱 빌더<small>AI가 스스로 일하게</small></div>
+      <div class="nchips"><span class="chip" style="background:#e9eef7;border-color:rgba(66,102,163,.55);color:#2f4c85;font-weight:800">Claude Code</span><span class="chip">Antigravity</span><span class="chip">Cursor</span><span class="chip">Codex</span><span class="chip">Gemini CLI</span><span class="chip">OpenCode</span><span class="chip">Windsurf</span><span class="chip">Lovable</span><span class="chip">v0</span><span class="chip">Replit</span></div>
+    </div>
+    <div class="nmidcol">
+      <div class="npanel" id="np6">
+        <div class="nh"><span class="dot" style="background:#6f5aa8"></span>리서치 · 콘텐츠 제작<small>조사하고 만들고</small></div>
+        <div class="nchips"><span class="chip" style="background:#eeeaf6;border-color:rgba(111,90,168,.5);color:#5a4694;font-weight:800">NotebookLM</span><span class="chip">Genspark</span><span class="chip">Manus</span><span class="chip">Midjourney</span><span class="chip">Nano Banana</span><span class="chip">Veo · Sora</span><span class="chip">Suno</span><span class="chip">Gamma</span></div>
+      </div>
+      <div class="npanel" id="np3">
+        <div class="nh"><span class="dot" style="background:#2e8a5c"></span>코드 · 실행 환경<small>만들고 실행</small></div>
+        <div class="nchips"><span class="chip" style="background:#e7f1ea;border-color:rgba(46,138,92,.5);color:#1f6644;font-weight:800">Python</span><span class="chip">VBA · 엑셀</span><span class="chip">HTML·CSS·JS</span><span class="chip">Chart.js · SheetJS</span><span class="chip">Node.js</span><span class="chip">브라우저</span><span class="chip">Git</span></div>
+      </div>
+    </div>
+    <div class="nhubwrap"><div class="nethub" id="nethub">
+      <span class="k">ORCHESTRATION</span>
+      <span class="t">문제 정의<br>조합 → 검증</span>
+      <span class="s">업무에 맞는 조합을<br><b>실무자가 설계</b>합니다.<br>도구가 바뀌어도<br>이 힘은 남습니다.</span>
+    </div></div>
+    <div class="npanel" id="np4" style="grid-column:3;grid-row:1">
+      <div class="nh"><span class="dot" style="background:#c38424"></span>연결 · 컨텍스트<small>엮어서 확장</small></div>
+      <div class="nchips"><span class="chip" style="background:#f7efe0;border-color:rgba(195,132,36,.55);color:#8f5f14;font-weight:800">MCP</span><span class="chip">API</span><span class="chip">스킬</span><span class="chip">DB · SQLite</span><span class="chip">RAG · 벡터검색</span><span class="chip">공공데이터 API</span><span class="chip">웹 크롤링</span></div>
+    </div>
+    <div class="npanel" id="np5" style="grid-column:3;grid-row:2">
+      <div class="nh"><span class="dot" style="background:#141b28"></span>로컬 · 폐쇄망<small>인터넷 없이도</small></div>
+      <div class="nchips"><span class="chip" style="background:#e6e9ee;border-color:rgba(20,27,40,.5);color:#141b28;font-weight:800">Ollama sLLM</span><span class="chip">Llama · Qwen · EXAONE</span><span class="chip">LM Studio</span><span class="chip">단일 HTML 반입</span><span class="chip">라이브러리 반입</span><span class="chip">GitHub 오픈소스</span><span class="chip">Electron</span></div>
+    </div>
+  </div>
+  <div class="anchor"><span class="k">MAP</span>
+    <span class="t">도구는 1~2개월 단위로 바뀝니다 — <b>남는 것은 조합하는 힘</b>입니다</span>
+    <span class="r">바이브코딩 실습 스택 · ‘민첩한 AI 8가지 기술’ 기준</span>
+  </div>
+  <div class="foot"><span>AI챔피언 교육 방향성 및 체계 · 국가공무원인재원장 보고</span><span>행정안전부 · NIA · 2026</span><span class="pg"><b>08</b> / 09</span></div>
+</section>
+
+<!-- ================= SLIDE 7 ================= -->
+<section class="slide" id="s7">
+  <div class="head">
+    <div>
+      <div class="kick"><span class="no">09</span><span class="lb">Learning to Evidence · 시험 연결과 건의</span></div>
+      <h1>문제가 먼저가 아니라, <em>측정할 역량이 먼저</em>입니다</h1>
+      <div class="headsub">등급별 <b>문제 유형 → 측정 역량(10대 행동역량)</b>을 연결했습니다. 구체 문항은 회차마다 바뀌어도 <b>측정하는 역량은 같습니다</b>.</div>
+    </div>
+    <div class="brand"><div class="t1">AI <span>CHAMPION</span></div><div class="t2">행정안전부 AI·데이터 역량강화</div></div>
+  </div>
+
+  <div class="main s7-main">
+    <div class="s7-score">
+      <div class="h">GREEN·BLUE 표준평가<br><small>배점 구조 (100점)</small></div>
+      <div class="p i"><span class="n">이론 10</span><span class="l">공통 지식</span></div>
+      <div class="p a"><span class="n">문서·콘텐츠 30</span><span class="l">수행 과제 1</span></div>
+      <div class="p b"><span class="n">데이터 30</span><span class="l">수행 과제 2</span></div>
+      <div class="p c"><span class="n">자동화·서비스 30</span><span class="l">수행 과제 3</span></div>
+      <div class="cond"><span class="n">90분 · 75점 이상 합격</span><span class="l">실제 산출물 제출 방식</span></div>
+    </div>
+
+    <div class="mtx">
+      <div class="mh mrow-line">등급 · 연계과목</div><div class="mh mrow-line">① 문서·콘텐츠 30점 — 유형과 측정 역량</div><div class="mh mrow-line">② 데이터 30점 — 유형과 측정 역량</div><div class="mh mrow-line">③ 자동화·서비스 30점 — 유형과 측정 역량</div><div class="mh mrow-line" style="padding-left:14px">판정 방식</div>
+
+      <div class="mg G mrow-line"><span class="g">GREEN</span><span class="s">C04–C06 연계<br>노코드 분석·기획·구현</span></div>
+      <div class="mc mrow-line"><span class="t">유형 · 원문 사실 검증</span><span class="s">여러 원문을 AI가 일할 맥락으로 만들고, 결과를 사실과 대조해 문서로 완성하는 힘</span><span class="m">측정 역량 <b>04 컨텍스트 · 05 검증 · 08 문서화</b></span></div>
+      <div class="mc mrow-line"><span class="t">유형 · 단일 데이터 집계·분석</span><span class="s">공공데이터를 필터·집계·정렬해 판단의 근거자료로 바꾸는 힘</span><span class="m">측정 역량 <b>07 데이터 판단</b></span></div>
+      <div class="mc mrow-line"><span class="t">유형 · 콘텐츠 제작·정적 배포</span><span class="s">만든 콘텐츠를 웹서비스로 구현해 공개까지 끝내는 실행력</span><span class="m">측정 역량 <b>03 경계 도전 · 09 구현</b></span></div>
+      <div class="mc ev mrow-line"><span class="t">판정 · 업무 완결성</span><span class="s">산출 파일 + 배포 URL 제출 — 한 업무를 끝까지 끝냈는가</span><span class="m">이론 10 + 수행 90 · <b>75점↑</b></span></div>
+
+      <div class="mg B mrow-line"><span class="g">BLUE</span><span class="s">C07–C08 연계<br>Python·바이브코딩</span></div>
+      <div class="mc mrow-line"><span class="t">유형 · 다문서 규칙 검증 (코드)</span><span class="s">코드를 도구 삼아 여러 문서의 검토를 자동화하고 결과를 검증하는 힘</span><span class="m">측정 역량 <b>03 경계 도전 · 05 검증</b></span></div>
+      <div class="mc mrow-line"><span class="t">유형 · 데이터 정제·모델 비교</span><span class="s">복수 데이터를 병합·정제하고 모델 성능을 비교해 더 나은 답을 고르는 힘</span><span class="m">측정 역량 <b>05 검증 · 07 데이터 판단</b></span></div>
+      <div class="mc mrow-line"><span class="t">유형 · DB 연동 서비스 구현</span><span class="s">DB·검색·화면을 조합해 실제로 동작하는 서비스로 연결하는 힘</span><span class="m">측정 역량 <b>06 도구 조합 · 09 구현</b></span></div>
+      <div class="mc ev mrow-line"><span class="t">판정 · 흐름의 복합성</span><span class="s">코드·보고서·DB·화면 세트 제출 — 흐름 전체를 연결했는가</span><span class="m">이론 10 + 수행 90 · <b>75점↑</b></span></div>
+
+      <div class="mg K"><span class="g">BLACK</span><span class="s">전문인재 9모듈<br>+ 개인·팀 프로젝트</span></div>
+      <div class="mc"><span class="t">유형 · 최신 기술 판단</span><span class="s">하네스·RAG·로컬 AI 같은 변화를 읽고 무엇을 어디에 적용할지 판단하는 힘</span><span class="m">측정 역량 <b>01 변화 적응 · 02 실전 적용</b></span></div>
+      <div class="mc"><span class="t">유형 · 근거 선별·컨텍스트 설계</span><span class="s">원자료에서 필요한 근거만 골라 AI가 일할 맥락을 직접 설계하는 힘</span><span class="m">측정 역량 <b>04 컨텍스트 · 05 검증</b></span></div>
+      <div class="mc"><span class="t">유형 · 로컬 AI 구현·발표</span><span class="s">폐쇄망 제약 속에서 직접 구현하고, 조직이 이해하게 설명하는 운영력</span><span class="m">측정 역량 <b>06 조합 · 09 구현 · 10 열린 확산</b></span></div>
+      <div class="mc ev"><span class="t">판정 · 교육기반 인증</span><span class="s">출석 20 + 과제 40 + 프로젝트 발표 40 — 조직을 이끌 수 있는가</span><span class="m">Green·Blue CBT와 <b>구분 판정</b></span></div>
+    </div>
+
+    <div class="s7-relay">
+      <div class="relay"><span class="t">기관맞춤형 전수 <b>5개 기관 운영 중</b></span>
+        <span class="s">문체부 · 복지부 · 농진청 · 해수부 · 방사청</span></div>
+      <div class="arrow">›</div>
+      <div class="relay"><span class="t">2026년 <b>18회 · 약 560명</b> 자체 양성</span>
+        <span class="s">기관이 교육을 직접 운영</span></div>
+      <div class="arrow">›</div>
+      <div class="relay"><span class="t">행안부·NIA <b>월 1회 표준 인증평가</b></span>
+        <span class="s">평가·인증 품질은 행안부 표준이 보증</span></div>
+    </div>
+  </div>
+
+  <div class="anchor coral"><span class="k">건의</span>
+    <span class="t"><b>국가공무원인재원의 직접 운영</b>을 건의드립니다 — 검증된 과정을 전수받아 공직사회 AI챔피언의 거점으로</span>
+    <span class="r">하반기 기관맞춤형 전수 컨설팅 모집 · <b>8월경 예정</b></span>
+  </div>
+  <div class="foot"><span>AI챔피언 교육 방향성 및 체계 · 국가공무원인재원장 보고</span><span>행정안전부 · NIA · 2026</span><span class="pg"><b>09</b> / 09</span></div>
+</section>
+
+</div>
+
+<script>
+// ---- per-slide shot mode: ?slide=N ----
+(function(){
+  const p = new URLSearchParams(location.search).get('slide');
+  if(p){
+    document.body.classList.add('shot');
+    document.querySelectorAll('.slide').forEach((s,i)=>{ if(i+1!==+p) s.style.display='none'; });
+    window.scrollTo(0,0);
+  }
+})();
+
+// ---- presentation mode (P / ▶버튼 / 더블클릭 진입, Esc 종료) ----
+(function(){
+  if(document.body.classList.contains('shot')) return;
+  const slides=[...document.querySelectorAll('.slide')];
+  let cur=0, present=false;
+  const SEL='.head .kick,.head h1,.head .headsub,.head .brand,.s1-models,.sl,.step,.arrow,.op,'+
+            '.s2-sum,.s2-big,.case,.dm,.s4-trend,.loopnote,.colh,.cap,.trk,.grade,'+
+            '.s7-score,.mtx>*,.relay,.anchor,.cover h1,.cv-sub,.cv-item,.cv-stats .st,.ktop,.keyebrow,.ktitle,.knum,.ktxt h2,.ktxt p,.stat6,.role,.agrow,.npanel,.nethub';
+  let editing=false;
+  const bar=document.createElement('div');
+  bar.className='ptools';
+  bar.innerHTML='<span class="hintxt">P 발표 · ←→ 이동 · Esc 종료</span>'+
+    '<button type="button" data-act="edit">✏ 편집</button>'+
+    '<button type="button" data-act="save">💾 저장 HTML</button>'+
+    '<button type="button" data-act="pdf">📄 PDF</button>'+
+    '<button type="button" class="primary" data-act="play">▶ 발표</button>';
+  document.body.appendChild(bar);
+  const btnEdit=bar.querySelector('[data-act="edit"]');
+  function setEdit(on){
+    editing=on;
+    document.body.classList.toggle('editing',on);
+    document.querySelectorAll('.slide').forEach(s=>{
+      if(on) s.setAttribute('contenteditable','true');
+      else s.removeAttribute('contenteditable');
+    });
+    btnEdit.classList.toggle('on',on);
+    btnEdit.textContent=on?'✔ 편집 완료':'✏ 편집';
+    if(!on && typeof drawWires==='function') setTimeout(drawWires,60);
+  }
+  function saveHTML(){
+    if(editing) setEdit(false);
+    const clone=document.documentElement.cloneNode(true);
+    clone.querySelectorAll('.ptools').forEach(e=>e.remove());
+    clone.querySelectorAll('[contenteditable]').forEach(e=>e.removeAttribute('contenteditable'));
+    clone.querySelectorAll('.a-el').forEach(e=>{
+      e.classList.remove('a-el'); e.style.removeProperty('--d');
+      if(!e.getAttribute('style')) e.removeAttribute('style');
+    });
+    const b=clone.querySelector('body'); if(b) b.removeAttribute('class');
+    clone.querySelectorAll('.slide').forEach(s=>{
+      s.classList.remove('cur','reveal');
+      s.style.removeProperty('--sc'); s.style.removeProperty('display');
+      if(!s.getAttribute('style')) s.removeAttribute('style');
+    });
+    const svg=clone.querySelector('svg.wires');
+    if(svg){svg.innerHTML='';svg.removeAttribute('viewBox');}
+    const html='<!DOCTYPE html>\n'+clone.outerHTML;
+    const a=document.createElement('a');
+    a.href=URL.createObjectURL(new Blob([html],{type:'text/html;charset=utf-8'}));
+    const d=new Date(), z=n=>String(n).padStart(2,'0');
+    a.download='AI챔피언_키노트_수정_'+d.getFullYear()+z(d.getMonth()+1)+z(d.getDate())+'_'+z(d.getHours())+z(d.getMinutes())+'.html';
+    a.click(); URL.revokeObjectURL(a.href);
+  }
+  bar.addEventListener('click',e=>{
+    const btn=e.target.closest('button'); if(!btn) return;
+    const act=btn.dataset.act;
+    if(act==='edit') setEdit(!editing);
+    else if(act==='save') saveHTML();
+    else if(act==='pdf'){ if(editing) setEdit(false); setTimeout(()=>window.print(),120); }
+    else if(act==='play'){ if(editing) setEdit(false); enter(); }
+  });
+  function mark(slide){
+    slide.querySelectorAll(SEL).forEach((e,i)=>{
+      e.classList.add('a-el');
+      e.style.setProperty('--d',Math.min(i*55,1500)+'ms');
+    });
+  }
+  function fit(){
+    const sc=Math.min(innerWidth/1280,innerHeight/720);
+    slides.forEach(s=>s.style.setProperty('--sc',sc));
+  }
+  function animateWires(slide){
+    const svg=slide.querySelector('svg.wires'); if(!svg) return;
+    svg.querySelectorAll('path').forEach((p,i)=>{
+      try{
+        const L=p.getTotalLength(); if(!L) return;
+        p.style.strokeDasharray=L; p.style.strokeDashoffset=L; p.style.transition='none';
+        requestAnimationFrame(()=>{
+          p.style.transition='stroke-dashoffset .9s ease '+(600+i*35)+'ms';
+          p.style.strokeDashoffset='0';
+        });
+      }catch(err){}
+    });
+    svg.querySelectorAll('circle').forEach((c,i)=>{
+      c.style.opacity='0'; c.style.transition='none';
+      requestAnimationFrame(()=>{
+        c.style.transition='opacity .4s ease '+(1000+i*35)+'ms';
+        c.style.opacity='1';
+      });
+    });
+  }
+  function show(n){
+    cur=Math.max(0,Math.min(slides.length-1,n));
+    slides.forEach((s,i)=>{s.classList.toggle('cur',i===cur);s.classList.remove('reveal');});
+    const s=slides[cur];
+    mark(s);
+    if(typeof drawWires==='function') drawWires(); if(typeof drawNet==='function') drawNet();
+    requestAnimationFrame(()=>requestAnimationFrame(()=>{
+      s.classList.add('reveal');
+      animateWires(s);
+    }));
+  }
+  function enter(){
+    if(present) return;
+    let idx=0;
+    slides.forEach((s,i)=>{ if(s.getBoundingClientRect().top < innerHeight/2) idx=i; });
+    present=true; document.body.classList.add('present'); fit();
+    show(idx);
+    if(document.documentElement.requestFullscreen)
+      document.documentElement.requestFullscreen().catch(()=>{});
+  }
+  function exit(){
+    if(!present) return;
+    present=false; document.body.classList.remove('present');
+    slides.forEach(s=>s.classList.remove('cur','reveal'));
+    if(document.fullscreenElement) document.exitFullscreen().catch(()=>{});
+    if(typeof drawWires==='function') setTimeout(drawWires,60);
+    slides[cur].scrollIntoView();
+  }
+  document.addEventListener('dblclick',()=>{ if(!present && !editing) enter(); });
+  addEventListener('resize',()=>{ if(present) fit(); });
+  document.addEventListener('fullscreenchange',()=>{ if(!document.fullscreenElement) exit(); });
+  document.addEventListener('keydown',e=>{
+    if(editing){ if(e.key==='Escape') setEdit(false); return; }
+    if(!present){
+      if(e.key==='p'||e.key==='P'){ enter(); return; }
+      if(e.key==='ArrowRight'||e.key==='PageDown'){ cur=Math.min(slides.length-1,cur+1); slides[cur].scrollIntoView({behavior:'smooth'}); }
+      else if(e.key==='ArrowLeft'||e.key==='PageUp'){ cur=Math.max(0,cur-1); slides[cur].scrollIntoView({behavior:'smooth'}); }
+      return;
+    }
+    if(e.key==='Escape'){ exit(); return; }
+    if(e.key==='ArrowRight'||e.key==='PageDown'||e.key===' '||e.key==='Enter'){ e.preventDefault(); show(cur+1); }
+    else if(e.key==='ArrowLeft'||e.key==='PageUp'){ e.preventDefault(); show(cur-1); }
+    else if(e.key==='Home'){ show(0); }
+    else if(e.key==='End'){ show(slides.length-1); }
+  });
+  // ?present=1 로 열면 바로 발표 모드
+  if(new URLSearchParams(location.search).get('present')) setTimeout(enter,120);
+})();
+
+// ---- slide 6 flowchart wires (measured coordinates) ----
+function drawWires(){
+  const map=document.getElementById('wiremap'); if(!map) return;
+  const s6=document.getElementById('s6'); if(s6.style.display==='none') return;
+  const svg=document.getElementById('wires6');
+  const mr=map.getBoundingClientRect();
+  svg.setAttribute('viewBox','0 0 '+mr.width+' '+mr.height);
+  const R=id=>{const r=document.getElementById(id).getBoundingClientRect();
+    return {l:r.left-mr.left, r:r.right-mr.left, t:r.top-mr.top, b:r.bottom-mr.top,
+            cy:r.top-mr.top+r.height/2};};
+  const caps=['cap1','cap2','cap3','cap4','cap5','cap6','cap7','cap8','cap9','cap10'].map(R);
+  const trks=['trk1','trk2','trk3','trk4'].map(R);
+  const busX=caps[0].r+15;
+  const BUS='#c3cad6';
+  let paths=[];
+  caps.forEach(c=>paths.push(`<path d="M ${c.r} ${c.cy} H ${busX}" stroke="${BUS}" stroke-width="1.6" fill="none"/>`));
+  paths.push(`<path d="M ${busX} ${caps[0].cy} V ${caps[9].cy}" stroke="${BUS}" stroke-width="1.6" fill="none"/>`);
+  trks.forEach(t=>{
+    paths.push(`<path d="M ${busX} ${t.cy} H ${t.l}" stroke="${BUS}" stroke-width="1.6" fill="none"/>`);
+    paths.push(`<circle cx="${t.l}" cy="${t.cy}" r="2.8" fill="#a4aec0"/>`);
+  });
+  const g=R('grdG'), b=R('grdB'), k=R('grdK');
+  const wire=(t,gr,col,w)=>{
+    const x1=t.r, y1=t.cy, x2=gr.l, y2=gr.cy, mx=(x1+x2)/2;
+    paths.push(`<path d="M ${x1} ${y1} C ${mx} ${y1}, ${mx} ${y2}, ${x2} ${y2}" stroke="${col}" stroke-width="${w}" fill="none" opacity="0.85"/>`);
+    paths.push(`<circle cx="${x2}" cy="${y2}" r="3.2" fill="${col}"/>`);
+  };
+  wire(trks[0],g,'#ccd4e0',1.4); wire(trks[0],b,'#ccd4e0',1.4); wire(trks[0],k,'#ccd4e0',1.4);
+  wire(trks[1],g,'#2e8a5c',2.8);
+  wire(trks[2],b,'#4266a3',2.8);
+  wire(trks[3],k,'#1c2331',2.8);
+  svg.innerHTML=paths.join('');
+}
+function drawNet(){
+  const map=document.getElementById('netmap'); if(!map) return;
+  const sl=document.getElementById('s7x'); if(!sl||sl.style.display==='none') return;
+  const svg=document.getElementById('wires8'); if(!svg) return;
+  const mr=map.getBoundingClientRect(); if(mr.width<10) return;
+  svg.setAttribute('viewBox','0 0 '+mr.width+' '+mr.height);
+  const hb=document.getElementById('nethub').getBoundingClientRect();
+  const hx=hb.left-mr.left+hb.width/2, hy=hb.top-mr.top+hb.height/2;
+  const specs=[['np1','#b94a48'],['np2','#4266a3'],['np3','#2e8a5c'],['np4','#c38424'],['np5','#141b28'],['np6','#6f5aa8']];
+  let p='';
+  p+='<circle cx="'+hx+'" cy="'+hy+'" r="146" fill="none" stroke="#aab8cc" stroke-width="1" stroke-dasharray="3 7" opacity="0.65"/>';
+  p+='<circle cx="'+hx+'" cy="'+hy+'" r="188" fill="none" stroke="#b8c4d6" stroke-width="1" stroke-dasharray="2 9" opacity="0.4"/>';
+  specs.forEach(function(sp){
+    const r=document.getElementById(sp[0]).getBoundingClientRect();
+    const cx=r.left-mr.left+r.width/2, cy=r.top-mr.top+r.height/2;
+    const mx=(hx+cx)/2;
+    p+='<path d="M '+hx+' '+hy+' C '+mx+' '+hy+', '+mx+' '+cy+', '+cx+' '+cy+'" stroke="'+sp[1]+'" stroke-width="2.5" fill="none" opacity="0.85"/>';
+    const dx=cx-hx, dy=cy-hy, L=Math.hypot(dx,dy)||1;
+    p+='<circle cx="'+(hx+dx/L*118)+'" cy="'+(hy+dy/L*118)+'" r="3.6" fill="'+sp[1]+'"/>';
+    p+='<circle cx="'+(hx+dx/L*146)+'" cy="'+(hy+dy/L*146)+'" r="2.2" fill="'+sp[1]+'" opacity="0.65"/>';
+  });
+  svg.innerHTML=p;
+}
+window.addEventListener('load',drawNet);
+window.addEventListener('resize',drawNet);
+if(document.fonts&&document.fonts.ready){document.fonts.ready.then(()=>{drawWires();drawNet();});}
+window.addEventListener('load',drawWires);
+window.addEventListener('resize',drawWires);
+</script>
+<script>/* kg-preview: #<heading> \uc704\uce58\ub85c \uc774\ub3d9 */
+(function(){function norm(t){return (t||'').replace(/\s+/g,'').toLowerCase()}
+function go(){var h=decodeURIComponent(location.hash.slice(1));if(!h)return;var k=norm(h).slice(0,24);if(!k)return;
+var best=null,bl=1e9,els=document.body.querySelectorAll('h1,h2,h3,h4,h5,p,div,span,li,td,text,tspan,section,article');
+for(var i=0;i<els.length;i++){var e=els[i],t=norm(e.textContent);if(t.length<bl&&t.indexOf(k)>-1){best=e;bl=t.length}}
+if(!best)return;var box=best.closest('section,[class*=slide],[class*=page],article')||best;
+box.scrollIntoView({block:'start'});box.style.outline='3px solid #c0504d';box.style.outlineOffset='4px';
+setTimeout(function(){box.style.outline=''},2600)}
+window.addEventListener('load',function(){setTimeout(go,400)});window.addEventListener('hashchange',go)})();</script></body>
+</html>

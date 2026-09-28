@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head><meta name="robots" content="noindex, nofollow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>제2차시 — 프론티어 모델 심층 탐구와 AI 도구 생태계 50선</title>
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Noto+Serif+KR:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f5efe4;--bg2:#ede4d3;--bg3:#e3d6bb;--ink:#2b2015;--ink2:#5a4a38;--ink3:#8a7659;--ink4:#b3a17f;--acc:#b8532a;--acc2:#8b3e1f;--acc3:#d49575;--ln:#d8c8ae;--ln2:#e6d9bf;--dk:#1a1612;--dk2:#241e17;--on:#ede4d3;--on2:#a89172;--serif:'Fraunces','Noto Serif KR',Georgia,serif;--sans:'Pretendard Variable',Pretendard,-apple-system,sans-serif;--mono:'JetBrains Mono',ui-monospace,Consolas,monospace}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:#0e0a06;font-family:var(--sans);-webkit-font-smoothing:antialiased}
+.deck{height:100vh;overflow-y:scroll;scroll-snap-type:y mandatory;scroll-behavior:smooth}
+.stage{width:100vw;min-height:100vh;display:flex;align-items:center;justify-content:center;scroll-snap-align:start;padding:16px}
+.slide{width:1600px;height:900px;background:var(--bg);position:relative;overflow:hidden;transform-origin:center;box-shadow:0 40px 90px -30px rgba(0,0,0,0.7);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' seed='3'/%3E%3CfeColorMatrix values='0 0 0 0 0.16  0 0 0 0 0.12  0 0 0 0 0.08  0 0 0 0.025 0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E")}
+.hbar{position:absolute;top:0;left:0;right:0;height:52px;background:var(--dk);display:flex;align-items:center;justify-content:space-between;padding:0 80px}
+.hbar-l{display:flex;align-items:center;gap:12px;font-family:var(--mono);font-size:10.5px;color:#fff;letter-spacing:2.5px;font-weight:600}
+.hbar-l::before{content:"";width:22px;height:8px;background:var(--acc)}
+.hbar-r{font-family:var(--mono);font-size:10.5px;color:#bbb;letter-spacing:1.5px}
+.hl{position:absolute;left:80px;right:80px;top:68px}
+.hl-kicker{font-family:var(--mono);font-size:10.5px;color:var(--ink3);letter-spacing:2.5px;font-weight:700;margin-bottom:8px}
+.hl-title{font-family:var(--serif);font-weight:700;font-size:30px;line-height:1.2;letter-spacing:-0.3px;color:var(--ink)}
+.hl-lede{font-size:13px;color:var(--ink2);margin-top:6px;line-height:1.6;font-style:italic;max-width:1200px}
+.hl-bar{width:48px;height:3px;background:var(--ink);margin-top:6px}
+.hl-rule{position:absolute;left:80px;right:80px;top:188px;height:1px;background:var(--ln2)}
+.bd{position:absolute;left:80px;right:80px;top:198px;bottom:52px;display:grid;gap:1px;background:var(--ln2)}
+.bd.col3{grid-template-columns:1fr 1fr 1fr}
+.bd.col2{grid-template-columns:1fr 1fr}
+.col{background:var(--bg);padding:14px 18px;display:flex;flex-direction:column;overflow:hidden;min-width:0}
+.fbar{position:absolute;bottom:0;left:0;right:0;height:52px;background:#f0e8d8;border-top:3px solid var(--ln);display:flex;align-items:center;justify-content:space-between;padding:0 80px}
+.fbar-l,.fbar-r{display:flex;flex-direction:column;gap:2px}
+.fbar-r{align-items:flex-end}
+.fbar-label{font-family:var(--mono);font-size:10px;color:var(--ink3);letter-spacing:2.5px;font-weight:700}
+.fbar-title{font-size:13px;color:var(--ink)}
+.sh{display:flex;align-items:baseline;gap:10px;margin-bottom:8px}
+.sh-n{font-family:var(--mono);font-size:10.5px;color:var(--ink3);letter-spacing:2.5px;font-weight:700;text-transform:uppercase;white-space:nowrap}
+.sh-t{font-size:11px;color:var(--ink2)}
+.sh-line{height:1px;background:var(--ln2);margin-bottom:10px}
+.bth{font-size:14px;color:var(--ink);font-weight:600;margin-bottom:6px;line-height:1.35}
+.bt{font-size:13px;line-height:1.7;color:var(--ink2);margin-bottom:6px}
+.bt strong{color:var(--ink);font-weight:600}
+.mtbl{width:100%;border-collapse:collapse;font-size:12px;margin:6px 0}
+.mtbl thead th{font-family:var(--mono);font-size:10px;color:var(--ink3);letter-spacing:1.5px;font-weight:700;text-align:left;padding:6px 8px;border-bottom:1.2px solid var(--ink)}
+.mtbl tbody td{padding:5px 8px;border-bottom:1px solid var(--ln2);color:var(--ink2);vertical-align:top;line-height:1.5}
+.mtbl tbody td:first-child{color:var(--ink);font-weight:600}
+.co{background:var(--bg2);border-left:3px solid var(--acc);padding:10px 14px;margin:6px 0}
+.co-lb{font-family:var(--mono);font-size:10px;color:var(--acc);letter-spacing:2px;font-weight:700;margin-bottom:4px}
+.co-main{font-size:14px;color:var(--ink);font-weight:600;line-height:1.35;margin-bottom:4px}
+.co p{font-size:12px;color:var(--ink2);line-height:1.6}
+.cod{background:var(--dk);padding:10px 14px;margin:6px 0;position:relative;overflow:hidden}
+.cod::before{content:"";position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='nd'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' seed='5'/%3E%3CfeColorMatrix values='0 0 0 0 1  0 0 0 0 0.92  0 0 0 0 0.78  0 0 0 0.04 0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23nd)'/%3E%3C/svg%3E");opacity:0.6;pointer-events:none}
+.cod>*{position:relative}
+.cod-lb{font-family:var(--mono);font-size:10px;color:var(--on2);letter-spacing:2px;font-weight:700;margin-bottom:5px}
+.cod-main{font-size:15px;color:var(--on);font-weight:700;line-height:1.3;margin-bottom:5px}
+.cod p{font-size:12px;color:var(--on2);line-height:1.65}
+.dstrip{background:var(--dk);padding:6px 14px;margin:6px 0;display:grid;grid-template-columns:repeat(3,1fr);position:relative;overflow:hidden}
+.dstrip::before{content:"";position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='ns'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' seed='7'/%3E%3CfeColorMatrix values='0 0 0 0 1  0 0 0 0 0.92  0 0 0 0 0.78  0 0 0 0.04 0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23ns)'/%3E%3C/svg%3E");opacity:0.6;pointer-events:none}
+.dstrip>*{position:relative}
+.ds-c:not(:first-child){border-left:1px solid rgba(255,255,255,0.12);padding-left:14px}
+.ds-a{font-family:var(--mono);font-size:9px;color:var(--on2);letter-spacing:1.5px;font-weight:700}
+.ds-n{font-size:20px;color:var(--on);font-weight:800;margin-top:2px}
+.ds-d{font-size:9px;color:var(--on2);margin-top:1px}
+.icard{background:var(--bg2);border:1px solid var(--ln);padding:8px 12px;margin-bottom:5px}
+.icard-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px}
+.icard-lb{font-family:var(--mono);font-size:9px;color:var(--acc);letter-spacing:2px;font-weight:700}
+.icard-sess{font-family:var(--mono);font-size:9px;color:var(--ink3);letter-spacing:1.5px;font-weight:600}
+.icard.dark{background:var(--dk);border-color:var(--dk)}
+.icard.dark .icard-lb{color:var(--acc3)}.icard.dark .bth{color:var(--on)}.icard.dark .bt{color:var(--on2)}.icard.dark .bt strong{color:var(--on)}.icard.dark .icard-sess{color:var(--on2)}
+.pill{display:inline-block;font-family:var(--mono);font-size:9px;color:var(--acc);background:rgba(184,83,42,0.1);padding:1px 5px;letter-spacing:0.08em;text-transform:uppercase;font-weight:600;border-radius:2px;margin:1px 2px 0 0}
+.fig{font-family:var(--mono);font-size:10px;color:var(--ink3);letter-spacing:1.5px;font-weight:700;margin:6px 0 4px}
+.pit{border-left:3px solid var(--ink);padding:8px 14px;margin:6px 0}
+.pit-lb{font-family:var(--mono);font-size:10px;color:var(--ink3);letter-spacing:2px;font-weight:700;margin-bottom:4px}
+.pit-h{font-size:12.5px;color:var(--ink);font-weight:700;line-height:1.3}
+.pit-d{font-size:11px;color:var(--ink2);line-height:1.5;margin-bottom:5px}
+.quote{border-left:3px solid var(--ink);padding:8px 14px;margin:6px 0}
+.quote-src{font-family:var(--mono);font-size:10px;color:var(--ink3);letter-spacing:2px;font-weight:700;margin-bottom:4px}
+.quote-q{font-family:var(--serif);font-size:13px;color:var(--ink);font-weight:700;font-style:italic;line-height:1.4}
+.quote-a{font-size:11px;color:var(--ink2);margin-top:2px}
+.chk{display:grid;grid-template-columns:12px 1fr;gap:8px;margin-bottom:4px}
+.chk-b{width:12px;height:12px;border:1.2px solid var(--ink);margin-top:2px}
+.chk-t{font-size:12px;color:var(--ink2);line-height:1.5}
+.spacer{flex:1}
+
+
+
+/* ═══ PRESENTATION MODE ═══ */
+html,body{margin:0;padding:0;overflow:hidden;height:100vh;width:100vw;background:#0e0a06}
+.deck{scrollbar-width:none;-ms-overflow-style:none;background:#0e0a06}
+.deck::-webkit-scrollbar{display:none}
+.stage{padding:0;background:#0e0a06;display:flex;align-items:center;justify-content:center}
+
+/* ═══ TOOLBAR (항상 상단 고정) ═══ */
+.toolbar{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:center;justify-content:center;gap:6px;padding:6px 20px;background:rgba(14,10,6,0.92);backdrop-filter:blur(10px);border-bottom:1px solid rgba(255,255,255,0.08);transition:opacity .3s}
+.toolbar button{background:rgba(255,255,255,0.08);color:#ccc;border:1px solid rgba(255,255,255,0.12);padding:5px 14px;font-family:var(--mono);font-size:10px;letter-spacing:1.5px;cursor:pointer;border-radius:3px;text-transform:uppercase;font-weight:600;transition:all .15s}
+.toolbar button:hover{background:var(--acc);color:#fff;border-color:var(--acc)}
+.toolbar button.on{background:var(--acc2);color:#fff;border-color:var(--acc)}
+.toolbar .pg{background:none;border:none;color:rgba(255,255,255,0.5);cursor:default;font-size:11px;padding:5px 10px;min-width:70px;text-align:center}
+.toolbar .pg:hover{background:none;color:rgba(255,255,255,0.5)}
+.toolbar .sep{width:1px;height:18px;background:rgba(255,255,255,0.1);margin:0 4px}
+
+/* ═══ EDIT MODE ═══ */
+body.editing .bth,body.editing .bt,body.editing .co-main,body.editing .co p,
+body.editing .cod-main,body.editing .cod p,body.editing .hl-title,body.editing .hl-lede,
+body.editing .pit-h,body.editing .pit-d,body.editing .quote-q,body.editing .chk-t{
+  outline:1px dashed rgba(184,83,42,0.35);outline-offset:1px;cursor:text}
+body.editing .bth:focus,body.editing .bt:focus,body.editing .co-main:focus,
+body.editing .hl-title:focus,body.editing .hl-lede:focus,
+body.editing .cod-main:focus,body.editing .pit-h:focus,body.editing .quote-q:focus{
+  outline:2px solid var(--acc);background:rgba(184,83,42,0.06)}
+
+
+
+/* ═══ PRINT / PDF — 1:1 스케일, 16:9 정확 ═══ */
+@media print{
+  @page{size:423.33mm 237.5mm;margin:0}
+  *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
+  html,body{overflow:visible!important;height:auto!important;width:auto!important;background:#fff!important;margin:0!important;padding:0!important}
+  .deck{overflow:visible!important;height:auto!important;scroll-snap-type:none!important;background:#fff!important}
+  .stage{min-height:0!important;height:auto!important;width:auto!important;page-break-after:always;page-break-inside:avoid;padding:0!important;margin:0!important;background:#fff!important;display:block!important;overflow:visible!important}
+  .stage:last-child{page-break-after:avoid}
+  .slide{transform:none!important;box-shadow:none!important;width:1600px!important;height:900px!important;margin:0!important;position:relative!important;overflow:visible!important}
+  .toolbar{display:none!important}
+  .hbar,.fbar,.bd,.hl,.hl-rule{position:absolute!important}
+}
+
+</style>
+</head>
+<body>
+<div class="deck" id="deck">
+
+<!-- ═══ 01 COVER ═══ -->
+<div class="stage"><div class="slide" data-title="Cover">
+  <div class="hbar"><div class="hbar-l">SESSION 02 · TOOL ATLAS</div><div class="hbar-r">공공 AI 전문인재 양성과정 · 8주 실전 여정</div></div>
+  <div style="position:absolute;top:56px;left:80px;display:flex;align-items:center;gap:14px;font-family:var(--mono);font-size:10px;color:var(--acc);letter-spacing:2.5px;font-weight:600"><div style="width:22px;height:8px;background:var(--acc)"></div>PUBLIC AI EXPERT PROGRAM · 2026</div>
+  <div style="position:absolute;top:56px;right:80px;font-family:var(--mono);font-size:10px;color:var(--ink3);letter-spacing:2px;text-align:right;line-height:1.6">Module 02 / Session 02<br>Hub Leader Track</div>
+  <div style="position:absolute;top:140px;right:80px;font-family:var(--serif);font-size:260px;line-height:1;color:var(--acc);font-weight:300;opacity:0.07;letter-spacing:-0.06em;pointer-events:none;font-style:italic">02</div>
+  <div style="position:absolute;top:180px;left:80px;right:80px;bottom:120px;display:grid;grid-template-columns:1fr 360px;gap:56px">
+    <div>
+      <div style="font-family:var(--mono);font-size:10px;color:var(--acc);letter-spacing:3px;font-weight:700;margin-bottom:12px">SESSION 02</div>
+      <div style="font-family:var(--serif);font-weight:700;font-size:56px;line-height:1.06;letter-spacing:-0.03em;color:var(--ink)">프론티어 모델 심층 탐구와 AI 도구 생태계 50선</div>
+      <div style="width:56px;height:2px;background:var(--acc);margin:18px 0 14px"></div>
+      <div style="font-family:var(--serif);font-size:17px;color:var(--ink);font-weight:600;line-height:1.45">재료 창고를 가득 채우는 시간</div>
+      <p style="margin-top:14px;font-size:13px;color:var(--ink2);line-height:1.7;max-width:580px"><strong style="color:var(--ink)">Part A.</strong> 플래그십 모델 심층 — ChatGPT·Claude·Gemini의 숨은 킥 + 로컬 모델 체험 + 라이브 비교 시연. <strong style="color:var(--ink)">Part B.</strong> AI 도구 생태계 50선 카테고리 투어 + "5분 파악 루틴" 체크리스트. <strong style="color:var(--ink)">Part C.</strong> Toolify·ProductHunt·HuggingFace 자유 탐색 워크샵 + 결합 설계서 작성.</p>
+    </div>
+    <div style="align-self:end;border-top:1px solid var(--ink);padding-top:14px">
+      <div style="display:grid;grid-template-columns:85px 1fr;gap:10px;padding:7px 0;border-bottom:1px solid var(--ln);font-size:12px"><span style="font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--ink3);font-weight:700">PROGRAM</span><span style="font-family:var(--serif);color:var(--ink);font-weight:600">공공 AI 전문인재 양성과정</span></div>
+      <div style="display:grid;grid-template-columns:85px 1fr;gap:10px;padding:7px 0;border-bottom:1px solid var(--ln);font-size:12px"><span style="font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--ink3);font-weight:700">SESSION</span><span style="font-family:var(--serif);color:var(--ink);font-weight:600">02 / 08</span></div>
+      <div style="display:grid;grid-template-columns:85px 1fr;gap:10px;padding:7px 0;border-bottom:1px solid var(--ln);font-size:12px"><span style="font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--ink3);font-weight:700">GOAL</span><span style="font-family:var(--serif);color:var(--ink);font-weight:600">새 서비스가 나오면 5분 안에 파악하는 적응력</span></div>
+      <div style="display:grid;grid-template-columns:85px 1fr;gap:10px;padding:7px 0;border-bottom:1px solid var(--ln);font-size:12px"><span style="font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--ink3);font-weight:700">FORMAT</span><span style="font-family:var(--serif);color:var(--ink);font-weight:600">강의·시연 120m + 워크샵 60m</span></div>
+      <div style="display:grid;grid-template-columns:85px 1fr;gap:10px;padding:7px 0;font-size:12px"><span style="font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--ink3);font-weight:700">PREREQ</span><span style="font-family:var(--serif);color:var(--ink);font-weight:600">1차시 환경 세팅 완료 + LLM 4종 로그인</span></div>
+    </div>
+  </div>
+  <div style="position:absolute;bottom:56px;left:80px;font-family:var(--mono);font-size:10px;color:var(--ink3);letter-spacing:2px">— Editorial Warm Edition · v1.0</div>
+  <div style="position:absolute;bottom:56px;right:80px;font-size:12px;color:var(--ink2);text-align:right;line-height:1.6;max-width:480px">거점리더의 무기는 알고 있는 도구의 개수가 아니라<br>새 서비스가 나와도 당황하지 않는 적응력이다.</div>
+</div></div>
+
+<!-- ═══ 02 A-1 ChatGPT ═══ -->
+<div class="stage"><div class="slide" data-title="A-1 ChatGPT">
+  <div class="hbar"><div class="hbar-l">MODULE 02 · PART A-1 · CHATGPT DEEP DIVE</div><div class="hbar-r">공공 AI 전문인재 양성과정 · 8주 실전 여정</div></div>
+  <div class="hl">
+    <div class="hl-kicker">PART A-1 · CHATGPT 심층 탐구 — 남들이 잘 모르는 킥 · 15MIN</div>
+    <div class="hl-title">ChatGPT — Projects·Custom GPTs·Canvas·Agent Mode·Deep Research·Memory·o3</div>
+    <div class="hl-lede">단순 채팅을 넘어 "작업 플랫폼"으로 진화한 기능들. 각 기능이 공공 업무에서 어떻게 쓰이는지 맥락과 함께 시연한다.</div>
+    <div class="hl-bar"></div>
+  </div>
+  <div class="hl-rule"></div>
+  <div class="bd col3">
+    <div class="col">
+      <div class="sh"><span class="sh-n">PROJECTS · CUSTOM GPTs</span><span class="sh-t">작업 공간 + 나만의 GPT</span></div>
+      <div class="sh-line"></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">PROJECTS</span><span class="icard-sess">chatgpt.com</span></div>
+        <div class="bth">채팅·파일·지침을 하나의 프로젝트로 묶는 작업 공간</div>
+        <p class="bt">같은 프로젝트 안에서 대화하면 항상 맥락 유지. 파일 40개 업로드(Team). <strong>2025.10부터 무료 포함 전원 공유 기능 개방.</strong> 공공: 부서별 프로젝트를 만들어 팀원과 공유.</p>
+      </div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">CUSTOM GPTs</span><span class="icard-sess">GPT Store</span></div>
+        <div class="bth">시스템 프롬프트 + 파일 + API(Actions) = 나만의 GPT</div>
+        <p class="bt">GPT Store에서 남이 만든 것도 가져다 쓸 수 있다. 공공: <strong>"민원 분류 GPT", "예산 검토 GPT"</strong> 같은 업무 특화 GPT를 거점리더가 만들어 부서에 배포.</p>
+      </div>
+      <div class="spacer"></div>
+      <div class="dstrip">
+        <div class="ds-c"><div class="ds-a">FILES</div><div class="ds-n">40개</div><div class="ds-d">프로젝트당 (Team)</div></div>
+        <div class="ds-c"><div class="ds-a">SHARE</div><div class="ds-n">전원</div><div class="ds-d">무료 포함 공유 가능</div></div>
+        <div class="ds-c"><div class="ds-a">GPT STORE</div><div class="ds-n">공개</div><div class="ds-d">커뮤니티 GPT 활용</div></div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">CANVAS · AGENT MODE</span><span class="sh-t">편집 작업 공간 + 멀티스텝 자동</span></div>
+      <div class="sh-line"></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">CANVAS</span><span class="icard-sess">편집 공간</span></div>
+        <div class="bth">채팅 옆에 열리는 편집 작업 공간 — 문서·코드를 나란히</div>
+        <p class="bt">특정 구간만 하이라이트해서 수정 요청 가능. Claude Artifacts, Cursor와 유사. 공공: 보고서 초안을 Canvas에서 작성하면서 실시간 AI 수정.</p>
+      </div>
+      <div class="icard dark"><div class="icard-top"><span class="icard-lb">AGENT MODE ★</span><span class="icard-sess">Plus/Pro</span></div>
+        <div class="bth">멀티스텝 작업을 자동 수행 — Drive 검색→정리→보고서</div>
+        <p class="bt">Google Drive에서 파일을 가져오고, 웹을 검색하고, 결과를 정리하는 등 <strong>여러 단계를 순차 실행.</strong> Canvas와 달리 외부 도구 연결 가능. 유료 플랜.</p>
+      </div>
+      <div class="spacer"></div>
+      <div class="co">
+        <div class="co-lb">CANVAS vs AGENT MODE</div>
+        <div class="co-main">Canvas = 문서 편집 협업 / Agent = 도구 연결 자동화</div>
+        <p>Canvas는 외부 연결 불가. Agent Mode는 Drive·웹·API 연결 가능. 용도가 다르다.</p>
+      </div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">DEEP RESEARCH · o3</span><span class="sh-t">종합 리서치 + 추론 모델</span></div>
+      <div class="sh-line"></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">DEEP RESEARCH</span><span class="icard-sess">종합 리포트</span></div>
+        <div class="bth">여러 소스 검색 → 종합 리서치 보고서 자동 작성</div>
+        <p class="bt">중간에 멈추고 방향 수정 가능. <strong>Connectors로 내부 데이터(Drive, Notion)도 연결.</strong> PDF 내보내기 지원. 공공: 정책 트렌드 리서치 보고서 자동 생성.</p>
+      </div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">MEMORY</span><span class="icard-sess">개인화</span></div>
+        <div class="bth">대화에서 사용자 정보를 기억 → 다음 대화에 반영</div>
+        <p class="bt">프로젝트별 메모리 설정 가능. 사용자 완전 제어(삭제·수정). 공공: "내가 ○○부서 주무관이고 담당 업무는 △△" 한 번만 알려주면 이후 자동 반영.</p>
+      </div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">o3 추론 모델</span><span class="icard-sess">REASONING</span></div>
+        <div class="bth">"생각하는 시간" → 복잡 추론·법령 해석 정확도 상승</div>
+        <p class="bt">1차시 A-2 ⑥에서 소개한 Reasoning 모델의 실제 체험. 대신 응답 시간·비용 증가. 공공: 법령 해석, 다단계 행정 판단에 적합.</p>
+      </div>
+      <div class="spacer"></div>
+      <div class="pit">
+        <div class="pit-lb">PITFALL · ChatGPT 활용 시</div>
+        <div class="pit-h">▸ 장문 일관성이 Claude 대비 약함</div>
+        <div class="pit-d">법령 전문 같은 장문 처리는 Claude가 유리. 용도별 모델 선택이 핵심.</div>
+      </div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">02 · 프론티어 모델 심층 탐구와 AI 도구 생태계 50선</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">002 / 011</span></div></div>
+</div></div>
+
+<!-- ═══ 03 A-2 Claude ═══ -->
+<div class="stage"><div class="slide" data-title="A-2 Claude">
+  <div class="hbar"><div class="hbar-l">MODULE 02 · PART A-2 · CLAUDE DEEP DIVE</div><div class="hbar-r">공공 AI 전문인재 양성과정 · 8주 실전 여정</div></div>
+  <div class="hl">
+    <div class="hl-kicker">PART A-2 · CLAUDE 심층 탐구 — Projects·Skills·Artifacts·200K 컨텍스트 · 15MIN</div>
+    <div class="hl-title">Claude — 긴 문서·법령 처리, 추론 정합성, 코드 품질에서 차별화</div>
+    <div class="hl-lede">공공 업무에서 법령·규정·장문 보고서 처리에 강점. Skills로 반복 작업 패턴을 모듈화하는 것이 거점리더 시나리오의 핵심.</div>
+    <div class="hl-bar"></div>
+  </div>
+  <div class="hl-rule"></div>
+  <div class="bd col3">
+    <div class="col">
+      <div class="sh"><span class="sh-n">PROJECTS · SKILLS</span><span class="sh-t">맥락 유지 + 작업 패턴 모듈화</span></div>
+      <div class="sh-line"></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">PROJECTS</span><span class="icard-sess">claude.ai</span></div>
+        <div class="bth">프로젝트 지식(Knowledge) — 업로드 문서를 전 대화에서 자동 참조</div>
+        <p class="bt">ChatGPT Projects와 유사하지만 <strong>프로젝트 지식 개념</strong>이 있어 업로드 문서가 모든 대화에서 자동으로 맥락에 포함된다.</p>
+      </div>
+      <div class="icard dark"><div class="icard-top"><span class="icard-lb">SKILLS ★</span><span class="icard-sess">2025.10 공개</span></div>
+        <div class="bth">반복 작업 패턴을 SKILL.md로 저장·재사용 — 1,234+ 커뮤니티 스킬</div>
+        <p class="bt">문서 스타일·분석 절차·출력 형식을 모듈화. 다른 프로젝트에서도 재사용. <strong>거점리더가 "HWPX 보고서 스킬", "민원 답변 스킬"을 만들어 동료에 배포.</strong> 이것이 1차시 A-3 ③에서 소개한 컨텍스트 단계의 핵심 도구.</p>
+      </div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">STYLES</span><span class="icard-sess">톤 프리셋</span></div>
+        <div class="bth">응답 톤·길이·형식을 저장 — "공문서체" "브리핑체"</div>
+        <p class="bt">매번 "공문서 어투로 작성해줘"를 입력하지 않아도 됨. 스타일 한 번 설정으로 해결.</p>
+      </div>
+      <div class="spacer"></div>
+      <div class="dstrip">
+        <div class="ds-c"><div class="ds-a">CONTEXT</div><div class="ds-n">200K</div><div class="ds-d">A4 약 300페이지</div></div>
+        <div class="ds-c"><div class="ds-a">SKILLS</div><div class="ds-n">1,234+</div><div class="ds-d">커뮤니티 스킬</div></div>
+        <div class="ds-c"><div class="ds-a">ZDR</div><div class="ds-n">가능</div><div class="ds-d">비학습 보장 계약</div></div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">ARTIFACTS · COMPUTER USE</span><span class="sh-t">실시간 렌더링 + 화면 제어</span></div>
+      <div class="sh-line"></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">ARTIFACTS</span><span class="icard-sess">실시간 미리보기</span></div>
+        <div class="bth">코드·문서·시각화를 별도 패널에 렌더링</div>
+        <p class="bt">React·HTML·Mermaid·SVG를 실시간 미리보기. ChatGPT Canvas와 유사하지만 <strong>코드 실행 결과를 즉시 렌더링</strong>하는 점이 차별화. 공공: 데이터 시각화를 즉석 생성해 보고서에 삽입.</p>
+      </div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">COMPUTER USE</span><span class="icard-sess">실험적</span></div>
+        <div class="bth">에이전트가 화면을 보고 마우스·키보드를 직접 조작</div>
+        <p class="bt">레거시 시스템(온나라, 새올 등)과 AI를 연결하는 가능성. 아직 실험적이지만 <strong>API가 없는 시스템도 AI가 조작할 수 있다</strong>는 것이 핵심. 6차시에서 다시 다룸.</p>
+      </div>
+      <div class="spacer"></div>
+      <div class="co">
+        <div class="co-lb">CLAUDE vs CHATGPT · 판단 기준</div>
+        <div class="co-main">장문·법령·코드 → Claude / 도구 연결·검색 → ChatGPT</div>
+        <p>Claude: 200K 컨텍스트, 추론 정합성, 코드 품질. ChatGPT: Agent Mode, Deep Research, Workspace 연동. <strong>업무 특성에 따라 선택.</strong></p>
+      </div>
+      <div class="pit">
+        <div class="pit-lb">PITFALL</div>
+        <div class="pit-h">▸ 한국어 관용 표현이 간혹 부자연스러움</div>
+        <div class="pit-d">Styles에서 "한국어 공문서 톤"을 설정하면 상당 부분 해결된다.</div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">DEMO · 실제 화면</span><span class="sh-t">시연 시 보여줄 것</span></div>
+      <div class="sh-line"></div>
+      <div class="bth">시연 1. Projects에 법령 PDF 업로드 → 질의응답</div>
+      <p class="bt">법령 전문 PDF를 프로젝트에 업로드하고 "제3조 2항의 의미를 설명해줘"와 같은 질문. 200K 컨텍스트의 위력을 체험.</p>
+      <div class="bth">시연 2. Skills 설정 화면</div>
+      <p class="bt">Settings → Skills 메뉴에서 기존 스킬 목록 확인. "이 스킬을 부서 동료에게 어떻게 배포하는가" 절차 설명.</p>
+      <div class="bth">시연 3. Artifacts 데이터 시각화</div>
+      <p class="bt">"이 CSV 데이터로 부서별 민원 건수 차트를 그려줘" → Artifacts 패널에서 즉시 렌더링. 코드 수정 → 즉시 반영.</p>
+      <div class="spacer"></div>
+      <div class="cod">
+        <div class="cod-lb">KEY INSIGHT · 거점리더 시나리오</div>
+        <div class="cod-main">Skills + Styles = 부서 표준 AI 환경</div>
+        <p>거점리더가 "민원 답변 스킬" + "공문서 스타일"을 세팅해두면, 동료는 프로젝트에 들어가서 질문만 하면 된다. <strong>AI 숙련도가 낮은 동료도 일관된 품질의 산출물을 받을 수 있다.</strong></p>
+      </div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">02 · 프론티어 모델 심층 탐구와 AI 도구 생태계 50선</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">003 / 011</span></div></div>
+</div></div>
+
+<!-- ═══ 04 A-3/A-4 Gemini + Others ═══ -->
+<div class="stage"><div class="slide" data-title="A-3 A-4 Gemini Others">
+  <div class="hbar"><div class="hbar-l">MODULE 02 · PART A-3·4 · GEMINI & ALTERNATIVES</div><div class="hbar-r">공공 AI 전문인재 양성과정 · 8주 실전 여정</div></div>
+  <div class="hl">
+    <div class="hl-kicker">PART A-3·4 · GEMINI·PERPLEXITY·GROK·MS COPILOT + 로컬 모델 체험 · 20MIN</div>
+    <div class="hl-title">Gemini Workspace 통합 + Perplexity 리서치 + 로컬 모델(LM Studio·AnythingLLM·MSTY)</div>
+    <div class="hl-lede">각 모델의 차별화 포인트와 공공 업무 적합성을 비교한다. 로컬 모델 도구를 추가 체험하고, 라이브 비교 시연으로 마무리.</div>
+    <div class="hl-bar"></div>
+  </div>
+  <div class="hl-rule"></div>
+  <div class="bd col3">
+    <div class="col">
+      <div class="sh"><span class="sh-n">GEMINI</span><span class="sh-t">Google 생태계 + 1M+ 컨텍스트</span></div>
+      <div class="sh-line"></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">DEEP RESEARCH</span><span class="icard-sess">gemini.google.com</span></div>
+        <div class="bth">수십 개 소스 자동 검색 → 종합 리서치 보고서</div>
+        <p class="bt">Google 검색 기반이라 웹 소스 접근 범위가 넓다. ChatGPT Deep Research와 비교 체험.</p>
+      </div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">GEMS</span></div>
+        <div class="bth">Google 버전 Custom GPT — 시스템 지침 설정</div>
+        <p class="bt">"정책 분석 Gem", "보도자료 작성 Gem" 등. ChatGPT Custom GPTs와 동일 개념.</p>
+      </div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">WORKSPACE 통합</span></div>
+        <div class="bth">Gmail·Drive·Docs·Sheets와 직접 연결</div>
+        <p class="bt">"내 드라이브에서 지난달 회의록 찾아서 요약해줘" 가능. <strong>Google Workspace 쓰는 기관이면 즉시 활용.</strong></p>
+      </div>
+      <div class="spacer"></div>
+      <div class="dstrip">
+        <div class="ds-c"><div class="ds-a">CONTEXT</div><div class="ds-n">1M+</div><div class="ds-d">책 한 권 통째로</div></div>
+        <div class="ds-c"><div class="ds-a">WORKSPACE</div><div class="ds-n">통합</div><div class="ds-d">Gmail·Drive·Docs</div></div>
+        <div class="ds-c"><div class="ds-a">CANVAS</div><div class="ds-n">지원</div><div class="ds-d">편집 공간 (2025~)</div></div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">ALTERNATIVES</span><span class="sh-t">Perplexity·Grok·Copilot·중국 모델</span></div>
+      <div class="sh-line"></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">PERPLEXITY</span><span class="icard-sess">perplexity.ai</span></div>
+        <div class="bth">출처 명시 AI 검색 — Spaces·Pages·Focus 모드</div>
+        <p class="bt">Spaces(주제별 리서치 공간, 팀 공유), Pages(결과를 웹페이지로 발행). 공공: 정책 벤치마킹, 논문 검색에 최적.</p>
+      </div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">GROK · MS COPILOT</span></div>
+        <div class="bth">Grok: 실시간 X 트렌드 / Copilot: M365 연동</div>
+        <p class="bt">Grok: 여론 동향 파악. <strong>MS Copilot: Word·Excel·PPT 연동</strong> — M365 쓰는 공공기관에서 접근성 가장 높음.</p>
+      </div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">DeepSeek · Qwen · MiniMax</span><span class="icard-sess">⚠ 데이터 주의</span></div>
+        <div class="bth">중국 계열 모델 — 사이트에 한 번 들어가보는 것으로 정리</div>
+        <p class="bt">모델 성능은 뛰어나지만 <strong>공공 데이터 업로드는 엄격히 금지.</strong> "이런 게 있다" 수준의 인식.</p>
+      </div>
+      <div class="spacer"></div>
+      <div class="pit">
+        <div class="pit-lb">PITFALL · 모델 선택 판단</div>
+        <div class="pit-h">▸ "최신 모델이 항상 최고" 는 아니다</div>
+        <div class="pit-d">업무 특성(장문/검색/코드/속도)에 맞는 선택이 거점리더의 판단. 이 비교 감각이 2차시의 핵심 산출물.</div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">LOCAL MODELS</span><span class="sh-t">LM Studio·AnythingLLM·MSTY</span></div>
+      <div class="sh-line"></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">LM STUDIO</span><span class="icard-sess">lmstudio.ai</span></div>
+        <div class="bth">GUI 기반 로컬 모델 관리 — 검색·다운로드·채팅 원스톱</div>
+        <p class="bt">Ollama가 터미널이라면 LM Studio는 GUI. 비개발자에게 더 접근성 높음. GGUF 파일 관리.</p>
+      </div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">ANYTHINGLLM</span><span class="icard-sess">anythingllm.com</span></div>
+        <div class="bth">문서 업로드 → 바로 RAG Q&A — Ollama 연동</div>
+        <p class="bt">7차시 RAG 파이프라인의 가장 쉬운 입문. PDF 올리고 질문하면 답변. 완전 로컬.</p>
+      </div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">MSTY</span><span class="icard-sess">msty.app</span></div>
+        <div class="bth">여러 모델을 동시에 비교하는 채팅 인터페이스</div>
+        <p class="bt">같은 질문을 Gemma/Llama/Qwen에 동시에 던져 응답 차이 확인. 모델 선택 판단 연습.</p>
+      </div>
+      <div class="spacer"></div>
+      <div class="cod">
+        <div class="cod-lb">LIVE COMPARISON · 라이브 비교 시연</div>
+        <div class="cod-main">같은 민원 시나리오를 ChatGPT·Claude·Gemini에 동시 입력</div>
+        <p>"도로 포트홀 신고 민원을 분류하고 답변 초안을 작성해줘." 관찰: 분류 정확도, 답변 톤, 출처 제시, 응답 속도, 한국어 자연스러움.</p>
+      </div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">02 · 프론티어 모델 심층 탐구와 AI 도구 생태계 50선</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">004 / 011</span></div></div>
+</div></div>
+
+<!-- ═══ 05 B-1~4 50선 전반 ═══ -->
+<div class="stage"><div class="slide" data-title="B 50Tools 1">
+  <div class="hbar"><div class="hbar-l">MODULE 02 · PART B · AI TOOL ATLAS 50</div><div class="hbar-r">공공 AI 전문인재 양성과정 · 8주 실전 여정</div></div>
+  <div class="hl">
+    <div class="hl-kicker">PART B · AI 도구 생태계 50선 카테고리 투어 — 전반부 · 60MIN</div>
+    <div class="hl-title">문서·슬라이드 생성 + 이미지 생성·편집 + 영상 생성 (20개 도구)</div>
+    <div class="hl-lede">빠른 호흡으로 훑되, 각 도구의 UI 공통 패턴을 관찰한다. "새 서비스가 나오면 5분 안에 파악하는 루틴"을 만드는 것이 목표.</div>
+    <div class="hl-bar"></div>
+  </div>
+  <div class="hl-rule"></div>
+  <div class="bd col3">
+    <div class="col">
+      <div class="sh"><span class="sh-n">B-1 · 문서·슬라이드</span><span class="sh-t">5개 도구</span></div>
+      <div class="sh-line"></div>
+      <div class="fig">TABLE · 문서·슬라이드 생성 도구</div>
+      <table class="mtbl"><thead><tr><th>도구</th><th>핵심</th><th>공공 활용</th></tr></thead><tbody>
+        <tr><td>Gamma</td><td>주제→PPT 자동 제작</td><td>브리핑 슬라이드</td></tr>
+        <tr><td>Genspark</td><td>올인원 리서치+위키</td><td>정책 리서치 정리</td></tr>
+        <tr><td>Napkin AI</td><td>텍스트→다이어그램</td><td>회의 결과 시각화</td></tr>
+        <tr><td>Codia AI</td><td>NotebookLM→PPT</td><td>녹취→슬라이드</td></tr>
+        <tr><td>Beautiful.ai</td><td>디자인 자동 조정</td><td>비디자이너 PPT</td></tr>
+      </tbody></table>
+      <div class="sh" style="margin-top:8px"><span class="sh-n">B-2 · 이미지 생성</span><span class="sh-t">5개 도구</span></div>
+      <div class="sh-line"></div>
+      <table class="mtbl"><thead><tr><th>도구</th><th>핵심</th></tr></thead><tbody>
+        <tr><td>Midjourney</td><td>최고 퀄리티 (디스코드)</td></tr>
+        <tr><td>Ideogram</td><td>텍스트 삽입 이미지 강점</td></tr>
+        <tr><td>Flux</td><td>오픈소스, HF 직접 실행</td></tr>
+        <tr><td>Recraft</td><td>벡터 일러스트·아이콘</td></tr>
+        <tr><td>Krea AI</td><td>스케치→실시간 고화질</td></tr>
+      </tbody></table>
+      <div class="spacer"></div>
+      <div class="dstrip">
+        <div class="ds-c"><div class="ds-a">문서·슬라이드</div><div class="ds-n">5</div><div class="ds-d">Gamma, Napkin 등</div></div>
+        <div class="ds-c"><div class="ds-a">이미지 생성</div><div class="ds-n">5</div><div class="ds-d">Midjourney, Flux 등</div></div>
+        <div class="ds-c"><div class="ds-a">편집·업스케일</div><div class="ds-n">2</div><div class="ds-d">Magnific, Krea</div></div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">B-4 · 영상 생성</span><span class="sh-t">5개 도구</span></div>
+      <div class="sh-line"></div>
+      <div class="fig">TABLE · 영상 생성 도구</div>
+      <table class="mtbl"><thead><tr><th>도구</th><th>핵심</th><th>비고</th></tr></thead><tbody>
+        <tr><td>Runway</td><td>Gen-3, 모션 브러시</td><td>가장 넓은 편집</td></tr>
+        <tr><td>Kling AI</td><td>극강 현실감</td><td>중국, 데이터 주의</td></tr>
+        <tr><td>Sora</td><td>OpenAI 영상 엔진</td><td>ChatGPT 통합</td></tr>
+        <tr><td>Pika</td><td>3초 클립 최적화</td><td>빠른 프로토타입</td></tr>
+        <tr><td>Hailuo</td><td>무료 AI 영상</td><td>실험용</td></tr>
+      </tbody></table>
+      <div class="co">
+        <div class="co-lb">공공 영상 활용 시나리오</div>
+        <div class="co-main">정책 홍보 영상·캠페인 클립·교육 자료 제작</div>
+        <p>전문 편집 인력 없이 텍스트/이미지만으로 영상 생성. 3차시 워크플로우에서 "보고서→스크립트→TTS→영상" 파이프라인으로 연결.</p>
+      </div>
+      <div class="sh" style="margin-top:8px"><span class="sh-n">B-5 · 음성·음악</span><span class="sh-t">3개 도구</span></div>
+      <div class="sh-line"></div>
+      <table class="mtbl"><thead><tr><th>도구</th><th>핵심</th><th>공공 활용</th></tr></thead><tbody>
+        <tr><td>ElevenLabs</td><td>가장 현실적 TTS+음성복제</td><td>안내 방송·내레이션</td></tr>
+        <tr><td>Suno</td><td>가사+장르→노래 생성</td><td>캠페인 징글</td></tr>
+        <tr><td>Udio</td><td>Suno 대안, 장르 다양</td><td>배경음악</td></tr>
+      </tbody></table>
+      <div class="spacer"></div>
+      <div class="pit">
+        <div class="pit-lb">PITFALL · 미디어 도구 공공 사용 시</div>
+        <div class="pit-h">▸ 저작권·초상권 확인 필수</div>
+        <div class="pit-d">AI 생성 이미지·영상의 저작권 귀속은 아직 법적으로 불확실. 공공 홍보물에는 주의.</div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">B-6·7·8 · 회의록·번역·논문</span><span class="sh-t">12개 도구</span></div>
+      <div class="sh-line"></div>
+      <div class="fig">회의록·음성→텍스트</div>
+      <table class="mtbl"><thead><tr><th>도구</th><th>핵심</th></tr></thead><tbody>
+        <tr><td>Whisper (OpenAI)</td><td>오픈소스, 로컬 실행 가능</td></tr>
+        <tr><td>클로바노트</td><td>한국어 최적화, 녹음→요약</td></tr>
+        <tr><td>Otter / Fireflies</td><td>영어 회의 자막+요약+액션</td></tr>
+      </tbody></table>
+      <div class="fig">번역</div>
+      <table class="mtbl"><thead><tr><th>도구</th><th>핵심</th></tr></thead><tbody>
+        <tr><td>DeepL</td><td>가장 자연스러운 번역 품질</td></tr>
+        <tr><td>Lilys AI</td><td>유튜브·PDF 한글 분석·요약</td></tr>
+      </tbody></table>
+      <div class="fig">논문·학술 검색</div>
+      <table class="mtbl"><thead><tr><th>도구</th><th>핵심</th></tr></thead><tbody>
+        <tr><td>Elicit</td><td>AI 논문 검색+요약+추출</td></tr>
+        <tr><td>Consensus</td><td>논문 합의 추출</td></tr>
+        <tr><td>Scite</td><td>인용 맥락 분석</td></tr>
+        <tr><td>SciSpace</td><td>논문 PDF→AI Q&A</td></tr>
+        <tr><td>ResearchRabbit</td><td>논문 연결 관계 시각화</td></tr>
+      </tbody></table>
+      <div class="spacer"></div>
+      <div class="cod">
+        <div class="cod-lb">공공 리서치 최적 조합</div>
+        <div class="cod-main">Perplexity + Elicit + NotebookLM</div>
+        <p>Perplexity로 트렌드 검색 → Elicit으로 논문 심층 → NotebookLM에 올려서 팟캐스트까지. 3차시 워크플로우 타입 "논문·리서치"에 직결.</p>
+      </div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">02 · 프론티어 모델 심층 탐구와 AI 도구 생태계 50선</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">005 / 011</span></div></div>
+</div></div>
+
+<!-- ═══ 06 B-9~12 50선 후반 + 5분 루틴 ═══ -->
+<div class="stage"><div class="slide" data-title="B 50Tools 2">
+  <div class="hbar"><div class="hbar-l">MODULE 02 · PART B · AI TOOL ATLAS 50</div><div class="hbar-r">공공 AI 전문인재 양성과정 · 8주 실전 여정</div></div>
+  <div class="hl">
+    <div class="hl-kicker">PART B · AI 도구 생태계 50선 — 후반부 + "5분 파악 루틴" 체크리스트</div>
+    <div class="hl-title">검색·리서치 + 데이터 분석 + 노코드 + AI 트렌드 플랫폼 + 5분 파악 루틴 6단계</div>
+    <div class="hl-lede">나머지 도구를 훑고, 모든 투어를 마친 후 "새 도구를 만났을 때 적용할 6단계 루틴"을 정리한다. 이 루틴이 이 회차의 진짜 산출물.</div>
+    <div class="hl-bar"></div>
+  </div>
+  <div class="hl-rule"></div>
+  <div class="bd col3">
+    <div class="col">
+      <div class="sh"><span class="sh-n">B-9·10 · 검색·데이터</span><span class="sh-t">10개 도구</span></div>
+      <div class="sh-line"></div>
+      <div class="fig">검색·리서치</div>
+      <table class="mtbl"><thead><tr><th>도구</th><th>핵심</th><th>공공 활용</th></tr></thead><tbody>
+        <tr><td>Felo</td><td>다국어 번역 기반 검색</td><td>해외 정책 벤치마킹</td></tr>
+        <tr><td>Exa</td><td>의미 기반 검색 (문장으로)</td><td>유사 사례 발굴</td></tr>
+        <tr><td>Phind</td><td>개발자 특화 검색</td><td>기술 조사</td></tr>
+        <tr><td>Liner</td><td>웹 하이라이트+AI 요약</td><td>자료 수집·정리</td></tr>
+      </tbody></table>
+      <div class="fig">데이터 분석·문서 이해</div>
+      <table class="mtbl"><thead><tr><th>도구</th><th>핵심</th><th>공공 활용</th></tr></thead><tbody>
+        <tr><td>Julius AI</td><td>엑셀→통계+차트 자동</td><td>비전문가 데이터 분석</td></tr>
+        <tr><td>NotebookLM</td><td>PDF→Q&A+팟캐스트</td><td>교안·보고서 학습</td></tr>
+        <tr><td>Rows AI</td><td>스프레드시트+AI 함수</td><td>엑셀 대안</td></tr>
+      </tbody></table>
+      <div class="spacer"></div>
+      <div class="co">
+        <div class="co-lb">공공 데이터 분석 최적 조합</div>
+        <div class="co-main">Julius AI(빠른 시각화) + NotebookLM(문서 이해)</div>
+        <p>Julius에 엑셀 올려서 즉석 차트 → NotebookLM에 보고서 올려서 핵심 요약. 4차시 데이터 시각화 회차의 보조 도구.</p>
+      </div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">B-11·12 · 노코드·트렌드</span><span class="sh-t">8개 도구</span></div>
+      <div class="sh-line"></div>
+      <div class="fig">노코드 개발</div>
+      <table class="mtbl"><thead><tr><th>도구</th><th>핵심</th></tr></thead><tbody>
+        <tr><td>v0 (Vercel)</td><td>디자인 설명→React UI 코드</td></tr>
+        <tr><td>Lovable</td><td>프롬프트→작동하는 웹앱</td></tr>
+        <tr><td>Bolt.new</td><td>브라우저에서 풀스택 앱</td></tr>
+      </tbody></table>
+      <div class="fig">AI 트렌드·도구 탐색 플랫폼</div>
+      <table class="mtbl"><thead><tr><th>도구</th><th>핵심</th></tr></thead><tbody>
+        <tr><td>Toolify</td><td>AI 도구 카탈로그+순위+트렌드</td></tr>
+        <tr><td>ProductHunt</td><td>신규 출시 AI 도구 발견+리뷰</td></tr>
+        <tr><td>HuggingFace</td><td>200만+ 모델+Spaces 데모</td></tr>
+        <tr><td>OpenRouter</td><td>여러 AI 모델 API 비교</td></tr>
+        <tr><td>Arena AI</td><td>모델 성능 리더보드</td></tr>
+      </tbody></table>
+      <div class="spacer"></div>
+      <div class="cod">
+        <div class="cod-lb">WORKSHOP PREVIEW</div>
+        <div class="cod-main">Part C에서 Toolify·ProductHunt·HuggingFace를 직접 탐색</div>
+        <p>위 3개 플랫폼에서 각 1개씩 도구를 찾아와서 "내 업무에 어떻게 결합하는가" 설계서를 작성하는 워크샵이 이어진다.</p>
+      </div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">5-MIN ROUTINE</span><span class="sh-t">새 도구 파악 6단계</span></div>
+      <div class="sh-line"></div>
+      <div class="bth">"새 AI 서비스를 처음 만났을 때 5분 안에 파악하는 루틴"</div>
+      <p class="bt">이 체크리스트가 이 회차의 <strong>진짜 산출물</strong>이다. 도구 50개를 외우는 게 아니라, 어떤 도구든 5분 안에 판단할 수 있는 프레임을 갖추는 것.</p>
+      <div class="fig">CHECKLIST · 5분 파악 루틴</div>
+      <div style="border-top:1.2px solid var(--ink);padding-top:6px">
+        <div class="chk"><div class="chk-b"></div><div class="chk-t"><strong>① 입력→출력</strong> 이 도구는 무엇을 받아 무엇을 내보내는가?</div></div>
+        <div class="chk"><div class="chk-b"></div><div class="chk-t"><strong>② 무료 티어</strong> 무료로 쓸 수 있는가? 제한은?</div></div>
+        <div class="chk"><div class="chk-b"></div><div class="chk-t"><strong>③ 데이터 위치</strong> 데이터가 어디에 저장되는가? (미국/유럽/로컬)</div></div>
+        <div class="chk"><div class="chk-b"></div><div class="chk-t"><strong>④ API · MCP</strong> API가 있는가? MCP 서버가 있는가?</div></div>
+        <div class="chk"><div class="chk-b"></div><div class="chk-t"><strong>⑤ 결합 지점</strong> 내 업무의 어떤 단계에 끼워 넣을 수 있는가?</div></div>
+        <div class="chk"><div class="chk-b"></div><div class="chk-t"><strong>⑥ 연결성</strong> 이미 쓰는 도구와 어떻게 연결되는가?</div></div>
+      </div>
+      <div class="spacer"></div>
+      <div class="co">
+        <div class="co-lb">KEY MESSAGE</div>
+        <div class="co-main">도구 50개를 외우지 않는다. 어떤 도구든 5분 안에 판단하는 프레임을 갖춘다</div>
+        <p>이 루틴을 공용 아카이브에 등록하고, 앞으로 새 도구를 발견할 때마다 이 양식으로 기록한다.</p>
+      </div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">02 · 프론티어 모델 심층 탐구와 AI 도구 생태계 50선</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">006 / 011</span></div></div>
+</div></div>
+
+<!-- ═══ 07 C-1 Workshop Exploration ═══ -->
+<div class="stage"><div class="slide" data-title="C-1 Workshop">
+  <div class="hbar"><div class="hbar-l">MODULE 02 · PART C · TOOL DISCOVERY WORKSHOP</div><div class="hbar-r">공공 AI 전문인재 양성과정 · 8주 실전 여정</div></div>
+  <div class="hl">
+    <div class="hl-kicker">PART C-1 · TOOLIFY·PRODUCTHUNT·HUGGINGFACE 자유 탐색 워크샵 · 25MIN</div>
+    <div class="hl-title">3개 플랫폼에서 각 1개씩 도구를 찾아온다 + 5분 파악 루틴 적용</div>
+    <div class="hl-lede">도구를 "소개받는" 것에서 끝나지 않고, 직접 탐색하고 판단하는 경험. 거점리더가 부서에서 새 도구를 발견·평가·도입하는 역할의 실전 연습.</div>
+    <div class="hl-bar"></div>
+  </div>
+  <div class="hl-rule"></div>
+  <div class="bd col3">
+    <div class="col">
+      <div class="sh"><span class="sh-n">TOOLIFY</span><span class="sh-t">toolify.ai — AI 도구 카탈로그</span></div>
+      <div class="sh-line"></div>
+      <div class="bth">카테고리별 필터 + Free 필터로 무료 AI 도구 탐색</div>
+      <p class="bt">Productivity, Data Analysis, Writing, Coding 등 세분화된 카테고리. Free AI Tools 태그로 무료 도구만 필터링 가능. 인기 순위·트렌드·지역별 정렬.</p>
+      <div class="co">
+        <div class="co-lb">탐색 미션</div>
+        <div class="co-main">내 업무에 쓸 수 있는 무료 AI 도구 1개를 찾아온다</div>
+        <p>찾은 도구에 <strong>5분 파악 루틴 6단계</strong>를 적용해 메모한다. ① 입력→출력 ② 무료 범위 ③ 데이터 위치 ④ API 유무 ⑤ 결합 지점 ⑥ 기존 도구 연결</p>
+      </div>
+      <div class="spacer"></div>
+      <div class="pit">
+        <div class="pit-lb">PITFALL · Toolify 탐색 시</div>
+        <div class="pit-h">▸ "Free"라고 적혀 있어도 실제로는 제한적</div>
+        <div class="pit-d">워터마크, 일일 크레딧 제한, 내보내기 제한 등. 실제로 써봐야 알 수 있다.</div>
+        <div class="pit-h">▸ 인기 순위 ≠ 품질 순위</div>
+        <div class="pit-d">Toolify는 에디토리얼 큐레이션이 아니라 인기 신호 기반. 직접 판단 필요.</div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">PRODUCTHUNT</span><span class="sh-t">producthunt.com — 신규 출시 발견</span></div>
+      <div class="sh-line"></div>
+      <div class="bth">"AI Software" · "AI Agents" · "Productivity" 카테고리 최신 도구</div>
+      <p class="bt">매일 새로운 AI 도구가 출시되고, 커뮤니티가 리뷰·투표한다. "이번 주 가장 핫한 AI 도구"를 실시간으로 확인 가능. 개발자·창업자 커뮤니티이므로 기술적 피드백 품질이 높다.</p>
+      <div class="co">
+        <div class="co-lb">탐색 미션</div>
+        <div class="co-main">이번 달 출시된 흥미로운 AI 도구 1개를 찾아온다</div>
+        <p>해당 도구의 ProductHunt 페이지에서 <strong>유저 리뷰 2~3개를 읽고</strong> 장단점을 정리한다. 실제 사용자 피드백이 가장 솔직한 판단 근거.</p>
+      </div>
+      <div class="spacer"></div>
+      <div class="cod">
+        <div class="cod-lb">PRODUCTHUNT 탐색 팁</div>
+        <div class="cod-main">카테고리 → "Most Recent" 정렬 → 상위 5개 확인</div>
+        <p>producthunt.com/categories/ai-software 접속 → Most Recent 또는 Trending 정렬 → 상위 5개의 설명과 리뷰를 빠르게 훑는다. 5분이면 충분.</p>
+      </div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">HUGGINGFACE</span><span class="sh-t">huggingface.co — 200만+ 모델</span></div>
+      <div class="sh-line"></div>
+      <div class="bth">Spaces(데모앱) 탐색 — 모델을 직접 실행해보는 놀이터</div>
+      <p class="bt">huggingface.co/spaces 에서 텍스트 분류, 이미지 생성, 문서 요약 등 수천 개 데모앱을 <strong>브라우저에서 바로 실행</strong>할 수 있다. 모델을 설치하지 않고도 체험 가능.</p>
+      <div class="co">
+        <div class="co-lb">탐색 미션</div>
+        <div class="co-main">공공 업무에 활용 가능한 모델 또는 데모 1개를 찾아온다</div>
+        <p>Spaces 검색창에 "summarize", "classify", "translate" 등 업무 키워드를 입력. 실행해보고 결과 품질을 판단한다.</p>
+      </div>
+      <div class="spacer"></div>
+      <div class="quote">
+        <div class="quote-src">HUGGING FACE · 2026.03</div>
+        <div class="quote-q">"200만+ 모델, 50만 데이터셋, 100만 Spaces. 첫 100만 모델은 1,000일, 두 번째 100만은 335일."</div>
+        <div class="quote-a">— State of Open Source on Hugging Face</div>
+      </div>
+      <div class="dstrip">
+        <div class="ds-c"><div class="ds-a">TOOLIFY</div><div class="ds-n">1개</div><div class="ds-d">무료 도구 찾기</div></div>
+        <div class="ds-c"><div class="ds-a">PH</div><div class="ds-n">1개</div><div class="ds-d">이번 달 신규 도구</div></div>
+        <div class="ds-c"><div class="ds-a">HF</div><div class="ds-n">1개</div><div class="ds-d">Spaces 데모 체험</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">02 · 프론티어 모델 심층 탐구와 AI 도구 생태계 50선</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">007 / 011</span></div></div>
+</div></div>
+
+<!-- ═══ 08 C-2/C-3 결합 설계 + 발표 ═══ -->
+<div class="stage"><div class="slide" data-title="C-2 C-3 Design">
+  <div class="hbar"><div class="hbar-l">MODULE 02 · PART C-2·3 · INTEGRATION DESIGN</div><div class="hbar-r">공공 AI 전문인재 양성과정 · 8주 실전 여정</div></div>
+  <div class="hl">
+    <div class="hl-kicker">PART C-2·3 · 결합 설계서 작성 + 발표·토론 · 35MIN</div>
+    <div class="hl-title">찾은 도구를 내 워크플로우에 어떻게 끼워 넣을 것인가 — 결합 설계서 작성</div>
+    <div class="hl-lede">도구를 "발견"하는 것에서 끝나지 않고, "결합"까지 설계한다. 3차시 워크플로우 오케스트레이션의 사전 연습.</div>
+    <div class="hl-bar"></div>
+  </div>
+  <div class="hl-rule"></div>
+  <div class="bd col3">
+    <div class="col">
+      <div class="sh"><span class="sh-n">결합 설계서</span><span class="sh-t">양식 + 작성 가이드</span></div>
+      <div class="sh-line"></div>
+      <div class="bth">탐색한 3개 도구 중 1개를 골라 작성한다</div>
+      <div class="cod">
+        <div class="cod-lb">INTEGRATION DESIGN SHEET</div>
+        <div class="cod-main">결합 설계서</div>
+        <p style="border-bottom:1px solid rgba(255,255,255,0.1);padding-bottom:5px;margin-bottom:5px"><strong style="color:var(--acc3)">도구명</strong> __________________</p>
+        <p style="border-bottom:1px solid rgba(255,255,255,0.1);padding-bottom:5px;margin-bottom:5px"><strong style="color:var(--acc3)">입력→출력</strong> 무엇을 넣으면 무엇이 나오는가</p>
+        <p style="border-bottom:1px solid rgba(255,255,255,0.1);padding-bottom:5px;margin-bottom:5px"><strong style="color:var(--acc3)">현재 업무 흐름</strong> 이 작업을 지금 어떻게 하고 있는가</p>
+        <p style="border-bottom:1px solid rgba(255,255,255,0.1);padding-bottom:5px;margin-bottom:5px"><strong style="color:var(--acc3)">결합 지점</strong> 기존 흐름의 어느 단계에 끼워 넣는가</p>
+        <p style="border-bottom:1px solid rgba(255,255,255,0.1);padding-bottom:5px;margin-bottom:5px"><strong style="color:var(--acc3)">앞뒤 연결</strong> 앞 단계 도구 → [이 도구] → 뒷 단계 도구</p>
+        <p style="border-bottom:1px solid rgba(255,255,255,0.1);padding-bottom:5px;margin-bottom:5px"><strong style="color:var(--acc3)">데이터 보안</strong> 민감 데이터가 외부로 나가는가?</p>
+        <p style="border-bottom:1px solid rgba(255,255,255,0.1);padding-bottom:5px;margin-bottom:5px"><strong style="color:var(--acc3)">비용</strong> 무료인가? 유료라면 월 얼마?</p>
+        <p><strong style="color:var(--acc3)">미션 카드 연결</strong> 1차시 거점 미션에 기여하는가?</p>
+      </div>
+      <div class="spacer"></div>
+      <div class="co">
+        <div class="co-lb">작성 시간</div>
+        <div class="co-main">20분 — 개인 작업</div>
+        <p>5분 파악 루틴으로 이미 메모한 내용을 설계서 양식에 옮겨 담는다. 핵심은 "결합 지점"과 "앞뒤 연결" 항목.</p>
+      </div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">발표·토론</span><span class="sh-t">2~3명 발표 + 기술 토론</span></div>
+      <div class="sh-line"></div>
+      <div class="bth">발표 15분 — AI 전공자들 간 기술적 토론까지</div>
+      <div class="fig">TABLE · 토론 포인트</div>
+      <table class="mtbl"><thead><tr><th>질문</th><th>의도</th></tr></thead><tbody>
+        <tr><td>"이 도구 대신 이걸 쓰면?"</td><td>대안 도구 제안</td></tr>
+        <tr><td>"이 단계에 LLM이 필요한가?"</td><td>오케스트레이션 판단</td></tr>
+        <tr><td>"내부망에서 가능한가?"</td><td>보안 현실 검토</td></tr>
+        <tr><td>"3차시에서 조립할 수 있겠나?"</td><td>다음 회차 연결</td></tr>
+        <tr><td>"1차시 미션 카드에 기여하나?"</td><td>최종 목표 연결</td></tr>
+      </tbody></table>
+      <div class="spacer"></div>
+      <div class="co">
+        <div class="co-lb">아카이브 등록</div>
+        <div class="co-main">발표 내용 + 결합 설계서를 공용 아카이브에 즉시 등록</div>
+        <p>다른 수강생의 설계서도 열람 가능. "동료가 찾은 도구를 내 맥락에 변형" — 1차시에서 강조한 아카이브 운영 원칙 ③.</p>
+      </div>
+      <div class="pit">
+        <div class="pit-lb">3차시 연결 포인트</div>
+        <div class="pit-h">▸ 이 설계서가 3차시 워크플로우 조립의 재료가 된다</div>
+        <div class="pit-d">3차시에서는 "도구 1개"가 아니라 "도구 체인(여러 도구를 이어 붙여 과제를 푸는 것)"을 조립한다. 오늘의 결합 설계서는 그 첫 번째 조각.</div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">EXAMPLES</span><span class="sh-t">결합 설계서 작성 예시</span></div>
+      <div class="sh-line"></div>
+      <div class="icard">
+        <div class="icard-top"><span class="icard-lb">예시 1</span></div>
+        <div class="bth">Julius AI + 기존 엑셀 보고 업무</div>
+        <p class="bt"><strong>현재:</strong> 엑셀 피벗→차트 수작업 2시간. <strong>결합:</strong> CSV 업로드→Julius가 차트 자동 생성 5분. <strong>앞:</strong> 데이터 추출(기존). <strong>뒤:</strong> 보고서 삽입(기존). <strong>보안:</strong> Julius 서버(US) — 비식별화 필요.</p>
+      </div>
+      <div class="icard">
+        <div class="icard-top"><span class="icard-lb">예시 2</span></div>
+        <div class="bth">Whisper(로컬) + 회의록 업무</div>
+        <p class="bt"><strong>현재:</strong> 녹음→수기 텍스트화 1시간. <strong>결합:</strong> 녹음 파일→Whisper 로컬 실행 5분. <strong>보안:</strong> 완전 로컬, 외부 통신 0. <strong>미션 카드:</strong> 회의록 자동화.</p>
+      </div>
+      <div class="icard dark">
+        <div class="icard-top"><span class="icard-lb">예시 3</span></div>
+        <div class="bth">HuggingFace 한국어 감성 분석 모델 + 민원 분류</div>
+        <p class="bt"><strong>현재:</strong> 민원 텍스트를 사람이 읽고 분류. <strong>결합:</strong> HF Spaces에서 감성 분석 모델 테스트 → 5차시 VBA+Ollama로 내부망 구현 연결. <strong>보안:</strong> 테스트는 외부, 구현은 완전 내부.</p>
+      </div>
+      <div class="spacer"></div>
+      <div class="dstrip">
+        <div class="ds-c"><div class="ds-a">탐색</div><div class="ds-n">3개</div><div class="ds-d">플랫폼별 1개씩</div></div>
+        <div class="ds-c"><div class="ds-a">설계서</div><div class="ds-n">1장</div><div class="ds-d">결합 지점+보안+비용</div></div>
+        <div class="ds-c"><div class="ds-a">아카이브</div><div class="ds-n">즉시</div><div class="ds-d">등록+공유</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">02 · 프론티어 모델 심층 탐구와 AI 도구 생태계 50선</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">008 / 011</span></div></div>
+</div></div>
+
+<!-- ═══ 09 Closing ═══ -->
+<div class="stage"><div class="slide" data-title="Closing">
+  <div class="hbar"><div class="hbar-l">MODULE 02 · CLOSING</div><div class="hbar-r">공공 AI 전문인재 양성과정 · 8주 실전 여정</div></div>
+  <div class="hl">
+    <div class="hl-kicker">CLOSING · 2차시 정리 — 오늘 채운 재료 + 5분 루틴 + 3차시 안내</div>
+    <div class="hl-title">2차시 정리 — 재료 창고가 채워졌다. 3차시부터 이 재료로 워크플로우를 짠다.</div>
+    <div class="hl-lede">플래그십 모델의 숨은 기능을 체험했고, 50개 도구를 카테고리별로 훑었고, 직접 탐색해서 결합 설계서까지 작성했다.</div>
+    <div class="hl-bar"></div>
+  </div>
+  <div class="hl-rule"></div>
+  <div class="bd col3">
+    <div class="col">
+      <div class="sh"><span class="sh-n">SUMMARY</span><span class="sh-t">오늘 다룬 3가지</span></div>
+      <div class="sh-line"></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">01</span></div>
+        <div class="bth">플래그십 모델 심층 탐구</div>
+        <p class="bt">ChatGPT(Projects·Canvas·Agent Mode)·Claude(Skills·Artifacts·200K)·Gemini(Workspace·1M+)의 숨은 킥을 체험. 라이브 비교 시연으로 업무별 모델 선택 감각 확보.</p>
+      </div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">02</span></div>
+        <div class="bth">AI 도구 생태계 50선 카테고리 투어</div>
+        <p class="bt">문서·이미지·영상·음성·회의록·번역·논문·검색·데이터·노코드 10개 카테고리. <strong>"5분 파악 루틴" 6단계 체크리스트</strong>를 산출물로 확보.</p>
+      </div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">03</span></div>
+        <div class="bth">도구 탐색 + 결합 설계 워크샵</div>
+        <p class="bt">Toolify·ProductHunt·HuggingFace에서 직접 도구를 찾고, 결합 설계서를 작성해 아카이브에 등록. 3차시 워크플로우의 첫 번째 조각.</p>
+      </div>
+      <div class="spacer"></div>
+      <div class="co">
+        <div class="co-lb">CORE MESSAGE</div>
+        <div class="co-main">적응력 = 도구 50개를 외우는 것이 아니라 어떤 도구든 5분 안에 판단하는 프레임</div>
+        <p>이 프레임이 거점리더가 부서에서 "이건 써도 되나? 이건 어디에 쓰나?"라는 질문에 답할 수 있는 근거.</p>
+      </div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">NEXT SESSION</span><span class="sh-t">3차시 안내</span></div>
+      <div class="sh-line"></div>
+      <div class="icard dark"><div class="icard-top"><span class="icard-lb">SESSION 03</span></div>
+        <div class="bth">메타 프롬프트 설계와 AI 서비스 워크플로우 오케스트레이션</div>
+        <p class="bt">Part A. 메타 프롬프트 — 프롬프트를 AI에게 만들게 하는 접근. 교차 검증. 프롬프트 공유 활동(1인 2개 × 20~40명 = 80개 시드). Part B. 워크플로우 6가지 타입 시연 — 문서 취합·데이터 분석·문서 변환·논문 리서치·이미지 콘텐츠·영상 파이프라인. <strong>오늘 채운 재료 창고의 도구들을 여러 개 이어 붙여 과제를 푸는 첫 경험.</strong></p>
+      </div>
+      <div class="co">
+        <div class="co-lb">3차시 준비물</div>
+        <div class="co-main">오늘의 결합 설계서 + 자주 쓰는 프롬프트 2개</div>
+        <p>3차시 프롬프트 공유 활동에서 각자 프롬프트 2개를 메타 프롬프트로 변환한다. 미리 "내가 자주 쓰는 프롬프트"를 2개 골라 오면 시간 절약.</p>
+      </div>
+      <div class="spacer"></div>
+      <div class="quote">
+        <div class="quote-src">커리큘럼 설계 철학</div>
+        <div class="quote-q">"프롬프트 기법을 외우지 않고, 워크플로우를 짠다. 거점리더는 프롬프트를 외우는 사람이 아니라 흐름을 짜는 사람이다."</div>
+        <div class="quote-a">— 3차시 핵심 메시지</div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">STAGE MAP</span><span class="sh-t">8주 중 현재 위치</span></div>
+      <div class="sh-line"></div>
+      <div class="fig">TABLE · 8주 로드맵 — 현재 위치 표시</div>
+      <table class="mtbl"><thead><tr><th>회차</th><th>주제</th><th>상태</th></tr></thead><tbody>
+        <tr><td>S01</td><td>AI 에이전트 시대 · 지형도</td><td>완료</td></tr>
+        <tr><td><strong>S02</strong></td><td><strong>프론티어 + 도구 50선</strong></td><td><strong>오늘</strong></td></tr>
+        <tr><td>S03</td><td>메타 프롬프트 · 워크플로우</td><td>다음</td></tr>
+        <tr><td>S04</td><td>어시스트 바이브 ① 시각화</td><td>—</td></tr>
+        <tr><td>S05</td><td>어시스트 바이브 ② 자동화</td><td>—</td></tr>
+        <tr><td>S06</td><td>에이전트 도구 마스터리</td><td>—</td></tr>
+        <tr><td>S07</td><td>RAG 파이프라인 · 웹서비스</td><td>—</td></tr>
+        <tr><td>S08</td><td>API·MCP · 아키텍처 캔버스</td><td>—</td></tr>
+      </tbody></table>
+      <div class="spacer"></div>
+      <div class="cod">
+        <div class="cod-lb">STAGE A · 완료</div>
+        <div class="cod-main">1~3차시는 "재료 창고" — 코드 없이 기획·재료 수집</div>
+        <p>1차시: 지형 파악 + 미션 선언. <strong>2차시: 재료 채우기(오늘).</strong> 3차시: 재료로 워크플로우 조립. Stage A가 끝나면 4차시부터 실제 코드를 만진다.</p>
+      </div>
+      <div class="dstrip">
+        <div class="ds-c"><div class="ds-a">STAGE A</div><div class="ds-n">2/3</div><div class="ds-d">재료 창고 (진행중)</div></div>
+        <div class="ds-c"><div class="ds-a">NEXT</div><div class="ds-n">S03</div><div class="ds-d">워크플로우 조립</div></div>
+        <div class="ds-c"><div class="ds-a">BRING</div><div class="ds-n">2개</div><div class="ds-d">자주 쓰는 프롬프트</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">02 · 프론티어 모델 심층 탐구와 AI 도구 생태계 50선</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">009 / 009</span></div></div>
+</div></div>
+
+</div>
+
+
+<script>
+
+// ═══ TOOLBAR ═══
+(function(){
+  // Remove old toolbar/nav if exists
+  document.querySelectorAll('.toolbar,.deck-nav').forEach(e=>e.remove());
+  
+  const tb = document.createElement('div');
+  tb.className = 'toolbar';
+  tb.innerHTML = `
+    <button onclick="pNav(-1)" title="← 이전">◀</button>
+    <span class="pg" id="pgInd">1 / 1</span>
+    <button onclick="pNav(1)" title="→ 다음">▶</button>
+    <span class="sep"></span>
+    <button id="ebtn" onclick="tEdit()" title="E 텍스트 편집">✎ EDIT</button>
+    <button onclick="window.print()" title="Ctrl+P PDF 저장">⬇ PDF</button>
+    <button onclick="tFull()" title="F 전체화면">⛶ FULL</button>
+  `;
+  document.body.appendChild(tb);
+})();
+
+// ═══ SCALING ═══
+const allSlides = document.querySelectorAll('.slide');
+const allStages = document.querySelectorAll('.stage');
+function fitSlides(){
+  const vw=innerWidth, vh=innerHeight;
+  const r = Math.min(vw/1600, vh/900);
+  allSlides.forEach(s=>{s.style.transform=`scale(${r})`;s.style.transformOrigin='center center'});
+}
+addEventListener('resize', fitSlides);
+fitSlides();
+
+// ═══ NAVIGATION ═══
+function curIdx(){let i=0,m=1e9;allStages.forEach((s,x)=>{const d=Math.abs(s.getBoundingClientRect().top+s.getBoundingClientRect().height/2-innerHeight/2);if(d<m){m=d;i=x}});return i}
+function pNav(dir){const i=curIdx()+dir;if(i>=0&&i<allStages.length)allStages[i].scrollIntoView({behavior:'smooth'})}
+function updPg(){document.getElementById('pgInd').textContent=`${curIdx()+1} / ${allStages.length}`}
+const dk=document.getElementById('deck');
+dk.addEventListener('scroll',updPg);
+updPg();
+
+// ═══ EDIT MODE ═══
+let isEdit=false;
+const editEls = () => document.querySelectorAll('.bth,.bt,.co-main,.co p,.cod-main,.cod p,.hl-title,.hl-lede,.pit-h,.pit-d,.quote-q,.chk-t');
+function tEdit(){
+  isEdit=!isEdit;
+  document.body.classList.toggle('editing',isEdit);
+  document.getElementById('ebtn').classList.toggle('on',isEdit);
+  editEls().forEach(el=>el.contentEditable=isEdit?'true':'false');
+}
+
+// ═══ FULLSCREEN ═══
+function tFull(){
+  if(document.fullscreenElement)document.exitFullscreen();
+  else document.documentElement.requestFullscreen().catch(()=>{});
+}
+
+// ═══ KEYBOARD ═══
+document.addEventListener('keydown',e=>{
+  if(isEdit&&!['Escape','F11'].includes(e.key)&&!e.key.startsWith('Arrow')&&e.key!=='e') return;
+  if(e.key==='ArrowRight'||e.key==='ArrowDown'||e.key===' '||e.key==='PageDown'){if(!isEdit){e.preventDefault();pNav(1)}}
+  else if(e.key==='ArrowLeft'||e.key==='ArrowUp'||e.key==='PageUp'){if(!isEdit){e.preventDefault();pNav(-1)}}
+  else if(e.key==='f'||e.key==='F11'){e.preventDefault();tFull()}
+  else if(e.key==='e'&&!isEdit){e.preventDefault();tEdit()}
+  else if(e.key==='Escape'){if(isEdit)tEdit();else if(document.fullscreenElement)document.exitFullscreen()}
+});
+
+</script>
+<script>/* kg-preview: #<heading> \uc704\uce58\ub85c \uc774\ub3d9 */
+(function(){function norm(t){return (t||'').replace(/\s+/g,'').toLowerCase()}
+function go(){var h=decodeURIComponent(location.hash.slice(1));if(!h)return;var k=norm(h).slice(0,24);if(!k)return;
+var best=null,bl=1e9,els=document.body.querySelectorAll('h1,h2,h3,h4,h5,p,div,span,li,td,text,tspan,section,article');
+for(var i=0;i<els.length;i++){var e=els[i],t=norm(e.textContent);if(t.length<bl&&t.indexOf(k)>-1){best=e;bl=t.length}}
+if(!best)return;var box=best.closest('section,[class*=slide],[class*=page],article')||best;
+box.scrollIntoView({block:'start'});box.style.outline='3px solid #c0504d';box.style.outlineOffset='4px';
+setTimeout(function(){box.style.outline=''},2600)}
+window.addEventListener('load',function(){setTimeout(go,400)});window.addEventListener('hashchange',go)})();</script></body>
+</html>

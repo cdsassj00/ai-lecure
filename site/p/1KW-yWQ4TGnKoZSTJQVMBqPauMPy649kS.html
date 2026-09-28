@@ -1,0 +1,443 @@
+<!doctype html><html lang="ko"><head><meta name="robots" content="noindex, nofollow"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>바이브코딩 · 에이전트 · MCP · 컨텍스트 — 페이지 교재</title><style>
+:root{--ink:#172033;--muted:#667085;--line:#d8dee8;--paper:#fff;--bg:#e9eef5;--navy:#163a63;--blue:#eaf4ff;--mint:#e9fbf1;--green:#17834b;--soft:#f7f9fc;--warn:#fff7e8;--pink:#fff0f3}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--ink);font-family:Pretendard,"Noto Sans KR","Malgun Gothic",Arial,sans-serif;line-height:1.7;letter-spacing:-.02em}
+.toolbar{position:sticky;top:0;z-index:20;height:56px;background:rgba(23,32,51,.96);color:white;display:flex;align-items:center;gap:10px;padding:0 18px;box-shadow:0 4px 18px rgba(0,0,0,.18)}
+.toolbar button,.toolbar select{height:34px;border:1px solid rgba(255,255,255,.25);border-radius:8px;background:#fff;color:#172033;padding:0 12px;font-weight:700;cursor:pointer}.toolbar .title{font-weight:800;margin-right:auto}.toolbar .count{font-variant-numeric:tabular-nums;min-width:74px;text-align:center}.toolbar .hint{font-size:12px;color:#cbd5e1}
+.book{padding:28px 0 70px}.page{width:210mm;height:297mm;margin:0 auto 28px;background:var(--paper);box-shadow:0 14px 40px rgba(16,24,40,.15);position:relative;padding:18mm 19mm 17mm;overflow:hidden;page-break-after:always}
+.page-head,.page-foot{position:absolute;left:19mm;right:19mm;display:flex;justify-content:space-between;align-items:center;color:#8290a3;font-size:10.5px;letter-spacing:.01em}.page-head{top:9mm;padding-bottom:7px;border-bottom:1px solid var(--line)}.page-head span:first-child{font-weight:900;color:var(--navy)}.page-foot{bottom:7mm;padding-top:7px;border-top:1px solid var(--line)}.page-foot b{font-size:12px;color:var(--navy)}
+.page-content{height:100%;padding-top:7mm}.page h1{font-size:30px;line-height:1.22;margin:0 0 7px;color:#12263f;letter-spacing:-.045em}.page h1 em{font-style:normal;color:var(--green)}.subtitle{font-size:15px;color:var(--muted);margin:0 0 22px;line-height:1.6}.page h2{font-size:18px;line-height:1.35;margin:14px 0 8px;color:#17395f}.page h3{font-size:15px;margin:0 0 4px}.page p{margin:6px 0 10px;font-size:13.3px}.page ul,.page ol{margin:6px 0 8px;padding-left:22px;font-size:13.2px}.page li{margin:4px 0}.page code{font-family:Consolas,monospace;background:#eef2f6;border:1px solid #e1e7ef;border-radius:5px;padding:1px 4px;font-size:.92em}
+.cover{background:linear-gradient(145deg,#f8fbff 0%,#ffffff 55%,#ecf9f2 100%)}.cover .page-head,.cover .page-foot{border-color:#cbd8e6}.cover h1{font-size:48px;margin-top:36mm;max-width:150mm}.cover .subtitle{font-size:18px;max-width:150mm;line-height:1.8}.hero{margin-top:20px}.hero-box{border-left:6px solid var(--green);padding:14px 18px;background:#f0fbf5;border-radius:0 14px 14px 0}.hero-box strong{font-size:14px}.hero-box p{font-size:17px;line-height:1.75;margin:5px 0}.chips{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin:26px 0}.chips span{padding:7px 12px;border-radius:999px;background:#17395f;color:white;font-size:12px;font-weight:800}.chips i{font-style:normal;color:#7a8aa0}.cover-note{font-size:14px;color:#425466;line-height:1.8;border-top:1px solid var(--line);padding-top:18px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:18px}.three{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.three>div,.two>div{min-width:0}.three>div{background:var(--soft);border:1px solid var(--line);border-radius:12px;padding:14px}.three b{color:var(--navy)}
+.callout,.warning,.example{margin:16px 0;padding:13px 15px;border-radius:12px;font-size:13.4px}.callout{background:var(--blue);border-left:5px solid #4b88c5}.callout.big{font-size:15px;padding:16px 18px}.warning{background:var(--warn);border-left:5px solid #d39b34}.example{background:var(--mint);border-left:5px solid var(--green)}.muted{color:var(--muted)}
+.clean{list-style:none;padding-left:0!important}.clean li{padding:5px 0;border-bottom:1px dashed var(--line)}.steps{counter-reset:step;list-style:none;padding-left:0!important}.steps li{position:relative;padding:7px 8px 7px 38px;margin:5px 0;background:var(--soft);border-radius:8px}.steps li:before{counter-increment:step;content:counter(step);position:absolute;left:9px;top:7px;width:22px;height:22px;border-radius:50%;background:var(--navy);color:#fff;display:grid;place-items:center;font-weight:800;font-size:11px}.steps.large li{padding-top:8px;padding-bottom:8px}
+.flow{display:flex;align-items:center;justify-content:center}.flow.vertical{flex-direction:column;gap:4px;margin:6px auto 12px}.flow.vertical>div{width:92%;display:flex;justify-content:space-between;align-items:center;background:var(--soft);border:1px solid var(--line);border-radius:11px;padding:8px 14px}.flow.vertical>span{line-height:1;color:#8ea0b4}.flow small{color:var(--muted)}.flow.horizontal{gap:8px;margin:20px 0;align-items:stretch}.flow.horizontal>div{flex:1;background:var(--soft);border:1px solid var(--line);border-radius:12px;padding:13px;text-align:center}.flow.horizontal>span{align-self:center;font-size:20px;color:#8ea0b4}.flow.compact>div{padding:10px}
+.agent-diagram,.context-demo,.arch,.deploy,.api-card{display:flex;align-items:center;justify-content:center;gap:10px;margin:20px 0}.node,.box{padding:18px 16px;border-radius:14px;border:1px solid var(--line);background:var(--soft);text-align:center;min-width:125px;font-weight:800}.node.ai,.box.ai2,.llm{background:#def7e7;border-color:#a3dfb9}.arrow,.arch>span,.context-demo>span{font-size:24px;color:#718198}.mini{text-align:center;background:#f3f6fa;border-radius:9px;padding:8px;font-size:12px;font-weight:700}.lecture-img{display:block;width:100%;border:1px solid var(--line);border-radius:12px;background:#fafafa;margin:12px 0 4px}.lecture-img.contain{max-height:112mm;object-fit:contain}.caption{font-size:10.5px!important;color:#7d8998!important;text-align:center;margin:3px 0 10px!important}
+.compare{display:grid;grid-template-columns:1fr auto 1fr;gap:14px;align-items:stretch}.panel{border:1px solid var(--line);border-radius:16px;padding:18px}.panel.front{background:#eef7ff}.panel.back{background:#effaf3}.bigword{font-size:28px!important;font-weight:900;color:var(--navy)}.midarrow{display:grid;place-items:center;font-size:28px;color:#6f8297}.example span{display:inline-block;background:white;border:1px solid #cfe3d7;padding:2px 7px;border-radius:999px;margin:4px 2px}
+.api-card .you,.api-card .service{padding:28px;border-radius:18px;font-size:20px;font-weight:900}.api-card .you{background:#eaf4ff}.api-card .service{background:#e8f9ef}.api-card .pipe{font-size:13px;font-weight:800;color:#62748a}.library-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0}.library-grid>div{padding:12px;border:1px solid var(--line);border-radius:10px;background:var(--soft)}.library-grid b{display:block;color:var(--navy)}.library-grid span{font-size:12px;color:#53657a}.checkline{display:flex;flex-wrap:wrap;gap:7px}.checkline span{background:#eef2f7;padding:4px 8px;border-radius:999px;font-size:11px;font-weight:700}.prompt{background:#f8fafc;border:1px solid #dbe3ec;border-radius:12px;padding:12px 15px;margin:11px 0}.prompt>b{color:#12395f}.prompt p{font-size:12.7px;line-height:1.65;margin-bottom:0}.cards4{display:grid;grid-template-columns:1fr 1fr;gap:10px}.cards4>div{border:1px solid var(--line);border-radius:11px;padding:12px;background:var(--soft)}.cards4 p{font-size:12px;margin:0}
+.format-table{border:1px solid var(--line);border-radius:12px;overflow:hidden}.format-table .row{display:grid;grid-template-columns:34mm 1fr 1.1fr;gap:10px;padding:10px 12px;border-bottom:1px solid var(--line);font-size:12px;align-items:center}.format-table .row:last-child{border-bottom:0}.format-table .head{background:#17395f;color:#fff;font-size:11px}.format-table .row>b{color:#17395f}.format-table .head>b{color:white}.big-equation{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:20px 0 28px}.big-equation span,.big-equation strong{padding:12px 14px;border-radius:12px;background:#eef4fb;border:1px solid #d1deeb}.big-equation strong{background:#e5f8ec;color:#11643b}.big-equation>b{font-size:20px}
+.search-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.search-grid>div{padding:16px;border:1px solid var(--line);border-radius:12px;background:var(--soft)}.search-grid b{font-size:18px;color:var(--navy)}.search-grid p{font-size:12.5px}.context-demo>div{padding:15px 12px;border-radius:12px;border:1px solid var(--line);text-align:center;min-width:125px}.q{background:#f8f9fb}.retrieve{background:#eef7ff}.ctx{background:#fff7e8}.llm{font-weight:800}.mcp-sources{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 20px}.mcp-sources span{padding:8px 11px;border-radius:8px;background:#f1f5f9;border:1px solid var(--line);font-size:11.5px;font-weight:700}.timeline{display:flex;gap:5px;align-items:stretch;margin:18px 0}.timeline div{flex:1;background:#f2f6fa;border:1px solid var(--line);border-radius:10px;padding:8px 4px;text-align:center}.timeline b{display:block;width:24px;height:24px;line-height:24px;border-radius:50%;background:var(--navy);color:#fff;margin:0 auto 5px}.timeline span{font-size:10.5px;font-weight:700}.schema{display:flex;gap:16px;align-items:center;justify-content:center;margin:20px 0}.schema>div:not(.plus){width:40%;border:1px solid var(--line);border-radius:14px;padding:16px}.schema .fixed{background:#eef7ff}.schema .flex{background:#effaf3}.schema .plus{font-size:28px;font-weight:800;color:#7a8a9e}.schema p{line-height:1.9}.arch .box{min-width:108px;padding:14px 9px}.workflow-list{display:grid;grid-template-columns:1fr 1fr;gap:10px}.workflow-list>div{border:1px solid var(--line);border-radius:11px;padding:11px 13px}.workflow-list b{color:var(--navy)}.workflow-list p{font-size:12px;margin:3px 0}.troubles{display:grid;gap:9px}.troubles>div{display:grid;grid-template-columns:47mm 1fr;gap:10px;padding:11px 13px;border:1px solid var(--line);border-radius:10px;background:var(--soft)}.troubles b{color:#17395f}.troubles span{font-size:12.5px}.deploy>div{flex:1;padding:16px;border:1px solid var(--line);border-radius:13px;text-align:center;background:var(--soft)}.deploy>span{font-size:12px;font-weight:800;color:#65778d}
+.myths{display:grid;gap:6px}.myths>div{display:grid;grid-template-columns:9mm 1fr 1.45fr;gap:9px;align-items:center;padding:7px 10px;border-bottom:1px solid #e4e9ef}.myths b{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;background:var(--navy);color:white;font-size:10px}.myths span{font-size:12.2px;font-weight:700}.myths em{font-style:normal;color:#586a80;font-size:11.7px}.recipes{display:grid;gap:9px}.recipes>div{display:grid;grid-template-columns:48mm 1fr;gap:12px;padding:12px 14px;background:var(--soft);border:1px solid var(--line);border-radius:10px}.recipes b{color:var(--navy)}.recipes span{font-size:12.5px}.checklist{display:grid;grid-template-columns:1fr 1fr;gap:10px}.checklist label{display:block;padding:11px 12px;border:1px solid var(--line);border-radius:10px;background:var(--soft);font-size:12.5px}.glossary{display:grid;grid-template-columns:1fr 1fr;gap:7px 14px}.glossary>div{display:grid;grid-template-columns:32mm 1fr;gap:8px;padding:8px 0;border-bottom:1px solid #e8edf3}.glossary b{color:var(--navy)}.glossary span{font-size:12px}.final-flow{display:flex;flex-direction:column;align-items:center;gap:1px;margin:10px 0 16px}.final-flow span{width:70%;text-align:center;padding:6px;border-radius:9px;background:#f2f6fa;border:1px solid var(--line);font-size:12px;font-weight:800}.final-flow i{font-style:normal;line-height:1;color:#9aa8b8}.closing{margin-top:16px;padding:20px 22px;border-radius:16px;background:linear-gradient(135deg,#eef7ff,#effaf3);font-size:14px;line-height:1.8;border:1px solid #dce8e1}.keyword-groups{display:grid;gap:9px}.keyword-groups>div{display:grid;grid-template-columns:40mm 1fr;gap:12px;padding:10px 12px;border-bottom:1px solid var(--line)}.keyword-groups b{color:var(--navy)}.keyword-groups span{font-size:12.5px}.small-note{font-size:11px;color:#718096;margin-top:14px}
+body.paged .page{display:none;margin-bottom:0}body.paged .page.active{display:block}.book{min-height:calc(100vh - 56px)}
+@media(max-width:900px){.toolbar .hint{display:none}.toolbar .title{font-size:13px}.page{width:96vw;height:auto;min-height:calc(96vw * 1.414);padding:60px 6vw 54px}.page-head,.page-foot{left:6vw;right:6vw}.two,.three,.search-grid,.library-grid,.cards4,.workflow-list,.checklist,.glossary{grid-template-columns:1fr}.compare{grid-template-columns:1fr}.midarrow{transform:rotate(90deg)}.flow.horizontal,.arch,.context-demo,.deploy,.api-card{flex-wrap:wrap}.troubles>div,.recipes>div,.myths>div,.format-table .row{grid-template-columns:1fr}.timeline{flex-wrap:wrap}.timeline div{min-width:25%}}
+@media print{body{background:white}.toolbar{display:none}.book{padding:0}.page{display:block!important;box-shadow:none;margin:0;width:210mm;height:297mm;break-after:page;page-break-after:always}@page{size:A4;margin:0}}
+</style></head>
+<body class="paged"><div class="toolbar"><div class="title">바이브코딩 · 에이전트 · MCP · 컨텍스트</div><button id="prev">← 이전</button><span id="count" class="count"></span><button id="next">다음 →</button><select id="toc"><option value="">목차 이동</option><option value="1">1. 바이브코딩은“조합”이다</option><option value="2">2. 이 교재는 코딩 문법책이 아닙니다</option><option value="3">3. 바이브코딩의 전체 흐름</option><option value="4">4. 에이전트 = AI + 도구 + 컨텍스트 + 반복</option><option value="5">5. 하네스는 AI에게 손과 발을 붙이는 작업대</option><option value="6">6. 프론트엔드는 “보이는 곳”, 백엔드는 “처리하는 곳”</option><option value="7">7. localhost는 “내 PC 안의 웹사이트”라고 생각하면 쉽습니</option><option value="8">8. 로컬 → 검증 → 웹 배포 순서가 가장 편합니다</option><option value="9">9. API는 “남이 이미 만든 기능을 빌려오는 문”입니다</option><option value="10">10. 라이브러리는 “누군가 미리 만들어 둔 코드 부품”입니다</option><option value="11">11. 문서를 “읽는 것”과 “검색하기 좋게 바꾸는 것”은 다릅니다</option><option value="12">12. XML, JSON, CSV, SQLite, JSONB는 경쟁자가 </option><option value="13">13. 내가 만든 데이터베이스가 프로젝트의 차별점이 됩니다</option><option value="14">14. 벡터DB만 검색이 아닙니다</option><option value="15">15. 컨텍스트 주입은 “AI에게 지금 필요한 자료를 건네주는 것”입니다</option><option value="16">16. MCP는 AI용 “표준 멀티탭”입니다</option><option value="17">17. 법령 API만 MCP가 되는 것이 아닙니다</option><option value="18">18. 오늘 강의 프롬프트를 한 줄의 개발 파이프라인으로 읽기</option><option value="19">19. 비정형 문서에는 “일반 컬럼 + JSON 구조”가 잘 맞을 때가 </option><option value="20">20. XML·JSON·DB를 검색해서 AI에게 필요한 근거만 주면 됩니</option><option value="21">21. 바이브코딩에서 “찾는 능력”은 실제 개발 능력입니다</option><option value="22">22. 막히면 코드만 고치지 말고 “조합”을 바꿔보세요</option><option value="23">23. 웹으로 옮길 때는 “어디서 무엇이 실행되는지” 다시 그립니다</option><option value="24">24. AI에게 “코드부터”가 아니라 “설계와 비교부터” 시키세요</option><option value="25">25. MCP와 배포도 “사용자 질문”에서 역으로 설계합니다</option><option value="26">26. 초보자가 자주 하는 오해 10가지</option><option value="27">27. 기술을 많이 쓰는 것이 고급이 아닙니다</option><option value="28">28. 예제: “기관장용 정책문서 검색 비서”를 만든다면</option><option value="29">29. 프로젝트를 만들기 전에 이 12가지만 답해보세요</option><option value="30">30. 한 번에 보는 초보자 용어 사전</option><option value="31">31. 바이브코딩의 본질을 한 문장으로</option><option value="32">32. 부록 · 오늘 이후 직접 더 찾아볼 키워드</option></select><select id="mode"><option value="paged">한 페이지씩</option><option value="continuous">연속 보기</option></select><button id="print">인쇄 / PDF</button><span class="hint">← → 키로 이동</span></div><main class="book"><section class="page cover" data-page="1">
+      <header class="page-head"><span>COVER</span><span>AI 챔피언 고급과정 · 바이브코딩 실전</span></header>
+      <div class="page-content">
+        <h1>바이브코딩은<br><em>“조합”</em>이다</h1>
+        <p class="subtitle">에이전트 · 프론트엔드 · 백엔드 · API · 라이브러리 · 데이터 · MCP · 컨텍스트를 한 흐름으로 이해하는 초보자용 교재</p>
+        <div class="hero">
+        <div class="hero-box"><strong>핵심 한 문장</strong><p>코드를 많이 아는 사람보다, <b>문제에 맞는 데이터·API·라이브러리·AI·화면·서버를 골라 연결하는 사람</b>이 바이브코딩을 잘합니다.</p></div>
+        <div class="chips"><span>문제</span><i>→</i><span>데이터</span><i>→</i><span>검색</span><i>→</i><span>AI</span><i>→</i><span>도구</span><i>→</i><span>화면</span></div>
+        <div class="cover-note">이 교재는 “프로그램이 왜 이렇게 생겼는지”를 이해하는 데 초점을 둡니다. Python, Node.js, HTML, SQLite, MCP를 전부 외우는 대신, <b>각 기술이 어느 자리에 들어가는지</b>를 먼저 잡습니다.</div>
+     </div>
+      </div>
+      <footer class="page-foot"><span>2026. 9. 8. 강의 재구성</span><b>1</b></footer>
+    </section><section class="page " data-page="2">
+      <header class="page-head"><span>0. 시작하기</span><span>AI 챔피언 고급과정 · 바이브코딩 실전</span></header>
+      <div class="page-content">
+        <h1>이 교재는 코딩 문법책이 아닙니다</h1>
+        <p class="subtitle">먼저 “프로그램이 흘러가는 길”을 이해하면, AI에게 무엇을 시켜야 할지가 보입니다.</p>
+        <div class="callout big"><b>바이브코딩을 아주 쉽게 말하면</b><br>“내가 원하는 결과를 얻기 위해, 이미 존재하는 좋은 부품을 찾아 AI와 함께 조립하는 일”입니다.</div>
+<div class="two">
+<div><h2>요리로 비유하면</h2><ul class="clean"><li><b>AI/LLM</b> = 요리사</li><li><b>데이터</b> = 식재료</li><li><b>데이터베이스</b> = 냉장고</li><li><b>라이브러리</b> = 조리도구</li><li><b>API</b> = 밖에서 재료·서비스를 받아오는 통로</li><li><b>백엔드</b> = 주방</li><li><b>프론트엔드</b> = 손님이 보는 식탁</li><li><b>MCP</b> = AI가 여러 도구를 같은 방식으로 쓰게 해주는 연결 규격</li></ul></div>
+<div><h2>이 순서만 기억하세요</h2><ol class="steps"><li>무엇을 만들지 정한다.</li><li>필요한 데이터가 무엇인지 찾는다.</li><li>그 데이터를 읽는 라이브러리나 API를 찾는다.</li><li>검색하기 좋은 형태로 정리한다.</li><li>검색 결과를 AI에게 넣는다.</li><li>백엔드에서 연결하고 프론트엔드에서 보여준다.</li><li>반복해서 쓸 기능은 MCP로 도구화한다.</li></ol></div>
+</div>
+      </div>
+      <footer class="page-foot"><span>2026. 9. 8. 강의 재구성</span><b>2</b></footer>
+    </section><section class="page " data-page="3">
+      <header class="page-head"><span>1. 큰 그림</span><span>AI 챔피언 고급과정 · 바이브코딩 실전</span></header>
+      <div class="page-content">
+        <h1>바이브코딩의 전체 흐름</h1>
+        <p class="subtitle">코드는 중간에 들어갑니다. 앞에는 데이터와 설계가 있고, 뒤에는 화면과 배포가 있습니다.</p>
+        <div class="flow vertical">
+<div><b>① 문제</b><small>누가 무엇을 하려고 하는가?</small></div><span>↓</span>
+<div><b>② 데이터</b><small>문서 · 홈페이지 · RSS · DB · 외부 API</small></div><span>↓</span>
+<div><b>③ 읽기/파싱</b><small>MarkItDown · Docling · BeautifulSoup · SDK</small></div><span>↓</span>
+<div><b>④ 구조화/저장</b><small>XML · JSON · CSV · SQLite · PostgreSQL/JSONB</small></div><span>↓</span>
+<div><b>⑤ 검색</b><small>SQL · FTS5/BM25 · Fuse.js · 임베딩</small></div><span>↓</span>
+<div><b>⑥ 컨텍스트 주입</b><small>필요한 근거만 AI에게 전달</small></div><span>↓</span>
+<div><b>⑦ AI + 백엔드 + 프론트엔드</b><small>판단하고 실행하고 보여주기</small></div>
+</div>
+<div class="callout"><b>중요:</b> 처음부터 “React로 만들어줘”, “벡터DB 써줘”라고 기술을 먼저 고르지 않습니다. 먼저 문제와 데이터를 보고 <b>가장 단순한 조합</b>을 선택합니다.</div>
+      </div>
+      <footer class="page-foot"><span>2026. 9. 8. 강의 재구성</span><b>3</b></footer>
+    </section><section class="page " data-page="4">
+      <header class="page-head"><span>2. 에이전트</span><span>AI 챔피언 고급과정 · 바이브코딩 실전</span></header>
+      <div class="page-content">
+        <h1>에이전트 = AI + 도구 + 컨텍스트 + 반복</h1>
+        <p class="subtitle">AI가 말만 하는 것이 아니라, 필요한 도구를 골라 실행하고 결과를 다시 읽는 구조입니다.</p>
+        <div class="agent-diagram">
+<div class="node ai">AI<br><small>판단</small></div><div class="arrow">→</div><div class="node">도구 선택<br><small>검색 · 파일 · DB · API</small></div><div class="arrow">→</div><div class="node">실행 결과<br><small>JSON · 텍스트 · 상태값</small></div><div class="arrow">↺</div>
+</div>
+<div class="two"><div><h2>그냥 챗봇</h2><p>질문을 받고 한 번 답합니다. 외부 파일을 읽거나 실제 프로그램을 실행하지 않아도 됩니다.</p><div class="mini">질문 → AI → 답변</div></div>
+<div><h2>에이전트</h2><p>AI가 상황을 보고 “무슨 도구가 필요한지” 판단합니다. 실행 결과가 예상과 다르면 다른 도구를 다시 선택할 수 있습니다.</p><div class="mini">질문 → 판단 → 도구 → 결과 → 재판단 → 답변</div></div></div>
+<div class="callout"><b>예:</b> “이 폴더의 PDF를 읽어서 정책별로 분류하고 DB로 만든 뒤, 결과가 이상한 파일만 다시 파싱해줘.”라고 하면 파일 읽기, 파싱, DB 저장, 검증이 여러 번 이어집니다. 이때 AI는 <b>작업 순서를 조정하는 역할</b>을 합니다.</div>
+      </div>
+      <footer class="page-foot"><span>2026. 9. 8. 강의 재구성</span><b>4</b></footer>
+    </section><section class="page " data-page="5">
+      <header class="page-head"><span>2. 에이전트</span><span>AI 챔피언 고급과정 · 바이브코딩 실전</span></header>
+      <div class="page-content">
+        <h1>하네스는 AI에게 손과 발을 붙이는 작업대</h1>
+        <p class="subtitle">모델 자체가 엔진이라면, 하네스(harness)는 그 엔진이 파일·터미널·브라우저·MCP·API를 쓰게 하는 실행 환경입니다.</p>
+        <div class="two"><div><h2>LLM만 있을 때</h2><ul><li>글을 읽고 판단한다.</li><li>코드를 제안한다.</li><li>답변을 만든다.</li><li>하지만 실제 PC에서 파일을 열거나 명령을 실행할 권한은 없을 수 있다.</li></ul></div>
+<div><h2>하네스가 붙으면</h2><ul><li>파일 시스템을 읽는다.</li><li>터미널 명령을 실행한다.</li><li>브라우저를 조작한다.</li><li>API·MCP 도구를 호출한다.</li><li>결과를 다시 AI에게 돌려준다.</li></ul></div></div>
+<img class="lecture-img contain" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="강의 스케치: 데이터센터 LLM과 로컬 하네스 구조">
+<p class="caption">강의 스케치 1 — 클라우드의 LLM과 내 컴퓨터의 하네스·브라우저·프론트엔드·백엔드를 분리해서 본 그림</p>
+<div class="callout"><b>그래서 코딩 에이전트가 강한 이유:</b> AI가 “코드를 말해주는 것”에서 끝나지 않고, 실제 프로젝트 폴더를 읽고 수정하고 실행 결과까지 확인하기 때문입니다.</div>
+      </div>
+      <footer class="page-foot"><span>2026. 9. 8. 강의 재구성</span><b>5</b></footer>
+    </section><section class="page " data-page="6">
+      <header class="page-head"><span>3. 프론트엔드/백엔드</span><span>AI 챔피언 고급과정 · 바이브코딩 실전</span></header>
+      <div class="page-content">
+        <h1>프론트엔드는 “보이는 곳”, 백엔드는 “처리하는 곳”</h1>
+        <p class="subtitle">둘을 나누면 복잡했던 프로그램 구조가 매우 단순하게 보입니다.</p>
+        <div class="compare">
+<div class="panel front"><h2>프론트엔드</h2><p class="bigword">화면</p><ul><li>입력창, 버튼, 표, 그래프</li><li>HTML / CSS / JavaScript</li><li>React 같은 UI 프레임워크</li><li>사용자가 직접 보는 영역</li></ul></div>
+<div class="midarrow">⇄</div>
+<div class="panel back"><h2>백엔드</h2><p class="bigword">처리</p><ul><li>AI API 호출</li><li>DB 검색·저장</li><li>문서 파싱</li><li>인증·권한·비밀키 관리</li><li>Python / Node.js / Workers 등</li></ul></div>
+</div>
+<div class="example"><b>검색 챗봇으로 보면</b><br><span>질문 입력창</span> → <span>/api/ask</span> → <span>DB 검색</span> → <span>AI 호출</span> → <span>답변을 화면에 표시</span></div>
+<div class="warning"><b>공개 웹에서 주의:</b> OpenRouter나 다른 AI API 키를 HTML/JavaScript에 그대로 넣으면 브라우저에서 노출될 수 있습니다. 공개 배포에서는 보통 <b>백엔드/서버리스 함수가 키를 보관</b>합니다.</div>
+      </div>
+      <footer class="page-foot"><span>2026. 9. 8. 강의 재구성</span><b>6</b></footer>
+    </section><section class="page " data-page="7">
+      <header class="page-head"><span>3. 프론트엔드/백엔드</span><span>AI 챔피언 고급과정 · 바이브코딩 실전</span></header>
+      <div class="page-content">
+        <h1>localhost는 “내 PC 안의 웹사이트”라고 생각하면 쉽습니다</h1>
+        <p class="subtitle">브라우저로 보인다고 해서 반드시 인터넷에 올라간 사이트는 아닙니다.</p>
+        <img class="lecture-img contain" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="강의 스케치: 로컬 컴퓨터 내부 구조">
+<p class="caption">강의 스케치 2 — 내 컴퓨터 안에서 Python/Node, SQLite, AI API, HTML/CSS/JS, Electron을 조합하는 관점</p>
+<div class="three"><div><b>localhost:8000</b><p>내 PC에서 실행 중인 Python 서버에 브라우저가 접속하는 주소일 수 있습니다.</p></div><div><b>localhost:8800</b><p>다른 로컬 앱이나 개발 서버가 사용하는 포트일 수 있습니다.</p></div><div><b>Electron/Tauri</b><p>웹 기술로 만든 화면을 데스크톱 앱처럼 패키징할 수 있습니다.</p></div></div>
+<div class="callout"><b>초보자 관점의 핵심:</b> “웹처럼 생긴 것”과 “인터넷에 공개된 것”은 다릅니다. 내 PC 안에서 백엔드와 프론트엔드를 모두 띄워 테스트한 뒤, 필요할 때 클라우드로 옮기면 됩니다.</div>
+      </div>
+      <footer class="page-foot"><span>2026. 9. 8. 강의 재구성</span><b>7</b></footer>
+    </section><section class="page " data-page="8">
+      <header class="page-head"><span>4. 로컬과 웹</span><span>AI 챔피언 고급과정 · 바이브코딩 실전</span></header>
+      <div class="page-content">
+        <h1>로컬 → 검증 → 웹 배포 순서가 가장 편합니다</h1>
+        <p class="subtitle">처음부터 클라우드에 올리면 오류 원인이 로컬 코드인지, 배포 설정인지, 인증인지 구분하기 어려워집니다.</p>
+        <img class="lecture-img contain" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="강의 스케치: 로컬과 클라우드 배포 비교">
+<p class="caption">강의 스케치 3 — 로컬 컴퓨터와 백엔드 서버, Vercel·Netlify·Cloudflare 같은 프론트/서버리스 배포 환경을 비교한 그림</p>
+<div class="three"><div><b>1단계 · 로컬</b><p>Python/Node + SQLite + HTML로 가장 단순한 버전을 만듭니다.</p></div><div><b>2단계 · 연결</b><p>AI API, 외부 데이터 API, 검색 함수를 하나씩 붙입니다.</p></div><div><b>3단계 · 배포</b><p>여러 사람이 써야 할 때 Vercel, Cloudflare, Netlify, Render 등으로 옮깁니다.</p></div></div>
+<div class="callout"><b>원칙:</b> 배포는 개발의 시작점이 아니라 <b>검증된 조합을 다른 사람이 사용할 수 있게 옮기는 단계</b>라고 생각하면 쉽습니다.</div>
+      </div>
+      <footer class="page-foot"><span>2026. 9. 8. 강의 재구성</span><b>8</b></footer>
+    </section><section class="page " data-page="9">
+      <header class="page-head"><span>5. API</span><span>AI 챔피언 고급과정 · 바이브코딩 실전</span></header>
+      <div class="page-content">
+        <h1>API는 “남이 이미 만든 기능을 빌려오는 문”입니다</h1>
+        <p class="subtitle">직접 구현하기 어려운 기능일수록 API를 먼저 찾아보는 습관이 중요합니다.</p>
+        <div class="api-card"><div class="you">내 프로그램</div><div class="pipe">요청 →</div><div class="service">외부 서비스/API</div><div class="pipe">← JSON 응답</div></div>
+<div class="two"><div><h2>API로 가져올 수 있는 것</h2><ul><li>공공데이터</li><li>법령/통계/날씨/지도</li><li>AI 모델 호출</li><li>결제·메일·메신저</li><li>번역·OCR·음성인식</li></ul></div><div><h2>API를 찾을 때 볼 것</h2><ul><li>공식 API인가?</li><li>무료/유료인가?</li><li>API 키가 필요한가?</li><li>호출 제한이 있는가?</li><li>응답이 JSON/XML 중 무엇인가?</li><li>브라우저에서 직접 호출 가능한가?</li></ul></div></div>
+<div class="callout"><b>바이브코딩 습관:</b> “이 기능을 코딩해줘”보다 먼저 “이 기능을 제공하는 공식 API가 있는지 찾아서 비교해줘”라고 시켜보세요. 직접 구현할 코드가 크게 줄어듭니다.</div>
+      </div>
+      <footer class="page-foot"><span>2026. 9. 8. 강의 재구성</span><b>9</b></footer>
+    </section><section class="page " data-page="10">
+      <header class="page-head"><span>6. 라이브러리</span><span>AI 챔피언 고급과정 · 바이브코딩 실전</span></header>
+      <div class="page-content">
+        <h1>라이브러리는 “누군가 미리 만들어 둔 코드 부품”입니다</h1>
+        <p class="subtitle">기능을 처음부터 구현하지 않고, 검증된 부품을 설치해서 내 프로그램 안에서 사용합니다.</p>
+        <div class="library-grid">
+<div><b>문서 읽기</b><span>MarkItDown · Docling · PyMuPDF4LLM · Unstructured</span></div>
+<div><b>웹 수집</b><span>requests · httpx · BeautifulSoup · Playwright</span></div>
+<div><b>데이터</b><span>pandas · polars</span></div>
+<div><b>검색</b><span>SQLite FTS5 · BM25 구현체 · Fuse.js</span></div>
+<div><b>시각화</b><span>D3.js · Cytoscape.js · Three.js</span></div>
+<div><b>서버</b><span>FastAPI · Flask · Express · Hono</span></div>
+</div>
+<h2>라이브러리를 찾을 때는 “유명한 것”보다 “내 조건에 맞는 것”</h2>
+<div class="checkline"><span>Windows 지원</span><span>로컬 실행</span><span>라이선스</span><span>최근 유지보수</span><span>지원 파일</span><span>표/OCR</span><span>설치 난이도</span></div>
+<div class="prompt"><b>AI에게 이렇게 시키세요</b><p>“PDF·DOCX·PPTX를 구조를 최대한 보존해서 Markdown/JSON으로 바꾸는 오픈소스 라이브러리를 비교해줘. 로컬 실행, 표 추출, OCR, 라이선스, Windows 설치 난이도, 최근 유지보수 여부를 기준으로 표로 비교하고 내 목적에 맞는 2개만 추천해줘.”</p></div>
+      </div>
+      <footer class="page-foot"><span>2026. 9. 8. 강의 재구성</span><b>10</b></footer>
+    </section><section class="page " data-page="11">
+      <header class="page-head"><span>7. 문서 파싱</span><span>AI 챔피언 고급과정 · 바이브코딩 실전</span></header>
+      <div class="page-content">
+        <h1>문서를 “읽는 것”과 “검색하기 좋게 바꾸는 것”은 다릅니다</h1>
+        <p class="subtitle">문서 파싱은 PDF·Word·PPT·HTML의 내용을 제목, 섹션, 표, 본문, 메타데이터처럼 다룰 수 있는 구조로 바꾸는 작업입니다.</p>
+        <div class="flow horizontal"><div><b>원본문서</b><small>PDF · DOCX · PPTX · HTML</small></div><span>→</span><div><b>파서</b><small>MarkItDown · Docling 등</small></div><span>→</span><div><b>구조화</b><small>Markdown · XML · JSON</small></div><span>→</span><div><b>검색/DB</b><small>SQL · BM25 · Fuse.js</small></div></div>
+<div class="cards4"><div><h3>MarkItDown</h3><p>여러 문서 형식을 빠르게 Markdown 중심으로 바꾸고 싶을 때.</p></div><div><h3>Docling</h3><p>PDF 레이아웃, 표, 읽기 순서처럼 구조 보존이 중요할 때.</p></div><div><h3>PyMuPDF4LLM</h3><p>PDF 중심으로 빠르게 Markdown/JSON/TXT를 만들고 싶을 때.</p></div><div><h3>Unstructured</h3><p>문서를 Title, Table, List 같은 요소 단위로 쪼개고 싶을 때.</p></div></div>
+<div class="warning"><b>꿀팁:</b> 문서가 깨지면 프롬프트를 더 길게 쓰는 것보다 <b>파서 자체를 바꿔 보는 것</b>이 훨씬 빠를 때가 많습니다. 표가 많으면 A, 스캔 PDF면 B, PPT 도형이 중요하면 C처럼 도구를 바꿔 실험하세요.</div>
+      </div>
+      <footer class="page-foot"><span>2026. 9. 8. 강의 재구성</span><b>11</b></footer>
+    </section><section class="page " data-page="12">
+      <header class="page-head"><span>8. 데이터 구조</span><span>AI 챔피언 고급과정 · 바이브코딩 실전</span></header>
+      <div class="page-content">
+        <h1>XML, JSON, CSV, SQLite, JSONB는 경쟁자가 아니라 “다른 그릇”입니다</h1>
+        <p class="subtitle">어떤 형식이 최고인지 묻기보다, 어떤 질문을 할 것인지부터 봅니다.</p>
+        <div class="format-table">
+<div class="row head"><b>형식</b><b>쉽게 말하면</b><b>잘 맞는 상황</b></div>
+<div class="row"><b>XML</b><span>태그로 의미와 계층을 표시</span><span>RSS, 법령, 문서 구조, 표준 교환</span></div>
+<div class="row"><b>JSON</b><span>코드와 AI가 다루기 쉬운 구조</span><span>API, 설정, 웹 데이터, 구조화 문서</span></div>
+<div class="row"><b>CSV</b><span>사람이 바로 보는 표</span><span>DB 넣기 전 검수, 단순 목록</span></div>
+<div class="row"><b>SQLite</b><span>파일 하나짜리 SQL 데이터베이스</span><span>로컬 검색, 개인 도구, 교육 실습</span></div>
+<div class="row"><b>PostgreSQL JSONB</b><span>JSON을 DB 안에서 구조적으로 저장/질의</span><span>Supabase 같은 웹 프로젝트, 유연한 스키마</span></div>
+</div>
+<div class="callout"><b>중요한 구분:</b> SQLite는 보통 JSON을 TEXT로 저장하고 JSON 함수를 사용합니다. PostgreSQL/Supabase에서는 JSONB 타입을 직접 사용할 수 있습니다. 즉, “JSONB”라는 말은 DB 종류에 따라 의미가 다릅니다.</div>
+      </div>
+      <footer class="page-foot"><span>2026. 9. 8. 강의 재구성</span><b>12</b></footer>
+    </section><section class="page " data-page="13">
+      <header class="page-head"><span>8. 데이터 구조</span><span>AI 챔피언 고급과정 · 바이브코딩 실전</span></header>
+      <div class="page-content">
+        <h1>내가 만든 데이터베이스가 프로젝트의 차별점이 됩니다</h1>
+        <p class="subtitle">같은 GPT, 같은 Claude를 써도 데이터가 다르면 서비스의 품질과 전문성이 달라집니다.</p>
+        <div class="big-equation"><span>공개 API</span><b>+</b><span>나만의 정제 데이터</span><b>+</b><span>나만의 검색 규칙</span><b>=</b><strong>차별화된 서비스</strong></div>
+<div class="two"><div><h2>“남들이 가진 데이터”만 쓸 때</h2><ul><li>공공 API 그대로 연결</li><li>원문 문서 전체를 그대로 넣음</li><li>분류체계가 없음</li><li>검색 결과가 비슷해지기 쉬움</li></ul></div>
+<div><h2>“내 데이터”를 만들 때</h2><ul><li>현업에서 필요한 문서만 큐레이션</li><li>부서·날짜·업무유형·근거조항 메타데이터 추가</li><li>예외사례와 판단기준을 사람이 검수</li><li>기관 업무 흐름에 맞는 카테고리 구성</li></ul></div></div>
+<div class="callout"><b>DB는 꼭 거대한 서버가 아닙니다.</b> 작은 프로젝트에서는 잘 정리된 XML 한 파일, JSON 묶음, CSV 폴더도 충분히 “지식베이스”가 됩니다. 핵심은 <b>필요한 순간에 필요한 조각을 정확히 꺼낼 수 있느냐</b>입니다.</div>
+      </div>
+      <footer class="page-foot"><span>2026. 9. 8. 강의 재구성</span><b>13</b></footer>
+    </section><section class="page " data-page="14">
+      <header class="page-head"><span>9. 검색</span><span>AI 챔피언 고급과정 · 바이브코딩 실전</span></header>
+      <div class="page-content">
+        <h1>벡터DB만 검색이 아닙니다</h1>
+        <p class="subtitle">질문 유형과 데이터 구조가 명확하면 SQL·BM25·Fuse.js가 더 단순하고 정확한 경우도 많습니다.</p>
+        <div class="search-grid"><div><b>SQL</b><p>부서=인사, 연도=2026처럼 필드가 명확할 때.</p></div><div><b>FTS5 / BM25</b><p>문서 안의 단어와 문구를 빠르게 찾고 싶을 때.</p></div><div><b>Fuse.js</b><p>브라우저 안에서 작은 JSON을 퍼지 검색할 때.</p></div><div><b>임베딩</b><p>표현은 달라도 의미가 비슷한 문장을 찾고 싶을 때.</p></div></div>
+<div class="example"><b>질문 예시: “재난 문자 외국어 번역 관련 자료 찾아줘.”</b><br>① 키워드/BM25로 관련 문서 후보를 찾음 → ② 날짜·부서 필터 → ③ 상위 5개 문단만 AI에게 전달 → ④ AI가 근거를 종합해 답변</div>
+<div class="callout"><b>검색의 목적은 AI에게 모든 문서를 먹이는 것이 아닙니다.</b> AI가 답변하는 데 필요한 근거를 <b>작고 정확하게 골라주는 것</b>입니다.</div>
+      </div>
+      <footer class="page-foot"><span>2026. 9. 8. 강의 재구성</span><b>14</b></footer>
+    </section><section class="page " data-page="15">
+      <header class="page-head"><span>10. 컨텍스트</span><span>AI 챔피언 고급과정 · 바이브코딩 실전</span></header>
+      <div class="page-content">
+        <h1>컨텍스트 주입은 “AI에게 지금 필요한 자료를 건네주는 것”입니다</h1>
+        <p class="subtitle">RAG, SQL 검색, XML 검색, MCP 조회는 결국 “어떤 근거를 AI에게 넣을 것인가”라는 같은 문제를 다른 방식으로 푸는 것입니다.</p>
+        <div class="context-demo"><div class="q">사용자 질문<br><b>“교육 대상자는 누구야?”</b></div><span>→</span><div class="retrieve">검색<br><small>SQL / BM25 / Fuse / API</small></div><span>→</span><div class="ctx">컨텍스트<br><small>근거 3~5개</small></div><span>→</span><div class="llm">LLM<br><small>답변 + 출처</small></div></div>
+<div class="two"><div><h2>나쁜 방식</h2><p>문서 500개를 전부 프롬프트에 넣고 “알아서 찾아”라고 함.</p><p class="muted">토큰 낭비, 속도 저하, 근거 혼선</p></div><div><h2>좋은 방식</h2><p>질문에 맞는 문서 5개, 문단 10개만 선별해서 전달.</p><p class="muted">저비용, 빠른 응답, 검증 가능한 근거</p></div></div>
+<div class="callout"><b>실무 관점:</b> “RAG를 쓸까 말까?”보다 먼저 “내 질문은 어떤 검색이면 충분한가?”를 묻습니다. 임베딩이 필요하면 그때 추가하면 됩니다.</div>
+      </div>
+      <footer class="page-foot"><span>2026. 9. 8. 강의 재구성</span><b>15</b></footer>
+    </section><section class="page " data-page="16">
+      <header class="page-head"><span>11. MCP</span><span>AI 챔피언 고급과정 · 바이브코딩 실전</span></header>
+      <div class="page-content">
+        <h1>MCP는 AI용 “표준 멀티탭”입니다</h1>
+        <p class="subtitle">AI가 여러 데이터와 기능을 제각각 연결하지 않고, 일정한 방식으로 발견하고 호출하게 해주는 연결 규격입니다.</p>
+        <img class="lecture-img contain" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="강의 스케치: AI와 MCP 서버 연결">
+<p class="caption">강의 스케치 4 — AI가 MCP 서버에 연결되고, 서버 안의 도구가 API·문서·CLI·DB를 호출하는 개념</p>
+<div class="three"><div><b>Tool</b><p>AI가 실행하는 함수<br><code>search_docs()</code><br><code>query_db()</code></p></div><div><b>Resource</b><p>AI가 읽을 수 있는 자료<br>문서 · 파일 · 설정 · 데이터</p></div><div><b>Prompt</b><p>미리 정의한 작업 템플릿<br>검토 절차 · 보고서 양식 등</p></div></div>
+<div class="callout"><b>MCP가 마법은 아닙니다.</b> MCP는 데이터를 똑똑하게 만들어 주는 기술이 아니라, <b>내가 만든 데이터와 기능을 AI가 호출할 수 있게 표준화</b>하는 역할입니다.</div>
+      </div>
+      <footer class="page-foot"><span>2026. 9. 8. 강의 재구성</span><b>16</b></footer>
+    </section><section class="page " data-page="17">
+      <header class="page-head"><span>11. MCP</span><span>AI 챔피언 고급과정 · 바이브코딩 실전</span></header>
+      <div class="page-content">
+        <h1>법령 API만 MCP가 되는 것이 아닙니다</h1>
+        <p class="subtitle">문서, 홈페이지, XML, JSON, SQLite, 내가 만든 계산 로직까지 “함수로 호출 가능하게” 만들면 MCP 도구가 될 수 있습니다.</p>
+        <div class="mcp-sources"><span>법령정보 API</span><span>공공데이터 API</span><span>홈페이지 수집 데이터</span><span>RSS/XML</span><span>JSON 파일</span><span>SQLite DB</span><span>PostgreSQL</span><span>사내 문서 폴더</span><span>내 계산 함수</span></div>
+<div class="flow horizontal compact"><div><b>내 데이터/기능</b><small>DB · XML · API · 파일</small></div><span>→</span><div><b>함수</b><small>search_docs(query)</small></div><span>→</span><div><b>MCP Tool</b><small>입력/출력 규격</small></div><span>→</span><div><b>AI Client</b><small>필요할 때 호출</small></div></div>
+<h2>예: 내가 만든 정책 DB를 MCP로 바꾸는 순서</h2>
+<ol class="steps"><li>사용자가 자주 할 질문을 먼저 적습니다.</li><li>질문을 처리하는 검색 함수를 만듭니다.</li><li>입력값(query, year, department)과 출력(JSON)을 정합니다.</li><li>MCP 서버에서 그 함수를 Tool로 공개합니다.</li><li>AI가 Tool 결과를 읽고 최종 답변을 만듭니다.</li></ol>
+<div class="callout"><b>프로젝트 차별점:</b> 남들도 쓸 수 있는 MCP보다, <b>내가 큐레이션한 데이터 + 내 검색 규칙 + 내 Tool 설계</b>가 붙은 MCP가 더 가치 있습니다.</div>
+      </div>
+      <footer class="page-foot"><span>2026. 9. 8. 강의 재구성</span><b>17</b></footer>
+    </section><section class="page " data-page="18">
+      <header class="page-head"><span>12. 오늘 실습</span><span>AI 챔피언 고급과정 · 바이브코딩 실전</span></header>
+      <div class="page-content">
+        <h1>오늘 강의 프롬프트를 한 줄의 개발 파이프라인으로 읽기</h1>
+        <p class="subtitle">문서 → 구조화 → DB → 검색 → AI → 시각화 → 배포. 사실 오늘 실습은 하나의 프로젝트를 단계적으로 확장한 것입니다.</p>
+        <div class="timeline"><div><b>1</b><span>문서 모으기</span></div><div><b>2</b><span>XML 파싱</span></div><div><b>3</b><span>SQLite/JSON</span></div><div><b>4</b><span>검색</span></div><div><b>5</b><span>AI 답변</span></div><div><b>6</b><span>3D 그래프</span></div><div><b>7</b><span>배포/MCP</span></div></div>
+<div class="prompt"><b>실습 1 · 문서를 XML 검색 컨텍스트로</b><p>“여기 있는 문서를 한 폴더에 모으고, 나중에 검색 컨텍스트로 활용할 수 있도록 XML 구조로 파싱해줘. 제목, 출처, 날짜, 섹션, 본문, 키워드처럼 검색에 필요한 태그를 만들어줘. RSS 방식으로도 활용할 수 있게 구조를 설명해줘.”</p></div>
+<div class="prompt"><b>실습 2 · SQLite로</b><p>“이 문서와 XML을 기반으로 SQLite DB를 설계해줘. 비정형 데이터를 SQL로 찾을 수 있게 필드를 나누되, 바로 DB를 만들기 전에 내가 검수할 수 있는 CSV 예시를 먼저 보여줘.”</p></div>
+<div class="callout"><b>포인트:</b> AI에게 “완성품 한 번에”를 시킨 것이 아니라, <b>데이터가 어떻게 변하는지 단계별로 확인</b>한 것이 좋습니다. 이 방식이 오류를 찾기 쉽습니다.</div>
+      </div>
+      <footer class="page-foot"><span>2026. 9. 8. 강의 재구성</span><b>18</b></footer>
+    </section><section class="page " data-page="19">
+      <header class="page-head"><span>12. 오늘 실습</span><span>AI 챔피언 고급과정 · 바이브코딩 실전</span></header>
+      <div class="page-content">
+        <h1>비정형 문서에는 “일반 컬럼 + JSON 구조”가 잘 맞을 때가 많습니다</h1>
+        <p class="subtitle">모든 내용을 행과 열로 억지로 쪼개면 문맥이 사라집니다. 반대로 모든 것을 JSON 한 덩어리로 넣으면 SQL 검색이 불편합니다.</p>
+        <div class="schema"><div class="fixed"><h2>일반 컬럼</h2><p><code>id</code><br><code>title</code><br><code>date</code><br><code>department</code><br><code>category</code></p></div><div class="plus">+</div><div class="flex"><h2>유연한 구조</h2><p><code>metadata_json</code><br><code>sections_json</code><br><code>entities_json</code><br><code>relations_json</code></p></div></div>
+<div class="prompt"><b>실습 3 · 구조를 다시 생각하기</b><p>“지금은 SQL DB에 명사형 필드로 나눴지만, 내용을 살펴보면 일부는 JSON 구조로 저장하는 편이 자연스러워 보여. 어떤 값은 일반 컬럼으로, 어떤 값은 JSON으로 두는 게 좋은지 먼저 CSV/스키마 표로 보여줘.”</p></div>
+<div class="callout"><b>설계 기준:</b> 자주 필터링·정렬·집계할 값은 컬럼으로, 문서마다 모양이 달라질 수 있는 세부 구조는 JSON/XML로 두는 식으로 생각하면 쉽습니다.</div>
+      </div>
+      <footer class="page-foot"><span>2026. 9. 8. 강의 재구성</span><b>19</b></footer>
+    </section><section class="page " data-page="20">
+      <header class="page-head"><span>13. 검색 챗봇</span><span>AI 챔피언 고급과정 · 바이브코딩 실전</span></header>
+      <div class="page-content">
+        <h1>XML·JSON·DB를 검색해서 AI에게 필요한 근거만 주면 됩니다</h1>
+        <p class="subtitle">초기 버전은 BM25·Fuse.js·SQL만으로도 충분히 만들 수 있습니다.</p>
+        <div class="arch"><div class="box">질문</div><span>→</span><div class="box">검색<br><small>BM25 / Fuse / SQL</small></div><span>→</span><div class="box">상위 결과<br><small>5~10개</small></div><span>→</span><div class="box ai2">OpenRouter AI</div><span>→</span><div class="box">답변 + 근거</div></div>
+<div class="prompt"><b>실습 4 · 검색챗봇</b><p>“지금까지 만든 XML, JSON, DB를 AI 컨텍스트로 사용해서 답변하는 검색챗봇을 만들어줘. BM25, Fuse.js, SQL 중 적합한 방식을 조합하고, 검색된 원문과 출처도 함께 보여줘.”</p></div>
+<div class="prompt"><b>실습 5 · 시각화</b><p>“문서·부서·키워드의 관계를 온톨로지처럼 보이는 3D 그래프 네트워크로 보여줘. 검색 결과와 그래프가 연결되고, 노드를 클릭하면 근거 문서가 열리게 해줘.”</p></div>
+<div class="callout"><b>여기서 중요한 것:</b> 3D 그래프가 멋있다고 프로젝트가 좋아지는 것이 아닙니다. <b>검색 근거가 정확하고, 사용자가 그 근거를 확인할 수 있는 구조</b>가 먼저입니다.</div>
+      </div>
+      <footer class="page-foot"><span>2026. 9. 8. 강의 재구성</span><b>20</b></footer>
+    </section><section class="page " data-page="21">
+      <header class="page-head"><span>14. API/라이브러리 탐색</span><span>AI 챔피언 고급과정 · 바이브코딩 실전</span></header>
+      <div class="page-content">
+        <h1>바이브코딩에서 “찾는 능력”은 실제 개발 능력입니다</h1>
+        <p class="subtitle">좋은 개발자는 모든 기능을 외우지 않습니다. 필요한 순간에 적절한 API·라이브러리·예제를 빨리 찾아 비교합니다.</p>
+        <div class="workflow-list"><div><b>① 기능을 말로 적기</b><p>“PPTX에서 슬라이드 노트만 추출하고 싶다.”</p></div><div><b>② 기술명으로 바꾸기</b><p>PPTX parsing, speaker notes extraction, python-pptx 등</p></div><div><b>③ 후보 5~10개 찾기</b><p>공식 문서, GitHub, 패키지 저장소, 예제 코드</p></div><div><b>④ 조건으로 거르기</b><p>Windows, 라이선스, 유지보수, 설치 난이도, 입력/출력 형식</p></div><div><b>⑤ 작은 샘플로 시험</b><p>파일 1개, API 1회, DB 10행처럼 최소 규모로 검증</p></div><div><b>⑥ 실패하면 부품 교체</b><p>프롬프트만 고치지 말고 라이브러리·검색 방식·저장 형식도 바꿔보기</p></div></div>
+<div class="callout"><b>바이브코딩의 실험:</b> “A가 안 되네 → A를 20번 고친다”가 아니라 “A, B, C를 작은 샘플로 비교해서 가장 잘 맞는 것을 고른다”에 가깝습니다.</div>
+      </div>
+      <footer class="page-foot"><span>2026. 9. 8. 강의 재구성</span><b>21</b></footer>
+    </section><section class="page " data-page="22">
+      <header class="page-head"><span>15. 시행착오</span><span>AI 챔피언 고급과정 · 바이브코딩 실전</span></header>
+      <div class="page-content">
+        <h1>막히면 코드만 고치지 말고 “조합”을 바꿔보세요</h1>
+        <p class="subtitle">같은 문제도 파서, 검색기, DB, 배포 방식을 바꾸면 갑자기 쉬워질 수 있습니다.</p>
+        <div class="troubles">
+<div><b>PDF 표가 깨진다</b><span>MarkItDown → Docling → PyMuPDF4LLM → OCR 옵션 비교</span></div>
+<div><b>검색이 엉뚱하다</b><span>Fuse.js 가중치 → FTS5/BM25 → 필드 검색 → 하이브리드</span></div>
+<div><b>JSON이 너무 크다</b><span>전체 주입 → 필터 → 청크 → 메타데이터/요약</span></div>
+<div><b>API가 느리다</b><span>반복 호출 → 캐시 → 배치 → 서버리스/백엔드 최적화</span></div>
+<div><b>브라우저에서 DB 접근이 어렵다</b><span>프론트 직접 접근 → 백엔드 API 하나 두기</span></div>
+<div><b>MCP 도구가 너무 많다</b><span>기능별 tool 남발 → 사용자 질문 기준 핵심 3~5개로 재설계</span></div>
+</div>
+<div class="callout"><b>추천 실험 순서:</b> 파일 직접 읽기 → JSON/Fuse 검색 → SQLite/FTS5 → 필요하면 임베딩. <b>가장 단순한 버전부터</b> 성공시키면 복잡해져도 디버깅이 쉽습니다.</div>
+      </div>
+      <footer class="page-foot"><span>2026. 9. 8. 강의 재구성</span><b>22</b></footer>
+    </section><section class="page " data-page="23">
+      <header class="page-head"><span>16. 배포 설계</span><span>AI 챔피언 고급과정 · 바이브코딩 실전</span></header>
+      <div class="page-content">
+        <h1>웹으로 옮길 때는 “어디서 무엇이 실행되는지” 다시 그립니다</h1>
+        <p class="subtitle">로컬에서는 한 PC 안에 있던 것들이, 웹에서는 브라우저·서버·DB로 나뉩니다.</p>
+        <div class="deploy"><div><h3>브라우저</h3><p>HTML/CSS/JS<br>입력·표·그래프</p></div><span>⇄ HTTPS</span><div><h3>백엔드/서버리스</h3><p>AI 호출<br>검색·인증<br>비밀키</p></div><span>⇄</span><div><h3>데이터</h3><p>D1 · Supabase<br>PostgreSQL<br>R2 · 외부 API</p></div></div>
+<div class="two"><div><h2>Vercel/Netlify</h2><p>프론트엔드 배포가 편하고 서버리스 함수도 붙일 수 있습니다.</p></div><div><h2>Cloudflare</h2><p>Workers, D1, R2 등 엣지 기반 구성요소를 조합할 수 있습니다.</p></div></div>
+<div class="warning"><b>보안 체크:</b> API 키는 프론트엔드에 넣지 않기 · 환경변수 사용 · DB 쓰기 권한 제한 · 로그에 민감정보 남기지 않기 · CORS/인증 확인.</div>
+      </div>
+      <footer class="page-foot"><span>2026. 9. 8. 강의 재구성</span><b>23</b></footer>
+    </section><section class="page " data-page="24">
+      <header class="page-head"><span>17. 프롬프트 카드</span><span>AI 챔피언 고급과정 · 바이브코딩 실전</span></header>
+      <div class="page-content">
+        <h1>AI에게 “코드부터”가 아니라 “설계와 비교부터” 시키세요</h1>
+        <p class="subtitle">좋은 프롬프트는 길어서 좋은 것이 아니라, 의사결정 기준이 분명해서 좋습니다.</p>
+        <div class="prompt"><b>A. 라이브러리 찾기</b><p>“내 목표는 [목표]다. 처음부터 구현하지 않고 사용할 수 있는 Python/JavaScript 오픈소스 라이브러리 10개를 찾아줘. 설치 난이도, 라이선스, Windows 지원, 로컬 실행, 최근 유지보수 여부로 비교해줘.”</p></div>
+<div class="prompt"><b>B. API 찾기</b><p>“[데이터/기능]을 제공하는 공식 API를 찾아줘. 무료 여부, 인증 방식, 호출 제한, 응답 JSON/XML 예시, Python/JavaScript 호출 예시까지 비교해줘.”</p></div>
+<div class="prompt"><b>C. 데이터 구조 설계</b><p>“이 문서를 AI 검색용 데이터로 바꾸려고 한다. 일반 컬럼과 JSON/XML 계층으로 나눌 부분을 제안하고, 바로 DB를 만들기 전에 내가 검수할 CSV 예시부터 보여줘.”</p></div>
+<div class="prompt"><b>D. 검색 방식 비교</b><p>“문서 수는 [N], 질문 유형은 [유형]이다. SQL, FTS5/BM25, Fuse.js, 임베딩 중 무엇이 적합한지 비용·정확도·난이도로 비교하고 가장 단순한 구조부터 제안해줘.”</p></div>
+      </div>
+      <footer class="page-foot"><span>2026. 9. 8. 강의 재구성</span><b>24</b></footer>
+    </section><section class="page " data-page="25">
+      <header class="page-head"><span>17. 프롬프트 카드</span><span>AI 챔피언 고급과정 · 바이브코딩 실전</span></header>
+      <div class="page-content">
+        <h1>MCP와 배포도 “사용자 질문”에서 역으로 설계합니다</h1>
+        <p class="subtitle">Tool 이름을 먼저 만드는 것이 아니라, 실제 사용자가 어떤 질문을 할지를 먼저 적습니다.</p>
+        <div class="prompt"><b>E. MCP 설계</b><p>“내 데이터는 [XML/JSON/SQLite/API]다. 사용자가 자주 할 질문 10개를 먼저 가정하고, 그 질문을 처리하는 MCP Tool을 3~5개로 최소화해서 이름·입력·출력·내부 검색 로직을 설계해줘.”</p></div>
+<div class="prompt"><b>F. 배포 전 점검</b><p>“이 프로젝트를 공개 웹에 배포하려고 한다. 프론트에 노출되면 안 되는 키, 서버에서 처리해야 하는 기능, CORS, 환경변수, DB 접근, 로그, 권한을 체크리스트로 검사해줘.”</p></div>
+<div class="prompt"><b>G. 실패 원인 분리</b><p>“현재 증상은 [증상]이다. 원인을 데이터, 파싱, 검색, AI 프롬프트, 백엔드, 프론트엔드, 배포 환경으로 나눠 진단 순서를 만들어줘. 한 번에 여러 곳을 고치지 말고 가장 작은 재현 테스트부터 제안해줘.”</p></div>
+<div class="callout"><b>이 프롬프트들의 공통점:</b> AI에게 “정답 하나”를 요구하지 않고, <b>후보를 찾고 → 비교하고 → 작은 실험을 하고 → 선택</b>하게 합니다.</div>
+      </div>
+      <footer class="page-foot"><span>2026. 9. 8. 강의 재구성</span><b>25</b></footer>
+    </section><section class="page " data-page="26">
+      <header class="page-head"><span>18. 오해 정리</span><span>AI 챔피언 고급과정 · 바이브코딩 실전</span></header>
+      <div class="page-content">
+        <h1>초보자가 자주 하는 오해 10가지</h1>
+        <p class="subtitle">기술 이름에 끌려가지 않으면 프로젝트가 훨씬 단순해집니다.</p>
+        <div class="myths">
+<div><b>1</b><span>AI 앱은 React가 필수다.</span><em>작은 도구는 HTML/CSS/JS만으로 충분할 수 있습니다.</em></div>
+<div><b>2</b><span>백엔드는 꼭 Python이다.</span><em>Node.js, Workers, Rust 등도 가능합니다.</em></div>
+<div><b>3</b><span>DB는 서버가 필요하다.</span><em>SQLite는 파일 하나로도 동작합니다.</em></div>
+<div><b>4</b><span>검색 챗봇 = 벡터DB다.</span><em>SQL/BM25/Fuse.js가 더 적합할 때도 많습니다.</em></div>
+<div><b>5</b><span>MCP는 외부 API 연결용이다.</span><em>내 파일·DB·함수도 MCP가 될 수 있습니다.</em></div>
+<div><b>6</b><span>MCP를 쓰면 검색 정확도가 자동으로 오른다.</span><em>검색 품질은 데이터와 함수 설계가 좌우합니다.</em></div>
+<div><b>7</b><span>JSON이 XML보다 항상 좋다.</span><em>RSS·계층·표준 교환은 XML이 자연스러울 수 있습니다.</em></div>
+<div><b>8</b><span>AI가 좋은 라이브러리를 알아서 선택한다.</span><em>조건을 주고 비교·검증해야 합니다.</em></div>
+<div><b>9</b><span>프론트에 API 키를 넣어도 된다.</span><em>공개 배포에서는 위험합니다.</em></div>
+<div><b>10</b><span>한 번에 완성해야 한다.</span><em>작은 버전 → 검증 → 확장이 더 빠릅니다.</em></div>
+</div>
+      </div>
+      <footer class="page-foot"><span>2026. 9. 8. 강의 재구성</span><b>26</b></footer>
+    </section><section class="page " data-page="27">
+      <header class="page-head"><span>19. 최소 조합</span><span>AI 챔피언 고급과정 · 바이브코딩 실전</span></header>
+      <div class="page-content">
+        <h1>기술을 많이 쓰는 것이 고급이 아닙니다</h1>
+        <p class="subtitle">목적에 맞는 가장 작은 조합부터 시작하고, 필요할 때만 부품을 추가합니다.</p>
+        <div class="recipes">
+<div><b>개인용 문서검색</b><span>Python + MarkItDown + SQLite FTS5 + AI API</span></div>
+<div><b>브라우저만으로 작은 검색기</b><span>JSON + Fuse.js + HTML/CSS/JS</span></div>
+<div><b>공개 웹 검색챗봇</b><span>Workers/Node + DB + AI API + HTML/React</span></div>
+<div><b>복잡한 PDF 검색</b><span>Docling/PyMuPDF4LLM + 구조화 JSON + 검색 + AI</span></div>
+<div><b>기관 내부 데이터 도구화</b><span>SQLite/PostgreSQL + 검색함수 + MCP Server + AI Client</span></div>
+<div><b>관계 시각화</b><span>JSON graph + Cytoscape.js/Three.js + 검색 API</span></div>
+</div>
+<div class="callout"><b>고급 설계의 기준:</b> 기술이 많은가가 아니라, <b>데이터가 어디서 와서 → 어떻게 검색되고 → 어떤 근거가 AI에 들어가고 → 어디에서 실행되는지 설명할 수 있는가</b>입니다.</div>
+      </div>
+      <footer class="page-foot"><span>2026. 9. 8. 강의 재구성</span><b>27</b></footer>
+    </section><section class="page " data-page="28">
+      <header class="page-head"><span>20. 실전 예제</span><span>AI 챔피언 고급과정 · 바이브코딩 실전</span></header>
+      <div class="page-content">
+        <h1>예제: “기관장용 정책문서 검색 비서”를 만든다면</h1>
+        <p class="subtitle">오늘 강의의 여러 조각을 하나의 실제 서비스로 묶어봅니다.</p>
+        <ol class="steps large"><li><b>문서 수집</b> — PDF, DOCX, PPTX, 홈페이지 자료를 폴더에 모읍니다.</li><li><b>파싱</b> — MarkItDown/Docling 등으로 Markdown 또는 JSON으로 바꿉니다.</li><li><b>메타데이터</b> — 제목, 날짜, 부서, 주제, 근거, 키워드를 붙입니다.</li><li><b>저장</b> — 작은 규모는 JSON/SQLite, 웹서비스는 PostgreSQL/Supabase 등을 검토합니다.</li><li><b>검색</b> — FTS5/BM25, SQL, Fuse.js 중 가장 단순한 것을 먼저 씁니다.</li><li><b>AI</b> — 상위 검색 결과 5~10개와 질문을 AI API에 보냅니다.</li><li><b>근거 표시</b> — 답변 옆에 원문, 출처, 날짜를 보여줍니다.</li><li><b>관계 시각화</b> — 문서·키워드·부서 그래프를 붙입니다.</li><li><b>MCP</b> — 반복 검색/조회 기능을 Tool로 묶습니다.</li><li><b>배포</b> — 로컬 검증 후 Cloudflare/Vercel 등에 옮깁니다.</li></ol>
+      </div>
+      <footer class="page-foot"><span>2026. 9. 8. 강의 재구성</span><b>28</b></footer>
+    </section><section class="page " data-page="29">
+      <header class="page-head"><span>21. 체크리스트</span><span>AI 챔피언 고급과정 · 바이브코딩 실전</span></header>
+      <div class="page-content">
+        <h1>프로젝트를 만들기 전에 이 12가지만 답해보세요</h1>
+        <p class="subtitle">기술 선택보다 먼저 답해야 하는 질문들입니다.</p>
+        <div class="checklist">
+<label>□ 사용자는 실제로 어떤 질문/행동을 하는가?</label>
+<label>□ 답변의 근거 데이터는 어디에 있는가?</label>
+<label>□ 문서는 어떤 라이브러리로 읽을 것인가?</label>
+<label>□ XML/JSON/CSV/SQL 중 어떤 구조가 자연스러운가?</label>
+<label>□ SQL/BM25/Fuse/임베딩 중 가장 단순한 검색은 무엇인가?</label>
+<label>□ AI가 판단할 부분과 규칙으로 처리할 부분을 나눴는가?</label>
+<label>□ API/라이브러리 후보를 2개 이상 비교했는가?</label>
+<label>□ 비밀키·DB·파일처리는 백엔드에서 안전하게 처리하는가?</label>
+<label>□ 사용자가 검색 근거를 확인할 수 있는가?</label>
+<label>□ 반복 기능을 MCP Tool로 만들 가치가 있는가?</label>
+<label>□ 로컬에서 작은 샘플로 먼저 검증했는가?</label>
+<label>□ 문제가 생겼을 때 부품을 교체할 수 있게 나눠져 있는가?</label>
+</div>
+<div class="callout"><b>12개에 답할 수 있으면</b> AI에게 훨씬 정확한 개발 지시를 줄 수 있습니다. 반대로 답이 없으면 AI가 임의로 기술을 골라 프로젝트가 불필요하게 복잡해질 수 있습니다.</div>
+      </div>
+      <footer class="page-foot"><span>2026. 9. 8. 강의 재구성</span><b>29</b></footer>
+    </section><section class="page " data-page="30">
+      <header class="page-head"><span>22. 용어 정리</span><span>AI 챔피언 고급과정 · 바이브코딩 실전</span></header>
+      <div class="page-content">
+        <h1>한 번에 보는 초보자 용어 사전</h1>
+        <p class="subtitle">강의 중 나오는 용어를 “무슨 역할인가” 기준으로만 정리했습니다.</p>
+        <div class="glossary">
+<div><b>LLM</b><span>텍스트를 이해하고 생성하는 AI 모델</span></div><div><b>API</b><span>다른 서비스의 기능/데이터를 호출하는 통로</span></div><div><b>Library</b><span>내 코드 안에 설치해서 쓰는 재사용 부품</span></div><div><b>SDK</b><span>특정 서비스/API를 쉽게 쓰게 해주는 개발도구 묶음</span></div><div><b>Frontend</b><span>사용자가 보는 화면</span></div><div><b>Backend</b><span>데이터·AI·업무규칙을 처리하는 서버 쪽</span></div><div><b>Database</b><span>데이터를 저장하고 조회하는 구조</span></div><div><b>Parsing</b><span>문서를 검색/처리하기 좋은 구조로 바꾸는 작업</span></div><div><b>Context</b><span>AI가 이번 답변에 참고하도록 주는 정보</span></div><div><b>Retrieval</b><span>질문에 필요한 근거를 찾아오는 단계</span></div><div><b>MCP</b><span>AI가 도구·데이터를 일정한 방식으로 호출하는 연결 규격</span></div><div><b>Harness</b><span>AI가 파일·터미널·브라우저·도구를 실제로 쓰게 하는 실행 환경</span></div><div><b>localhost</b><span>내 컴퓨터 안에서 실행 중인 서버 주소</span></div><div><b>Serverless</b><span>서버를 직접 운영하지 않고 함수 단위로 실행하는 배포 방식</span></div>
+</div>
+      </div>
+      <footer class="page-foot"><span>2026. 9. 8. 강의 재구성</span><b>30</b></footer>
+    </section><section class="page " data-page="31">
+      <header class="page-head"><span>23. 마지막 한 장</span><span>AI 챔피언 고급과정 · 바이브코딩 실전</span></header>
+      <div class="page-content">
+        <h1>바이브코딩의 본질을 한 문장으로</h1>
+        <p class="subtitle">AI가 코드를 잘 써주는 시대일수록, 사람은 “무엇을 연결할지”를 더 잘 알아야 합니다.</p>
+        <div class="final-flow"><span>문제</span><i>↓</i><span>데이터·문서·API</span><i>↓</i><span>파싱 라이브러리</span><i>↓</i><span>XML / JSON / DB</span><i>↓</i><span>SQL / BM25 / Fuse / 임베딩</span><i>↓</i><span>컨텍스트 주입</span><i>↓</i><span>AI / LLM</span><i>↓</i><span>백엔드</span><i>↓</i><span>프론트엔드</span><i>↓</i><span>배포</span></div>
+<div class="closing">바이브코딩의 경쟁력은 “프롬프트를 예쁘게 쓰는 능력”만으로 생기지 않습니다.<br><br><b>내 문제에 맞는 데이터</b>, <b>내 데이터에 맞는 파서</b>, <b>내 질문에 맞는 검색</b>, <b>내 환경에 맞는 API와 라이브러리</b>를 찾고 조합하는 능력에서 생깁니다.<br><br>그리고 그 조합을 반복 가능한 도구로 만들 때 <b>에이전트와 MCP</b>가 의미를 갖습니다.</div>
+      </div>
+      <footer class="page-foot"><span>2026. 9. 8. 강의 재구성</span><b>31</b></footer>
+    </section><section class="page " data-page="32">
+      <header class="page-head"><span>APPENDIX</span><span>AI 챔피언 고급과정 · 바이브코딩 실전</span></header>
+      <div class="page-content">
+        <h1>부록 · 오늘 이후 직접 더 찾아볼 키워드</h1>
+        <p class="subtitle">막혔을 때 검색하거나 AI에게 조사시킬 수 있는 키워드 목록입니다.</p>
+        <div class="keyword-groups">
+<div><b>문서 파싱</b><span>MarkItDown, Docling, PyMuPDF4LLM, Unstructured, Pandoc, Apache Tika, OCR</span></div>
+<div><b>검색</b><span>SQLite FTS5, BM25, Fuse.js, full-text search, metadata filter, hybrid search</span></div>
+<div><b>DB</b><span>SQLite, PostgreSQL, JSONB, Supabase, Cloudflare D1</span></div>
+<div><b>백엔드</b><span>FastAPI, Flask, Express, Hono, Cloudflare Workers, serverless function</span></div>
+<div><b>프론트엔드</b><span>HTML/CSS/JS, React, Cytoscape.js, D3.js, Three.js</span></div>
+<div><b>에이전트/MCP</b><span>tool calling, function calling, MCP server, MCP client, resources, prompts, tool schema</span></div>
+</div>
+<div class="prompt"><b>마지막으로 AI에게 이렇게 물어보세요</b><p>“내가 지금 만들려는 프로젝트를 구성요소로 분해해줘. 데이터, 파싱, 저장, 검색, AI, 백엔드, 프론트엔드, 배포, MCP로 나누고, 각 단계에서 사용할 수 있는 API와 오픈소스 라이브러리 후보를 3개씩 찾아 비교해줘. 처음에는 가장 단순한 최소 구성으로 제안하고, 이후 확장 경로도 보여줘.”</p></div>
+<div class="small-note">오픈소스 라이브러리와 API의 기능·라이선스·유지보수 상태는 바뀔 수 있으므로 실제 프로젝트에 넣기 전 공식 문서와 최근 릴리스를 다시 확인하세요.</div>
+      </div>
+      <footer class="page-foot"><span>2026. 9. 8. 강의 재구성</span><b>32</b></footer>
+    </section></main><script>
+const pages=[...document.querySelectorAll('.page')];
+let current=Math.max(1,Math.min(pages.length,parseInt(location.hash.replace('#p',''))||1));
+const body=document.body, count=document.getElementById('count');
+function render(){pages.forEach((p,i)=>p.classList.toggle('active',i===current-1));count.textContent=`${current} / ${pages.length}`;location.hash='p'+current;window.scrollTo({top:0,behavior:'instant'});}
+function go(n){current=Math.max(1,Math.min(pages.length,n));render()}
+document.getElementById('prev').onclick=()=>go(current-1);document.getElementById('next').onclick=()=>go(current+1);
+document.getElementById('mode').onchange=e=>{body.classList.toggle('paged',e.target.value==='paged');if(body.classList.contains('paged'))render();else pages.forEach(p=>p.classList.remove('active'));};
+document.getElementById('print').onclick=()=>window.print();document.getElementById('toc').onchange=e=>{if(e.target.value){go(+e.target.value);e.target.value='';}};
+window.addEventListener('keydown',e=>{if(!body.classList.contains('paged'))return;if(e.key==='ArrowRight'||e.key==='PageDown')go(current+1);if(e.key==='ArrowLeft'||e.key==='PageUp')go(current-1)});
+window.addEventListener('hashchange',()=>{const n=parseInt(location.hash.replace('#p',''));if(n&&n!==current){current=n;render()}});render();
+</script><script>/* kg-preview: #<heading> \uc704\uce58\ub85c \uc774\ub3d9 */
+(function(){function norm(t){return (t||'').replace(/\s+/g,'').toLowerCase()}
+function go(){var h=decodeURIComponent(location.hash.slice(1));if(!h)return;var k=norm(h).slice(0,24);if(!k)return;
+var best=null,bl=1e9,els=document.body.querySelectorAll('h1,h2,h3,h4,h5,p,div,span,li,td,text,tspan,section,article');
+for(var i=0;i<els.length;i++){var e=els[i],t=norm(e.textContent);if(t.length<bl&&t.indexOf(k)>-1){best=e;bl=t.length}}
+if(!best)return;var box=best.closest('section,[class*=slide],[class*=page],article')||best;
+box.scrollIntoView({block:'start'});box.style.outline='3px solid #c0504d';box.style.outlineOffset='4px';
+setTimeout(function(){box.style.outline=''},2600)}
+window.addEventListener('load',function(){setTimeout(go,400)});window.addEventListener('hashchange',go)})();</script></body></html>

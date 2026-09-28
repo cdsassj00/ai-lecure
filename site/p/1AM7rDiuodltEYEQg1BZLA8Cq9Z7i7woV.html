@@ -1,0 +1,1204 @@
+<!doctype html>
+<html lang="ko">
+<head><meta name="robots" content="noindex, nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>생성형AI 강사양성과정</title>
+<!--
+  사용법: 이 파일을 결과 경로로 복사한 뒤, <section class="slide"> 들을 주제에 맞게 채운다.
+  CSS는 손대지 말고 그대로 둔다(디자인 일관성). 아래 슬라이드들은 레이아웃 예시이며,
+  필요한 것만 골라 복제·편집하고 나머지는 지운다. 캔버스는 1280x720(16:9) 고정.
+  팔레트는 <body data-palette="..."> 값으로 고른다. 색상 버튼은 미리보기용이며 저장 시 유지된다.
+-->
+<style>
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css");
+@import url("https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500;600;700;900&family=JetBrains+Mono:wght@400;600&display=swap");
+:root{
+  --pagebg:#cfc8ba; --presentbg:#0c0907;
+  --paper:#f8f4ed; --paper2:#fbf8f1; --band:#efe8d7; --band2:#e7dcc6;
+  --dark:#1a130f; --ink:#211913; --ink2:#473d33; --muted:#8c8275;
+  --rust:#bf571d; --rust2:#9c440f; --gold:#c98a3a; --line:#ddd1ba; --line2:#cabb9c;
+  --soft-bg:#eef1e9; --soft-fg:#3a5240; --force-bg:#34190f; --force-fg:#ffcfa8;
+  --stack1:#9c440f; --stack2:#b35a26; --stack3:#c47a45; --stack4:#caa06e; --stack4fg:#2a1d12;
+  --fail-bg:#2a1812; --fail-title:#ffd9bb; --fail-text:#d3c6b8;
+}
+body[data-palette="navy-coral"]{
+  --pagebg:#c6d0ce; --presentbg:#071819;
+  --paper:#f4f7f4; --paper2:#fbfcf9; --band:#e4ece8; --band2:#d5e1dd;
+  --dark:#102425; --ink:#172223; --ink2:#3d4b4c; --muted:#738181;
+  --rust:#00756f; --rust2:#005f5a; --gold:#b97923; --line:#cedbd8; --line2:#b8c9c5;
+  --soft-bg:#e8f0e6; --soft-fg:#34533b; --force-bg:#123331; --force-fg:#aee7df;
+  --stack1:#005f5a; --stack2:#087c75; --stack3:#39978e; --stack4:#9fc9bd; --stack4fg:#123331;
+  --fail-bg:#182a2c; --fail-title:#bceee7; --fail-text:#d0dddc;
+}
+body[data-palette="forest-gold"]{
+  --pagebg:#c9c8b8; --presentbg:#0b160d;
+  --paper:#f6f5ec; --paper2:#fbfaf4; --band:#e6ead9; --band2:#d7ddc3;
+  --dark:#172719; --ink:#1f271f; --ink2:#454c42; --muted:#7b8173;
+  --rust:#5d7c2f; --rust2:#46651f; --gold:#b98222; --line:#d7dcc9; --line2:#bdc7a8;
+  --soft-bg:#edf0df; --soft-fg:#405225; --force-bg:#263317; --force-fg:#d6e89a;
+  --stack1:#46651f; --stack2:#5d7c2f; --stack3:#819b4b; --stack4:#c6c983; --stack4fg:#263317;
+  --fail-bg:#1f2b18; --fail-title:#e3efad; --fail-text:#d4dbc8;
+}
+body[data-palette="navy-coral"]{
+  --pagebg:#c8ccd3; --presentbg:#070d18;
+  --paper:#f5f6f8; --paper2:#fbfbfd; --band:#e5e9ef; --band2:#d7dde6;
+  --dark:#101827; --ink:#171d2a; --ink2:#424a59; --muted:#767f90;
+  --rust:#b94a48; --rust2:#943539; --gold:#c38424; --line:#d6dce5; --line2:#bdc7d4;
+  --soft-bg:#e8edf3; --soft-fg:#314760; --force-bg:#241d2c; --force-fg:#ffc9c5;
+  --stack1:#943539; --stack2:#b94a48; --stack3:#c96c63; --stack4:#dba89d; --stack4fg:#2b1e24;
+  --fail-bg:#241d2c; --fail-title:#ffc9c5; --fail-text:#d8d3dc;
+}
+body[data-palette="graphite-rose"]{
+  --pagebg:#cbc7c8; --presentbg:#101011;
+  --paper:#f7f5f4; --paper2:#fcfaf9; --band:#e9e3e2; --band2:#ddd4d2;
+  --dark:#202022; --ink:#222122; --ink2:#4c4849; --muted:#807879;
+  --rust:#a8485c; --rust2:#873447; --gold:#b47a2f; --line:#ded6d3; --line2:#c8bdb9;
+  --soft-bg:#eee8e6; --soft-fg:#4c4748; --force-bg:#332026; --force-fg:#ffd2dc;
+  --stack1:#873447; --stack2:#a8485c; --stack3:#bd6c79; --stack4:#d4a7ad; --stack4fg:#332026;
+  --fail-bg:#332026; --fail-title:#ffd2dc; --fail-text:#ded1d4;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;background:var(--pagebg);font-family:Pretendard,"Apple SD Gothic Neo","Noto Sans KR",sans-serif;color:var(--ink);-webkit-font-smoothing:antialiased;}
+.deck{display:flex;flex-direction:column;align-items:center;gap:22px;padding:22px 0 40px;}
+.slide{position:relative;width:1280px;height:720px;background:var(--paper);overflow:hidden;box-shadow:0 10px 34px rgba(0,0,0,.22);}
+h1,h2,h3,h4,p,ul,ol,li{margin:0;padding:0;}
+
+/* 머리글: 솔리드 다크 마스트헤드 (그림자/그라데이션 금지) */
+.hdr{position:absolute;top:0;left:0;right:0;height:44px;display:flex;align-items:center;justify-content:space-between;padding:0 46px;background:var(--dark);z-index:3;}
+.hdr .ht{font-size:12.5px;font-weight:700;color:#f3ede2;letter-spacing:.2px;}
+.hdr .ht span{color:rgba(243,237,226,.42);font-weight:600;letter-spacing:1px;font-size:10px;margin-left:7px;}
+.hdr .hr{font-size:10.5px;font-weight:600;letter-spacing:1.2px;color:rgba(243,237,226,.55);}
+
+.stage{position:absolute;top:44px;left:0;right:0;bottom:0;padding:26px 50px 38px;display:flex;flex-direction:column;}
+.crumb{font-size:14px;font-weight:600;color:var(--rust);letter-spacing:.3px;margin-bottom:6px;}
+.atitle{font-family:"Noto Serif KR",serif;font-weight:700;font-size:28px;line-height:1.28;color:#13100c;letter-spacing:-.4px;}
+.atitle .lbl{color:var(--rust2);}
+.atitle .sub{font-weight:500;color:#3a322a;}
+.titlerule{height:0;border-bottom:1.5px solid var(--line2);margin:14px 0 0;}
+
+.body{flex:1;min-height:0;display:grid;gap:26px;padding-top:18px;}
+.split{grid-template-columns:1fr 1fr;}
+.split-l{grid-template-columns:1.08fr .92fr;}
+.split-r{grid-template-columns:.9fr 1.1fr;}
+.colflow{display:flex;flex-direction:column;min-height:0;}
+
+/* 인트로 설명문(합니다체) */
+.lead{font-size:16.5px;line-height:1.82;color:var(--ink);font-weight:400;}
+.lead b{font-weight:700;color:#13100c;}
+.lead .hl{color:var(--rust2);font-weight:700;}
+
+/* 번호 개념 정의 — 박스 그리드 대신 이것을 쓴다 */
+.concepts{display:flex;flex-direction:column;}
+.concepts.fill{flex:1;justify-content:flex-start;}          /* 칼럼 높이를 균등 분배해 채움 */
+.concepts.fill .concept{flex:1;align-items:center;}
+.concept{padding:16px 0 17px;border-bottom:1px solid var(--line);display:flex;gap:16px;}
+.concept:first-child{padding-top:5px;}
+.concept .no{flex:0 0 auto;font-family:"Noto Serif KR",serif;font-size:22px;font-weight:700;color:var(--rust);line-height:1.25;width:30px;}
+.concept .cbody{flex:1;}
+.concept .cbody .cn{font-size:17.5px;font-weight:700;color:#15100c;line-height:1.3;}
+.concept .cbody .cn .en{font-size:12px;font-weight:600;color:var(--muted);letter-spacing:.6px;margin-left:8px;}
+.concept .cbody p{font-size:15px;line-height:1.7;color:var(--ink2);margin-top:6px;font-weight:400;}
+.concept .cbody p b{color:#2a231c;font-weight:700;}
+.concepts.big .concept .cbody .cn{font-size:19px;}
+.concepts.big .concept .cbody p{font-size:16px;line-height:1.74;}
+.boxmore{display:block;margin-top:6px;color:var(--rust2);font-weight:650;}
+.boxcheck{display:block;margin-top:3px;color:#5d5044;font-weight:500;}
+
+/* 하단 정리/캡션 바 — 슬로건 금지, 사실 설명만 */
+.note{margin-top:auto;display:flex;gap:16px;align-items:flex-start;padding:16px 20px;background:var(--band);border-left:3px solid var(--rust);border-radius:0 3px 3px 0;}
+.note .nl{flex:0 0 auto;font-size:12px;font-weight:700;letter-spacing:1px;color:var(--rust2);padding-top:2px;}
+.note p{font-size:15px;line-height:1.66;color:var(--ink);font-weight:400;}
+.note p b{font-weight:700;color:var(--rust2);}
+.srcline{position:absolute;left:50px;bottom:15px;font-size:11px;color:var(--muted);font-weight:400;}
+.pageno{position:absolute;right:30px;bottom:13px;font-size:13.5px;font-weight:700;color:var(--rust);}
+
+/* 표 */
+.tablefill{flex:1;min-height:0;display:flex;align-items:stretch;}
+.tablefill table.grid{height:100%;}
+table.grid{width:100%;border-collapse:collapse;font-size:14.2px;}
+table.grid th{background:var(--dark);color:#f1ebe0;font-weight:700;font-size:13.4px;padding:9.5px 12px;text-align:left;}
+table.grid td{padding:10px 12px;border-bottom:1px solid var(--line);color:var(--ink2);vertical-align:top;line-height:1.52;}
+table.grid tr:nth-child(even) td{background:rgba(231,220,198,.36);}
+table.grid td b{color:#1c1610;font-weight:700;}
+.grp td{background:var(--band2)!important;color:var(--rust2);font-weight:700;font-size:13px;letter-spacing:.5px;}
+table.grid.even{--rows:3;--head-h:44px;height:100%;table-layout:fixed;}
+table.grid.even th,table.grid.even td{vertical-align:middle;}
+table.grid.even tr:first-child{height:var(--head-h);}
+table.grid.even .grp{height:34px;}
+table.grid.even tr:not(:first-child):not(.grp){height:calc((100% - var(--head-h)) / var(--rows));}
+table.grid.roomy{font-size:14.7px;}
+table.grid.roomy th{font-size:13.8px;padding:11px 13px;}
+table.grid.roomy td{padding:12px 13px;line-height:1.58;}
+table.grid.tight{font-size:13px;}
+table.grid.tight th,table.grid.tight td{padding:6.5px 12px;}
+table.grid.tight td{line-height:1.45;}
+.pill{display:inline-block;font-size:11px;font-weight:700;padding:2px 8px;border-radius:3px;white-space:nowrap;}
+.pill.soft{background:var(--soft-bg);color:var(--soft-fg);}
+.pill.force{background:var(--force-bg);color:var(--force-fg);}
+
+/* === 도식 === */
+.figcap{font-size:12px;font-weight:700;letter-spacing:1px;color:var(--muted);margin-bottom:16px;text-transform:uppercase;}
+.figwrap{display:flex;flex-direction:column;justify-content:center;min-height:0;height:100%;}
+.figwrap.flow .veri{flex:1;justify-content:space-between;}  /* 5단 이상 흐름만 채우기. 항목 3개 이하면 .flow 빼기 */
+
+/* 가로 타임라인 */
+.lineage{display:flex;align-items:stretch;}
+.lineage .ln{flex:1;text-align:center;padding:0 10px;position:relative;}
+.lineage .ln .dot{width:17px;height:17px;border-radius:50%;background:var(--paper);border:4px solid var(--rust);margin:0 auto 16px;position:relative;z-index:2;}
+.lineage .ln.hot .dot{background:var(--rust);}
+.lineage .ln::before{content:"";position:absolute;top:8px;left:0;right:0;height:2px;background:var(--line2);z-index:1;}
+.lineage .ln:first-child::before{left:50%;}.lineage .ln:last-child::before{right:50%;}
+.lineage .ln .yr{font-size:12px;font-weight:700;color:var(--muted);margin-bottom:5px;}
+.lineage .ln .tm{font-size:16px;font-weight:700;color:#15100c;line-height:1.25;margin-bottom:8px;}
+.lineage .ln p{font-size:13.5px;line-height:1.5;color:var(--ink2);}
+
+/* 2계층 스택(대비) */
+.layer2{display:flex;flex-direction:column;gap:15px;}
+.layer2 .lay{border-radius:6px;padding:21px 24px;}
+.layer2 .lay.top{background:var(--band);border:1.5px solid var(--line2);}
+.layer2 .lay.bot{background:var(--dark);color:#efe7da;}
+.layer2 .lay .lh{font-size:17.5px;font-weight:700;margin-bottom:6px;}
+.layer2 .lay.top .lh{color:#15100c;}
+.layer2 .lay .lt{font-size:12.5px;font-weight:600;color:var(--rust);letter-spacing:.5px;margin-bottom:9px;}
+.layer2 .lay.bot .lt{color:var(--gold);}
+.layer2 .lay p{font-size:14px;line-height:1.6;}
+.layer2 .lay.top p{color:var(--ink2);}.layer2 .lay.bot p{color:#cabfb0;}
+.layer2 .conn{text-align:center;color:var(--muted);font-size:13px;font-weight:600;}
+.layer2.big .lay{padding:25px 28px;}
+.layer2.big .lay .lh{font-size:20px;}
+.layer2.big .lay p{font-size:15.5px;line-height:1.68;}
+
+/* 순서 흐름 도식(반복 포함) */
+.loop{display:flex;flex-direction:column;gap:13px;}
+.loop .lp{display:flex;align-items:center;gap:14px;background:var(--paper2);border:1px solid var(--line);border-radius:5px;padding:15px 18px;}
+.loop .lp .lpn{flex:0 0 auto;width:27px;height:27px;border-radius:50%;background:var(--dark);color:#f1ebe0;font-size:12.5px;font-weight:700;display:flex;align-items:center;justify-content:center;}
+.loop .lp .lpt{font-size:15px;color:var(--ink);line-height:1.4;}
+.loop .lp .lpt b{font-weight:700;color:#15100c;}
+.loop .back{font-size:13px;color:var(--rust2);font-weight:700;text-align:center;align-self:center;margin-top:5px;background:var(--band);border:1px dashed var(--line2);border-radius:20px;padding:7px 18px;}
+.loop.big .lp{padding:18px 20px;}
+.loop.big .lp .lpt{font-size:16.5px;line-height:1.55;}
+
+/* 폭 증가 계층 스택 */
+.stack{display:flex;flex-direction:column;gap:12px;align-items:center;}
+.stack .sb{border-radius:5px;padding:16px 22px;color:#fff;text-align:left;}
+.stack .sb .sh{font-size:16px;font-weight:700;}
+.stack .sb .sd{font-size:13px;opacity:.92;margin-top:3px;line-height:1.45;}
+.stack .s1{width:56%;background:var(--stack1);}.stack .s2{width:70%;background:var(--stack2);}
+.stack .s3{width:84%;background:var(--stack3);}.stack .s4{width:98%;background:var(--stack4);color:var(--stack4fg);}
+
+/* 분기 흐름(검증/판정) */
+.veri{display:flex;flex-direction:column;gap:11px;}
+.veri .vrow{display:flex;align-items:center;gap:13px;}
+.veri .vbox{flex:1;background:var(--paper2);border:1px solid var(--line);border-radius:5px;padding:15px 18px;}
+.veri .vbox .vt{font-size:15px;font-weight:700;color:#15100c;}
+.veri .vbox p{font-size:13.5px;color:var(--ink2);line-height:1.5;margin-top:3px;}
+.veri .vbox.fail{background:var(--fail-bg);border-color:var(--fail-bg);}
+.veri .vbox.fail .vt{color:var(--fail-title);}.veri .vbox.fail p{color:var(--fail-text);}
+.veri .arr{color:var(--rust);font-size:18px;font-weight:700;flex:0 0 auto;}
+.veri.big .vbox{padding:18px 21px;}
+.veri.big .vbox .vt{font-size:16.5px;}
+.veri.big .vbox p{font-size:14.8px;line-height:1.58;}
+
+/* 가로 단계(좌→우) */
+.steps{display:flex;align-items:stretch;}
+.steps .st{flex:1;padding:0 18px;position:relative;}
+.steps .st:not(:last-child)::after{content:"›";position:absolute;right:-7px;top:15px;color:var(--rust);font-size:24px;font-weight:700;}
+.steps .st .sn{font-size:12px;font-weight:700;color:var(--rust);letter-spacing:.5px;margin-bottom:7px;}
+.steps .st .sh{font-size:16.5px;font-weight:700;color:#15100c;margin-bottom:7px;}
+.steps .st p{font-size:14.5px;line-height:1.58;color:var(--ink2);}
+.steps.big .st .sh{font-size:18.2px;}
+.steps.big .st p{font-size:15.6px;line-height:1.64;}
+
+/* 단계 사이 데이터 릴레이 바 */
+.relay{display:flex;align-items:stretch;gap:9px;}
+.relay .rc{flex:1;background:var(--band);border:1px solid var(--line2);border-radius:5px;padding:13px 12px;text-align:center;display:flex;flex-direction:column;justify-content:center;}
+.relay .rc .rk{font-size:11px;font-weight:700;color:var(--rust2);letter-spacing:.5px;margin-bottom:5px;}
+.relay .rc .rv{font-size:14.5px;font-weight:700;color:#15100c;}
+.relay .ra{display:flex;align-items:center;color:var(--rust);font-size:17px;font-weight:700;}
+.relay.big .rc{padding:16px 14px;}
+.relay.big .rc .rk{font-size:12px;margin-bottom:7px;}
+.relay.big .rc .rv{font-size:16.6px;line-height:1.35;}
+
+/* 영역 카드(3열) */
+.domain{flex:1;background:var(--paper2);border:1px solid var(--line);border-top:3px solid var(--rust);border-radius:5px;padding:18px 19px;display:flex;flex-direction:column;}
+.domain .dh{font-size:17.5px;font-weight:700;color:#15100c;margin-bottom:6px;}
+.domain .dh span{font-size:12px;font-weight:600;color:var(--muted);margin-left:7px;}
+.dl{list-style:none;display:flex;flex-direction:column;flex:1;justify-content:space-around;padding-top:4px;}
+.dl li{position:relative;padding-left:16px;font-size:14.5px;line-height:1.55;color:var(--ink2);}
+.dl li::before{content:"";position:absolute;left:0;top:9px;width:6px;height:6px;background:var(--rust);border-radius:1px;}
+.dl li b{color:var(--rust2);font-weight:700;margin-right:5px;}
+.domain.big{padding:21px 22px;}
+.domain.big .dh{font-size:20px;margin-bottom:8px;}
+.domain.big .dl li{font-size:15.8px;line-height:1.64;}
+
+/* 인용(좌측 빈 중단 채울 때) */
+.pull{border-left:3px solid var(--rust);padding:6px 0 6px 20px;font-family:"Noto Serif KR",serif;font-size:19.5px;font-weight:600;color:#15100c;line-height:1.5;}
+.pull span{display:block;font-family:Pretendard,sans-serif;font-size:14px;font-weight:400;color:var(--ink2);line-height:1.65;margin-top:11px;}
+
+/* 수치 강조 */
+.stats{display:flex;gap:16px;margin-top:8px;}
+.stat{flex:1;text-align:center;background:var(--paper2);border:1px solid var(--line);border-radius:5px;padding:16px 12px;}
+.stat .sv{font-family:"Noto Serif KR",serif;font-size:28px;font-weight:700;color:var(--rust2);line-height:1;}
+.stat .sl{font-size:13px;color:var(--ink2);margin-top:7px;line-height:1.4;}
+
+/* 다크 표지/마무리 */
+.slide.dark{background:var(--dark);color:#f1ebe0;}
+.slide.dark .hdr{background:transparent;border-bottom:1px solid rgba(255,255,255,.1);}
+.dwrap{position:absolute;inset:44px 0 0;display:flex;flex-direction:column;justify-content:center;padding:0 80px;}
+.dwrap .eye{font-size:13px;font-weight:600;letter-spacing:3px;color:var(--gold);margin-bottom:20px;text-transform:uppercase;}
+.dwrap h1{font-family:"Noto Serif KR",serif;font-weight:700;font-size:56px;line-height:1.16;color:#fdfbf6;letter-spacing:-1px;}
+.dwrap h1 .ac{color:var(--rust);}
+.dwrap .ds{font-size:19px;color:#c6bbac;font-weight:400;margin-top:20px;line-height:1.65;max-width:900px;}
+.dwrap .den{font-family:"Noto Serif KR",serif;font-size:17px;font-weight:500;letter-spacing:5px;color:rgba(255,255,255,.14);margin-top:16px;text-transform:uppercase;}
+.dmeta{position:absolute;left:80px;right:80px;bottom:52px;display:flex;justify-content:space-between;align-items:flex-end;border-top:1px solid rgba(255,255,255,.14);padding-top:18px;}
+.dmeta .who{font-size:14.5px;color:#e6ddd0;font-weight:600;}
+.dmeta .who span{display:block;font-size:12px;color:var(--muted);font-weight:400;margin-top:3px;}
+.dmeta .topic{font-size:13px;color:#c6bbac;text-align:right;line-height:1.55;max-width:520px;}
+.dmeta .topic b{color:var(--gold);font-weight:600;}
+.recap{position:absolute;inset:44px 0 0;display:flex;flex-direction:column;justify-content:center;padding:0 80px;}
+.recap .eye{font-size:13px;font-weight:600;letter-spacing:3px;color:var(--gold);margin-bottom:16px;}
+.recap h1{font-family:"Noto Serif KR",serif;font-size:40px;font-weight:700;color:#fdfbf6;line-height:1.3;margin-bottom:30px;}
+.recap .ritems{display:flex;flex-direction:column;gap:18px;max-width:960px;}
+.recap .ri{display:flex;gap:16px;align-items:baseline;}
+.recap .ri .rn{font-family:"Noto Serif KR",serif;color:var(--rust);font-size:19px;font-weight:700;flex:0 0 auto;}
+.recap .ri p{font-size:16.5px;color:#d8cdbe;line-height:1.62;}
+.recap .ri p b{color:#fdfbf6;font-weight:700;}
+
+/* === 강의 도구: 편집 · PDF · 발표 (인쇄/발표 시 자동 숨김) === */
+.tool{position:fixed;top:12px;right:12px;z-index:9999;display:flex;gap:6px;font-family:Pretendard,sans-serif;}
+.tool button{font-size:12px;font-weight:700;padding:7px 12px;border-radius:6px;border:1px solid var(--line2);background:#fffdf8;color:#3a322a;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.18);}
+.tool button:hover{background:var(--band);}
+.tool button.on{background:var(--rust);color:#fff;border-color:var(--rust);}
+body.editing .slide{outline:2px dashed rgba(191,87,29,.45);outline-offset:-2px;}
+body.presenting{overflow:hidden;background:var(--presentbg);}
+body.presenting .deck{display:block;padding:0;gap:0;margin:0;}
+body.presenting .slide{display:none!important;}
+body.presenting .slide.present-current{display:block!important;position:fixed;left:50%;top:50%;transform:translate(-50%,-50%) scale(var(--ps,1));box-shadow:0 0 70px rgba(0,0,0,.6);}
+.pnav{position:fixed;bottom:14px;left:0;right:0;text-align:center;color:rgba(255,255,255,.55);font-size:13px;font-family:Pretendard,sans-serif;z-index:9999;display:none;}
+body.presenting .pnav{display:block;}
+@page{size:1280px 720px;margin:0;}
+@media print{
+  html,body{margin:0;padding:0;background:#fff;width:1280px;}
+  .tool,.pnav{display:none!important;}
+  .deck{display:block;gap:0;padding:0;margin:0;}
+  .slide{margin:0;box-shadow:none;page-break-after:always;break-after:page;}
+  .slide:last-child{page-break-after:auto;break-after:auto;}
+  *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}
+}
+</style>
+</head>
+<body data-palette="navy-coral">
+<div class="tool">
+  <button id="btnPalette">색상</button>
+  <button id="btnEdit">편집</button>
+  <button id="btnSave">저장(HTML)</button>
+  <button id="btnPdf">PDF</button>
+  <button id="btnPlay">발표</button>
+</div>
+<div class="pnav"></div>
+<div class="deck">
+
+<section class="slide dark">
+  <div class="hdr"><div class="ht">생성형AI 강사양성과정<span>GENERATIVE AI INSTRUCTOR</span></div><div class="hr">공공기관 · CDSA</div></div>
+  <div class="dwrap">
+    <div class="eye">공공기관 강사양성 · 이론편 30장 + 실습 모듈 100선</div>
+    <h1>생성형AI<br><span class="ac">강사양성과정</span></h1>
+    <div class="ds">공공기관에서 생성형 AI를 가르치는 강사가 갖춰야 할 관점, 정보 수집 체계, 모델 작동 원리, 교육 설계 기준을 다룹니다. 이론편 뒤에는 1장당 실습 1건으로 구성된 실습 모듈 100선이 이어집니다.</div>
+    <div class="den">Generative AI Instructor Program</div>
+  </div>
+  <div class="dmeta">
+    <div class="who">신성진<span>한국데이터사이언티스트협회(CDSA) · 대표</span></div>
+    <div class="topic">이론편 4부 30장 · 실습 모듈 100선<br><b>공공기관 생성형AI 강사양성과정</b></div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="hdr"><div class="ht">생성형AI 강사양성과정<span>GENERATIVE AI INSTRUCTOR</span></div><div class="hr">CURRICULUM</div></div>
+  <div class="stage">
+    <div class="crumb">과정 안내</div>
+    <h2 class="atitle"><span class="lbl">[과정 안내]</span> 전체 구성 <span class="sub">— 이론편 4부와 실습 모듈 100선</span></h2>
+    <div class="titlerule"></div>
+    <div class="body colflow" style="padding-top:14px;">
+      <p class="lead" style="margin-bottom:12px;">이론편은 강사가 과정을 설계·운영하는 기준을 다루고, 실습 모듈 100선은 수강생에게 그대로 제공하는 실습 단위입니다.</p>
+      <div class="tablefill">
+        <table class="grid even" style="--rows:5;">
+          <tr><th style="width:170px;">구분</th><th style="width:64px;">장수</th><th>다루는 내용</th><th style="width:200px;">활용 시점</th></tr>
+          <tr><td><b>1부 강사의 관점</b></td><td>7</td><td>정책 단위와 업무 단위의 구분, 도구의 전유, AI 활용 3단 구분, 가능 여부와 책임 범위, 업무 정의 중심 접근, 강사의 포지션</td><td>과정 기획 시 방향 설정</td></tr>
+          <tr><td><b>2부 정보 수집 체계</b></td><td>6</td><td>Threads·X·Facebook 그룹·GeekNews 등 소스별 운영 지침, 일간·주간·월간 루틴, 소문→공식→재현 3단 검증, 지식 자산화</td><td>매 강의 전 최신화</td></tr>
+          <tr><td><b>3부 생성형 AI 원리</b></td><td>7</td><td>토큰과 다음 단어 예측, 컨텍스트 윈도우, 환각의 구조, 추론 모드, DX와 AX, sLM·파인튜닝·RAG, 에이전트와 MCP</td><td>수강생 원리 질문 대응</td></tr>
+          <tr><td><b>4부 공공 교육 설계</b></td><td>7</td><td>망분리·계정 제약 반영, 활동 중심 모듈 설계, 실습 3요소, 수준 진단과 트랙, 평가 기준, 현장 장애 대응, 윤리·보안 지도</td><td>실습 모듈 조합 기준</td></tr>
+          <tr><td><b>실습 모듈 100선</b></td><td>100</td><td>1장 = 실습 1건. 복붙 가능한 프롬프트, 진행 단계, 산출물, 확인 기준으로 구성한 모듈 풀</td><td>본 과정의 실습부</td></tr>
+        </table>
+      </div>
+      <div class="note"><div class="nl">과정 목표</div><p>수료 후 강사는 <b>대상·시간·환경에 맞는 과정을 스스로 설계</b>하고, 실습 모듈 100선에서 모듈을 골라 조합해 강의를 운영할 수 있습니다.</p></div>
+    </div>
+  </div>
+  <div class="pageno">02</div>
+</section>
+
+<section class="slide">
+  <div class="hdr"><div class="ht">생성형AI 강사양성과정<span>GENERATIVE AI INSTRUCTOR</span></div><div class="hr">1부 · 강사의 관점</div></div>
+  <div class="stage">
+    <div class="crumb">1부 · 강사의 관점</div>
+    <h2 class="atitle"><span class="lbl">[관점]</span> 공공 AX 정책과 현장 업무의 간극 <span class="sub">— 정책 단위와 업무 단위의 구분</span></h2>
+    <div class="titlerule"></div>
+    <div class="body split-l" style="padding-top:18px;">
+      <div class="colflow">
+        <p class="lead" style="margin-bottom:14px;">공공 AX 정책은 플랫폼 구축, 데이터센터, 전사 시스템처럼 <b>큰 단위</b>로 발표됩니다. 그러나 수강생이 매일 하는 일은 한글 공문 기안, 엑셀 취합, 민원 답변, 회의록 정리 같은 <b>작은 단위</b>입니다.</p>
+        <div class="concepts fill">
+          <div class="concept"><div class="no">1</div><div class="cbody"><div class="cn">정책 단위 교육의 한계</div>
+            <p>사례가 크고 멀어서 수강생이 자기 업무와 연결하지 못합니다. <b>예 —</b> 전사 챗봇 구축 사례만 다루면 강의 직후 이어질 실습 접점이 없습니다.</p></div></div>
+          <div class="concept"><div class="no">2</div><div class="cbody"><div class="cn">업무 단위 교육의 조건</div>
+            <p>수강생이 오늘 오후에 해볼 수 있는 크기로 과제를 자릅니다. <b>예 —</b> 30분짜리 부서 취합 업무 1건을 실습 재료로 가져와 그 자리에서 처리해 봅니다.</p></div></div>
+        </div>
+      </div>
+      <div class="figwrap">
+        <div class="figcap">같은 "AI 도입"의 두 층위</div>
+        <div class="layer2 big">
+          <div class="lay top"><div class="lt">정책 단위</div><div class="lh">플랫폼 · 데이터센터 · 전사 시스템</div><p>예산·조직 단위로 움직이고, 실무자 개인이 좌우할 수 없습니다.</p></div>
+          <div class="conn">▼ 강의는 이 아래에서 출발합니다</div>
+          <div class="lay bot"><div class="lt">업무 단위</div><div class="lh">공문 기안 · 엑셀 취합 · 민원 답변 · 회의록</div><p>실무자가 오늘 바꿀 수 있고, 실습으로 바로 이어지는 층위입니다.</p></div>
+        </div>
+      </div>
+    </div>
+    <div class="note"><div class="nl">정리</div><p>강사는 두 층위를 구분해 설명하고, <b>실습은 반드시 업무 단위에서 출발</b>합니다. 정책 이야기는 배경 설명 10분을 넘기지 않습니다.</p></div>
+  </div>
+  <div class="pageno">03</div>
+</section>
+
+<section class="slide">
+  <div class="hdr"><div class="ht">생성형AI 강사양성과정<span>GENERATIVE AI INSTRUCTOR</span></div><div class="hr">1부 · 강사의 관점</div></div>
+  <div class="stage">
+    <div class="crumb">1부 · 강사의 관점</div>
+    <h2 class="atitle"><span class="lbl">[관점]</span> 거시 인프라와 미시 업무 개선 <span class="sub">— 역할 구분과 강사의 담당 영역</span></h2>
+    <div class="titlerule"></div>
+    <div class="body colflow" style="padding-top:16px;">
+      <p class="lead" style="margin-bottom:12px;">GPU·데이터센터·전사 플랫폼 같은 거시 인프라는 정부와 대기업이 맡는 영역입니다. 강사가 맡는 영역은 실무자 책상 위의 <b>반복 취합·문서 변환·자료 정리</b> 같은 미시 업무 개선입니다.</p>
+      <div class="tablefill">
+        <table class="grid even roomy" style="--rows:3;">
+          <tr><th style="width:150px;">구분</th><th>거시 인프라</th><th>미시 업무 개선</th></tr>
+          <tr><td><b>주체</b></td><td>정부 부처, 대기업, 시스템 구축 업체가 예산 사업으로 추진합니다.</td><td>실무자 본인이 자기 업무 안에서 직접 시도합니다. 결재나 예산 없이 시작합니다.</td></tr>
+          <tr><td><b>대상</b></td><td>데이터센터, 전사 플랫폼, 파운데이션 모델, 기관 공동 시스템.</td><td>반복 취합, 공문·보고서 작성, 민원 분류, 회의록 정리, 자료 검색 같은 책상 위 업무.</td></tr>
+          <tr><td><b>강사의 역할</b></td><td>배경 지식으로 소개만 합니다. 수강생이 통제할 수 없는 영역이기 때문입니다.</td><td>실습으로 직접 다루는 본 영역입니다. 실습 모듈 100선이 전부 이 층위에 있습니다.</td></tr>
+        </table>
+      </div>
+      <div class="note"><div class="nl">과정 공통 문구</div><p>CDSA 과정의 공통 문구는 <b>"AX, 거대한 혁신이 아닌, 내 책상 위의 작은 불편함부터"</b>이며, 커리큘럼 순서도 미시 업무에서 출발해 필요할 때만 거시로 확장합니다.</p></div>
+    </div>
+  </div>
+  <div class="pageno">04</div>
+</section>
+
+<section class="slide">
+  <div class="hdr"><div class="ht">생성형AI 강사양성과정<span>GENERATIVE AI INSTRUCTOR</span></div><div class="hr">1부 · 강사의 관점</div></div>
+  <div class="stage">
+    <div class="crumb">1부 · 강사의 관점</div>
+    <h2 class="atitle"><span class="lbl">[관점]</span> 도구의 전유 <span class="sub">— 기존 도구를 원래 용도 밖에서 쓰는 방법</span></h2>
+    <div class="titlerule"></div>
+    <div class="body colflow" style="padding-top:16px;">
+      <p class="lead" style="margin-bottom:6px;">전유(Appropriation)는 이미 설치된 도구를 원래 용도 밖의 업무 도구로 끌어다 쓰는 것입니다. 새 시스템 도입도 보안 결재도 필요 없어, 공공 환경에서 실행 가능성이 가장 높은 출발점입니다.</p>
+      <div class="concepts fill big">
+        <div class="concept"><div class="no">1</div><div class="cbody"><div class="cn">HTML 파일을 업무 도구로</div>
+          <p>브라우저만 있으면 실행되는 단일 HTML 파일로 계산기·체크리스트·시뮬레이터를 만듭니다.<span class="boxmore">예 — "단일 HTML 파일로 OO 계산기를 만들어 달라"고 요청해 받은 파일을 더블클릭으로 실행. 설치·서버·인터넷 없이 동작해 망분리 PC에서도 씁니다.</span></p></div></div>
+        <div class="concept"><div class="no">2</div><div class="cbody"><div class="cn">브라우저 개발자도구(F12)를 자동화 도구로</div>
+          <p>브라우저 내장 콘솔에서 자바스크립트 몇 줄로 화면의 표를 추출하거나 반복 입력을 대신합니다.<span class="boxmore">예 — 게시판 목록에서 콘솔 코드 한 번으로 제목·날짜를 표로 복사. 코드는 AI에게 화면 구조를 설명하고 받아서 쓰며 외부 설치가 없습니다.</span></p></div></div>
+        <div class="concept"><div class="no">3</div><div class="cbody"><div class="cn">그림자 자동화 리스크</div>
+          <p>개인이 만든 자동화가 부서 공유·감사 범위 밖에서 돌아가는 상태로, 전유를 가르칠 때 반드시 함께 다룹니다.<span class="boxmore">예 — 담당자만 아는 취합 파일이 인사이동 후 방치. 부서 공유·사용법 문서화·인수인계 등록을 실습 마무리에 포함합니다.</span></p></div></div>
+      </div>
+      <div class="note"><div class="nl">정리</div><p>강사는 신규 도입 제안이 아니라 <b>이미 깔려 있는 도구의 재사용</b>부터 시연합니다. 수강생의 첫 성공 경험이 여기서 나옵니다.</p></div>
+    </div>
+  </div>
+  <div class="pageno">05</div>
+</section>
+
+<section class="slide">
+  <div class="hdr"><div class="ht">생성형AI 강사양성과정<span>GENERATIVE AI INSTRUCTOR</span></div><div class="hr">1부 · 강사의 관점</div></div>
+  <div class="stage">
+    <div class="crumb">1부 · 강사의 관점</div>
+    <h2 class="atitle"><span class="lbl">[관점]</span> AI 활용 3단 구분 <span class="sub">— 채팅 LLM · 바이브코딩 · 코딩 에이전트</span></h2>
+    <div class="titlerule"></div>
+    <div class="body colflow" style="padding-top:16px;">
+      <p class="lead" style="margin-bottom:12px;">같은 업무도 어느 층위로 처리하느냐에 따라 도구와 난이도가 달라집니다. 수강생에게 이 구분을 첫 시간에 잡아주면 "무엇을 배워야 하는지"가 정리됩니다.</p>
+      <div class="tablefill">
+        <table class="grid even roomy" style="--rows:3;">
+          <tr><th style="width:150px;">층위</th><th style="width:300px;">방식</th><th style="width:270px;">대표 도구</th><th>적합한 업무</th></tr>
+          <tr><td><b>① 채팅 LLM</b></td><td>대화창에 요청하고 결과를 복사해 씁니다. 가장 낮은 진입 장벽.</td><td>ChatGPT, Claude, Gemini, Perplexity</td><td>초안 작성, 요약, 검토 의견, 번역, 아이디어 발산</td></tr>
+          <tr><td><b>② 바이브코딩</b></td><td>자연어로 요청해 코드·앱을 생성하고, 실행 결과를 사람이 확인하며 고쳐 나갑니다.</td><td>Claude, Google AI Studio, Lovable, v0</td><td>단일 HTML 도구, 업무 자동화 스크립트, 웹앱 시제품</td></tr>
+          <tr><td><b>③ 코딩 에이전트</b></td><td>파일·실행 권한을 주고 여러 단계 작업을 통째로 위임합니다. 결과 검토가 필수.</td><td>Claude Code, Cursor</td><td>반복 문서 일괄 생성, 폴더 정리, 다단계 자료 가공</td></tr>
+        </table>
+      </div>
+      <div class="note"><div class="nl">강의 시연</div><p>같은 과제(예 — 월간 보고서 요약)를 ①②③으로 각각 처리해 <b>결과·소요 시간·확인 부담</b>을 비교해 보여주면 구분이 한 번에 잡힙니다.</p></div>
+    </div>
+  </div>
+  <div class="pageno">06</div>
+</section>
+
+<section class="slide">
+  <div class="hdr"><div class="ht">생성형AI 강사양성과정<span>GENERATIVE AI INSTRUCTOR</span></div><div class="hr">1부 · 강사의 관점</div></div>
+  <div class="stage">
+    <div class="crumb">1부 · 강사의 관점</div>
+    <h2 class="atitle"><span class="lbl">[관점]</span> 가능 여부와 책임 범위 <span class="sub">— 약관·보안·감사 기준의 구분</span></h2>
+    <div class="titlerule"></div>
+    <div class="body colflow" style="padding-top:16px;">
+      <p class="lead" style="margin-bottom:6px;">시연에서 "된다"는 것과 기관에서 "책임지고 쓸 수 있다"는 것은 다른 문제입니다. 이 구분 없이 기능만 보여주면 수강생이 보안 사고의 출발점이 될 수 있습니다.</p>
+      <div class="concepts fill big">
+        <div class="concept"><div class="no">1</div><div class="cbody"><div class="cn">되는 것 <span class="en">기술적으로 가능한 범위</span></div>
+          <p>기능 자체는 대부분 됩니다. 내부 문서를 올리면 요약되고 민원 데이터를 넣으면 분류됩니다.<span class="boxmore">예 — 회의록 업로드 후 "부서별 조치사항을 표로 정리해 달라". 다만 "된다"는 사실만으로 업무 적용을 권하지 않습니다.</span></p></div></div>
+        <div class="concept"><div class="no">2</div><div class="cbody"><div class="cn">책임지고 쓸 수 있는 것 <span class="en">규정을 통과하는 범위</span></div>
+          <p>보안지침·서비스 약관·개인정보보호법·감사 대응까지 통과해야 업무에 쓸 수 있습니다.<span class="boxmore">확인 — 개인정보·비공개 자료 입력 금지, 입력 데이터 학습 여부와 제외(옵트아웃) 설정, 기관 지침 존재. 하나라도 미확인이면 가상 자료로 처리합니다.</span></p></div></div>
+        <div class="concept"><div class="no">3</div><div class="cbody"><div class="cn">강의에서의 처리 방식</div>
+          <p>모든 실습 앞에 "이 실습에 넣어도 되는 데이터"를 먼저 명시합니다.<span class="boxmore">예 — 실제 민원 대신 강사 제공 가상 데이터로 실습. 산출물은 부서로 가져갈 "입력 가능/불가 판단표" 1장입니다.</span></p></div></div>
+      </div>
+      <div class="note"><div class="nl">정리</div><p>실습 자료는 가상 데이터로 제공하고, <b>실제 업무 적용 시의 판단 기준</b>을 별도 장(4부 윤리·보안)에서 다시 다룹니다.</p></div>
+    </div>
+  </div>
+  <div class="pageno">07</div>
+</section>
+
+<section class="slide">
+  <div class="hdr"><div class="ht">생성형AI 강사양성과정<span>GENERATIVE AI INSTRUCTOR</span></div><div class="hr">1부 · 강사의 관점</div></div>
+  <div class="stage">
+    <div class="crumb">1부 · 강사의 관점</div>
+    <h2 class="atitle"><span class="lbl">[관점]</span> 질문 기술에서 업무 정의로 <span class="sub">— 프롬프트 작성과 업무 분해의 구분</span></h2>
+    <div class="titlerule"></div>
+    <div class="body colflow" style="padding-top:18px;">
+      <p class="lead" style="margin-bottom:8px;">프롬프트 4요소(역할·배경·지시·출력 형식)는 출발점이지 종착점이 아닙니다. 실무 성과를 가르는 것은 "어떻게 묻느냐"보다 <b>"무엇을 하고 싶은지"를 업무 단위로 정의하는 능력</b>입니다. 강의 시간 배분도 이 순서를 따릅니다.</p>
+      <div style="flex:1;display:flex;flex-direction:column;justify-content:space-around;padding:8px 0;">
+        <div class="steps big">
+          <div class="st"><div class="sn">① 나열</div><div class="sh">내 업무 목록화</div><p>일주일 단위로 반복하는 업무를 전부 적습니다. 크기 제한 없이 나열합니다.</p></div>
+          <div class="st"><div class="sn">② 매핑</div><div class="sh">반복빈도 × 위험도</div><p>2×2 표에 배치합니다. 자동화 1순위는 반복 많고 위험 낮은 칸입니다.</p></div>
+          <div class="st"><div class="sn">③ 선정</div><div class="sh">자동화 과제 1건</div><p>오늘 다룰 과제 1건을 고르고 입력·출력·성공 기준을 한 줄씩 적습니다.</p></div>
+          <div class="st"><div class="sn">④ 매칭</div><div class="sh">도구·층위 결정</div><p>채팅 LLM·바이브코딩·에이전트 중 어느 층위로 풀지 정하고 실습에 들어갑니다.</p></div>
+        </div>
+        <div>
+          <div class="figcap" style="margin-bottom:12px;">단계 사이에 만들어지는 산출물</div>
+          <div class="relay big">
+            <div class="rc"><div class="rk">① 이후</div><div class="rv">업무 목록</div></div><div class="ra">›</div>
+            <div class="rc"><div class="rk">② 이후</div><div class="rv">2×2 우선순위 맵</div></div><div class="ra">›</div>
+            <div class="rc"><div class="rk">③ 이후</div><div class="rv">과제 정의서 1건</div></div><div class="ra">›</div>
+            <div class="rc"><div class="rk">④ 이후</div><div class="rv">실습 설계안</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="note"><div class="nl">시간 배분</div><p>프롬프트 문법 설명은 <b>30분이면 충분</b>합니다. 남는 시간은 수강생 업무를 분해하는 워크숍(①~④)에 배정합니다.</p></div>
+    </div>
+  </div>
+  <div class="pageno">08</div>
+</section>
+
+<section class="slide">
+  <div class="hdr"><div class="ht">생성형AI 강사양성과정<span>GENERATIVE AI INSTRUCTOR</span></div><div class="hr">1부 · 강사의 관점</div></div>
+  <div class="stage">
+    <div class="crumb">1부 · 강사의 관점</div>
+    <h2 class="atitle"><span class="lbl">[관점]</span> 강사의 포지션 <span class="sub">— 기능 시연자와 교육 설계자의 구분, M.A.S.T.E.R 6요소</span></h2>
+    <div class="titlerule"></div>
+    <div class="body colflow" style="padding-top:14px;">
+      <p class="lead" style="margin-bottom:10px;">도구 기능 설명은 유튜브에도 있습니다. 강사의 값어치는 수강생의 업무·환경·수준에 맞게 과정을 설계하고, 문제 정의부터 산출물 적용까지 안내하는 데서 나옵니다. 그 준비 항목을 6가지로 정리합니다.</p>
+      <div class="tablefill">
+        <table class="grid even" style="--rows:6;">
+          <tr><th style="width:210px;">요소</th><th>내용</th><th style="width:330px;">점검 질문</th></tr>
+          <tr><td><b>M</b> 메시지·브랜딩</td><td>전문 분야, 강의 철학, 차별점을 문장으로 정리해 둡니다.</td><td>"나는 어떤 강사인가"에 한 줄로 답할 수 있는가.</td></tr>
+          <tr><td><b>A</b> 도입·몰입 설계</td><td>첫 10분의 사례·시연·질문으로 수강생을 자기 업무 생각으로 끌어옵니다.</td><td>도입 시연이 수강생 직군과 연결되는가.</td></tr>
+          <tr><td><b>S</b> 구조·도구 라이브러리</td><td>자료·도구·프롬프트를 모듈 단위로 쌓아 재사용합니다.</td><td>지난 강의 자료를 30분 안에 재조합할 수 있는가.</td></tr>
+          <tr><td><b>T</b> 과정 설계</td><td>모듈을 조합해 대상·시간·환경에 맞는 커리큘럼을 만듭니다.</td><td>같은 주제로 3시간판·6시간판을 만들 수 있는가.</td></tr>
+          <tr><td><b>E</b> 자료·비주얼</td><td>표·도식·실습 화면 중심으로 강의안을 구성합니다.</td><td>슬라이드에 복붙 가능한 실제 프롬프트가 있는가.</td></tr>
+          <tr><td><b>R</b> 리허설·현장 운영</td><td>전일 재실행, 백업 캡처, 대체 도구까지 준비합니다.</td><td>주력 도구가 막혀도 강의가 진행되는가.</td></tr>
+        </table>
+      </div>
+      <div class="note"><div class="nl">정리</div><p>이 6요소가 본 과정 4개 부의 배치 기준입니다. <b>S·T는 2부와 4부</b>에서, <b>E·R은 4부와 실습 모듈</b>에서 구체화됩니다.</p></div>
+    </div>
+  </div>
+  <div class="pageno">09</div>
+</section>
+
+<section class="slide">
+  <div class="hdr"><div class="ht">생성형AI 강사양성과정<span>GENERATIVE AI INSTRUCTOR</span></div><div class="hr">2부 · 정보 수집 체계</div></div>
+  <div class="stage">
+    <div class="crumb">2부 · 정보 수집 체계</div>
+    <h2 class="atitle"><span class="lbl">[수집]</span> 정보 소스 4계층 <span class="sub">— 커뮤니티·공식·허브·큐레이션 구분</span></h2>
+    <div class="titlerule"></div>
+    <div class="body colflow" style="padding-top:16px;">
+      <p class="lead" style="margin-bottom:12px;">생성형 AI는 주 단위로 바뀌므로 강사에게 정보 수집은 취미가 아니라 <b>업무</b>입니다. 소스는 성격이 다른 4계층으로 나눠 각각 다른 목적으로 봅니다.</p>
+      <div class="tablefill">
+        <table class="grid even roomy" style="--rows:4;">
+          <tr><th style="width:120px;">계층</th><th style="width:390px;">대표 소스</th><th>얻는 것</th><th style="width:110px;">확인 주기</th></tr>
+          <tr><td><b>커뮤니티</b></td><td>Threads, X(트위터), Facebook 그룹, GeekNews(news.hada.io), Reddit</td><td>신모델·신기능 속보, 실사용 후기, 실패 사례, 현장 반응</td><td>매일</td></tr>
+          <tr><td><b>공식 발표</b></td><td>OpenAI·Anthropic·Google 공식 블로그, 릴리스 노트, 모델 카드</td><td>정확한 사양·가격·한도·정책. 강의안 표기의 근거</td><td>소식 발생 시</td></tr>
+          <tr><td><b>허브</b></td><td>Hugging Face, GitHub, Toolify.ai</td><td>모델·도구의 실물과 데모. 직접 만져보는 자리</td><td>주 1회</td></tr>
+          <tr><td><b>큐레이션</b></td><td>AI타임스, LifeArchitect.ai 모델 표, 뉴스레터, 유튜브 해설 채널</td><td>맥락과 해설, 비교표. 흐름을 잡는 정리 자료</td><td>주 1회</td></tr>
+        </table>
+      </div>
+      <div class="note"><div class="nl">사용 순서</div><p><b>커뮤니티에서 듣고 → 공식에서 확인하고 → 허브에서 만져보고 → 큐레이션으로 정리</b>합니다. 계층을 건너뛰고 강의에 넣지 않습니다.</p></div>
+    </div>
+  </div>
+  <div class="pageno">10</div>
+</section>
+
+<section class="slide">
+  <div class="hdr"><div class="ht">생성형AI 강사양성과정<span>GENERATIVE AI INSTRUCTOR</span></div><div class="hr">2부 · 정보 수집 체계</div></div>
+  <div class="stage">
+    <div class="crumb">2부 · 정보 수집 체계</div>
+    <h2 class="atitle"><span class="lbl">[수집]</span> 커뮤니티 소스 운영 <span class="sub">— Threads·X·Facebook 그룹·GeekNews·Reddit 확인 지침</span></h2>
+    <div class="titlerule"></div>
+    <div class="body colflow" style="padding-top:14px;">
+      <p class="lead" style="margin-bottom:10px;">신모델·신기능 소식은 공식 발표보다 커뮤니티에 먼저 돕니다. 강사는 아래 소스에 계정을 만들어 직접 팔로우하고, 눈으로만 보지 말고 <b>저장하는 습관</b>으로 봅니다.</p>
+      <div class="tablefill">
+        <table class="grid even" style="--rows:5;">
+          <tr><th style="width:180px;">소스</th><th>무엇을 보나</th><th style="width:420px;">운영 지침</th></tr>
+          <tr><td><b>X (트위터)</b></td><td>모델사 연구원, 도구 개발자, 해외 실무자 계정의 발표·데모 영상</td><td>리스트 기능으로 AI 전용 리스트를 만들어 일반 타임라인과 분리합니다. 데모 영상은 북마크로 저장합니다.</td></tr>
+          <tr><td><b>Threads</b></td><td>국내 AI 실무자·강사의 사용 후기, 강의 소재, 국내 도입 반응</td><td>과장 글은 원 출처 링크가 있는지 먼저 봅니다. 링크 없는 성능 주장은 후보에서 제외합니다.</td></tr>
+          <tr><td><b>Facebook 그룹</b></td><td>생성형 AI 활용 커뮤니티(직장인·강사 그룹)의 질문과 해결 사례</td><td>수강생이 실제로 막히는 지점이 질문으로 올라옵니다. 반복 질문은 강의 FAQ 재료로 수집합니다.</td></tr>
+          <tr><td><b>GeekNews</b></td><td>news.hada.io — 해외 기술 소식의 한국어 요약과 댓글 토론</td><td>매일 아침 상위 글을 훑고, 강의 관련 글은 링크와 한 줄 메모를 저장합니다.</td></tr>
+          <tr><td><b>Reddit</b></td><td>r/LocalLLaMA, r/ClaudeAI 등 — 오픈소스 모델·도구의 실사용 성능 보고</td><td>영어라도 제목과 표만 훑으면 충분합니다. 성능 수치는 반드시 원 글 조건(장비·버전)과 함께 저장합니다.</td></tr>
+        </table>
+      </div>
+      <div class="note"><div class="nl">원칙</div><p>목적은 유행 추종이 아니라 <b>강의 소재 확보</b>입니다. 확인한 정보는 그 자리에서 저장 폴더나 노트로 옮깁니다.</p></div>
+    </div>
+  </div>
+  <div class="pageno">11</div>
+</section>
+
+<section class="slide">
+  <div class="hdr"><div class="ht">생성형AI 강사양성과정<span>GENERATIVE AI INSTRUCTOR</span></div><div class="hr">2부 · 정보 수집 체계</div></div>
+  <div class="stage">
+    <div class="crumb">2부 · 정보 수집 체계</div>
+    <h2 class="atitle"><span class="lbl">[수집]</span> 공식 소스 확인 <span class="sub">— 벤더 블로그·릴리스 노트·모델 정보 대조 절차</span></h2>
+    <div class="titlerule"></div>
+    <div class="body split" style="padding-top:16px;">
+      <div class="concepts fill big">
+        <div class="concept"><div class="no">1</div><div class="cbody"><div class="cn">벤더 공식 블로그·도움말</div>
+          <p>OpenAI·Anthropic·Google의 공식 발표와 도움말 문서입니다. 신모델, 기능 변경, 요금제·한도의 원문이 여기 있습니다.<span class="boxmore">확인 시점 — 강의 전날, 그리고 커뮤니티에서 소식을 들은 즉시.</span><span class="boxcheck">용도 — 강의안의 버전·가격·한도 표기의 유일한 근거로 씁니다.</span></p></div></div>
+        <div class="concept"><div class="no">2</div><div class="cbody"><div class="cn">릴리스 노트·모델 카드</div>
+          <p>모델별 한계, 권장 용도, 안전장치가 명시된 문서입니다.<span class="boxmore">예 — 지원 언어, 컨텍스트 길이, 지식 기준 시점, 금지 용도.</span><span class="boxcheck">용도 — "이 모델은 왜 이렇게 답하나"라는 수강생 질문의 대응 근거.</span></p></div></div>
+      </div>
+      <div class="concepts fill big">
+        <div class="concept"><div class="no">3</div><div class="cbody"><div class="cn">Hugging Face</div>
+          <p>오픈소스 모델·데모(Spaces)·데이터셋이 모인 허브입니다. 발표 자료가 아니라 실물을 확인하는 자리입니다.<span class="boxmore">검색 필터 — 한국어 지원, 라이선스, 최근 갱신일, 모델 크기.</span><span class="boxcheck">용도 — 망분리 기관의 설치형 경량 모델(sLM) 후보 검토 출발점.</span></p></div></div>
+        <div class="concept"><div class="no">4</div><div class="cbody"><div class="cn">모델 비교·국내 동향</div>
+          <p>LifeArchitect.ai의 모델 비교표, AI타임스의 국내 기사로 흐름을 정리합니다.<span class="boxmore">예 — 모델 크기·성능 비교표, 공공기관 도입 사례 기사.</span><span class="boxcheck">주의 — 수치를 인용할 때는 원문 링크를 강의안 각주로 남깁니다.</span></p></div></div>
+      </div>
+    </div>
+    <div class="note"><div class="nl">정리</div><p>커뮤니티에서 들은 소식은 <b>공식 소스에서 사실 확인을 마친 뒤에만</b> 강의에 넣습니다. 버전·가격·한도는 공식 문서 기준으로 말해야 수강생 질문에 흔들리지 않습니다.</p></div>
+  </div>
+  <div class="pageno">12</div>
+</section>
+
+<section class="slide">
+  <div class="hdr"><div class="ht">생성형AI 강사양성과정<span>GENERATIVE AI INSTRUCTOR</span></div><div class="hr">2부 · 정보 수집 체계</div></div>
+  <div class="stage">
+    <div class="crumb">2부 · 정보 수집 체계</div>
+    <h2 class="atitle"><span class="lbl">[수집]</span> 일간·주간·월간 루틴 <span class="sub">— 15분 스캔과 강의안 반영 절차</span></h2>
+    <div class="titlerule"></div>
+    <div class="body colflow" style="padding-top:18px;">
+      <p class="lead" style="margin-bottom:8px;">수집은 시간이 남을 때 하는 일이 아니라 <b>정해진 루틴</b>으로 돌립니다. 하루 15분이면 충분하고, 핵심은 주간 재현과 월간 강의안 반영입니다.</p>
+      <div style="flex:1;display:flex;flex-direction:column;justify-content:space-around;padding:8px 0;">
+        <div class="steps big">
+          <div class="st"><div class="sn">① 일간 · 15분</div><div class="sh">스캔과 저장</div><p>GeekNews 상위 글, X 리스트, Threads를 훑고 강의 후보만 링크 저장합니다. 읽는 시간이 아니라 거르는 시간입니다.</p></div>
+          <div class="st"><div class="sn">② 주간 · 60분</div><div class="sh">직접 재현</div><p>저장분 중 강의 관련 2~3건을 내 계정에서 재현하고 화면을 캡처합니다. 재현 안 되는 건 조건을 메모합니다.</p></div>
+          <div class="st"><div class="sn">③ 월간</div><div class="sh">강의안 갱신</div><p>강의안의 도구 열을 갱신하고, UI가 바뀌었거나 종료된 도구는 폐기 목록으로 옮깁니다.</p></div>
+        </div>
+        <div>
+          <div class="figcap" style="margin-bottom:12px;">루틴이 남기는 산출물</div>
+          <div class="relay big">
+            <div class="rc"><div class="rk">일간</div><div class="rv">저장 링크 + 한 줄 메모</div></div><div class="ra">›</div>
+            <div class="rc"><div class="rk">주간</div><div class="rv">재현 캡처 + 프롬프트</div></div><div class="ra">›</div>
+            <div class="rc"><div class="rk">월간</div><div class="rv">강의안 도구 열 갱신</div></div><div class="ra">›</div>
+            <div class="rc"><div class="rk">월간</div><div class="rv">폐기·주의 목록</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="note"><div class="nl">설계 연결</div><p>도구는 반년 주기로 바뀌므로 강의안은 <b>활동 중심 + 도구 병기</b> 구조(4부에서 상술)로 만들어, 갱신 시 도구 열만 갈아끼웁니다.</p></div>
+    </div>
+  </div>
+  <div class="pageno">13</div>
+</section>
+
+<section class="slide">
+  <div class="hdr"><div class="ht">생성형AI 강사양성과정<span>GENERATIVE AI INSTRUCTOR</span></div><div class="hr">2부 · 정보 수집 체계</div></div>
+  <div class="stage">
+    <div class="crumb">2부 · 정보 수집 체계</div>
+    <h2 class="atitle"><span class="lbl">[수집]</span> 3단 검증 <span class="sub">— 소문·공식·직접 재현 확인 절차</span></h2>
+    <div class="titlerule"></div>
+    <div class="body colflow" style="padding-top:16px;">
+      <p class="lead" style="margin-bottom:10px;">커뮤니티 소식을 그대로 강의에 옮기면 사고가 납니다. "봤다"와 "된다"를 구분하는 3단 검증을 거쳐, <b>직접 재현된 것만</b> 강의에 넣습니다.</p>
+      <div class="figwrap">
+        <div class="veri big">
+          <div class="vrow">
+            <div class="vbox"><div class="vt">1단계 · 커뮤니티 수집</div><p>X·Threads·GeekNews에서 본 소식. 이 단계에서는 "소문"으로만 취급하고 링크를 저장합니다.</p></div>
+            <div class="arr">→</div>
+            <div class="vbox"><div class="vt">2단계 · 공식 대조</div><p>벤더 블로그·릴리스 노트에서 같은 내용을 확인합니다. 버전, 요금제, 지역 제한을 함께 적습니다.</p></div>
+            <div class="arr">→</div>
+            <div class="vbox"><div class="vt">3단계 · 직접 재현</div><p>내 계정에서 같은 작업을 재현합니다. 프롬프트, 결과, 날짜를 함께 기록합니다.</p></div>
+          </div>
+          <div class="vrow">
+            <div class="vbox"><div class="vt">재현 성공 → 강의 반영</div><p>화면 캡처와 사용 프롬프트를 강의안에 넣습니다. 이 기록이 그대로 실습 자료가 됩니다.</p></div>
+            <div class="arr">/</div>
+            <div class="vbox fail"><div class="vt">재현 실패 → 제외 또는 제약 표기</div><p>실패 조건(요금제·지역·버전·계정 등급)을 기록합니다. 강의에서는 빼거나 "현재 제약 있음"으로만 언급합니다.</p></div>
+          </div>
+        </div>
+      </div>
+      <div class="note"><div class="nl">정리</div><p>재현 기록(프롬프트·캡처·날짜)이 곧 강의 자료입니다. 검증 절차가 <b>자료 제작 절차를 겸하므로</b> 별도 시간이 들지 않습니다.</p></div>
+    </div>
+  </div>
+  <div class="pageno">14</div>
+</section>
+
+<section class="slide">
+  <div class="hdr"><div class="ht">생성형AI 강사양성과정<span>GENERATIVE AI INSTRUCTOR</span></div><div class="hr">2부 · 정보 수집 체계</div></div>
+  <div class="stage">
+    <div class="crumb">2부 · 정보 수집 체계</div>
+    <h2 class="atitle"><span class="lbl">[수집]</span> 지식 자산화 <span class="sub">— 자료 폴더·프롬프트 라이브러리·NotebookLM 운영</span></h2>
+    <div class="titlerule"></div>
+    <div class="body colflow" style="padding-top:16px;">
+      <p class="lead" style="margin-bottom:6px;">수집한 정보는 검색 가능한 형태로 쌓아야 다음 강의에서 재사용됩니다. 저장 도구는 자유지만 아래 세 축은 분리해서 관리합니다.</p>
+      <div style="flex:1;display:flex;gap:18px;align-items:stretch;padding:10px 0;">
+        <div class="domain big"><div class="dh">자료 폴더 <span>수집물 보관</span></div><ul class="dl">
+          <li><b>구조</b> 강의별이 아니라 주제별 폴더(모델·도구·사례·정책)로 만듭니다</li>
+          <li><b>파일명</b> 날짜를 앞에 붙여 최신 여부를 바로 판단합니다</li>
+          <li><b>캡처</b> 화면 캡처는 원본 링크 메모와 한 세트로 저장합니다</li>
+        </ul></div>
+        <div class="domain big"><div class="dh">프롬프트 라이브러리 <span>재사용 문장</span></div><ul class="dl">
+          <li><b>분류</b> 업무별(문서작성·요약·분석·이미지·코드)로 나눕니다</li>
+          <li><b>기준</b> 실제로 성공한 프롬프트만 넣고, 실패작은 따로 둡니다</li>
+          <li><b>형식</b> 입력 예시와 출력 예시를 한 세트로 붙여 둡니다</li>
+        </ul></div>
+        <div class="domain big"><div class="dh">NotebookLM · 개인 위키 <span>질의응답 자산</span></div><ul class="dl">
+          <li><b>소스화</b> 수집 자료를 NotebookLM 소스로 올려 질의응답에 씁니다</li>
+          <li><b>브리핑</b> 강의 전 해당 주제 브리핑 노트를 생성해 훑습니다</li>
+          <li><b>카탈로그</b> 강의 모듈 목록 문서를 함께 갱신합니다</li>
+        </ul></div>
+      </div>
+      <div class="note"><div class="nl">정리</div><p>이 축적물이 실습 모듈 100선 같은 <b>재사용 가능한 자산</b>의 원천입니다. 수집 → 검증 → 자산화가 한 흐름으로 이어져야 강사 준비 시간이 줄어듭니다.</p></div>
+    </div>
+  </div>
+  <div class="pageno">15</div>
+</section>
+
+<section class="slide">
+  <div class="hdr"><div class="ht">생성형AI 강사양성과정<span>GENERATIVE AI INSTRUCTOR</span></div><div class="hr">3부 · 생성형 AI 원리</div></div>
+  <div class="stage">
+    <div class="crumb">3부 · 생성형 AI 원리</div>
+    <h2 class="atitle"><span class="lbl">[원리]</span> 토큰과 다음 단어 예측 <span class="sub">— 학습과 생성의 구분</span></h2>
+    <div class="titlerule"></div>
+    <div class="body split-l" style="padding-top:16px;">
+      <div class="colflow">
+        <p class="lead" style="margin-bottom:12px;">LLM은 문장을 토큰 단위로 잘라, 지금까지의 토큰열 다음에 올 토큰의 <b>확률을 계산하는 장치</b>입니다. 이 한 문장을 정확히 설명할 수 있으면 환각·프롬프트·비용 질문의 절반에 답할 수 있습니다.</p>
+        <div class="concepts fill">
+          <div class="concept"><div class="no">1</div><div class="cbody"><div class="cn">학습 <span class="en">TRAINING</span></div>
+            <p>대량의 텍스트로 "다음 토큰 맞히기"를 반복하며 내부 수치(가중치)를 조정합니다. 서비스 출시 <b>전에 끝나는</b> 과정입니다. 예 — [나는][학교에] 다음은 [갔습니다].</p></div></div>
+          <div class="concept"><div class="no">2</div><div class="cbody"><div class="cn">생성 <span class="en">INFERENCE</span></div>
+            <p>학습된 가중치는 고정된 채, 입력 토큰열에 이어 <b>한 토큰씩</b> 뽑아냅니다. 우리가 대화창에서 쓰는 순간은 전부 이 단계이며, 이때 모델은 아무것도 새로 배우지 않습니다.</p></div></div>
+        </div>
+      </div>
+      <div class="figwrap">
+        <div class="figcap">생성 단계의 반복 구조</div>
+        <div class="loop big">
+          <div class="lp"><div class="lpn">1</div><div class="lpt"><b>입력 토큰열</b> — 질문과 지금까지의 대화가 토큰으로 들어갑니다.</div></div>
+          <div class="lp"><div class="lpn">2</div><div class="lpt"><b>다음 토큰 확률 계산</b> — 이어질 후보 토큰들의 확률을 구합니다.</div></div>
+          <div class="lp"><div class="lpn">3</div><div class="lpt"><b>토큰 1개 선택</b> — 확률에 따라 한 개를 고릅니다.</div></div>
+          <div class="back">선택한 토큰을 입력 끝에 붙이고 1번부터 반복 — 답이 끝날 때까지</div>
+        </div>
+      </div>
+    </div>
+    <div class="note"><div class="nl">지도 포인트</div><p>비개발 수강생에게는 <b>"정답 검색기"가 아니라 "이어질 말 예측기"</b>라는 사실부터 잡아줍니다. 이 전제가 서야 환각과 검증 책임이 설명됩니다.</p></div>
+  </div>
+  <div class="pageno">16</div>
+</section>
+
+<section class="slide">
+  <div class="hdr"><div class="ht">생성형AI 강사양성과정<span>GENERATIVE AI INSTRUCTOR</span></div><div class="hr">3부 · 생성형 AI 원리</div></div>
+  <div class="stage">
+    <div class="crumb">3부 · 생성형 AI 원리</div>
+    <h2 class="atitle"><span class="lbl">[원리]</span> 컨텍스트 윈도우 <span class="sub">— 모델이 한 번에 읽는 범위와 잘림 현상</span></h2>
+    <div class="titlerule"></div>
+    <div class="body split-l" style="padding-top:16px;">
+      <div class="colflow">
+        <p class="lead" style="margin-bottom:12px;">컨텍스트 윈도우는 모델이 <b>한 번에 입력으로 읽을 수 있는 토큰의 최대량</b>입니다. 대화가 길어지면 앞 내용이 밀려나고, 큰 문서를 통째로 못 넣는 이유가 여기 있습니다.</p>
+        <div class="concepts fill">
+          <div class="concept"><div class="no">1</div><div class="cbody"><div class="cn">크기의 변화</div>
+            <p>초기 모델은 1,024토큰(GPT-2, 2019) 수준이었고, 최신 모델은 수십만 토큰까지 읽습니다. 클수록 긴 문서·긴 대화를 다룰 수 있지만 무한은 아닙니다.</p></div></div>
+          <div class="concept"><div class="no">2</div><div class="cbody"><div class="cn">잘림·참조 약화</div>
+            <p>한도를 넘으면 오래된 내용부터 제외되거나 참조가 약해집니다. 예 — 긴 대화 끝에 "아까 말한 조건대로"라고 하면 모델이 그 조건을 놓치는 상황.</p></div></div>
+          <div class="concept"><div class="no">3</div><div class="cbody"><div class="cn">수강생 지도법</div>
+            <p>긴 작업은 새 대화로 나누고, 핵심 조건은 매 요청에 다시 붙이게 안내합니다. 문서가 크면 장 단위로 나눠 넣고 마지막에 통합 요약을 요청합니다.</p></div></div>
+        </div>
+      </div>
+      <div class="figwrap">
+        <div class="figcap">윈도우 안과 밖</div>
+        <div class="layer2 big">
+          <div class="lay top"><div class="lt">윈도우 안</div><div class="lh">모델이 참조하는 범위</div><p>최근 대화, 방금 넣은 문서, 시스템 지시. 여기 있는 내용만 답변에 반영됩니다.</p></div>
+          <div class="conn">▲ 한도를 넘으면 오래된 것부터 밀려납니다</div>
+          <div class="lay bot"><div class="lt">윈도우 밖</div><div class="lh">잘리거나 약화된 내용</div><p>오래된 대화 앞부분, 넣지 않은 문서. 모델은 이 내용을 "기억"하지 못합니다.</p></div>
+        </div>
+      </div>
+    </div>
+    <div class="note"><div class="nl">현장 대응</div><p>시연 중 모델이 앞 지시를 잊는 상황은 오류가 아니라 <b>윈도우 한도의 결과</b>임을 그 자리에서 설명하면, 오히려 원리 교육의 기회가 됩니다.</p></div>
+  </div>
+  <div class="pageno">17</div>
+</section>
+
+<section class="slide">
+  <div class="hdr"><div class="ht">생성형AI 강사양성과정<span>GENERATIVE AI INSTRUCTOR</span></div><div class="hr">3부 · 생성형 AI 원리</div></div>
+  <div class="stage">
+    <div class="crumb">3부 · 생성형 AI 원리</div>
+    <h2 class="atitle"><span class="lbl">[원리]</span> 환각의 구조 <span class="sub">— 확률 생성과 사실 확인의 분리</span></h2>
+    <div class="titlerule"></div>
+    <div class="body split-l" style="padding-top:16px;">
+      <div class="colflow">
+        <p class="lead" style="margin-bottom:12px;">환각(Hallucination)은 모델이 거짓말을 하는 것이 아니라, <b>사실 확인 장치 없이 그럴듯한 다음 토큰을 뽑는 구조</b>에서 나오는 출력입니다. 원인을 알면 대응이 규칙이 됩니다.</p>
+        <div class="concepts fill">
+          <div class="concept"><div class="no">1</div><div class="cbody"><div class="cn">왜 생기나</div>
+            <p>모델 내부에 사실 데이터베이스가 없고, 학습 데이터의 패턴으로 문장을 만들 뿐입니다. 예 — 존재하지 않는 논문 제목을 형식만 완벽하게 생성합니다.</p></div></div>
+          <div class="concept"><div class="no">2</div><div class="cbody"><div class="cn">언제 심해지나</div>
+            <p>학습 데이터가 적은 주제(최신 소식·지역 정보·기관 내부 규정), 구체 수치와 출처를 요구할 때, 길게 생성할 때 빈도가 올라갑니다.</p></div></div>
+          <div class="concept"><div class="no">3</div><div class="cbody"><div class="cn">어떻게 줄이나</div>
+            <p>웹검색 결합, 문서 근거 제공(RAG), "모르면 모른다고 답하라"는 지시, 그리고 수치·인명·법령의 원문 대조. 없애는 것이 아니라 <b>줄이고 걸러내는</b> 것입니다.</p></div></div>
+        </div>
+      </div>
+      <div class="figwrap">
+        <div class="figcap">환각 대응의 두 층</div>
+        <div class="layer2 big">
+          <div class="lay top"><div class="lt">모델 내부</div><div class="lh">패턴 기반 토큰 생성</div><p>사실 확인 장치가 없습니다. 여기서 나온 수치·출처는 전부 검증 대상입니다.</p></div>
+          <div class="conn">▼ 외부 장치로 보강합니다</div>
+          <div class="lay bot"><div class="lt">외부 보강</div><div class="lh">웹검색 · 문서 근거(RAG) · 사람의 원문 대조</div><p>근거를 입력에 붙여 주고, 최종 확인은 사용자가 합니다.</p></div>
+        </div>
+      </div>
+    </div>
+    <div class="note"><div class="nl">지도 기준</div><p>수강생 지도 기준 — <b>생성물의 사실 확인 책임은 사용자에게 있으며</b>, 출처 없는 수치는 공문·보고서에 넣지 않습니다.</p></div>
+  </div>
+  <div class="pageno">18</div>
+</section>
+
+<section class="slide">
+  <div class="hdr"><div class="ht">생성형AI 강사양성과정<span>GENERATIVE AI INSTRUCTOR</span></div><div class="hr">3부 · 생성형 AI 원리</div></div>
+  <div class="stage">
+    <div class="crumb">3부 · 생성형 AI 원리</div>
+    <h2 class="atitle"><span class="lbl">[원리]</span> 추론 모드의 동작 <span class="sub">— 중간 토큰 생성과 정확도·비용의 관계</span></h2>
+    <div class="titlerule"></div>
+    <div class="body split" style="padding-top:16px;">
+      <div class="colflow">
+        <p class="lead" style="margin-bottom:12px;">Thinking·추론 모드는 모델이 답 앞에 <b>풀이 과정을 토큰으로 길게 생성</b>하는 방식입니다. 생성 중 자기 출력이 다시 입력으로 들어가므로, 중간 단계를 써 두면 다음 단계의 정확도가 올라갑니다.</p>
+        <div class="concepts fill">
+          <div class="concept"><div class="no">1</div><div class="cbody"><div class="cn">정확도가 오르는 이유</div>
+            <p>매 토큰을 생성할 때 지금까지 자기가 쓴 내용을 전부 다시 읽습니다. 중간 계산을 적어 두면 그 내용이 다음 판단의 근거가 됩니다.</p></div></div>
+          <div class="concept"><div class="no">2</div><div class="cbody"><div class="cn">비용·속도, 그리고 선택 기준</div>
+            <p>토큰을 많이 생성하므로 느리고 비쌉니다. 예 — 요약·초안은 일반 모드, 수치 계산·논리 검토·복잡한 조건 처리는 추론 모드를 권합니다.</p></div></div>
+        </div>
+      </div>
+      <div class="figwrap">
+        <div class="figcap">일반 모드와 추론 모드 — 가중치는 동일</div>
+        <div class="layer2 big">
+          <div class="lay top"><div class="lt">일반 모드</div><div class="lh">질문 → 답 (짧은 토큰열)</div><p>바로 답을 뽑습니다. 간단한 요청은 충분하지만 복잡한 계산에서 틀리기 쉽습니다.</p></div>
+          <div class="conn">차이는 생성하는 토큰 수 — 모델 자체는 같습니다</div>
+          <div class="lay bot"><div class="lt">추론 모드</div><div class="lh">질문 → 풀이 토큰 다수 → 답</div><p>풀이를 먼저 쓰고, 그 풀이를 참조하며 답을 냅니다. 느리고 비싸지만 정확합니다.</p></div>
+        </div>
+      </div>
+    </div>
+    <div class="note"><div class="nl">오해 방지</div><p>"생각한다"는 표현 때문에 사용 중 학습이 일어난다고 오해하기 쉬우나, <b>사용 중 가중치는 변하지 않습니다.</b> 달라지는 것은 생성 토큰의 양뿐입니다.</p></div>
+  </div>
+  <div class="pageno">19</div>
+</section>
+
+<section class="slide">
+  <div class="hdr"><div class="ht">생성형AI 강사양성과정<span>GENERATIVE AI INSTRUCTOR</span></div><div class="hr">3부 · 생성형 AI 원리</div></div>
+  <div class="stage">
+    <div class="crumb">3부 · 생성형 AI 원리</div>
+    <h2 class="atitle"><span class="lbl">[원리]</span> DX와 AX <span class="sub">— 예측·분류 AI와 생성·추론 AI의 구분</span></h2>
+    <div class="titlerule"></div>
+    <div class="body colflow" style="padding-top:16px;">
+      <p class="lead" style="margin-bottom:12px;">공공 교육 현장에는 기존 데이터분석(머신러닝) 교육과 생성형 AI 교육이 섞여 들어옵니다. 두 흐름을 구분해 설명하면 "우리 과정엔 뭘 넣어야 하나"라는 담당자 질문이 정리됩니다.</p>
+      <div class="tablefill">
+        <table class="grid even roomy" style="--rows:4;">
+          <tr><th style="width:140px;">구분</th><th>전통 ML · 데이터분석 (DX)</th><th>생성형 AI (AX)</th></tr>
+          <tr><td><b>하는 일</b></td><td>예측·분류 — 수치를 맞힙니다. 수요 예측, 민원 유형 분류, 이상 탐지.</td><td>생성·추론 — 글·코드·이미지를 만듭니다. 보고서 초안, 분석 코드, 요약.</td></tr>
+          <tr><td><b>입력 데이터</b></td><td>정형 데이터(표). 컬럼이 정해진 CSV·엑셀.</td><td>비정형 데이터. 문장, 문서, 이미지, 대화.</td></tr>
+          <tr><td><b>대표 실습</b></td><td>파이썬·Colab으로 회귀·분류·시각화.</td><td>문서 작성·요약, 데이터 구조 전달형 분석, 바이브코딩.</td></tr>
+          <tr><td><b>교육 연결</b></td><td>워드클라우드·LDA 같은 항목은 그 자체가 목적이 아니라 코드 실행 역량의 확인 수단으로 다룹니다.</td><td>생성형 AI에게 분석 코드를 <b>생성·설명</b>시키는 실습으로 두 교육을 결합합니다.</td></tr>
+        </table>
+      </div>
+      <div class="note"><div class="nl">정리</div><p>두 흐름이 만나는 자리는 <b>"생성형 AI로 파이썬 분석 코드를 만들고 해석하는 실습"</b>입니다. 기존 데이터분석 커리큘럼을 버리지 않고 생성형 AI와 연결합니다.</p></div>
+    </div>
+  </div>
+  <div class="pageno">20</div>
+</section>
+
+<section class="slide">
+  <div class="hdr"><div class="ht">생성형AI 강사양성과정<span>GENERATIVE AI INSTRUCTOR</span></div><div class="hr">3부 · 생성형 AI 원리</div></div>
+  <div class="stage">
+    <div class="crumb">3부 · 생성형 AI 원리</div>
+    <h2 class="atitle"><span class="lbl">[원리]</span> sLM·파인튜닝·RAG <span class="sub">— 용어 정의와 공공 적용 조건</span></h2>
+    <div class="titlerule"></div>
+    <div class="body colflow" style="padding-top:16px;">
+      <p class="lead" style="margin-bottom:12px;">세 용어는 기관 담당자 회의에서 자주 혼용되지만, 비용과 적용 조건이 완전히 다릅니다. "우리도 파인튜닝을 해야 하나요"라는 질문에 답하는 기준입니다.</p>
+      <div class="tablefill">
+        <table class="grid even roomy" style="--rows:3;">
+          <tr><th style="width:180px;">방식</th><th>정의</th><th style="width:430px;">공공 적용 조건</th></tr>
+          <tr><td><b>sLM</b><br>경량 언어모델</td><td>소형 언어모델을 기관 서버나 PC에 설치해 자체 구동하는 방식입니다.</td><td>망분리 환경에서 Ollama 등으로 구동 가능합니다. 성능은 상용 대비 제한적이므로 요약·분류 등 좁은 용도부터 검토합니다.</td></tr>
+          <tr><td><b>파인튜닝</b><br>추가 학습</td><td>기존 모델에 기관 데이터를 추가 학습시켜 말투·양식을 맞추는 방식입니다.</td><td>데이터 정제, 학습 비용, 유지보수 부담이 큽니다. 대부분의 요구는 파인튜닝 전에 프롬프트 설계나 RAG로 먼저 해결되는지 확인합니다.</td></tr>
+          <tr><td><b>RAG</b><br>검색 결합 생성</td><td>질문이 들어오면 기관 문서를 검색해 근거로 붙인 뒤 답을 생성하는 방식입니다.</td><td>문서 최신화가 관건입니다. 규정·매뉴얼·업무편람 질의응답에 우선 적용하고, 답변에 근거 문서 표시를 요구합니다.</td></tr>
+        </table>
+      </div>
+      <div class="note"><div class="nl">정리</div><p>기관 요구의 대부분은 파인튜닝이 아니라 <b>RAG 또는 프롬프트 설계</b>로 해결됩니다. 강사는 이 판단 순서를 담당자에게 제시할 수 있어야 합니다.</p></div>
+    </div>
+  </div>
+  <div class="pageno">21</div>
+</section>
+
+<section class="slide">
+  <div class="hdr"><div class="ht">생성형AI 강사양성과정<span>GENERATIVE AI INSTRUCTOR</span></div><div class="hr">3부 · 생성형 AI 원리</div></div>
+  <div class="stage">
+    <div class="crumb">3부 · 생성형 AI 원리</div>
+    <h2 class="atitle"><span class="lbl">[원리]</span> 에이전트와 MCP <span class="sub">— 도구 연결 구조와 실패 요인</span></h2>
+    <div class="titlerule"></div>
+    <div class="body split-l" style="padding-top:16px;">
+      <div class="colflow">
+        <p class="lead" style="margin-bottom:12px;">에이전트는 LLM이 도구(검색·파일·프로그램 실행)를 호출하고 결과를 받아 다음 행동을 정하는 <b>반복 구조</b>입니다. MCP(Model Context Protocol)는 이 도구 연결을 표준화한 규격입니다.</p>
+        <div class="concepts fill">
+          <div class="concept"><div class="no">1</div><div class="cbody"><div class="cn">실패 요인 ① 반복 폭주</div>
+            <p>반복할수록 입력이 길어져 비용이 급증하고, 종료 조건이 없으면 멈추지 않습니다. 확인 — 최대 반복 횟수·시간 제한을 걸고 시연합니다.</p></div></div>
+          <div class="concept"><div class="no">2</div><div class="cbody"><div class="cn">실패 요인 ② 오류 증폭</div>
+            <p>앞 단계의 잘못된 출력이 다음 단계의 근거가 되어 오류가 굳어집니다. 확인 — 중간 산출물을 사람이 검토하는 지점을 설계에 넣습니다.</p></div></div>
+        </div>
+      </div>
+      <div class="figwrap">
+        <div class="figcap">에이전트의 반복 구조</div>
+        <div class="loop big">
+          <div class="lp"><div class="lpn">1</div><div class="lpt"><b>목표 입력</b> — 사람이 과제와 권한 범위를 정해 줍니다.</div></div>
+          <div class="lp"><div class="lpn">2</div><div class="lpt"><b>도구 선택·호출</b> — 모델이 검색·파일 읽기·실행 중 필요한 것을 고릅니다.</div></div>
+          <div class="lp"><div class="lpn">3</div><div class="lpt"><b>결과 반영</b> — 도구 결과를 입력에 추가하고 다음 행동을 정합니다.</div></div>
+          <div class="lp"><div class="lpn">4</div><div class="lpt"><b>완료 판단</b> — 목표 달성 여부를 확인하고 보고합니다.</div></div>
+          <div class="back">미완료면 2번으로 반복 — 그래서 종료 조건이 필수입니다</div>
+        </div>
+      </div>
+    </div>
+    <div class="note"><div class="nl">시연 기준</div><p>시연은 반드시 <b>작은 과제(파일 3개 정리 수준)</b>로 하고, 부여한 권한 범위를 화면으로 먼저 보여준 뒤 시작합니다.</p></div>
+  </div>
+  <div class="pageno">22</div>
+</section>
+
+<section class="slide">
+  <div class="hdr"><div class="ht">생성형AI 강사양성과정<span>GENERATIVE AI INSTRUCTOR</span></div><div class="hr">4부 · 공공 교육 설계</div></div>
+  <div class="stage">
+    <div class="crumb">4부 · 공공 교육 설계</div>
+    <h2 class="atitle"><span class="lbl">[설계]</span> 공공 환경 제약 <span class="sub">— 망분리·설치·계정·보안 제한의 커리큘럼 반영</span></h2>
+    <div class="titlerule"></div>
+    <div class="body colflow" style="padding-top:14px;">
+      <p class="lead" style="margin-bottom:10px;">공공 강의는 도구가 아니라 <b>환경에서 먼저 막힙니다.</b> 커리큘럼은 아래 제약을 전제로 설계해야 현장에서 그대로 돌아갑니다.</p>
+      <div class="tablefill">
+        <table class="grid even" style="--rows:4;">
+          <tr><th style="width:150px;">제약</th><th style="width:330px;">현장 상황</th><th>커리큘럼 반영</th></tr>
+          <tr><td><b>망분리 · 업로드 제한</b></td><td>파일 업로드가 기술적으로 막히거나, 규정상·심리적으로 불가능합니다.</td><td>파일 대신 데이터 구조만 전달하는 방식을 가르칩니다. 예 — "A열 민원접수일, B열 유형, C열 처리일 구조입니다. 유형별 평균 처리일수를 구하는 엑셀 수식을 만들어 주세요."</td></tr>
+          <tr><td><b>설치 불가</b></td><td>관리자 권한이 없고 프로그램 설치가 금지된 PC가 많습니다.</td><td>단일 HTML 도구와 브라우저 기반 도구(Colab, 웹 서비스) 중심으로 실습을 구성합니다.</td></tr>
+          <tr><td><b>계정 · 결제</b></td><td>기관 카드 결제가 어렵고 유료 계정이 없는 수강생이 대부분입니다.</td><td>무료 범위로 완주 가능한 실습을 설계하고, 유료 전용 기능은 강사 시연으로 대체합니다.</td></tr>
+          <tr><td><b>보안 규정</b></td><td>내부자료·개인정보의 외부 서비스 입력이 금지됩니다.</td><td>실습용 가상 데이터 세트를 강사가 제공하고, 실자료 판단 기준을 별도 장으로 안내합니다.</td></tr>
+        </table>
+      </div>
+      <div class="note"><div class="nl">사전 확인</div><p>강의 전 담당자와 확인 — 실습장 PC의 <b>인터넷 여부, 차단 사이트 목록, 수강생 계정 준비 상태, 빔·음향</b>. 이 확인표가 없으면 첫 30분을 잃습니다.</p></div>
+    </div>
+  </div>
+  <div class="pageno">23</div>
+</section>
+
+<section class="slide">
+  <div class="hdr"><div class="ht">생성형AI 강사양성과정<span>GENERATIVE AI INSTRUCTOR</span></div><div class="hr">4부 · 공공 교육 설계</div></div>
+  <div class="stage">
+    <div class="crumb">4부 · 공공 교육 설계</div>
+    <h2 class="atitle"><span class="lbl">[설계]</span> 모듈식 커리큘럼 <span class="sub">— 활동 중심 분류와 도구 병기 원칙</span></h2>
+    <div class="titlerule"></div>
+    <div class="body colflow" style="padding-top:16px;">
+      <p class="lead" style="margin-bottom:10px;">도구는 반년마다 바뀌지만 활동("표를 자동으로 뽑는다", "단일 HTML 도구를 만든다")은 오래 갑니다. 그래서 모듈은 <b>활동 단위로 자르고, 각 모듈에 현재 시점의 대표 도구를 병기</b>합니다. 도구가 바뀌면 도구 열만 갈아끼웁니다.</p>
+      <div style="flex:1;display:flex;flex-direction:column;justify-content:space-around;padding:6px 0;">
+        <div>
+          <div class="figcap" style="margin-bottom:12px;">모듈 공통 구조 — 5요소</div>
+          <div class="relay big">
+            <div class="rc"><div class="rk">1</div><div class="rv">목표 한 줄</div></div><div class="ra">›</div>
+            <div class="rc"><div class="rk">2</div><div class="rv">주요 주제</div></div><div class="ra">›</div>
+            <div class="rc"><div class="rk">3</div><div class="rv">대표 실습</div></div><div class="ra">›</div>
+            <div class="rc"><div class="rk">4</div><div class="rv">워크플로우</div></div><div class="ra">›</div>
+            <div class="rc"><div class="rk">5</div><div class="rv">산출물</div></div>
+          </div>
+        </div>
+        <div class="concepts">
+          <div class="concept"><div class="no">1</div><div class="cbody"><div class="cn">모듈 단위</div>
+            <p>1모듈 = 활동 1개 = 60~90분. 난이도는 입문·실무·심화로 표기합니다. 도구 이름은 익명화하지 않고 실제 제품명(ChatGPT, Claude, Gemini, NotebookLM, Colab 등)으로 적습니다.</p></div></div>
+          <div class="concept"><div class="no">2</div><div class="cbody"><div class="cn">조합 방식</div>
+            <p>대상 × 시간 × 환경에 맞춰 모듈을 골라 과정을 만듭니다. 예 — 3시간 과정 = 공통 프레임 모듈 1 + 문서작성 모듈 1 + 실습 모듈 1.</p></div></div>
+        </div>
+      </div>
+      <div class="note"><div class="nl">연결</div><p>실습 모듈 100선이 이 원칙으로 만들어진 <b>모듈 풀</b>입니다. 2부의 월간 루틴에서 갱신하는 대상도 이 도구 열입니다.</p></div>
+    </div>
+  </div>
+  <div class="pageno">24</div>
+</section>
+
+<section class="slide">
+  <div class="hdr"><div class="ht">생성형AI 강사양성과정<span>GENERATIVE AI INSTRUCTOR</span></div><div class="hr">4부 · 공공 교육 설계</div></div>
+  <div class="stage">
+    <div class="crumb">4부 · 공공 교육 설계</div>
+    <h2 class="atitle"><span class="lbl">[설계]</span> 실습 설계 3요소 <span class="sub">— 복붙 프롬프트·산출물·확인 기준</span></h2>
+    <div class="titlerule"></div>
+    <div class="body colflow" style="padding-top:16px;">
+      <p class="lead" style="margin-bottom:6px;">실습 1건은 "따라 하면 눈에 보이는 결과가 남는 단위"로 설계합니다. 아래 3요소가 모두 있어야 실습이고, 하나라도 없으면 시연입니다.</p>
+      <div style="flex:1;display:flex;gap:18px;align-items:stretch;padding:10px 0;">
+        <div class="domain big"><div class="dh">① 복붙 프롬프트 <span>입력</span></div><ul class="dl">
+          <li><b>완성 문장</b> "이런 식으로 물어보세요"가 아니라 그대로 붙여넣을 실제 문장을 줍니다</li>
+          <li><b>예시 데이터</b> 프롬프트에 넣을 가상 데이터 파일·텍스트를 함께 제공합니다</li>
+          <li><b>변형 안내</b> 수강생 업무로 바꿀 때 고칠 자리를 괄호로 표시합니다</li>
+        </ul></div>
+        <div class="domain big"><div class="dh">② 눈에 보이는 산출물 <span>결과</span></div><ul class="dl">
+          <li><b>실물</b> 표, 문서 초안, HTML 파일, 차트처럼 손에 잡히는 결과물이어야 합니다</li>
+          <li><b>1인 1개</b> 실습 종료 시 각자 자기 산출물 1개를 보유합니다</li>
+          <li><b>휴대성</b> 업무 PC로 가져가 바로 쓸 수 있는 형태로 마무리합니다</li>
+        </ul></div>
+        <div class="domain big"><div class="dh">③ 확인 기준 <span>검증</span></div><ul class="dl">
+          <li><b>자가 검사</b> 결과가 맞는지 스스로 확인할 항목을 줍니다 — 예: 합계 수치 원본 대조</li>
+          <li><b>실패 경로</b> 안 될 때 다시 시도할 경로(프롬프트 수정 예)를 미리 적어 둡니다</li>
+          <li><b>책임 표시</b> 산출물에 출처·검증 여부 표기 습관을 붙입니다</li>
+        </ul></div>
+      </div>
+      <div class="note"><div class="nl">연결</div><p>실습 모듈 100선의 <b>1장 구성이 이 3요소를 그대로</b> 따릅니다. 강사가 새 실습을 추가할 때도 이 틀에 맞춰 만듭니다.</p></div>
+    </div>
+  </div>
+  <div class="pageno">25</div>
+</section>
+
+<section class="slide">
+  <div class="hdr"><div class="ht">생성형AI 강사양성과정<span>GENERATIVE AI INSTRUCTOR</span></div><div class="hr">4부 · 공공 교육 설계</div></div>
+  <div class="stage">
+    <div class="crumb">4부 · 공공 교육 설계</div>
+    <h2 class="atitle"><span class="lbl">[설계]</span> 수준 진단과 트랙 배치 <span class="sub">— 입문·실무·심화 구분 기준</span></h2>
+    <div class="titlerule"></div>
+    <div class="body colflow" style="padding-top:16px;">
+      <p class="lead" style="margin-bottom:12px;">같은 강의실에 ChatGPT를 처음 여는 사람과 코드 실행 경험자가 함께 앉습니다. 시작 10분의 진단 질문으로 트랙을 나누고, 실습 난이도를 이원화합니다.</p>
+      <div class="tablefill">
+        <table class="grid even roomy" style="--rows:3;">
+          <tr><th style="width:110px;">트랙</th><th style="width:360px;">진단 기준 (거수·설문)</th><th>도달 목표</th></tr>
+          <tr><td><b>입문</b></td><td>생성형 AI 대화 경험이 거의 없거나, 검색 대용으로만 써 봤습니다.</td><td>문서 작성·요약·검토를 프롬프트로 처리하고, 결과 검증 습관을 갖춥니다.</td></tr>
+          <tr><td><b>실무</b></td><td>채팅은 익숙하지만 자동화·코드·데이터 분석은 처음입니다.</td><td>데이터 구조 전달형 분석을 수행하고, 단일 HTML 업무 도구 1개를 직접 만듭니다.</td></tr>
+          <tr><td><b>심화</b></td><td>코드 실행, 외부 서비스 연동(호출 규격 API) 경험이 있습니다.</td><td>바이브코딩으로 웹앱 시제품을 만들고, 코딩 에이전트·MCP를 체험합니다.</td></tr>
+        </table>
+      </div>
+      <div class="note"><div class="nl">공통 축</div><p>트랙이 달라도 성취 축은 같습니다 — <b>문서 작성 · 데이터 분석 · 웹앱 제작</b> 3역량. 평가와 실습 모듈 배치도 이 축을 따릅니다.</p></div>
+    </div>
+  </div>
+  <div class="pageno">26</div>
+</section>
+
+<section class="slide">
+  <div class="hdr"><div class="ht">생성형AI 강사양성과정<span>GENERATIVE AI INSTRUCTOR</span></div><div class="hr">4부 · 공공 교육 설계</div></div>
+  <div class="stage">
+    <div class="crumb">4부 · 공공 교육 설계</div>
+    <h2 class="atitle"><span class="lbl">[설계]</span> 평가 기준 <span class="sub">— 결과물·설계 논리·수정 과정의 3축</span></h2>
+    <div class="titlerule"></div>
+    <div class="body split" style="padding-top:16px;">
+      <div class="colflow">
+        <p class="lead" style="margin-bottom:12px;">생성형 AI 교육은 결과물만 보면 변별이 안 됩니다. 결과물에 더해 <b>프롬프트 설계 논리와 수정 과정</b>을 평가 요소에 넣어야 실제 역량이 측정됩니다.</p>
+        <div class="concepts fill">
+          <div class="concept"><div class="no">1</div><div class="cbody"><div class="cn">결과물</div>
+            <p>산출물의 요건 충족과 완성도. 예 — 보고서 형식 준수, 수치 정확성, 산출물 동작 여부.</p></div></div>
+          <div class="concept"><div class="no">2</div><div class="cbody"><div class="cn">프롬프트 설계 논리</div>
+            <p>왜 그렇게 요청했는지 판단 이유를 기술하게 합니다. 확인 — 사용한 프롬프트 전체를 제출받습니다.</p></div></div>
+          <div class="concept"><div class="no">3</div><div class="cbody"><div class="cn">수정 과정 (로그)</div>
+            <p>실패 → 수정 → 개선의 반복 기록. 확인 — 1차 결과와 최종 결과를 나란히 제출받아 비교합니다.</p></div></div>
+        </div>
+      </div>
+      <div class="figwrap">
+        <div class="figcap">공정성 장치</div>
+        <div class="loop big">
+          <div class="lp"><div class="lpn">1</div><div class="lpt"><b>문제은행 순환 출제</b> — 같은 문제의 반복 노출을 막고 유형을 유지합니다.</div></div>
+          <div class="lp"><div class="lpn">2</div><div class="lpt"><b>트랙별 도구 차등</b> — 트랙에 따라 허용 도구를 구분해 변별력을 확보합니다.</div></div>
+          <div class="lp"><div class="lpn">3</div><div class="lpt"><b>채점 기준 사전 공개</b> — 3축의 배점을 실습 전에 공지합니다.</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="note"><div class="nl">효과</div><p>과정 중심 평가는 "AI가 다 해준 것 아니냐"는 논란을 줄이고, 학습자의 <b>판단 능력</b>을 평가 대상으로 드러냅니다.</p></div>
+  </div>
+  <div class="pageno">27</div>
+</section>
+
+<section class="slide">
+  <div class="hdr"><div class="ht">생성형AI 강사양성과정<span>GENERATIVE AI INSTRUCTOR</span></div><div class="hr">4부 · 공공 교육 설계</div></div>
+  <div class="stage">
+    <div class="crumb">4부 · 공공 교육 설계</div>
+    <h2 class="atitle"><span class="lbl">[설계]</span> 강의 현장 운영 <span class="sub">— 장애·버전 변경 대응 절차</span></h2>
+    <div class="titlerule"></div>
+    <div class="body colflow" style="padding-top:18px;">
+      <p class="lead" style="margin-bottom:8px;">도구 화면은 강의 전날에도 바뀝니다. 접속 장애, 무료 한도 소진, 기능 위치 변경은 예외가 아니라 <b>상수</b>이므로, 대응 절차를 강의 준비에 포함합니다.</p>
+      <div style="flex:1;display:flex;flex-direction:column;justify-content:space-around;padding:8px 0;">
+        <div class="steps big">
+          <div class="st"><div class="sn">① 전일</div><div class="sh">리허설 재실행</div><p>실습 전 과정을 본 계정으로 다시 실행하고, 바뀐 화면은 캡처를 갱신합니다.</p></div>
+          <div class="st"><div class="sn">② 준비</div><div class="sh">백업 자료</div><p>각 실습의 결과 화면 캡처와 녹화를 준비해 장애 시 흐름을 잇습니다.</p></div>
+          <div class="st"><div class="sn">③ 지정</div><div class="sh">대체 도구</div><p>실습마다 대체 도구 1개를 지정합니다. 예 — Claude 장애 시 Gemini로 동일 실습.</p></div>
+          <div class="st"><div class="sn">④ 현장</div><div class="sh">전환 공지</div><p>장애 발생 시 캡처로 설명을 잇고, 실습은 대체 도구로 전환한다고 공지합니다.</p></div>
+        </div>
+        <div>
+          <div class="figcap" style="margin-bottom:12px;">준비 산출물</div>
+          <div class="relay big">
+            <div class="rc"><div class="rk">①</div><div class="rv">리허설 체크표</div></div><div class="ra">›</div>
+            <div class="rc"><div class="rk">②</div><div class="rv">캡처·녹화 폴더</div></div><div class="ra">›</div>
+            <div class="rc"><div class="rk">③</div><div class="rv">대체 도구 표</div></div><div class="ra">›</div>
+            <div class="rc"><div class="rk">④</div><div class="rv">현장 공지 문구</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="note"><div class="nl">한도 계산</div><p>무료 한도는 <b>수강생 수 × 실습 요청 횟수</b>로 미리 계산해, 계정 분산·시연 전환 여부를 강의 전에 결정합니다.</p></div>
+    </div>
+  </div>
+  <div class="pageno">28</div>
+</section>
+
+<section class="slide">
+  <div class="hdr"><div class="ht">생성형AI 강사양성과정<span>GENERATIVE AI INSTRUCTOR</span></div><div class="hr">4부 · 공공 교육 설계</div></div>
+  <div class="stage">
+    <div class="crumb">4부 · 공공 교육 설계</div>
+    <h2 class="atitle"><span class="lbl">[설계]</span> 윤리·보안 안내 <span class="sub">— 실무자 관점의 지도 원칙 4가지</span></h2>
+    <div class="titlerule"></div>
+    <div class="body split" style="padding-top:16px;">
+      <div class="concepts fill big">
+        <div class="concept"><div class="no">1</div><div class="cbody"><div class="cn">입력 금지 기준</div>
+          <p>개인정보, 비공개 문서, 계약·인사 자료는 외부 상용 서비스에 입력하지 않습니다.<span class="boxmore">예 — 민원인 실명·연락처가 든 파일은 가명화 전에는 업로드 금지.</span><span class="boxcheck">확인 — 소속 기관의 생성형 AI 활용 지침 존재 여부를 첫 시간에 확인시킵니다.</span></p></div></div>
+        <div class="concept"><div class="no">2</div><div class="cbody"><div class="cn">검증 책임</div>
+          <p>생성물의 사실·수치·법령 확인 책임은 사용자에게 있습니다.<span class="boxmore">예 — 법령 조문 번호, 통계 수치는 원문 대조 후에만 문서에 반영.</span><span class="boxcheck">확인 — 결재 전 출처 대조를 업무 절차로 못 박습니다.</span></p></div></div>
+      </div>
+      <div class="concepts fill big">
+        <div class="concept"><div class="no">3</div><div class="cbody"><div class="cn">표기·저작권</div>
+          <p>AI 활용 사실의 표기 기준과 생성물의 저작권 이슈를 안내합니다.<span class="boxmore">예 — 대외 발간물의 AI 활용 표기, 생성 이미지의 상업적 사용 조건.</span><span class="boxcheck">확인 — 타인 저작물을 통째로 넣어 변형 생성하는 요청은 하지 않도록 지도합니다.</span></p></div></div>
+        <div class="concept"><div class="no">4</div><div class="cbody"><div class="cn">결과 책임과 공유</div>
+          <p>자동화 산출물의 오류도 담당자 책임입니다. 공유와 문서화로 그림자 자동화를 방지합니다.<span class="boxmore">예 — 자동 취합 도구는 사용법 1장 문서와 함께 부서에 공유.</span><span class="boxcheck">확인 — 인수인계 목록에 자동화 도구 항목을 추가합니다.</span></p></div></div>
+      </div>
+    </div>
+    <div class="note"><div class="nl">근거 자료</div><p>각 기관·부처의 <b>생성형 AI 업무활용 지침(행정안전부 가이드 등)</b>을 강의 자료에 첨부해, 강사 개인 의견이 아닌 규정 기반으로 안내합니다.</p></div>
+  </div>
+  <div class="pageno">29</div>
+</section>
+
+<section class="slide">
+  <div class="hdr"><div class="ht">생성형AI 강사양성과정<span>GENERATIVE AI INSTRUCTOR</span></div><div class="hr">5부 · 실습 연계</div></div>
+  <div class="stage">
+    <div class="crumb">5부 · 실습 연계</div>
+    <h2 class="atitle"><span class="lbl">[연계]</span> 실습 모듈 100선 활용 <span class="sub">— 모듈 선택·조합 절차</span></h2>
+    <div class="titlerule"></div>
+    <div class="body colflow" style="padding-top:18px;">
+      <p class="lead" style="margin-bottom:8px;">다음 장부터 이어지는 실습 모듈 100선은 <b>1장 = 실습 1건</b> 단위입니다. 강사는 100장을 순서대로 강의하는 것이 아니라, 대상·시간·환경에 맞춰 골라 조합합니다.</p>
+      <div style="flex:1;display:flex;flex-direction:column;justify-content:space-around;padding:8px 0;">
+        <div class="steps big">
+          <div class="st"><div class="sn">① 확인</div><div class="sh">대상·환경 파악</div><p>직군, 수준 분포, 망분리 여부, 계정 준비 상태를 담당자와 확인합니다.</p></div>
+          <div class="st"><div class="sn">② 배분</div><div class="sh">시간 계산</div><p>모듈 수 = 총 시간 ÷ 60~90분. 도입·정리 시간을 먼저 빼고 계산합니다.</p></div>
+          <div class="st"><div class="sn">③ 선택</div><div class="sh">모듈 고르기</div><p>트랙(입문·실무·심화)과 활동(문서·분석·제작) 기준으로 실습 장을 고릅니다.</p></div>
+          <div class="st"><div class="sn">④ 완성</div><div class="sh">리허설·자료화</div><p>고른 모듈을 전일 재실행하고, 캡처를 갱신해 강의 패키지로 묶습니다.</p></div>
+        </div>
+        <div>
+          <div class="figcap" style="margin-bottom:12px;">조합 절차의 산출물</div>
+          <div class="relay big">
+            <div class="rc"><div class="rk">①</div><div class="rv">요구 확인표</div></div><div class="ra">›</div>
+            <div class="rc"><div class="rk">②</div><div class="rv">시간 배분표</div></div><div class="ra">›</div>
+            <div class="rc"><div class="rk">③</div><div class="rv">선택 모듈 목록</div></div><div class="ra">›</div>
+            <div class="rc"><div class="rk">④</div><div class="rv">강의 패키지</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="note"><div class="nl">장 구성</div><p>각 실습 장은 <b>복붙 프롬프트 · 산출물 · 확인 기준</b>의 3요소 구조입니다. 새 실습을 추가할 때도 같은 틀을 유지해 100선을 확장합니다.</p></div>
+    </div>
+  </div>
+  <div class="pageno">30</div>
+</section>
+
+<section class="slide dark">
+  <div class="hdr"><div class="ht">생성형AI 강사양성과정<span>GENERATIVE AI INSTRUCTOR</span></div><div class="hr">강의 요약 · Q &amp; A</div></div>
+  <div class="recap">
+    <div class="eye">이론편 마무리</div>
+    <h1>강의 요약</h1>
+    <div class="ritems">
+      <div class="ri"><div class="rn">01</div><p>강사는 정책 단위가 아니라 <b>업무 단위</b>에서 실습을 설계한다. 거시 인프라는 배경으로, 책상 위 미시 업무 개선을 본 영역으로 다룬다.</p></div>
+      <div class="ri"><div class="rn">02</div><p>정보 수집은 정해진 루틴으로 돌린다. <b>Threads·X·Facebook 그룹·GeekNews</b>를 매일 확인하고, 공식 소스 대조와 직접 재현을 거친 것만 강의에 넣는다.</p></div>
+      <div class="ri"><div class="rn">03</div><p><b>토큰 예측·컨텍스트 윈도우·환각·추론 모드</b>를 비개발자 언어로 설명할 수 있어야 수강생 질문에 흔들리지 않는다.</p></div>
+      <div class="ri"><div class="rn">04</div><p>공공 과정은 망분리·설치·계정·보안 제약을 전제로, <b>활동 중심 모듈에 도구를 병기</b>해 설계하고 도구 열만 갱신한다.</p></div>
+      <div class="ri"><div class="rn">05</div><p>실습 1건 = <b>복붙 프롬프트 + 산출물 + 확인 기준</b>. 이 구조로 만든 실습 모듈 100선이 다음 장부터 이어진다.</p></div>
+    </div>
+  </div>
+  <div class="dmeta">
+    <div class="who">신성진<span>한국데이터사이언티스트협회(CDSA) · 대표</span></div>
+    <div class="topic">실습 모듈 100선으로 이어집니다<br><b>1장당 실습 1건 · 선택·조합형 운영</b></div>
+  </div>
+  <div class="pageno">31</div>
+</section>
+
+</div>
+<script>
+(function(){
+  var slides=[].slice.call(document.querySelectorAll('.slide'));
+  var editing=false, pidx=0;
+  var palettes=[
+    {id:'slate-teal', label:'슬레이트 틸'},
+    {id:'classic-rust', label:'클래식 러스트'},
+    {id:'forest-gold', label:'포레스트 골드'},
+    {id:'navy-coral', label:'네이비 코랄'},
+    {id:'graphite-rose', label:'그래파이트 로즈'}
+  ];
+  var bPalette=document.getElementById('btnPalette'),
+      bEdit=document.getElementById('btnEdit'), bSave=document.getElementById('btnSave'),
+      bPdf=document.getElementById('btnPdf'), bPlay=document.getElementById('btnPlay'),
+      nav=document.querySelector('.pnav');
+  function paletteIndex(id){for(var i=0;i<palettes.length;i++){if(palettes[i].id===id)return i;}return 0;}
+  function setPalette(id){
+    var idx=paletteIndex(id), p=palettes[idx];
+    document.body.dataset.palette=p.id;
+    if(bPalette)bPalette.textContent='색상: '+p.label;
+  }
+  if(bPalette){
+    bPalette.onclick=function(){setPalette(palettes[(paletteIndex(document.body.dataset.palette)+1)%palettes.length].id);};
+    setPalette(document.body.dataset.palette||palettes[0].id);
+  }
+  function setEdit(v){editing=v;document.body.classList.toggle('editing',v);
+    slides.forEach(function(s){s.contentEditable=v;});bEdit.classList.toggle('on',v);bEdit.textContent=v?'편집 끝':'편집';}
+  bEdit.onclick=function(){setEdit(!editing);};
+  bPdf.onclick=function(){window.print();};
+  bSave.onclick=function(){
+    var wasEdit=editing; if(editing)setEdit(false);
+    var clone=document.documentElement.cloneNode(true);
+    clone.querySelectorAll('.slide').forEach(function(s){s.removeAttribute('contenteditable');s.classList.remove('present-current');});
+    clone.querySelector('body').classList.remove('editing','presenting');
+    var html='<!doctype html>\n'+clone.outerHTML;
+    var a=document.createElement('a');
+    a.href=URL.createObjectURL(new Blob([html],{type:'text/html;charset=utf-8'}));
+    a.download=(document.title.replace(/\s+/g,'_')||'lecture')+'_편집본.html';
+    document.body.appendChild(a);a.click();a.remove();
+    if(wasEdit)setEdit(true);
+  };
+  function fit(){var s=Math.min(window.innerWidth/1280,window.innerHeight/720);
+    var cur=document.querySelector('.slide.present-current');if(cur)cur.style.setProperty('--ps',s);}
+  function show(i){pidx=(i+slides.length)%slides.length;
+    slides.forEach(function(s){s.classList.remove('present-current');});
+    slides[pidx].classList.add('present-current');fit();
+    nav.textContent=(pidx+1)+' / '+slides.length+'   ·   ← →  이동,  Esc  종료';}
+  function enter(){if(editing)setEdit(false);document.body.classList.add('presenting');show(pidx);
+    if(document.documentElement.requestFullscreen)document.documentElement.requestFullscreen().catch(function(){});}
+  function exit(){document.body.classList.remove('presenting');
+    slides.forEach(function(s){s.classList.remove('present-current');s.style.removeProperty('--ps');});
+    if(document.fullscreenElement)document.exitFullscreen().catch(function(){});}
+  bPlay.onclick=enter;
+  window.addEventListener('resize',function(){if(document.body.classList.contains('presenting'))fit();});
+  document.addEventListener('keydown',function(e){
+    if(!document.body.classList.contains('presenting'))return;
+    if(e.key==='ArrowRight'||e.key==='PageDown'||e.key===' '){e.preventDefault();show(pidx+1);}
+    else if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();show(pidx-1);}
+    else if(e.key==='Escape'){exit();}
+  });
+  document.addEventListener('click',function(e){
+    if(document.body.classList.contains('presenting')&&!editing){
+      var cur=document.querySelector('.slide.present-current');
+      if(cur&&cur.contains(e.target))show(pidx+1);
+    }
+  });
+})();
+</script>
+<script>/* kg-preview: #<heading> \uc704\uce58\ub85c \uc774\ub3d9 */
+(function(){function norm(t){return (t||'').replace(/\s+/g,'').toLowerCase()}
+function go(){var h=decodeURIComponent(location.hash.slice(1));if(!h)return;var k=norm(h).slice(0,24);if(!k)return;
+var best=null,bl=1e9,els=document.body.querySelectorAll('h1,h2,h3,h4,h5,p,div,span,li,td,text,tspan,section,article');
+for(var i=0;i<els.length;i++){var e=els[i],t=norm(e.textContent);if(t.length<bl&&t.indexOf(k)>-1){best=e;bl=t.length}}
+if(!best)return;var box=best.closest('section,[class*=slide],[class*=page],article')||best;
+box.scrollIntoView({block:'start'});box.style.outline='3px solid #c0504d';box.style.outlineOffset='4px';
+setTimeout(function(){box.style.outline=''},2600)}
+window.addEventListener('load',function(){setTimeout(go,400)});window.addEventListener('hashchange',go)})();</script></body>
+</html>

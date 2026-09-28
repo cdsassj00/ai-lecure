@@ -1,0 +1,4033 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head><meta name="robots" content="noindex, nofollow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>의성군 AI 전략 리더: AI 에이전트에 대한 이해</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<style>
+:root{
+  --bg:#f4f6f9;
+  --surface:#ffffff;
+  --tint:#e8edf4;
+  --tint-light:#f1f5fa;
+  --line:#d2dce8;
+  --line-strong:#b2c1d4;
+  --ink:#0e1c31;
+  --body:#31425a;
+  --muted:#5c6f88;
+  --faint:#8697ae;
+  --navy:#0c1626;
+  --navy-light:#162640;
+  --coral:#b63d3a;
+  --coral-dark:#8c2a28;
+  --coral-light:#f9ebea;
+  --green:#247352;
+  --green-light:#edf6f1;
+  --gold:#b57518;
+  --gold-light:#fcf3e6;
+  --blue:#325896;
+  --blue-light:#ecf2fc;
+  --shadow:0 6px 18px -10px rgba(14,28,49,0.10);
+  --shadow-strong:0 12px 30px -10px rgba(12,22,38,0.16);
+  --radius-sm:6px;
+  --radius-md:9px;
+  --radius-lg:12px;
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html{color-scheme:light}
+body{
+  background:#1a212d;
+  color:var(--ink);
+  font-family:"Pretendard Variable",Pretendard,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans KR",sans-serif;
+  line-height:1.52;
+  letter-spacing:-0.018em;
+  -webkit-font-smoothing:antialiased;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  padding:20px 0 80px;
+  min-height:100vh;
+}
+
+/* 1280x720 고정 슬라이드 캔버스 (하단 잘림 방지: 높이와 여백 엄격 통제) */
+.slide{
+  width:1280px;
+  height:720px;
+  background:var(--bg);
+  position:relative;
+  overflow:hidden;
+  flex:none;
+  margin-bottom:44px;
+  box-shadow:0 14px 36px rgba(0,0,0,0.35);
+  border-radius:2px;
+  display:flex;
+  flex-direction:column;
+  word-break:keep-all;
+  overflow-wrap:break-word;
+}
+
+/* 상단 슬라이드 식별 헤더 (44px) */
+.slide-header{
+  height:44px;
+  flex:none;
+  padding:0 46px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  border-bottom:1px solid var(--line);
+  background:var(--surface);
+}
+.header-tagline{
+  font-size:12px;
+  font-weight:800;
+  letter-spacing:0.04em;
+  color:var(--blue);
+  text-transform:uppercase;
+  display:flex;
+  align-items:center;
+  gap:7px;
+}
+.header-tagline::before{
+  content:"";
+  width:6px;
+  height:6px;
+  background:var(--blue);
+  border-radius:50%;
+  display:inline-block;
+}
+.header-meta{
+  font-size:11.5px;
+  color:var(--muted);
+  font-weight:600;
+}
+
+/* 슬라이드 제목부 (컴팩트 높이 배정) */
+.slide-headline{
+  padding:12px 46px 6px;
+  flex:none;
+}
+.eyebrow{
+  font-size:11px;
+  font-weight:800;
+  letter-spacing:0.08em;
+  text-transform:uppercase;
+  color:var(--coral);
+  margin-bottom:2px;
+}
+.slide-title{
+  font-size:24px;
+  font-weight:900;
+  line-height:1.25;
+  color:var(--ink);
+  letter-spacing:-0.03em;
+}
+
+/* 본문 캔버스 영역 */
+.slide-canvas{
+  flex:1;
+  padding:6px 46px 8px;
+  min-height:0;
+  display:flex;
+  flex-direction:column;
+}
+
+/* 하단 회수 앵커 (36px 컴팩트) */
+.bottom-anchor{
+  margin:0 46px 8px;
+  padding:6px 14px;
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-left:4px solid var(--navy);
+  border-radius:var(--radius-sm);
+  display:flex;
+  align-items:center;
+  gap:10px;
+  flex:none;
+}
+.anchor-tag{
+  background:var(--navy);
+  color:#fff;
+  font-size:10.5px;
+  font-weight:800;
+  padding:2px 7px;
+  border-radius:3px;
+  letter-spacing:0.02em;
+  flex:none;
+}
+.anchor-text{
+  font-size:12.5px;
+  font-weight:700;
+  color:var(--navy-light);
+  line-height:1.35;
+}
+
+/* 푸터 바 (30px 컴팩트) */
+.slide-footer{
+  height:30px;
+  flex:none;
+  padding:0 46px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  border-top:1px solid var(--line);
+  background:rgba(255,255,255,0.7);
+  font-size:11px;
+  color:var(--faint);
+}
+.page-badge{
+  font-size:11.5px;
+  font-weight:800;
+  color:var(--muted);
+  font-feature-settings:"tnum";
+}
+
+/* ============================================================
+   단원 간지 규격: ssjhtml4 chapter-divider.md (하단 잘림 완전 방지)
+   ============================================================ */
+.chapter-divider{
+  display:flex;
+  flex-direction:column;
+  padding:0;
+  background:#f8f9fb;
+}
+.chapter-top{
+  height:42px;
+  flex:none;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 46px;
+  background:var(--navy);
+  color:#f4eee2;
+  font-size:11.5px;
+  font-weight:600;
+  letter-spacing:0.02em;
+}
+.chapter-top small{
+  color:#d7b483;
+  margin-left:6px;
+  font-weight:700;
+}
+.chapter-head{
+  flex:none;
+  padding:18px 46px 16px;
+  background:var(--tint);
+  border-bottom:1.5px solid var(--line-strong);
+}
+.chapter-eyebrow{
+  font-size:12px;
+  font-weight:800;
+  letter-spacing:0.08em;
+  color:var(--coral);
+  margin-bottom:4px;
+  text-transform:uppercase;
+}
+.chapter-head h1{
+  margin:0;
+  font-size:28px;
+  font-weight:900;
+  color:var(--ink);
+  letter-spacing:-0.03em;
+  line-height:1.25;
+}
+.chapter-body{
+  flex:1;
+  display:grid;
+  grid-template-columns:230px 1fr;
+  align-items:center;
+  padding:0 70px 20px 46px;
+  min-height:0;
+}
+.chapter-no{
+  font-size:110px;
+  font-weight:900;
+  line-height:0.85;
+  text-align:center;
+  letter-spacing:-5px;
+  color:#cdd7e4;
+  user-select:none;
+}
+.chapter-message{
+  padding-left:32px;
+  border-left:2px solid var(--line-strong);
+}
+.chapter-message h2{
+  margin:0 0 10px;
+  font-size:26px;
+  font-weight:800;
+  line-height:1.35;
+  color:var(--ink);
+  letter-spacing:-0.025em;
+}
+.chapter-message h2 em{
+  font-style:normal;
+  color:var(--coral);
+  border-bottom:3px solid rgba(185,64,61,0.25);
+}
+.chapter-message p{
+  margin:0;
+  font-size:15px;
+  line-height:1.6;
+  color:var(--body);
+}
+
+/* ============================================================
+   슬라이드별 컴포넌트 & 쉬운 도식 스타일 (리더 눈높이)
+   ============================================================ */
+
+/* 표지: cover-stage */
+.cover-layout{
+  height:100%;
+  padding:48px 58px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  background:radial-gradient(circle at 85% 15%, rgba(50,88,150,0.10), transparent 45%),
+             radial-gradient(circle at 10% 85%, rgba(182,61,58,0.08), transparent 40%),
+             #f8fafc;
+}
+.cover-badge-row{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.cover-badge{
+  font-size:12px;
+  font-weight:800;
+  padding:5px 12px;
+  background:var(--navy);
+  color:#fff;
+  border-radius:18px;
+  letter-spacing:0.03em;
+}
+.cover-sub-badge{
+  font-size:12.5px;
+  font-weight:700;
+  color:var(--muted);
+  border-left:2px solid var(--line);
+  padding-left:10px;
+}
+.cover-center h1{
+  font-size:48px;
+  font-weight:900;
+  line-height:1.16;
+  letter-spacing:-0.035em;
+  color:var(--ink);
+  margin-bottom:14px;
+}
+.cover-center h1 em{
+  font-style:normal;
+  color:var(--blue);
+}
+.cover-statement{
+  font-size:22px;
+  font-weight:800;
+  line-height:1.4;
+  color:var(--coral);
+  margin-bottom:10px;
+  letter-spacing:-0.02em;
+}
+.cover-desc{
+  font-size:15px;
+  color:var(--body);
+  max-width:860px;
+  line-height:1.6;
+}
+.cover-footer-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:16px;
+  padding-top:20px;
+  border-top:1.5px solid var(--line);
+}
+.cover-foot-item strong{
+  display:block;
+  font-size:11px;
+  color:var(--faint);
+  text-transform:uppercase;
+  letter-spacing:0.06em;
+  margin-bottom:3px;
+}
+.cover-foot-item span{
+  font-size:13.5px;
+  font-weight:700;
+  color:var(--ink);
+}
+
+/* 로드맵: timeline */
+.timeline-strip{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:14px;
+  height:100%;
+  align-items:stretch;
+}
+.timeline-card{
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-top:4px solid var(--blue);
+  border-radius:var(--radius-md);
+  padding:16px 15px;
+  display:flex;
+  flex-direction:column;
+  box-shadow:var(--shadow);
+}
+.timeline-card.focus{
+  border-top-color:var(--coral);
+  background:#fffefe;
+}
+.tl-phase{
+  font-size:11px;
+  font-weight:800;
+  color:var(--muted);
+  letter-spacing:0.06em;
+  margin-bottom:4px;
+}
+.tl-time{
+  font-size:12px;
+  font-weight:800;
+  color:var(--blue);
+  margin-bottom:8px;
+  display:inline-block;
+  padding:2px 7px;
+  background:var(--blue-light);
+  border-radius:4px;
+  width:fit-content;
+}
+.timeline-card.focus .tl-time{
+  color:var(--coral);
+  background:var(--coral-light);
+}
+.tl-title{
+  font-size:16px;
+  font-weight:800;
+  line-height:1.3;
+  color:var(--ink);
+  margin-bottom:6px;
+}
+.tl-desc{
+  font-size:12px;
+  color:var(--body);
+  line-height:1.5;
+  flex:1;
+}
+.tl-target{
+  margin-top:10px;
+  padding-top:8px;
+  border-top:1px dashed var(--line);
+  font-size:11px;
+  font-weight:700;
+  color:var(--navy);
+}
+
+/* 비교 대칭: before-after */
+.compare-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:18px;
+  height:100%;
+}
+.compare-col{
+  background:var(--surface);
+  border:1.5px solid var(--line);
+  border-radius:var(--radius-lg);
+  padding:18px 20px;
+  display:flex;
+  flex-direction:column;
+  box-shadow:var(--shadow);
+}
+.compare-col.before{
+  border-top:5px solid var(--faint);
+  background:#fafbfd;
+}
+.compare-col.after{
+  border-top:5px solid var(--coral);
+  background:#fffefe;
+}
+.comp-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:10px;
+}
+.comp-pill{
+  font-size:11px;
+  font-weight:800;
+  padding:3px 8px;
+  border-radius:14px;
+  letter-spacing:0.03em;
+}
+.compare-col.before .comp-pill{background:var(--tint);color:var(--muted);}
+.compare-col.after .comp-pill{background:var(--coral-light);color:var(--coral);}
+.comp-title{
+  font-size:19px;
+  font-weight:900;
+  color:var(--ink);
+  margin-bottom:4px;
+}
+.comp-sub{
+  font-size:12.5px;
+  color:var(--muted);
+  margin-bottom:12px;
+  line-height:1.4;
+}
+.comp-list{
+  list-style:none;
+  display:flex;
+  flex-direction:column;
+  gap:9px;
+  flex:1;
+}
+.comp-item{
+  display:flex;
+  gap:8px;
+  font-size:13px;
+  line-height:1.5;
+  color:var(--body);
+}
+.comp-bullet{
+  font-weight:900;
+  color:var(--faint);
+  flex:none;
+}
+.compare-col.after .comp-bullet{color:var(--coral);}
+.comp-footer{
+  margin-top:12px;
+  padding:8px 12px;
+  border-radius:var(--radius-sm);
+  background:var(--tint);
+  font-size:12px;
+  font-weight:700;
+  color:var(--navy);
+}
+
+/* 분할 해부: split-explain */
+.split-layout{
+  display:grid;
+  grid-template-columns:420px 1fr;
+  gap:20px;
+  height:100%;
+}
+.split-visual{
+  background:var(--navy);
+  border-radius:var(--radius-lg);
+  padding:18px;
+  color:#fff;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  box-shadow:var(--shadow-strong);
+}
+.split-details{
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-radius:var(--radius-lg);
+  padding:18px 22px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  box-shadow:var(--shadow);
+}
+.explain-point{
+  margin-bottom:10px;
+}
+.explain-point:last-child{margin-bottom:0;}
+.point-tag{
+  font-size:11px;
+  font-weight:800;
+  color:var(--coral);
+  letter-spacing:0.04em;
+  margin-bottom:2px;
+}
+.point-head{
+  font-size:15px;
+  font-weight:800;
+  color:var(--ink);
+  margin-bottom:4px;
+}
+.point-body{
+  font-size:12.5px;
+  color:var(--body);
+  line-height:1.5;
+}
+
+/* 핵심 명제: proposition */
+.proposition-canvas{
+  height:100%;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  padding:0 16px;
+}
+.prop-hero{
+  background:var(--surface);
+  border:1.5px solid var(--line);
+  border-left:7px solid var(--coral);
+  border-radius:var(--radius-lg);
+  padding:24px 30px;
+  margin-bottom:16px;
+  box-shadow:var(--shadow);
+}
+.prop-statement{
+  font-size:30px;
+  font-weight:900;
+  line-height:1.3;
+  color:var(--ink);
+  letter-spacing:-0.035em;
+  margin-bottom:10px;
+}
+.prop-statement mark{
+  background:transparent;
+  color:var(--coral);
+  border-bottom:3px solid var(--coral-light);
+}
+.prop-comment{
+  font-size:15px;
+  line-height:1.6;
+  color:var(--body);
+}
+.prop-pillars{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:16px;
+}
+.pillar-card{
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-radius:var(--radius-md);
+  padding:16px 18px;
+  box-shadow:var(--shadow);
+}
+.pillar-badge{
+  font-size:11px;
+  font-weight:800;
+  color:var(--blue);
+  margin-bottom:4px;
+}
+.pillar-card:last-child .pillar-badge{color:var(--green);}
+.pillar-title{
+  font-size:16px;
+  font-weight:800;
+  color:var(--ink);
+  margin-bottom:4px;
+}
+.pillar-text{
+  font-size:12.5px;
+  color:var(--body);
+  line-height:1.5;
+}
+
+/* 시스템 해부도: anatomy */
+.anatomy-board{
+  height:100%;
+  display:grid;
+  grid-template-columns:1fr 320px;
+  gap:18px;
+  align-items:stretch;
+}
+.anatomy-svg-box{
+  background:var(--surface);
+  border:1.5px solid var(--line);
+  border-radius:var(--radius-lg);
+  padding:12px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  box-shadow:var(--shadow);
+}
+.anatomy-panel{
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-radius:var(--radius-lg);
+  padding:16px 18px;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  box-shadow:var(--shadow);
+}
+.block-spec{
+  border-bottom:1px solid var(--tint);
+  padding-bottom:6px;
+}
+.block-spec:last-child{border-bottom:0;padding-bottom:0;}
+.spec-name{
+  font-size:13px;
+  font-weight:800;
+  color:var(--navy);
+  display:flex;
+  align-items:center;
+  gap:5px;
+  margin-bottom:2px;
+}
+.spec-desc{
+  font-size:11.5px;
+  color:var(--body);
+  line-height:1.4;
+}
+
+/* 자율 순환 루프: loop-cycle */
+.loop-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:14px;
+  height:100%;
+}
+.loop-step{
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-radius:var(--radius-md);
+  padding:16px 14px;
+  display:flex;
+  flex-direction:column;
+  position:relative;
+  box-shadow:var(--shadow);
+}
+.loop-step.highlight{
+  border-color:var(--green);
+  background:#f9fdfa;
+}
+.loop-num{
+  font-size:24px;
+  font-weight:900;
+  color:var(--line-strong);
+  line-height:1;
+  margin-bottom:6px;
+}
+.loop-step.highlight .loop-num{color:var(--green);}
+.loop-title{
+  font-size:16px;
+  font-weight:800;
+  color:var(--ink);
+  margin-bottom:6px;
+}
+.loop-action{
+  font-size:12px;
+  color:var(--body);
+  line-height:1.5;
+  flex:1;
+}
+.loop-detail{
+  margin-top:8px;
+  padding-top:6px;
+  border-top:1px dashed var(--line);
+  font-size:11px;
+  font-weight:700;
+  color:var(--navy);
+}
+
+/* 3단 레인 와이어: three-lane-wire */
+.lane-wire-canvas{
+  height:100%;
+  display:grid;
+  grid-template-columns:1fr auto 1.2fr auto 1fr;
+  gap:10px;
+  align-items:center;
+}
+.lane-column{
+  background:var(--surface);
+  border:1.5px solid var(--line);
+  border-radius:var(--radius-md);
+  padding:18px 16px;
+  height:100%;
+  display:flex;
+  flex-direction:column;
+  box-shadow:var(--shadow);
+}
+.lane-column.center{
+  border-color:var(--blue);
+  background:#fafcff;
+}
+.lane-header{
+  font-size:12px;
+  font-weight:800;
+  color:var(--muted);
+  text-transform:uppercase;
+  letter-spacing:0.04em;
+  margin-bottom:4px;
+}
+.lane-column.center .lane-header{color:var(--blue);}
+.lane-title{
+  font-size:17px;
+  font-weight:900;
+  color:var(--ink);
+  margin-bottom:8px;
+}
+.lane-body{
+  font-size:12px;
+  color:var(--body);
+  line-height:1.5;
+  flex:1;
+}
+.lane-tags{
+  margin-top:8px;
+  display:flex;
+  flex-wrap:wrap;
+  gap:4px;
+}
+.lane-tag{
+  font-size:10.5px;
+  font-weight:700;
+  padding:2px 7px;
+  background:var(--tint);
+  border-radius:4px;
+  color:var(--navy);
+}
+.lane-arrow{
+  color:var(--line-strong);
+  font-size:22px;
+  font-weight:900;
+}
+
+/* 계층 스택: layer-stack */
+.stack-canvas{
+  height:100%;
+  display:grid;
+  grid-template-columns:1fr 340px;
+  gap:18px;
+}
+.stack-layers{
+  display:flex;
+  flex-direction:column;
+  gap:9px;
+  justify-content:center;
+}
+.stack-layer-row{
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-left:5px solid var(--blue);
+  border-radius:var(--radius-md);
+  padding:12px 16px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  box-shadow:var(--shadow);
+}
+.stack-layer-row:nth-child(2){border-left-color:var(--coral);}
+.stack-layer-row:nth-child(3){border-left-color:var(--green);}
+.stack-layer-row:nth-child(4){border-left-color:var(--gold);}
+.layer-left h4{
+  font-size:15px;
+  font-weight:800;
+  color:var(--ink);
+  margin-bottom:2px;
+}
+.layer-left p{
+  font-size:11.5px;
+  color:var(--muted);
+}
+.layer-right{
+  font-size:11px;
+  font-weight:800;
+  padding:3px 8px;
+  border-radius:4px;
+  background:var(--tint);
+  color:var(--navy);
+}
+.stack-side-card{
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-radius:var(--radius-lg);
+  padding:18px 20px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  box-shadow:var(--shadow);
+}
+.side-card-title{
+  font-size:17px;
+  font-weight:800;
+  color:var(--ink);
+  margin-bottom:8px;
+}
+.side-card-body{
+  font-size:12.5px;
+  color:var(--body);
+  line-height:1.55;
+}
+
+/* 성숙도 계단: staircase */
+.staircase-canvas{
+  height:100%;
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:12px;
+  align-items:flex-end;
+}
+.stair-step{
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-radius:var(--radius-md) var(--radius-md) 0 0;
+  padding:14px 12px;
+  display:flex;
+  flex-direction:column;
+  box-shadow:var(--shadow);
+}
+.stair-1{height:54%;border-top:4px solid var(--faint);}
+.stair-2{height:64%;border-top:4px solid var(--muted);}
+.stair-3{height:76%;border-top:4px solid var(--blue);background:#fafcff;}
+.stair-4{height:88%;border-top:4px solid var(--green);background:#f9fdfa;}
+.stair-5{height:100%;border-top:4px solid var(--coral);background:#fffcfc;}
+.stair-lvl{
+  font-size:10.5px;
+  font-weight:800;
+  color:var(--muted);
+  letter-spacing:0.04em;
+  margin-bottom:3px;
+}
+.stair-name{
+  font-size:14.5px;
+  font-weight:800;
+  color:var(--ink);
+  margin-bottom:6px;
+  line-height:1.25;
+}
+.stair-desc{
+  font-size:11px;
+  color:var(--body);
+  line-height:1.4;
+  flex:1;
+}
+.stair-badge{
+  margin-top:6px;
+  font-size:10px;
+  font-weight:800;
+  padding:2px 5px;
+  border-radius:3px;
+  background:var(--tint);
+  width:fit-content;
+}
+
+/* 사분면 매트릭스: quadrant */
+.quadrant-canvas{
+  height:100%;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  grid-template-rows:1fr 1fr;
+  gap:12px;
+}
+.quad-cell{
+  background:var(--surface);
+  border:1.5px solid var(--line);
+  border-radius:var(--radius-md);
+  padding:14px 16px;
+  display:flex;
+  flex-direction:column;
+  box-shadow:var(--shadow);
+}
+.quad-cell.priority{
+  border-color:var(--coral);
+  background:#fffdfd;
+}
+.quad-tag{
+  font-size:11px;
+  font-weight:800;
+  color:var(--muted);
+  letter-spacing:0.03em;
+  margin-bottom:3px;
+}
+.quad-cell.priority .quad-tag{color:var(--coral);}
+.quad-title{
+  font-size:16px;
+  font-weight:800;
+  color:var(--ink);
+  margin-bottom:5px;
+}
+.quad-text{
+  font-size:12px;
+  color:var(--body);
+  line-height:1.45;
+  flex:1;
+}
+.quad-target{
+  margin-top:6px;
+  font-size:11.5px;
+  font-weight:700;
+  color:var(--navy);
+}
+
+/* 프로세스 리버: process-river */
+.river-canvas{
+  height:100%;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  gap:10px;
+}
+.river-flow{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:12px;
+}
+.river-block{
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-top:4px solid var(--green);
+  border-radius:var(--radius-md);
+  padding:14px 13px;
+  display:flex;
+  flex-direction:column;
+  box-shadow:var(--shadow);
+}
+.river-step-no{
+  font-size:11px;
+  font-weight:800;
+  color:var(--green);
+  margin-bottom:3px;
+}
+.river-step-title{
+  font-size:15px;
+  font-weight:800;
+  color:var(--ink);
+  margin-bottom:4px;
+}
+.river-step-desc{
+  font-size:11.5px;
+  color:var(--body);
+  line-height:1.45;
+}
+.river-metrics{
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-radius:var(--radius-md);
+  padding:12px 16px;
+  display:flex;
+  align-items:center;
+  justify-content:space-around;
+}
+.metric-col strong{
+  font-size:20px;
+  font-weight:900;
+  color:var(--coral);
+  display:block;
+}
+.metric-col span{
+  font-size:11.5px;
+  color:var(--muted);
+  font-weight:600;
+}
+
+/* 허브 스포크: hub-spoke */
+.hub-spoke-canvas{
+  height:100%;
+  display:grid;
+  grid-template-columns:270px 1fr;
+  gap:18px;
+  align-items:center;
+}
+.hub-center-card{
+  background:var(--navy);
+  color:#fff;
+  border-radius:var(--radius-lg);
+  padding:24px 18px;
+  text-align:center;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  box-shadow:var(--shadow-strong);
+}
+.hub-tag{
+  font-size:10.5px;
+  font-weight:800;
+  letter-spacing:0.06em;
+  color:#d7b483;
+  text-transform:uppercase;
+  margin-bottom:6px;
+}
+.hub-center-card h3{
+  font-size:19px;
+  font-weight:900;
+  line-height:1.3;
+  margin-bottom:8px;
+}
+.hub-center-card p{
+  font-size:12px;
+  color:#cfd8e5;
+  line-height:1.45;
+}
+.spoke-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+.spoke-node{
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-left:4px solid var(--blue);
+  border-radius:var(--radius-md);
+  padding:12px 14px;
+  box-shadow:var(--shadow);
+}
+.spoke-node:nth-child(2){border-left-color:var(--green);}
+.spoke-node:nth-child(3){border-left-color:var(--coral);}
+.spoke-node:nth-child(4){border-left-color:var(--gold);}
+.spoke-role{
+  font-size:11px;
+  font-weight:800;
+  color:var(--muted);
+  margin-bottom:2px;
+}
+.spoke-title{
+  font-size:14.5px;
+  font-weight:800;
+  color:var(--ink);
+  margin-bottom:3px;
+}
+.spoke-desc{
+  font-size:11.5px;
+  color:var(--body);
+  line-height:1.45;
+}
+
+/* 케이스 캔버스: case-canvas */
+.case-canvas-grid{
+  height:100%;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:18px;
+}
+.case-side-block{
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-radius:var(--radius-lg);
+  padding:16px 18px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  box-shadow:var(--shadow);
+}
+.case-step-row{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+.case-sec-title{
+  font-size:15.5px;
+  font-weight:800;
+  color:var(--ink);
+  margin-bottom:4px;
+}
+.case-sec-body{
+  font-size:12px;
+  color:var(--body);
+  line-height:1.5;
+}
+
+/* 데모 시연 무대: demo-stage */
+.demo-canvas-grid{
+  height:100%;
+  display:grid;
+  grid-template-columns:1.15fr 1fr;
+  gap:18px;
+}
+.terminal-window{
+  background:#0f1724;
+  border-radius:var(--radius-lg);
+  color:#f0f4fc;
+  font-family:Consolas,Monaco,Courier,monospace;
+  padding:14px 16px;
+  display:flex;
+  flex-direction:column;
+  box-shadow:var(--shadow-strong);
+}
+.term-bar{
+  display:flex;
+  gap:5px;
+  margin-bottom:10px;
+}
+.term-dot{
+  width:9px;
+  height:9px;
+  border-radius:50%;
+  background:#3b4759;
+}
+.term-dot.r{background:#ff5f56;}
+.term-dot.y{background:#ffbd2e;}
+.term-dot.g{background:#27c93f;}
+.term-body{
+  font-size:11.5px;
+  line-height:1.6;
+  color:#a3b8d6;
+  flex:1;
+  overflow-y:auto;
+}
+.term-body b{color:#64b5ff;}
+.term-body em{font-style:normal;color:#65dc7e;}
+.term-body mark{background:transparent;color:#ffe46b;}
+.demo-guide{
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-radius:var(--radius-lg);
+  padding:16px 18px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  box-shadow:var(--shadow);
+}
+
+/* 의사결정 트리: decision-tree */
+.tree-canvas{
+  height:100%;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:18px;
+}
+.tree-branch{
+  background:var(--surface);
+  border:1.5px solid var(--line);
+  border-radius:var(--radius-lg);
+  padding:18px 20px;
+  display:flex;
+  flex-direction:column;
+  box-shadow:var(--shadow);
+}
+.tree-branch.low-risk{border-top:5px solid var(--green);}
+.tree-branch.high-risk{border-top:5px solid var(--coral);}
+.tree-badge{
+  font-size:11px;
+  font-weight:800;
+  padding:2px 7px;
+  border-radius:4px;
+  width:fit-content;
+  margin-bottom:8px;
+}
+.tree-branch.low-risk .tree-badge{background:var(--green-light);color:var(--green);}
+.tree-branch.high-risk .tree-badge{background:var(--coral-light);color:var(--coral);}
+.tree-title{
+  font-size:17px;
+  font-weight:800;
+  color:var(--ink);
+  margin-bottom:6px;
+}
+.tree-desc{
+  font-size:12.5px;
+  color:var(--body);
+  line-height:1.5;
+  margin-bottom:10px;
+}
+.tree-points{
+  list-style:none;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  flex:1;
+}
+.tree-point{
+  font-size:12px;
+  color:var(--body);
+  line-height:1.45;
+  display:flex;
+  gap:6px;
+}
+.tree-point::before{
+  content:"•";
+  font-weight:900;
+  color:var(--navy);
+}
+
+/* 근거 매트릭스 표: evidence-matrix */
+.matrix-canvas{
+  height:100%;
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-radius:var(--radius-lg);
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+  box-shadow:var(--shadow);
+}
+.matrix-table{
+  width:100%;
+  border-collapse:collapse;
+  text-align:left;
+  height:100%;
+}
+.matrix-table th{
+  background:var(--tint);
+  color:var(--navy);
+  font-size:12.5px;
+  font-weight:800;
+  padding:10px 14px;
+  border-bottom:1.5px solid var(--line-strong);
+}
+.matrix-table td{
+  padding:10px 14px;
+  border-bottom:1px solid var(--tint);
+  font-size:12px;
+  color:var(--body);
+  line-height:1.45;
+}
+.matrix-table tr:last-child td{border-bottom:0;}
+.matrix-table tr:hover td{background:rgba(232,237,244,0.35);}
+.grade-badge{
+  font-size:11px;
+  font-weight:800;
+  padding:2px 7px;
+  border-radius:4px;
+  display:inline-block;
+}
+.grade-1{background:#ffedeb;color:#b63d3a;}
+.grade-2{background:#fff3d9;color:#b57518;}
+.grade-3{background:#edf6f1;color:#247352;}
+
+/* 토론 렌즈: discussion-lens */
+.discussion-canvas{
+  height:100%;
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:16px;
+}
+.lens-col{
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-top:5px solid var(--blue);
+  border-radius:var(--radius-lg);
+  padding:18px 16px;
+  display:flex;
+  flex-direction:column;
+  box-shadow:var(--shadow);
+}
+.lens-col:nth-child(2){border-top-color:var(--coral);}
+.lens-col:nth-child(3){border-top-color:var(--gold);}
+.lens-tag{
+  font-size:11px;
+  font-weight:800;
+  color:var(--muted);
+  letter-spacing:0.03em;
+  margin-bottom:6px;
+}
+.lens-q{
+  font-size:16px;
+  font-weight:800;
+  color:var(--ink);
+  line-height:1.35;
+  margin-bottom:10px;
+}
+.lens-desc{
+  font-size:12px;
+  color:var(--body);
+  line-height:1.5;
+  flex:1;
+}
+.lens-action{
+  margin-top:12px;
+  padding:8px 10px;
+  border-radius:var(--radius-sm);
+  background:var(--tint);
+  font-size:11.5px;
+  font-weight:700;
+  color:var(--navy);
+}
+
+/* 리캡 맵: recap-map */
+.recap-canvas{
+  height:100%;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:14px;
+}
+.recap-node{
+  background:var(--surface);
+  border:1.5px solid var(--line);
+  border-radius:var(--radius-md);
+  padding:16px 18px;
+  display:flex;
+  flex-direction:column;
+  box-shadow:var(--shadow);
+}
+.recap-no{
+  font-size:20px;
+  font-weight:900;
+  color:var(--blue);
+  margin-bottom:3px;
+}
+.recap-title{
+  font-size:16px;
+  font-weight:800;
+  color:var(--ink);
+  margin-bottom:5px;
+}
+.recap-desc{
+  font-size:12px;
+  color:var(--body);
+  line-height:1.5;
+}
+
+/* 컨트롤 툴바 (하단 잘림 및 겹침 방지: 작은 패딩 및 깔끔한 위치) */
+.control-toolbar{
+  position:fixed;
+  bottom:16px;
+  background:rgba(12,22,38,0.92);
+  backdrop-filter:blur(10px);
+  border:1px solid rgba(255,255,255,0.18);
+  padding:6px 14px;
+  border-radius:24px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  box-shadow:0 6px 24px rgba(0,0,0,0.38);
+  z-index:9999;
+  color:#fff;
+}
+.tb-btn{
+  background:rgba(255,255,255,0.14);
+  border:0;
+  color:#fff;
+  font-family:inherit;
+  font-size:11.5px;
+  font-weight:700;
+  padding:5px 11px;
+  border-radius:16px;
+  cursor:pointer;
+  transition:all 0.15s;
+}
+.tb-btn:hover{background:rgba(255,255,255,0.24);}
+.tb-btn.active{background:var(--coral);}
+.tb-count{
+  font-size:12px;
+  font-weight:800;
+  padding:0 6px;
+  font-feature-settings:"tnum";
+}
+
+/* 발표 모드 (Presentation Mode: P key) */
+body.presentation-mode{
+  padding:0;
+  background:#0a1018;
+  overflow:hidden;
+}
+body.presentation-mode .slide{
+  display:none;
+  position:fixed;
+  top:50%;
+  left:50%;
+  transform:translate(-50%, -50%);
+  margin:0;
+}
+body.presentation-mode .slide.active-slide{
+  display:flex;
+}
+body.presentation-mode .control-toolbar{
+  opacity:0.2;
+  transition:opacity 0.2s;
+}
+body.presentation-mode .control-toolbar:hover{
+  opacity:1;
+}
+
+/* 인쇄 및 PDF 저장 모드 */
+@media print{
+  @page{size:1280px 720px;margin:0;}
+  body{
+    padding:0;
+    background:none;
+    margin:0;
+  }
+  .slide{
+    margin:0!important;
+    page-break-after:always!important;
+    break-after:page!important;
+    box-shadow:none!important;
+    border-radius:0!important;
+  }
+  .control-toolbar{display:none!important;}
+}
+
+/* 기본 본문 가독성 및 조판 밀도 상향 */
+.slide-title{
+  font-size:26px;
+  font-weight:900;
+  line-height:1.25;
+  color:var(--ink);
+  letter-spacing:-0.03em;
+}
+.slide-headline{
+  padding:10px 46px 6px;
+  flex:none;
+}
+.slide-canvas{
+  flex:1;
+  padding:4px 46px 8px;
+  min-height:0;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+}
+.bottom-anchor{
+  margin:0 46px 8px;
+  padding:8px 16px;
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-left:4px solid var(--navy);
+  border-radius:var(--radius-sm);
+  display:flex;
+  align-items:center;
+  gap:12px;
+  flex:none;
+}
+.anchor-tag{
+  background:var(--navy);
+  color:#fff;
+  font-size:11px;
+  font-weight:800;
+  padding:3px 8px;
+  border-radius:4px;
+  letter-spacing:0.02em;
+  flex:none;
+}
+.anchor-text{
+  font-size:13.5px;
+  font-weight:700;
+  color:var(--navy-light);
+  line-height:1.4;
+}
+.slide-footer{
+  height:32px;
+  flex:none;
+  padding:0 46px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  border-top:1px solid var(--line);
+  background:rgba(255,255,255,0.8);
+  font-size:11.5px;
+  color:var(--faint);
+}
+
+/* 카드 및 비교 컬럼 내부 폰트 확대 (박스 내부 꽉 차게) */
+.compare-col{
+  background:var(--surface);
+  border:1.5px solid var(--line);
+  border-radius:var(--radius-lg);
+  padding:20px 22px;
+  display:flex;
+  flex-direction:column;
+  box-shadow:var(--shadow);
+  justify-content:space-between;
+}
+.comp-title{
+  font-size:21px;
+  font-weight:900;
+  color:var(--ink);
+  margin-bottom:4px;
+}
+.comp-sub{
+  font-size:13.5px;
+  color:var(--muted);
+  margin-bottom:14px;
+  line-height:1.45;
+}
+.comp-item{
+  display:flex;
+  gap:10px;
+  font-size:14.5px;
+  line-height:1.55;
+  color:var(--body);
+}
+.comp-footer{
+  margin-top:14px;
+  padding:10px 14px;
+  border-radius:var(--radius-sm);
+  background:var(--tint);
+  font-size:13px;
+  font-weight:700;
+  color:var(--navy);
+}
+
+/* 로드맵 타임라인 카드 */
+.timeline-card{
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-top:4px solid var(--blue);
+  border-radius:var(--radius-md);
+  padding:18px 16px;
+  display:flex;
+  flex-direction:column;
+  box-shadow:var(--shadow);
+  justify-content:space-between;
+}
+.tl-title{
+  font-size:18px;
+  font-weight:800;
+  line-height:1.3;
+  color:var(--ink);
+  margin-bottom:8px;
+}
+.tl-desc{
+  font-size:13.5px;
+  color:var(--body);
+  line-height:1.55;
+  flex:1;
+}
+.tl-target{
+  margin-top:12px;
+  padding-top:10px;
+  border-top:1px dashed var(--line);
+  font-size:12px;
+  font-weight:700;
+  color:var(--navy);
+}
+
+/* 분할 설명 */
+.split-visual{
+  background:var(--navy);
+  border-radius:var(--radius-lg);
+  padding:22px;
+  color:#fff;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  box-shadow:var(--shadow-strong);
+}
+.split-details{
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-radius:var(--radius-lg);
+  padding:22px 24px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  box-shadow:var(--shadow);
+}
+.point-head{
+  font-size:17px;
+  font-weight:800;
+  color:var(--ink);
+  margin-bottom:4px;
+}
+.point-body{
+  font-size:13.5px;
+  color:var(--body);
+  line-height:1.55;
+}
+
+/* 핵심 명제 */
+.prop-statement{
+  font-size:32px;
+  font-weight:900;
+  line-height:1.25;
+  color:var(--ink);
+  letter-spacing:-0.035em;
+  margin-bottom:12px;
+}
+.prop-comment{
+  font-size:16px;
+  line-height:1.65;
+  color:var(--body);
+}
+.pillar-title{
+  font-size:18px;
+  font-weight:800;
+  color:var(--ink);
+  margin-bottom:6px;
+}
+.pillar-text{
+  font-size:13.5px;
+  color:var(--body);
+  line-height:1.55;
+}
+
+/* 4단계 루프 */
+.loop-step{
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-radius:var(--radius-md);
+  padding:18px 16px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  position:relative;
+  box-shadow:var(--shadow);
+}
+.loop-num{
+  font-size:28px;
+  font-weight:900;
+  color:var(--line-strong);
+  line-height:1;
+  margin-bottom:8px;
+}
+.loop-title{
+  font-size:18px;
+  font-weight:800;
+  color:var(--ink);
+  margin-bottom:8px;
+}
+.loop-action{
+  font-size:13.5px;
+  color:var(--body);
+  line-height:1.55;
+  flex:1;
+}
+.loop-detail{
+  margin-top:12px;
+  padding-top:8px;
+  border-top:1px dashed var(--line);
+  font-size:12px;
+  font-weight:700;
+  color:var(--navy);
+}
+
+/* 3단 레인 */
+.lane-column{
+  background:var(--surface);
+  border:1.5px solid var(--line);
+  border-radius:var(--radius-md);
+  padding:20px 18px;
+  height:100%;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  box-shadow:var(--shadow);
+}
+.lane-title{
+  font-size:19px;
+  font-weight:800;
+  color:var(--ink);
+  margin-bottom:10px;
+}
+.lane-body{
+  font-size:13.5px;
+  color:var(--body);
+  line-height:1.6;
+  flex:1;
+}
+
+/* 레이어 스택 */
+.stack-title{
+  font-size:17px;
+  font-weight:800;
+  color:var(--ink);
+  margin-bottom:4px;
+}
+.stack-desc{
+  font-size:13.5px;
+  color:var(--body);
+  line-height:1.5;
+}
+
+/* 계단식 5단계 */
+.stair-name{
+  font-size:16px;
+  font-weight:800;
+  color:var(--ink);
+  margin-bottom:4px;
+}
+.stair-desc{
+  font-size:13px;
+  color:var(--body);
+  line-height:1.5;
+}
+
+/* 4분면 */
+.quad-cell{
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-radius:var(--radius-md);
+  padding:18px 20px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  box-shadow:var(--shadow);
+}
+.quad-title{
+  font-size:18px;
+  font-weight:800;
+  color:var(--ink);
+  margin-bottom:6px;
+}
+.quad-text{
+  font-size:13.5px;
+  color:var(--body);
+  line-height:1.55;
+  flex:1;
+}
+.quad-target{
+  margin-top:10px;
+  font-size:12px;
+  font-weight:700;
+  color:var(--navy);
+}
+
+/* 리버 프로세스 (읍면 엑셀) */
+.river-step-title{
+  font-size:17px;
+  font-weight:800;
+  color:var(--ink);
+  margin-bottom:6px;
+}
+.river-step-desc{
+  font-size:13px;
+  color:var(--body);
+  line-height:1.5;
+}
+.metric-col strong{
+  font-size:24px;
+  font-weight:900;
+  color:var(--coral);
+  display:block;
+}
+.metric-col span{
+  font-size:13px;
+  color:var(--muted);
+  font-weight:600;
+}
+
+/* 허브 스포크 */
+.spoke-title{
+  font-size:16px;
+  font-weight:800;
+  color:var(--ink);
+  margin-bottom:4px;
+}
+.spoke-desc{
+  font-size:13px;
+  color:var(--body);
+  line-height:1.5;
+}
+
+/* 케이스 캔버스 (관광 홍보) */
+.case-sec-title{
+  font-size:18px;
+  font-weight:800;
+  color:var(--ink);
+  margin-bottom:8px;
+}
+.case-sec-body{
+  font-size:13.5px;
+  color:var(--body);
+  line-height:1.6;
+}
+
+/* 결재 트리 (슬라이드 20) */
+.decision-col{
+  background:var(--surface);
+  border:1.5px solid var(--line);
+  border-radius:var(--radius-lg);
+  padding:22px 24px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  box-shadow:var(--shadow);
+}
+.decision-col.auto{
+  border-top:5px solid var(--green);
+}
+.decision-col.human{
+  border-top:5px solid var(--coral);
+}
+.decision-col h3{
+  font-size:20px;
+  font-weight:900;
+  color:var(--ink);
+  margin-bottom:6px;
+}
+.decision-col ul{
+  list-style:none;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  margin:12px 0;
+  flex:1;
+}
+.decision-col li{
+  font-size:14px;
+  line-height:1.55;
+  color:var(--body);
+  position:relative;
+  padding-left:14px;
+}
+.decision-col li::before{
+  content:"•";
+  position:absolute;
+  left:0;
+  font-weight:900;
+}
+.decision-col.auto li::before{color:var(--green);}
+.decision-col.human li::before{color:var(--coral);}
+
+/* 체크리스트 & 감사 로그 (슬라이드 18 교안용) */
+.audit-log-card{
+  background:#141e2e;
+  border-radius:var(--radius-lg);
+  padding:20px 22px;
+  color:#e2ecf8;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  box-shadow:var(--shadow-strong);
+  font-family:"Pretendard Variable",sans-serif;
+}
+.audit-log-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  border-bottom:1px solid rgba(255,255,255,0.15);
+  padding-bottom:10px;
+  margin-bottom:12px;
+}
+.audit-badge{
+  background:var(--coral);
+  color:#fff;
+  font-size:11.5px;
+  font-weight:800;
+  padding:3px 8px;
+  border-radius:4px;
+}
+.audit-table{
+  width:100%;
+  font-size:12.5px;
+  border-collapse:collapse;
+  margin-bottom:10px;
+}
+.audit-table td{
+  padding:6px 4px;
+  border-bottom:1px dashed rgba(255,255,255,0.1);
+}
+.audit-table td:first-child{
+  color:#9ab0ce;
+  font-weight:600;
+  width:95px;
+}
+.audit-table td:last-child{
+  color:#ffffff;
+  font-weight:700;
+}
+
+.checklist-card{
+  background:var(--surface);
+  border:1.5px solid var(--line);
+  border-radius:var(--radius-lg);
+  padding:20px 24px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  box-shadow:var(--shadow);
+}
+.check-item{
+  display:flex;
+  gap:12px;
+  align-items:flex-start;
+  margin-bottom:12px;
+}
+.check-item:last-child{margin-bottom:0;}
+.check-icon{
+  width:26px;
+  height:26px;
+  background:var(--coral-light);
+  color:var(--coral);
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:14px;
+  font-weight:900;
+  flex:none;
+}
+.check-content-title{
+  font-size:16px;
+  font-weight:800;
+  color:var(--ink);
+  margin-bottom:3px;
+}
+.check-content-desc{
+  font-size:13.5px;
+  color:var(--body);
+  line-height:1.5;
+}
+
+/* 토론 렌즈 (슬라이드 22) */
+.lens-col{
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-radius:var(--radius-md);
+  padding:20px 18px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  box-shadow:var(--shadow);
+}
+.lens-title{
+  font-size:18px;
+  font-weight:800;
+  color:var(--ink);
+  margin-bottom:8px;
+}
+.lens-desc{
+  font-size:13.5px;
+  color:var(--body);
+  line-height:1.6;
+  flex:1;
+}
+
+/* 총정리 맵 (슬라이드 23) */
+.recap-node{
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-radius:var(--radius-md);
+  padding:18px 18px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  box-shadow:var(--shadow);
+}
+.recap-no{
+  font-size:24px;
+  font-weight:900;
+  color:var(--coral);
+  margin-bottom:6px;
+}
+.recap-title{
+  font-size:18px;
+  font-weight:800;
+  color:var(--ink);
+  margin-bottom:6px;
+}
+.recap-desc{
+  font-size:13.5px;
+  color:var(--body);
+  line-height:1.6;
+}
+
+
+.decision-grid{
+  display:grid !important;
+  grid-template-columns:1fr 1fr !important;
+  gap:18px !important;
+  height:100% !important;
+}
+
+
+/* Slide 14 4분면 조판 밀도 보강 */
+#slide-14 .quadrant-canvas{
+  height:100%;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  grid-template-rows:1fr 1fr;
+  gap:16px;
+}
+#slide-14 .quad-cell{
+  background:var(--surface);
+  border:1.5px solid var(--line);
+  border-radius:var(--radius-md);
+  padding:16px 20px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  box-shadow:var(--shadow);
+}
+#slide-14 .quad-title{
+  font-size:18px;
+  font-weight:900;
+  color:var(--ink);
+  margin-bottom:6px;
+}
+#slide-14 .quad-text{
+  font-size:13.2px;
+  color:var(--body);
+  line-height:1.52;
+}
+#slide-14 .quad-target{
+  margin-top:8px;
+  padding-top:6px;
+  border-top:1px dashed var(--line);
+  font-size:11.8px;
+  font-weight:700;
+  color:var(--navy);
+}
+
+/* Slide 22 AI 교육 전략 렌즈 조판 */
+#slide-22 .discussion-canvas{
+  height:100%;
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:18px;
+}
+#slide-22 .lens-col{
+  background:var(--surface);
+  border:1.5px solid var(--line);
+  border-radius:var(--radius-lg);
+  padding:20px 20px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  box-shadow:var(--shadow);
+}
+#slide-22 .lens-tag{
+  font-size:11.5px;
+  font-weight:800;
+  color:var(--coral);
+  letter-spacing:0.04em;
+  margin-bottom:4px;
+}
+#slide-22 .lens-title{
+  font-size:18px;
+  font-weight:900;
+  color:var(--ink);
+  margin-bottom:10px;
+  line-height:1.3;
+}
+#slide-22 .lens-desc{
+  font-size:13.8px;
+  color:var(--body);
+  line-height:1.6;
+}
+
+
+/* ============================================================
+   SLIDE 11: layer-stack (누락 CSS 완벽 복구)
+   ============================================================ */
+.layer-canvas{
+  height:100%;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  gap:10px;
+}
+.layer-band{
+  background:var(--surface);
+  border:1.5px solid var(--line);
+  border-left:6px solid var(--navy);
+  border-radius:var(--radius-md);
+  padding:14px 22px;
+  display:grid;
+  grid-template-columns:150px 1fr 190px;
+  align-items:center;
+  gap:18px;
+  box-shadow:var(--shadow);
+}
+.band-num{
+  font-size:14px;
+  font-weight:900;
+  color:var(--navy);
+  letter-spacing:0.02em;
+}
+.band-content{
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+}
+.stack-title{
+  font-size:17px;
+  font-weight:900;
+  color:var(--ink);
+}
+.stack-desc{
+  font-size:13.5px;
+  color:var(--body);
+  line-height:1.55;
+}
+.band-role{
+  font-size:12px;
+  font-weight:800;
+  padding:6px 14px;
+  border-radius:4px;
+  background:var(--tint);
+  color:var(--navy);
+  text-align:center;
+  line-height:1.4;
+}
+
+/* ============================================================
+   SLIDE 12: staircase 5단계 (누락 CSS 완벽 복구)
+   ============================================================ */
+.stair-canvas{
+  height:100%;
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:12px;
+  align-items:stretch;
+}
+.stair-block{
+  background:var(--surface);
+  border:1.5px solid var(--line);
+  border-radius:var(--radius-md);
+  padding:18px 14px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  box-shadow:var(--shadow);
+}
+.stair-block.current{
+  border-color:var(--coral);
+  border-top:5px solid var(--coral);
+  background:#fffefe;
+  box-shadow:var(--shadow-strong);
+}
+.stair-step-tag{
+  font-size:11px;
+  font-weight:800;
+  color:var(--muted);
+  letter-spacing:0.04em;
+  margin-bottom:6px;
+}
+.stair-block.current .stair-step-tag{
+  color:var(--coral);
+  font-weight:900;
+}
+.stair-name{
+  font-size:18px;
+  font-weight:900;
+  color:var(--ink);
+  margin-bottom:8px;
+  line-height:1.3;
+}
+.stair-desc{
+  font-size:13px;
+  color:var(--body);
+  line-height:1.55;
+  flex:1;
+}
+.stair-metric{
+  margin-top:12px;
+  padding-top:8px;
+  border-top:1px dashed var(--line);
+  font-size:12px;
+  font-weight:800;
+  color:var(--navy);
+}
+
+/* ============================================================
+   SLIDE 17: case-canvas 폰트 및 박스 채움 CSS
+   ============================================================ */
+#slide-17 .case-canvas-grid{
+  height:100%;
+  display:grid;
+  grid-template-columns:1fr 1.15fr;
+  gap:18px;
+}
+#slide-17 .case-side-block{
+  background:var(--surface);
+  border:1.5px solid var(--line);
+  border-radius:var(--radius-lg);
+  padding:22px 24px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  box-shadow:var(--shadow);
+}
+
+/* ============================================================
+   SLIDE 21: policy-table (누락 CSS 완벽 복구)
+   ============================================================ */
+.matrix-canvas{
+  height:100%;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+}
+.policy-table{
+  width:100%;
+  border-collapse:collapse;
+  background:var(--surface);
+  border:1.5px solid var(--line);
+  border-radius:var(--radius-md);
+  overflow:hidden;
+  box-shadow:var(--shadow);
+}
+.policy-table th{
+  background:var(--tint);
+  color:var(--navy);
+  font-size:13px;
+  font-weight:900;
+  padding:12px 16px;
+  border-bottom:1.5px solid var(--line-strong);
+  text-align:left;
+}
+.policy-table td{
+  padding:14px 16px;
+  border-bottom:1px solid var(--line);
+  font-size:13.5px;
+  line-height:1.55;
+  color:var(--body);
+  vertical-align:middle;
+}
+.policy-table tr:last-child td{
+  border-bottom:none;
+}
+.tag-crit{
+  background:var(--coral-light);
+  color:var(--coral-dark);
+  font-size:12px;
+  font-weight:900;
+  padding:4px 10px;
+  border-radius:4px;
+  display:inline-block;
+  white-space:nowrap;
+}
+.tag-warn{
+  background:var(--gold-light);
+  color:var(--gold);
+  font-size:12px;
+  font-weight:900;
+  padding:4px 10px;
+  border-radius:4px;
+  display:inline-block;
+  white-space:nowrap;
+}
+.tag-safe{
+  background:var(--green-light);
+  color:var(--green);
+  font-size:12px;
+  font-weight:900;
+  padding:4px 10px;
+  border-radius:4px;
+  display:inline-block;
+  white-space:nowrap;
+}
+
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     SLIDE 01: [표지] cover-stage
+     ============================================================ -->
+<section class="slide" id="slide-01" data-role="cover" data-layout="cover-stage" data-purpose="특강 표지와 핵심 목표를 제시한다">
+  <div class="cover-layout">
+    <div class="cover-badge-row">
+      <div class="cover-badge">의성군 간부공무원 및 전략 리더십 역량강화 특강</div>
+      <div class="cover-sub-badge">2026 공공 행정 AX 특강 · 2시간 집중 과정</div>
+    </div>
+    <div class="cover-center">
+      <h1>AI 에이전트에 대한 <em>이해</em></h1>
+      <div class="cover-statement">“AI 에이전트는 AI에게 손과 발을 달아주는 것입니다”</div>
+      <p class="cover-desc">
+        말만 유창하고 정작 서류는 한 장도 직접 고치지 못하던 챗봇의 단계를 지나, 군청의 엑셀과 한글 문서를 직접 열어 정리하고 스스로 오류를 검증하는 든든한 행정 실무 파트너의 기본 원리와 활용법을 쉽게 풀어냅니다.
+      </p>
+    </div>
+    <div class="cover-footer-grid">
+      <div class="cover-foot-item">
+        <strong>교육 대상</strong>
+        <span>의성군 간부공무원 및 부서 리더</span>
+      </div>
+      <div class="cover-foot-item">
+        <strong>강의 시간</strong>
+        <span>총 2시간 (120분 집중)</span>
+      </div>
+      <div class="cover-foot-item">
+        <strong>핵심 눈높이</strong>
+        <span>비IT 리더를 위한 실무 비유와 쉬운 해설</span>
+      </div>
+      <div class="cover-foot-item">
+        <strong>강사 / 개발</strong>
+        <span>신성진 대표 (한국데이터사이언티스트협회)</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 02: [2시간 로드맵] timeline
+     ============================================================ -->
+<section class="slide" id="slide-02" data-role="process" data-layout="timeline" data-purpose="2시간 강의 흐름과 단계별 학습 목표를 제시한다">
+  <div class="slide-header">
+    <span class="header-tagline">강의 전체 흐름</span>
+    <span class="header-meta">2시간의 쉬운 여정</span>
+  </div>
+  <div class="slide-headline">
+    <div class="eyebrow">강의 흐름 안내</div>
+    <h2 class="slide-title">질문하는 리더에서 일을 시키는 리더로: 2시간의 쉬운 여정</h2>
+  </div>
+  <div class="slide-canvas">
+    <div class="timeline-strip">
+      <!-- 1교시 -->
+      <div class="timeline-card">
+        <div>
+          <div class="tl-phase">PART 01 · 개념의 전환</div>
+          <div class="tl-time">1교시 전반 (30분)</div>
+          <div class="tl-title">챗봇에서 에이전트로</div>
+          <div class="tl-desc">
+            말만 청산유수인 챗봇에 피로했던 이유를 짚고, AI에게 손과 발을 달아주는 에이전트의 본질과 5대 부품(두뇌·손발·관절·조례·화면)을 비개발자 눈높이로 이해합니다.
+          </div>
+          <div style="margin-top:10px;display:flex;flex-direction:column;gap:5px;font-size:12px;color:var(--muted);">
+            <div>• 말동무 챗봇 vs 일하는 에이전트 비교</div>
+            <div>• 사람이 복붙 심부름꾼이었던 원인 규명</div>
+            <div>• 핵심 명제: 지능에 손과 발을 쥐여주기</div>
+          </div>
+        </div>
+        <div class="tl-target">습득 목표: 에이전트의 작동 개념과 구조 이해</div>
+      </div>
+
+      <!-- 2교시 -->
+      <div class="timeline-card">
+        <div>
+          <div class="tl-phase">PART 02 · 작동과 지휘</div>
+          <div class="tl-time">1교시 후반 (30분)</div>
+          <div class="tl-title">스스로 일하는 자율 원리</div>
+          <div class="tl-desc">
+            계획 ➔ 도구잡기 ➔ 실행 ➔ 확인의 4단계 일머리 루프와 오류 자율 수정 원리를 살피고, 블록을 엮는 오케스트레이션과 조례 근거 행정을 파악합니다.
+          </div>
+          <div style="margin-top:10px;display:flex;flex-direction:column;gap:5px;font-size:12px;color:var(--muted);">
+            <div>• 스스로 코드를 고쳐 다시 시도하는 루프</div>
+            <div>• 블록 6개의 오케스트레이션과 하네스</div>
+            <div>• 군청 조례 책자를 펼쳐놓는 신뢰 보장</div>
+          </div>
+        </div>
+        <div class="tl-target">습득 목표: 자율 오류 수정과 오케스트레이션 안목</div>
+      </div>
+
+      <!-- 3교시 -->
+      <div class="timeline-card focus">
+        <div>
+          <div class="tl-phase">PART 03 · 행정 실무 적용</div>
+          <div class="tl-time">2교시 전반 (35분)</div>
+          <div class="tl-title">행정 4대 실무와 실습 사례</div>
+          <div class="tl-desc">
+            문서·콘텐츠·데이터·바이브코딩의 4대 영역을 정립하고, 읍면 농자재 취합, 4대 관점 부서 협업, 마늘축제·펫월드 관광 분석 등 의성 맞춤 실증을 확인합니다.
+          </div>
+          <div style="margin-top:10px;display:flex;flex-direction:column;gap:5px;font-size:12px;color:var(--coral);">
+            <div>• [실습 1] 18개 읍·면 엑셀 180건 3분 취합</div>
+            <div>• [실습 2] 조례·예산·민원 정책 교차 검토</div>
+            <div>• [실습 3] 관광 데이터 분석 & 홍보물 제작</div>
+          </div>
+        </div>
+        <div class="tl-target" style="color:var(--coral);">습득 목표: 의성군 현업 즉시 적용 시나리오 체득</div>
+      </div>
+
+      <!-- 4교시 -->
+      <div class="timeline-card">
+        <div>
+          <div class="tl-phase">PART 04 · 거버넌스와 교육</div>
+          <div class="tl-time">2교시 후반 (25분)</div>
+          <div class="tl-title">결재선 기준과 직원 교육</div>
+          <div class="tl-desc">
+            AI 전결 허용 구간과 사람 결재 필수 구간을 명확히 나누고, 3단계 공공 보안 기준과 기능 암기가 아닌 문제 해결 중심의 공무원 AI 교육 전략을 수립합니다.
+          </div>
+          <div style="margin-top:10px;display:flex;flex-direction:column;gap:5px;font-size:12px;color:var(--muted);">
+            <div>• AI 자율 실행 vs 공무원 최종 승인 결재선</div>
+            <div>• 안심하고 쓰는 3단계 공공 보안 수칙</div>
+            <div>• 비개발자 행정직 바이브코딩 교육 로드맵</div>
+          </div>
+        </div>
+        <div class="tl-target">습득 목표: 리더십 통제 기준 및 부서 교육 전략 확립</div>
+      </div>
+    </div>
+  </div>
+  <div class="bottom-anchor">
+    <span class="anchor-tag">특강의 약속</span>
+    <span class="anchor-text">기술 용어는 비유로 쉽게 풀고, 2시간 뒤에는 "우리 부서의 어떤 일에 에이전트를 시킬지" 즉시 판단할 수 있게 해드립니다.</span>
+  </div>
+  <div class="slide-footer">
+    <span>의성군 AI전략리더 특강</span>
+    <span>특강 일정 · 2시간의 쉬운 여정</span>
+    <span class="page-badge" data-page-number>02</span>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 03: [간지 01] chapter-gate
+     ============================================================ -->
+<section class="slide chapter-divider" id="slide-03" data-role="chapter" data-layout="chapter-gate" data-purpose="첫 번째 단원의 학습 질문을 제시한다" data-divider-index="1">
+  <div class="chapter-top">
+    <span>의성군 AI 전략 리더십 특강 <small>LECTURE SERIES</small></span>
+    <span>의성군청 · 2026. 09</span>
+  </div>
+  <div class="chapter-head">
+    <div class="chapter-eyebrow">PART 01 · 문제의 발견과 패러다임 전환</div>
+    <h1>왜 우리는 여전히 AI에게 복사-붙여넣기를 반복하고 있을까요?</h1>
+  </div>
+  <div class="chapter-body">
+    <div class="chapter-no" data-divider-number>01</div>
+    <div class="chapter-message">
+      <h2>챗봇은 <em>말</em>을 하고, 에이전트는 <em>일</em>을 합니다</h2>
+      <p>
+        그동안 써왔던 ChatGPT는 놀라운 대답을 내놓았지만, 정작 군청 컴퓨터에 있는 엑셀 파일이나 기안문 문서를 단 한 줄도 직접 열어서 고쳐주지 못했습니다. 왜 그런 일이 일어났는지 그 이유부터 풀어봅니다.
+      </p>
+    </div>
+  </div>
+  <div class="slide-footer">
+    <span>의성군 AI전략리더 특강 · PART 01</span>
+    <span>다음 슬라이드: 챗봇과 에이전트의 쉬운 비교</span>
+    <span class="page-badge" data-page-number>03</span>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 04: [비교] before-after
+     ============================================================ -->
+<section class="slide" id="slide-04" data-role="concept" data-layout="before-after" data-purpose="챗봇과 AI 에이전트의 근본적인 차이를 비교한다">
+  <div class="slide-header">
+    <span class="header-tagline">패러다임의 변화</span>
+    <span class="header-meta">말동무 챗봇 vs 일하는 에이전트</span>
+  </div>
+  <div class="slide-headline">
+    <div class="eyebrow">개념 비교 이해</div>
+    <h2 class="slide-title">답만 알려주는 챗봇 vs 실제로 일을 끝내는 에이전트</h2>
+  </div>
+  <div class="slide-canvas">
+    <div class="compare-grid">
+      <!-- 기존 챗봇 -->
+      <div class="compare-col before">
+        <div>
+          <div class="comp-head">
+            <span class="comp-pill">기존 챗봇 (2023~2024)</span>
+            <span style="font-size:12px;color:var(--muted);font-weight:700;">말만 잘하는 자문관</span>
+          </div>
+          <div class="comp-title">화면 속 말동무 (챗봇)</div>
+          <div class="comp-sub">물어보면 글은 유창하게 쓰지만, 정작 내 컴퓨터 안의 서류는 못 만지는 상태</div>
+          <ul class="comp-list">
+            <li class="comp-item">
+              <span class="comp-bullet">✕</span>
+              <span><strong>손발이 없음:</strong> 훌륭한 계산식이나 기안문 초안을 써주지만, 내 컴퓨터의 엑셀 파일을 열거나 저장하지 못합니다.</span>
+            </li>
+            <li class="comp-item">
+              <span class="comp-bullet">✕</span>
+              <span><strong>사람이 심부름꾼:</strong> AI가 준 코드를 공무원이 일일이 복사해서 엑셀에 붙여넣고, 에러가 나면 다시 복사해 물어봐야 합니다.</span>
+            </li>
+            <li class="comp-item">
+              <span class="comp-bullet">✕</span>
+              <span><strong>확인 안 함:</strong> 대답을 화면에 띄우면 끝입니다. 그 숫자가 정말 맞는지, 오타가 없는지 스스로 점검하지 않습니다.</span>
+            </li>
+            <li class="comp-item">
+              <span class="comp-bullet">✕</span>
+              <span><strong>출처 불명확:</strong> 가끔 그럴듯한 거짓말(환각)을 지어내도 스스로 군청 조례집을 찾아 대조해 주지 않아 불안합니다.</span>
+            </li>
+          </ul>
+        </div>
+        <div class="comp-footer">
+          <strong>실제 행정 현장:</strong> 조례를 물어보면 긴 법조문 텍스트만 띄워주고, 결국 서식에 맞춰 정리하는 일은 공무원 몫으로 남습니다.
+        </div>
+      </div>
+
+      <!-- AI 에이전트 -->
+      <div class="compare-col after">
+        <div>
+          <div class="comp-head">
+            <span class="comp-pill">AI 에이전트 (2025~2026)</span>
+            <span style="font-size:12px;color:var(--coral);font-weight:800;">직접 일하는 실무 파트너</span>
+          </div>
+          <div class="comp-title">손발 달린 실행관 (에이전트)</div>
+          <div class="comp-sub">목표를 주면 직접 폴더를 열고 엑셀을 고쳐서 최종본을 책상에 올려놓는 동료</div>
+          <ul class="comp-list">
+            <li class="comp-item">
+              <span class="comp-bullet">✓</span>
+              <span><strong>직접 파일 작업:</strong> 컴퓨터 폴더를 스스로 탐색해 엑셀을 직접 열고, 숫자를 계산해 새 파일로 깔끔하게 저장합니다.</span>
+            </li>
+            <li class="comp-item">
+              <span class="comp-bullet">✓</span>
+              <span><strong>스스로 오류 수정:</strong> 작업 중 에러가 나면 사람을 부르지 않고, 무엇이 잘못됐는지 스스로 읽어서 고쳐 다시 시도합니다.</span>
+            </li>
+            <li class="comp-item">
+              <span class="comp-bullet">✓</span>
+              <span><strong>끝까지 완수:</strong> "18개 읍면 취합해 줘"라고 한마디 지시하면 완료될 때까지 여러 단계를 혼자 알아서 처리합니다.</span>
+            </li>
+            <li class="comp-item">
+              <span class="comp-bullet">✓</span>
+              <span><strong>검증 증표 첨부:</strong> 어떤 조례 기준과 계산식으로 작업했는지 대조표를 함께 남겨 과장·국장의 결재를 지원합니다.</span>
+            </li>
+          </ul>
+        </div>
+        <div class="comp-footer" style="background:var(--coral-light);color:var(--coral-dark);">
+          <strong>리더의 체감 혁신:</strong> 직원이 주말 내내 하던 단순 취합 90%가 사라지고, 사람은 최종 확인과 대민 지원에 집중합니다.
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="bottom-anchor">
+    <span class="anchor-tag">리더의 한 줄 요약</span>
+    <span class="anchor-text">챗봇이 면접관 질문에 대답만 잘하는 신임이라면, 에이전트는 결재 서류를 직접 작성해 책상에 올려놓는 실무자입니다.</span>
+  </div>
+  <div class="slide-footer">
+    <span>의성군 AI전략리더 특강</span>
+    <span>개념 전환 · 챗봇에서 에이전트로</span>
+    <span class="page-badge" data-page-number>04</span>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 05: [병목 해부] split-explain
+     ============================================================ -->
+<section class="slide" id="slide-05" data-role="concept" data-layout="split-explain" data-purpose="챗봇 단계에서 공무원이 겪은 병목을 분석한다">
+  <div class="slide-header">
+    <span class="header-tagline">업무 병목 분석</span>
+    <span class="header-meta">사람이 복사-붙여넣기 심부름을 하던 한계</span>
+  </div>
+  <div class="slide-headline">
+    <div class="eyebrow">행정 현장의 고민과 원인</div>
+    <h2 class="slide-title">AI를 써도 피곤했던 이유: 사람이 '심부름꾼' 노릇을 했기 때문입니다</h2>
+  </div>
+  <div class="slide-canvas">
+    <div class="split-layout">
+      <!-- 좌측: 비주얼 요약 카드 -->
+      <div class="split-visual">
+        <div>
+          <div style="font-size:12px;font-weight:800;letter-spacing:0.06em;color:#e8a7a1;margin-bottom:8px;">악순환의 고리</div>
+          <h3 style="font-size:22px;font-weight:900;line-height:1.3;margin-bottom:14px;">그동안 우리가 겪은 복붙 뺑뺑이 구조</h3>
+          <p style="font-size:14px;color:#cbd9ea;line-height:1.6;margin-bottom:16px;">
+            AI가 똑똑해졌다고 해서 써봤더니, 정작 공무원은 웹 브라우저와 엑셀 화면 사이를 하루에 수십 번씩 오가며 마우스 복사-붙여넣기만 무한 반복했습니다.
+          </p>
+          <div style="background:rgba(255,255,255,0.08);padding:12px 14px;border-radius:8px;font-size:13px;line-height:1.55;color:#f0f4fa;">
+            <strong>핵심 병목:</strong> "AI 머리"와 "컴퓨터 속 실제 서류" 사이에 연결 통로(손과 발)가 전혀 없었기 때문입니다.
+          </div>
+        </div>
+        <div style="margin-top:16px;padding-top:14px;border-top:1px solid rgba(255,255,255,0.15);font-size:12.5px;color:#a8c2e0;">
+          리더의 통찰: 거창한 전사 플랫폼(고속도로)을 깔아도, 책상 위 골목길(엑셀 복붙 뺑뺑이)이 사라지지 않으면 AX는 실패합니다.
+        </div>
+      </div>
+
+      <!-- 우측: 3대 답답함 및 현장 사례 -->
+      <div class="split-details">
+        <div class="explain-point">
+          <div class="point-tag">답답함 01</div>
+          <div class="point-head">복사해서 붙여넣다 하루가 다 갑니다</div>
+          <div class="point-body">
+            AI가 엑셀 계산식을 알려주어도 결국 공무원이 내 컴퓨터 엑셀 창을 띄우고 붙여넣어야 합니다. 서식이 조금만 달라도 에러가 나면서 작업이 멈춥니다.
+          </div>
+        </div>
+        <div class="explain-point">
+          <div class="point-tag">답답함 02</div>
+          <div class="point-head">에러가 나면 또 사람이 질문창에 복사해 묻습니다</div>
+          <div class="point-body">
+            "오류 코드 #VALUE!가 떴어. 어떡해?"라고 사람이 다시 물어봐야 합니다. AI는 자기가 준 코드가 제대로 실행되었는지 확인하지 못합니다.
+          </div>
+        </div>
+        <div class="explain-point">
+          <div class="point-tag">답답함 03</div>
+          <div class="point-head">결국 엑셀 파일 열고 도장 찍는 건 사람이 다 합니다</div>
+          <div class="point-body">
+            챗봇은 조언만 해줄 뿐, 실제로 일을 끝내고 엑셀 파일을 저장해 주는 '손과 발'이 없어서 공무원의 실제 야근 시간은 줄어들지 않았습니다.
+          </div>
+        </div>
+        <div style="padding:10px 14px;background:var(--tint);border-radius:6px;font-size:13px;font-weight:700;color:var(--navy);margin-top:6px;">
+          <strong>에이전트의 해결:</strong> 사람이 하던 '화면 간 심부름'을 에이전트가 직접 컴퓨터 내부에서 자율 완결합니다.
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="bottom-anchor">
+    <span class="anchor-tag">리더의 착안점</span>
+    <span class="anchor-text">단순히 똑똑한 AI를 구독해 주는 것으로는 혁신이 안 됩니다. 실제 행정 파일과 연결해 주는 '손발 체계'를 열어주어야 합니다.</span>
+  </div>
+  <div class="slide-footer">
+    <span>의성군 AI전략리더 특강</span>
+    <span>원인 분석 · 사람이 심부름꾼이었던 이유</span>
+    <span class="page-badge" data-page-number>05</span>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 06: [핵심 명제] proposition
+     ============================================================ -->
+<section class="slide" id="slide-06" data-role="concept" data-layout="proposition" data-purpose="특강의 핵심 명제를 쉽고 명확하게 선언한다">
+  <div class="slide-header">
+    <span class="header-tagline">핵심 개념 정의</span>
+    <span class="header-meta">말만 하는 AI에서 일하는 AI로</span>
+  </div>
+  <div class="slide-headline">
+    <div class="eyebrow">특강 핵심 명제</div>
+    <h2 class="slide-title">오늘 특강에서 기억할 단 하나의 핵심 명제</h2>
+  </div>
+  <div class="slide-canvas">
+    <div class="proposition-canvas">
+      <div class="prop-hero">
+        <div class="prop-statement">
+          “AI 에이전트는 <mark>AI에게 손과 발을 붙여주는 것</mark>입니다”
+        </div>
+        <p class="prop-comment">
+          머리(지능)만 좋아서 말만 청산유수로 하던 AI에게 마우스와 키보드, 파일 열기, 코드 실행(손과 발)을 쥐여줄 때 비로소 군청의 실제 엑셀과 공문서를 직접 처리하는 진짜 일꾼이 됩니다.
+        </p>
+      </div>
+      <div class="prop-pillars">
+        <div class="pillar-card">
+          <div class="pillar-badge">축 01 · 두뇌 (생각하는 힘)</div>
+          <div class="pillar-title">계획 세우기와 상황 판단</div>
+          <div class="pillar-text">
+            복잡한 군청 지침을 읽고, 무엇을 먼저 해야 할지 일머리 순서를 짭니다. 결과가 맞게 나왔는지 스스로 살핍니다.
+          </div>
+        </div>
+        <div class="pillar-card">
+          <div class="pillar-badge">축 02 · 손과 발 (실행하는 힘)</div>
+          <div class="pillar-title">도구 조작과 자율 실행</div>
+          <div class="pillar-text">
+            마우스와 키보드처럼 직접 엑셀을 열고, 계산식을 돌리며, 에러가 나면 스스로 코드를 고쳐 다시 실행합니다.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="bottom-anchor">
+    <span class="anchor-tag">리더의 생각</span>
+    <span class="anchor-text">손발 없는 천재는 조언만 남기지만, 손발 달린 AI 일꾼은 오늘 밤 읍·면에서 올라온 엑셀 180건을 말끔히 정리해 둡니다.</span>
+  </div>
+  <div class="slide-footer">
+    <span>의성군 AI전략리더 특강</span>
+    <span>THE 핵심 명제 · 손과 발을 붙여주는 AI</span>
+    <span class="page-badge" data-page-number>06</span>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 07: [구조 해부] anatomy
+     ============================================================ -->
+<section class="slide" id="slide-07" data-role="structure" data-layout="anatomy" data-purpose="에이전트를 구성하는 5가지 핵심 부품의 역할과 상호작용을 도식화한다">
+  <div class="slide-header">
+    <span class="header-tagline">에이전트 구성 부품</span>
+    <span class="header-meta">두뇌 · 손발 · 관절 · 기억 · 창구</span>
+  </div>
+  <div class="slide-headline">
+    <div class="eyebrow">에이전트 5대 핵심 부품</div>
+    <h2 class="slide-title">비개발자 눈높이로 보는 에이전트 5가지 핵심 부품: 두뇌·손발·관절·기억·창구</h2>
+  </div>
+  <div class="slide-canvas">
+    <div class="anatomy-board">
+      <div class="anatomy-svg-box">
+        <svg viewBox="0 0 660 380" style="width:100%;height:auto;display:block;">
+          <defs>
+            <marker id="arr-g" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L5,3 L0,6 Z" fill="#247352"/></marker>
+            <marker id="arr-b" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L5,3 L0,6 Z" fill="#325896"/></marker>
+            <marker id="arr-c" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L5,3 L0,6 Z" fill="#b63d3a"/></marker>
+          </defs>
+
+          <!-- 4. 조례 책자 (상단) -->
+          <rect x="230" y="15" width="200" height="60" rx="8" fill="#fcf3e6" stroke="#b57518" stroke-width="1.5"/>
+          <text x="330" y="38" fill="#b57518" font-size="12.5" font-weight="800" text-anchor="middle">④ 규정과 조례 책자 (기억과 근거)</text>
+          <text x="330" y="56" fill="#5c6f88" font-size="10.5" text-anchor="middle">의성군 조례 · 업무지침 · 규정집 펼쳐보기</text>
+
+          <!-- 1. 두뇌 (중앙) -->
+          <rect x="230" y="135" width="200" height="95" rx="10" fill="#ecf2fc" stroke="#325896" stroke-width="2"/>
+          <text x="330" y="165" fill="#325896" font-size="16" font-weight="900" text-anchor="middle">① 두뇌 (생각하는 AI)</text>
+          <text x="330" y="185" fill="#0e1c31" font-size="11.5" font-weight="700" text-anchor="middle">GPT · Claude · Gemini</text>
+          <text x="330" y="204" fill="#5c6f88" font-size="11" text-anchor="middle">무엇을 먼저 할지 계획 세우고 판단</text>
+          <text x="330" y="218" fill="#8697ae" font-size="10" text-anchor="middle">단, 혼자서는 파일을 못 엶</text>
+
+          <!-- 2. 손과 발 (하단) -->
+          <rect x="230" y="290" width="200" height="70" rx="8" fill="#edf6f1" stroke="#247352" stroke-width="2"/>
+          <text x="330" y="315" fill="#247352" font-size="13.5" font-weight="800" text-anchor="middle">② 손과 발 (실행 도구)</text>
+          <text x="330" y="333" fill="#0e1c31" font-size="11" font-weight="700" text-anchor="middle">컴퓨터 파일 열기 · 엑셀 수정 · 코드 실행</text>
+          <text x="330" y="348" fill="#5c6f88" font-size="10" text-anchor="middle">에러 나면 고쳐서 다시 하는 자율 실행체계</text>
+
+          <!-- 3. 관절과 통로 (좌측) -->
+          <rect x="20" y="135" width="150" height="95" rx="8" fill="#f1f5fa" stroke="#5c6f88" stroke-width="1.5"/>
+          <text x="95" y="163" fill="#0e1c31" font-size="12.5" font-weight="800" text-anchor="middle">③ 데이터 연결 통로</text>
+          <text x="95" y="182" fill="#5c6f88" font-size="10" text-anchor="middle">자료 규격 표준 관절</text>
+          <text x="95" y="200" fill="#31425a" font-size="10" text-anchor="middle">국가법령 · KOSIS 통계</text>
+          <text x="95" y="214" fill="#31425a" font-size="10" text-anchor="middle">군청 내부 데이터 연결</text>
+
+          <!-- 5. 모니터 창구 (우측) -->
+          <rect x="490" y="135" width="150" height="95" rx="8" fill="#fffcfc" stroke="#b63d3a" stroke-width="1.5"/>
+          <text x="565" y="163" fill="#b63d3a" font-size="12.5" font-weight="800" text-anchor="middle">⑤ 결과 창구 (화면)</text>
+          <text x="565" y="182" fill="#5c6f88" font-size="10" text-anchor="middle">소통과 결재 보고</text>
+          <text x="565" y="200" fill="#31425a" font-size="10" text-anchor="middle">웹 대시보드 화면</text>
+          <text x="565" y="214" fill="#31425a" font-size="10" text-anchor="middle">팀원과 결재권자 공유</text>
+
+          <!-- 연결선 -->
+          <path d="M330 75 V130" stroke="#b57518" stroke-width="1.6" marker-end="url(#arr-b)"/>
+          <path d="M310 230 V285" stroke="#247352" stroke-width="1.6" marker-end="url(#arr-g)"/>
+          <path d="M350 290 V235" stroke="#247352" stroke-width="1.6" marker-end="url(#arr-b)"/>
+          <path d="M170 182 H225" stroke="#5c6f88" stroke-width="1.6" marker-end="url(#arr-b)"/>
+          <path d="M430 182 H485" stroke="#b63d3a" stroke-width="1.6" marker-end="url(#arr-c)"/>
+        </svg>
+      </div>
+      <div class="anatomy-panel">
+        <div class="block-spec">
+          <div class="spec-name"><span style="color:var(--blue)">①</span> 두뇌 (생각하는 AI)</div>
+          <div class="spec-desc">어떻게 처리할지 생각하고 일머리 계획을 세웁니다. 단, 생각만 할 뿐 혼자서는 컴퓨터 파일을 열지 못합니다.</div>
+          <div style="font-size:11.5px;color:var(--muted);margin-top:2px;">예: "18개 읍면 농자재 신청서를 어떤 순서로 합칠지 계획 수립"</div>
+        </div>
+        <div class="block-spec">
+          <div class="spec-name"><span style="color:var(--green)">②</span> 손과 발 (실행 도구)</div>
+          <div class="spec-desc">내 컴퓨터 안의 엑셀을 직접 열고 계산하며, 틀리면 스스로 코드를 고쳐서 끝까지 완성해 내는 핵심 일꾼입니다.</div>
+          <div style="font-size:11.5px;color:var(--muted);margin-top:2px;">예: "엑셀 수식 오류 적발 및 검증 완료된 새 파일 저장"</div>
+        </div>
+        <div class="block-spec">
+          <div class="spec-name"><span style="color:var(--navy)">③</span> 관절 (연결 통로)</div>
+          <div class="spec-desc">국가법령, 통계청 자료, 군청 내부 데이터를 AI가 안전하게 넘나들 수 있도록 규격화해 주는 표준 연결 관절입니다.</div>
+          <div style="font-size:11.5px;color:var(--muted);margin-top:2px;">예: "국가법령정보센터 조례 연계 및 의성군 내부 통계 검색"</div>
+        </div>
+        <div class="block-spec">
+          <div class="spec-name"><span style="color:var(--gold)">④</span> 조례 책자 (기억과 근거)</div>
+          <div class="spec-desc">군청 조례와 지침을 먼저 펼쳐보고 답변하게 만들어, 거짓 정보(환각) 없이 100% 사실에 근거해 일하게 합니다.</div>
+          <div style="font-size:11.5px;color:var(--muted);margin-top:2px;">예: "의성군 청년 조례 제5조 지원 자격 조항 확인"</div>
+        </div>
+        <div class="block-spec">
+          <div class="spec-name"><span style="color:var(--coral)">⑤</span> 창구 (결과 화면)</div>
+          <div class="spec-desc">공무원과 군민이 완성된 보고서를 확인하고, 리더가 결재할 수 있도록 링크 하나로 깔끔하게 띄워주는 모니터 화면입니다.</div>
+          <div style="font-size:11.5px;color:var(--muted);margin-top:2px;">예: "과장님 보고용 요약 시트 및 한눈에 보는 통계 대시보드"</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="bottom-anchor">
+    <span class="anchor-tag">핵심 구조</span>
+    <span class="anchor-text">도구 이름은 매달 바뀌어도 이 5가지 부품 구조는 영원합니다. 리더는 이 부품들이 잘 연결되어 있는지 확인하면 됩니다.</span>
+  </div>
+  <div class="slide-footer">
+    <span>의성군 AI전략리더 특강</span>
+    <span>5대 핵심 부품 · 두뇌와 손발의 결합</span>
+    <span class="page-badge" data-page-number>07</span>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 08: [간지 02] chapter-gate
+     ============================================================ -->
+<section class="slide chapter-divider" id="slide-08" data-role="chapter" data-layout="chapter-gate" data-purpose="두 번째 단원의 학습 질문을 제시한다" data-divider-index="2">
+  <div class="chapter-top">
+    <span>의성군 AI 전략 리더십 특강 <small>LECTURE SERIES</small></span>
+    <span>의성군청 · 2026. 09</span>
+  </div>
+  <div class="chapter-head">
+    <div class="chapter-eyebrow">PART 02 · 작동 원리와 지휘하는 법</div>
+    <h1>에이전트는 어떻게 스스로 생각하고 오류를 바로잡을까요?</h1>
+  </div>
+  <div class="chapter-body">
+    <div class="chapter-no" data-divider-number>02</div>
+    <div class="chapter-message">
+      <h2>계획하고, 실행하고, <em>확인하고, 고쳐서 다시</em> 합니다</h2>
+      <p>
+        챗봇은 한 번 대답하고 나면 맞든 틀리든 신경 쓰지 않지만, 에이전트는 결과가 올바른지 스스로 살펴봅니다. 사람이 옆에서 지켜보지 않아도 스스로 끝까지 해내는 일머리 루프를 확인합니다.
+      </p>
+    </div>
+  </div>
+  <div class="slide-footer">
+    <span>의성군 AI전략리더 특강 · PART 02</span>
+    <span>다음 슬라이드: 스스로 일하는 4단계 자율 루프</span>
+    <span class="page-badge" data-page-number>08</span>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 09: [작동 루프] loop-cycle
+     ============================================================ -->
+<section class="slide" id="slide-09" data-role="process" data-layout="loop-cycle" data-purpose="에이전트가 문제를 해결하는 4단계 자율 순환 루프와 자기 치유 과정을 제시한다">
+  <div class="slide-header">
+    <span class="header-tagline">자율 순환 루프</span>
+    <span class="header-meta">스스로 문제를 해결하는 일머리 4단계</span>
+  </div>
+  <div class="slide-headline">
+    <div class="eyebrow">자율 오류 수정의 원리</div>
+    <h2 class="slide-title">사람이 안 봐도 스스로 완수하는 4단계 일머리 루프: 계획 → 도구잡기 → 실행 → 확인</h2>
+  </div>
+  <div class="slide-canvas">
+    <div class="loop-grid">
+      <!-- 1단계 -->
+      <div class="loop-step">
+        <div>
+          <div class="loop-num">01</div>
+          <div class="loop-title">목표 쪼개기 (계획)</div>
+          <div class="loop-action">
+            지시를 받으면 무작정 덤비지 않고 일을 세부 순서로 쪼갭니다. "18개 읍면 폴더 찾기 ➔ 서식 확인 ➔ 수식 계산 ➔ 검증" 단계로 일머리를 설계합니다.
+          </div>
+          <div style="margin-top:10px;background:var(--tint);padding:8px;border-radius:6px;font-size:12px;color:var(--ink);line-height:1.45;">
+            <strong>에이전트 동작:</strong> 업무 목표를 분석해 5~10단계 작업 계획표를 메모리에 생성
+          </div>
+        </div>
+        <div class="loop-detail">핵심 역량: 복잡한 지침의 단계별 분해력</div>
+      </div>
+
+      <!-- 2단계 -->
+      <div class="loop-step">
+        <div>
+          <div class="loop-num">02</div>
+          <div class="loop-title">도구 선택 (손발)</div>
+          <div class="loop-action">
+            계획에 맞게 필요한 손발을 스스로 집어 듭니다. 엑셀을 열어야 하면 파일 도구를, 조례를 찾아야 하면 규정 검색 도구를 선택해 작동시킵니다.
+          </div>
+          <div style="margin-top:10px;background:var(--tint);padding:8px;border-radius:6px;font-size:12px;color:var(--ink);line-height:1.45;">
+            <strong>에이전트 동작:</strong> 파이썬 스크립트, 한글/엑셀 파일 뷰어, 공공 API 자동 호출
+          </div>
+        </div>
+        <div class="loop-detail">핵심 역량: 작업에 꼭 맞는 맞춤 도구 호출</div>
+      </div>
+
+      <!-- 3단계 -->
+      <div class="loop-step highlight">
+        <div>
+          <div class="loop-num" style="color:var(--coral);">03</div>
+          <div class="loop-title">자율 실행 (수정)</div>
+          <div class="loop-action">
+            실행 중 서식이 다르거나 에러(#VALUE!)가 발생하면 사람을 부르지 않습니다. 에러 메시지를 스스로 읽고 코드를 고쳐 다시 시도합니다.
+          </div>
+          <div style="margin-top:10px;background:var(--coral-light);padding:8px;border-radius:6px;font-size:12px;color:var(--coral-dark);line-height:1.45;">
+            <strong>에이전트 동작:</strong> "열 이름 불일치 에러 감지 ➔ 열 매핑 코드 수정 후 재실행"
+          </div>
+        </div>
+        <div class="loop-detail" style="color:var(--coral);">핵심 역량: 오류 자율 복구 (Self-Healing)</div>
+      </div>
+
+      <!-- 4단계 -->
+      <div class="loop-step">
+        <div>
+          <div class="loop-num">04</div>
+          <div class="loop-title">결과 대조 (확인)</div>
+          <div class="loop-action">
+            최종 파일이 나왔다고 끝내지 않습니다. 조례 단가와 일치하는지, 수치 합계가 맞는지 재검토하고 검증표와 함께 폴더에 저장합니다.
+          </div>
+          <div style="margin-top:10px;background:var(--tint);padding:8px;border-radius:6px;font-size:12px;color:var(--ink);line-height:1.45;">
+            <strong>에이전트 동작:</strong> 원본 대비 수정 이력 검증 리포트 자동 생성 후 보고
+          </div>
+        </div>
+        <div class="loop-detail">핵심 역량: 오차 없는 완결성과 증빙 보장</div>
+      </div>
+    </div>
+  </div>
+  <div class="bottom-anchor">
+    <span class="anchor-tag">작동의 본질</span>
+    <span class="anchor-text">챗봇은 한 번 대답하고 손을 떼지만, 에이전트는 목표가 100% 완료될 때까지 이 4단계 루프를 스스로 반복합니다.</span>
+  </div>
+  <div class="slide-footer">
+    <span>의성군 AI전략리더 특강</span>
+    <span>자율 루프 · 스스로 오류를 바로잡는 과정</span>
+    <span class="page-badge" data-page-number>09</span>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 10: [블록 조립] three-lane-wire
+     ============================================================ -->
+<section class="slide" id="slide-10" data-role="relation" data-layout="three-lane-wire" data-purpose="도구의 나열이 아닌 블록 조합과 오케스트레이션, 하네스 실행 구조를 제시한다">
+  <div class="slide-header">
+    <span class="header-tagline">조합과 오케스트레이션</span>
+    <span class="header-meta">블록 6개의 조합력 · 프롬프트에서 하네스로</span>
+  </div>
+  <div class="slide-headline">
+    <div class="eyebrow">리더의 설계 관점</div>
+    <h2 class="slide-title">전략 리더의 관점: AI는 완제품 하나가 아니라 '블록의 오케스트레이션'입니다</h2>
+  </div>
+  <div class="slide-canvas">
+    <div class="lane-wire-canvas">
+      <!-- 레인 1: 목표와 컨텍스트 -->
+      <div class="lane-column">
+        <div>
+          <div class="lane-header">레인 1 · 프롬프트 너머 컨텍스트</div>
+          <div class="lane-title">행정 맥락과 규정 통째로 제공</div>
+          <div class="lane-body">
+            단순 질문 한 줄이 아니라, AI가 정확히 일할 수 있도록 <strong>업무의 원문, 군정 조례, 예산 지침, 예외 기준</strong>을 맥락(Context)으로 통째로 설계해 주는 리더의 지휘력입니다.
+          </div>
+          <div style="margin-top:14px;display:flex;flex-direction:column;gap:8px;">
+            <div style="background:var(--tint);padding:8px 10px;border-radius:6px;font-size:12.5px;color:var(--ink);line-height:1.45;">
+              <strong>① 업무 목표 정의:</strong> "농자재 지원 신청 180건 취합 및 오류 검증"
+            </div>
+            <div style="background:var(--tint);padding:8px 10px;border-radius:6px;font-size:12.5px;color:var(--ink);line-height:1.45;">
+              <strong>② 조례 규정 제공:</strong> 의성군 농업 육성 조례 제4조 지원 단가 기준
+            </div>
+            <div style="background:var(--tint);padding:8px 10px;border-radius:6px;font-size:12.5px;color:var(--ink);line-height:1.45;">
+              <strong>③ 예외 처리 지침:</strong> 면적 누락자나 주민번호 오류자는 별도 경고 시트 분리
+            </div>
+          </div>
+        </div>
+        <div style="margin-top:14px;padding:8px 12px;background:var(--blue-light);border-radius:6px;font-size:12px;font-weight:700;color:var(--blue);">
+          리더 역할: 질문자가 아니라 업무 기준을 세우는 출제자
+        </div>
+      </div>
+
+      <div class="lane-arrow">➔</div>
+
+      <!-- 레인 2: 블록 오케스트레이션과 하네스 -->
+      <div class="lane-column center">
+        <div>
+          <div class="lane-header">레인 2 · 실행 환경 하네스(Harness)</div>
+          <div class="lane-title">6개 블록의 오케스트레이션</div>
+          <div class="lane-body">
+            두뇌에 도구를 쥐여주는 하네스(실행 환경)를 구축합니다. <strong>재료(블록 6개)는 이미 다 있습니다. 차이는 조합력입니다.</strong>
+          </div>
+          <div style="margin-top:14px;display:flex;flex-direction:column;gap:7px;">
+            <div style="background:#fff;border:1px solid var(--line);padding:7px 10px;border-radius:6px;font-size:12.3px;color:var(--body);line-height:1.4;">
+              <strong style="color:var(--blue);">블록 1 (두뇌):</strong> GPT·Claude·Gemini 등 복수 모델 교차 검토
+            </div>
+            <div style="background:#fff;border:1px solid var(--line);padding:7px 10px;border-radius:6px;font-size:12.3px;color:var(--body);line-height:1.4;">
+              <strong style="color:var(--coral);">블록 2 (손발):</strong> 엑셀 열기, 파이썬 계산 실행, 한글 서식 변환
+            </div>
+            <div style="background:#fff;border:1px solid var(--line);padding:7px 10px;border-radius:6px;font-size:12.3px;color:var(--body);line-height:1.4;">
+              <strong style="color:var(--green);">블록 3 (자율 루프):</strong> 에러 발생 시 스스로 코드를 고쳐 재실행
+            </div>
+            <div style="background:#fff;border:1px solid var(--line);padding:7px 10px;border-radius:6px;font-size:12.3px;color:var(--body);line-height:1.4;">
+              <strong style="color:var(--navy);">블록 4 (연결 관절):</strong> 국가법령정보센터 조례 연계 및 내부 자료 통로
+            </div>
+          </div>
+        </div>
+        <div style="margin-top:14px;padding:8px 12px;background:var(--coral-light);border-radius:6px;font-size:12px;font-weight:700;color:var(--coral-dark);">
+          성과 공식: 블록 6개 조합 = 9억 1,510만 가지 행정 문제 해결
+        </div>
+      </div>
+
+      <div class="lane-arrow">➔</div>
+
+      <!-- 레인 3: 현장 문제 해결 -->
+      <div class="lane-column">
+        <div>
+          <div class="lane-header">레인 3 · 현장 문제 해결 (도메인)</div>
+          <div class="lane-title">코드가 아닌 문제 정의가 이긴다</div>
+          <div class="lane-body">
+            코드를 짜는 외부 개발자보다, <strong>군정의 병목과 군민의 불편(미시 페인포인트)을 꿰뚫고 있는 행정직 공무원</strong>이 AI를 가장 잘 지휘합니다.
+          </div>
+          <div style="margin-top:14px;display:flex;flex-direction:column;gap:8px;">
+            <div style="background:var(--tint);padding:8px 10px;border-radius:6px;font-size:12.5px;color:var(--ink);line-height:1.45;">
+              <strong>① 직원의 짜증 발굴:</strong> 매주 3일 야근하던 반복 수기 취합 업무 적발
+            </div>
+            <div style="background:var(--tint);padding:8px 10px;border-radius:6px;font-size:12.5px;color:var(--ink);line-height:1.45;">
+              <strong>② 바이브코딩 구현:</strong> 자연어로 "취합 프로그램 짜줘" 즉석 완성
+            </div>
+            <div style="background:var(--tint);padding:8px 10px;border-radius:6px;font-size:12.5px;color:var(--ink);line-height:1.45;">
+              <strong>③ 비판적 검증과 결재:</strong> 이상치 대조표를 확인하고 최종 서명
+            </div>
+          </div>
+        </div>
+        <div style="margin-top:14px;padding:8px 12px;background:var(--green-light);border-radius:6px;font-size:12px;font-weight:700;color:var(--green);">
+          핵심 통찰: "코딩 능력보다 중요한 것은 현장 업무의 설계력입니다."
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="bottom-anchor">
+    <span class="anchor-tag">리더의 통찰</span>
+    <span class="anchor-text">도구는 1~2개월 단위로 바뀝니다. 남는 것은 '문제를 정의하고 도구를 엮는 오케스트레이션 역량'입니다.</span>
+  </div>
+  <div class="slide-footer">
+    <span>의성군 AI전략리더 특강</span>
+    <span>블록 조립 관점 · 레고처럼 맞추는 도구</span>
+    <span class="page-badge" data-page-number>10</span>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 11: [신뢰와 근거] layer-stack
+     ============================================================ -->
+<section class="slide" id="slide-11" data-role="relation" data-layout="layer-stack" data-purpose="지자체 규정에 기반하여 거짓말 없는 신뢰 행정을 보장하는 근거 연결 구조를 제시한다">
+  <div class="slide-header">
+    <span class="header-tagline">행정의 정확성과 신뢰</span>
+    <span class="header-meta">군청 조례와 지침에 근거한 답변 · Grounding</span>
+  </div>
+  <div class="slide-headline">
+    <div class="eyebrow">행정 신뢰와 근거 보장</div>
+    <h2 class="slide-title">행정의 신뢰를 지키는 법: 군청 조례 책자를 펼쳐놓고 확인하게 만들기</h2>
+  </div>
+  <div class="slide-canvas">
+    <div class="layer-canvas">
+      <!-- 4단계 (최상단) -->
+      <div class="layer-band" style="background:#fffefe;border-left-color:var(--coral);">
+        <div class="band-num" style="color:var(--coral);">4단계 · 최종 산출</div>
+        <div class="band-content">
+          <div class="stack-title">최종 군정 보고서 및 결재 공문서 초안 완성</div>
+          <div class="stack-desc">
+            과장·국장 보고용 요약 시트와 군민 배포용 안내문 초안이 완성됩니다. 모든 수치와 문장마다 어떤 조례 몇 조를 근거로 작성되었는지 각주 출처가 명시됩니다.
+          </div>
+        </div>
+        <div class="band-role" style="background:var(--coral-light);color:var(--coral-dark);">책임: 공무원 최종 결재</div>
+      </div>
+
+      <!-- 3단계 -->
+      <div class="layer-band" style="background:var(--surface);border-left-color:var(--blue);">
+        <div class="band-num" style="color:var(--blue);">3단계 · 판단 대조</div>
+        <div class="band-content">
+          <div class="stack-title">AI 에이전트의 사실 대조 및 교차 검증 (초안 작성)</div>
+          <div class="stack-desc">
+            검색된 실제 조례 조항을 책상 위에 펼쳐놓고, 신청자의 자격 조건과 엑셀 수치를 한 줄씩 대조합니다. 근거에 없는 내용은 일절 지어내지 못하도록 엄격히 통제합니다.
+          </div>
+        </div>
+        <div class="band-role">원칙: 근거 없는 답변 원천 차단</div>
+      </div>
+
+      <!-- 2단계 -->
+      <div class="layer-band" style="background:var(--surface);border-left-color:var(--gold);">
+        <div class="band-num" style="color:var(--gold);">2단계 · 규정 검색</div>
+        <div class="band-content">
+          <div class="stack-title">관련 조례 조항 및 행정 지침 자동 검색 (기억과 근거)</div>
+          <div class="stack-desc">
+            "청년 귀농 보조금 지원 조건 찾아줘" 요청 시, 수백 페이지 분량의 의성군 자치법규집에서 해당되는 제5조 및 시행규칙 조항을 1초 만에 발췌해 올립니다.
+          </div>
+        </div>
+        <div class="band-role">도구: 군청 조례 검색 시스템</div>
+      </div>
+
+      <!-- 1단계 (바닥) -->
+      <div class="layer-band" style="background:var(--surface);border-left-color:var(--navy);">
+        <div class="band-num" style="color:var(--navy);">1단계 · 원천 근거</div>
+        <div class="band-content">
+          <div class="stack-title">의성군 자치법규집 · 예산편성지침 · 업무편람 (공식 데이터)</div>
+          <div class="stack-desc">
+            외부 인터넷의 불확실한 소문이 아니라, 군청 내부에서 공식 승인된 조례 파일, 군보 고시문, 결산 보고서 등 100% 검증된 행정 원천 데이터입니다.
+          </div>
+        </div>
+        <div class="band-role">기반: 군청 공인 문서 자산</div>
+      </div>
+    </div>
+  </div>
+  <div class="bottom-anchor">
+    <span class="anchor-tag">행정 신뢰의 원칙</span>
+    <span class="anchor-text">"AI의 첫 답은 정답이 아니라 초안입니다." 출처와 대조표를 확인하고 채택하는 비판적 검증까지가 업무의 완성입니다.</span>
+  </div>
+  <div class="slide-footer">
+    <span>의성군 AI전략리더 특강</span>
+    <span>행정 신뢰 · 조례 규정을 펼쳐놓고 확인</span>
+    <span class="page-badge" data-page-number>11</span>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 12: [진화 5단계] staircase
+     ============================================================ -->
+<section class="slide" id="slide-12" data-role="process" data-layout="staircase" data-purpose="지자체 조직의 AI 활용 발전 5단계를 제시하고 의성군의 목표 지점을 정의한다">
+  <div class="slide-header">
+    <span class="header-tagline">조직 AI 성숙도</span>
+    <span class="header-meta">지자체 AI 도입의 성숙 과정 5단계</span>
+  </div>
+  <div class="slide-headline">
+    <div class="eyebrow">지자체 AI 성숙도 5단계</div>
+    <h2 class="slide-title">지자체 AI 활용의 성숙도 5단계: 의성군은 지금 어디로 가야 할까요?</h2>
+  </div>
+  <div class="slide-canvas">
+    <div class="stair-canvas">
+      <!-- 1단계 -->
+      <div class="stair-block">
+        <div class="stair-step-tag">1단계 · 챗봇 질문</div>
+        <div class="stair-name">글만 쓰는 검색창</div>
+        <div class="stair-desc">
+          웹 브라우저에서 질문하면 글로만 답함. 손발이 없어 사람이 복사-붙여넣기를 반복해야 하는 초보 단계.
+        </div>
+        <div class="stair-metric">상태: 대다수 지자체 머무름</div>
+      </div>
+
+      <!-- 2단계 -->
+      <div class="stair-block">
+        <div class="stair-step-tag">2단계 · 복붙 뺑뺑이</div>
+        <div class="stair-name">코딩 질문과 수동 복붙</div>
+        <div class="stair-desc">
+          AI가 준 파이썬/엑셀 코드를 공무원이 일일이 복사해서 실행. 에러 나면 질문창 오가며 피로 누적.
+        </div>
+        <div class="stair-metric">상태: 개인적 시도에 그침</div>
+      </div>
+
+      <!-- 3단계 (의성군 도약 지점!) -->
+      <div class="stair-block current">
+        <div class="stair-step-tag">3단계 · 손발 에이전트 ★</div>
+        <div class="stair-name">내 PC에서 자율 실행</div>
+        <div class="stair-desc">
+          지시하면 에이전트가 폴더째 엑셀을 열고 계산 후 새 파일 저장. 에러 시 스스로 고치는 <strong>의성군의 도약 지점!</strong>
+        </div>
+        <div class="stair-metric" style="color:var(--coral);font-weight:900;">목표: 2026년 의성군 표준화</div>
+      </div>
+
+      <!-- 4단계 -->
+      <div class="stair-block">
+        <div class="stair-step-tag">4단계 · 부서 협업</div>
+        <div class="stair-name">다중 에이전트 협업</div>
+        <div class="stair-desc">
+          조례 검토관, 예산 분석관, 민원 예측관이 동시에 한 기안문을 교차 검증해 1장의 사전 심의서 완성.
+        </div>
+        <div class="stair-metric">상태: 선도 부서 시범 운영</div>
+      </div>
+
+      <!-- 5단계 -->
+      <div class="stair-block">
+        <div class="stair-step-tag">5단계 · 행정 혁신</div>
+        <div class="stair-name">군정 자율 운영 체계</div>
+        <div class="stair-desc">
+          반복 행정 수작업 90%가 백그라운드 자동화되고, 리더와 공무원은 군민 소통과 고난도 정책 기획에만 집중.
+        </div>
+        <div class="stair-metric">비전: 미래 선도 스마트 의성</div>
+      </div>
+    </div>
+  </div>
+  <div class="bottom-anchor">
+    <span class="anchor-tag">도약의 방향</span>
+    <span class="anchor-text">대다수 조직이 1~2단계(복붙 피로)에 머물러 있습니다. 의성군은 3단계(손발 달린 실행 에이전트)를 선점하여 행정의 표준을 바꿉니다.</span>
+  </div>
+  <div class="slide-footer">
+    <span>의성군 AI전략리더 특강</span>
+    <span>조직 성숙도 · 의성군 지자체 AI 5단계</span>
+    <span class="page-badge" data-page-number>12</span>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 13: [간지 03] chapter-gate
+     ============================================================ -->
+<section class="slide chapter-divider" id="slide-03-c" data-role="chapter" data-layout="chapter-gate" data-purpose="세 번째 단원의 학습 질문을 제시한다" data-divider-index="3">
+  <div class="chapter-top">
+    <span>의성군 AI 전략 리더십 특강 <small>LECTURE SERIES</small></span>
+    <span>의성군청 · 2026. 09</span>
+  </div>
+  <div class="chapter-head">
+    <div class="chapter-eyebrow">PART 03 · 의성군 행정 실전 시나리오</div>
+    <h1>우리 군청 업무 어디에 손발 달린 AI를 먼저 투입할까요?</h1>
+  </div>
+  <div class="chapter-body">
+    <div class="chapter-no" data-divider-number>03</div>
+    <div class="chapter-message">
+      <h2>거창한 사업 대신, <em>매주 겪는 골칫거리</em>부터 풉니다</h2>
+      <p>
+        수억 원짜리 거대한 시스템 도입은 1년 넘게 걸리고 실패하기 쉽습니다. 의성군 공무원들이 매주 가장 큰 피로를 겪는 읍·면 농자재 취합, 조례 대조, 축제 데이터 분석에 손발 달린 에이전트를 지금 바로 투입합니다.
+      </p>
+    </div>
+  </div>
+  <div class="slide-footer">
+    <span>의성군 AI전략리더 특강 · PART 03</span>
+    <span>다음 슬라이드: 의성군 업무 도입 우선순위</span>
+    <span class="page-badge" data-page-number>13</span>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 14: [도입 매트릭스] quadrant
+     ============================================================ -->
+<section class="slide" id="slide-14" data-role="compare" data-layout="quadrant" data-purpose="에이전트를 통해 실현하는 행정의 4대 핵심 영역인 문서, 콘텐츠, 데이터, 바이브코딩을 정의한다">
+  <div class="slide-header">
+    <span class="header-tagline">행정 4대 실무 영역</span>
+    <span class="header-meta">문서 · 콘텐츠 · 데이터 · 바이브코딩</span>
+  </div>
+  <div class="slide-headline">
+    <div class="eyebrow">행정 에이전트 4대 핵심 영역</div>
+    <h2 class="slide-title">[행정 에이전트 4대 핵심 영역] 문서·콘텐츠·데이터·바이브코딩(업무자동화)</h2>
+  </div>
+  <div class="slide-canvas">
+    <div class="quadrant-canvas">
+      <!-- 1. 문서 작성·수정·편집 -->
+      <div class="quad-cell priority">
+        <div>
+          <div class="quad-tag" style="background:var(--blue-light);color:var(--blue);">영역 01 · 규정 근거와 서식 정돈</div>
+          <div class="quad-title">① 문서 작성·수정·편집</div>
+          <div class="quad-text">
+            <strong>원문 대조 및 조례 검증:</strong> 의성군 자치법규와 상위 법령을 AI가 먼저 펼쳐보고 대조하여, 거짓 정보(환각) 없는 기안문·보도자료 초안을 작성합니다. 18개 읍·면에서 제각각 올라온 한글·엑셀 서식을 단 1분 만에 하나의 통일된 공문서 규격으로 자동 변환합니다.
+          </div>
+        </div>
+        <div class="quad-target">주요 실무: 군정 정책 기안문, 조례 제·개정 조문 비교표, 회의록 요약문</div>
+      </div>
+
+      <!-- 2. 콘텐츠 제작 (카드뉴스·이미지, 영상) -->
+      <div class="quad-cell">
+        <div>
+          <div class="quad-tag" style="background:var(--coral-light);color:var(--coral);">영역 02 · 군정 홍보와 소통</div>
+          <div class="quad-title">② 콘텐츠 제작 (카드뉴스·이미지, 영상)</div>
+          <div class="quad-text">
+            <strong>관광·축제 멀티미디어 생성:</strong> 의성슈퍼푸드마늘축제, 조문국사적지, 의성펫월드 홍보 문안을 카드뉴스 이미지, 블로그 스토리라인, 숏폼 영상 스크립트로 즉시 다변화합니다. 외주 용역 없이도 담당자가 10분 만에 웹 배포용 고품질 시각 홍보물을 제작합니다.
+          </div>
+        </div>
+        <div class="quad-target">주요 실무: 축제 카드뉴스, 군민 알림톡 안내문, 숏폼 영상 대본, 웹 배포 페이지</div>
+      </div>
+
+      <!-- 3. 데이터 분석 -->
+      <div class="quad-cell">
+        <div>
+          <div class="quad-tag" style="background:var(--green-light);color:var(--green);">영역 03 · 통계 집계와 이상치 탐색</div>
+          <div class="quad-title">③ 데이터 분석 (숫자·통계)</div>
+          <div class="quad-text">
+            <strong>행정 데이터 정제와 의사결정 근거:</strong> 18개 읍·면에서 올라온 180건 보조금 신청 수치를 교차 집계하고, 단가 곱셈 오류나 중복 수혜자를 1초 만에 적발합니다. 통신사 유동인구와 카드 소비 데이터를 결합해 지역 상권 활성화의 객관적 근거를 도출합니다.
+          </div>
+        </div>
+        <div class="quad-target">주요 실무: 읍·면 보조금 교차 집계, 관광객 소비 패턴 분석, 예산 추계 시뮬레이션</div>
+      </div>
+
+      <!-- 4. 바이브코딩 (업무자동화) -->
+      <div class="quad-cell">
+        <div>
+          <div class="quad-tag" style="background:var(--gold-light);color:var(--gold);">영역 04 · 자연어로 만드는 업무 도구</div>
+          <div class="quad-title">④ 바이브코딩 (업무자동화)</div>
+          <div class="quad-text">
+            <strong>비개발자 공무원의 직접 구현:</strong> 개발자를 거치지 않고 "우리 부서 엑셀 3개 파일 합치고 오류 시트 만들어줘"라는 일상 한국어(바이브코딩)로 파이썬 스크립트나 단일 HTML 도구를 즉석 완성합니다. 매주 반복되는 손작업을 직원이 직접 없앱니다.
+          </div>
+        </div>
+        <div class="quad-target">주요 실무: 엑셀 취합 자동화 매크로, 단일 HTML 업무 뷰어, 폴더 일괄 정리 스크립트</div>
+      </div>
+    </div>
+  </div>
+  <div class="bottom-anchor">
+    <span class="anchor-tag">리더의 통찰</span>
+    <span class="anchor-text">문서·콘텐츠·데이터·바이브코딩의 4대 영역에서, 공무원은 '문제를 정의'하고 에이전트는 '손발이 되어 실행'합니다.</span>
+  </div>
+  <div class="slide-footer">
+    <span>의성군 AI전략리더 특강</span>
+    <span>행정 4대 실무 영역 · 문서 · 콘텐츠 · 데이터 · 바이브코딩</span>
+    <span class="page-badge" data-page-number>14</span>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 15: [의성 실습 1] process-river
+     ============================================================ -->
+<section class="slide" id="slide-15" data-role="case" data-layout="process-river" data-purpose="의성군 읍면 엑셀 취합 자동화 파이프라인을 제시한다">
+  <div class="slide-header">
+    <span class="header-tagline">의성 행정 실무 01</span>
+    <span class="header-meta">18개 읍·면 농자재 신청서 자동 취합</span>
+  </div>
+  <div class="slide-headline">
+    <div class="eyebrow">의성 행정 실무 01 · 엑셀 취합</div>
+    <h2 class="slide-title">[의성 실습 1] 18개 읍·면 농자재 신청 엑셀 180건 취합 및 오류 자동 검증</h2>
+  </div>
+  <div class="slide-canvas">
+    <div class="river-canvas">
+      <div class="river-flow">
+        <div class="river-block">
+          <div class="river-step-no">1단계</div>
+          <div class="river-step-title">폴더 일괄 읽기</div>
+          <div class="river-step-desc">
+            18개 읍·면에서 파일 이름도 제각각 다르게 제출된 엑셀 파일을 에이전트가 지정된 군청 폴더에서 한꺼번에 찾아 읽어들입니다.
+          </div>
+          <div style="font-size:11.5px;color:var(--muted);margin-top:6px;border-top:1px dashed var(--line);padding-top:4px;">
+            사람의 개입 없이 180개 서식 자동 식별
+          </div>
+        </div>
+        <div class="river-block">
+          <div class="river-step-no">2단계</div>
+          <div class="river-step-title">서식 자동 정렬</div>
+          <div class="river-step-desc">
+            칸 위치가 조금씩 어긋나거나 빈칸이 있는 데이터를 정렬하여, 열 순서와 주소 표기법을 하나의 반듯한 표준 규격으로 자동 변환합니다.
+          </div>
+          <div style="font-size:11.5px;color:var(--muted);margin-top:6px;border-top:1px dashed var(--line);padding-top:4px;">
+            읍·면마다 다른 폰트와 행 높이 자동 통일
+          </div>
+        </div>
+        <div class="river-block">
+          <div class="river-step-no">3단계</div>
+          <div class="river-step-title">계산 오류 검증</div>
+          <div class="river-step-desc">
+            신청 면적에 단가를 잘못 곱했거나, 주민번호가 틀린 사람, 타 읍·면 이중 신청자를 찾아내 '빨간색 경고 시트'로 분리합니다.
+          </div>
+          <div style="font-size:11.5px;color:var(--coral);font-weight:700;margin-top:6px;border-top:1px dashed var(--line);padding-top:4px;">
+            단가 오기 3건, 주민번호 오류 1건 적발
+          </div>
+        </div>
+        <div class="river-block">
+          <div class="river-step-no">4단계</div>
+          <div class="river-step-title">완성본 파일 저장</div>
+          <div class="river-step-desc">
+            오류가 검증된 통합 엑셀 시트와 과장님 보고용 1장 요약본을 내 컴퓨터 폴더에 바로 저장하고 작업 완료 알림을 띄웁니다.
+          </div>
+          <div style="font-size:11.5px;color:var(--navy);font-weight:700;margin-top:6px;border-top:1px dashed var(--line);padding-top:4px;">
+            결재용 변경 이력 검증표 자동 동봉
+          </div>
+        </div>
+      </div>
+      <div class="river-metrics">
+        <div class="metric-col">
+          <strong>3일 ➔ 3분</strong>
+          <span>직원 3명이 꼬박 3일 야근하던 작업 3분 완결</span>
+        </div>
+        <div class="metric-col">
+          <strong>0건 오차</strong>
+          <span>단순 수기 계산 실수 및 누락 위험 원천 제거</span>
+        </div>
+        <div class="metric-col">
+          <strong>100% 안심</strong>
+          <span>외부 인터넷 유출 없이 군청 내부 PC 안에서 처리</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="bottom-anchor">
+    <span class="anchor-tag">실무 성과</span>
+    <span class="anchor-text">에이전트는 밤새 일해도 피로를 느끼지 않습니다. 동일한 계산 규칙을 180건 전체에 단 1초의 오차도 없이 똑같이 적용합니다.</span>
+  </div>
+  <div class="slide-footer">
+    <span>의성군 AI전략리더 특강</span>
+    <span>실무 사례 01 · 18개 읍면 엑셀 취합</span>
+    <span class="page-badge" data-page-number>15</span>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 16: [의성 실습 2] hub-spoke
+     ============================================================ -->
+<section class="slide" id="slide-16" data-role="case" data-layout="hub-spoke" data-purpose="부서 협업형 다중 에이전트 정책 검토 모델을 제시한다">
+  <div class="slide-header">
+    <span class="header-tagline">의성 행정 실무 02</span>
+    <span class="header-meta">4개 관점 정책 교차 검토 시스템</span>
+  </div>
+  <div class="slide-headline">
+    <div class="eyebrow">의성 행정 실무 02 · 부서 협업</div>
+    <h2 class="slide-title">[의성 실습 2] 부서 협업형 다중 에이전트: 4개 관점 정책 교차 검토 시스템</h2>
+  </div>
+  <div class="slide-canvas">
+    <div class="hub-spoke-canvas">
+      <!-- 중앙 허브: 정책 기안문 -->
+      <div class="hub-center-card">
+        <div class="hub-tag">의성군 신규 정책 안건</div>
+        <h3 style="font-size:20px;font-weight:900;margin-bottom:12px;">청년 귀농귀촌 정착장려금 및 주거 지원 조례안</h3>
+        <p style="font-size:13px;color:#d0ddeb;line-height:1.6;margin-bottom:16px;">
+          신규 조례 발의 전, 4개 전문 분야 에이전트가 동시에 투입되어 법률 충돌, 예산 소요, 원주민 형평성, 홍보 파급력을 교차 검토합니다.
+        </p>
+        <div style="background:rgba(255,255,255,0.1);padding:10px 14px;border-radius:8px;font-size:12px;color:#f0f5fc;">
+          종합 성과: 부서 간 핑퐁 회의 3주 ➔ 10분 만에 1장 사전 심의 조서 자동 출력
+        </div>
+      </div>
+
+      <!-- 우측 스포크 4개 노드 -->
+      <div class="spoke-grid">
+        <div class="spoke-node">
+          <div class="spoke-role">역할 1 · 조례 및 상위법령 검토관</div>
+          <div class="spoke-title">상위 법률 및 타 조례 충돌 점검</div>
+          <div class="spoke-desc">
+            농식품부 귀농어 귀촌 활성화 지침 및 의성군 기존 자치법규와 부딪히는 조항이 있는지 전수 대조. "제7조 주거비 지원 조건이 농진청 지침과 일부 불일치" 수정 권고.
+          </div>
+        </div>
+        <div class="spoke-node">
+          <div class="spoke-role">역할 2 · 재정 및 예산 분석관</div>
+          <div class="spoke-title">향후 3년간 군비 재정 부담 추계</div>
+          <div class="spoke-desc">
+            최근 3개년 의성군 청년 유입 데이터 기반 예산 시뮬레이션. "연간 군비 약 14.5억 소요 예상, 지방소멸대응기금 연계 활용 방안" 수치 제시.
+          </div>
+        </div>
+        <div class="spoke-node">
+          <div class="spoke-role">역할 3 · 주민 형평성 검토관</div>
+          <div class="spoke-title">기존 원주민 역차별 민원 예측</div>
+          <div class="spoke-desc">
+            과거 유사 청년 지원 사업 시 제기된 이장단 및 원주민 민원 빅데이터 분석. "기존 거주 청년 농업인과의 융합 지원 조항 보완 필요" 사전 리스크 예방.
+          </div>
+        </div>
+        <div class="spoke-node">
+          <div class="spoke-role">역할 4 · 군민 소통 홍보관</div>
+          <div class="spoke-title">군민 눈높이 카드뉴스 문안 기획</div>
+          <div class="spoke-desc">
+            딱딱한 법조문을 청년과 학부모가 읽기 쉬운 5컷 카드뉴스와 의성군 블로그용 문안으로 즉시 재작성하여 정책 수용성 극대화.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="bottom-anchor">
+    <span class="anchor-tag">협업의 가치</span>
+    <span class="anchor-text">혼자 쓰면 단순 조교지만, 여러 관점의 에이전트를 모아 토론시키면 부서 간 칸막이를 허무는 강력한 정책 자문단이 됩니다.</span>
+  </div>
+  <div class="slide-footer">
+    <span>의성군 AI전략리더 특강</span>
+    <span>실무 사례 02 · 4개 부서 교차 검토</span>
+    <span class="page-badge" data-page-number>16</span>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 17: [의성 실습 3] case-canvas
+     ============================================================ -->
+<section class="slide" id="slide-17" data-role="case" data-layout="case-canvas" data-purpose="마늘축제 및 펫월드 관광 데이터 분석과 멀티미디어 콘텐츠 제작 실무 적용 사례를 제시한다">
+  <div class="slide-header">
+    <span class="header-tagline">의성 행정 실무 03</span>
+    <span class="header-meta">군정 데이터 기반 관광 활성화 & 홍보물 제작</span>
+  </div>
+  <div class="slide-headline">
+    <div class="eyebrow">의성 행정 실무 03 · 군정 홍보</div>
+    <h2 class="slide-title">[의성 실습 3] 마늘축제·조문국·펫월드 관광 데이터로 맞춤 홍보하기</h2>
+  </div>
+  <div class="slide-canvas">
+    <div class="case-canvas-grid">
+      <!-- 좌측: 행정 고민과 기존 방식의 한계 -->
+      <div class="case-side-block">
+        <div>
+          <div style="font-size:12px;font-weight:800;color:var(--coral);margin-bottom:4px;">행정 현장의 페인포인트</div>
+          <div class="case-sec-title">의성군 관광 현장의 실제 고민과 한계</div>
+          <div class="case-sec-body" style="margin-bottom:14px;">
+            의성슈퍼푸드마늘축제, 조문국사적지, 의성펫월드(반려마루)에 많은 군민과 외지인이 방문하지만, <strong>“어디서 온 분들이, 어디서 밥을 먹고, 왜 당일치기로 떠날까?”</strong>에 대한 실시간 분석이 부족했습니다.
+          </div>
+          
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <div style="background:var(--tint);padding:10px 12px;border-radius:6px;font-size:13px;color:var(--body);line-height:1.5;">
+              <strong>• 기존의 한계:</strong> 5천만 원짜리 연말 연구용역 보고서가 책상에 올 때까지 반년 동안 감에만 의존해 홍보 예산을 집행함.
+            </div>
+            <div style="background:var(--tint);padding:10px 12px;border-radius:6px;font-size:13px;color:var(--body);line-height:1.5;">
+              <strong>• 데이터 단절:</strong> 통신사 유동인구, 카드사 매출, 주말 날씨 데이터가 제각각 흩어져 있어 공무원이 직접 결합하기 어려움.
+            </div>
+          </div>
+        </div>
+        <div style="padding:10px 14px;background:var(--coral-light);border-radius:6px;font-size:12.5px;font-weight:800;color:var(--coral-dark);">
+          기존 현실: "두꺼운 연구용역 보고서는 캐비닛에 들어가고, 정작 이번 주말 쓸 홍보물은 없었습니다."
+        </div>
+      </div>
+
+      <!-- 우측: 에이전트가 1시간 만에 끝낸 4단계 완결 작업 -->
+      <div class="case-side-block" style="background:#fafcff;border-color:var(--blue);">
+        <div>
+          <div style="font-size:12px;font-weight:800;color:var(--blue);margin-bottom:4px;">에이전트 실무 완결</div>
+          <div class="case-sec-title" style="color:var(--blue);">데이터 분석에서 멀티미디어 홍보물 배포까지</div>
+          
+          <div style="display:flex;flex-direction:column;gap:10px;margin-top:10px;">
+            <div style="font-size:13.2px;color:var(--body);line-height:1.55;">
+              <strong>1. 10분 데이터 통합:</strong> 통신사 생활인구 + 카드 매출 + 날씨 데이터를 에이전트가 파이썬 코드로 10분 만에 교차 분석.
+            </div>
+            <div style="font-size:13.2px;color:var(--body);line-height:1.55;">
+              <strong>2. 핵심 행동 패턴 적발:</strong> 펫월드 방문객의 78%가 대구·구미의 2030 반려가족이며, 일반 식당 대신 "반려견 동반 카페"를 찾는 동선 발견.
+            </div>
+            <div style="font-size:13.2px;color:var(--body);line-height:1.55;">
+              <strong>3. 카드뉴스 이미지 즉석 제작:</strong> "이번 주말 펫월드 갔다가 들르기 좋은 의성 카페 5선" 5컷 카드뉴스를 담당자가 10분 만에 완성.
+            </div>
+            <div style="font-size:13.2px;color:var(--body);line-height:1.55;">
+              <strong>4. 숏폼 영상 대본 완성:</strong> 30초 릴스/쇼츠용 홍보 영상 스크립트와 군민 알림톡 문안까지 1회 작업으로 원스톱 생성.
+            </div>
+          </div>
+        </div>
+        <div style="padding:10px 14px;background:var(--blue-light);border-radius:6px;font-size:12.8px;font-weight:800;color:var(--blue);margin-top:10px;">
+          성과: 외주 용역비 수천만 원 절감 + 데이터 분석부터 군민 상권 홍보물 배포까지 단 1시간 만에 완결!
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="bottom-anchor">
+    <span class="anchor-tag">행동하는 AI</span>
+    <span class="anchor-text">분석 결과가 캐비닛 속 두꺼운 책자로 끝나지 않고, 지역 상권과 군민의 소득 증대로 곧장 이어지게 합니다.</span>
+  </div>
+  <div class="slide-footer">
+    <span>의성군 AI전략리더 특강</span>
+    <span>실무 사례 03 · 관광 데이터 맞춤 홍보</span>
+    <span class="page-badge" data-page-number>17</span>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 18: [시연 관찰] demo-stage
+     ============================================================ -->
+<section class="slide" id="slide-18" data-role="teaching" data-layout="demo-stage" data-purpose="군청 에이전트 도입 시 리더가 확인해야 할 3대 통제 기준과 검증 리포트를 제시한다">
+  <div class="slide-header">
+    <span class="header-tagline">리더십 통제 기준</span>
+    <span class="header-meta">행정 에이전트 검증 체크리스트</span>
+  </div>
+  <div class="slide-headline">
+    <div class="eyebrow">행정 도입 체크리스트</div>
+    <h2 class="slide-title">[행정 도입 체크리스트] 군청에 에이전트를 도입할 때 리더가 점검할 3대 통제 기준</h2>
+  </div>
+  <div class="slide-canvas">
+    <div class="demo-canvas-grid">
+      <!-- 좌측: 에이전트 작업 검증 보고서 (표준 감사 로그) -->
+      <div class="audit-log-card">
+        <div>
+          <div class="audit-log-header">
+            <span style="font-size:14px;font-weight:900;color:#fff;">에이전트 검증 보고서 (표준 감사 양식)</span>
+            <span class="audit-badge">자동 검증 완료</span>
+          </div>
+          <table class="audit-table">
+            <tr><td>업무 명칭</td><td>18개 읍·면 농자재 신청 엑셀 180건 취합 및 오류 검증</td></tr>
+            <tr><td>지시 담당</td><td>농업기술센터 농축산과 주무관 (2026. 09. 15)</td></tr>
+            <tr><td>대상 파일</td><td>군청 공용폴더 내 18개 읍·면 제출 원본 엑셀 전체</td></tr>
+            <tr><td>처리 결과</td><td>총 180건 중 정상 176건 통과, 이상치 4건 검출</td></tr>
+            <tr><td>발견 오류</td><td>안계면 2건(단가 수식 오기), 금성면 2건(주민번호 앞자리 누락)</td></tr>
+            <tr><td>조치 내역</td><td>오류 항목은 임의 수정하지 않고 <mark style="background:#b63d3a;color:#fff;padding:1px 4px;border-radius:2px;">[적색 경고 시트]</mark>로 별도 분리</td></tr>
+            <tr><td>최종 파일</td><td>C:\농업기술센터\2026_농자재_통합취합_검증본.xlsx</td></tr>
+          </table>
+        </div>
+        <div style="padding:10px 12px;background:rgba(255,255,255,0.06);border-radius:6px;font-size:12.5px;color:#c2d5eb;line-height:1.5;">
+          <strong>리더 확인 포인트:</strong> 에이전트가 마음대로 숫자를 바꾸지 않고, 이상치를 정확히 골라내어 공무원의 확인을 요구했는지 확인하십시오.
+        </div>
+      </div>
+
+      <!-- 우측: 수강생(리더)을 위한 3대 핵심 점검 기준 -->
+      <div class="checklist-card">
+        <div>
+          <div style="font-size:12px;font-weight:800;color:var(--coral);margin-bottom:4px;">공직 리더 필수 점검 항목</div>
+          <div style="font-size:18px;font-weight:900;color:var(--ink);margin-bottom:14px;">팀장·주무관에게 확인할 3가지 지시 수칙</div>
+          
+          <div class="check-item">
+            <div class="check-icon">1</div>
+            <div>
+              <div class="check-content-title">업무 지시의 구체성 (작업 범위와 예외 기준)</div>
+              <div class="check-content-desc">
+                "알아서 잘 취합해"가 아니라, 원본 폴더 위치와 서식이 다를 때의 처리 지침(빈칸 시 경고 표시 등)을 주무관이 명확히 지시했는가?
+              </div>
+            </div>
+          </div>
+
+          <div class="check-item">
+            <div class="check-icon">2</div>
+            <div>
+              <div class="check-content-title">오류 자율 수정의 한계선 (사람 개입 알림)</div>
+              <div class="check-content-desc">
+                수식 에러 발생 시 스스로 코드를 고쳐 재시도하되, 3회 이상 실패하거나 데이터가 충돌하면 즉시 담당자에게 알림을 보내 멈추는가?
+              </div>
+            </div>
+          </div>
+
+          <div class="check-item">
+            <div class="check-icon">3</div>
+            <div>
+              <div class="check-content-title">수치 대조 검증표 확보 (최종 결재 증빙)</div>
+              <div class="check-content-desc">
+                최종 결과 파일과 함께 '원본 대비 수정 이력표'를 반드시 함께 출력하여, 과장·국장이 1분 만에 교차 대조할 수 있게 했는가?
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div style="padding:10px 14px;background:var(--tint);border-radius:6px;font-size:13px;font-weight:700;color:var(--navy);line-height:1.45;">
+          <strong>행정 리더십 팁:</strong> "AI가 다 알아서 했습니다"라는 보고는 반려하십시오. "AI가 검증표를 이렇게 작성해 왔습니다"라는 보고를 받으셔야 안전합니다.
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="bottom-anchor">
+    <span class="anchor-tag">리더의 원칙</span>
+    <span class="anchor-text">에이전트에게 힘든 반복 계산은 전적으로 맡기되, 결과물의 신뢰성을 검증하는 '증표 요구권'은 리더가 쥐고 있어야 합니다.</span>
+  </div>
+  <div class="slide-footer">
+    <span>의성군 AI전략리더 특강</span>
+    <span>행정 도입 점검 · 리더가 확인해야 할 3대 통제 기준</span>
+    <span class="page-badge" data-page-number>18</span>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 19: [간지 04] chapter-gate
+     ============================================================ -->
+<section class="slide chapter-divider" id="slide-04-c" data-role="chapter" data-layout="chapter-gate" data-purpose="네 번째 단원의 학습 질문을 제시한다" data-divider-index="4">
+  <div class="chapter-top">
+    <span>의성군 AI 전략 리더십 특강 <small>LECTURE SERIES</small></span>
+    <span>의성군청 · 2026. 09</span>
+  </div>
+  <div class="chapter-head">
+    <div class="chapter-eyebrow">PART 04 · 거버넌스와 리더의 결재선</div>
+    <h1>전략 리더는 무엇을 통제하고, 어떻게 승인해야 할까요?</h1>
+  </div>
+  <div class="chapter-body">
+    <div class="chapter-no" data-divider-number>04</div>
+    <div class="chapter-message">
+      <h2>기술보다 중요한 것은 <em>책임과 권한의 경계선</em>입니다</h2>
+      <p>
+        손발 달린 AI를 현장에 쓸 때 가장 큰 걱정은 보안과 오류 책임입니다. 사람이 어느 지점에서 최종 도장을 찍어야 하는지, 공공데이터 보안 가이드라인과 우리 부서의 즉시 실천 계획을 세웁니다.
+      </p>
+    </div>
+  </div>
+  <div class="slide-footer">
+    <span>의성군 AI전략리더 특강 · PART 04</span>
+    <span>다음 슬라이드: 리더의 의사결정 분기 기준</span>
+    <span class="page-badge" data-page-number>19</span>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 20: [의사결정 트리] decision-tree
+     ============================================================ -->
+<section class="slide" id="slide-20" data-role="synthesis" data-layout="decision-tree" data-purpose="AI 자율 실행 구간과 공무원 필수 승인 구간의 경계를 제시한다">
+  <div class="slide-header">
+    <span class="header-tagline">리더의 결재 기준</span>
+    <span class="header-meta">AI 자율 구간 vs 공무원 필수 결재선</span>
+  </div>
+  <div class="slide-headline">
+    <div class="eyebrow">리더의 결재선과 권한</div>
+    <h2 class="slide-title">리더의 결재선: 어디까지 AI가 하고, 어디서 사람이 도장을 찍을까?</h2>
+  </div>
+  <div class="slide-canvas">
+    <div class="decision-grid">
+      <!-- 전결 허용 구간 -->
+      <div class="decision-col auto">
+        <div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+            <span class="badge-tag" style="background:var(--green-light);color:var(--green);">저위험 · 내부 행정 작업</span>
+            <span style="font-size:12px;font-weight:800;color:var(--green);">사전 위임 (전결 허용)</span>
+          </div>
+          <h3>에이전트 자율 실행 구간 (과감한 위임)</h3>
+          <p style="font-size:13px;color:var(--muted);margin-bottom:8px;">오류가 나도 외부 군민에게 피해가 없고 내부에서 얼마든지 재검토 가능한 정형화된 일상 수작업</p>
+          <ul>
+            <li><strong>데이터 서식 및 규격 정돈:</strong> 18개 읍·면 취합 엑셀 시트의 공백 제거, 날짜 형식 통일, 주소 정제.</li>
+            <li><strong>단순 수치 합산 및 검증표 생성:</strong> 행·열 합계 재계산 및 신청 면적 대비 단가 오류 자동 적발.</li>
+            <li><strong>공개 자치법규 비교 대조:</strong> 국가법령 및 타 시·군 조례 조항 검색 후 유사 지침 비교표 자동 작성.</li>
+            <li><strong>군정 홍보문안 다변화 초안:</strong> 보도자료 내용을 블로그, 카드뉴스, 알림톡용 문안으로 다변화 생성.</li>
+            <li><strong>행정 회의록 요약본 작성:</strong> 녹음 전사 텍스트에서 쟁점과 후속 조치 사항을 1장으로 일목요연 요약.</li>
+          </ul>
+        </div>
+        <div style="padding:10px 14px;background:var(--green-light);border-radius:6px;font-size:13px;font-weight:700;color:var(--green);">
+          운영 원칙: 주무관이 지침만 주면 컴퓨터가 알아서 끝내게 두고, 사람은 과정에 개입하지 않습니다.
+        </div>
+      </div>
+
+      <!-- 공무원 최종 결재 구간 -->
+      <div class="decision-col human">
+        <div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+            <span class="badge-tag" style="background:var(--coral-light);color:var(--coral);">고위험 · 법적/재정적 효력</span>
+            <span style="font-size:12px;font-weight:800;color:var(--coral);">사람 결재 필수</span>
+          </div>
+          <h3>공무원 최종 승인 필수 구간 (철저한 통제)</h3>
+          <p style="font-size:13px;color:var(--muted);margin-bottom:8px;">실제 군비 예산이 지출되거나, 인허가 처분, 대민 공식 발송 등 감사의 대상이 되는 법적 책임 업무</p>
+          <ul>
+            <li><strong>보조금 지급 최종 확정:</strong> 농자재 및 청년 장려금 지원 수혜자 확정 및 군 금고 계좌 입금 실행.</li>
+            <li><strong>대외 공식 공문서 기안 및 서명:</strong> 상급 기관 보고문 및 의성군수 명의 공식 문서 최종 서명.</li>
+            <li><strong>군민 대상 행정 처분 및 통보:</strong> 인허가 불허, 과태료 부과, 자격 취소 등 권리 제한 행정 처분.</li>
+            <li><strong>개인식별정보 결합 및 외부 공개:</strong> 주민번호, 소득 정보 등 민감정보가 포함된 통계자료 승인.</li>
+            <li><strong>신규 조례 제·개정안 최종안:</strong> 법률 자문관과 감사부서의 대면 합의를 거치는 정책 최종 확정.</li>
+          </ul>
+        </div>
+        <div style="padding:10px 14px;background:var(--coral-light);border-radius:6px;font-size:13px;font-weight:700;color:var(--coral-dark);">
+          운영 원칙: AI는 완벽한 근거표와 초안까지만 작성! 최종 승인 도장은 반드시 공무원이 직접 찍습니다.
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="bottom-anchor">
+    <span class="anchor-tag">책임의 원칙</span>
+    <span class="anchor-text">책임은 사람에게 남고, 수고는 AI가 덜어갑니다. 권한의 경계선을 명확히 그어주는 것이 리더의 책무입니다.</span>
+  </div>
+  <div class="slide-footer">
+    <span>의성군 AI전략리더 특강</span>
+    <span>결재선 기준 · AI 전결 vs 사람 결재</span>
+    <span class="page-badge" data-page-number>20</span>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 21: [보안·망분리] evidence-matrix
+     ============================================================ -->
+<section class="slide" id="slide-21" data-role="compare" data-layout="evidence-matrix" data-purpose="공공행정 데이터 보안 등급별 안전한 AI 활용 가이드를 제시한다">
+  <div class="slide-header">
+    <span class="header-tagline">공공 데이터 보안</span>
+    <span class="header-meta">안전하게 쓰는 3단계 보안 기준</span>
+  </div>
+  <div class="slide-headline">
+    <div class="eyebrow">공공 행정 보안 안심 기준</div>
+    <h2 class="slide-title">공공기관 보안 등급: 걱정 없이 안전하게 쓰는 3단계 기준</h2>
+  </div>
+  <div class="slide-canvas">
+    <div class="matrix-canvas">
+      <table class="policy-table">
+        <thead>
+          <tr>
+            <th style="width:130px;">자료 보안 등급</th>
+            <th style="width:280px;">군청 행정 업무 예시</th>
+            <th style="width:300px;">허용되는 AI 사용 환경</th>
+            <th>리더의 관리 수칙 및 안심 장치</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="tag-crit">1등급 · 비공개</span></td>
+            <td>주민등록번호, 계좌번호, 비공개 인사·감사자료, 수사문건</td>
+            <td><strong>인터넷 끊긴 내부 PC (폐쇄망):</strong> 내부 로컬 AI 프로그램으로만 처리</td>
+            <td>외부 전송 절대 불가. 실습 시에는 가명화·마스킹 처리된 샘플 데이터만 활용.</td>
+          </tr>
+          <tr>
+            <td><span class="tag-warn">2등급 · 업무내부</span></td>
+            <td>행정 회의록, 미발표 정책 기안문 초안, 읍면 통계 집계표</td>
+            <td><strong>보안 계약된 독립 환경:</strong> 학습 제외 옵션 설정 및 사내 클라우드</td>
+            <td>"우리 데이터가 외부 AI 학습에 쓰이지 않는다"는 보안 확약 설정 확인 후 결재.</td>
+          </tr>
+          <tr>
+            <td><span class="tag-safe">3등급 · 대민공개</span></td>
+            <td>조례·규칙, 보도자료, 축제·관광 홍보 문안, 통계연보</td>
+            <td><strong>모든 상용 AI 자유 활용:</strong> ChatGPT, Claude, 웹 에이전트</td>
+            <td>적극 권장. 대민 홍보물, 카드뉴스 제작 등은 신속하게 생성하여 군민 소통 확대.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- 하단 안심 수칙 패널 추가 (박스 하단 텅 빔 완전 해소!) -->
+      <div style="margin-top:14px;background:var(--surface);border:1.5px solid var(--line);border-left:5px solid var(--green);border-radius:var(--radius-md);padding:14px 18px;display:flex;justify-content:space-between;align-items:center;">
+        <div>
+          <div style="font-size:14px;font-weight:900;color:var(--ink);margin-bottom:3px;">
+            공직 리더를 위한 보안 안심 3계명
+          </div>
+          <div style="font-size:12.5px;color:var(--body);line-height:1.5;">
+            ① 주민번호·개인정보는 인터넷 전송 금지(내부 PC 로컬 에이전트 처리) | ② 공개된 조례·관광 통계는 100% 안심 활용 | ③ 모호할 땐 마스킹(홍*동) 후 사용
+          </div>
+        </div>
+        <div style="flex:none;background:var(--green-light);color:var(--green);font-size:12px;font-weight:800;padding:6px 14px;border-radius:20px;">
+          감사 대비 100% 안전
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="bottom-anchor">
+    <span class="anchor-tag">리더의 기준</span>
+    <span class="anchor-text">"무조건 막는 것"은 능사가 아닙니다. 자료의 등급을 나누어, 안전한 공개 데이터부터 과감하게 에이전트를 가동하십시오.</span>
+  </div>
+  <div class="slide-footer">
+    <span>의성군 AI전략리더 특강</span>
+    <span>보안 수칙 · 걱정 없는 3단계 안심 기준</span>
+    <span class="page-badge" data-page-number>21</span>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 22: [리더 토론] discussion-lens
+     ============================================================ -->
+<section class="slide" id="slide-22" data-role="teaching" data-layout="discussion-lens" data-purpose="공직사회 AI 교육의 올바른 방향성과 실천 방안을 제시한다">
+  <div class="slide-header">
+    <span class="header-tagline">공직 AI 교육 전략</span>
+    <span class="header-meta">기능 암기가 아닌 문제 해결 역량 육성</span>
+  </div>
+  <div class="slide-headline">
+    <div class="eyebrow">리더의 AI 교육 전략</div>
+    <h2 class="slide-title">[리더의 AI 교육 전략] 우리 군청 공무원, AI 교육은 이렇게 시켜야 합니다</h2>
+  </div>
+  <div class="slide-canvas">
+    <div class="discussion-canvas">
+      <!-- 렌즈 1 -->
+      <div class="lens-col">
+        <div>
+          <div class="lens-tag">교육 혁신 01 · 역량의 전환</div>
+          <div class="lens-title">메뉴 암기 NO ➔ 문제 정의와 조합력</div>
+          <div class="lens-desc">
+            특정 챗봇 화면의 버튼 사용법을 외우는 교육은 도구가 바뀌면 함께 낡아버립니다. <strong>"어떤 문제에 어떤 AI 모델과 도구를 엮을 것인가?"</strong> 문제를 쪼개고 도구를 오케스트레이션(조합)하는 힘을 훈련시켜야 합니다.
+          </div>
+          <div style="margin-top:12px;background:var(--tint);padding:10px 12px;border-radius:6px;font-size:12.8px;color:var(--ink);line-height:1.5;">
+            <strong>• 실무 교육 지침:</strong> 메뉴 기능 시험을 보지 말고, 실제 읍·면 취합 과제를 주고 '문제를 어떻게 정의하고 조합했는가'를 평가하십시오.
+          </div>
+        </div>
+        <div class="lens-action" style="background:var(--blue-light);color:var(--blue);padding:10px 14px;border-radius:6px;font-size:13px;font-weight:800;margin-top:12px;">
+          핵심 원칙: 도구의 수가 아니라 오케스트레이션(조합력)이 경쟁력입니다.
+        </div>
+      </div>
+
+      <!-- 렌즈 2 -->
+      <div class="lens-col">
+        <div>
+          <div class="lens-tag">교육 혁신 02 · 참여자의 전환</div>
+          <div class="lens-title">개발자 NO ➔ 행정직의 바이브코딩 도전</div>
+          <div class="lens-desc">
+            코딩 지식이 없어도 자연어로 원하는 프로그램을 직접 만드는 <strong>바이브코딩(Vibe Coding)</strong> 시대입니다. 외부 개발자보다 <strong>행정 현장의 병목을 가장 잘 아는 행정직 공무원이 AI를 지휘할 때</strong> 진짜 혁신이 일어납니다.
+          </div>
+          <div style="margin-top:12px;background:var(--tint);padding:10px 12px;border-radius:6px;font-size:12.8px;color:var(--ink);line-height:1.5;">
+            <strong>• 글로벌 해커톤 실증:</strong> Anthropic 해커톤에서 비개발자(변호사·의사)가 전문 개발자를 누르고 1위 수상 — "도메인 지식이 무기!"
+          </div>
+        </div>
+        <div class="lens-action" style="background:var(--coral-light);color:var(--coral-dark);padding:10px 14px;border-radius:6px;font-size:13px;font-weight:800;margin-top:12px;">
+          핵심 원칙: "코딩 기술자보다 현장의 병목을 아는 공무원이 이깁니다."
+        </div>
+      </div>
+
+      <!-- 렌즈 3 -->
+      <div class="lens-col">
+        <div>
+          <div class="lens-tag">교육 혁신 03 · 방식의 전환</div>
+          <div class="lens-title">거창한 이론 NO ➔ 애자일 실전 프로젝트</div>
+          <div class="lens-desc">
+            AI로 모든 것을 한 번에 바꾸려는 대형 프로젝트는 70%가 실패합니다. 직원이 <strong>매주 가장 짜증 나는 자기 업무 1개(미시 페인포인트)</strong>를 교육장에 들고 와서 반나절 만에 해결 도구를 만들고 즉시 현업에 쓰는 Try & Error 교육을 시키십시오.
+          </div>
+          <div style="margin-top:12px;background:var(--tint);padding:10px 12px;border-radius:6px;font-size:12.8px;color:var(--ink);line-height:1.5;">
+            <strong>• 작은 성공(Small Win):</strong> 1개 업무 자동화 성공 ➔ 2개 ➔ 부서 전체 점진 확산. 실패가 허용되는 소규모 샌드박스를 제공하십시오.
+          </div>
+        </div>
+        <div class="lens-action" style="background:var(--green-light);color:var(--green);padding:10px 14px;border-radius:6px;font-size:13px;font-weight:800;margin-top:12px;">
+          핵심 원칙: 1주일 업무 로그에서 '가장 싫은 일 1개'부터 당일 해결하십시오.
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="bottom-anchor">
+    <span class="anchor-tag">리더의 행동</span>
+    <span class="anchor-text">교육의 목적은 코딩 기술 습득이 아닙니다. 공무원이 자기 업무의 문제를 AI로 직접 해결하는 '새로운 근육'을 길러주는 것입니다.</span>
+  </div>
+  <div class="slide-footer">
+    <span>의성군 AI전략리더 특강</span>
+    <span>공직 AI 교육 전략 · 기능 암기에서 문제 해결로</span>
+    <span class="page-badge" data-page-number>22</span>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 23: [종합 요약] recap-map
+     ============================================================ -->
+<section class="slide" id="slide-23" data-role="synthesis" data-layout="recap-map" data-purpose="특강 2시간의 핵심 메시지를 4개 기둥으로 종합 회수한다">
+  <div class="slide-header">
+    <span class="header-tagline">특강 총정리</span>
+    <span class="header-meta">손과 발이 달린 AI와 의성의 미래</span>
+  </div>
+  <div class="slide-headline">
+    <div class="eyebrow">특강 총정리</div>
+    <h2 class="slide-title">2시간 핵심 요약: 손과 발이 달린 AI와 함께 도약할 의성군의 행정 미래</h2>
+  </div>
+  <div class="slide-canvas">
+    <div class="recap-grid">
+      <div class="recap-node">
+        <div class="recap-no">01</div>
+        <div class="recap-title">에이전트의 본질은 '손과 발'</div>
+        <div class="recap-desc">
+          말만 청산유수인 챗봇의 시대를 지나, 컴퓨터 파일을 직접 열고 엑셀을 고쳐서 완수하는 진짜 실무 일꾼입니다.
+        </div>
+      </div>
+      <div class="recap-node">
+        <div class="recap-no">02</div>
+        <div class="recap-title">단일 도구 아닌 '오케스트레이션'</div>
+        <div class="recap-desc">
+          도구는 계속 바뀝니다. 프롬프트에서 하네스로, 블록들을 엮어 내 업무 문제를 푸는 조합력이 진짜 실력입니다.
+        </div>
+      </div>
+      <div class="recap-node">
+        <div class="recap-no">03</div>
+        <div class="recap-title">행정 4대 실무 영역의 완결</div>
+        <div class="recap-desc">
+          문서 작성·수정, 콘텐츠 제작, 데이터 분석, 바이브코딩까지 공무원이 겪는 매주의 병목을 즉시 자동화합니다.
+        </div>
+      </div>
+      <div class="recap-node">
+        <div class="recap-no">04</div>
+        <div class="recap-title">문제 해결 중심의 직원 교육</div>
+        <div class="recap-desc">
+          기능 암기가 아닌 자기 업무 문제를 직접 푸는 실전형 교육으로, 공무원이 AI를 지휘하는 혁신 조직을 만듭니다.
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="bottom-anchor">
+    <span class="anchor-tag">맺음말</span>
+    <span class="anchor-text">지능에 손과 발을 더해, 군민에게 더 신속하고 따뜻한 행정 서비스를 실현하는 의성군 리더 여러분을 응원합니다.</span>
+  </div>
+  <div class="slide-footer">
+    <span>의성군 AI전략리더 특강</span>
+    <span>특강 총정리 · 의성군의 도약</span>
+    <span class="page-badge" data-page-number>23</span>
+  </div>
+</section>
+
+<!-- ============================================================
+     발표 및 인터랙션 컨트롤 툴바
+     ============================================================ -->
+<div class="control-toolbar" id="toolbar">
+  <button class="tb-btn" onclick="prevSlide()" title="이전 장표 (←)">이전</button>
+  <span class="tb-count" id="slideCount">01 / 23</span>
+  <button class="tb-btn" onclick="nextSlide()" title="다음 장표 (→)">다음</button>
+  <button class="tb-btn" id="presentBtn" onclick="togglePresentation()" title="발표 모드 (P)">발표 (P)</button>
+  <button class="tb-btn" id="editBtn" onclick="toggleEditMode()" title="편집 모드">편집</button>
+  <button class="tb-btn" onclick="saveDeck()" title="현재 상태로 HTML 저장">저장</button>
+  <button class="tb-btn" onclick="window.print()" title="PDF 인쇄">PDF 인쇄</button>
+</div>
+
+<!-- ============================================================
+     스크립트: 발표·편집·저장·단원간지 동기화
+     ============================================================ -->
+<script>
+let currentSlideIndex = 0;
+const slides = Array.from(document.querySelectorAll('.slide'));
+const totalSlides = slides.length;
+let isPresentation = false;
+let isEditable = false;
+
+/* 단원 간지 순서 번호 자동 동기화: ssjhtml4 chapter-divider.md 규격 */
+function syncDividerNumbers(){
+  const dividers = Array.from(document.querySelectorAll('.slide[data-role="chapter"], .slide[data-role="section"]'));
+  dividers.forEach((slide, index) => {
+    const order = index + 1;
+    const label = String(order).padStart(2, '0');
+    slide.dataset.dividerIndex = String(order);
+    slide.querySelectorAll('[data-divider-number]').forEach(node => {
+      node.textContent = label;
+      node.contentEditable = 'false';
+    });
+  });
+}
+
+/* 푸터 페이지 번호 동기화 */
+function syncPageNumbers(){
+  slides.forEach((slide, index) => {
+    const pageNo = String(index + 1).padStart(2, '0');
+    const badge = slide.querySelector('[data-page-number]');
+    if(badge){
+      badge.textContent = pageNo;
+    }
+  });
+}
+
+/* 특정 슬라이드로 이동 */
+function goToSlide(index){
+  if(index < 0) index = 0;
+  if(index >= totalSlides) index = totalSlides - 1;
+  currentSlideIndex = index;
+
+  if(isPresentation){
+    slides.forEach((s, i) => {
+      s.classList.toggle('active-slide', i === currentSlideIndex);
+    });
+  } else {
+    slides[currentSlideIndex].scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  const countBadge = document.getElementById('slideCount');
+  if(countBadge){
+    countBadge.textContent = String(currentSlideIndex + 1).padStart(2, '0') + ' / ' + String(totalSlides).padStart(2, '0');
+  }
+
+  const url = new URL(window.location);
+  url.searchParams.set('slide', String(currentSlideIndex + 1));
+  window.history.replaceState({}, '', url);
+}
+
+function nextSlide(){
+  goToSlide(currentSlideIndex + 1);
+}
+
+function prevSlide(){
+  goToSlide(currentSlideIndex - 1);
+}
+
+/* 발표 모드 토글 (P key) */
+function togglePresentation(){
+  isPresentation = !isPresentation;
+  document.body.classList.toggle('presentation-mode', isPresentation);
+  const btn = document.getElementById('presentBtn');
+  if(btn) btn.classList.toggle('active', isPresentation);
+
+  if(isPresentation){
+    goToSlide(currentSlideIndex);
+  } else {
+    slides.forEach(s => s.classList.remove('active-slide'));
+    slides[currentSlideIndex].scrollIntoView({ behavior: 'auto', block: 'center' });
+  }
+}
+
+/* 인라인 편집 모드 토글 */
+function toggleEditMode(){
+  isEditable = !isEditable;
+  const btn = document.getElementById('editBtn');
+  if(btn) btn.classList.toggle('active', isEditable);
+
+  const targets = document.querySelectorAll('.slide-title, .cover-center h1, .cover-statement, .cover-desc, .prop-statement, .prop-comment, .chapter-message h2, .chapter-message p, .tl-desc, .comp-item span, .point-body, .quad-text, .river-step-desc, .spoke-desc, .case-sec-body, .lens-desc, .recap-desc');
+  targets.forEach(el => {
+    el.contentEditable = isEditable ? 'true' : 'false';
+  });
+
+  document.querySelectorAll('[data-divider-number]').forEach(el => {
+    el.contentEditable = 'false';
+  });
+}
+
+/* HTML 저장 */
+function saveDeck(){
+  syncDividerNumbers();
+  syncPageNumbers();
+  const htmlContent = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+  const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = '의성군_AI전략리더_AI에이전트_강의안_수정본.html';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+}
+
+/* 키보드 단축키 이벤트 */
+window.addEventListener('keydown', (e) => {
+  if(e.target.isContentEditable) return;
+  if(e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' '){
+    e.preventDefault();
+    nextSlide();
+  } else if(e.key === 'ArrowLeft' || e.key === 'PageUp'){
+    e.preventDefault();
+    prevSlide();
+  } else if(e.key === 'Home'){
+    e.preventDefault();
+    goToSlide(0);
+  } else if(e.key === 'End'){
+    e.preventDefault();
+    goToSlide(totalSlides - 1);
+  } else if(e.key === 'p' || e.key === 'P'){
+    e.preventDefault();
+    togglePresentation();
+  } else if(e.key === 'Escape'){
+    if(isPresentation){
+      e.preventDefault();
+      togglePresentation();
+    }
+  }
+});
+
+/* 초기화 */
+window.addEventListener('DOMContentLoaded', () => {
+  syncDividerNumbers();
+  syncPageNumbers();
+
+  const urlParams = new URLSearchParams(window.location.search);
+  const slideParam = parseInt(urlParams.get('slide'), 10);
+  if(!isNaN(slideParam) && slideParam >= 1 && slideParam <= totalSlides){
+    goToSlide(slideParam - 1);
+  } else {
+    goToSlide(0);
+  }
+});
+</script>
+
+<script>/* kg-preview: #<heading> \uc704\uce58\ub85c \uc774\ub3d9 */
+(function(){function norm(t){return (t||'').replace(/\s+/g,'').toLowerCase()}
+function go(){var h=decodeURIComponent(location.hash.slice(1));if(!h)return;var k=norm(h).slice(0,24);if(!k)return;
+var best=null,bl=1e9,els=document.body.querySelectorAll('h1,h2,h3,h4,h5,p,div,span,li,td,text,tspan,section,article');
+for(var i=0;i<els.length;i++){var e=els[i],t=norm(e.textContent);if(t.length<bl&&t.indexOf(k)>-1){best=e;bl=t.length}}
+if(!best)return;var box=best.closest('section,[class*=slide],[class*=page],article')||best;
+box.scrollIntoView({block:'start'});box.style.outline='3px solid #c0504d';box.style.outlineOffset='4px';
+setTimeout(function(){box.style.outline=''},2600)}
+window.addEventListener('load',function(){setTimeout(go,400)});window.addEventListener('hashchange',go)})();</script></body>
+</html>

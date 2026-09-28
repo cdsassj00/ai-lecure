@@ -1,0 +1,329 @@
+<!doctype html>
+<html lang="ko">
+<head><meta name="robots" content="noindex, nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Semantic Search · 초보자를 위한 시맨틱 검색 입문</title>
+<style>
+:root{--canvas:#e9edf2;--paper:#fff;--ink:#20252c;--muted:#707985;--line:#d6dce3;--navy:#12233d;--aqua:#00a6a0;--pale:#f3f6f8;--page-w:152mm;--page-h:225mm}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--canvas);color:var(--ink);font:400 10.9pt/1.76 "Noto Serif KR","Source Han Serif K","KoPub Batang","Batang",serif}.topbar{position:fixed;z-index:20;inset:0 0 auto;height:54px;display:flex;align-items:center;gap:8px;padding:0 18px;background:rgba(18,35,61,.97);color:#fff;box-shadow:0 5px 18px rgba(20,31,48,.13)}.brand{font:800 12px/1 Inter,Pretendard,"Noto Sans KR",sans-serif;letter-spacing:.08em}.brand::before{content:"";display:inline-block;width:6px;height:6px;margin-right:8px;border-radius:50%;background:var(--aqua)}.brand-sub{color:#afbdd0;font:500 11px/1 Inter,Pretendard,"Noto Sans KR",sans-serif}.spacer{flex:1}.topbar button{border:1px solid rgba(255,255,255,.23);border-radius:5px;background:transparent;color:#fff;padding:6px 9px;cursor:pointer;font:700 10px/1 Inter,Pretendard,"Noto Sans KR",sans-serif}.topbar button:hover,.topbar button.active{background:#fff;color:var(--navy)}.topbar input{width:38px;border:0;border-bottom:1px solid rgba(255,255,255,.5);background:transparent;color:#fff;text-align:center;font:700 11px/1 Inter,sans-serif;outline:0}.page-count{color:#aebbd0;font:600 10px/1 Inter,sans-serif}.layout{display:grid;grid-template-columns:240px var(--page-w);gap:28px;justify-content:center;width:min(1080px,calc(100vw - 32px));padding:78px 0 60px;margin:0 auto}.sidebar{position:sticky;top:76px;align-self:start;max-height:calc(100vh - 94px);overflow:auto;padding:4px 10px 18px 2px}.sidebar h3{margin:0 0 13px;padding-bottom:8px;border-bottom:1px solid #cbd3dc;color:var(--navy);font:800 10px/1.4 Inter,Pretendard,"Noto Sans KR",sans-serif;letter-spacing:.13em}.sidebar input{width:100%;margin-bottom:12px;padding:8px 9px;border:1px solid #cbd3dc;border-radius:4px;background:rgba(255,255,255,.7);color:var(--ink);outline:0;font:500 9.5pt/1.2 Inter,Pretendard,"Noto Sans KR",sans-serif}.group{margin:17px 0 5px;color:var(--aqua);font:800 9px/1.4 Inter,Pretendard,"Noto Sans KR",sans-serif;letter-spacing:.05em}.sidebar a{display:grid;grid-template-columns:25px 1fr;gap:7px;padding:6px 4px;border-left:2px solid transparent;color:#505966;text-decoration:none;font:500 8.8pt/1.45 Inter,Pretendard,"Noto Sans KR",sans-serif}.sidebar a::before{content:attr(data-num);color:#919aa6;font:700 9px/1.45 Inter,sans-serif}.sidebar a:hover,.sidebar a.active{border-left-color:var(--aqua);color:var(--navy)}.sidebar a.active::before{color:var(--aqua)}.pages{display:flex;flex-direction:column;gap:13mm}.sheet{position:relative;width:var(--page-w);height:var(--page-h);overflow:hidden;flex:none;background:var(--paper);box-shadow:0 14px 40px rgba(35,47,62,.15);padding-top:14mm;padding-bottom:17mm}.sheet:nth-child(odd){padding-left:23mm;padding-right:18mm}.sheet:nth-child(even){padding-left:18mm;padding-right:23mm}.running{height:8mm;display:flex;justify-content:space-between;align-items:start;padding-bottom:2.5mm;border-bottom:.25mm solid var(--line);color:var(--muted);font:500 7.8pt/1.25 Inter,Pretendard,"Noto Sans KR",sans-serif;letter-spacing:.03em}.running strong{color:var(--navy);font-weight:700}.page-body{height:178mm;overflow:hidden;padding-top:6mm}.page-footer{position:absolute;bottom:8mm;color:#777f89;font:500 8pt/1 Inter,"Noto Sans KR",sans-serif}.sheet:nth-child(odd) .page-footer{right:18mm}.sheet:nth-child(even) .page-footer{left:18mm}.page-footer .book-name{display:none}.block{break-inside:avoid;margin:0}.block p{margin:0;text-indent:1em;word-break:keep-all;orphans:2;widows:2}.block p+p{margin-top:0}.block:has(h1){margin:0 0 8mm}.block:has(h2){margin:8mm 0 3mm}.block:has(.code),.block:has(table),.block:has(.flow){margin:5mm 0}h1,h2{font-family:Inter,Pretendard,"Noto Sans KR","Malgun Gothic",sans-serif;word-break:keep-all}h1{margin:0;color:var(--navy);font-size:22pt;line-height:1.35;letter-spacing:-.045em;font-weight:800}h2{margin:0;color:#344a66;font-size:12.8pt;line-height:1.5;letter-spacing:-.025em;font-weight:700}strong{font-weight:700;color:#162238}em{font-style:normal;color:#006e6a}.continued{margin-bottom:5mm;color:#657080;font:700 8.5pt/1.4 Inter,Pretendard,"Noto Sans KR",sans-serif;letter-spacing:.04em}.reference{margin:4mm 0 4mm 4mm!important;padding-left:4mm;border-left:.4mm solid var(--aqua);text-indent:0!important;color:#4c5663;font-size:9.6pt}.code{position:relative;margin:0;border-top:.5mm solid var(--navy);border-bottom:.25mm solid #aeb7c2;background:#f5f7f9}.code::before{content:"실습 요청문";display:block;padding:2.5mm 3mm 0;color:#526072;font:700 8pt/1.4 Inter,Pretendard,"Noto Sans KR",sans-serif}.code pre{margin:0;padding:2.5mm 3mm 3mm;white-space:pre-wrap;color:#263446;font:400 8.8pt/1.65 ui-monospace,SFMono-Regular,Consolas,monospace}.copy{position:absolute;right:2.5mm;top:2mm;border:1px solid #b9c1ca;border-radius:3px;background:#fff;color:#475568;padding:3px 5px;cursor:pointer;font:600 8px/1 Inter,Pretendard,"Noto Sans KR",sans-serif}table{width:100%;border-collapse:collapse;font:400 9pt/1.55 Inter,Pretendard,"Noto Sans KR",sans-serif}th,td{padding:2.5mm 2mm;vertical-align:top;border-bottom:.25mm solid #cfd5dc;text-align:left}th{border-top:.5mm solid var(--navy);color:var(--navy);font-weight:700}.flow{margin:0;padding:4mm 0;border-top:.5mm solid var(--navy);border-bottom:.25mm solid #9da7b3}.flow p{margin:0;padding:1.4mm 0;text-indent:0;font-family:Inter,Pretendard,"Noto Sans KR",sans-serif}.flow p+p{border-top:.25mm solid #d9dee4}.cover{padding:0!important;background:linear-gradient(145deg,#0b1729 0%,#122b4a 68%,#0d5b62 140%);color:#fff}.cover::after{content:"";position:absolute;right:-29mm;top:-30mm;width:98mm;height:98mm;border:.25mm solid rgba(105,229,220,.28);border-radius:50%;box-shadow:0 0 0 18mm rgba(31,112,121,.08)}.cover .running,.cover .page-footer{display:none}.cover .page-body{position:relative;z-index:1;height:225mm;padding:39mm 22mm 23mm;display:flex;flex-direction:column;justify-content:center}.cover .block:has(h1){margin-bottom:7mm}.cover .block:has(h2){margin:0 0 24mm}.cover h1{color:#fff;font-size:33pt;line-height:1.15;letter-spacing:-.045em}.cover h2{color:#63ddd5;font-size:16pt;line-height:1.5;font-weight:600}.cover p{max-width:99mm;margin:0 0 5mm;text-indent:0;color:#d9e5f1;font-family:Inter,Pretendard,"Noto Sans KR",sans-serif;font-size:10pt;line-height:1.85}.cover strong{color:#fff}.source{display:none}.toast{position:fixed;z-index:30;left:50%;bottom:22px;transform:translate(-50%,90px);padding:9px 13px;border-radius:4px;background:var(--navy);color:#fff;font:500 12px/1.4 Inter,Pretendard,"Noto Sans KR",sans-serif;transition:.2s}.toast.show{transform:translate(-50%,0)}body.single .sheet{display:none}body.single .sheet.current{display:block}body.editing .page-body .block{outline:.25mm dashed rgba(0,166,160,.45);outline-offset:1.5mm}
+.sheet:nth-child(odd),.sheet:nth-child(even){padding-left:21mm;padding-right:21mm}.block p{margin:0;text-indent:1em;text-align:justify;text-justify:inter-character;word-break:keep-all;letter-spacing:-.01em;orphans:2;widows:2}.flow{counter-reset:flow-step;margin:0;padding:4mm 0;border-top:.5mm solid var(--navy);border-bottom:.25mm solid #9da7b3}.flow::before{content:"WORKFLOW";display:block;margin-bottom:2.5mm;color:#617087;font:800 7.5pt/1 Inter,Pretendard,"Noto Sans KR",sans-serif;letter-spacing:.13em}.flow p{counter-increment:flow-step;position:relative;margin:0 0 2mm;padding:2.3mm 4mm 2.3mm 12mm;background:#f3f6f8;text-indent:0;text-align:left;color:#26384f;font:600 9.2pt/1.45 Inter,Pretendard,"Noto Sans KR",sans-serif}.flow p::before{content:counter(flow-step);position:absolute;left:3.5mm;top:50%;width:5mm;height:5mm;transform:translateY(-50%);border-radius:50%;background:var(--navy);color:#fff;text-align:center;font:800 7.5pt/5mm Inter,sans-serif}.flow p:not(:last-child)::after{content:"↓";position:absolute;left:5.2mm;bottom:-3.1mm;z-index:2;color:var(--aqua);font:800 9pt/1 Inter,sans-serif}.flow p:last-child{margin-bottom:0}
+/* 2026-09 전문인재판: 현대적인 기술 단행본 조판 */
+body{color:#20232a;font:400 9.8pt/1.72 "IBM Plex Sans KR","SUIT","Pretendard","Noto Sans KR",sans-serif;letter-spacing:-.018em}.sheet{background:#fcfcfb;padding-top:13mm;padding-bottom:15mm}.sheet:nth-child(odd),.sheet:nth-child(even){padding-left:20.5mm;padding-right:20.5mm}.running{height:7mm;padding-bottom:2mm;border-bottom:.2mm solid #d9dce2;color:#7d8490;font:600 7.2pt/1.2 "SUIT","Pretendard",sans-serif;letter-spacing:.02em}.running strong{color:#3154bb;font-weight:750;letter-spacing:.01em}.page-body{height:184mm;padding-top:5.5mm}.page-footer{bottom:7mm;color:#9297a1;font:600 7.3pt/1 "SUIT","Pretendard",sans-serif}.sheet:nth-child(odd) .page-footer{right:20.5mm}.sheet:nth-child(even) .page-footer{left:20.5mm}.block p{margin:0;text-indent:.85em;text-align:justify;text-justify:inter-character;word-break:break-all;line-break:strict;letter-spacing:-.025em}.block:has(h1){margin:0 0 6mm}.block:has(h2){margin:6.5mm 0 2.5mm}.block:has(.flow){margin:4.5mm 0 5mm}h1,h2{font-family:"SUIT","Pretendard","Noto Sans KR",sans-serif}h1{color:#161c29;font-size:19.5pt;line-height:1.3;letter-spacing:-.055em;font-weight:800}h2{color:#34445f;font-size:11.2pt;line-height:1.45;letter-spacing:-.035em;font-weight:750}.continued{margin-bottom:4mm;color:#3154bb;font:750 8pt/1.4 "SUIT","Pretendard",sans-serif}.flow{counter-reset:flow-step;margin:0;padding:3.2mm 0;border-top:.45mm solid #202735;border-bottom:.2mm solid #cdd1d8}.flow::before{content:"PROCESS";display:block;margin-bottom:1.6mm;color:#3154bb;font:800 6.8pt/1 "SUIT","Pretendard",sans-serif;letter-spacing:.16em}.flow p{counter-increment:flow-step;position:relative;margin:0;padding:1.55mm 0 1.55mm 9mm;border:0;border-top:.2mm solid #e4e6ea;background:transparent;text-indent:0;text-align:left;color:#252d3a;font:600 8.5pt/1.42 "SUIT","Pretendard",sans-serif}.flow p:first-of-type{border-top:0}.flow p::before{content:"0" counter(flow-step);position:absolute;left:0;top:1.65mm;width:auto;height:auto;transform:none;border:0;border-radius:0;background:transparent;color:#3154bb;text-align:left;font:800 7.2pt/1.42 "IBM Plex Sans KR","SUIT",sans-serif}.flow p:not(:last-child)::after{content:""}.chapter-page .page-body{padding-top:8mm}.chapter-page h1{max-width:103mm;padding-bottom:5mm;border-bottom:.7mm solid #3154bb;font-size:20.5pt}.chapter-page h2{color:#3154bb}.part-page{padding:0!important;background:linear-gradient(145deg,#111827 0%,#192a55 63%,#2c58ca 135%);color:#fff}.part-page::before{content:"";position:absolute;left:18mm;top:25mm;width:21mm;height:1.2mm;background:#ff6b4a}.part-page .running,.part-page .page-footer{display:none}.part-page .page-body{height:225mm;padding:43mm 20mm 22mm}.part-page h1{margin:0 0 8mm;color:#8faaff;font:850 13pt/1 "IBM Plex Sans KR","SUIT",sans-serif;letter-spacing:.18em}.part-page h2{max-width:100mm;margin:0 0 15mm;color:#fff;font-size:25pt;line-height:1.25;letter-spacing:-.055em}.part-page p{max-width:104mm;color:#dce3f2;text-indent:0;text-align:left;font-size:9.5pt;line-height:1.75;letter-spacing:-.02em}.part-page .flow{border-color:rgba(255,255,255,.5)}.part-page .flow::before,.part-page .flow p::before{color:#ff8a6f}.part-page .flow p{border-color:rgba(255,255,255,.15);color:#edf1fa}.part-intro-page .continued{color:#3154bb}.cover{background:linear-gradient(145deg,#0d1426 0%,#16284c 68%,#3159bf 145%)}.cover::after{right:-24mm;top:-26mm;width:92mm;height:92mm;border-color:rgba(143,170,255,.3);box-shadow:0 0 0 15mm rgba(49,84,187,.08)}.cover .page-body{padding:40mm 20.5mm 22mm;justify-content:flex-start}.cover .block:has(h1){margin-top:35mm;margin-bottom:6mm}.cover .block:has(h2){margin-bottom:18mm}.cover h1{max-width:108mm;color:#fff;font-size:30pt;line-height:1.08;font-weight:850}.cover h2{color:#9eb5ff;font-size:14pt}.cover p{max-width:105mm;color:#d7deeb;font:500 9.2pt/1.75 "SUIT","Pretendard",sans-serif}.sidebar{font-family:"SUIT","Pretendard",sans-serif}.sidebar a{font-size:8.3pt}.topbar{font-family:"SUIT","Pretendard",sans-serif}
+@media(max-width:900px){.layout{display:block;width:min(var(--page-w),calc(100vw - 20px));padding-top:68px}.sidebar{display:none}.brand-sub,#toc-toggle,#save{display:none}.topbar{padding:0 9px;gap:5px}.topbar button{padding:6px}.sheet{width:100%;height:calc((100vw - 20px) * 1.4803)}.sheet:nth-child(odd),.sheet:nth-child(even){padding:8vw 10vw}.running{height:5vw}.page-body{height:calc((100vw - 20px) * 1.4803 - 32vw);padding-top:4vw}.page-footer{bottom:4vw!important;left:auto!important;right:10vw!important}.cover .page-body,.part-page .page-body{height:calc((100vw - 20px) * 1.4803);padding:20vw 10vw}.cover h1{font-size:10vw}.cover h2{font-size:4.5vw}.cover p,.part-page p{font-size:3.2vw}.part-page h2{font-size:7vw}.pages{gap:18px}body{font-size:3.1vw}h1{font-size:5.8vw}h2{font-size:3.7vw}.code pre{font-size:2.8vw}.flow p{font-size:2.8vw;padding:1.6vw 0 1.6vw 8vw}.flow p::before{left:0;width:auto;height:auto;font-size:2.3vw;line-height:1.4}.flow p:not(:last-child)::after{content:""}}
+/* 본문 밀도 보정: 전문 기술서 기준 */
+body{font-size:9pt;line-height:1.53}.sheet{padding-top:12.5mm;padding-bottom:14mm}.page-body{height:189.5mm;padding-top:4.2mm}.block p{text-indent:.72em}.block:has(h1){margin-bottom:4.2mm}.block:has(h2){margin-top:4.6mm;margin-bottom:1.8mm}.block:has(.flow){margin-top:3.2mm;margin-bottom:3.5mm}h1{font-size:18pt;line-height:1.24}h2{font-size:10.3pt;line-height:1.38}.continued{margin-bottom:3mm;font-size:7.7pt}.flow{padding-top:2.4mm;padding-bottom:2.4mm}.flow::before{margin-bottom:1.1mm;font-size:6.5pt}.flow p{padding-top:1.1mm;padding-bottom:1.1mm;padding-left:8mm;font-size:8pt;line-height:1.33}.flow p::before{top:1.15mm;font-size:6.8pt;line-height:1.33}.chapter-page .page-body{padding-top:5.5mm}.chapter-page h1{padding-bottom:3.7mm;font-size:18.5pt}
+@media(max-width:900px){body{font-size:3.05vw}.page-body{height:calc((100vw - 20px) * 1.4803 - 32vw);padding-top:4vw}h1{font-size:5.8vw}h2{font-size:3.7vw}.flow p{padding:1.6vw 0 1.6vw 8vw;font-size:2.8vw}.part-page .page-body{height:calc((100vw - 20px) * 1.4803);padding:20vw 10vw}}
+/* ai-idea-book 신국판 내지 마스터: 152x225mm trim + 사방 3mm bleed */
+:root{--trim-w:152mm;--trim-h:225mm;--bleed:3mm;--page-w:158mm;--page-h:231mm;--inside:20mm;--outside:14mm;--book-top:15mm;--book-bottom:20mm;--paper:#f7f7f4;--book-ink:#172b36;--book-coral:#e86352;--book-sage:#81977e;--book-sans:"Noto Sans KR","SUIT","Pretendard","Malgun Gothic",sans-serif;--book-serif:"Noto Serif KR","KoPub Batang","Nanum Myeongjo","Batang",serif}
+body{background:#3f4345;color:var(--book-ink);font:400 9.3pt/1.72 var(--book-serif);letter-spacing:-.018em}.layout{display:block;width:auto;padding:82px 0 24mm;margin:0}.sidebar{display:none}.pages{display:grid;grid-template-columns:repeat(2,var(--page-w));gap:10mm;justify-content:center}.sheet{position:relative;width:var(--page-w);height:var(--page-h);overflow:hidden;background:var(--paper);box-shadow:0 14px 40px rgba(0,0,0,.28);break-after:page}.sheet.odd{padding:18mm 17mm 23mm 23mm}.sheet.even{padding:18mm 23mm 23mm 17mm}.running{height:auto;min-height:7mm;padding:0 0 3mm;border-bottom:.25mm solid var(--book-ink);color:#6b7579;font:700 7.5pt/1.25 var(--book-sans);letter-spacing:.045em}.running strong{color:var(--book-coral)}.page-body{height:180mm;overflow:hidden;padding-top:6mm}.page-footer{bottom:9mm;color:#687279;font:700 7.5pt/1 var(--book-sans)}.sheet.odd .page-footer{right:17mm;left:auto}.sheet.even .page-footer{left:17mm;right:auto}.block{break-inside:avoid}.block p{margin:0 0 3.2mm;text-indent:0;text-align:justify;text-justify:inter-character;word-break:normal;overflow-wrap:break-word;line-break:strict;letter-spacing:-.02em}.block:has(h1){margin:0 0 5mm}.block:has(h2){margin:6mm 0 2.2mm}.block:has(.flow){margin:5mm 0}h1,h2{font-family:var(--book-serif)}h1{margin:0;color:var(--book-ink);font-size:22pt;line-height:1.22;font-weight:700;letter-spacing:-.05em}h2{margin:0;color:#40565e;font-family:var(--book-sans);font-size:10.2pt;line-height:1.45;font-weight:800;letter-spacing:-.035em}.chapter-page .page-body{padding-top:9mm}.chapter-page h1{max-width:115mm;padding:0;border:0;font-size:22pt}.chapter-page h2{color:var(--book-coral)}.continued{margin:0 0 5mm;color:var(--book-sage);font:800 7.8pt/1.4 var(--book-sans);letter-spacing:.02em}.flow{display:grid;grid-template-columns:repeat(4,1fr);gap:3mm;margin:0;padding:4mm 0 0;border-top:.25mm solid #aeb5b5;border-bottom:0}.flow::before{display:none}.flow p{position:relative;margin:0;padding:6mm 0 0;border:0;background:transparent;color:#33464f;text-indent:0;text-align:left;font:700 7.4pt/1.45 var(--book-sans)}.flow p::before{content:"0" counter(flow-step);position:absolute;left:0;top:0;width:auto;height:auto;transform:none;border:0;border-radius:0;background:transparent;color:var(--book-coral);font:800 6.5pt/1 var(--book-sans)}.flow p:not(:last-child)::after{content:"→";position:absolute;right:-2.3mm;top:6mm;color:#9aa4a4;font:700 7pt/1 var(--book-sans)}.cover{padding:0!important;background:linear-gradient(145deg,#122a35 0%,#173b46 62%,#6e8872 150%)}.cover .page-body{height:231mm;padding:42mm 23mm 25mm;justify-content:flex-start}.cover .block:has(h1){margin-top:34mm;margin-bottom:6mm}.cover h1{max-width:108mm;color:#fff;font-size:31pt;font-family:var(--book-serif);font-weight:700}.cover h2{color:#f29282;font-family:var(--book-sans);font-size:13pt}.cover p{max-width:104mm;color:#e6ece8;font:500 9.2pt/1.78 var(--book-sans)}.part-page{padding:0!important;background:linear-gradient(145deg,#172b36 0%,#26434a 66%,#81977e 150%)}.part-page::before{left:20mm;top:29mm;width:20mm;height:1mm;background:var(--book-coral)}.part-page .page-body{height:231mm;padding:49mm 23mm 24mm}.part-page h1{color:#f39a8d;font-family:var(--book-sans);font-size:12pt;letter-spacing:.18em}.part-page h2{max-width:106mm;margin-bottom:14mm;color:#fff;font-family:var(--book-serif);font-size:25pt}.part-page p{max-width:105mm;color:#e4ebe8;font:500 9.2pt/1.78 var(--book-sans);text-align:left}.part-intro-page .page-body{padding-top:10mm}
+/* 신국판 기술교재 밀도: 한 장의 설명을 한 물리면에 완결 */
+body{font-size:9pt;line-height:1.55}.page-body{height:181.5mm;padding-top:5mm}.block p{margin-bottom:1.8mm}.block:has(h1){margin-bottom:3.8mm}.block:has(h2){margin-top:4mm;margin-bottom:1.5mm}h1{font-size:20pt;line-height:1.2}h2{font-size:9.7pt;line-height:1.4}.chapter-page .page-body{padding-top:6mm}.chapter-page h1{font-size:20pt}.flow{gap:2.5mm;margin:3mm 0;padding-top:3mm}.flow p{padding-top:5mm;font-size:7.1pt;line-height:1.38}.flow p::before{font-size:6.2pt}.flow p:not(:last-child)::after{top:5mm}.continued{margin-bottom:3mm;font-size:7.4pt}.part-intro-page .flow{grid-template-columns:repeat(2,1fr);gap:7mm 6mm;margin:9mm 0 11mm;padding-top:5mm}.part-intro-page .flow p{min-height:22mm;padding:7mm 3mm 2mm 0;font-size:8pt}.part-intro-page .flow p::before{top:0;font-size:7pt}.part-intro-page .flow p:not(:last-child)::after{display:none}.part-intro-page h2{margin-top:10mm;font-size:13pt;color:var(--book-coral)}
+.flow{grid-template-columns:repeat(auto-fit,minmax(24mm,1fr))}.toast:empty{display:none!important}
+/* 출판 내지 기준: 흰 종이, 본문 중심의 연속 조판 */
+:root{--paper:#fff}
+body{font-size:8.7pt;line-height:1.58;letter-spacing:-.012em}
+.sheet:not(.cover):not(.part-page){background:#fff}
+.page-body{height:185mm;padding-top:4mm}
+.block p{margin:0 0 2.25mm;text-indent:.9em;text-align:justify;text-justify:inter-character;word-break:normal;line-break:strict;orphans:2;widows:2}
+.block:has(h1){margin:0 0 4.2mm}
+.block:has(h2){margin:5mm 0 2mm}
+.chapter-page .page-body{padding-top:7mm}
+.chapter-break{margin-top:8mm!important;padding-top:6mm;border-top:.35mm solid #b8c0bd}
+.chapter-break h1{font-size:18pt;line-height:1.24}
+.chapter-break + .block:has(h2){margin-top:3mm}
+.continuation-page .continued{margin-bottom:3.5mm}
+.flow{margin:4mm 0 5mm}
+table{font-size:8.5pt;line-height:1.48}
+th,td{padding:2.7mm 2.2mm}
+.flow p{font-size:8.1pt;line-height:1.42}
+.code pre{font-size:8.1pt;line-height:1.5}
+.cover,.part-page{background:#fff!important;color:var(--book-ink)}
+.cover::before{content:"";position:absolute;left:0;top:0;width:8mm;height:231mm;background:var(--book-ink)}
+.cover::after{right:-28mm;top:-31mm;border-color:rgba(232,99,82,.22);box-shadow:0 0 0 15mm rgba(129,151,126,.08)}
+.cover h1{color:var(--book-ink)}
+.cover h2{color:var(--book-coral)}
+.cover p{color:#5f6c70}
+.part-page::before{background:var(--book-coral)}
+.part-page h1{color:var(--book-coral)}
+.part-page h2{color:var(--book-ink)}
+.part-page p{color:#53646a}
+.part-page .flow{border-color:#b8c0bd}
+.part-page .flow p{border-color:#d9dedd;color:#33464f}
+@media(max-width:1300px){.pages{grid-template-columns:var(--page-w)}}
+@media(max-width:680px){.layout{padding-top:68px}.pages{display:flex;gap:18px}.sheet{width:calc(100vw - 20px);height:calc((100vw - 20px) * 1.462);padding:10vw!important}.running{font-size:2.4vw}.page-body{height:calc((100vw - 20px) * 1.462 - 30vw);padding-top:4vw}body{font-size:3vw}.cover .page-body,.part-page .page-body{height:calc((100vw - 20px) * 1.462);padding:18vw 10vw}.cover h1{font-size:9vw}.part-page h2{font-size:7vw}.flow{grid-template-columns:repeat(2,1fr);gap:3vw}.flow p{font-size:2.5vw}}
+@page{size:158mm 231mm;margin:0}
+@media print{html,body{width:158mm;background:#fff}.topbar,.sidebar{display:none!important}.layout{display:block;width:auto;padding:0;margin:0}.pages{display:block}.sheet{width:158mm;height:231mm;margin:0;box-shadow:none;break-after:page;print-color-adjust:exact;-webkit-print-color-adjust:exact}.sheet:last-child{break-after:auto}}
+pre{white-space:pre-wrap;overflow-wrap:anywhere;font:9pt/1.6 Consolas,monospace;background:#f1f4f7;padding:10px;border-left:3px solid #00a6a0}p{overflow-wrap:anywhere}</style>
+<style>
+/* 표지 제목과 목차 번호를 페이지뷰 폭에 맞춘 마지막 보정 */
+.cover h1 { max-width: none; }
+.sidebar a::before { content: attr(data-num) !important; }
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">Semantic Search</div>
+  <div class="brand-sub">초보자를 위한 시맨틱 검색 입문</div>
+  <div class="spacer"></div>
+  <button id="toc-toggle">목차</button>
+  <button id="prev" aria-label="이전 페이지">←</button>
+  <input id="page-input" type="number" min="1" value="1" aria-label="페이지 번호">
+  <span class="page-count">/ <span id="total">0</span></span>
+  <button id="next" aria-label="다음 페이지">→</button>
+  <button id="view-toggle">한 쪽씩</button>
+  <button id="edit">편집</button>
+  <button id="save">HTML 저장</button>
+  <button id="print">PDF 저장</button>
+</header>
+<main class="layout">
+  <aside class="sidebar" aria-label="교재 목차">
+    <h3>CONTENTS</h3>
+    <input id="toc-search" type="search" placeholder="목차 검색" aria-label="목차 검색">
+    <nav id="toc"></nav>
+  </aside>
+  <div class="pages" id="pages"></div>
+</main>
+<div class="source" id="source">
+<section data-group="표지" data-title="Semantic Search" data-kind="cover">
+  <div class="block" data-key="sem0"><h1>Semantic Search</h1></div>
+  <div class="block" data-key="sem1"><h2>초보자를 위한 시맨틱 검색 입문</h2></div>
+  <div class="block" data-key="sem2"><p>키워드 검색부터 Query Expansion, SPLADE, Embedding, Hybrid Search까지</p></div>
+  <div class="block" data-key="sem3"><p>검색의 목적은 단순히 문서를 찾는 것이 아니라, 질문과 관련된 근거를 골라 AI에게 전달하는 것입니다. 이 교재는 “같은 단어”를 찾는 검색과 “같은 뜻”을 찾는 검색의 차이를 이해하고, Context Injection에 연결하는 방법을 쉽게 설명합니다.</p></div>
+</section>
+
+<section data-group="PART 1 · 검색의 기본" data-title="PART 1 · 같은 단어와 같은 뜻은 다르다" data-kind="part">
+  <div class="block" data-key="sem10"><h1>PART 1 · 검색의 기본</h1></div>
+  <div class="block" data-key="sem11"><h2>같은 단어를 찾는 것과 같은 뜻을 찾는 것은 다르다</h2></div>
+  <div class="block" data-key="sem12"><p>사용자가 “공무원 업무 자동화”라고 검색했는데 문서에는 “반복 행정절차를 AI가 대신 처리한다”라고 적혀 있을 수 있습니다. 단어는 다르지만 사람은 같은 주제라고 이해합니다. 시맨틱 검색은 이런 의미 관계를 검색에 반영하는 방법입니다.</p></div>
+</section>
+
+<section data-group="PART 1 · 검색의 기본" data-title="1장 키워드 검색과 시맨틱 검색" data-kind="chapter">
+  <div class="block" data-key="sem20"><h1>1장 키워드 검색과 시맨틱 검색</h1></div>
+  <div class="block" data-key="sem21"><p><strong>키워드 검색</strong>은 문서 안에 검색어와 같거나 비슷한 단어가 있는지를 봅니다. <strong>시맨틱 검색</strong>은 단어가 달라도 의미가 비슷한지를 봅니다.</p></div>
+  <div class="block" data-key="sem22"><table><thead><tr><th>질문</th><th>문서 표현</th><th>키워드 검색</th><th>시맨틱 검색</th></tr></thead><tbody>
+  <tr><td>공무원 업무 자동화</td><td>공무원 반복업무 자동화</td><td>잘 찾음</td><td>잘 찾음</td></tr>
+  <tr><td>공무원 업무 자동화</td><td>반복 행정절차를 AI가 대신 처리</td><td>놓칠 수 있음</td><td>찾을 가능성이 높음</td></tr>
+  <tr><td>자동차 사고</td><td>차량 충돌</td><td>약함</td><td>강함</td></tr>
+  </tbody></table></div>
+  <div class="block" data-key="sem23"><p>따라서 시맨틱 검색은 “문장을 이해해서 답한다”는 뜻이 아니라, 질문과 문서 사이의 <strong>의미적 관련성</strong>을 계산해 더 관련 있는 문서를 찾는 검색 방식입니다.</p></div>
+</section>
+
+<section data-group="PART 1 · 검색의 기본" data-title="2장 FTS와 BM25는 왜 필요한가" data-kind="chapter">
+  <div class="block" data-key="sem30"><h1>2장 FTS와 BM25는 왜 필요한가</h1></div>
+  <div class="block" data-key="sem31"><p>시맨틱 검색을 이해하려면 먼저 전통적인 검색을 알아야 합니다. <strong>FTS</strong>는 Full-Text Search의 약자로, 문서를 단어 단위로 미리 색인해 빠르게 찾는 방식입니다. <strong>BM25</strong>는 검색 결과 중 어떤 문서가 더 중요한지를 점수화해 순위를 정합니다.</p></div>
+  <div class="block" data-key="sem32"><table><thead><tr><th>방식</th><th>쉽게 말하면</th><th>강점</th></tr></thead><tbody>
+  <tr><td>LIKE</td><td>문자열 포함 여부</td><td>가장 단순함</td></tr>
+  <tr><td>Fuse.js</td><td>글자 모양이 비슷한지 비교</td><td>오타·부분일치</td></tr>
+  <tr><td>FTS</td><td>단어 색인을 만들어 검색</td><td>빠른 본문 검색</td></tr>
+  <tr><td>BM25</td><td>관련 문서를 점수순으로 정렬</td><td>검색 결과 순위</td></tr>
+  </tbody></table></div>
+  <div class="block" data-key="sem33"><p>중요한 점은 BM25도 매우 강력한 검색이지만, 기본 상태에서는 “자동차”와 “차량”처럼 단어가 다른 동의어를 자동으로 이해하지 못한다는 것입니다.</p></div>
+</section>
+
+<section data-group="PART 2 · 임베딩 없는 시맨틱 검색" data-title="PART 2 · 임베딩 없이 의미 검색에 가까워지기" data-kind="part">
+  <div class="block" data-key="sem40"><h1>PART 2 · 임베딩 없는 시맨틱 검색</h1></div>
+  <div class="block" data-key="sem41"><h2>검색어를 똑똑하게 만들면 벡터 DB 없이도 품질을 높일 수 있다</h2></div>
+  <div class="block" data-key="sem42"><p>문서를 모두 벡터화하지 않고도 의미 검색에 가까운 결과를 만들 수 있습니다. 대표적인 방법이 동의어 확장, Query Expansion, 형태소 분석, N-gram, Sparse Semantic Search입니다.</p></div>
+</section>
+
+<section data-group="PART 2 · 임베딩 없는 시맨틱 검색" data-title="3장 Query Expansion · 질문을 검색어로 확장한다" data-kind="chapter">
+  <div class="block" data-key="sem50"><h1>3장 Query Expansion · 질문을 검색어로 확장한다</h1></div>
+  <div class="block" data-key="sem51"><p>사용자의 질문을 그대로 한 번 검색하는 대신, 관련된 표현을 여러 개 만들어 검색하는 방법입니다. LLM을 답변 생성기가 아니라 <strong>검색어 생성기</strong>로 사용할 수도 있습니다.</p></div>
+  <div class="block" data-key="sem52"><pre>질문:
+예산 낭비 사업을 찾아줘
+
+확장 검색어:
+예산 낭비
+예산 과다
+불용액
+집행률 저조
+성과 미달
+중복 사업</pre></div>
+  <div class="block" data-key="sem53"><p>이 확장 검색어를 FTS나 BM25에 넣으면 “예산 낭비”라는 표현이 원문에 없어도 관련 문서를 찾을 가능성이 높아집니다.</p></div>
+  <div class="block" data-key="sem54"><div class="flow"><p>사용자 질문</p><p>핵심어 추출</p><p>동의어·관련어 확장</p><p>FTS·BM25 검색</p></div></div>
+</section>
+
+<section data-group="PART 2 · 임베딩 없는 시맨틱 검색" data-title="4장 동의어·형태소·N-gram" data-kind="chapter">
+  <div class="block" data-key="sem60"><h1>4장 동의어·형태소·N-gram</h1></div>
+  <div class="block" data-key="sem61"><p><strong>동의어 사전</strong>은 “자동차=차량”, “공무원=공직자”, “AI=인공지능”처럼 같은 뜻의 표현을 미리 연결합니다. 업무 용어가 명확한 기관 검색에서 설명 가능성이 높고 통제하기 쉽습니다.</p></div>
+  <div class="block" data-key="sem62"><p><strong>형태소 분석</strong>은 한국어 문장에서 핵심 단위를 분리합니다. “행정업무를 자동화했습니다”를 “행정 / 업무 / 자동화”처럼 나누면 검색 품질이 좋아질 수 있습니다.</p></div>
+  <div class="block" data-key="sem63"><p><strong>N-gram</strong>은 문자열을 2~3글자씩 잘라 비교합니다. 띄어쓰기, 복합어, 오타가 있는 한국어 검색에서 보조적으로 유용합니다. PostgreSQL의 pg_trgm도 비슷한 목적에 사용할 수 있습니다.</p></div>
+  <div class="block" data-key="sem64"><table><thead><tr><th>방법</th><th>잘하는 것</th></tr></thead><tbody>
+  <tr><td>동의어</td><td>업무 용어·표준어 연결</td></tr>
+  <tr><td>형태소 분석</td><td>한국어 핵심어 분리</td></tr>
+  <tr><td>N-gram / Trigram</td><td>띄어쓰기·부분일치·오타 보정</td></tr>
+  </tbody></table></div>
+</section>
+
+<section data-group="PART 2 · 임베딩 없는 시맨틱 검색" data-title="5장 SPLADE · 키워드 검색과 의미 검색의 중간" data-kind="chapter">
+  <div class="block" data-key="sem70"><h1>5장 SPLADE · 키워드와 의미의 중간</h1></div>
+  <div class="block" data-key="sem71"><p>SPLADE는 Sparse Semantic Search 계열의 대표적인 방식입니다. 문장을 단순히 그대로 저장하지 않고, 관련성이 높은 단어까지 확장해 각 단어에 가중치를 줍니다.</p></div>
+  <div class="block" data-key="sem72"><pre>원문:
+자동차 사고 보험
+
+확장 예:
+자동차  2.4
+사고    2.2
+보험    2.0
+차량    1.5
+충돌    1.3
+보상    1.1
+청구    0.9</pre></div>
+  <div class="block" data-key="sem73"><p>Dense Embedding처럼 수백 개 숫자 좌표를 사용하는 대신 단어 기반의 Sparse Vector를 사용합니다. 따라서 키워드 기반 검색의 설명 가능성을 어느 정도 유지하면서 의미 확장을 얻을 수 있습니다.</p></div>
+</section>
+
+<section data-group="PART 3 · 임베딩 시맨틱 검색" data-title="PART 3 · 임베딩으로 같은 뜻을 찾기" data-kind="part">
+  <div class="block" data-key="sem80"><h1>PART 3 · 임베딩 시맨틱 검색</h1></div>
+  <div class="block" data-key="sem81"><h2>문장을 숫자 벡터로 바꾸어 의미의 거리를 비교한다</h2></div>
+  <div class="block" data-key="sem82"><p>임베딩은 문장이나 문서를 수백 개의 숫자로 변환합니다. 의미가 비슷한 문장은 벡터 공간에서도 가까운 위치에 놓이도록 학습됩니다.</p></div>
+</section>
+
+<section data-group="PART 3 · 임베딩 시맨틱 검색" data-title="6장 Embedding · 문장을 숫자로 바꾼다" data-kind="chapter">
+  <div class="block" data-key="sem90"><h1>6장 Embedding · 문장을 숫자로 바꾼다</h1></div>
+  <div class="block" data-key="sem91"><pre>자동차 사고
+→ [0.21, -0.45, 0.92, ...]
+
+차량 충돌
+→ [0.20, -0.42, 0.89, ...]</pre></div>
+  <div class="block" data-key="sem92"><p>두 문장의 숫자 배열이 가깝다면 의미도 비슷하다고 판단합니다. 이때 자주 사용하는 계산 중 하나가 cosine similarity입니다.</p></div>
+  <div class="block" data-key="sem93"><p>문서가 많아지면 임베딩을 저장하고 빠르게 찾기 위해 pgvector, Qdrant, Pinecone, Milvus, Weaviate, Chroma, FAISS 같은 벡터 검색 도구를 사용할 수 있습니다.</p></div>
+  <div class="block" data-key="sem94"><div class="flow"><p>문서를 작은 단위로 나눈다</p><p>각 문서를 임베딩한다</p><p>질문도 임베딩한다</p><p>가까운 문서를 찾는다</p></div></div>
+</section>
+
+<section data-group="PART 3 · 임베딩 시맨틱 검색" data-title="7장 Sparse와 Dense를 비교한다" data-kind="chapter">
+  <div class="block" data-key="sem100"><h1>7장 Sparse와 Dense를 비교한다</h1></div>
+  <div class="block" data-key="sem101"><table><thead><tr><th>항목</th><th>Sparse</th><th>Dense</th></tr></thead><tbody>
+  <tr><td>대표 방식</td><td>BM25, SPLADE</td><td>Embedding</td></tr>
+  <tr><td>표현</td><td>단어별 가중치</td><td>숫자 벡터</td></tr>
+  <tr><td>정확 키워드</td><td>강함</td><td>상대적으로 약할 수 있음</td></tr>
+  <tr><td>의미 유사도</td><td>중~강</td><td>강함</td></tr>
+  <tr><td>설명 가능성</td><td>높음</td><td>낮음</td></tr>
+  </tbody></table></div>
+  <div class="block" data-key="sem102"><p>업무 시스템에서는 어느 한쪽이 항상 우월한 것이 아닙니다. 문서번호, 기관명, 사업명처럼 정확한 단어가 중요한 검색은 Sparse/키워드 방식이 강하고, 민원·상담·회의록처럼 표현이 다양한 데이터는 Dense Semantic Search가 유리할 수 있습니다.</p></div>
+</section>
+
+<section data-group="PART 4 · 하이브리드와 Context Injection" data-title="PART 4 · 검색 결과를 AI의 근거로 만든다" data-kind="part">
+  <div class="block" data-key="sem110"><h1>PART 4 · Hybrid Search와 Context Injection</h1></div>
+  <div class="block" data-key="sem111"><h2>검색 기술보다 중요한 것은 필요한 근거를 골라 모델에 넣는 과정이다</h2></div>
+  <div class="block" data-key="sem112"><p>실무에서는 키워드 검색과 시맨틱 검색을 함께 사용한 뒤, 상위 결과만 Context로 전달하는 구조가 강력합니다.</p></div>
+</section>
+
+<section data-group="PART 4 · 하이브리드와 Context Injection" data-title="8장 Hybrid Search · 키워드와 의미를 함께 본다" data-kind="chapter">
+  <div class="block" data-key="sem120"><h1>8장 Hybrid Search · 키워드와 의미를 함께 본다</h1></div>
+  <div class="block" data-key="sem121"><p>Hybrid Search는 BM25 같은 키워드 검색과 Embedding 같은 시맨틱 검색을 함께 사용합니다. 두 방식이 잘하는 영역이 다르기 때문입니다.</p></div>
+  <div class="block" data-key="sem122"><table><thead><tr><th>질문</th><th>우선 강한 방식</th></tr></thead><tbody>
+  <tr><td>AI-2026-00451 문서</td><td>Exact / BM25</td></tr>
+  <tr><td>성과가 좋지 않았던 사업</td><td>Semantic Search</td></tr>
+  <tr><td>행안부 AI 사업 중 복지 분야</td><td>SQL + BM25 + Semantic</td></tr>
+  </tbody></table></div>
+  <div class="block" data-key="sem123"><p>두 결과를 합칠 때 RRF(Reciprocal Rank Fusion) 같은 순위 결합 방식을 쓸 수 있습니다. 초보자는 먼저 “키워드 상위 5개 + 시맨틱 상위 5개 → 중복 제거”만 해도 하이브리드의 개념을 이해할 수 있습니다.</p></div>
+</section>
+
+<section data-group="PART 4 · 하이브리드와 Context Injection" data-title="9장 검색 결과를 Context Injection으로 연결한다" data-kind="chapter">
+  <div class="block" data-key="sem130"><h1>9장 검색 결과를 Context Injection으로 연결한다</h1></div>
+  <div class="block" data-key="sem131"><p>검색은 최종 답변이 아닙니다. 검색으로 얻은 문서 중 질문과 관련된 근거만 골라 모델 입력에 넣는 것이 Context Injection입니다.</p></div>
+  <div class="block" data-key="sem132"><div class="flow"><p>사용자 질문</p><p>키워드·시맨틱 검색</p><p>상위 근거 선택</p><p>질문+근거를 모델 입력에 전달</p><p>모델이 근거를 설명</p></div></div>
+  <div class="block" data-key="sem133"><pre>질문:
+최근 3년간 지자체 AI 사업 중 복지 분야 사업을 찾아줘.
+
+검색:
+1. 날짜 조건 → SQL
+2. AI/인공지능/복지/돌봄 → FTS·BM25
+3. 필요하면 시맨틱 검색
+4. 상위 근거와 출처 선택
+5. 선택된 근거만 모델에 전달</pre></div>
+  <div class="block" data-key="sem134"><p>이 구조에서는 AI가 데이터베이스 전체를 읽는 것이 아닙니다. 프로그램이 먼저 필요한 근거를 좁히고, 모델에는 질문과 관련된 범위만 전달합니다.</p></div>
+</section>
+
+<section data-group="PART 4 · 하이브리드와 Context Injection" data-title="10장 초보자의 선택 순서" data-kind="chapter">
+  <div class="block" data-key="sem140"><h1>10장 초보자의 선택 순서</h1></div>
+  <div class="block" data-key="sem141"><table><thead><tr><th>단계</th><th>먼저 배울 것</th><th>이유</th></tr></thead><tbody>
+  <tr><td>1</td><td>문자열 검색</td><td>검색의 기본 이해</td></tr>
+  <tr><td>2</td><td>FTS + BM25</td><td>실제 검색엔진 구조 이해</td></tr>
+  <tr><td>3</td><td>Query Expansion</td><td>벡터 DB 없이 의미 확장</td></tr>
+  <tr><td>4</td><td>SPLADE / Sparse</td><td>키워드와 의미의 중간 이해</td></tr>
+  <tr><td>5</td><td>Embedding</td><td>Dense Semantic Search 이해</td></tr>
+  <tr><td>6</td><td>Hybrid Search</td><td>실무형 검색 구성</td></tr>
+  </tbody></table></div>
+  <div class="block" data-key="sem142"><p>처음부터 벡터 데이터베이스를 구축할 필요는 없습니다. SQLite FTS5 + BM25로 시작하고, 실제로 “같은 뜻인데 단어가 달라서 못 찾는 문제”가 생기면 Query Expansion이나 Embedding을 추가하는 것이 이해하기 쉽습니다.</p></div>
+  <div class="block" data-key="sem143"><p><strong>핵심 정리:</strong> 키워드 검색은 같은 말을 잘 찾고, 시맨틱 검색은 같은 뜻을 잘 찾습니다. Hybrid Search는 둘을 합칩니다. Context Injection은 그 검색 결과를 AI의 답변 근거로 넣는 과정입니다.</p></div>
+</section>
+
+<section data-group="요약" data-title="한 장 요약 · 어떤 검색을 선택할까" data-kind="chapter">
+  <div class="block" data-key="sem150"><h1>한 장 요약 · 어떤 검색을 선택할까</h1></div>
+  <div class="block" data-key="sem151"><table><thead><tr><th>원하는 것</th><th>추천 시작점</th></tr></thead><tbody>
+  <tr><td>정확한 단어·기관명·사업명</td><td>FTS / BM25</td></tr>
+  <tr><td>오타·부분일치</td><td>Fuse.js / Trigram</td></tr>
+  <tr><td>같은 뜻의 다른 표현</td><td>Query Expansion / SPLADE / Embedding</td></tr>
+  <tr><td>정확성과 의미 둘 다</td><td>Hybrid Search</td></tr>
+  <tr><td>벡터 DB 없이 시작</td><td>SQLite FTS5 + BM25 + Query Expansion</td></tr>
+  <tr><td>검색 결과를 AI 답변에 사용</td><td>Top-K 검색 → Context Injection</td></tr>
+  </tbody></table></div>
+</section>
+</div>
+<div class="toast" id="toast" role="status"></div>
+<script>
+const $=s=>document.querySelector(s),source=$('#source'),pages=$('#pages');let sheets=[],starts=[],current=0,observer,editing=false;
+function toast(t){const e=$('#toast');e.textContent=t;e.classList.add('show');setTimeout(()=>e.classList.remove('show'),1600)}
+function makePage(sec,section,continued=false){const page=document.createElement('article');const kind=sec.dataset.kind||'chapter';const parity=((sheets.length+1)%2===0?' even':' odd');page.className='sheet'+parity+(section===0?' cover':'')+(kind==='part'&&!continued?' part-page':'')+(kind==='part'&&continued?' part-intro-page':'')+(kind==='chapter'&&!continued?' chapter-page':'')+(continued?' continuation-page':'');page.dataset.section=section;page.innerHTML='<header class="running"><strong>Context Injection</strong><span></span></header><div class="page-body"></div><footer class="page-footer"><span class="book-name">Context Injection</span><span class="folio"></span></footer>';page.querySelector('.running span').textContent=sec.dataset.group;if(continued){const c=document.createElement('div');c.className='continued';c.textContent=sec.dataset.title+' · 계속';page.querySelector('.page-body').append(c)}pages.append(page);sheets.push(page);return page}
+function overflow(el){return el.scrollHeight>el.clientHeight+1}
+function paginate(){
+  if(observer)observer.disconnect();
+  pages.replaceChildren();sheets=[];starts=[];document.body.classList.remove('single');
+  let page=null,body=null,lastKind='';
+  Array.from(source.children).forEach((sec,si)=>{
+    const kind=sec.dataset.kind||'chapter';
+    const children=Array.from(sec.children);
+    const forced=si===0||kind==='part'||!page||lastKind==='part';
+    let reused=false;
+    if(forced){page=makePage(sec,si);body=page.querySelector('.page-body')}
+    else{
+      body=page.querySelector('.page-body');
+      const opener=children.slice(0,Math.min(3,children.length)).map(x=>x.cloneNode(true));
+      if(opener[0])opener[0].classList.add('chapter-break');
+      opener.forEach(x=>body.append(x));
+      const fits=!overflow(body);
+      opener.forEach(x=>x.remove());
+      if(fits)reused=true;
+      else{page=makePage(sec,si);body=page.querySelector('.page-body')}
+    }
+    starts.push(sheets.length-1);
+    children.forEach((item,i)=>{
+      const block=item.cloneNode(true);
+      if(reused&&i===0)block.classList.add('chapter-break');
+      body.append(block);
+      if(overflow(body)&&body.querySelectorAll('.block').length>1){
+        block.remove();page=makePage(sec,si,true);body=page.querySelector('.page-body');body.append(block)
+      }
+      if(overflow(body))block.classList.add('oversize');
+      if(block.querySelector('h1,h2')&&i<children.length-1){
+        const probe=children[i+1].cloneNode(true);body.append(probe);
+        const bad=overflow(body);probe.remove();
+        if(bad&&body.querySelectorAll('.block').length>1){
+          block.remove();page=makePage(sec,si,true);body=page.querySelector('.page-body');body.append(block)
+        }
+      }
+    });
+    lastKind=kind;
+  });
+  sheets.forEach((p,i)=>{p.id='page-'+(i+1);p.querySelector('.folio').textContent=String(i+1)});
+  $('#total').textContent=sheets.length;$('#page-input').max=sheets.length;renderToc();setCurrent(Math.min(current,sheets.length-1));
+  observer=new IntersectionObserver(es=>{if(document.body.classList.contains('single'))return;const best=es.filter(e=>e.isIntersecting).sort((a,b)=>b.intersectionRatio-a.intersectionRatio)[0];if(best)setCurrent(sheets.indexOf(best.target))},{rootMargin:'-68px 0px -42% 0px',threshold:[0,.25,.5,.75]});
+  sheets.forEach(s=>observer.observe(s));document.documentElement.dataset.ready='true'
+}
+function renderToc(){const nav=$('#toc');nav.replaceChildren();let group='';Array.from(source.children).forEach((s,i)=>{if(s.dataset.group!==group){group=s.dataset.group;const d=document.createElement('div');d.className='group';d.textContent=group;nav.append(d)}const a=document.createElement('a');a.href='#page-'+(starts[i]+1);a.dataset.section=i;a.dataset.num=String(i+1).padStart(2,'0');a.textContent=s.dataset.title;a.onclick=e=>{e.preventDefault();go(starts[i])};nav.append(a)})}
+function setCurrent(n){current=Math.max(0,Math.min(n,sheets.length-1));sheets.forEach((s,i)=>s.classList.toggle('current',i===current));$('#page-input').value=current+1;const sec=sheets[current]?.dataset.section;document.querySelectorAll('#toc a').forEach(a=>a.classList.toggle('active',a.dataset.section===sec))}
+function go(n){setCurrent(n);sheets[current].scrollIntoView({behavior:'smooth',block:'start'})}
+$('#prev').onclick=()=>go(current-1);$('#next').onclick=()=>go(current+1);$('#page-input').onchange=e=>go(Number(e.target.value)-1);$('#view-toggle').onclick=e=>{const on=!document.body.classList.contains('single');document.body.classList.toggle('single',on);e.target.classList.toggle('active',on);e.target.textContent=on?'모두 보기':'한 쪽씩';go(current)};$('#toc-toggle').onclick=()=>toast('왼쪽 목차에서 장을 선택할 수 있습니다');$('#toc-search').oninput=e=>{const q=e.target.value.toLowerCase();document.querySelectorAll('#toc a').forEach(a=>a.hidden=!a.textContent.toLowerCase().includes(q))};$('#print').onclick=()=>window.print();$('#edit').onclick=()=>{editing=!editing;document.body.classList.toggle('editing',editing);document.querySelectorAll('.page-body .block').forEach(x=>x.contentEditable=editing?'true':'false');$('#edit').textContent=editing?'편집 마침':'편집';toast(editing?'본문을 직접 고칠 수 있습니다':'편집을 마쳤습니다')};function syncEdits(){document.querySelectorAll('#pages .block[data-key]').forEach(b=>{const t=Array.from(source.querySelectorAll('.block')).find(x=>x.dataset.key===b.dataset.key);if(t)t.innerHTML=b.innerHTML})}pages.addEventListener('input',syncEdits);$('#save').onclick=()=>{syncEdits();const html='<!doctype html>\n'+document.documentElement.outerHTML;const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([html],{type:'text/html'}));a.download='Context_Injection_교재.html';a.click();URL.revokeObjectURL(a.href);toast('현재 HTML을 저장했습니다')};document.addEventListener('click',e=>{if(e.target.classList.contains('copy')){navigator.clipboard?.writeText(e.target.parentElement.querySelector('pre').innerText);toast('요청문을 복사했습니다')}});window.addEventListener('resize',()=>{clearTimeout(window.__resize);window.__resize=setTimeout(paginate,180)});paginate();
+</script>
+<script>/* kg-preview: #<heading> \uc704\uce58\ub85c \uc774\ub3d9 */
+(function(){function norm(t){return (t||'').replace(/\s+/g,'').toLowerCase()}
+function go(){var h=decodeURIComponent(location.hash.slice(1));if(!h)return;var k=norm(h).slice(0,24);if(!k)return;
+var best=null,bl=1e9,els=document.body.querySelectorAll('h1,h2,h3,h4,h5,p,div,span,li,td,text,tspan,section,article');
+for(var i=0;i<els.length;i++){var e=els[i],t=norm(e.textContent);if(t.length<bl&&t.indexOf(k)>-1){best=e;bl=t.length}}
+if(!best)return;var box=best.closest('section,[class*=slide],[class*=page],article')||best;
+box.scrollIntoView({block:'start'});box.style.outline='3px solid #c0504d';box.style.outlineOffset='4px';
+setTimeout(function(){box.style.outline=''},2600)}
+window.addEventListener('load',function(){setTimeout(go,400)});window.addEventListener('hashchange',go)})();</script></body>
+</html>

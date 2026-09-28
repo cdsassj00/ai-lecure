@@ -1,0 +1,1659 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head><meta name="robots" content="noindex, nofollow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GWANGJIN·AI — 광진구 AI 역량강화 포털</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0d14;
+    --surface: #111520;
+    --card: #161c2e;
+    --accent: #4fd1c5;
+    --accent2: #f6ad55;
+    --accent3: #fc8181;
+    --text: #e2e8f0;
+    --muted: #718096;
+    --border: #2d3748;
+    --blue: #63b3ed;
+    --green: #68d391;
+    --purple: #b794f4;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* 배경 그리드 */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(79,209,197,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(79,209,197,0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* 네비게이션 */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    background: rgba(10,13,20,0.92);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+  }
+
+  .nav-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .nav-badge {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    border: 1px solid var(--accent);
+    padding: 3px 8px;
+    border-radius: 2px;
+  }
+
+  .nav-title {
+    font-weight: 700;
+    font-size: 16px;
+    color: var(--text);
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 32px;
+    list-style: none;
+  }
+
+  .nav-links a {
+    text-decoration: none;
+    color: var(--muted);
+    font-size: 14px;
+    font-weight: 500;
+    transition: color 0.2s;
+    cursor: pointer;
+  }
+
+  .nav-links a:hover, .nav-links a.active {
+    color: var(--accent);
+  }
+
+  .nav-cta {
+    background: var(--accent);
+    color: #000;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: 'Noto Sans KR', sans-serif;
+    transition: all 0.2s;
+  }
+
+  .nav-cta:hover {
+    background: #38b2ac;
+    transform: translateY(-1px);
+  }
+
+  /* 히어로 섹션 */
+  .hero {
+    position: relative;
+    padding: 160px 80px 100px;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+  }
+
+  .hero-orb {
+    position: absolute;
+    width: 600px;
+    height: 600px;
+    right: -100px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: radial-gradient(circle, rgba(79,209,197,0.08) 0%, rgba(99,179,237,0.05) 40%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+  }
+
+  .hero-orb::after {
+    content: '';
+    position: absolute;
+    inset: 40px;
+    border-radius: 50%;
+    border: 1px solid rgba(79,209,197,0.15);
+    animation: pulse 4s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); opacity: 0.5; }
+    50% { transform: scale(1.05); opacity: 1; }
+  }
+
+  .hero-content {
+    max-width: 700px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .hero-eyebrow {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    color: var(--accent);
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .hero-eyebrow::before {
+    content: '';
+    width: 40px;
+    height: 1px;
+    background: var(--accent);
+  }
+
+  .hero-title {
+    font-size: clamp(40px, 5vw, 72px);
+    font-weight: 900;
+    line-height: 1.1;
+    margin-bottom: 24px;
+    letter-spacing: -1px;
+  }
+
+  .hero-title span {
+    color: var(--accent);
+    display: block;
+  }
+
+  .hero-subtitle {
+    font-size: 18px;
+    color: var(--muted);
+    line-height: 1.8;
+    margin-bottom: 48px;
+    font-weight: 300;
+  }
+
+  .hero-stats {
+    display: flex;
+    gap: 48px;
+    padding-top: 48px;
+    border-top: 1px solid var(--border);
+  }
+
+  .stat-item {}
+
+  .stat-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--accent);
+    display: block;
+  }
+
+  .stat-label {
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+
+  /* 서비스 섹션 */
+  .section {
+    padding: 100px 80px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .section-header {
+    margin-bottom: 60px;
+  }
+
+  .section-tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--accent2);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+
+  .section-title {
+    font-size: 36px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+  }
+
+  .section-desc {
+    color: var(--muted);
+    font-size: 16px;
+    margin-top: 12px;
+    font-weight: 300;
+  }
+
+  /* 서비스 카드 그리드 */
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    background: var(--border);
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .service-card {
+    background: var(--card);
+    padding: 40px;
+    cursor: pointer;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .service-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--card-accent, var(--accent));
+    transform: scaleX(0);
+    transition: transform 0.3s;
+  }
+
+  .service-card:hover::before {
+    transform: scaleX(1);
+  }
+
+  .service-card:hover {
+    background: var(--surface);
+  }
+
+  .service-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    margin-bottom: 20px;
+    background: rgba(79,209,197,0.1);
+  }
+
+  .service-card-title {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    color: var(--text);
+  }
+
+  .service-card-desc {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+
+  .service-tag {
+    display: inline-block;
+    margin-top: 20px;
+    font-size: 11px;
+    font-family: 'Space Mono', monospace;
+    color: var(--accent);
+    border: 1px solid rgba(79,209,197,0.3);
+    padding: 4px 10px;
+    border-radius: 2px;
+  }
+
+  /* 핵심 기능 - AI 문서 도우미 */
+  .demo-section {
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .demo-layout {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 80px;
+    align-items: start;
+  }
+
+  .demo-left {}
+
+  .demo-right {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .demo-window-bar {
+    background: var(--bg);
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+  }
+
+  .dot-red { background: var(--accent3); }
+  .dot-yellow { background: var(--accent2); }
+  .dot-green { background: var(--green); }
+
+  .demo-window-title {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    margin-left: 8px;
+  }
+
+  .demo-chat {
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    min-height: 380px;
+  }
+
+  .chat-msg {
+    display: flex;
+    gap: 12px;
+    animation: fadeUp 0.4s ease forwards;
+    opacity: 0;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .chat-msg.user { flex-direction: row-reverse; }
+
+  .chat-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+
+  .avatar-ai { background: rgba(79,209,197,0.2); }
+  .avatar-user { background: rgba(246,173,85,0.2); }
+
+  .chat-bubble {
+    max-width: 75%;
+    padding: 12px 16px;
+    border-radius: 12px;
+    font-size: 13px;
+    line-height: 1.6;
+  }
+
+  .bubble-ai {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text);
+    border-radius: 2px 12px 12px 12px;
+  }
+
+  .bubble-user {
+    background: rgba(79,209,197,0.15);
+    border: 1px solid rgba(79,209,197,0.3);
+    color: var(--text);
+    border-radius: 12px 2px 12px 12px;
+  }
+
+  .demo-input-area {
+    padding: 16px 24px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    gap: 12px;
+  }
+
+  .demo-input {
+    flex: 1;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 16px;
+    color: var(--text);
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 13px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .demo-input:focus { border-color: var(--accent); }
+  .demo-input::placeholder { color: var(--muted); }
+
+  .demo-send {
+    background: var(--accent);
+    color: #000;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-weight: 700;
+    cursor: pointer;
+    font-size: 13px;
+    font-family: 'Noto Sans KR', sans-serif;
+    transition: all 0.2s;
+  }
+
+  .demo-send:hover { background: #38b2ac; }
+
+  /* 학습 로드맵 */
+  .roadmap {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    position: relative;
+  }
+
+  .roadmap::before {
+    content: '';
+    position: absolute;
+    top: 32px;
+    left: 12.5%;
+    right: 12.5%;
+    height: 1px;
+    background: linear-gradient(90deg, var(--accent), var(--blue), var(--purple), var(--accent2));
+    z-index: 0;
+  }
+
+  .roadmap-step {
+    text-align: center;
+    padding: 0 20px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .roadmap-dot {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    margin: 0 auto 20px;
+    border: 2px solid;
+    position: relative;
+    background: var(--bg);
+  }
+
+  .step1 .roadmap-dot { border-color: var(--accent); color: var(--accent); }
+  .step2 .roadmap-dot { border-color: var(--blue); color: var(--blue); }
+  .step3 .roadmap-dot { border-color: var(--purple); color: var(--purple); }
+  .step4 .roadmap-dot { border-color: var(--accent2); color: var(--accent2); }
+
+  .roadmap-num {
+    position: absolute;
+    top: -8px; right: -8px;
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    font-size: 10px;
+    font-family: 'Space Mono', monospace;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #000;
+  }
+
+  .step1 .roadmap-num { background: var(--accent); }
+  .step2 .roadmap-num { background: var(--blue); }
+  .step3 .roadmap-num { background: var(--purple); }
+  .step4 .roadmap-num { background: var(--accent2); }
+
+  .roadmap-label {
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+
+  .roadmap-desc {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  /* 현황 대시보드 */
+  .dashboard-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    grid-template-rows: auto auto;
+    gap: 16px;
+  }
+
+  .dash-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 28px;
+  }
+
+  .dash-card.large { grid-row: span 2; }
+
+  .dash-card-title {
+    font-size: 13px;
+    color: var(--muted);
+    font-family: 'Space Mono', monospace;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .dash-card-live {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 10px;
+    color: var(--green);
+  }
+
+  .live-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--green);
+    animation: blink 2s ease-in-out infinite;
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  .progress-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .progress-item {}
+
+  .progress-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    margin-bottom: 8px;
+    color: var(--text);
+  }
+
+  .progress-pct {
+    font-family: 'Space Mono', monospace;
+    color: var(--accent);
+    font-size: 12px;
+  }
+
+  .progress-bar-bg {
+    height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .progress-bar-fill {
+    height: 100%;
+    border-radius: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--blue));
+    transition: width 1.5s ease;
+  }
+
+  .metric-value {
+    font-family: 'Space Mono', monospace;
+    font-size: 42px;
+    font-weight: 700;
+    color: var(--accent);
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+
+  .metric-change {
+    font-size: 12px;
+    color: var(--green);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .metric-label {
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+
+  /* AI 도구 모음 */
+  .tools-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+
+  .tool-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 24px;
+    cursor: pointer;
+    transition: all 0.25s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .tool-card:hover {
+    border-color: var(--accent);
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+  }
+
+  .tool-status {
+    position: absolute;
+    top: 16px; right: 16px;
+    font-size: 10px;
+    font-family: 'Space Mono', monospace;
+    padding: 3px 8px;
+    border-radius: 2px;
+  }
+
+  .status-active {
+    background: rgba(104,211,145,0.15);
+    color: var(--green);
+    border: 1px solid rgba(104,211,145,0.3);
+  }
+
+  .status-beta {
+    background: rgba(246,173,85,0.15);
+    color: var(--accent2);
+    border: 1px solid rgba(246,173,85,0.3);
+  }
+
+  .status-soon {
+    background: rgba(113,128,150,0.15);
+    color: var(--muted);
+    border: 1px solid rgba(113,128,150,0.3);
+  }
+
+  .tool-icon {
+    font-size: 32px;
+    margin-bottom: 16px;
+    display: block;
+  }
+
+  .tool-name {
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+
+  .tool-desc {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  /* 공지/알림 배너 */
+  .notice-bar {
+    background: linear-gradient(135deg, rgba(79,209,197,0.1), rgba(99,179,237,0.1));
+    border: 1px solid rgba(79,209,197,0.2);
+    border-radius: 8px;
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+
+  .notice-icon {
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+
+  .notice-text {
+    font-size: 14px;
+    color: var(--text);
+  }
+
+  .notice-badge {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    background: var(--accent);
+    color: #000;
+    padding: 2px 8px;
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+
+  /* 탭 */
+  .tab-nav {
+    display: flex;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 40px;
+    gap: 4px;
+  }
+
+  .tab-btn {
+    background: none;
+    border: none;
+    color: var(--muted);
+    padding: 12px 24px;
+    font-size: 14px;
+    font-family: 'Noto Sans KR', sans-serif;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+    font-weight: 500;
+  }
+
+  .tab-btn:hover { color: var(--text); }
+  .tab-btn.active {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+  }
+
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  /* 하단 CTA */
+  .footer-cta {
+    background: linear-gradient(135deg, var(--card), var(--surface));
+    border-top: 1px solid var(--border);
+    padding: 80px;
+    text-align: center;
+  }
+
+  .footer-cta h2 {
+    font-size: 40px;
+    font-weight: 900;
+    margin-bottom: 16px;
+    letter-spacing: -0.5px;
+  }
+
+  .footer-cta p {
+    color: var(--muted);
+    font-size: 16px;
+    margin-bottom: 40px;
+  }
+
+  .cta-buttons {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+  }
+
+  .btn-primary {
+    background: var(--accent);
+    color: #000;
+    border: none;
+    padding: 14px 32px;
+    border-radius: 6px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: 'Noto Sans KR', sans-serif;
+    transition: all 0.2s;
+  }
+
+  .btn-primary:hover {
+    background: #38b2ac;
+    transform: translateY(-2px);
+  }
+
+  .btn-outline {
+    background: transparent;
+    color: var(--text);
+    border: 1px solid var(--border);
+    padding: 14px 32px;
+    border-radius: 6px;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: 'Noto Sans KR', sans-serif;
+    transition: all 0.2s;
+  }
+
+  .btn-outline:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  /* 푸터 */
+  footer {
+    background: var(--bg);
+    border-top: 1px solid var(--border);
+    padding: 32px 80px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  .footer-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .footer-logo {
+    font-family: 'Space Mono', monospace;
+    color: var(--accent);
+    font-size: 14px;
+    font-weight: 700;
+  }
+
+  /* 모달 */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.8);
+    backdrop-filter: blur(8px);
+    z-index: 1000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+  }
+
+  .modal-overlay.open { display: flex; }
+
+  .modal-box {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 48px;
+    max-width: 560px;
+    width: 100%;
+    position: relative;
+  }
+
+  .modal-close {
+    position: absolute;
+    top: 16px; right: 16px;
+    background: none;
+    border: none;
+    color: var(--muted);
+    font-size: 24px;
+    cursor: pointer;
+    line-height: 1;
+    padding: 8px;
+    transition: color 0.2s;
+  }
+
+  .modal-close:hover { color: var(--text); }
+
+  .modal-title {
+    font-size: 24px;
+    font-weight: 800;
+    margin-bottom: 8px;
+  }
+
+  .modal-subtitle {
+    color: var(--muted);
+    font-size: 14px;
+    margin-bottom: 32px;
+  }
+
+  .form-group {
+    margin-bottom: 20px;
+  }
+
+  .form-label {
+    display: block;
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 8px;
+    font-weight: 500;
+  }
+
+  .form-input, .form-select {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 16px;
+    color: var(--text);
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .form-input:focus, .form-select:focus { border-color: var(--accent); }
+  .form-select option { background: var(--card); }
+
+  .form-submit {
+    width: 100%;
+    background: var(--accent);
+    color: #000;
+    border: none;
+    border-radius: 8px;
+    padding: 14px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: 'Noto Sans KR', sans-serif;
+    transition: all 0.2s;
+    margin-top: 8px;
+  }
+
+  .form-submit:hover { background: #38b2ac; }
+
+  /* 타이핑 효과 */
+  .typing-cursor {
+    display: inline-block;
+    width: 2px;
+    height: 14px;
+    background: var(--accent);
+    margin-left: 2px;
+    animation: cursor-blink 1s step-end infinite;
+    vertical-align: middle;
+  }
+
+  @keyframes cursor-blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
+
+  /* 스크롤 애니메이션 */
+  .fade-in {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+
+  .fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* 반응형 */
+  @media (max-width: 1024px) {
+    .services-grid { grid-template-columns: repeat(2, 1fr); }
+    .roadmap { grid-template-columns: repeat(2, 1fr); gap: 32px; }
+    .roadmap::before { display: none; }
+    .dashboard-grid { grid-template-columns: 1fr 1fr; }
+    .tools-grid { grid-template-columns: repeat(2, 1fr); }
+    .demo-layout { grid-template-columns: 1fr; }
+    .hero { padding: 120px 40px 80px; }
+    .section { padding: 80px 40px; }
+  }
+
+  @media (max-width: 768px) {
+    nav { padding: 0 20px; }
+    .nav-links, .nav-cta { display: none; }
+    .services-grid { grid-template-columns: 1fr; }
+    .dashboard-grid { grid-template-columns: 1fr; }
+    .tools-grid { grid-template-columns: 1fr; }
+    .hero-stats { flex-direction: column; gap: 24px; }
+    .hero { padding: 100px 24px 60px; }
+    .section { padding: 60px 24px; }
+    footer { flex-direction: column; gap: 16px; text-align: center; }
+    .cta-buttons { flex-direction: column; }
+    .footer-cta { padding: 60px 24px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- 네비게이션 -->
+<nav>
+  <div class="nav-logo">
+    <span class="nav-badge">GWANGJIN-GU</span>
+    <span class="nav-title">AI 역량강화 포털</span>
+  </div>
+  <ul class="nav-links">
+    <li><a class="active" onclick="scrollTo('hero')">홈</a></li>
+    <li><a onclick="scrollToSection('services')">서비스</a></li>
+    <li><a onclick="scrollToSection('tools')">AI 도구</a></li>
+    <li><a onclick="scrollToSection('roadmap')">학습 로드맵</a></li>
+    <li><a onclick="scrollToSection('dashboard')">현황</a></li>
+  </ul>
+  <button class="nav-cta" onclick="openModal()">교육 신청</button>
+</nav>
+
+<!-- 히어로 -->
+<section class="hero" id="hero">
+  <div class="hero-orb"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">SMART GWANGJIN-GU · AX TRANSFORMATION</div>
+    <h1 class="hero-title">
+      광진구청 직원을 위한
+      <span>AI 역량강화</span>
+      통합 포털
+    </h1>
+    <p class="hero-subtitle">
+      스마트정보과가 운영하는 공직자 AI 활용 역량강화 플랫폼입니다.<br>
+      AI 학습부터 업무 자동화, 공문서 작성 지원까지 — 행정 AX 전환을 함께합니다.
+    </p>
+    <div class="hero-stats">
+      <div class="stat-item">
+        <span class="stat-num" id="stat1">0</span>
+        <div class="stat-label">등록 직원</div>
+      </div>
+      <div class="stat-item">
+        <span class="stat-num" id="stat2">0</span>
+        <div class="stat-label">완료된 AI 학습 과정</div>
+      </div>
+      <div class="stat-item">
+        <span class="stat-num" id="stat3">0</span>
+        <div class="stat-label">자동화 업무 건수</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 서비스 섹션 -->
+<section class="section" id="services">
+  <div class="section-header fade-in">
+    <div class="section-tag">CORE SERVICES</div>
+    <h2 class="section-title">6대 핵심 서비스</h2>
+    <p class="section-desc">광진구청 스마트정보과가 제공하는 AI 행정 혁신 서비스입니다.</p>
+  </div>
+
+  <div class="services-grid fade-in">
+    <div class="service-card" style="--card-accent: var(--accent);" onclick="openToolDetail('doc')">
+      <div class="service-icon">📄</div>
+      <div class="service-card-title">AI 공문서 작성 도우미</div>
+      <div class="service-card-desc">보고서, 공문, 보도자료 초안을 AI가 행정 문체로 자동 생성합니다. 기안문 양식에 맞게 즉시 변환 가능합니다.</div>
+      <span class="service-tag">ACTIVE</span>
+    </div>
+
+    <div class="service-card" style="--card-accent: var(--blue);" onclick="openToolDetail('edu')">
+      <div class="service-icon">🎓</div>
+      <div class="service-card-title">AI 역량 교육 플랫폼</div>
+      <div class="service-card-desc">단계별 AI 활용 교육 콘텐츠를 직원 수준에 맞게 제공합니다. 수료증 발급 및 역량 이수 현황 관리가 가능합니다.</div>
+      <span class="service-tag">ACTIVE</span>
+    </div>
+
+    <div class="service-card" style="--card-accent: var(--purple);" onclick="openToolDetail('meeting')">
+      <div class="service-icon">🎙️</div>
+      <div class="service-card-title">AI 회의록 자동 생성</div>
+      <div class="service-card-desc">회의 음성을 자동으로 텍스트화하고, 핵심 안건·결정사항·후속조치를 정리한 공식 회의록을 생성합니다.</div>
+      <span class="service-tag">BETA</span>
+    </div>
+
+    <div class="service-card" style="--card-accent: var(--green);" onclick="openToolDetail('data')">
+      <div class="service-icon">📊</div>
+      <div class="service-card-title">민원 데이터 분석 도구</div>
+      <div class="service-card-desc">민원 유형·빈도·처리 시간을 AI가 분석하여 업무 개선 인사이트를 시각화합니다. 정기 보고서 자동 생성 지원.</div>
+      <span class="service-tag">ACTIVE</span>
+    </div>
+
+    <div class="service-card" style="--card-accent: var(--accent2);" onclick="openToolDetail('qna')">
+      <div class="service-icon">💬</div>
+      <div class="service-card-title">내부 AI 챗봇 (행정 Q&A)</div>
+      <div class="service-card-desc">법령, 예규, 지침, 내부 규정을 학습한 AI 챗봇이 직원의 행정 질문에 즉시 답변합니다. 24시간 운영.</div>
+      <span class="service-tag">BETA</span>
+    </div>
+
+    <div class="service-card" style="--card-accent: var(--accent3);" onclick="openToolDetail('auto')">
+      <div class="service-icon">⚙️</div>
+      <div class="service-card-title">반복 업무 자동화 빌더</div>
+      <div class="service-card-desc">코딩 없이 반복 행정 업무를 자동화할 수 있는 No-Code 워크플로우 도구입니다. 엑셀 자동화, 알림 발송 등 지원.</div>
+      <span class="service-tag">SOON</span>
+    </div>
+  </div>
+</section>
+
+<!-- AI 문서 도우미 데모 -->
+<section class="section demo-section" id="demo">
+  <div class="demo-layout">
+    <div class="demo-left fade-in">
+      <div class="section-tag">LIVE DEMO</div>
+      <h2 class="section-title" style="font-size:28px;">AI 공문서 도우미<br>직접 체험해보기</h2>
+      <p class="section-desc" style="margin-top: 16px;">
+        보고서 작성, 공문 초안, 보도자료 등<br>다양한 행정 문서를 AI와 함께 작성하세요.
+      </p>
+
+      <div style="margin-top: 32px; display: flex; flex-direction: column; gap: 12px;">
+        <div style="display: flex; align-items: center; gap: 12px; font-size: 14px; color: var(--muted);">
+          <span style="color: var(--accent); font-size: 18px;">✓</span> 행정 문체 자동 적용
+        </div>
+        <div style="display: flex; align-items: center; gap: 12px; font-size: 14px; color: var(--muted);">
+          <span style="color: var(--accent); font-size: 18px;">✓</span> 기안문 양식 변환 지원
+        </div>
+        <div style="display: flex; align-items: center; gap: 12px; font-size: 14px; color: var(--muted);">
+          <span style="color: var(--accent); font-size: 18px;">✓</span> 내부 결재 라인 맞춤 작성
+        </div>
+        <div style="display: flex; align-items: center; gap: 12px; font-size: 14px; color: var(--muted);">
+          <span style="color: var(--accent); font-size: 18px;">✓</span> 한글(.hwp/.hwpx) 직접 출력
+        </div>
+      </div>
+
+      <div style="margin-top: 40px;">
+        <div style="font-size: 12px; color: var(--muted); font-family: 'Space Mono', monospace; margin-bottom: 12px;">빠른 템플릿 선택</div>
+        <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+          <button onclick="quickPrompt('보도자료')" style="background: var(--card); border: 1px solid var(--border); color: var(--text); padding: 8px 16px; border-radius: 20px; font-size: 13px; cursor: pointer; font-family: 'Noto Sans KR', sans-serif; transition: all 0.2s;" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border)'">📢 보도자료</button>
+          <button onclick="quickPrompt('업무보고')" style="background: var(--card); border: 1px solid var(--border); color: var(--text); padding: 8px 16px; border-radius: 20px; font-size: 13px; cursor: pointer; font-family: 'Noto Sans KR', sans-serif; transition: all 0.2s;" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border)'">📋 업무보고</button>
+          <button onclick="quickPrompt('공문서')" style="background: var(--card); border: 1px solid var(--border); color: var(--text); padding: 8px 16px; border-radius: 20px; font-size: 13px; cursor: pointer; font-family: 'Noto Sans KR', sans-serif; transition: all 0.2s;" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border)'">📨 공문서</button>
+          <button onclick="quickPrompt('회의안건')" style="background: var(--card); border: 1px solid var(--border); color: var(--text); padding: 8px 16px; border-radius: 20px; font-size: 13px; cursor: pointer; font-family: 'Noto Sans KR', sans-serif; transition: all 0.2s;" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border)'">🗂️ 회의안건</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="demo-right fade-in">
+      <div class="demo-window-bar">
+        <div class="dot dot-red"></div>
+        <div class="dot dot-yellow"></div>
+        <div class="dot dot-green"></div>
+        <span class="demo-window-title">AI 공문서 도우미 v1.0 — 광진구청 스마트정보과</span>
+      </div>
+      <div class="demo-chat" id="chatArea">
+        <div class="chat-msg" style="animation-delay: 0.1s; opacity: 1;">
+          <div class="chat-avatar avatar-ai">🤖</div>
+          <div class="chat-bubble bubble-ai">
+            안녕하세요! 광진구청 AI 공문서 도우미입니다.<br>
+            작성하실 문서 유형과 주요 내용을 알려주시면 행정 문체로 초안을 바로 작성해 드립니다. 📝
+          </div>
+        </div>
+      </div>
+      <div class="demo-input-area">
+        <input type="text" class="demo-input" id="chatInput" placeholder="예: AI 역량강화 교육 실시 계획 보고서 초안을 써줘" onkeypress="handleEnter(event)">
+        <button class="demo-send" onclick="sendChat()">전송</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- AI 도구 모음 -->
+<section class="section" id="tools">
+  <div class="section-header fade-in">
+    <div class="section-tag">AI TOOLKIT</div>
+    <h2 class="section-title">추천 AI 도구 모음</h2>
+    <p class="section-desc">업무에 바로 활용 가능한 AI 도구를 소개합니다.</p>
+  </div>
+
+  <div class="tab-nav">
+    <button class="tab-btn active" onclick="switchTab('all')">전체</button>
+    <button class="tab-btn" onclick="switchTab('writing')">문서 작성</button>
+    <button class="tab-btn" onclick="switchTab('analysis')">분석·리서치</button>
+    <button class="tab-btn" onclick="switchTab('auto')">자동화</button>
+  </div>
+
+  <div class="tab-content active" id="tab-all">
+    <div class="tools-grid fade-in">
+      <div class="tool-card">
+        <span class="tool-status status-active">● 사용가능</span>
+        <span class="tool-icon">🤖</span>
+        <div class="tool-name">Claude (Anthropic)</div>
+        <div class="tool-desc">공문서 작성, 요약, 번역, 기획안 작성 등 범용 AI 어시스턴트. 행정 문서에 최적화.</div>
+      </div>
+      <div class="tool-card">
+        <span class="tool-status status-active">● 사용가능</span>
+        <span class="tool-icon">📊</span>
+        <div class="tool-name">ChatGPT (OpenAI)</div>
+        <div class="tool-desc">대화형 AI. 정책 분석, 민원 답변 초안, 아이디어 브레인스토밍에 활용 가능.</div>
+      </div>
+      <div class="tool-card">
+        <span class="tool-status status-active">● 사용가능</span>
+        <span class="tool-icon">🔍</span>
+        <div class="tool-name">Perplexity AI</div>
+        <div class="tool-desc">실시간 웹 검색 결합 AI. 최신 정책·법령 정보 조사, 리서치 업무에 유용.</div>
+      </div>
+      <div class="tool-card">
+        <span class="tool-status status-beta">◐ 베타</span>
+        <span class="tool-icon">🎙️</span>
+        <div class="tool-name">CLOVA Note (네이버)</div>
+        <div class="tool-desc">회의 음성 자동 텍스트 변환. 한국어 특화 STT로 회의록 초안 자동 작성.</div>
+      </div>
+      <div class="tool-card">
+        <span class="tool-status status-active">● 사용가능</span>
+        <span class="tool-icon">📈</span>
+        <div class="tool-name">Copilot (Microsoft)</div>
+        <div class="tool-desc">엑셀·파워포인트·워드 내 AI 통합. 데이터 분석, 프레젠테이션 자동화.</div>
+      </div>
+      <div class="tool-card">
+        <span class="tool-status status-beta">◐ 베타</span>
+        <span class="tool-icon">🖼️</span>
+        <div class="tool-name">Gamma AI</div>
+        <div class="tool-desc">AI 기반 프레젠테이션 자동 생성. 보고용 슬라이드를 빠르게 제작.</div>
+      </div>
+      <div class="tool-card">
+        <span class="tool-status status-soon">○ 도입예정</span>
+        <span class="tool-icon">⚡</span>
+        <div class="tool-name">Make (Integromat)</div>
+        <div class="tool-desc">No-Code 자동화 플랫폼. 행정 반복 업무를 워크플로우로 자동화.</div>
+      </div>
+      <div class="tool-card">
+        <span class="tool-status status-active">● 사용가능</span>
+        <span class="tool-icon">🌐</span>
+        <div class="tool-name">DeepL</div>
+        <div class="tool-desc">고품질 AI 번역 도구. 국제 협력 문서, 외국어 민원 대응에 활용.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 학습 로드맵 -->
+<section class="section" id="roadmap" style="background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
+  <div class="section-header fade-in" style="text-align: center;">
+    <div class="section-tag">LEARNING PATH</div>
+    <h2 class="section-title">AI 역량강화 단계별 로드맵</h2>
+    <p class="section-desc">모든 직원이 단계적으로 AI를 업무에 적용할 수 있도록 설계된 커리큘럼입니다.</p>
+  </div>
+
+  <div class="roadmap fade-in">
+    <div class="roadmap-step step1">
+      <div class="roadmap-dot">
+        📚
+        <span class="roadmap-num">1</span>
+      </div>
+      <div class="roadmap-label">AI 기초 이해</div>
+      <div class="roadmap-desc">AI의 개념, 활용 사례, 공공부문 적용 방향 이해. 필수 수료 과정.</div>
+    </div>
+    <div class="roadmap-step step2">
+      <div class="roadmap-dot">
+        💡
+        <span class="roadmap-num">2</span>
+      </div>
+      <div class="roadmap-label">프롬프트 활용</div>
+      <div class="roadmap-desc">ChatGPT·Claude 등 생성형 AI 실습. 업무별 프롬프트 작성 방법 습득.</div>
+    </div>
+    <div class="roadmap-step step3">
+      <div class="roadmap-dot">
+        🔧
+        <span class="roadmap-num">3</span>
+      </div>
+      <div class="roadmap-label">업무 자동화</div>
+      <div class="roadmap-desc">엑셀 매크로, 자동화 도구 활용. 반복 업무 자동화 프로세스 설계 실습.</div>
+    </div>
+    <div class="roadmap-step step4">
+      <div class="roadmap-dot">
+        🚀
+        <span class="roadmap-num">4</span>
+      </div>
+      <div class="roadmap-label">AX 리더십</div>
+      <div class="roadmap-desc">부서 AX 혁신 과제 발굴 및 기획. AI 챔피언으로서 팀 내 확산 주도.</div>
+    </div>
+  </div>
+
+  <div style="margin-top: 60px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;" class="fade-in">
+    <div style="background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 24px;">
+      <div style="font-family: 'Space Mono', monospace; font-size: 11px; color: var(--muted); margin-bottom: 12px;">SCHEDULE 01</div>
+      <div style="font-size: 16px; font-weight: 700; margin-bottom: 8px;">AI 기초 과정 (온라인)</div>
+      <div style="font-size: 13px; color: var(--muted);">매월 상시 수강 가능 · 4주 과정 · 자기주도학습</div>
+    </div>
+    <div style="background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 24px;">
+      <div style="font-family: 'Space Mono', monospace; font-size: 11px; color: var(--muted); margin-bottom: 12px;">SCHEDULE 02</div>
+      <div style="font-size: 16px; font-weight: 700; margin-bottom: 8px;">실무 활용 워크숍 (집합)</div>
+      <div style="font-size: 13px; color: var(--muted);">분기 1회 · 반일 과정 · 실습 중심</div>
+    </div>
+    <div style="background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 24px;">
+      <div style="font-family: 'Space Mono', monospace; font-size: 11px; color: var(--muted); margin-bottom: 12px;">SCHEDULE 03</div>
+      <div style="font-size: 16px; font-weight: 700; margin-bottom: 8px;">AX 리더 심화 과정</div>
+      <div style="font-size: 13px; color: var(--muted);">연 2회 · 2일 과정 · 선발제</div>
+    </div>
+  </div>
+</section>
+
+<!-- 현황 대시보드 -->
+<section class="section" id="dashboard">
+  <div class="section-header fade-in">
+    <div class="section-tag">LIVE DASHBOARD</div>
+    <h2 class="section-title">AI 역량강화 현황</h2>
+    <p class="section-desc">광진구청 AI 도입 및 역량강화 추진 현황을 실시간으로 확인합니다.</p>
+  </div>
+
+  <div class="notice-bar fade-in">
+    <span class="notice-icon">📢</span>
+    <span class="notice-text">2026년 2분기 AI 역량강화 교육 접수가 진행 중입니다. 참여를 원하시는 직원은 교육 신청 버튼을 눌러주세요.</span>
+    <span class="notice-badge">공지</span>
+  </div>
+
+  <div class="dashboard-grid fade-in">
+    <div class="dash-card large">
+      <div class="dash-card-title">
+        부서별 AI 학습 이수율
+        <span class="dash-card-live"><span class="live-dot"></span>실시간</span>
+      </div>
+      <div class="progress-list">
+        <div class="progress-item">
+          <div class="progress-label"><span>스마트정보과</span><span class="progress-pct">92%</span></div>
+          <div class="progress-bar-bg"><div class="progress-bar-fill" data-width="92%" style="width:0; background: linear-gradient(90deg, var(--accent), var(--blue));"></div></div>
+        </div>
+        <div class="progress-item">
+          <div class="progress-label"><span>기획예산과</span><span class="progress-pct">78%</span></div>
+          <div class="progress-bar-bg"><div class="progress-bar-fill" data-width="78%" style="width:0; background: linear-gradient(90deg, var(--blue), var(--purple));"></div></div>
+        </div>
+        <div class="progress-item">
+          <div class="progress-label"><span>행정지원과</span><span class="progress-pct">65%</span></div>
+          <div class="progress-bar-bg"><div class="progress-bar-fill" data-width="65%" style="width:0; background: linear-gradient(90deg, var(--purple), var(--accent2));"></div></div>
+        </div>
+        <div class="progress-item">
+          <div class="progress-label"><span>민원여권과</span><span class="progress-pct">71%</span></div>
+          <div class="progress-bar-bg"><div class="progress-bar-fill" data-width="71%" style="width:0; background: linear-gradient(90deg, var(--accent2), var(--accent3));"></div></div>
+        </div>
+        <div class="progress-item">
+          <div class="progress-label"><span>도시계획과</span><span class="progress-pct">54%</span></div>
+          <div class="progress-bar-bg"><div class="progress-bar-fill" data-width="54%" style="width:0; background: linear-gradient(90deg, var(--green), var(--blue));"></div></div>
+        </div>
+        <div class="progress-item">
+          <div class="progress-label"><span>복지정책과</span><span class="progress-pct">48%</span></div>
+          <div class="progress-bar-bg"><div class="progress-bar-fill" data-width="48%" style="width:0; background: linear-gradient(90deg, var(--accent3), var(--purple));"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="dash-card">
+      <div class="dash-card-title">이수 직원 수</div>
+      <div class="metric-value" id="metricEmployees">0</div>
+      <div class="metric-change">↑ 전월 대비 +23명</div>
+      <div class="metric-label">2026년 누계</div>
+    </div>
+
+    <div class="dash-card">
+      <div class="dash-card-title">문서 자동화 건수</div>
+      <div class="metric-value" id="metricDocs">0</div>
+      <div class="metric-change">↑ 이번 달 +1,240건</div>
+      <div class="metric-label">총 처리 문서</div>
+    </div>
+
+    <div class="dash-card">
+      <div class="dash-card-title">업무시간 절감 (시간)</div>
+      <div class="metric-value" id="metricHours">0</div>
+      <div class="metric-change">↑ 월 평균 절감</div>
+      <div class="metric-label">직원당 평균 절감 시간</div>
+    </div>
+
+    <div class="dash-card">
+      <div class="dash-card-title">AI 만족도</div>
+      <div class="metric-value" style="color: var(--accent2);">4.2</div>
+      <div class="metric-change" style="color: var(--accent2);">/ 5점 만점</div>
+      <div class="metric-label">직원 만족도 조사 결과</div>
+    </div>
+  </div>
+</section>
+
+<!-- 하단 CTA -->
+<div class="footer-cta">
+  <h2>지금 바로 시작하세요</h2>
+  <p>AI와 함께하는 스마트 광진구청, 역량강화 교육에 참여하실 직원을 기다립니다.</p>
+  <div class="cta-buttons">
+    <button class="btn-primary" onclick="openModal()">교육 신청하기</button>
+    <button class="btn-outline" onclick="scrollToSection('services')">서비스 자세히 보기</button>
+  </div>
+</div>
+
+<!-- 푸터 -->
+<footer>
+  <div class="footer-left">
+    <span class="footer-logo">GWANGJIN·AI</span>
+    <span>광진구청 스마트정보과 운영</span>
+  </div>
+  <div>서울특별시 광진구 아차산로 272 · ☎ 02-450-7000</div>
+  <div style="font-family: 'Space Mono', monospace; font-size: 11px;">v1.0.0 · 2026</div>
+</footer>
+
+<!-- 교육 신청 모달 -->
+<div class="modal-overlay" id="modal" onclick="closeModalOutside(event)">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal()">×</button>
+    <div class="modal-title">AI 역량강화 교육 신청</div>
+    <div class="modal-subtitle">광진구청 소속 직원만 신청 가능합니다.</div>
+    <div class="form-group">
+      <label class="form-label">성명</label>
+      <input type="text" class="form-input" placeholder="홍길동">
+    </div>
+    <div class="form-group">
+      <label class="form-label">소속 부서</label>
+      <select class="form-select">
+        <option value="">부서를 선택하세요</option>
+        <option>스마트정보과</option>
+        <option>기획예산과</option>
+        <option>행정지원과</option>
+        <option>민원여권과</option>
+        <option>도시계획과</option>
+        <option>복지정책과</option>
+        <option>기타</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">신청 과정</label>
+      <select class="form-select">
+        <option value="">과정을 선택하세요</option>
+        <option>AI 기초 과정 (온라인)</option>
+        <option>실무 활용 워크숍 (집합)</option>
+        <option>AX 리더 심화 과정</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">현재 AI 활용 수준</label>
+      <select class="form-select">
+        <option>AI를 거의 사용해본 적 없음</option>
+        <option>기본적인 사용 경험 있음</option>
+        <option>업무에 간헐적으로 활용 중</option>
+        <option>정기적으로 업무에 활용 중</option>
+      </select>
+    </div>
+    <button class="form-submit" onclick="submitForm()">신청 완료</button>
+  </div>
+</div>
+
+<script>
+  // 숫자 카운트 애니메이션
+  function animateCount(id, target, duration = 2000, suffix = '') {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const start = performance.now();
+    const update = (time) => {
+      const elapsed = time - start;
+      const progress = Math.min(elapsed / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      el.textContent = Math.floor(eased * target).toLocaleString() + suffix;
+      if (progress < 1) requestAnimationFrame(update);
+    };
+    requestAnimationFrame(update);
+  }
+
+  // 히어로 통계 카운트
+  window.addEventListener('load', () => {
+    setTimeout(() => {
+      animateCount('stat1', 847, 2000, '명');
+      animateCount('stat2', 124, 1800, '개');
+      animateCount('stat3', 3200, 2200, '건');
+    }, 500);
+
+    setTimeout(() => {
+      animateCount('metricEmployees', 612, 1500, '명');
+      animateCount('metricDocs', 8420, 1800, '건');
+      animateCount('metricHours', 18, 1500, 'h');
+    }, 800);
+  });
+
+  // 스크롤 애니메이션
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+
+        // 프로그레스 바 애니메이션
+        const bars = entry.target.querySelectorAll('.progress-bar-fill');
+        bars.forEach(bar => {
+          const width = bar.dataset.width;
+          setTimeout(() => { bar.style.width = width; }, 200);
+        });
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+  // 네비게이션
+  function scrollToSection(id) {
+    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+  }
+
+  // 모달
+  function openModal() {
+    document.getElementById('modal').classList.add('open');
+  }
+
+  function closeModal() {
+    document.getElementById('modal').classList.remove('open');
+  }
+
+  function closeModalOutside(e) {
+    if (e.target.id === 'modal') closeModal();
+  }
+
+  function submitForm() {
+    closeModal();
+    setTimeout(() => {
+      alert('교육 신청이 완료되었습니다.\n담당자가 확인 후 이메일로 안내해 드리겠습니다.');
+    }, 100);
+  }
+
+  // 탭
+  function switchTab(tab) {
+    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    document.querySelector(`[onclick="switchTab('${tab}')"]`).classList.add('active');
+    const tabEl = document.getElementById(`tab-${tab}`);
+    if (tabEl) tabEl.classList.add('active');
+    else document.getElementById('tab-all').classList.add('active');
+  }
+
+  // 챗봇 데모
+  const demoResponses = {
+    '보도자료': `보도자료 초안을 작성해 드리겠습니다.\n\n【보도자료】\n광진구, AI 역량강화 교육 프로그램 본격 운영\n- 소속 직원 대상 단계별 맞춤 AI 교육 실시\n\n서울특별시 광진구(구청장 OOO)는 스마트 행정 전환을 위한 '직원 AI 역량강화 교육 프로그램'을 본격 운영한다고 밝혔다...\n\n📎 추가 수정이 필요하시면 말씀해 주세요.`,
+    '업무보고': `업무보고서 초안을 작성해 드리겠습니다.\n\n━━━━━━━━━━━━━━━\n 업 무 보 고\n━━━━━━━━━━━━━━━\n\n1. 보고 개요\n  ■ 보고부서 : 스마트정보과\n  ■ 보고일시 : 2026. 06. 08.\n\n2. 추진 현황\n  가. 주요 성과\n    - 직원 AI 역량강화 교육 이수율: 73%\n    - 문서 자동화 도입 부서: 6개 과\n\n3. 향후 계획\n  - 2분기 집합 교육 실시(6월 중)\n\n📎 구체적인 내용을 입력하시면 수정해 드립니다.`,
+    '공문서': `공문서 초안을 작성해 드리겠습니다.\n\n수 신 : 서울특별시 디지털정책과장\n참 조 :\n제 목 : AI 역량강화 교육 추진 결과 보고\n\n1. 관련 : 디지털정책과-0000(2026.01.01.)호\n\n2. 위 호와 관련하여 2026년 상반기 직원 AI 역량강화 교육 추진 결과를 아래와 같이 보고합니다.\n\n  가. 교육 실시 현황\n    1) 일 시 : 2026. 04. 01. ~ 06. 30.\n    2) 대 상 : 전직원 847명\n    3) 이수율 : 73%(618명)\n\n끝.\n\n광 진 구 청 장`,
+    '회의안건': `회의 안건을 작성해 드리겠습니다.\n\n━━━━━━━━━━━━━━━\n 스마트정보과 업무 협의\n━━━━━━━━━━━━━━━\n■ 일시 : 2026. 06. 08.(월) 14:00\n■ 장소 : 스마트정보과 회의실\n■ 참석 : 과장, 팀장, 담당 주무관\n\n[안건]\n  1. AI 역량강화 2분기 교육 계획 논의\n  2. 자동화 시범 과제 선정\n  3. 기타\n\n[담당자]\n  김OO 주무관 ☎ 02-450-XXXX`,
+  };
+
+  const genericResponses = [
+    '해당 문서 초안을 행정 문체로 작성해 드리겠습니다. 구체적인 주제, 수신처, 주요 내용을 알려주시면 더욱 정확한 문서를 작성할 수 있습니다. 어떤 내용을 담고 싶으신가요?',
+    '말씀하신 내용을 바탕으로 공식 행정 문서를 초안 작성해 드릴 수 있습니다. 문서 유형(공문/보고서/보도자료)과 핵심 내용을 구체적으로 입력해 주시면 즉시 생성해 드리겠습니다.',
+    '광진구청 AI 공문서 도우미입니다. 업무보고서, 공문, 보도자료, 회의안건 등 다양한 행정 문서를 지원합니다. 작성하실 문서와 주요 내용을 알려주세요.',
+  ];
+
+  let responseIndex = 0;
+
+  function addMessage(text, isUser) {
+    const chatArea = document.getElementById('chatArea');
+    const msg = document.createElement('div');
+    msg.className = `chat-msg${isUser ? ' user' : ''}`;
+    msg.style.animationDelay = '0s';
+    msg.innerHTML = `
+      <div class="chat-avatar ${isUser ? 'avatar-user' : 'avatar-ai'}">${isUser ? '👤' : '🤖'}</div>
+      <div class="chat-bubble ${isUser ? 'bubble-user' : 'bubble-ai'}">${text.replace(/\n/g, '<br>')}</div>
+    `;
+    chatArea.appendChild(msg);
+    chatArea.scrollTop = chatArea.scrollHeight;
+  }
+
+  function sendChat() {
+    const input = document.getElementById('chatInput');
+    const text = input.value.trim();
+    if (!text) return;
+
+    addMessage(text, true);
+    input.value = '';
+
+    // 타이핑 인디케이터
+    const chatArea = document.getElementById('chatArea');
+    const typing = document.createElement('div');
+    typing.className = 'chat-msg';
+    typing.id = 'typing';
+    typing.innerHTML = `<div class="chat-avatar avatar-ai">🤖</div><div class="chat-bubble bubble-ai">작성 중<span class="typing-cursor"></span></div>`;
+    chatArea.appendChild(typing);
+    chatArea.scrollTop = chatArea.scrollHeight;
+
+    setTimeout(() => {
+      typing.remove();
+      let response = genericResponses[responseIndex % genericResponses.length];
+
+      // 키워드 매칭
+      for (const [key, val] of Object.entries(demoResponses)) {
+        if (text.includes(key)) { response = val; break; }
+      }
+
+      addMessage(response, false);
+      responseIndex++;
+    }, 1200);
+  }
+
+  function quickPrompt(type) {
+    document.getElementById('chatInput').value = `${type} 초안을 작성해줘`;
+    document.getElementById('demo').scrollIntoView({ behavior: 'smooth' });
+    setTimeout(() => sendChat(), 400);
+  }
+
+  function handleEnter(e) {
+    if (e.key === 'Enter') sendChat();
+  }
+
+  function openToolDetail(type) {
+    const messages = {
+      doc: 'AI 공문서 도우미 서비스 페이지는 현재 구축 중입니다. 아래 데모를 직접 체험해 보세요!',
+      edu: '교육 신청을 통해 역량강화 과정에 참여하실 수 있습니다.',
+      meeting: 'AI 회의록 자동 생성 서비스는 베타 테스트 중입니다. 담당자에게 문의 바랍니다.',
+      data: '민원 데이터 분석 도구는 스마트정보과 내부망에서 접근 가능합니다.',
+      qna: '행정 Q&A 챗봇은 내부망을 통해 이용 가능합니다.',
+      auto: '반복 업무 자동화 빌더는 2026년 하반기 오픈 예정입니다.',
+    };
+    alert(messages[type] || '서비스 상세 페이지로 이동합니다.');
+  }
+
+  // 활성 네비게이션 처리
+  const sections = ['hero', 'services', 'tools', 'roadmap', 'dashboard'];
+  window.addEventListener('scroll', () => {
+    const scrollY = window.scrollY + 100;
+    sections.forEach(id => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      if (scrollY >= el.offsetTop && scrollY < el.offsetTop + el.offsetHeight) {
+        document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+      }
+    });
+  });
+</script>
+<script>/* kg-preview: #<heading> \uc704\uce58\ub85c \uc774\ub3d9 */
+(function(){function norm(t){return (t||'').replace(/\s+/g,'').toLowerCase()}
+function go(){var h=decodeURIComponent(location.hash.slice(1));if(!h)return;var k=norm(h).slice(0,24);if(!k)return;
+var best=null,bl=1e9,els=document.body.querySelectorAll('h1,h2,h3,h4,h5,p,div,span,li,td,text,tspan,section,article');
+for(var i=0;i<els.length;i++){var e=els[i],t=norm(e.textContent);if(t.length<bl&&t.indexOf(k)>-1){best=e;bl=t.length}}
+if(!best)return;var box=best.closest('section,[class*=slide],[class*=page],article')||best;
+box.scrollIntoView({block:'start'});box.style.outline='3px solid #c0504d';box.style.outlineOffset='4px';
+setTimeout(function(){box.style.outline=''},2600)}
+window.addEventListener('load',function(){setTimeout(go,400)});window.addEventListener('hashchange',go)})();</script></body>
+</html>

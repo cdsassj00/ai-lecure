@@ -1,0 +1,1507 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head><meta name="robots" content="noindex, nofollow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Session 05 · 어시스트 바이브 코딩 ② — 업무 자동화와 로컬 AI</title>
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700;9..144,800&family=Noto+Serif+KR:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f5efe4;--bg2:#ede4d3;--ink:#2b2015;--ink2:#5a4a38;--ink3:#8a7659;--acc:#b8532a;--acc3:#d49575;--ln:#d8c8ae;--ln2:#e6d9bf;--dk:#1a1612;--dk2:#241e17;--on:#ede4d3;--on2:#a89172;--serif:'Fraunces','Noto Serif KR',Georgia,serif;--sans:'Pretendard Variable',Pretendard,sans-serif;--mono:'JetBrains Mono',ui-monospace,Consolas,monospace}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{margin:0;padding:0;overflow:hidden;height:100vh;width:100vw;background:#0e0a06;font-family:var(--sans);-webkit-font-smoothing:antialiased}
+.deck{height:100vh;overflow-y:scroll;scroll-snap-type:y mandatory;scroll-behavior:smooth;scrollbar-width:none;-ms-overflow-style:none;background:#0e0a06}
+.deck::-webkit-scrollbar{display:none}
+.stage{width:100vw;min-height:100vh;display:flex;align-items:center;justify-content:center;scroll-snap-align:start;padding:0;background:#0e0a06}
+.slide{width:1600px;height:900px;background:var(--bg);position:relative;overflow:hidden;transform-origin:center;box-shadow:0 40px 90px -30px rgba(0,0,0,0.7);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' seed='3'/%3E%3CfeColorMatrix values='0 0 0 0 0.16  0 0 0 0 0.12  0 0 0 0 0.08  0 0 0 0.025 0'/%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E")}
+
+.hbar{position:absolute;top:0;left:0;right:0;height:52px;background:var(--dk);display:flex;align-items:center;justify-content:space-between;padding:0 80px}
+.hbar-l{display:flex;align-items:center;gap:12px;font-family:var(--mono);font-size:10.5px;color:#fff;letter-spacing:2.5px;font-weight:600}
+.hbar-l::before{content:"";width:22px;height:8px;background:var(--acc)}
+.hbar-r{font-family:var(--mono);font-size:10.5px;color:#bbb;letter-spacing:1.5px}
+.hl{position:absolute;left:80px;right:80px;top:86px}
+.hl-kicker{font-family:var(--mono);font-size:12px;color:var(--ink3);letter-spacing:2.5px;font-weight:700;margin-bottom:14px}
+.hl-title{font-family:var(--serif);font-weight:700;font-size:36px;line-height:1.22;letter-spacing:-0.5px;color:var(--ink)}
+.hl-sub{font-size:15.5px;color:var(--ink2);margin-top:12px;line-height:1.6}
+.hl-bar{width:60px;height:3px;background:var(--ink);margin-top:16px}
+.hl-rule{position:absolute;left:80px;right:80px;top:248px;height:1px;background:var(--ln2)}
+.fbar{position:absolute;bottom:0;left:0;right:0;height:52px;background:#f0e8d8;border-top:3px solid var(--ln);display:flex;align-items:center;justify-content:space-between;padding:0 80px}
+.fbar-l,.fbar-r{display:flex;flex-direction:column;gap:2px}.fbar-r{align-items:flex-end}
+.fbar-label{font-family:var(--mono);font-size:10px;color:var(--ink3);letter-spacing:2.5px;font-weight:700}
+.fbar-title{font-size:13px;color:var(--ink)}
+
+.bd{position:absolute;left:80px;right:80px;top:264px;bottom:72px;display:grid;gap:1px;background:var(--ln2)}
+.bd.col3{grid-template-columns:1fr 1fr 1fr}
+.bd.col2{grid-template-columns:1fr 1fr}
+.bd.col2w{grid-template-columns:1.25fr 1fr}
+.bd.col2n{grid-template-columns:1fr 1.3fr}
+.col{background:var(--bg);padding:30px 34px;display:flex;flex-direction:column;overflow:hidden;min-width:0;gap:14px}
+.col > .grow{flex:1;min-height:0;display:flex;flex-direction:column;justify-content:flex-end;gap:10px}
+
+.card{background:var(--bg);padding:34px 36px;display:flex;flex-direction:column;gap:16px;overflow:hidden;min-width:0}
+.card.dk{background:var(--dk);color:var(--on)}
+.card-k{font-family:var(--mono);font-size:11px;color:var(--acc);letter-spacing:2.5px;font-weight:700}
+.card.dk .card-k{color:var(--acc3)}
+.card-anchor{font-family:var(--serif);font-size:26px;font-weight:700;line-height:1.22;color:var(--ink);letter-spacing:-0.4px}
+.card.dk .card-anchor{color:var(--on)}
+.card-anchor em{color:var(--acc);font-style:normal}
+.card.dk .card-anchor em{color:var(--acc3)}
+.card-body{font-size:14px;line-height:1.75;color:var(--ink2)}
+.card.dk .card-body{color:var(--on2)}
+.card-body strong{color:var(--ink);font-weight:700}
+.card.dk .card-body strong{color:var(--on)}
+.card-spacer{flex:1;min-height:8px}
+.card-note{font-size:12.5px;color:var(--ink3);font-style:italic;line-height:1.6}
+.card.dk .card-note{color:var(--on2)}
+
+.sh{display:flex;align-items:baseline;gap:12px;margin-bottom:3px}
+.sh-n{font-family:var(--mono);font-size:11px;color:var(--ink3);letter-spacing:2.5px;font-weight:700;white-space:nowrap}
+.sh-t{font-size:12.5px;color:var(--ink2)}
+.sh-line{height:1px;background:var(--ln2);margin-bottom:10px}
+
+.mtbl{width:100%;border-collapse:collapse;font-size:12.5px}
+.mtbl thead th{font-family:var(--mono);font-size:10px;color:var(--ink3);letter-spacing:1.5px;font-weight:700;text-align:left;padding:9px 9px;border-bottom:1.5px solid var(--ink);background:var(--bg2)}
+.mtbl tbody td{padding:10px 9px;border-bottom:1px solid var(--ln2);color:var(--ink2);vertical-align:top;line-height:1.6}
+.mtbl tbody tr:last-child td{border-bottom:0}
+.mtbl tbody td:first-child{color:var(--ink);font-weight:700;font-family:var(--mono);font-size:10.5px;letter-spacing:1px;white-space:nowrap}
+.mtbl tbody td.q{color:var(--ink);font-weight:600;font-family:var(--sans);font-size:12.5px;letter-spacing:0}
+
+.co{background:var(--bg2);border-left:3px solid var(--acc);padding:14px 18px}
+.co-lb{font-family:var(--mono);font-size:10.5px;color:var(--acc);letter-spacing:2px;font-weight:700;margin-bottom:5px}
+.co-main{font-size:14.5px;color:var(--ink);font-weight:700;line-height:1.5}
+.co p{font-size:12.5px;color:var(--ink2);line-height:1.7;margin-top:5px}
+
+.next{background:var(--dk);padding:16px 20px;color:var(--on)}
+.next-k{font-family:var(--mono);font-size:10.5px;color:var(--acc3);letter-spacing:2px;font-weight:700;margin-bottom:5px}
+.next-t{font-size:13.5px;line-height:1.65;color:var(--on2)}
+.next-t strong{color:var(--on);font-weight:700}
+
+.pit{border-left:3px solid var(--ink);padding:11px 15px;background:var(--bg2)}
+.pit-lb{font-family:var(--mono);font-size:10px;color:var(--ink3);letter-spacing:2px;font-weight:700;margin-bottom:5px}
+.pit-h{font-size:13px;color:var(--ink);font-weight:700;line-height:1.45}
+.pit-d{font-size:12px;color:var(--ink2);line-height:1.65;margin-top:4px}
+
+.smap{display:flex;flex-direction:column;gap:7px}
+.smap-i{display:grid;grid-template-columns:50px 1fr;gap:12px;align-items:start;padding:9px 13px;background:var(--bg2);border-left:2px solid var(--ln)}
+.smap-i.on{border-left-color:var(--acc);background:#f0e7d6}
+.smap-n{font-family:var(--mono);font-size:11px;color:var(--acc);letter-spacing:1.5px;font-weight:700;padding-top:2px}
+.smap-t{font-size:13px;color:var(--ink);font-weight:600;line-height:1.5}
+
+.qex{background:var(--bg2);border-left:3px solid var(--ink);padding:20px 26px;font-family:var(--serif);font-size:19px;line-height:1.75;color:var(--ink)}
+.qex .hot{background:var(--ink);color:var(--on);padding:2px 7px;border-radius:2px;font-weight:700;font-family:var(--sans);font-size:16px;letter-spacing:-0.2px}
+.qex .dim{color:var(--ink3);font-style:italic;font-size:16px}
+
+.draft{padding:14px 18px}
+.draft.weak{background:var(--bg2);border-left:3px solid var(--ln)}
+.draft.strong{background:var(--dk);color:var(--on);border-left:3px solid var(--acc3)}
+.draft-k{font-family:var(--mono);font-size:10px;letter-spacing:1.8px;font-weight:700;color:var(--ink3);margin-bottom:5px}
+.draft.strong .draft-k{color:var(--acc3)}
+.draft-t{font-size:13.5px;line-height:1.7;color:var(--ink)}
+.draft.strong .draft-t{color:var(--on)}
+.draft-note{font-size:11px;color:var(--ink3);margin-top:7px;line-height:1.55;font-style:italic}
+.draft.strong .draft-note{color:var(--on2)}
+
+.cmp2{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--ln2)}
+.cmp2c{padding:18px 22px;display:flex;flex-direction:column;gap:9px;background:var(--bg2)}
+.cmp2c.dk{background:var(--dk);color:var(--on)}
+.cmp2c-k{font-family:var(--mono);font-size:10.5px;color:var(--acc);letter-spacing:2px;font-weight:700}
+.cmp2c.dk .cmp2c-k{color:var(--acc3)}
+.cmp2c-h{font-family:var(--serif);font-size:19px;font-weight:700;color:var(--ink);line-height:1.3;letter-spacing:-0.3px}
+.cmp2c.dk .cmp2c-h{color:var(--on)}
+.cmp2c-d{font-size:12.5px;color:var(--ink2);line-height:1.7}
+.cmp2c.dk .cmp2c-d{color:var(--on2)}
+.cmp2c-list{display:flex;flex-direction:column;gap:4px;font-size:12px;line-height:1.65;color:var(--ink2)}
+.cmp2c.dk .cmp2c-list{color:var(--on2)}
+.cmp2c-list li{list-style:none;padding-left:14px;position:relative}
+.cmp2c-list li::before{content:"—";position:absolute;left:0;color:var(--ink3);font-family:var(--mono)}
+.cmp2c.dk .cmp2c-list li::before{color:var(--on2)}
+.cmp2c-fig{font-family:var(--mono);font-size:10px;color:var(--ink3);letter-spacing:1.5px;font-weight:700;padding-top:7px;border-top:1px solid var(--ln);margin-top:auto}
+.cmp2c.dk .cmp2c-fig{color:var(--acc3);border-top-color:#3a2f24}
+
+.hybrid{background:#f0e7d6;border-left:4px solid var(--acc);padding:18px 24px;display:flex;flex-direction:column;gap:8px}
+.hybrid-k{font-family:var(--mono);font-size:11px;color:var(--acc);letter-spacing:2.5px;font-weight:700}
+.hybrid-h{font-family:var(--serif);font-size:21px;font-weight:700;color:var(--ink);line-height:1.3;letter-spacing:-0.3px}
+.hybrid-d{font-size:13px;color:var(--ink2);line-height:1.7}
+.hybrid-d strong{color:var(--ink);font-weight:700}
+
+.tline{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--ln2);width:100%}
+.tblock{background:var(--bg2);padding:18px 20px;display:flex;flex-direction:column;gap:8px;position:relative}
+.tblock.dk{background:var(--dk);color:var(--on)}
+.tblock-w{font-family:var(--mono);font-size:11px;color:var(--acc);letter-spacing:2px;font-weight:700}
+.tblock.dk .tblock-w{color:var(--acc3)}
+.tblock-h{font-family:var(--serif);font-size:21px;font-weight:700;line-height:1.25;color:var(--ink);letter-spacing:-0.3px}
+.tblock.dk .tblock-h{color:var(--on)}
+.tblock-sess{font-size:11.5px;color:var(--ink2);line-height:1.6;font-family:var(--mono);letter-spacing:0.3px}
+.tblock.dk .tblock-sess{color:var(--on2)}
+.tblock-d{font-size:12px;color:var(--ink2);line-height:1.7}
+.tblock.dk .tblock-d{color:var(--on2)}
+
+/* 추가 컴포넌트 */
+.flow{display:grid;gap:10px;align-items:center}
+.flow.h4{grid-template-columns:1fr auto 1fr auto 1fr auto 1fr}
+.flow.h3{grid-template-columns:1fr auto 1fr auto 1fr}
+.flow-box{background:var(--bg2);border:1px solid var(--ln);padding:12px 14px;text-align:center;display:flex;flex-direction:column;gap:4px}
+.flow-box.dk{background:var(--dk);color:var(--on);border-color:var(--dk)}
+.flow-box.on{background:#f0e7d6;border-color:var(--acc);border-width:2px}
+.flow-box-k{font-family:var(--mono);font-size:9.5px;color:var(--ink3);letter-spacing:1.5px;font-weight:700}
+.flow-box.dk .flow-box-k{color:var(--acc3)}
+.flow-box.on .flow-box-k{color:var(--acc)}
+.flow-box-t{font-size:12.5px;color:var(--ink);font-weight:700;line-height:1.4}
+.flow-box.dk .flow-box-t{color:var(--on)}
+.flow-arrow{font-family:var(--mono);font-size:22px;color:var(--acc);font-weight:700;text-align:center}
+
+.grid2x2{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:1px;background:var(--ln2)}
+.qd{background:var(--bg2);padding:16px 20px;display:flex;flex-direction:column;gap:6px}
+.qd.dk{background:var(--dk);color:var(--on)}
+.qd-k{font-family:var(--mono);font-size:10px;color:var(--ink3);letter-spacing:2px;font-weight:700}
+.qd.dk .qd-k{color:var(--acc3)}
+.qd-h{font-size:14px;color:var(--ink);font-weight:700;line-height:1.35;font-family:var(--serif)}
+.qd.dk .qd-h{color:var(--on)}
+.qd-d{font-size:12px;color:var(--ink2);line-height:1.65}
+.qd.dk .qd-d{color:var(--on2)}
+.qd-d strong{color:var(--ink);font-weight:700}
+.qd.dk .qd-d strong{color:var(--on)}
+
+.ladder{display:flex;flex-direction:column;gap:1px;background:var(--ln2)}
+.ladder-step{background:var(--bg);padding:14px 18px;display:grid;grid-template-columns:56px 1fr auto;gap:16px;align-items:center}
+.ladder-step.dk{background:var(--dk);color:var(--on)}
+.ladder-step.on{background:#f0e7d6}
+.ladder-n{font-family:var(--serif);font-size:28px;color:var(--acc);font-weight:700;letter-spacing:-0.03em}
+.ladder-step.dk .ladder-n{color:var(--acc3)}
+.ladder-b{display:flex;flex-direction:column;gap:3px;min-width:0}
+.ladder-h{font-size:14px;color:var(--ink);font-weight:700;line-height:1.4}
+.ladder-step.dk .ladder-h{color:var(--on)}
+.ladder-d{font-size:12px;color:var(--ink2);line-height:1.6}
+.ladder-step.dk .ladder-d{color:var(--on2)}
+.ladder-tag{font-family:var(--mono);font-size:9.5px;color:var(--ink3);letter-spacing:1.5px;font-weight:700;text-align:right;white-space:nowrap}
+.ladder-step.dk .ladder-tag{color:var(--acc3)}
+
+.code{background:var(--dk2);padding:14px 18px;font-family:var(--mono);font-size:11.5px;line-height:1.75;color:var(--on);white-space:pre-wrap;border-left:3px solid var(--acc3)}
+.code .cm{color:var(--on2)}
+.code .kw{color:var(--acc3);font-weight:600}
+
+.typelist{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--ln2);flex:1}
+.type{background:var(--bg2);padding:16px 18px;display:flex;flex-direction:column;gap:6px}
+.type.dk{background:var(--dk);color:var(--on)}
+.type-n{font-family:var(--serif);font-size:32px;color:var(--acc);font-weight:700;line-height:1;letter-spacing:-0.03em}
+.type.dk .type-n{color:var(--acc3)}
+.type-h{font-size:13px;color:var(--ink);font-weight:700;line-height:1.35}
+.type.dk .type-h{color:var(--on)}
+.type-d{font-size:11.5px;color:var(--ink2);line-height:1.6}
+.type.dk .type-d{color:var(--on2)}
+.type-tag{font-family:var(--mono);font-size:9.5px;color:var(--ink3);letter-spacing:1.5px;font-weight:700;margin-top:auto;padding-top:6px;border-top:1px solid var(--ln)}
+.type.dk .type-tag{color:var(--acc3);border-top-color:#3a2f24}
+
+.toolbar{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:center;justify-content:center;gap:6px;padding:6px 20px;background:rgba(14,10,6,0.92);backdrop-filter:blur(10px);border-bottom:1px solid rgba(255,255,255,0.08)}
+.toolbar button{background:rgba(255,255,255,0.08);color:#ccc;border:1px solid rgba(255,255,255,0.12);padding:5px 14px;font-family:var(--mono);font-size:10px;letter-spacing:1.5px;cursor:pointer;border-radius:3px;text-transform:uppercase;font-weight:600}
+.toolbar button:hover{background:var(--acc);color:#fff;border-color:var(--acc)}
+.toolbar .pg{color:rgba(255,255,255,0.55);font-size:11px;padding:5px 10px;min-width:80px;text-align:center;font-family:var(--mono);letter-spacing:1px}
+@media print{@page{size:423.33mm 237.5mm;margin:0}*{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}html,body{overflow:visible!important;height:auto!important;background:#fff!important}.deck{overflow:visible!important;height:auto!important;scroll-snap-type:none!important;background:#fff!important}.stage{min-height:0!important;height:auto!important;page-break-after:always;page-break-inside:avoid;padding:0!important;margin:0!important;background:#fff!important;display:block!important}.stage:last-child{page-break-after:avoid}.slide{transform:none!important;box-shadow:none!important;width:1600px!important;height:900px!important}.toolbar{display:none!important}}
+
+.sm{font-size:12px;color:var(--ink2);line-height:1.6}
+/* === S04 ORIGINAL COMPONENTS === */
+.bd.col1{grid-template-columns:1fr;background:transparent;gap:0}
+.bth{font-size:15px;color:var(--ink);font-weight:600;margin-bottom:7px;line-height:1.4}
+.bt{font-size:13.5px;line-height:1.78;color:var(--ink2);margin-bottom:8px}
+.bt strong{color:var(--ink);font-weight:600}
+.cod{background:var(--dk);padding:12px 15px;margin:8px 0;position:relative;overflow:hidden}
+.cod::before{content:"";position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='nd'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' seed='5'/%3E%3CfeColorMatrix values='0 0 0 0 1  0 0 0 0 0.92  0 0 0 0 0.78  0 0 0 0.04 0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23nd)'/%3E%3C/svg%3E");opacity:0.6;pointer-events:none}
+.cod>*{position:relative}
+.cod-lb{font-family:var(--mono);font-size:10px;color:var(--on2);letter-spacing:2px;font-weight:700;margin-bottom:6px}
+.cod-main{font-size:15.5px;color:var(--on);font-weight:700;line-height:1.35;margin-bottom:6px}
+.cod p{font-size:12.5px;color:var(--on2);line-height:1.7}
+.dstrip{background:var(--dk);padding:9px 16px;margin:8px 0;display:grid;grid-template-columns:repeat(3,1fr);position:relative;overflow:hidden}
+.dstrip::before{content:"";position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='ns'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' seed='7'/%3E%3CfeColorMatrix values='0 0 0 0 1  0 0 0 0 0.92  0 0 0 0 0.78  0 0 0 0.04 0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23ns)'/%3E%3C/svg%3E");opacity:0.6;pointer-events:none}
+.dstrip>*{position:relative}
+.ds-c:not(:first-child){border-left:1px solid rgba(255,255,255,0.12);padding-left:16px}
+.ds-a{font-family:var(--mono);font-size:9.5px;color:var(--on2);letter-spacing:1.5px;font-weight:700}
+.ds-n{font-size:22px;color:var(--on);font-weight:800;margin-top:3px}
+.ds-d{font-size:10px;color:var(--on2);margin-top:2px}
+.quote{border-left:3px solid var(--ink);padding:11px 15px;margin:8px 0}
+.quote-src{font-family:var(--mono);font-size:10px;color:var(--ink3);letter-spacing:2px;font-weight:700;margin-bottom:5px}
+.quote-q{font-family:var(--serif);font-size:14px;color:var(--ink);font-weight:700;font-style:italic;line-height:1.45}
+.quote-a{font-size:11.5px;color:var(--ink2);margin-top:3px}
+.cblk{background:var(--dk);color:var(--on);padding:11px 14px;font-family:var(--mono);font-size:11.5px;line-height:1.7;border-left:2px solid var(--acc);margin:8px 0;white-space:pre-wrap}
+.cblk .cm{color:var(--acc3);opacity:0.8}.cblk .kw{color:var(--acc3);font-weight:600}
+.cblk .cap{font-size:10px;color:var(--on2);margin-top:5px;letter-spacing:0.1em;white-space:normal}
+.icard{background:var(--bg2);border:1px solid var(--ln);padding:11px 14px;margin-bottom:7px}
+.icard-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:5px}
+.icard-lb{font-family:var(--mono);font-size:9.5px;color:var(--acc);letter-spacing:2px;font-weight:700}
+.icard-sess{font-family:var(--mono);font-size:9.5px;color:var(--ink3);letter-spacing:1.5px;font-weight:600}
+.icard.dark{background:var(--dk);border-color:var(--dk)}
+.icard.dark .icard-lb{color:var(--acc3)}.icard.dark .icard-sess{color:var(--on2)}
+.icard.dark .bth{color:var(--on)}.icard.dark .bt{color:var(--on2)}.icard.dark .bt strong{color:var(--on)}
+.fig{font-family:var(--mono);font-size:10.5px;color:var(--ink3);letter-spacing:1.5px;font-weight:700;margin:8px 0 5px}
+.hero{display:flex;flex-direction:column;justify-content:center;padding:56px 90px}
+.hero-k{font-family:var(--mono);font-size:11.5px;color:var(--acc3);letter-spacing:3px;font-weight:700;margin-bottom:18px}
+.hero-t{font-family:var(--serif);font-size:52px;line-height:1.18;font-weight:700;color:var(--on);letter-spacing:-0.02em}
+.hero-s{font-size:17px;color:var(--on2);line-height:1.7;margin-top:22px;max-width:1100px;font-style:italic}
+.hero-q{border-left:3px solid var(--acc3);padding:16px 24px;margin-top:26px;max-width:1000px}
+.hero-q-q{font-family:var(--serif);font-size:21px;color:var(--on);font-weight:700;font-style:italic;line-height:1.5}
+.hero-q-a{font-size:12px;color:var(--on2);letter-spacing:2px;margin-top:10px;font-family:var(--mono);font-weight:700}
+
+</style>
+</head>
+<body>
+<div class="deck" id="deck">
+<div class="stage"><div class="slide" data-title="Cover">
+  <div class="hbar"><div class="hbar-l">SESSION 05 · WORKFLOW AUTOMATION</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 05
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">05 · 어시스트 바이브 코딩 ② — 업무 자동화와 로컬 AI</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">001 / 032</span></div></div></div></div>
+  <div style="position:absolute;top:56px;left:80px;display:flex;align-items:center;gap:14px;font-family:var(--mono);font-size:10px;color:var(--acc);letter-spacing:2.5px;font-weight:600"><div style="width:22px;height:8px;background:var(--acc)"></div>PUBLIC AI EXPERT PROGRAM · 2026</div>
+  <div style="position:absolute;top:56px;right:80px;font-family:var(--mono);font-size:10px;color:var(--ink3);letter-spacing:2px;text-align:right;line-height:1.6">Module 05 / Session 05<br>Hub Leader Track</div>
+  <div style="position:absolute;top:140px;right:80px;font-family:var(--serif);font-size:260px;line-height:1;color:var(--acc);font-weight:300;opacity:0.07;letter-spacing:-0.06em;pointer-events:none;font-style:italic">05</div>
+  <div style="position:absolute;top:180px;left:80px;right:80px;bottom:140px;display:grid;grid-template-columns:1fr 380px;gap:60px">
+    <div>
+      <div style="font-family:var(--mono);font-size:10px;color:var(--acc);letter-spacing:3px;font-weight:700;margin-bottom:14px">SESSION 05 · LECTURE COVER</div>
+      <div style="font-family:var(--serif);font-weight:700;font-size:56px;line-height:1.08;letter-spacing:-0.03em;color:var(--ink)">어시스트 바이브 코딩 ②</div>
+      <div style="width:60px;height:2px;background:var(--acc);margin:22px 0 16px"></div>
+      <div style="font-family:var(--serif);font-size:20px;color:var(--ink);font-weight:600;line-height:1.5">익숙한 도구 안에 AI를 들여온다</div>
+      <p style="margin-top:18px;font-size:14px;color:var(--ink2);line-height:1.8;max-width:680px"><strong style="color:var(--ink)">Part A.</strong> 파이썬 자동화 4종 — 파일·엑셀·PDF·메일. <strong style="color:var(--ink)">Part B.</strong> HWP 자동화 기초+일괄 처리 2시간. <strong style="color:var(--ink)">Part C.</strong> Ollama+VBA로 완전 내부망 엑셀 AI 함수 5종. <strong style="color:var(--ink)">Part D·E·F.</strong> Node 맛보기 + 캡스톤 + 어시스트 한계 회고.</p>
+    </div>
+    <div style="align-self:end;border-top:1px solid var(--ink);padding-top:16px">
+      <div style="display:grid;grid-template-columns:90px 1fr;gap:12px;padding:8px 0;border-bottom:1px solid var(--ln);font-size:13px"><span style="font-family:var(--mono);font-size:9.5px;letter-spacing:2px;color:var(--ink3);font-weight:700">PROGRAM</span><span style="font-family:var(--serif);color:var(--ink);font-weight:600">공공 AI 전문인재 양성과정</span></div>
+      <div style="display:grid;grid-template-columns:90px 1fr;gap:12px;padding:8px 0;border-bottom:1px solid var(--ln);font-size:13px"><span style="font-family:var(--mono);font-size:9.5px;letter-spacing:2px;color:var(--ink3);font-weight:700">SESSION</span><span style="font-family:var(--serif);color:var(--ink);font-weight:600">05 / 08</span></div>
+      <div style="display:grid;grid-template-columns:90px 1fr;gap:12px;padding:8px 0;border-bottom:1px solid var(--ln);font-size:13px"><span style="font-family:var(--mono);font-size:9.5px;letter-spacing:2px;color:var(--ink3);font-weight:700">GOAL</span><span style="font-family:var(--serif);color:var(--ink);font-weight:600">반복 업무 1개 오늘 중 자동화 완성</span></div>
+      <div style="display:grid;grid-template-columns:90px 1fr;gap:12px;padding:8px 0;border-bottom:1px solid var(--ln);font-size:13px"><span style="font-family:var(--mono);font-size:9.5px;letter-spacing:2px;color:var(--ink3);font-weight:700">FORMAT</span><span style="font-family:var(--serif);color:var(--ink);font-weight:600">강의 150m + 실습 120m</span></div>
+      <div style="display:grid;grid-template-columns:90px 1fr;gap:12px;padding:8px 0;border-bottom:1px solid var(--ln);font-size:13px"><span style="font-family:var(--mono);font-size:9.5px;letter-spacing:2px;color:var(--ink3);font-weight:700">SLIDES</span><span style="font-family:var(--serif);color:var(--ink);font-weight:600">32 pages</span></div>
+      <div style="display:grid;grid-template-columns:90px 1fr;gap:12px;padding:8px 0;font-size:13px"><span style="font-family:var(--mono);font-size:9.5px;letter-spacing:2px;color:var(--ink3);font-weight:700">PREREQ</span><span style="font-family:var(--serif);color:var(--ink);font-weight:600">4차시 시각화 + 파이썬·엑셀 기본</span></div>
+    </div>
+  </div>
+  <div style="position:absolute;bottom:64px;left:80px;font-family:var(--mono);font-size:10px;color:var(--ink3);letter-spacing:2px">— Editorial Warm Edition · Roomy Lecture Format</div>
+  <div style="position:absolute;bottom:64px;right:80px;font-size:13px;color:var(--ink2);text-align:right;line-height:1.7;max-width:520px">외부망에서 LLM과 함께 코드를 만든다.<br>내부망에서 그 코드를 실행한다 — 오늘의 기본 동선.</div>
+</div></div>
+
+<!-- 02 HERO · 반복 업무의 80% -->
+<div class="stage"><div class="slide" data-title="Hero 80 Percent">
+  <div class="hbar"><div class="hbar-l">MODULE 05 · SESSION KEY MESSAGE</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 05</div></div>
+  <div class="bd col1"><div class="col hero" style="background:var(--dk);color:var(--on)">
+    <div class="hero-k">SESSION 05 · ONE SENTENCE</div>
+    <div class="hero-t">반복 업무의 <span style="color:var(--acc3)">80%</span>는<br>네 가지에서 나온다.</div>
+    <div class="hero-s">거창한 시스템을 만들지 않는다. 일주일에 세 번 이상 손이 가는 지루한 업무 1개를 골라, 오늘 안에 버튼 한 번짜리 도구로 바꾼다. 네 가지 축이 공공 실무 반복의 대부분을 커버한다.</div>
+    <div class="hero-q"><div class="hero-q-q">"자동화의 ROI는 '한 번 만들어 30번 쓴다'에서 나온다. 주 3회 반복·30분 수작업·파일 기반 — 이 세 조건이 첫 과제의 정답."</div><div class="hero-q-a">— 커리큘럼 설계 원칙</div></div>
+  </div></div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">05 · 어시스트 바이브 코딩 ② — 업무 자동화와 로컬 AI 연동</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">002 / 032</span></div></div>
+</div></div>
+
+<!-- 03 Part A 개관 · 3칼럼 -->
+<div class="stage"><div class="slide" data-title="Part A Overview">
+  <div class="hbar"><div class="hbar-l">MODULE 05 · UNIT 01 · PART A OVERVIEW</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 05</div></div>
+  <div class="hl"><div class="hl-kicker">PART A · 파이썬 업무 자동화 개관 · 30MIN</div><div class="hl-title">파이썬 업무 자동화 4대 영역</div><div class="hl-sub">각 축마다 "손에 잡히는 라이브러리 2~3개"만 알면 된다. 외우지 않고 찾을 위치를 먼저 확보한다. 네 축이 한 스크립트로 묶이면 월말 정기 보고가 버튼 한 번이 된다.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col3">
+    <div class="col">
+      <div class="sh"><span class="sh-n">01 · FILE · EXCEL</span><span class="sh-t">파일·엑셀 축</span></div><div class="sh-line"></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">FILE SYSTEM</span><span class="icard-sess">pathlib · shutil · os</span></div><div class="bth">폴더 스캔 · 조건 필터 · 이름 변경·이동</div><p class="bt"><strong>pathlib.Path.glob()</strong> 한 줄로 특정 확장자·날짜 파일을 수집. <strong>shutil.move/copy</strong>로 규칙별 분류. 공공: 민원 PDF 월별 폴더 자동 분류.</p></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">EXCEL</span><span class="icard-sess">openpyxl · pandas</span></div><div class="bth">셀·수식·서식·차트 조작 + 대용량 데이터프레임</div><p class="bt">openpyxl은 셀 단위 정교 제어, pandas는 통계·집계·피벗. 공공: 접수대장 자동 생성, 예산 집계 자동화.</p></div>
+      <div class="co"><div class="co-lb">KEY TAKEAWAY</div><div class="co-main">두 축만으로 반복 업무 절반 해결</div><p>파일 정리·엑셀 집계는 자동화 ROI가 가장 즉각적으로 체감되는 영역.</p></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">02 · PDF · MAIL</span><span class="sh-t">PDF·메일 축</span></div><div class="sh-line"></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">PDF</span><span class="icard-sess">PyMuPDF(fitz)</span></div><div class="bth">본문 텍스트·표·이미지 추출 · 병합·분할</div><p class="bt"><strong>page.get_text()</strong>로 본문, <strong>page.find_tables()</strong>로 표, <strong>doc.insert_pdf</strong>로 병합. 공공: 30개 민원 PDF에서 필드 뽑아 엑셀 한 장으로.</p></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">MAIL</span><span class="icard-sess">smtplib · email.mime</span></div><div class="bth">수신자 리스트 · 첨부파일 · HTML 본문 대량 발송</div><p class="bt">CSV의 수신자마다 이름·맞춤 문구 개별 메일 생성. 기관 SMTP는 <strong>SSL(465)</strong> 또는 <strong>STARTTLS(587)</strong> 선택.</p></div>
+      <div class="co"><div class="co-lb">ZERO TO ONE</div><div class="co-main">"같은 규칙 3회 반복"이면 자동화 투자 시작</div><p>처음엔 폴더 한 개의 규칙부터. 한 번에 큰 시스템을 짜려고 하지 않는다.</p></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">03 · PIPELINE</span><span class="sh-t">네 축 결합</span></div><div class="sh-line"></div>
+      <div class="cod"><div class="cod-lb">MONTH-END PIPELINE</div><div class="cod-main">폴더 스캔 → 엑셀 집계 → PDF 리포트 → 메일 발송</div><p>네 가지가 한 스크립트로 묶이면 "월말 정기 보고"가 버튼 한 번. 4차시의 듀얼 네트워크 이관을 그대로 적용한다.</p></div>
+      <div class="dstrip"><div class="ds-c"><div class="ds-a">SAVING</div><div class="ds-n">-90%</div><div class="ds-d">월말 보고 시간</div></div><div class="ds-c"><div class="ds-a">LIBS</div><div class="ds-n">5</div><div class="ds-d">pathlib·openpyxl·pandas·fitz·smtplib</div></div><div class="ds-c"><div class="ds-a">ROI</div><div class="ds-n">3회+</div><div class="ds-d">반복 시 흑자</div></div></div>
+      <div class="pit"><div class="pit-lb">PITFALL</div><div class="pit-h">▸ 처음부터 "완벽한" 스크립트 시도</div><div class="pit-d">첫 버전은 10줄이면 충분. 쓰면서 에러 나는 부분만 고친다.</div><div class="pit-h">▸ 네 축 동시 학습 시도</div><div class="pit-d">우선 1축(파일 or 엑셀)으로 한 번 끝까지 경험한 뒤 확장.</div></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">05 · 어시스트 바이브 코딩 ② — 업무 자동화와 로컬 AI 연동</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">003 / 032</span></div></div>
+</div></div>
+
+<!-- 04 파일시스템 자동화 -->
+<div class="stage"><div class="slide" data-title="File System Automation">
+  <div class="hbar"><div class="hbar-l">MODULE 05 · UNIT 01 · FILE SYSTEM</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 05</div></div>
+  <div class="hl"><div class="hl-kicker">PART A-1 · 파일시스템 자동화 · os · shutil · pathlib · 8MIN</div><div class="hl-title">파일시스템 자동화의 3줄 패턴</div><div class="hl-sub">"파일 찾기·정리" 수작업은 평균 주 90분을 소요된다. 같은 규칙을 3회만 반복해도 자동화 ROI가 나온다. 폴더 한 개의 규칙부터 시작한다.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col2">
+    <div class="col">
+      <div class="sh"><span class="sh-n">CODE</span><span class="sh-t">민원 PDF 월별 자동 분류</span></div><div class="sh-line"></div>
+      <div class="bth">실습예시 — 파일명의 날짜로 월별 폴더 분류</div>
+      <div class="cblk"><span class="cm"># 민원 PDF를 YYYY-MM 폴더로 자동 이동</span>
+<span class="kw">from</span> pathlib <span class="kw">import</span> Path
+<span class="kw">import</span> shutil, re
+
+src = Path(<span class="cm">"./민원접수"</span>)
+<span class="kw">for</span> f <span class="kw">in</span> src.glob(<span class="cm">"*.pdf"</span>):
+    m = re.search(<span class="cm">r"(\d{4})-(\d{2})"</span>, f.name)
+    <span class="kw">if</span> m:
+        dst = src / <span class="cm">f"{m[1]}-{m[2]}"</span>
+        dst.mkdir(exist_ok=<span class="kw">True</span>)
+        shutil.move(f, dst / f.name)
+        <span class="kw">print</span>(<span class="cm">f"{f.name} → {dst.name}/"</span>)</div>
+      <p class="bt">핵심은 <strong>glob(패턴)·Path 연산자·shutil.move</strong> 세 줄. 이 세 줄이 공공 반복 업무 상당수를 해결한다.</p>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">PATTERN</span><span class="sh-t">3단 패턴·라이브러리 지도</span></div><div class="sh-line"></div>
+      <table class="mtbl"><thead><tr><th>단계</th><th>호출</th><th>용도</th></tr></thead><tbody>
+        <tr><td>스캔</td><td>Path.glob()</td><td>확장자·패턴 수집</td></tr>
+        <tr><td>필터</td><td>re.search / if</td><td>조건 검사</td></tr>
+        <tr><td>이동</td><td>shutil.move</td><td>원자적 이동</td></tr>
+        <tr><td>복사</td><td>shutil.copy2</td><td>메타 포함</td></tr>
+        <tr><td>이름</td><td>os.rename / Path.rename</td><td>표준화</td></tr>
+        <tr><td>생성</td><td>Path.mkdir(exist_ok=True)</td><td>목적지 준비</td></tr>
+      </tbody></table>
+      <div class="co"><div class="co-lb">KEY TAKEAWAY</div><div class="co-main">"파일 찾기·정리" 주 90분을 한 번에 회수</div><p>같은 규칙 3회 이상이면 즉시 스크립트로. 수작업 절반을 잘라낸다.</p></div>
+      <div class="pit"><div class="pit-lb">PITFALL</div><div class="pit-h">▸ 이동 대상이 네트워크 드라이브</div><div class="pit-d">중간에 연결이 끊기면 부분 이동 발생. try/except + 로그 필수.</div><div class="pit-h">▸ 목적지 파일명 충돌</div><div class="pit-d">같은 이름 존재 시 덮어쓰기 방지. 타임스탬프 접미사 규칙.</div></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">05 · 어시스트 바이브 코딩 ② — 업무 자동화와 로컬 AI 연동</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">004 / 032</span></div></div>
+</div></div>
+
+<!-- 05 엑셀 자동화 openpyxl + pandas -->
+<div class="stage"><div class="slide" data-title="Excel Automation">
+  <div class="hbar"><div class="hbar-l">MODULE 05 · UNIT 01 · EXCEL</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 05</div></div>
+  <div class="hl"><div class="hl-kicker">PART A-2 · 엑셀 자동화 · openpyxl · pandas · 8MIN</div><div class="hl-title">openpyxl과 pandas의 역할 분기</div><div class="hl-sub">둘의 역할은 다르다. 서식·수식을 건드릴 땐 openpyxl, 수만 행 집계는 pandas. 이 분기가 공공 엑셀 자동화의 첫 판단.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col2">
+    <div class="col">
+      <div class="sh"><span class="sh-n">OPENPYXL</span><span class="sh-t">셀·수식·서식</span></div><div class="sh-line"></div>
+      <div class="cblk"><span class="cm"># 민원 접수대장에 요약 열 추가</span>
+<span class="kw">from</span> openpyxl <span class="kw">import</span> load_workbook
+<span class="kw">from</span> openpyxl.styles <span class="kw">import</span> Font, PatternFill
+
+wb = load_workbook(<span class="cm">"접수대장.xlsx"</span>)
+ws = wb.active
+ws[<span class="cm">"E1"</span>] = <span class="cm">"자동요약"</span>
+ws[<span class="cm">"E1"</span>].font = Font(bold=<span class="kw">True</span>)
+<span class="kw">for</span> r <span class="kw">in</span> <span class="kw">range</span>(2, ws.max_row + 1):
+    ws.cell(r, 5).value = ws.cell(r, 3).value[:20]
+wb.save(<span class="cm">"접수대장_요약.xlsx"</span>)</div>
+      <table class="mtbl"><thead><tr><th>TASK</th><th>CORE CALL</th></tr></thead><tbody>
+        <tr><td>셀 읽기</td><td>ws["A1"].value</td></tr>
+        <tr><td>시트 추가</td><td>wb.create_sheet</td></tr>
+        <tr><td>수식 삽입</td><td>ws["B2"]="=SUM(...)"</td></tr>
+        <tr><td>서식</td><td>Font · PatternFill</td></tr>
+        <tr><td>차트</td><td>BarChart · LineChart</td></tr>
+      </tbody></table>
+      <div class="co"><div class="co-lb">ENTRY POINT</div><div class="co-main">"양식 유지·수식 포함" 업무의 기본 선택</div><p>결재 문서·감사 자료처럼 기존 서식을 반드시 살려야 하는 경우 openpyxl이 유일한 선택.</p></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">PANDAS</span><span class="sh-t">집계·피벗</span></div><div class="sh-line"></div>
+      <div class="cblk"><span class="cm"># 부서별 민원 건수 피벗 한 줄</span>
+<span class="kw">import</span> pandas <span class="kw">as</span> pd
+
+df = pd.read_excel(<span class="cm">"접수대장.xlsx"</span>)
+pivot = df.pivot_table(
+    index=<span class="cm">"부서"</span>, columns=<span class="cm">"유형"</span>,
+    values=<span class="cm">"건수"</span>, aggfunc=<span class="cm">"sum"</span>,
+    fill_value=0, margins=<span class="kw">True</span>)
+pivot.to_excel(<span class="cm">"월간집계.xlsx"</span>)</div>
+      <div class="co"><div class="co-lb">분기 기준</div><div class="co-main">서식 유지 필요 → openpyxl / 대량 집계 → pandas</div><p>둘을 섞어도 된다. pandas로 계산 → openpyxl로 최종 서식. 파이프라인의 표준 패턴.</p></div>
+      <div class="pit"><div class="pit-lb">PITFALL</div><div class="pit-h">▸ 병합 셀은 openpyxl에서 첫 칸만 값이 보인다</div><div class="pit-d">양식의 병합 셀은 unmerge 후 접근하거나, 병합 범위를 미리 계산한다.</div><div class="pit-h">▸ pandas 한글 컬럼의 공백·개행</div><div class="pit-d">df.columns = df.columns.str.strip() 를 습관화.</div></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">05 · 어시스트 바이브 코딩 ② — 업무 자동화와 로컬 AI 연동</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">005 / 032</span></div></div>
+</div></div>
+
+<!-- 06 PDF · 메일 -->
+<div class="stage"><div class="slide" data-title="PDF Mail Automation">
+  <div class="hbar"><div class="hbar-l">MODULE 05 · UNIT 01 · PDF · MAIL</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 05</div></div>
+  <div class="hl"><div class="hl-kicker">PART A-3 · PDF · MAIL 자동화 · PyMuPDF · smtplib · 8MIN</div><div class="hl-title">PDF 추출과 메일 발송 파이프라인</div><div class="hl-sub">PDF는 PyMuPDF(fitz) 하나로 끝난다. 메일은 smtplib + email.mime가 표준. 두 조각이 "보고 → 회신" 루프 전체를 연결한다.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col2">
+    <div class="col">
+      <div class="sh"><span class="sh-n">PDF</span><span class="sh-t">PyMuPDF(fitz)</span></div><div class="sh-line"></div>
+      <div class="cblk"><span class="cm"># 민원 PDF에서 3개 필드 추출 → 엑셀</span>
+<span class="kw">import</span> fitz, re, openpyxl
+<span class="kw">from</span> pathlib <span class="kw">import</span> Path
+
+wb = openpyxl.Workbook(); ws = wb.active
+ws.append([<span class="cm">"파일"</span>, <span class="cm">"민원일시"</span>, <span class="cm">"제목"</span>, <span class="cm">"요지"</span>])
+<span class="kw">for</span> p <span class="kw">in</span> Path(<span class="cm">"./pdfs"</span>).glob(<span class="cm">"*.pdf"</span>):
+    doc = fitz.open(p)
+    txt = <span class="cm">""</span>.join(pg.get_text() <span class="kw">for</span> pg <span class="kw">in</span> doc)
+    date = re.search(<span class="cm">r"\d{4}-\d{2}-\d{2}"</span>, txt)
+    title = re.search(<span class="cm">r"제목:\s*(.+)"</span>, txt)
+    ws.append([p.name, date.group() <span class="kw">if</span> date <span class="kw">else</span> <span class="cm">""</span>,
+               title.group(1) <span class="kw">if</span> title <span class="kw">else</span> <span class="cm">""</span>, txt[:60]])
+wb.save(<span class="cm">"민원취합.xlsx"</span>)</div>
+      <p class="bt"><strong>page.get_text()</strong>로 본문, <strong>page.find_tables()</strong>로 표. 스캔 PDF는 OCR 필요(별도 워크플로우).</p>
+      <div class="co"><div class="co-lb">KEY TAKEAWAY</div><div class="co-main">PDF 30건이 엑셀 한 장으로 수렴</div><p>본문 추출 → 정규식 필드 추출 → 엑셀 append의 3단. 민원 취합의 기본 공식.</p></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">MAIL</span><span class="sh-t">CSV → 개별 메일 일괄</span></div><div class="sh-line"></div>
+      <div class="cblk"><span class="cm"># CSV의 수신자에게 맞춤 메일 발송</span>
+<span class="kw">import</span> smtplib, csv
+<span class="kw">from</span> email.mime.multipart <span class="kw">import</span> MIMEMultipart
+<span class="kw">from</span> email.mime.text <span class="kw">import</span> MIMEText
+
+tmpl = <span class="cm">"&lt;p&gt;{이름}님, {부서} 회의 안내드립니다.&lt;/p&gt;"</span>
+<span class="kw">with</span> smtplib.SMTP_SSL(<span class="cm">"mail.gov.kr"</span>, 465) <span class="kw">as</span> s:
+    s.login(USER, PW)
+    <span class="kw">for</span> row <span class="kw">in</span> csv.DictReader(<span class="kw">open</span>(<span class="cm">"list.csv"</span>, encoding=<span class="cm">"utf-8"</span>)):
+        msg = MIMEMultipart()
+        msg[<span class="cm">"Subject"</span>] = <span class="cm">f"[공지] {row['이름']}님께"</span>
+        msg.attach(MIMEText(tmpl.format(**row), <span class="cm">"html"</span>))
+        s.sendmail(FROM, row[<span class="cm">"email"</span>], msg.as_string())</div>
+      <div class="co"><div class="co-lb">기관 SMTP 체크</div><div class="co-main">465(SSL) vs 587(STARTTLS) — 기관 정책 먼저</div><p>기관별 메일 서버 인증 방식이 다르다. 정보화 담당과 사전 확인 필수.</p></div>
+      <div class="pit"><div class="pit-lb">PITFALL</div><div class="pit-h">▸ 대량 발송 = 스팸 오인</div><div class="pit-d">초당 1건 이하 throttling. 실패 건만 재시도 로그.</div><div class="pit-h">▸ 첨부파일 100MB 초과</div><div class="pit-d">대용량은 내부 공유링크로 치환.</div></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">05 · 어시스트 바이브 코딩 ② — 업무 자동화와 로컬 AI 연동</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">006 / 032</span></div></div>
+</div></div>
+
+<!-- 07 외부망 → 내부망 듀얼 네트워크 -->
+<div class="stage"><div class="slide" data-title="Dual Network">
+  <div class="hbar"><div class="hbar-l">MODULE 05 · UNIT 01 · DUAL NETWORK</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 05</div></div>
+  <div class="hl"><div class="hl-kicker">PART A-4 · 외부망 → 내부망 듀얼 네트워크 루틴 · 6MIN</div><div class="hl-title">외부망과 내부망의 듀얼 네트워크 루틴</div><div class="hl-sub">외부망에서 LLM과 함께 코드를 만들고, 검증된 코드를 승인 루트로 내부망에 이관. 공공 환경의 현실을 강점으로 전환한다.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col2w">
+    <div class="col">
+      <div class="sh"><span class="sh-n">ROUTINE</span><span class="sh-t">5단계 루프</span></div><div class="sh-line"></div>
+      <table class="mtbl"><thead><tr><th>단계</th><th>환경</th><th>활동</th></tr></thead><tbody>
+        <tr><td>① 설계</td><td>외부망</td><td>Claude/Cursor로 요구사항·입력·출력 합의</td></tr>
+        <tr><td>② 생성</td><td>외부망</td><td>샘플 데이터(가명)로 코드 생성·검증</td></tr>
+        <tr><td>③ 이관</td><td>승인 루트</td><td>.py + requirements.txt + README 패키징</td></tr>
+        <tr><td>④ 실행</td><td>내부망</td><td>샘플 10건 → 전체 확대 실행</td></tr>
+        <tr><td>⑤ 로그</td><td>내부망</td><td>결과·에러·소요시간 CSV로 축적</td></tr>
+      </tbody></table>
+      <div class="co"><div class="co-lb">KEY TAKEAWAY</div><div class="co-main">"이관 비용"을 감안해도 여전히 흑자다</div><p>이관 10분을 감안해도, 수작업 90분을 회수한다. 듀얼 구조는 제약이 아니라 리듬이다.</p></div>
+      <div class="pit"><div class="pit-lb">PITFALL</div><div class="pit-h">▸ 실제 내부 데이터를 외부망에 붙여넣기</div><div class="pit-d">절대 금지. 외부망 작업 시엔 가명·비식별 샘플만 사용.</div><div class="pit-h">▸ 내부망에서 requirements 설치 경로 누락</div><div class="pit-d">사내 mirror/저장소 확인. 없으면 wheelhouse 방식으로 반입.</div></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">PACKAGE</span><span class="sh-t">이관 패키지 구성</span></div><div class="sh-line"></div>
+      <div class="cod"><div class="cod-lb">TRANSFER BUNDLE</div><div class="cod-main">3파일 최소 세트 — .py · requirements.txt · README.md</div><p>README에 "입력 형식·실행 명령·출력 위치·에러 해석" 4줄. 동료가 README만 보고 재실행 가능해야 "도구"다.</p></div>
+      <div class="cblk"><span class="cm"># requirements.txt — 오프라인 반입을 위한 정확한 버전 고정</span>
+openpyxl==3.1.5
+pandas==2.2.2
+pymupdf==1.24.10
+<span class="cm"># 내부망 설치: pip install --no-index \</span>
+<span class="cm">#   --find-links=./wheelhouse -r requirements.txt</span></div>
+      <div class="dstrip"><div class="ds-c"><div class="ds-a">TRANSFER</div><div class="ds-n">10m</div><div class="ds-d">이관 소요</div></div><div class="ds-c"><div class="ds-a">SAMPLE</div><div class="ds-n">10건</div><div class="ds-d">1차 검증</div></div><div class="ds-c"><div class="ds-a">SCALE</div><div class="ds-n">전체</div><div class="ds-d">2차 가동</div></div></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">05 · 어시스트 바이브 코딩 ② — 업무 자동화와 로컬 AI 연동</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">007 / 032</span></div></div>
+</div></div>
+
+<!-- 08 HERO · 외부망에서 코드를 받고 (크림 배경) -->
+<div class="stage"><div class="slide" data-title="Hero Dual">
+  <div class="hbar"><div class="hbar-l">MODULE 05 · SECTION BRIDGE</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 05</div></div>
+  <div class="bd col1"><div class="col hero" style="background:var(--bg2);padding:56px 90px;justify-content:center">
+    <div style="font-family:var(--mono);font-size:11.5px;color:var(--acc);letter-spacing:3px;font-weight:700;margin-bottom:18px">SESSION 05 · OPERATING PRINCIPLE</div>
+    <div style="font-family:var(--serif);font-weight:700;font-size:52px;line-height:1.18;letter-spacing:-0.02em;color:var(--ink)">외부망에서 <span style="color:var(--acc)">만들고</span>,<br>내부망에서 <span style="color:var(--acc)">돌린다</span>.</div>
+    <div style="width:60px;height:3px;background:var(--acc);margin:22px 0 18px"></div>
+    <p style="font-size:17px;color:var(--ink2);line-height:1.7;max-width:1200px;font-style:italic">이 원칙이 공공 어시스트 바이브 코딩의 운영 기준이다. 작성 환경과 실행 환경을 분리하는 것이 "불편한 제약"이 아니라, <strong style="color:var(--ink)">민감 데이터를 지키면서도 프론티어 모델의 출력을 쓰게 하는 가장 현실적인 설계</strong>다. Part B부터는 이 원칙 위에서 HWP·Ollama·VBA를 쌓는다.</p>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:30px">
+      <div style="border:1px solid var(--ln);padding:12px;background:var(--bg)"><div style="font-family:var(--mono);font-size:10px;color:var(--acc);letter-spacing:2px;font-weight:700">OUTSIDE</div><div style="font-size:13px;color:var(--ink);font-weight:600;margin-top:5px">생성·탐색·학습</div></div>
+      <div style="border:1px solid var(--ln);padding:12px;background:var(--bg)"><div style="font-family:var(--mono);font-size:10px;color:var(--acc);letter-spacing:2px;font-weight:700">BRIDGE</div><div style="font-size:13px;color:var(--ink);font-weight:600;margin-top:5px">승인 루트·로그</div></div>
+      <div style="border:1px solid var(--ln);padding:12px;background:var(--bg)"><div style="font-family:var(--mono);font-size:10px;color:var(--acc);letter-spacing:2px;font-weight:700">INSIDE</div><div style="font-size:13px;color:var(--ink);font-weight:600;margin-top:5px">실행·처리·배포</div></div>
+    </div>
+  </div></div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">05 · 어시스트 바이브 코딩 ② — 업무 자동화와 로컬 AI 연동</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">008 / 032</span></div></div>
+</div></div>
+
+<!-- 09 Part B-1 · HWP 자동화 기초 -->
+<div class="stage"><div class="slide" data-title="HWP Basics">
+  <div class="hbar"><div class="hbar-l">MODULE 05 · UNIT 02 · HWP BASICS</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 05</div></div>
+  <div class="hl"><div class="hl-kicker">PART B-1 · HWP 자동화 기초 · pyhwpx · win32com · 10MIN</div><div class="hl-title">HWP 자동화의 두 갈래 구조</div><div class="hl-sub">pyhwpx와 win32com 두 갈래. 설치 난이도 vs 제어 심도 축으로 구분한다. 먼저 pyhwpx로 80% 커버, 한계에서 win32com 하이브리드로 내려간다.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col3">
+    <div class="col">
+      <div class="sh"><span class="sh-n">WHICH LIB</span><span class="sh-t">pyhwpx vs win32com</span></div><div class="sh-line"></div>
+      <table class="mtbl"><thead><tr><th>기준</th><th>pyhwpx</th><th>win32com</th></tr></thead><tbody>
+        <tr><td>설치</td><td>pip install</td><td>pywin32 + 한글</td></tr>
+        <tr><td>난이도</td><td>낮음</td><td>높음</td></tr>
+        <tr><td>제어</td><td>80%</td><td>대부분</td></tr>
+        <tr><td>OS</td><td>Windows</td><td>Windows</td></tr>
+        <tr><td>문서</td><td>한국어 예제↑</td><td>COM 레퍼런스</td></tr>
+      </tbody></table>
+      <div class="co"><div class="co-lb">KEY TAKEAWAY</div><div class="co-main">pyhwpx로 시작, 한계 기능만 win32com으로 내려간다</div><p>처음부터 win32com을 붙잡지 말 것. 하이브리드가 현업 패턴.</p></div>
+      <div class="pit"><div class="pit-lb">선택 기준</div><div class="pit-h">▸ 표준 업무 80%</div><div class="pit-d">pyhwpx로 충분. 누름틀·표·PDF 변환 대부분 커버.</div></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">HELLO HWP</span><span class="sh-t">5줄로 첫 문서</span></div><div class="sh-line"></div>
+      <div class="cblk"><span class="cm"># pyhwpx 5줄 시작</span>
+<span class="kw">from</span> pyhwpx <span class="kw">import</span> Hwp
+hwp = Hwp(visible=<span class="kw">True</span>)
+hwp.insert_text(<span class="cm">"공공 AI 전문인재 양성과정\n"</span>)
+hwp.insert_text(<span class="cm">"5차시 실습 결과\n"</span>)
+hwp.save_as(<span class="cm">"./out/실습01.hwp"</span>)</div>
+      <div class="bth">표 조작 — 3개 메서드만 기억</div>
+      <p class="bt"><strong>create_table(rows,cols)</strong> 삽입, <strong>move_to_field(name)</strong> 셀 이동, <strong>insert_text</strong> 채움. HWP 자동화의 80%를 이 세 개로 커버한다.</p>
+      <div class="cblk">hwp.create_table(rows=3, cols=4)
+hwp.move_to_field(<span class="cm">"셀[0,0]"</span>)
+hwp.insert_text(<span class="cm">"구분"</span>)
+hwp.move_to_field(<span class="cm">"셀[0,1]"</span>)
+hwp.insert_text(<span class="cm">"담당자"</span>)</div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">ENV</span><span class="sh-t">환경·설치 체크</span></div><div class="sh-line"></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">PREREQ</span><span class="icard-sess">환경 점검</span></div><div class="bth">한글(HWP) 설치·정품 인증 Windows에서만</div><p class="bt">pyhwpx/win32com 모두 한글 본체 필요. Mac/Linux 실행 불가. 기관 PC 인증 상태 먼저 확인.</p></div>
+      <div class="pit"><div class="pit-lb">PITFALL · 초심자 3대 실수</div><div class="pit-h">▸ 한글 미설치 PC에서 실행</div><div class="pit-d">에러 메시지가 모호함. 설치·정품 인증 재확인.</div><div class="pit-h">▸ visible=False 대화상자 차단 누락</div><div class="pit-d">보안 경고 창에서 멈춤. register_module / reset_option 선제 차단.</div><div class="pit-h">▸ 누름틀 이름을 매번 다르게</div><div class="pit-d">템플릿 필드명 표준화해야 스크립트가 재사용된다.</div></div>
+      <div class="quote"><div class="quote-src">SOURCE · PYHWPX DOCS · 2024</div><div class="quote-q">"pyhwpx는 한글 사용자의 실무 시나리오에 최적화된 래퍼다."</div><div class="quote-a">— pyhwpx 공식 문서 서문</div></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">05 · 어시스트 바이브 코딩 ② — 업무 자동화와 로컬 AI 연동</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">009 / 032</span></div></div>
+</div></div>
+
+<!-- 10 HWP 양식 채우기 매크로 -->
+<div class="stage"><div class="slide" data-title="HWP Form Fill">
+  <div class="hbar"><div class="hbar-l">MODULE 05 · UNIT 02 · FORM FILL</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 05</div></div>
+  <div class="hl"><div class="hl-kicker">PART B-1 · HWP 양식 채우기 매크로 · 10MIN</div><div class="hl-title">HWP 누름틀 기반 양식 자동화</div><div class="hl-sub">기존 HWP 양식을 열어, 누름틀(필드)에 dict로 값을 주입하고, 파일명 규칙으로 저장. 출장비 정산, 교육 수료증, 각종 통지문이 이 패턴 하나로 해결된다.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col2">
+    <div class="col">
+      <div class="sh"><span class="sh-n">CODE</span><span class="sh-t">출장비 정산 양식 자동 생성</span></div><div class="sh-line"></div>
+      <div class="cblk"><span class="cm"># 출장비 정산 HWP 양식 1장 자동 생성</span>
+<span class="kw">from</span> pyhwpx <span class="kw">import</span> Hwp
+
+hwp = Hwp(visible=<span class="kw">False</span>)
+hwp.open(<span class="cm">"./tpl/출장비정산_양식.hwp"</span>)
+
+data = {
+    <span class="cm">"이름"</span>: <span class="cm">"김주무관"</span>,
+    <span class="cm">"부서"</span>: <span class="cm">"디지털정책팀"</span>,
+    <span class="cm">"일자"</span>: <span class="cm">"2026-04-20"</span>,
+    <span class="cm">"출장지"</span>: <span class="cm">"세종청사"</span>,
+    <span class="cm">"금액"</span>: <span class="cm">"128,500"</span>,
+}
+<span class="kw">for</span> k, v <span class="kw">in</span> data.items():
+    hwp.put_field_text(k, v)
+
+fname = <span class="cm">f"{data['일자']}_{data['부서']}_{data['이름']}.hwp"</span>
+hwp.save_as(<span class="cm">f"./out/{fname}"</span>)
+hwp.quit()</div>
+      <p class="bt">핵심 한 줄은 <strong>put_field_text(key, value)</strong>. CSV 헤더명과 HWP 누름틀 이름을 맞춰두면 <strong>dict 하나가 양식 하나</strong>가 된다.</p>
+      <div class="co"><div class="co-lb">KEY TAKEAWAY</div><div class="co-main">CSV 한 행 = HWP 한 장</div><p>헤더명을 누름틀 이름과 일치시키면 템플릿 교체가 자유로워진다. 양식 관리의 표준화 지점.</p></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">DEMO</span><span class="sh-t">시연 스크립트 5단계</span></div><div class="sh-line"></div>
+      <div class="bth">실습예시 — 출장비 정산 양식 1장 생성</div>
+      <table class="mtbl"><thead><tr><th>단계</th><th>활동</th></tr></thead><tbody>
+        <tr><td>① 템플릿 열기</td><td>기존 양식.hwp를 open()</td></tr>
+        <tr><td>② 필드 확인</td><td>이름·부서·일자·금액 4개 누름틀</td></tr>
+        <tr><td>③ 값 주입</td><td>put_field_text 루프</td></tr>
+        <tr><td>④ PDF 저장</td><td>save_as(".pdf")로 바로 변환</td></tr>
+        <tr><td>⑤ 파일명 규칙</td><td>{YYYYMMDD}_{부서}_{이름}</td></tr>
+      </tbody></table>
+      <div class="co"><div class="co-lb">FIELD CASE</div><div class="co-main">출장비·교육수료증·복무통지 — 같은 패턴 재활용</div><p>템플릿 3종만 표준화해두면, 부서 공문의 대부분이 "CSV 한 행 → HWP 한 장" 구조로 귀결된다.</p></div>
+      <div class="pit"><div class="pit-lb">PITFALL</div><div class="pit-h">▸ 누름틀 이름이 보이지 않음</div><div class="pit-d">한글에서 "보기 → 조판부호" 켜서 필드 위치 확인. 표준 필드명은 부서 템플릿 가이드에 명시.</div><div class="pit-h">▸ 저장 경로에 한글/공백</div><div class="pit-d">가능하면 ASCII 경로. 특수문자·공백은 파일명에서 제거.</div></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">05 · 어시스트 바이브 코딩 ② — 업무 자동화와 로컬 AI 연동</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">010 / 032</span></div></div>
+</div></div>
+
+<!-- 11 HWP 일괄 변환 · 병합 -->
+<div class="stage"><div class="slide" data-title="HWP Convert Merge">
+  <div class="hbar"><div class="hbar-l">MODULE 05 · UNIT 02 · CONVERT · MERGE</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 05</div></div>
+  <div class="hl"><div class="hl-kicker">PART B-1 · HWP 일괄 변환·병합 · 8MIN</div><div class="hl-title">HWP 일괄 변환과 병합의 핵심 3종</div><div class="hl-sub">양식을 채웠으면 최종본은 PDF. 회의자료는 한 파일로 병합. 표를 엑셀로 내리기까지 — 세 가지 변환이 실무 체감 90%.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col3">
+    <div class="col">
+      <div class="sh"><span class="sh-n">HWP → PDF</span><span class="sh-t">일괄 변환</span></div><div class="sh-line"></div>
+      <div class="cblk"><span class="cm"># 폴더 안 HWP를 모두 PDF로</span>
+<span class="kw">from</span> pyhwpx <span class="kw">import</span> Hwp
+<span class="kw">from</span> pathlib <span class="kw">import</span> Path
+
+hwp = Hwp(visible=<span class="kw">False</span>)
+<span class="kw">for</span> h <span class="kw">in</span> Path(<span class="cm">"./out"</span>).glob(<span class="cm">"*.hwp"</span>):
+    hwp.open(<span class="kw">str</span>(h))
+    hwp.save_as(<span class="kw">str</span>(h.with_suffix(<span class="cm">".pdf"</span>)))
+    hwp.clear()
+hwp.quit()</div>
+      <div class="co"><div class="co-lb">TIP</div><div class="co-main">결재·공유용 최종본만 PDF로 남긴다</div><p>원본 HWP는 편집용, PDF는 배포용. 두 벌 관리 원칙.</p></div>
+      <div class="pit"><div class="pit-lb">PITFALL</div><div class="pit-h">▸ 변환 중 visible=True 유지</div><div class="pit-d">수십 개 일괄 변환 시 창이 계속 깜빡여 PC가 느려진다. 배치에선 False 기본.</div></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">MERGE</span><span class="sh-t">여러 HWP 한 파일</span></div><div class="sh-line"></div>
+      <div class="cblk"><span class="cm"># 회의자료 10개 → 1개 파일 병합</span>
+<span class="kw">from</span> pyhwpx <span class="kw">import</span> Hwp
+<span class="kw">from</span> pathlib <span class="kw">import</span> Path
+
+hwp = Hwp(visible=<span class="kw">False</span>)
+parts = <span class="kw">sorted</span>(Path(<span class="cm">"./parts"</span>).glob(<span class="cm">"*.hwp"</span>))
+hwp.open(<span class="kw">str</span>(parts[0]))
+<span class="kw">for</span> p <span class="kw">in</span> parts[1:]:
+    hwp.move_to_end()
+    hwp.insert_file(<span class="kw">str</span>(p))
+hwp.save_as(<span class="cm">"./out/회의자료_통합.hwp"</span>)</div>
+      <p class="bt sm">insert_file 한 줄이 핵심. 목차·페이지번호는 병합 후 한 번만 재생성.</p>
+      <div class="co"><div class="co-lb">FIELD CASE</div><div class="co-main">회의자료 10개 → 한 파일 · 인쇄용 1종</div><p>파일 순서는 <strong>sorted()</strong>로 안정화. 파일명 접두어 01_, 02_ 규칙으로 순서 고정.</p></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">TABLE</span><span class="sh-t">표 → 엑셀 추출</span></div><div class="sh-line"></div>
+      <div class="cblk"><span class="cm"># HWP 표를 엑셀로 내리기</span>
+<span class="kw">from</span> pyhwpx <span class="kw">import</span> Hwp
+<span class="kw">import</span> openpyxl
+
+hwp = Hwp(visible=<span class="kw">False</span>)
+hwp.open(<span class="cm">"./in/예산집행표.hwp"</span>)
+rows = hwp.get_into_table()
+wb = openpyxl.Workbook(); ws = wb.active
+<span class="kw">for</span> r <span class="kw">in</span> rows: ws.append(r)
+wb.save(<span class="cm">"./out/예산집행표.xlsx"</span>)</div>
+      <div class="pit"><div class="pit-lb">PITFALL</div><div class="pit-h">▸ 병합 셀·머리글 중복</div><div class="pit-d">병합 범위 사전 해제. 추출 후 pandas로 첫 행 정리.</div></div>
+      <div class="co"><div class="co-lb">TIP</div><div class="co-main">표 추출 후 반드시 엑셀 저장으로 아카이브</div><p>HWP 내부 표는 편집 중 변질 위험. 수치 원본은 엑셀로 고정 보관.</p></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">05 · 어시스트 바이브 코딩 ② — 업무 자동화와 로컬 AI 연동</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">011 / 032</span></div></div>
+</div></div>
+
+<!-- 12 Part B-2 · HWP 배치 30개 -->
+<div class="stage"><div class="slide" data-title="HWP Batch 30">
+  <div class="hbar"><div class="hbar-l">MODULE 05 · UNIT 02 · HWP BATCH</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 05</div></div>
+  <div class="hl"><div class="hl-kicker">PART B-2 · HWP 배치 처리 · 명단×양식×루프 · 10MIN</div><div class="hl-title">HWP 배치 처리의 표준 패턴</div><div class="hl-sub">한 명씩 이름·금액을 바꿔 저장하던 작업을 명단(CSV) 기반 루프로 전환. 월말 정기 통지·교육 수료증 대량 발급의 표준 패턴.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col3">
+    <div class="col">
+      <div class="sh"><span class="sh-n">SCENARIO</span><span class="sh-t">명단 30 → 공문 30</span></div><div class="sh-line"></div>
+      <div class="bth">입력은 CSV 한 장, 출력은 폴더 가득한 HWP</div>
+      <p class="bt">연말 인사이동 통지, 교육 수료증, 계약 통보 등 <strong>명단 × 표준 양식</strong> 구조가 반복된다. 한 건 3분 수작업이 전체 8분으로 압축.</p>
+      <div class="dstrip"><div class="ds-c"><div class="ds-a">TIME</div><div class="ds-n">-95%</div><div class="ds-d">90분 → 8분</div></div><div class="ds-c"><div class="ds-a">REUSE</div><div class="ds-n">월 4회</div><div class="ds-d">월말·분기</div></div><div class="ds-c"><div class="ds-a">ERROR</div><div class="ds-n">0</div><div class="ds-d">오타 없음</div></div></div>
+      <div class="co"><div class="co-lb">KEY TAKEAWAY</div><div class="co-main">자동화의 ROI는 "한 번 만들어 30번 쓴다"에서 나온다</div><p>명단 관리 담당자 역할로 이동 — 이것이 거점리더 포지션의 이동이다.</p></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">SKELETON</span><span class="sh-t">20줄 배치 스크립트</span></div><div class="sh-line"></div>
+      <div class="cblk"><span class="cm"># 명단 30건 → 공문 30개</span>
+<span class="kw">from</span> pyhwpx <span class="kw">import</span> Hwp
+<span class="kw">import</span> csv
+<span class="kw">from</span> pathlib <span class="kw">import</span> Path
+
+TEMPLATE = <span class="cm">"./공문_양식.hwp"</span>
+OUTDIR = Path(<span class="cm">"./out"</span>); OUTDIR.mkdir(exist_ok=<span class="kw">True</span>)
+
+hwp = Hwp(visible=<span class="kw">False</span>)
+<span class="kw">with</span> <span class="kw">open</span>(<span class="cm">"명단.csv"</span>, encoding=<span class="cm">"utf-8"</span>) <span class="kw">as</span> f:
+    <span class="kw">for</span> row <span class="kw">in</span> csv.DictReader(f):
+        hwp.open(TEMPLATE)
+        <span class="kw">for</span> k, v <span class="kw">in</span> row.items():
+            hwp.put_field_text(k, v)
+        name = <span class="cm">f"{row['부서']}_{row['이름']}.hwp"</span>
+        hwp.save_as(<span class="kw">str</span>(OUTDIR / name))
+        hwp.clear()
+hwp.quit()</div>
+      <p class="bt">20줄이 전체 구조다. <strong>open → put_field_text 루프 → save_as → clear</strong>의 4단이 곧 배치 자동화의 원형. 템플릿·명단만 바꾸면 새 업무가 된다.</p>
+      <div class="co"><div class="co-lb">REUSABLE</div><div class="co-main">다른 공문으로 확장 시 수정 지점 2곳뿐</div><p>TEMPLATE 경로와 파일명 규칙만 바꾼다. 본문 로직은 손대지 않는다.</p></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">LOG</span><span class="sh-t">실행 로그 + 검증</span></div><div class="sh-line"></div>
+      <div class="cblk"><span class="cm"># HWP → PDF 일괄 변환 + 로그</span>
+<span class="kw">import</span> time, csv
+<span class="kw">from</span> pathlib <span class="kw">import</span> Path
+log = []
+<span class="kw">for</span> h <span class="kw">in</span> Path(<span class="cm">"./out"</span>).glob(<span class="cm">"*.hwp"</span>):
+    t0 = time.time()
+    <span class="kw">try</span>:
+        hwp.open(<span class="kw">str</span>(h))
+        hwp.save_as(<span class="kw">str</span>(h.with_suffix(<span class="cm">".pdf"</span>)))
+        status = <span class="cm">"OK"</span>
+    <span class="kw">except</span> Exception <span class="kw">as</span> e:
+        status = <span class="kw">str</span>(e)
+    log.append([h.name, status, <span class="kw">round</span>(time.time()-t0, 2)])
+csv.writer(<span class="kw">open</span>(<span class="cm">"log.csv"</span>, <span class="cm">"w"</span>)).writerows(log)</div>
+      <div class="pit"><div class="pit-lb">PITFALL</div><div class="pit-h">▸ clear() 누락 시 이전 내용 섞임</div><div class="pit-d">open→save_as→clear 3단 리듬을 반드시 지킨다.</div></div>
+      <div class="co"><div class="co-lb">LOG TIP</div><div class="co-main">OK/실패/소요시간 3컬럼이면 감사 대응 가능</div><p>월말 집계 시 건당 평균 시간·실패율이 다음 자동화의 근거 자료.</p></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">05 · 어시스트 바이브 코딩 ② — 업무 자동화와 로컬 AI 연동</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">012 / 032</span></div></div>
+</div></div>
+
+<!-- 13 행안부 HWPX 가이드 -->
+<div class="stage"><div class="slide" data-title="HWPX Guideline">
+  <div class="hbar"><div class="hbar-l">MODULE 05 · UNIT 02 · HWPX GUIDE</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 05</div></div>
+  <div class="hl"><div class="hl-kicker">PART B-2 · 행안부 HWPX 개방형 표준 적용 팁 · 6MIN</div><div class="hl-title">HWPX 개방형 표준의 활용</div><div class="hl-sub">HWPX는 ZIP + XML 구조이므로, 한글 본체 없이도 읽기·수정이 가능. 장기 보존과 타 시스템 연계에서 HWP보다 유리하다.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col2">
+    <div class="col">
+      <div class="sh"><span class="sh-n">SPEC</span><span class="sh-t">HWPX 개요 · 적용 팁</span></div><div class="sh-line"></div>
+      <table class="mtbl"><thead><tr><th>항목</th><th>HWP</th><th>HWPX</th></tr></thead><tbody>
+        <tr><td>포맷</td><td>바이너리</td><td>ZIP + XML</td></tr>
+        <tr><td>표준</td><td>비공개</td><td>개방형 (KS X 6101)</td></tr>
+        <tr><td>외부 도구</td><td>한정적</td><td>Python·JS 파싱 가능</td></tr>
+        <tr><td>장기 보존</td><td>호환 리스크</td><td>유리</td></tr>
+        <tr><td>용량</td><td>중간</td><td>조금 큼</td></tr>
+      </tbody></table>
+      <div class="co"><div class="co-lb">정책 권장</div><div class="co-main">신규 양식은 HWPX로 저장하는 편이 안전</div><p>행안부·국가기록원 권장. 웹 API 연계·외부 파싱 때 이점.</p></div>
+      <div class="pit"><div class="pit-lb">PITFALL</div><div class="pit-h">▸ HWPX 서식 깨짐</div><div class="pit-d">기관 내 타 HWP 버전과 주고받을 때 글꼴·단락 설정 검증 필요.</div></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">CODE</span><span class="sh-t">HWPX를 ZIP으로 열기</span></div><div class="sh-line"></div>
+      <div class="cblk"><span class="cm"># HWPX 파일 내부 구조 읽기 (한글 없이)</span>
+<span class="kw">import</span> zipfile, xml.etree.ElementTree <span class="kw">as</span> ET
+
+<span class="kw">with</span> zipfile.ZipFile(<span class="cm">"보고서.hwpx"</span>) <span class="kw">as</span> z:
+    <span class="kw">for</span> name <span class="kw">in</span> z.namelist()[:5]:
+        <span class="kw">print</span>(name)
+    <span class="kw">with</span> z.open(<span class="cm">"Contents/section0.xml"</span>) <span class="kw">as</span> f:
+        tree = ET.parse(f)
+        root = tree.getroot()
+        <span class="kw">for</span> t <span class="kw">in</span> root.iter():
+            <span class="kw">if</span> t.text <span class="kw">and</span> t.text.strip():
+                <span class="kw">print</span>(t.text[:40])</div>
+      <p class="bt">ZIP을 풀어 XML을 읽는 순간, HWPX는 "열 수 있는 포맷"이 된다. 서버에서 텍스트 추출·검색이 가능해진다.</p>
+      <div class="co"><div class="co-lb">FIELD CASE</div><div class="co-main">기록물 아카이브 서버에서 HWPX 전문 검색</div><p>파일 열지 않고도 텍스트 색인 가능 — 기록 관리에 직결.</p></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">05 · 어시스트 바이브 코딩 ② — 업무 자동화와 로컬 AI 연동</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">013 / 032</span></div></div>
+</div></div>
+
+<!-- 14 Part C-1 VBA+Ollama 개관 -->
+<div class="stage"><div class="slide" data-title="VBA Ollama Overview">
+  <div class="hbar"><div class="hbar-l">MODULE 05 · UNIT 03 · VBA + OLLAMA</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 05</div></div>
+  <div class="hl"><div class="hl-kicker">PART C-1 · VBA + OLLAMA 빌드 개관 · 10MIN</div><div class="hl-title">엑셀 VBA 기반 AI 함수 설계</div><div class="hl-sub">외부 API 호출 없이, 기관 PC 한 대 안에서 돌아가는 로컬 LLM. 엑셀 셀에서 함수처럼 부르는 다섯 가지 사용자 정의 함수(UDF)를 직접 짠다.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col3">
+    <div class="col">
+      <div class="sh"><span class="sh-n">WHAT IS OLLAMA</span><span class="sh-t">localhost:11434</span></div><div class="sh-line"></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">OLLAMA</span><span class="icard-sess">로컬 LLM 런타임</span></div><div class="bth">LLM을 내 PC에 설치하면 REST API처럼 호출된다</div><p class="bt"><span style="font-family:var(--mono);font-size:11px;background:rgba(184,83,42,0.1);padding:1px 5px">ollama pull llama3.2</span> 한 줄로 모델이 로컬로 내려온다. <strong>http://localhost:11434/api/generate</strong>에 JSON POST → 응답. 완전 오프라인.</p></div>
+      <div class="co"><div class="co-lb">KEY TAKEAWAY</div><div class="co-main">AI 함수의 본질은 REST API 호출 래퍼</div><p>VBA가 어려운 게 아니라 "localhost에 JSON 보내고 받기" 한 줄이 전부.</p></div>
+      <div class="pit"><div class="pit-lb">INSTALL NOTE</div><div class="pit-h">▸ 외부망 1회 → 내부망 상주</div><div class="pit-d">설치 파일·모델 파일은 외부망에서 한 번만 받아 USB 이관. 이후 완전 오프라인 운영.</div></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">ARCHITECTURE</span><span class="sh-t">엑셀 ↔ VBA ↔ Ollama</span></div><div class="sh-line"></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">STACK</span></div><div class="bth">엑셀 셀 → =AI_*(args) → VBA HTTP → Ollama → 응답</div><p class="bt">셀 한 개 = 1회 호출. 500행 드래그 = 500회 자동 호출. 담당자는 "엑셀만" 쓴다.</p></div>
+      <div class="dstrip"><div class="ds-c"><div class="ds-a">LATENCY</div><div class="ds-n">3-8s</div><div class="ds-d">7B 모델 / 건</div></div><div class="ds-c"><div class="ds-a">COST</div><div class="ds-n">0원</div><div class="ds-d">로컬 추론</div></div><div class="ds-c"><div class="ds-a">NET</div><div class="ds-n">OFF</div><div class="ds-d">외부 통신 0</div></div></div>
+      <div class="quote"><div class="quote-src">SOURCE · OLLAMA BLOG</div><div class="quote-q">"사내 데이터를 외부 API에 보내지 않는 것이 가장 값비싼 기능이다."</div><div class="quote-a">— Local-first AI 논지</div></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">MODELS</span><span class="sh-t">권장 모델 3종</span></div><div class="sh-line"></div>
+      <table class="mtbl"><thead><tr><th>모델</th><th>크기</th><th>용도</th></tr></thead><tbody>
+        <tr><td>llama3.2:3b</td><td>2.0 GB</td><td>빠른 분류·요약</td></tr>
+        <tr><td>qwen2.5:7b</td><td>4.7 GB</td><td>한국어 강점</td></tr>
+        <tr><td>gemma2:9b</td><td>5.5 GB</td><td>다국어 번역</td></tr>
+        <tr><td>llama3.1:8b</td><td>4.9 GB</td><td>범용 추론</td></tr>
+      </tbody></table>
+      <div class="pit"><div class="pit-lb">PITFALL</div><div class="pit-h">▸ GPU 없이 13B 이상</div><div class="pit-d">CPU 추론은 건당 30초 이상. 7B 이하 권장.</div><div class="pit-h">▸ RAM 부족</div><div class="pit-d">7B 실행에 RAM 8GB 권장. 16GB면 여유.</div></div>
+      <div class="co"><div class="co-lb">권장 진입</div><div class="co-main">첫 모델은 qwen2.5:7b 한국어 강점</div><p>공공 한국어 문서 분류·요약 정확도가 높다. 속도 우선이면 llama3.2:3b 병행.</p></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">05 · 어시스트 바이브 코딩 ② — 업무 자동화와 로컬 AI 연동</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">014 / 032</span></div></div>
+</div></div>
+
+<!-- 15 Ollama API 호출 구조 -->
+<div class="stage"><div class="slide" data-title="Ollama API Call">
+  <div class="hbar"><div class="hbar-l">MODULE 05 · UNIT 03 · OLLAMA API</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 05</div></div>
+  <div class="hl"><div class="hl-kicker">PART C-1 · OLLAMA LOCALHOST API · VBA 래퍼 · 10MIN</div><div class="hl-title">Ollama 로컬 API와 VBA 래퍼 구조</div><div class="hl-sub">다섯 개 AI 함수가 공유하는 공통 헬퍼 한 개. VBA가 어려운 게 아니라 "JSON 보내고 받기"가 한 줄이면 끝난다.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col2">
+    <div class="col">
+      <div class="sh"><span class="sh-n">VBA</span><span class="sh-t">공통 HTTP 래퍼</span></div><div class="sh-line"></div>
+      <div class="cblk"><span class="cm">' 모든 AI 함수가 호출하는 공통 헬퍼</span>
+<span class="kw">Private Function</span> OllamaCall(prompt <span class="kw">As String</span>) <span class="kw">As String</span>
+  <span class="kw">Dim</span> http <span class="kw">As Object</span>
+  <span class="kw">Set</span> http = CreateObject(<span class="cm">"MSXML2.XMLHTTP.6.0"</span>)
+  http.Open <span class="cm">"POST"</span>, _
+    <span class="cm">"http://localhost:11434/api/generate"</span>, <span class="kw">False</span>
+  http.setRequestHeader <span class="cm">"Content-Type"</span>, <span class="cm">"application/json"</span>
+  <span class="kw">Dim</span> body <span class="kw">As String</span>
+  body = <span class="cm">"{""model"":""llama3.2"",""prompt"":"""</span> &amp; _
+         EscapeJSON(prompt) &amp; <span class="cm">""",""stream"":false}"</span>
+  http.send body
+  OllamaCall = ParseResponse(http.responseText)
+<span class="kw">End Function</span></div>
+      <div class="pit"><div class="pit-lb">PITFALL · 빈출 오류</div><div class="pit-h">▸ stream:false 누락</div><div class="pit-d">생략 시 JSON이 여러 조각으로 쪼개져 파싱 실패.</div><div class="pit-h">▸ 따옴표 이스케이프 누락</div><div class="pit-d">EscapeJSON 헬퍼 필수. 본문 따옴표가 JSON 깨뜨림.</div><div class="pit-h">▸ 타임아웃 기본값 과신</div><div class="pit-d">100건 드래그 시 체감 정지. 비동기 큐 고려.</div></div>
+      <div class="co"><div class="co-lb">KEY TAKEAWAY</div><div class="co-main">공통 래퍼 1개 = 5개 함수 공유 자산</div><p>프롬프트만 바꿔 다섯 함수를 찍어낸다. 유지보수는 이 래퍼 한 지점으로 수렴.</p></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">INSTALL</span><span class="sh-t">설치 확인 & 테스트</span></div><div class="sh-line"></div>
+      <div class="cblk"><span class="cm"># Ollama 설치 확인 (cmd 한 줄)</span>
+<span class="kw">ollama</span> list
+<span class="cm"># NAME              SIZE      MODIFIED</span>
+<span class="cm"># llama3.2:3b       2.0 GB    2 days ago</span>
+<span class="cm"># qwen2.5:7b        4.7 GB    5 days ago</span>
+
+<span class="cm"># 모델 로드 + 1회 호출 (cmd에서 API 테스트)</span>
+curl http://localhost:11434/api/generate -d <span class="cm">"{\"model\":\"llama3.2\",\"prompt\":\"안녕\",\"stream\":false}"</span></div>
+      <div class="co"><div class="co-lb">INSTALL ROUTINE</div><div class="co-main">외부망 1회 다운로드 → USB → 내부망 상주</div><p>Ollama 설치 파일 + 모델(수 GB)을 외부망에서 받아 <strong>보안 승인 USB</strong>로 이관. 이후 완전 오프라인.</p></div>
+      <div class="cblk"><span class="cm">' 응답 JSON 파싱 (최소 버전)</span>
+<span class="kw">Private Function</span> ParseResponse(js <span class="kw">As String</span>) <span class="kw">As String</span>
+  <span class="kw">Dim</span> s <span class="kw">As Long</span>, e <span class="kw">As Long</span>
+  s = InStr(js, <span class="cm">"""response"":"""</span>) + 12
+  e = InStr(s, js, <span class="cm">""","</span>)
+  ParseResponse = Mid(js, s, e - s)
+<span class="kw">End Function</span></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">05 · 어시스트 바이브 코딩 ② — 업무 자동화와 로컬 AI 연동</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">015 / 032</span></div></div>
+</div></div>
+
+<!-- 16 AI 함수 4종 설계 -->
+<div class="stage"><div class="slide" data-title="AI Functions Design">
+  <div class="hbar"><div class="hbar-l">MODULE 05 · UNIT 03 · 5 UDFs</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 05</div></div>
+  <div class="hl"><div class="hl-kicker">PART C-1 · =AI_SUMMARIZE · CLASSIFY · EXTRACT · TRANSLATE · ASK · 10MIN</div><div class="hl-title">엑셀 AI 함수 5종 설계</div><div class="hl-sub">공통 래퍼 위에 "프롬프트 한 줄"만 바꿔 다섯 함수를 만든다. 담당자는 엑셀에서 =AI_CLASSIFY(A2, "분류라벨") 한 줄로 끝.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col3">
+    <div class="col">
+      <div class="sh"><span class="sh-n">SIGNATURE</span><span class="sh-t">5개 함수 시그니처</span></div><div class="sh-line"></div>
+      <table class="mtbl"><thead><tr><th>FN</th><th>SIGNATURE</th><th>RESULT</th></tr></thead><tbody>
+        <tr><td>AI_SUMMARIZE</td><td style="font-family:var(--mono);font-size:10px">(range, maxlen)</td><td>긴 텍스트 → 요약</td></tr>
+        <tr><td>AI_CLASSIFY</td><td style="font-family:var(--mono);font-size:10px">(text, labels)</td><td>라벨 선택</td></tr>
+        <tr><td>AI_EXTRACT</td><td style="font-family:var(--mono);font-size:10px">(text, field)</td><td>필드 추출</td></tr>
+        <tr><td>AI_TRANSLATE</td><td style="font-family:var(--mono);font-size:10px">(text, lang)</td><td>번역</td></tr>
+        <tr><td>AI_ASK</td><td style="font-family:var(--mono);font-size:10px">(prompt, ctx)</td><td>자유 질의</td></tr>
+      </tbody></table>
+      <div class="co"><div class="co-lb">사용 예</div><div class="co-main">수식 한 번 → 500행 드래그로 전체 처리</div><p>엑셀에 익숙한 공직자가 <strong>코드 없이도</strong> AI를 쓰게 하는 것이 목표.</p></div>
+      <div class="pit"><div class="pit-lb">설계 원칙</div><div class="pit-h">▸ 반환은 항상 문자열 한 줄</div><div class="pit-d">여러 줄·JSON 반환 시 셀이 깨진다. 프롬프트 말미에 "한 줄로" 강제.</div></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">VBA</span><span class="sh-t">5개 함수 본체</span></div><div class="sh-line"></div>
+      <div class="cblk"><span class="cm">' =AI_SUMMARIZE — 요약</span>
+<span class="kw">Public Function</span> AI_SUMMARIZE(txt, <span class="kw">Optional</span> mx = 30)
+  AI_SUMMARIZE = OllamaCall(<span class="cm">"다음을 "</span> &amp; mx &amp; _
+    <span class="cm">"자 이내 한국어로 요약: "</span> &amp; txt)
+<span class="kw">End Function</span>
+
+<span class="cm">' =AI_CLASSIFY — 라벨 중 하나</span>
+<span class="kw">Public Function</span> AI_CLASSIFY(txt, labels)
+  AI_CLASSIFY = OllamaCall(<span class="cm">"다음 중 하나만 골라: "</span> &amp; _
+    labels &amp; <span class="cm">". 답 한 단어만. 대상: "</span> &amp; txt)
+<span class="kw">End Function</span>
+
+<span class="cm">' =AI_EXTRACT — 필드 값</span>
+<span class="kw">Public Function</span> AI_EXTRACT(txt, field)
+  AI_EXTRACT = OllamaCall(<span class="cm">"다음에서 '"</span> &amp; field &amp; _
+    <span class="cm">"' 값만 답해. "</span> &amp; txt)
+<span class="kw">End Function</span>
+
+<span class="cm">' =AI_TRANSLATE / =AI_ASK</span>
+<span class="kw">Public Function</span> AI_TRANSLATE(txt, lang)
+  AI_TRANSLATE = OllamaCall(<span class="cm">lang &amp; "로 번역: "</span> &amp; txt)
+<span class="kw">End Function</span></div>
+      <p class="bt">다섯 함수 공통점은 딱 한 줄 — <strong>OllamaCall(프롬프트)</strong> 호출. 본체가 3~4줄이니 한 파일 안에 모두 들어온다.</p>
+      <div class="co"><div class="co-lb">STRUCTURE</div><div class="co-main">프롬프트가 곧 스펙</div><p>함수 사양서는 프롬프트 문자열 한 줄. 신규 함수 추가는 새 프롬프트 1줄이면 끝.</p></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">USE</span><span class="sh-t">엑셀 사용 모습</span></div><div class="sh-line"></div>
+      <div class="cblk"><span class="cm">' 민원 제목 자동 분류</span>
+=<span class="kw">AI_CLASSIFY</span>(A2, <span class="cm">"환경,교통,복지,세무,기타"</span>)
+
+<span class="cm">' 긴 민원 15자 이내 요약</span>
+=<span class="kw">AI_SUMMARIZE</span>(A2, 15)
+
+<span class="cm">' 계약서에서 금액 필드만</span>
+=<span class="kw">AI_EXTRACT</span>(A2, <span class="cm">"계약금액"</span>)
+
+<span class="cm">' 영문 메일 한글로</span>
+=<span class="kw">AI_TRANSLATE</span>(B2, <span class="cm">"ko"</span>)
+
+<span class="cm">' 자유 질의</span>
+=<span class="kw">AI_ASK</span>(<span class="cm">"1차 응대안 3줄로"</span>, A2)</div>
+      <div class="pit"><div class="pit-lb">PITFALL</div><div class="pit-h">▸ 프롬프트에 따옴표 포함</div><div class="pit-d">EscapeJSON 통과 필수. 사용자가 직접 작성하는 A열 원문은 반드시 이스케이프.</div><div class="pit-h">▸ labels 콤마 규칙 불일치</div><div class="pit-d">"환경,교통" vs "환경, 교통" — 프롬프트에 명시.</div></div>
+      <div class="co"><div class="co-lb">ADOPTION</div><div class="co-main">담당자 학습 곡선 0 — 기존 수식 습관 그대로</div><p>=SUM 자리에 =AI_CLASSIFY만 들어간다. 교육이 아닌 배포가 본질.</p></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">05 · 어시스트 바이브 코딩 ② — 업무 자동화와 로컬 AI 연동</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">016 / 032</span></div></div>
+</div></div>
+
+<!-- 17 .xlam 배포 전략 -->
+<div class="stage"><div class="slide" data-title="XLAM Deploy">
+  <div class="hbar"><div class="hbar-l">MODULE 05 · UNIT 03 · XLAM DEPLOY</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 05</div></div>
+  <div class="hl"><div class="hl-kicker">PART C-1 · VBA 모듈 .xlam 배포 전략 · 8MIN</div><div class="hl-title">VBA 모듈 .xlam 애드인 배포 전략</div><div class="hl-sub">xlsm → xlam 애드인 변환 · 공용 폴더 고정 · 각 PC 등록 · Ollama 실행 체크 · 모델·프롬프트 버전 시트. 운영 루틴이 함수 구현보다 중요하다.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col2">
+    <div class="col">
+      <div class="sh"><span class="sh-n">STEPS</span><span class="sh-t">5단계 배포</span></div><div class="sh-line"></div>
+      <table class="mtbl"><thead><tr><th>STEP</th><th>활동</th></tr></thead><tbody>
+        <tr><td>① 애드인 변환</td><td>xlsm → "Excel 추가 기능(.xlam)"으로 저장</td></tr>
+        <tr><td>② 공용 폴더</td><td>\\DEPT\AI함수\KPA_AI_v1.xlam 버전 고정</td></tr>
+        <tr><td>③ 각 PC 등록</td><td>파일 → 옵션 → 추가 기능 → 체크</td></tr>
+        <tr><td>④ 실행 체크</td><td>Workbook_Open에서 localhost:11434 핑</td></tr>
+        <tr><td>⑤ 설정 시트</td><td>_CONFIG 시트로 모델·프롬프트 버전 관리</td></tr>
+      </tbody></table>
+      <div class="co"><div class="co-lb">VERSION LOCK</div><div class="co-main">파일명에 _v1, _v2 버전 고정</div><p>덮어쓰기 금지. 이전 버전은 _archive 폴더로. 롤백 경로 확보.</p></div>
+      <div class="pit"><div class="pit-lb">배포 원칙</div><div class="pit-h">▸ 첫 배포는 3인 한정 시범</div><div class="pit-d">1주 관찰 후 오류·프롬프트 피드백 반영. 전 부서는 2차.</div></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">OPS</span><span class="sh-t">운영 자동 체크</span></div><div class="sh-line"></div>
+      <div class="cblk"><span class="cm">' Workbook_Open — Ollama 체크</span>
+<span class="kw">Private Sub</span> Workbook_Open()
+  <span class="kw">Dim</span> http <span class="kw">As Object</span>
+  <span class="kw">On Error Resume Next</span>
+  <span class="kw">Set</span> http = CreateObject(<span class="cm">"MSXML2.XMLHTTP.6.0"</span>)
+  http.Open <span class="cm">"GET"</span>, <span class="cm">"http://localhost:11434"</span>, <span class="kw">False</span>
+  http.send
+  <span class="kw">If</span> Err.Number &lt;&gt; 0 <span class="kw">Or</span> http.Status &lt;&gt; 200 <span class="kw">Then</span>
+    MsgBox <span class="cm">"Ollama가 실행되지 않았습니다."</span> &amp; _
+      vbCrLf &amp; <span class="cm">"시작 메뉴에서 Ollama를 실행한 뒤 다시 여세요."</span>
+  <span class="kw">End If</span>
+<span class="kw">End Sub</span></div>
+      <div class="pit"><div class="pit-lb">PITFALL · 배포 단계</div><div class="pit-h">▸ 기관 보안 정책이 .xlam 차단</div><div class="pit-d">신뢰할 수 있는 위치·서명 인증을 정보화 부서와 사전 조율.</div><div class="pit-h">▸ 첫 호출 3~5초 멈춤</div><div class="pit-d">Ollama 콜드 스타트. Workbook_Open에서 더미 호출로 예열.</div></div>
+      <div class="co"><div class="co-lb">KEY TAKEAWAY</div><div class="co-main">운영 루틴이 함수 구현보다 오래 남는다</div><p>코드는 1일, 운영 규칙은 3개월. _CONFIG 시트와 버전 파일명이 조직 자산.</p></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">05 · 어시스트 바이브 코딩 ② — 업무 자동화와 로컬 AI 연동</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">017 / 032</span></div></div>
+</div></div>
+
+<!-- 18 HERO · 엑셀 셀 하나에 = AI 한 번 -->
+<div class="stage"><div class="slide" data-title="Hero Cell AI">
+  <div class="hbar"><div class="hbar-l">MODULE 05 · KEY INSIGHT</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 05</div></div>
+  <div class="bd col1"><div class="col hero" style="background:var(--dk);color:var(--on)">
+    <div class="hero-k">PART C · HEADLINE</div>
+    <div class="hero-t">엑셀 셀 하나가<br><span style="color:var(--acc3)">AI를 불러낸다</span>.</div>
+    <div class="hero-s">담당자는 평생 써온 엑셀을 그대로 쓴다. 바뀐 것은 오직 한 줄 — <strong style="color:var(--on)">B열 수식이 =SUM 대신 =AI_CLASSIFY</strong>라는 점뿐. 학습 곡선이 없는 AI 도입은 이 각도에서만 가능하다. Ollama가 내부망에 있고, VBA가 다리 역할을 하기 때문에.</div>
+    <div class="hero-q"><div class="hero-q-q">"민원 1,000건 × 3초 = 50분. 기존 수작업은 인당 하루. 함수 하나가 부서의 하루를 돌려준다."</div><div class="hero-q-a">— 내부 시범 운영 기록</div></div>
+  </div></div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">05 · 어시스트 바이브 코딩 ② — 업무 자동화와 로컬 AI 연동</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">018 / 032</span></div></div>
+</div></div>
+
+<!-- 19 공공 시나리오 -->
+<div class="stage"><div class="slide" data-title="Public Scenarios">
+  <div class="hbar"><div class="hbar-l">MODULE 05 · UNIT 03 · SCENARIOS</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 05</div></div>
+  <div class="hl"><div class="hl-kicker">PART C-2 · 공공 시나리오 5종 · 분류·요약·추출·번역·응대 · 10MIN</div><div class="hl-title">공공 민원 자동화 시나리오 5종</div><div class="hl-sub">다섯 AI 함수로 풀 수 있는 공공 업무. 민원 접수대를 기준으로 한 파이프라인으로 모두 연결된다.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col3">
+    <div class="col">
+      <div class="sh"><span class="sh-n">A · CLASSIFY</span><span class="sh-t">1,000건 자동 분류</span></div><div class="sh-line"></div>
+      <div class="bth">민원 1,000건 → 부서별 자동 배정</div>
+      <p class="bt sm"><strong>=AI_CLASSIFY(A2, "환경,교통,복지,세무,안전,기타")</strong> 한 줄로 분류. 1,000건 × 3초 ≈ 50분. 기존 인당 하루 대비 20배 단축.</p>
+      <div class="dstrip"><div class="ds-c"><div class="ds-a">ACC.</div><div class="ds-n">~93%</div><div class="ds-d">7B 기준</div></div><div class="ds-c"><div class="ds-a">SPEED</div><div class="ds-n">3s/건</div><div class="ds-d">CPU</div></div><div class="ds-c"><div class="ds-a">COST</div><div class="ds-n">0원</div><div class="ds-d">로컬</div></div></div>
+      <div class="bth">B · 10자 이내 제목</div>
+      <p class="bt sm"><strong>=AI_SUMMARIZE(A2, 10)</strong>으로 접수대장 자동 기입. 500자 이상 민원에서 특히 시간 절감이 크다.</p>
+      <div class="co"><div class="co-lb">TIP</div><div class="co-main">라벨 수가 많을수록 모델 크기↑</div><p>3~5 라벨: 3B. 10+ 라벨: 7B 권장.</p></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">C · D · E</span><span class="sh-t">추출·번역·자유질의</span></div><div class="sh-line"></div>
+      <div class="bth">C. 계약서·보고서 필드 추출</div>
+      <p class="bt sm"><strong>=AI_EXTRACT(A2, "계약금액")</strong>, <strong>=AI_EXTRACT(A2, "이행기간")</strong>. PDF 100건을 PyMuPDF로 텍스트화한 뒤 엑셀에서 일괄 추출.</p>
+      <div class="bth">D. 외국어 민원 실시간 번역</div>
+      <p class="bt sm"><strong>=AI_TRANSLATE(A2, "ko")</strong>. 다문화·외국인 민원에 외부 API 없이 즉시 응대안 초안.</p>
+      <div class="bth">E. 맥락 기반 자유 질의</div>
+      <p class="bt sm"><strong>=AI_ASK("1차 응대안을 3줄로", A2)</strong>. 기존 DB를 건드리지 않고 보조 열로만.</p>
+      <div class="cod"><div class="cod-lb">PIPELINE</div><div class="cod-main">A: 원문 · B: 분류 · C: 10자 제목 · D: 응대 초안</div><p>담당자는 D열만 수정·승인. <strong>1건 8분 → 2분.</strong></p></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">USE TABLE</span><span class="sh-t">업무별 매핑</span></div><div class="sh-line"></div>
+      <table class="mtbl"><thead><tr><th>업무</th><th>함수</th></tr></thead><tbody>
+        <tr><td>민원 분류</td><td>AI_CLASSIFY</td></tr>
+        <tr><td>접수 제목</td><td>AI_SUMMARIZE</td></tr>
+        <tr><td>계약 필드</td><td>AI_EXTRACT</td></tr>
+        <tr><td>번역 초안</td><td>AI_TRANSLATE</td></tr>
+        <tr><td>응대 초안</td><td>AI_ASK</td></tr>
+        <tr><td>긴 보고 요약</td><td>AI_SUMMARIZE</td></tr>
+        <tr><td>첨부 분류</td><td>AI_CLASSIFY</td></tr>
+      </tbody></table>
+      <div class="pit"><div class="pit-lb">공공 적용 주의</div><div class="pit-h">▸ 최종 의사결정은 사람</div><div class="pit-d">AI 출력은 "초안". 결재란에 담당자 검토 필수.</div><div class="pit-h">▸ 감사 대비 로그</div><div class="pit-d">모델·프롬프트·타임스탬프 CSV 축적.</div></div>
+      <div class="co"><div class="co-lb">CONVERGENCE</div><div class="co-main">다섯 함수가 한 접수대로 수렴</div><p>분류 → 요약 → 추출 → 번역 → 응대. 하나의 엑셀에서 한 사이클이 끝난다.</p></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">05 · 어시스트 바이브 코딩 ② — 업무 자동화와 로컬 AI 연동</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">019 / 032</span></div></div>
+</div></div>
+
+<!-- 20 성능·속도·캐싱 -->
+<div class="stage"><div class="slide" data-title="Perf Cache">
+  <div class="hbar"><div class="hbar-l">MODULE 05 · UNIT 03 · PERFORMANCE</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 05</div></div>
+  <div class="hl"><div class="hl-kicker">PART C-2 · 성능·속도·캐싱 팁 · 8MIN</div><div class="hl-title">AI 함수 성능과 캐싱 전략</div><div class="hl-sub">AI 함수는 기본이 "매 셀 1회 호출". 같은 질문을 100번 반복하면 100번 호출된다. 캐싱만 붙여도 체감 속도가 10배 이상 달라진다.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col2">
+    <div class="col">
+      <div class="sh"><span class="sh-n">CACHE</span><span class="sh-t">셀 내용 캐시</span></div><div class="sh-line"></div>
+      <div class="cblk"><span class="cm">' 딕셔너리 캐시 (같은 입력 → 재호출 생략)</span>
+<span class="kw">Private</span> gCache <span class="kw">As Object</span>
+
+<span class="kw">Private Function</span> Cached(prompt <span class="kw">As String</span>) <span class="kw">As String</span>
+  <span class="kw">If</span> gCache <span class="kw">Is Nothing</span> <span class="kw">Then</span>
+    <span class="kw">Set</span> gCache = CreateObject(<span class="cm">"Scripting.Dictionary"</span>)
+  <span class="kw">End If</span>
+  <span class="kw">If</span> <span class="kw">Not</span> gCache.Exists(prompt) <span class="kw">Then</span>
+    gCache(prompt) = OllamaCall(prompt)
+  <span class="kw">End If</span>
+  Cached = gCache(prompt)
+<span class="kw">End Function</span></div>
+      <p class="bt">같은 민원 텍스트가 반복 입력되는 분류 업무에서 특히 효과. 호출 수가 4~10배 줄어든다.</p>
+      <div class="co"><div class="co-lb">디스크 캐시</div><div class="co-main">세션 간 유지 — CSV로 영속화</div><p>엑셀 종료 후에도 결과 유지. _CACHE 시트에 쓰고 재시작 시 로드.</p></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">SPEED</span><span class="sh-t">모델·배치·자동계산</span></div><div class="sh-line"></div>
+      <table class="mtbl"><thead><tr><th>TIP</th><th>효과</th></tr></thead><tbody>
+        <tr><td>3B 모델 사용</td><td>속도 2배↑·정확도 약간↓</td></tr>
+        <tr><td>자동 계산 OFF</td><td>드래그 중 재계산 방지</td></tr>
+        <tr><td>일괄 호출(배치)</td><td>여러 프롬프트 묶음 처리</td></tr>
+        <tr><td>프롬프트 단축</td><td>토큰↓ → latency↓</td></tr>
+        <tr><td>옵션 num_ctx 설정</td><td>불필요 길이 절감</td></tr>
+        <tr><td>keep_alive 연장</td><td>모델 재로딩 방지</td></tr>
+      </tbody></table>
+      <div class="cod"><div class="cod-lb">BENCH · 내부 시범</div><div class="cod-main">라벨 5 · 3B 모델 · 캐시 적용</div><p>500건 분류 소요: 25분 → <strong>9분</strong>. 같은 데이터 반복 테스트 시 1분 이내.</p></div>
+      <div class="pit"><div class="pit-lb">PITFALL</div><div class="pit-h">▸ 모든 셀이 동시에 호출</div><div class="pit-d">자동 계산 OFF → 수동 F9. 드래그 후 일괄 계산.</div><div class="pit-h">▸ GPU 기대</div><div class="pit-d">사내 PC는 대부분 CPU. 3B·5B 한도 내.</div></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">05 · 어시스트 바이브 코딩 ② — 업무 자동화와 로컬 AI 연동</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">020 / 032</span></div></div>
+</div></div>
+
+<!-- 21 배포 후 동료 교육 · 운영 루틴 -->
+<div class="stage"><div class="slide" data-title="Team Training Ops">
+  <div class="hbar"><div class="hbar-l">MODULE 05 · UNIT 03 · TEAM OPS</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 05</div></div>
+  <div class="hl"><div class="hl-kicker">PART C-2 · 배포 후 동료 교육 · 운영 루틴 · 7MIN</div><div class="hl-title">배포 후 동료 교육과 운영 루틴</div><div class="hl-sub">거점리더의 임무는 "만든 것을 퍼뜨리는 것". 30분 교육·피드백 수집·월 점검의 3박자를 운영 루틴으로 박는다.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col2w">
+    <div class="col">
+      <div class="sh"><span class="sh-n">TRAINING</span><span class="sh-t">30분 동료 교육 커리큘럼</span></div><div class="sh-line"></div>
+      <table class="mtbl"><thead><tr><th>TIME</th><th>TOPIC</th></tr></thead><tbody>
+        <tr><td>0~5m</td><td>Ollama 왜 로컬인가 — 보안 3문장</td></tr>
+        <tr><td>5~12m</td><td>엑셀에서 =AI_SUMMARIZE 실습</td></tr>
+        <tr><td>12~20m</td><td>=AI_CLASSIFY 라벨 5개 실습</td></tr>
+        <tr><td>20~25m</td><td>주의사항 — 원본 보존·최종 사람 검토</td></tr>
+        <tr><td>25~30m</td><td>질의응답 + 오늘 과제 샘플 받기</td></tr>
+      </tbody></table>
+      <div class="co"><div class="co-lb">HUB LEADER NOTE</div><div class="co-main">"시연 1 + 실습 2 + 질의 1" 구조로 짧게</div><p>한 번에 다 가르치지 않는다. 첫 주는 SUMMARIZE/CLASSIFY 두 개만 공유.</p></div>
+      <div class="pit"><div class="pit-lb">PITFALL</div><div class="pit-h">▸ "완벽히 이해시키려" 1시간 넘김</div><div class="pit-d">30분 초과 시 집중력 붕괴. 다음 주 심화 세션으로 분리.</div><div class="pit-h">▸ 실패 사례를 숨김</div><div class="pit-d">"잘못 분류된 사례"를 함께 공유해야 신뢰가 쌓인다.</div></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">OPS</span><span class="sh-t">월간 점검 루틴</span></div><div class="sh-line"></div>
+      <div class="cod"><div class="cod-lb">MONTHLY CHECK</div><div class="cod-main">사용 통계·실패 로그·모델 업데이트 3종</div><p>① _CONFIG 시트의 호출 카운트 확인. ② 실패 로그 검토로 프롬프트 개선. ③ 필요 시 모델 버전 교체 → _xlam_v2로 롤아웃.</p></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">FEEDBACK</span></div><div class="bth">"이게 틀렸어요" 시트 하나</div><p class="bt">동료가 틀린 케이스를 표시할 수 있는 공용 시트. 거점리더는 이 시트 → 프롬프트/라벨 조정 → 재배포.</p></div>
+      <div class="dstrip"><div class="ds-c"><div class="ds-a">TRAIN</div><div class="ds-n">30m</div><div class="ds-d">1회</div></div><div class="ds-c"><div class="ds-a">CHECK</div><div class="ds-n">월 1</div><div class="ds-d">통계·개선</div></div><div class="ds-c"><div class="ds-a">ROLL</div><div class="ds-n">분기</div><div class="ds-d">모델 교체</div></div></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">05 · 어시스트 바이브 코딩 ② — 업무 자동화와 로컬 AI 연동</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">021 / 032</span></div></div>
+</div></div>
+
+<!-- 22 Part D · Node.js 맛보기 -->
+<div class="stage"><div class="slide" data-title="Node Taster">
+  <div class="hbar"><div class="hbar-l">MODULE 05 · UNIT 04 · NODE.JS</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 05</div></div>
+  <div class="hl"><div class="hl-kicker">PART D · NODE.JS 미리보기 · 5·6·8차시 연결 · 8MIN</div><div class="hl-title">Node.js 자동화 미리보기</div><div class="hl-sub">배우라는 게 아니다. "있다는 걸 알게 한다"가 목표. 8차시에 에이전트가 생성할 Node 코드를 검수할 때 막히지 않을 정도.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col3">
+    <div class="col">
+      <div class="sh"><span class="sh-n">WHY NODE</span><span class="sh-t">8차시 복선</span></div><div class="sh-line"></div>
+      <div class="bth">MCP 생태계의 공식 언어는 TypeScript/Node.js</div>
+      <p class="bt">Anthropic MCP SDK는 TS·Python 두 갈래지만 <strong>공개 MCP 서버 대부분이 Node 기반</strong>. 8차시에 에이전트가 MCP 서버를 생성하면 결과물이 Node일 확률이 높다.</p>
+      <table class="mtbl"><thead><tr><th>CRITERION</th><th>PY</th><th>NODE</th></tr></thead><tbody>
+        <tr><td>데이터 분석</td><td>강점</td><td>약점</td></tr>
+        <tr><td>엑셀·HWP</td><td>풍부</td><td>제한</td></tr>
+        <tr><td>웹·실시간</td><td>중간</td><td>강점</td></tr>
+        <tr><td>MCP SDK</td><td>보조</td><td>주류</td></tr>
+        <tr><td>공공 실무</td><td>추천</td><td>필요시</td></tr>
+      </tbody></table>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">HELLO NODE</span><span class="sh-t">세 줄로 감</span></div><div class="sh-line"></div>
+      <div class="cblk"><span class="cm"># 설치 확인</span>
+<span class="kw">node</span> -v
+<span class="kw">npm</span> -v
+
+<span class="cm"># 새 프로젝트</span>
+mkdir hello-node &amp;&amp; cd hello-node
+npm init -y</div>
+      <div class="cblk"><span class="cm">// convert.js — names.txt → names.json</span>
+<span class="kw">const</span> fs = <span class="kw">require</span>(<span class="cm">'fs'</span>);
+<span class="kw">const</span> lines = fs.readFileSync(<span class="cm">'names.txt'</span>, <span class="cm">'utf8'</span>)
+    .split(<span class="cm">'\n'</span>).filter(Boolean);
+<span class="kw">const</span> out = lines.map((n, i) =&gt; ({
+    id: i + 1, name: n.trim()
+}));
+fs.writeFileSync(<span class="cm">'names.json'</span>,
+    JSON.stringify(out, <span class="kw">null</span>, 2));
+<span class="kw">console</span>.log(<span class="cm">`Wrote ${out.length} items`</span>);</div>
+      <p class="bt sm">파이썬의 <span style="font-family:var(--mono);font-size:11px">with open()</span>이 <span style="font-family:var(--mono);font-size:11px">fs.readFileSync</span>로 바뀌었을 뿐. 개념은 같다.</p>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">FORESHADOW</span><span class="sh-t">재등장할 세 단어</span></div><div class="sh-line"></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">NPM</span></div><div class="bth">Node 패키지 매니저 (pip 역할)</div><p class="bt"><span style="font-family:var(--mono);font-size:11px">npm install @modelcontextprotocol/sdk</span></p></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">EXPRESS</span></div><div class="bth">가장 많이 쓰이는 웹 서버 프레임워크</div><p class="bt">5줄로 HTTP 서버. 7차시 "웹서비스 3덩어리" 후보.</p></div>
+      <div class="icard dark"><div class="icard-top"><span class="icard-lb">MCP SDK</span></div><div class="bth">에이전트-도구 연결 프로토콜</div><p class="bt">8차시 핵심. Node에서 가장 성숙.</p></div>
+      <div class="quote"><div class="quote-src">SOURCE · ANTHROPIC MCP DOCS</div><div class="quote-q">"MCP는 에이전트와 도구 사이의 표준 콘센트다."</div><div class="quote-a">— Model Context Protocol 개요</div></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">05 · 어시스트 바이브 코딩 ② — 업무 자동화와 로컬 AI 연동</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">022 / 032</span></div></div>
+</div></div>
+
+<!-- 23 Node 오프라인 패키지 반입 -->
+<div class="stage"><div class="slide" data-title="Node Offline">
+  <div class="hbar"><div class="hbar-l">MODULE 05 · UNIT 04 · NODE OFFLINE</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 05</div></div>
+  <div class="hl"><div class="hl-kicker">PART D · NODE 오프라인 패키지 반입 패턴 · 6MIN</div><div class="hl-title">Node 오프라인 패키지 반입 패턴</div><div class="hl-sub">내부망은 기본적으로 npm registry를 못 본다. 외부망에서 미리 받아 두고, 내부망에 USB/보안 파일 이관 후 "로컬 경로 설치"로 전환한다.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col2">
+    <div class="col">
+      <div class="sh"><span class="sh-n">EXTERNAL</span><span class="sh-t">외부망에서 준비</span></div><div class="sh-line"></div>
+      <div class="cblk"><span class="cm"># 외부망 — 패키지 tarball 수집</span>
+mkdir node-offline &amp;&amp; cd node-offline
+<span class="cm"># 1) 의존성 포함 설치</span>
+npm install @modelcontextprotocol/sdk zod
+
+<span class="cm"># 2) node_modules 통째 압축</span>
+tar -czf node_modules.tar.gz node_modules/
+
+<span class="cm"># 3) 또는 npm pack 으로 tarball만</span>
+npm pack @modelcontextprotocol/sdk
+npm pack zod
+<span class="cm"># *.tgz 파일 생성됨 → USB 이관</span></div>
+      <p class="bt">두 가지 루트. ① node_modules 통째 압축, ② tgz 개별 패킹. 기관 보안정책이 허용하는 쪽을 선택.</p>
+      <div class="co"><div class="co-lb">PREP CHECK</div><div class="co-main">외부·내부 Node 버전 고정부터</div><p>node -v 로 LTS 버전을 두 환경 모두 동일하게. 네이티브 바이너리 호환성의 근간.</p></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">INTERNAL</span><span class="sh-t">내부망에서 설치</span></div><div class="sh-line"></div>
+      <div class="cblk"><span class="cm"># 내부망 — 오프라인 설치</span>
+
+<span class="cm"># A) node_modules 통째 이관</span>
+tar -xzf node_modules.tar.gz
+<span class="cm"># package.json만 있으면 바로 node index.js 실행</span>
+
+<span class="cm"># B) tgz 로컬 경로 설치</span>
+npm install ./modelcontextprotocol-sdk-1.0.0.tgz \
+            ./zod-3.22.4.tgz \
+            --prefix ./myapp --no-save
+
+<span class="cm"># C) offline registry(verdaccio) 운영 시</span>
+npm config set registry http://npm.internal.gov/
+npm install</div>
+      <div class="co"><div class="co-lb">권장</div><div class="co-main">작은 프로젝트면 A, 공용이면 C(사내 mirror)</div><p>장기적으로는 사내 verdaccio/nexus 같은 mirror 도입이 안정적.</p></div>
+      <div class="pit"><div class="pit-lb">PITFALL</div><div class="pit-h">▸ 네이티브 바이너리</div><div class="pit-d">일부 패키지는 OS/아키텍처별 바이너리 필요. 내부망과 동일 OS에서 빌드.</div><div class="pit-h">▸ node 버전 불일치</div><div class="pit-d">외부·내부 Node LTS 버전 일치시키기.</div></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">05 · 어시스트 바이브 코딩 ② — 업무 자동화와 로컬 AI 연동</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">023 / 032</span></div></div>
+</div></div>
+
+<!-- 24 Part E 캡스톤 설계 -->
+<div class="stage"><div class="slide" data-title="Capstone Design">
+  <div class="hbar"><div class="hbar-l">MODULE 05 · UNIT 05 · CAPSTONE</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 05</div></div>
+  <div class="hl"><div class="hl-kicker">PART E · 캡스톤 "내 업무 1개 자동화" · 설계 가이드 · 10MIN</div><div class="hl-title">업무 1개 자동화 캡스톤 설계</div><div class="hl-sub">크게 시작하지 않는다. 주 3회 이상 반복·수작업 30분 이상·파일 기반. 이 세 조건으로 과제를 선정한다.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col3">
+    <div class="col">
+      <div class="sh"><span class="sh-n">SELECT</span><span class="sh-t">과제 선정 기준</span></div><div class="sh-line"></div>
+      <table class="mtbl"><thead><tr><th>CONDITION</th><th>이유</th></tr></thead><tbody>
+        <tr><td>주 3회 이상</td><td>ROI 보장</td></tr>
+        <tr><td>30분 이상</td><td>체감 효과 즉시</td></tr>
+        <tr><td>파일 기반</td><td>도구 매칭 용이</td></tr>
+        <tr><td>명확한 규칙</td><td>자동화 가능성↑</td></tr>
+      </tbody></table>
+      <div class="co"><div class="co-lb">EXAMPLE POOL</div><div class="co-main">월말 보고 · 민원 분류 · 공문 생성 · 회의록 정리</div><p>거의 예외 없이 첫 과제가 이 네 범주에서 나온다.</p></div>
+      <div class="bth">도구 선정 매트릭스</div>
+      <table class="mtbl"><thead><tr><th>INPUT</th><th>OUTPUT</th><th>도구</th></tr></thead><tbody>
+        <tr><td>엑셀/CSV</td><td>엑셀</td><td>openpyxl·VBA</td></tr>
+        <tr><td>PDF</td><td>엑셀·텍스트</td><td>PyMuPDF</td></tr>
+        <tr><td>HWP</td><td>HWP/PDF</td><td>pyhwpx</td></tr>
+        <tr><td>자유문장</td><td>분류·요약</td><td>Ollama+VBA</td></tr>
+      </tbody></table>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">5 STEPS</span><span class="sh-t">50분 실행 순서</span></div><div class="sh-line"></div>
+      <table class="mtbl"><thead><tr><th>STEP</th><th>TIME</th><th>활동</th></tr></thead><tbody>
+        <tr><td>① 해부</td><td>10m</td><td>수작업 단계를 종이에 번호로 나열</td></tr>
+        <tr><td>② 도구 선정</td><td>5m</td><td>매트릭스로 즉결</td></tr>
+        <tr><td>③ 외부망 생성</td><td>15m</td><td>Claude/Cursor + 샘플 데이터</td></tr>
+        <tr><td>④ 내부망 실행</td><td>15m</td><td>샘플 10건 → 전체</td></tr>
+        <tr><td>⑤ 시간 측정</td><td>5m</td><td>전/후 로그 CSV</td></tr>
+      </tbody></table>
+      <div class="dstrip"><div class="ds-c"><div class="ds-a">TARGET</div><div class="ds-n">50분</div><div class="ds-d">총 완성</div></div><div class="ds-c"><div class="ds-a">SUCCESS</div><div class="ds-n">-70%</div><div class="ds-d">수작업 대비</div></div><div class="ds-c"><div class="ds-a">REPEAT</div><div class="ds-n">10×</div><div class="ds-d">검증 실행</div></div></div>
+      <div class="pit"><div class="pit-lb">PITFALL · 초심자</div><div class="pit-h">▸ "하고 싶다"가 아니라 "자주 있다"로</div><div class="pit-d">흥미 기준 과제는 대부분 실패. 지루한 반복을 고른다.</div></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">SUCCESS</span><span class="sh-t">통과 조건 5</span></div><div class="sh-line"></div>
+      <ul style="font-size:13.5px;color:var(--ink2);line-height:1.78;padding-left:22px">
+        <li><strong>수작업 대비 70% 이상 시간 단축</strong></li>
+        <li>10회 연속 실행에 결과 동일</li>
+        <li>에러 발생 시 로그에 원인 기록</li>
+        <li>코드 + README 한 장이 세트</li>
+        <li>동료 1명이 README만 보고 재실행 가능</li>
+      </ul>
+      <div class="cod"><div class="cod-lb">README TEMPLATE</div><div class="cod-main">4줄 = 입력 · 실행 · 출력 · 에러</div><p>"코드가 동작한다"보다 "동료가 재실행할 수 있다"가 완성 기준.</p></div>
+      <div class="co"><div class="co-lb">포트폴리오</div><div class="co-main">자동화 전/후 시간 측정 로그는 개인 포트폴리오</div><p>"수작업 90분 → 자동 8분" 한 줄이 다음 과제 투자를 설득한다.</p></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">05 · 어시스트 바이브 코딩 ② — 업무 자동화와 로컬 AI 연동</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">024 / 032</span></div></div>
+</div></div>
+
+<!-- 25 캡스톤 예시 3종 -->
+<div class="stage"><div class="slide" data-title="Capstone Examples">
+  <div class="hbar"><div class="hbar-l">MODULE 05 · UNIT 05 · EXAMPLES</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 05</div></div>
+  <div class="hl"><div class="hl-kicker">PART E · 캡스톤 예시 3종 — 민원·회의록·엑셀 집계 · 8MIN</div><div class="hl-title">공공 캡스톤 조립 예시 3종</div><div class="hl-sub">파이썬·HWP·Ollama+VBA가 현업 시나리오에서 어떻게 한 흐름으로 엮이는지 본다.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col3">
+    <div class="col">
+      <div class="sh"><span class="sh-n">SCENARIO 1</span><span class="sh-t">민원 분류·응대</span></div><div class="sh-line"></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">민원 분류</span></div><div class="bth">월 3,000건 접수 → 자동 분류·초안</div><p class="bt">A열 원문 → B열 =AI_CLASSIFY → C열 =AI_SUMMARIZE(10자) → D열 =AI_ASK(응대안). <strong>1건 8분 → 2분.</strong> 담당자는 D열만 검토.</p></div>
+      <div class="dstrip"><div class="ds-c"><div class="ds-a">TOOLS</div><div class="ds-n">3</div><div class="ds-d">VBA·Ollama·엑셀</div></div><div class="ds-c"><div class="ds-a">SAVE</div><div class="ds-n">-75%</div><div class="ds-d">처리 시간</div></div><div class="ds-c"><div class="ds-a">COST</div><div class="ds-n">0</div><div class="ds-d">외부 API</div></div></div>
+      <div class="co"><div class="co-lb">포인트</div><div class="co-main">기존 엑셀 파일을 그대로 승계</div><p>담당자는 평소 업무 파일에 열만 3개 추가. 학습 곡선 0.</p></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">SCENARIO 2</span><span class="sh-t">회의록 자동화</span></div><div class="sh-line"></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">회의록</span></div><div class="bth">녹음 → STT → 요약 → HWP 템플릿 삽입</div><p class="bt"><strong>Whisper 로컬</strong>로 STT → 파이썬으로 요약 분할 → pyhwpx로 회의록 HWP 양식에 put_field_text. 1회 2시간 → 20분.</p></div>
+      <div class="cblk"><span class="cm"># 회의록 자동화 (개요)</span>
+txt = whisper_stt(<span class="cm">"회의.m4a"</span>)
+segs = split_agenda(txt)
+hwp.open(<span class="cm">"회의록_템플릿.hwp"</span>)
+<span class="kw">for</span> k, v <span class="kw">in</span> segs.items():
+    hwp.put_field_text(k, v)
+hwp.save_as(<span class="cm">"회의록_20260420.hwp"</span>)</div>
+      <p class="bt sm">외부 업로드 없이 로컬 STT → 로컬 요약. 민감 회의에 적합.</p>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">SCENARIO 3</span><span class="sh-t">엑셀 월간 집계</span></div><div class="sh-line"></div>
+      <div class="icard dark"><div class="icard-top"><span class="icard-lb">월간 집계</span></div><div class="bth">여러 시군구 엑셀 → 통합·피벗·HWP 보고서</div><p class="bt">① 폴더 안 엑셀 12개 수집 → ② pandas 병합 → ③ 피벗 생성 → ④ pyhwpx로 월간 보고서 HWP에 표·수치 자동 삽입. <strong>수작업 1일 → 15분.</strong></p></div>
+      <div class="cod"><div class="cod-lb">FIELD CASE</div><div class="cod-main">120건 수료증 발급 · 4시간 → 12분</div><p>명단 CSV + HWP 템플릿 + pyhwpx 루프. 월 1회 정기 업무가 "버튼 하나"로.</p></div>
+      <div class="pit"><div class="pit-lb">공통 교훈</div><div class="pit-h">▸ 한 흐름 안에 두 도구 이상</div><div class="pit-d">예시 3종 모두 최소 2~3개 도구 결합. 단일 도구 과제는 이미 4차시 수준.</div></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">05 · 어시스트 바이브 코딩 ② — 업무 자동화와 로컬 AI 연동</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">025 / 032</span></div></div>
+</div></div>
+
+<!-- 26 캡스톤 시간 측정 로그 양식 -->
+<div class="stage"><div class="slide" data-title="Time Log">
+  <div class="hbar"><div class="hbar-l">MODULE 05 · UNIT 05 · TIME LOG</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 05</div></div>
+  <div class="hl"><div class="hl-kicker">PART E · 캡스톤 시간 측정 로그 양식 · 6MIN</div><div class="hl-title">자동화 시간 측정 로그 8컬럼 양식</div><div class="hl-sub">"얼마나 빨라졌는가"를 기록해야 두 번째·세 번째 자동화 예산·시간이 따라온다. 8개 컬럼 로그 양식을 고정 포맷으로 쓴다.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col2">
+    <div class="col">
+      <div class="sh"><span class="sh-n">SCHEMA</span><span class="sh-t">로그 스키마 8컬럼</span></div><div class="sh-line"></div>
+      <table class="mtbl"><thead><tr><th>COL</th><th>내용</th></tr></thead><tbody>
+        <tr><td>date</td><td>실행 일자</td></tr>
+        <tr><td>task</td><td>업무명 (민원분류 등)</td></tr>
+        <tr><td>n_items</td><td>처리 건수</td></tr>
+        <tr><td>manual_min</td><td>수작업 예상 분</td></tr>
+        <tr><td>auto_min</td><td>실제 자동화 분</td></tr>
+        <tr><td>tool_stack</td><td>사용 도구 (py/pyhwpx/…)</td></tr>
+        <tr><td>error_rate</td><td>재작업 건수 / n_items</td></tr>
+        <tr><td>note</td><td>개선 포인트 한 줄</td></tr>
+      </tbody></table>
+      <div class="co"><div class="co-lb">SAMPLE ROW</div><div class="co-main">2026-04-20, 민원분류, 1000, 480, 50, VBA+Ollama, 0.07, 라벨 6개로 축소 검토</div><p>한 줄이 2개월 뒤 "투자 대비 성과 1장 보고"의 재료가 된다.</p></div>
+      <div class="pit"><div class="pit-lb">작성 원칙</div><div class="pit-h">▸ 실행 직후에 기록</div><div class="pit-d">일·주 단위로 미루면 정확도가 급락. 스크립트 종료 시점에 CSV append가 최선.</div></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">CODE</span><span class="sh-t">자동 기록 템플릿</span></div><div class="sh-line"></div>
+      <div class="cblk"><span class="cm"># 스크립트 시작·끝에 시간 기록</span>
+<span class="kw">import</span> time, csv
+<span class="kw">from</span> datetime <span class="kw">import</span> datetime
+
+t0 = time.time()
+<span class="cm"># ... 본 작업 ...</span>
+n = 1000  <span class="cm"># 처리 건수</span>
+manual_min = 480
+auto_min = (time.time() - t0) / 60
+
+<span class="kw">with</span> <span class="kw">open</span>(<span class="cm">"automation_log.csv"</span>, <span class="cm">"a"</span>, encoding=<span class="cm">"utf-8"</span>) <span class="kw">as</span> f:
+    csv.writer(f).writerow([
+        datetime.now().strftime(<span class="cm">"%Y-%m-%d"</span>),
+        <span class="cm">"민원분류"</span>, n, manual_min,
+        <span class="kw">round</span>(auto_min, 1),
+        <span class="cm">"VBA+Ollama"</span>, 0.07,
+        <span class="cm">"라벨 6개로 축소 검토"</span>
+    ])</div>
+      <div class="cod"><div class="cod-lb">USE</div><div class="cod-main">월말에 한 장으로 집계 → 간단한 막대그래프</div><p>"이번 분기 자동화로 회수한 시간 XX시간" 보고 1장. 조직 역량 기록.</p></div>
+      <div class="pit"><div class="pit-lb">주의</div><div class="pit-h">▸ manual_min을 과장하지 않는다</div><div class="pit-d">실제 이전 측정치나 동료 증언으로 근거. "감"이면 신뢰 하락.</div></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">05 · 어시스트 바이브 코딩 ② — 업무 자동화와 로컬 AI 연동</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">026 / 032</span></div></div>
+</div></div>
+
+<!-- 27 Part F 어시스트 한계 -->
+<div class="stage"><div class="slide" data-title="Assist Limits">
+  <div class="hbar"><div class="hbar-l">MODULE 05 · UNIT 06 · ASSIST LIMITS</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 05</div></div>
+  <div class="hl"><div class="hl-kicker">PART F · 어시스트의 한계 · 7가지 피로 · 8MIN</div><div class="hl-title">어시스트의 7가지 피로 지점</div><div class="hl-sub">어시스트 바이브 코딩은 강력하지만, 반복되는 수작업 고리가 남는다. 이 고리를 끊는 도구가 6차시의 에이전트다.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col2w">
+    <div class="col">
+      <div class="sh"><span class="sh-n">SEVEN</span><span class="sh-t">4·5차시에서 겪은 피로</span></div><div class="sh-line"></div>
+      <table class="mtbl"><thead><tr><th>#</th><th>피로 포인트</th></tr></thead><tbody>
+        <tr><td>01</td><td>코드를 매번 직접 복사·붙여넣기</td></tr>
+        <tr><td>02</td><td>가상환경·라이브러리 설치 사람이 직접</td></tr>
+        <tr><td>03</td><td>실행 후 에러 메시지 복사해 재질문</td></tr>
+        <tr><td>04</td><td>여러 파일 수정 시 일관성 조율 사람이</td></tr>
+        <tr><td>05</td><td>장기 태스크 중간 상태를 기억 못함</td></tr>
+        <tr><td>06</td><td>"같은 지시"를 반복해서 말하게 됨</td></tr>
+        <tr><td>07</td><td>다중 모듈·폴더 구조 설계가 어렵다</td></tr>
+      </tbody></table>
+      <div class="pit"><div class="pit-lb">FIELD OBSERVATION</div><div class="pit-h">▸ 하루 복붙 회수 40~80회</div><div class="pit-d">어시스트 이용 시간의 20~30%가 "복사·붙여넣기" 자체. 실제 사고엔 쓰이지 않는 시간이다.</div></div>
+      <div class="co"><div class="co-lb">TURNING POINT</div><div class="co-main">7가지 중 3개 이상 누적 시 에이전트 검토</div><p>반복 지시·장기 태스크·다파일 수정 세 축에서 피로가 크면 6차시 주제가 바로 처방.</p></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">CONSEQUENCE</span><span class="sh-t">피로의 결과</span></div><div class="sh-line"></div>
+      <div class="cod"><div class="cod-lb">ASSIST MODE</div><div class="cod-main">"코드를 받는" 모델 — 실행은 여전히 사람</div><p>작업 규모가 커질수록 "사람 병목"이 심해진다. 이 구간에서 거점리더는 피로도가 누적된다.</p></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">SYMPTOM</span></div><div class="bth">체감 신호 — "요즘 바이브 코딩 지친다"</div><p class="bt">① 오늘 질문을 어제도 했다 / ② 맥락을 다시 설명한다 / ③ 터미널 창을 계속 왔다갔다 한다. 이 중 2개 이상이면 전환 시점.</p></div>
+      <div class="quote"><div class="quote-src">SOURCE · 4·5차시 현장 관찰 노트</div><div class="quote-q">"어시스트는 잘 쓸수록 복붙 회수가 폭발한다. 이 지점에서 에이전트로 넘어가야 한다."</div><div class="quote-a">— 커리큘럼 설계 노트</div></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">05 · 어시스트 바이브 코딩 ② — 업무 자동화와 로컬 AI 연동</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">027 / 032</span></div></div>
+</div></div>
+
+<!-- 28 어시스트 vs 에이전트 Bridge -->
+<div class="stage"><div class="slide" data-title="Bridge Chart">
+  <div class="hbar"><div class="hbar-l">MODULE 05 · UNIT 06 · BRIDGE</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 05</div></div>
+  <div class="hl"><div class="hl-kicker">PART F · 어시스트 vs 에이전트 · 전환 지점 · 8MIN</div><div class="hl-title">어시스트와 에이전트의 역할 전환</div><div class="hl-sub">어시스트가 "답을 주는 사람"이라면, 에이전트는 "직접 움직이는 사람". 거점리더는 프롬프트 작성자에서 아키텍처 설계자로 이동한다.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col2">
+    <div class="col">
+      <div class="sh"><span class="sh-n">CHART</span><span class="sh-t">7가지 비교표</span></div><div class="sh-line"></div>
+      <table class="mtbl"><thead><tr><th>POINT</th><th>어시스트</th><th>에이전트</th></tr></thead><tbody>
+        <tr><td>실행</td><td>사람 복붙</td><td>파일 직접 수정</td></tr>
+        <tr><td>설치</td><td>사람 터미널</td><td>터미널 직접 실행</td></tr>
+        <tr><td>디버깅</td><td>사람이 에러 옮김</td><td>자동 재시도 루프</td></tr>
+        <tr><td>다파일</td><td>사람이 조율</td><td>프로젝트 트리 이해</td></tr>
+        <tr><td>장기 기억</td><td>맥락 재입력</td><td>세션·메모리 파일</td></tr>
+        <tr><td>반복 지시</td><td>매번 말함</td><td>Rules·Skills 고정</td></tr>
+        <tr><td>아키텍처</td><td>한 문단 프롬프트</td><td>설계서 공동 작성</td></tr>
+      </tbody></table>
+      <div class="co"><div class="co-lb">ROLE SHIFT</div><div class="co-main">코드를 직접 치지 않는다</div><p>설계서·검수 체크리스트가 거점리더의 새 산출물. "무엇을 어떤 구조로" 질문이 본게임.</p></div>
+      <div class="pit"><div class="pit-lb">전환 기준</div><div class="pit-h">▸ 단발 초안 → 어시스트</div><div class="pit-d">학습·탐색·1회성 생성은 여전히 어시스트가 빠르다.</div><div class="pit-h">▸ 반복·다파일 → 에이전트</div><div class="pit-d">주 단위 반복·3파일 이상 수정이면 에이전트가 우위.</div></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">TOOLS</span><span class="sh-t">6차시 도구 5종 예고</span></div><div class="sh-line"></div>
+      <div class="icard dark"><div class="icard-top"><span class="icard-lb">CLAUDE CODE</span></div><div class="bth">터미널 기반 풀 에이전트</div><p class="bt">파일 수정·테스트·커밋까지. 6차시 주력.</p></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">CURSOR · ANTIGRAVITY</span></div><div class="bth">IDE 통합형</div><p class="bt">편집기 내부 에이전트. 시각적 diff로 안심 검수.</p></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">CODEX · OPENCODE</span></div><div class="bth">경쟁·오픈 대안</div><p class="bt">정책·예산에 따른 선택지. 같은 문법으로 전환 가능.</p></div>
+      <div class="pit"><div class="pit-lb">전환기 오해</div><div class="pit-h">▸ "어시스트 버리고 에이전트로" 아님</div><div class="pit-d">빠른 초안·학습엔 어시스트가 여전히 유효. <strong>규모와 반복성</strong>에 따라 선택.</div></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">05 · 어시스트 바이브 코딩 ② — 업무 자동화와 로컬 AI 연동</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">028 / 032</span></div></div>
+</div></div>
+
+<!-- 29 HERO · 어시스트는 한 번 -->
+<div class="stage"><div class="slide" data-title="Hero Repeatable">
+  <div class="hbar"><div class="hbar-l">MODULE 05 · KEY INSIGHT</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 05</div></div>
+  <div class="bd col1"><div class="col hero" style="background:var(--bg2);padding:56px 90px;justify-content:center">
+    <div style="font-family:var(--mono);font-size:11.5px;color:var(--acc);letter-spacing:3px;font-weight:700;margin-bottom:18px">KEY INSIGHT · BRIDGE TO SESSION 06</div>
+    <div style="font-family:var(--serif);font-weight:700;font-size:52px;line-height:1.18;letter-spacing:-0.02em;color:var(--ink)">어시스트는 <span style="color:var(--acc)">한 번</span> 돌아간다.<br>에이전트는 <span style="color:var(--acc)">반복 가능</span>하다.</div>
+    <div style="width:60px;height:3px;background:var(--acc);margin:22px 0 18px"></div>
+    <p style="font-size:17px;color:var(--ink2);line-height:1.7;max-width:1200px;font-style:italic">5차시의 자동화는 <strong style="color:var(--ink)">"어시스트가 한 번 만들어준 스크립트"</strong>다. 같은 스크립트가 매달 돌면 훌륭한 자산이지만, 업무가 바뀌면 다시 사람이 고쳐야 한다. 6차시의 에이전트는 <strong style="color:var(--ink)">"그 수정을 다시 맡길 수 있는 동료"</strong>로 확장된다. 그래서 도구가 아니라 역할이 바뀐다.</p>
+    <div class="hero-q" style="border-left-color:var(--acc);margin-top:30px"><div style="font-family:var(--serif);font-size:21px;color:var(--ink);font-weight:700;font-style:italic;line-height:1.5">"코드는 에이전트에게 맡기고, 구조는 사람이 책임진다."</div><div style="font-size:12px;color:var(--ink3);letter-spacing:2px;margin-top:10px;font-family:var(--mono);font-weight:700">— 8주 커리큘럼 지도 원칙</div></div>
+  </div></div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">05 · 어시스트 바이브 코딩 ② — 업무 자동화와 로컬 AI 연동</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">029 / 032</span></div></div>
+</div></div>
+
+<!-- 30 CLOSING · 요약 4개 Part -->
+<div class="stage"><div class="slide" data-title="Closing Summary">
+  <div class="hbar"><div class="hbar-l">MODULE 05 · CLOSING ①</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 05</div></div>
+  <div class="hl"><div class="hl-kicker">CLOSING ① · 5차시 정리 — 네 축의 자동화 · 5MIN</div><div class="hl-title">5차시 네 축 자동화 요약</div><div class="hl-sub">이 네 축이 공공 업무 자동화의 기본 지도. 다음 차시부터는 이 지도를 에이전트에게 맡긴다.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col2">
+    <div class="col">
+      <div class="sh"><span class="sh-n">SUMMARY</span><span class="sh-t">네 축 요약</span></div><div class="sh-line"></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">AXIS 01 · PART A</span></div><div class="bth">파이썬 자동화 4종</div><p class="bt">파일·엑셀·PDF·메일 — 반복 업무의 80%가 여기서 해결. 네 축이 묶이면 월말 보고가 버튼 한 번.</p></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">AXIS 02 · PART B</span></div><div class="bth">HWP 자동화 기초 + 배치 + HWPX</div><p class="bt">pyhwpx 기초 → 30건 일괄 처리 → PDF 변환 → HWPX 개방 표준 활용까지.</p></div>
+      <div class="icard dark"><div class="icard-top"><span class="icard-lb">AXIS 03 · PART C</span></div><div class="bth">Ollama + VBA 완전 내부망 AI</div><p class="bt">=AI_SUMMARIZE 등 5개 함수. 외부 통신 0. .xlam으로 부서 배포.</p></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">AXIS 04 · PART D·E·F</span></div><div class="bth">Node 맛보기 + 캡스톤 + 한계 회고</div><p class="bt">8차시 MCP 복선 + 자동화 1개 완성 + 6차시 에이전트로의 다리.</p></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">CORE</span><span class="sh-t">핵심 메시지 · 산출물</span></div><div class="sh-line"></div>
+      <div class="co"><div class="co-lb">CORE MESSAGE</div><div class="co-main">외부망에서 코드를 받고, 내부망에서 돌린다 — 그리고 엑셀 셀 하나가 AI 한 번이 된다</div><p>듀얼 네트워크 + 로컬 LLM 두 원칙이 공공 AI 자동화의 근간.</p></div>
+      <div class="cod"><div class="cod-lb">STAGE B · 위치</div><div class="cod-main">4·5차시가 "어시스트 바이브 코딩" 2부작 완료</div><p>4차시: 시각화·작은 앱. <strong>5차시: 업무 자동화·로컬 AI(오늘).</strong> 6차시: 어시스트 → 에이전트 전환. Stage B를 마치면 7차시부터 데이터·지식의 AI 서비스화로 확장.</p></div>
+      <div class="bth">오늘의 산출물 4종</div>
+      <ul style="font-size:13.5px;color:var(--ink2);line-height:1.78;padding-left:22px">
+        <li>반복 업무 1개 자동화 스크립트(각자)</li>
+        <li>HWP 일괄 양식 채우기 매크로 1종</li>
+        <li>Ollama 기반 엑셀 AI 함수 모듈(.xlam)</li>
+        <li>자동화 전/후 시간 측정 로그</li>
+      </ul>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">05 · 어시스트 바이브 코딩 ② — 업무 자동화와 로컬 AI 연동</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">030 / 032</span></div></div>
+</div></div>
+
+<!-- 31 CLOSING · Next Session -->
+<div class="stage"><div class="slide" data-title="Closing Next">
+  <div class="hbar"><div class="hbar-l">MODULE 05 · CLOSING ②</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 05</div></div>
+  <div class="hl"><div class="hl-kicker">CLOSING ② · 6차시 예고 — AI 에이전트 도구 마스터리 · 4MIN</div><div class="hl-title">6차시 AI 에이전트 도구 마스터리 예고</div><div class="hl-sub">오늘 만든 스크립트를 에이전트가 고치고 확장하게 만든다. 도구 5종·Rules·Skills·Sub-agent·아키텍처 문법이 핵심 주제.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col2w">
+    <div class="col">
+      <div class="sh"><span class="sh-n">NEXT</span><span class="sh-t">6차시 미리보기</span></div><div class="sh-line"></div>
+      <div class="icard dark"><div class="icard-top"><span class="icard-lb">SESSION 06</span></div><div class="bth">AI 에이전트 도구 마스터리</div><p class="bt"><strong>Part A.</strong> 어시스트 vs 에이전트 7가지 차이 · <strong>Part B.</strong> 도구 5종(Claude Code · Cursor · Antigravity · Codex · OpenCode) + Rules · Skills · Sub-agent. <strong>Part C.</strong> 아키텍처로 말하기 · 검수 체크리스트. <strong>Part D.</strong> 5차시 자동화 과제를 에이전트로 재현·확장.</p></div>
+      <div class="co"><div class="co-lb">6차시 준비물</div><div class="co-main">Claude Code 계정 · Node LTS 설치 · 오늘의 캡스톤 코드</div><p>오늘 만든 자동화 스크립트 1개 + README 한 장을 가져온다. 에이전트가 이 코드를 확장·개선하는 실습을 진행한다.</p></div>
+      <div class="pit"><div class="pit-lb">BEFORE NEXT</div><div class="pit-h">▸ Claude Code 가입·인증 완료</div><div class="pit-d">설치 시간 절약. 본 강의 시간엔 바로 실습으로.</div><div class="pit-h">▸ Node LTS 설치 권장</div><div class="pit-d">node -v로 18.x 이상 확인.</div></div>
+    </div>
+    <div class="col" style="background:var(--dk);color:var(--on)">
+      <div class="sh"><span class="sh-n" style="color:var(--acc3)">QUOTE</span><span class="sh-t" style="color:var(--on2)">6차시 핵심 메시지</span></div><div class="sh-line" style="background:rgba(255,255,255,0.15)"></div>
+      <div style="border-left:3px solid var(--acc3);padding:18px 20px;margin:12px 0">
+        <div style="font-family:var(--mono);font-size:10px;color:var(--on2);letter-spacing:2px;font-weight:700;margin-bottom:10px">커리큘럼 설계 철학</div>
+        <div style="font-family:var(--serif);font-size:22px;color:var(--on);font-weight:700;font-style:italic;line-height:1.5">"거점리더는 개발자가 아니라 설계자다. 코드는 에이전트에게 맡기고, 구조는 사람이 책임진다."</div>
+        <div style="font-size:12px;color:var(--on2);margin-top:12px">— 8주 커리큘럼 지도 원칙</div>
+      </div>
+      <div style="font-family:var(--serif);font-size:34px;color:var(--acc3);font-style:italic;margin-top:20px;text-align:right">— 수고하셨습니다</div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">05 · 어시스트 바이브 코딩 ② — 업무 자동화와 로컬 AI 연동</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">031 / 032</span></div></div>
+</div></div>
+
+<!-- 32 STAGE MAP -->
+<div class="stage"><div class="slide" data-title="Stage Map">
+  <div class="hbar"><div class="hbar-l">MODULE 05 · 8-WEEK STAGE MAP</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 05</div></div>
+  <div class="hl"><div class="hl-kicker">8주 로드맵 · 현재 위치 · 3MIN</div><div class="hl-title">8주 로드맵과 현재 위치</div><div class="hl-sub">Stage A(재료) 종료, Stage B(어시스트)가 오늘로 끝. 6차시부터 Stage C(에이전트·서비스)로 진입한다.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col2w">
+    <div class="col">
+      <div class="sh"><span class="sh-n">TABLE</span><span class="sh-t">8주 로드맵</span></div><div class="sh-line"></div>
+      <table class="mtbl"><thead><tr><th>회차</th><th>주제</th><th>상태</th></tr></thead><tbody>
+        <tr><td>S01</td><td>AI 에이전트 시대 · 지형도</td><td>완료</td></tr>
+        <tr><td>S02</td><td>프론티어 + 도구 50선</td><td>완료</td></tr>
+        <tr><td>S03</td><td>메타 프롬프트 · 워크플로우</td><td>완료</td></tr>
+        <tr><td>S04</td><td>어시스트 바이브 ① 시각화</td><td>완료</td></tr>
+        <tr><td><strong>S05</strong></td><td><strong>어시스트 바이브 ② 자동화</strong></td><td><strong>오늘</strong></td></tr>
+        <tr><td>S06</td><td>AI 에이전트 도구 마스터리</td><td>다음</td></tr>
+        <tr><td>S07</td><td>RAG 파이프라인 · 웹서비스</td><td>—</td></tr>
+        <tr><td>S08</td><td>API·MCP · 아키텍처 캔버스</td><td>—</td></tr>
+      </tbody></table>
+      <div class="co"><div class="co-lb">현재 위치</div><div class="co-main">Stage B 종료 지점 — 어시스트 2부작 마무리</div><p>4·5차시가 어시스트 바이브 코딩 연작. 6차시 첫 시간에 에이전트로 넘어가 오늘 만든 캡스톤을 확장한다.</p></div>
+      <div class="pit"><div class="pit-lb">HANDOFF</div><div class="pit-h">▸ 오늘의 캡스톤이 6차시 입력</div><div class="pit-d">코드·README 한 세트를 다음 수업 시작 전 Git/공유 폴더에 정리해 둔다.</div></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">STAGE</span><span class="sh-t">구분</span></div><div class="sh-line"></div>
+      <div class="cod"><div class="cod-lb">STAGE B · 완료</div><div class="cod-main">4·5차시 "어시스트 바이브 코딩" 2부작 마무리</div><p>4차시: 시각화·작은 앱 어시스트. <strong>5차시: 업무 자동화·로컬 AI(오늘).</strong> 이제 Stage C(에이전트·서비스)로 넘어간다.</p></div>
+      <div class="dstrip"><div class="ds-c"><div class="ds-a">STAGE A</div><div class="ds-n">3/3</div><div class="ds-d">재료 창고 완료</div></div><div class="ds-c"><div class="ds-a">STAGE B</div><div class="ds-n">2/2</div><div class="ds-d">어시스트 완료</div></div><div class="ds-c"><div class="ds-a">NEXT</div><div class="ds-n">S06</div><div class="ds-d">에이전트 진입</div></div></div>
+      <div class="co"><div class="co-lb">HUB LEADER NOTE</div><div class="co-main">"만들었다"로 끝내지 않는다 — 공유가 거점리더의 임무</div><p>혼자의 자동화는 개인기, 부서 전체에 퍼지면 조직 역량. 시연·문서·피드백까지가 한 사이클.</p></div>
+      <div class="pit"><div class="pit-lb">BEFORE S06</div><div class="pit-h">▸ Claude Code 계정 + Node LTS + 오늘 캡스톤 코드</div><div class="pit-d">세 가지가 준비되면 6차시 첫 시간부터 실습으로 직행.</div></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">05 · 어시스트 바이브 코딩 ② — 업무 자동화와 로컬 AI 연동</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">032 / 032</span></div></div>
+</div></div>
+</div>
+
+<script>
+(function(){
+  document.querySelectorAll('.toolbar,.deck-nav').forEach(e=>e.remove());
+  const tb = document.createElement('div');
+  tb.className = 'toolbar';
+  tb.innerHTML = `<button onclick="pNav(-1)">◀</button><span class="pg" id="pgInd">1 / 1</span><button onclick="pNav(1)">▶</button><button onclick="window.print()">⬇ PDF</button><button onclick="tFull()">⛶ FULL</button><button id="editBtn" onclick="tEdit()">✎ EDIT</button>`;
+  document.body.appendChild(tb);
+})();
+
+const allSlides = document.querySelectorAll('.slide');
+const allStages = document.querySelectorAll('.stage');
+const deck = document.getElementById('deck');
+
+function fitSlides(){const vw=innerWidth,vh=innerHeight;const r=Math.min(vw/1600,vh/900);allSlides.forEach(s=>{s.style.transform=`scale(${r})`;s.style.transformOrigin='center center'})}
+addEventListener('resize',fitSlides);fitSlides();
+
+function curIdx(){let i=0,m=1e9;allStages.forEach((s,x)=>{const d=Math.abs(s.getBoundingClientRect().top+s.getBoundingClientRect().height/2-innerHeight/2);if(d<m){m=d;i=x}});return i}
+function pNav(dir){const i=curIdx()+dir;if(i>=0&&i<allStages.length)allStages[i].scrollIntoView({behavior:'smooth'})}
+function updPg(){document.getElementById('pgInd').textContent=`${curIdx()+1} / ${allStages.length}`}
+deck.addEventListener('scroll',updPg);updPg();
+function tFull(){if(document.fullscreenElement)document.exitFullscreen();else document.documentElement.requestFullscreen().catch(()=>{})}
+
+let editMode=false;
+function tEdit(){
+  editMode=!editMode;
+  const btn=document.getElementById('editBtn'),tb=document.querySelector('.toolbar');
+  const SEL='.bth,.bt,.cod-lb,.cod-main,.cod p,.ds-n,.ds-d,.hero-k,.hero-t,.hero-s,.hero-q-q,.hero-q-a,.icard-lb,.icard-sess,.quote-q,.quote-a,.quote-src,.fig,.hl-kicker,.hl-title,.hl-sub,.card-k,.card-anchor,.card-body,.card-note,.co-lb,.co-main,.co p,.next-k,.next-t,.pit-lb,.pit-h,.pit-d,.sh-n,.sh-t,.hybrid-k,.hybrid-h,.hybrid-d,.draft-k,.draft-t,.draft-note,.cmp2c-k,.cmp2c-h,.cmp2c-d,.cmp2c-fig,.qd-k,.qd-h,.qd-d,.ladder-h,.ladder-d,.ladder-tag,.tblock-w,.tblock-h,.tblock-d,.tblock-sess,.type-h,.type-d,.type-tag,.flow-box-t,.hbar-l,.hbar-r,.fbar-title,.mtbl td,.mtbl th,h1,p';
+  if(editMode){
+    btn.textContent='✎ EDITING';btn.style.background='#b8532a';btn.style.color='#fff';tb.style.borderBottom='2px solid #b8532a';
+    document.querySelectorAll(SEL).forEach(el=>{el.contentEditable='true';el.style.outline='1px dashed rgba(184,83,42,0.3)';el.style.cursor='text'});
+    deck.style.scrollSnapType='none';
+    sToast('EDIT ON — 텍스트 클릭 수정 · Ctrl+S 저장 · E 또는 ESC로 종료');
+  }else{
+    btn.textContent='✎ EDIT';btn.style.background='';btn.style.color='';tb.style.borderBottom='';
+    document.querySelectorAll('[contenteditable="true"]').forEach(el=>{el.contentEditable='false';el.style.outline='';el.style.cursor=''});
+    deck.style.scrollSnapType='y mandatory';
+    sToast('EDIT OFF — 프레젠테이션 모드');
+  }
+}
+function sToast(m){let t=document.getElementById('toast');if(!t){t=document.createElement('div');t.id='toast';t.style.cssText='position:fixed;bottom:60px;left:50%;transform:translateX(-50%);background:rgba(14,10,6,0.92);color:#ede4d3;font-family:var(--mono,monospace);font-size:11px;letter-spacing:1.5px;padding:10px 24px;border-radius:4px;z-index:300;pointer-events:none;opacity:0;transition:opacity 0.4s';document.body.appendChild(t)}t.textContent=m;t.style.opacity='1';clearTimeout(t._tid);t._tid=setTimeout(()=>{t.style.opacity='0'},3000)}
+
+document.addEventListener('keydown',e=>{
+  if(editMode){
+    if(e.key==='s'&&(e.ctrlKey||e.metaKey)){e.preventDefault();const b=new Blob(['<!DOCTYPE html>\n'+document.documentElement.outerHTML],{type:'text/html'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=document.title.replace(/[^a-zA-Z0-9가-힣\s·_-]/g,'')+'.html';a.click();URL.revokeObjectURL(a.href);sToast('HTML 파일 저장 완료')}
+    if(e.key==='Escape'||e.key==='e'||e.key==='E'){if(!document.activeElement||document.activeElement===document.body)tEdit()}
+    return;
+  }
+  if(e.key==='ArrowRight'||e.key==='ArrowDown'||e.key===' '||e.key==='PageDown'){e.preventDefault();pNav(1)}
+  else if(e.key==='ArrowLeft'||e.key==='ArrowUp'||e.key==='PageUp'){e.preventDefault();pNav(-1)}
+  else if(e.key==='Home'){e.preventDefault();allStages[0].scrollIntoView({behavior:'smooth'})}
+  else if(e.key==='End'){e.preventDefault();allStages[allStages.length-1].scrollIntoView({behavior:'smooth'})}
+  else if(e.key==='f'||e.key==='F11'){e.preventDefault();tFull()}
+  else if(e.key==='Escape'){if(document.fullscreenElement)document.exitFullscreen()}
+  else if(e.key==='e'||e.key==='E'){tEdit()}
+});
+</script>
+<script>/* kg-preview: #<heading> \uc704\uce58\ub85c \uc774\ub3d9 */
+(function(){function norm(t){return (t||'').replace(/\s+/g,'').toLowerCase()}
+function go(){var h=decodeURIComponent(location.hash.slice(1));if(!h)return;var k=norm(h).slice(0,24);if(!k)return;
+var best=null,bl=1e9,els=document.body.querySelectorAll('h1,h2,h3,h4,h5,p,div,span,li,td,text,tspan,section,article');
+for(var i=0;i<els.length;i++){var e=els[i],t=norm(e.textContent);if(t.length<bl&&t.indexOf(k)>-1){best=e;bl=t.length}}
+if(!best)return;var box=best.closest('section,[class*=slide],[class*=page],article')||best;
+box.scrollIntoView({block:'start'});box.style.outline='3px solid #c0504d';box.style.outlineOffset='4px';
+setTimeout(function(){box.style.outline=''},2600)}
+window.addEventListener('load',function(){setTimeout(go,400)});window.addEventListener('hashchange',go)})();</script></body>
+</html>

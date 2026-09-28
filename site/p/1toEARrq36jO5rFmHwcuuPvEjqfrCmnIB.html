@@ -1,0 +1,1235 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head><meta name="robots" content="noindex, nofollow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>전문인재 양성과정 — 프로젝트 · 기관컨설팅 연계 운영계획</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<style>
+/* ============================================================
+   MONOCHROME CINEMATIC STAGE — 전문인재 양성과정 발표 사이트
+   팔레트: 순수 모노톤 (블랙 스테이지 + 화이트 라이트)
+============================================================ */
+:root{
+  --stage:#050505;
+  --ink:#f5f5f5;
+  --mid:#b9b9b9;
+  --dim:#949494;
+  --line:#242424;
+  --card:#0d0d0d;
+  --card-edge:#2a2a2a;
+  --paper:#f2f2f0;
+  --paper-ink:#111111;
+  --mono:'JetBrains Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+  --sans:'Pretendard Variable', Pretendard, -apple-system, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:auto}
+body{
+  background:var(--stage);
+  color:var(--ink);
+  font-family:var(--sans);
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+  line-height:1.6;
+}
+::selection{background:#fff;color:#000}
+::-webkit-scrollbar{width:10px}
+::-webkit-scrollbar-track{background:#000}
+::-webkit-scrollbar-thumb{background:#333;border-radius:5px}
+::-webkit-scrollbar-thumb:hover{background:#555}
+
+/* ---------- 그레인 오버레이 ---------- */
+.grain{position:fixed;inset:-50%;width:200%;height:200%;pointer-events:none;z-index:120;opacity:.05;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation:grain 8s steps(10) infinite}
+@keyframes grain{
+  0%,100%{transform:translate(0,0)}10%{transform:translate(-5%,-8%)}20%{transform:translate(-12%,4%)}
+  30%{transform:translate(6%,-12%)}40%{transform:translate(-4%,14%)}50%{transform:translate(-12%,8%)}
+  60%{transform:translate(12%,0)}70%{transform:translate(0,12%)}80%{transform:translate(3%,14%)}90%{transform:translate(-8%,8%)}
+}
+
+/* ---------- 사이드 레일 ---------- */
+.rail{position:fixed;left:0;top:0;bottom:0;width:56px;z-index:110;display:flex;flex-direction:column;
+  align-items:center;justify-content:space-between;padding:28px 0;border-right:1px solid var(--line);
+  background:rgba(5,5,5,.55);backdrop-filter:blur(8px)}
+.rail .brand{writing-mode:vertical-rl;font-family:var(--mono);font-size:10px;letter-spacing:.35em;color:var(--dim);text-transform:uppercase}
+.rail .track{flex:1;width:2px;background:var(--line);margin:22px 0;position:relative;border-radius:2px}
+.rail .fill{position:absolute;top:0;left:0;width:100%;height:0%;background:#fff;border-radius:2px;
+  box-shadow:0 0 12px rgba(255,255,255,.7)}
+.rail .pct{font-family:var(--mono);font-size:11px;color:var(--mid);font-variant-numeric:tabular-nums}
+
+/* ---------- 공통 타이포 ---------- */
+.kicker{font-family:var(--mono);font-size:12px;letter-spacing:.42em;text-transform:uppercase;color:var(--mid);
+  display:flex;align-items:center;gap:14px}
+.kicker::before{content:'';width:34px;height:1px;background:#fff;box-shadow:0 0 8px rgba(255,255,255,.8);flex:none}
+.h-xl{font-weight:900;letter-spacing:-.035em;line-height:1.04;font-size:clamp(44px,7.4vw,118px)}
+.h-lg{font-weight:900;letter-spacing:-.03em;line-height:1.08;font-size:clamp(34px,4.6vw,72px)}
+.lead{font-size:clamp(17px,1.35vw,21px);color:var(--mid);line-height:1.75;font-weight:400}
+.lead strong,.lead b{color:var(--ink);font-weight:700}
+.num-huge{font-weight:900;font-variant-numeric:tabular-nums;letter-spacing:-.05em;line-height:.9}
+section{position:relative;padding:0 8vw 0 calc(56px + 6vw)}
+.sec-inner{max-width:1480px;margin:0 auto;padding:16vh 0 14vh}
+
+/* ---------- HERO ---------- */
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;position:relative;
+  padding:0 8vw 0 calc(56px + 6vw);overflow:hidden}
+#stage3d{position:absolute;inset:0;z-index:0}
+.hero::after{content:'';position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:radial-gradient(ellipse 90% 70% at 50% 42%,transparent 0%,rgba(5,5,5,.55) 62%,var(--stage) 100%)}
+.hero-content{position:relative;z-index:2;max-width:1480px;margin:0 auto;width:100%}
+.hero .kicker{margin-bottom:4vh}
+.hero-title{overflow:hidden}
+.hero-title .line{display:block;overflow:hidden}
+.hero-title .line>span{display:inline-block;will-change:transform}
+.hero-title .ghost{
+  color:transparent;-webkit-text-stroke:1.5px rgba(255,255,255,.55);text-stroke:1.5px rgba(255,255,255,.55)}
+.hero-sub{margin-top:4vh;max-width:760px}
+.hero-stats{position:relative;z-index:2;display:flex;gap:0;margin:7vh auto 0;max-width:1480px;width:100%;
+  border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.hstat{flex:1;padding:26px 28px;border-right:1px solid var(--line)}
+.hstat:last-child{border-right:none}
+.hstat .v{font-size:clamp(30px,3vw,46px);font-weight:900;letter-spacing:-.04em;font-variant-numeric:tabular-nums}
+.hstat .v em{font-style:normal;font-size:.44em;font-weight:700;color:var(--mid);margin-left:4px;letter-spacing:0}
+.hstat .l{font-family:var(--mono);font-size:13px;font-weight:700;letter-spacing:.16em;color:#cfcfcf;text-transform:uppercase;margin-top:8px}
+.scroll-cue{position:absolute;bottom:26px;left:50%;transform:translateX(-50%);z-index:3;
+  font-family:var(--mono);font-size:10px;letter-spacing:.4em;color:var(--dim);text-transform:uppercase;
+  display:flex;flex-direction:column;align-items:center;gap:12px}
+.scroll-cue .wire{width:1px;height:52px;background:linear-gradient(#fff,transparent);position:relative;overflow:hidden}
+.scroll-cue .wire::after{content:'';position:absolute;top:-20px;left:0;width:1px;height:20px;background:#fff;
+  box-shadow:0 0 8px #fff;animation:drop 1.8s ease-in-out infinite}
+@keyframes drop{to{top:60px}}
+
+/* ---------- 마퀴 ---------- */
+.marquee{border-top:1px solid var(--line);border-bottom:1px solid var(--line);overflow:hidden;
+  padding:20px 0;background:#080808;position:relative;z-index:2}
+.marquee .track-m{display:flex;width:max-content;animation:mq 34s linear infinite}
+.marquee span{font-weight:900;font-size:clamp(20px,2.2vw,32px);letter-spacing:-.02em;white-space:nowrap;
+  padding:0 34px;color:var(--ink)}
+.marquee span.o{color:transparent;-webkit-text-stroke:1px rgba(255,255,255,.4)}
+@keyframes mq{to{transform:translateX(-50%)}}
+
+/* ---------- 섹션 헤더 ---------- */
+.sec-head{margin-bottom:8vh}
+.sec-head .kicker{margin-bottom:26px}
+.sec-head .sub{margin-top:24px;max-width:720px}
+
+/* ---------- FLOW (핀 3D 스테이지) ---------- */
+#flow{padding:0}
+.flow-pin{height:100vh;display:flex;flex-direction:column;justify-content:center;overflow:hidden;
+  padding:0 4vw 0 calc(56px + 3vw)}
+.flow-head{max-width:1480px;margin:0 auto 4vh;width:100%;padding-left:2vw}
+.flow-viewport{width:100%;display:flex;justify-content:center;perspective:1600px;perspective-origin:50% 34%}
+.flow-stage{position:relative;width:1280px;height:600px;transform-style:preserve-3d;flex:none}
+.flow-floor{position:absolute;left:50%;top:58%;width:1900px;height:1300px;transform:translate(-50%,-14%) rotateX(78deg);
+  transform-origin:50% 50%;opacity:0;
+  background:
+    linear-gradient(rgba(255,255,255,.06) 1px,transparent 1px) 0 0/80px 80px,
+    linear-gradient(90deg,rgba(255,255,255,.06) 1px,transparent 1px) 0 0/80px 80px;
+  -webkit-mask-image:radial-gradient(ellipse 55% 55% at 50% 42%,#000 30%,transparent 75%);
+  mask-image:radial-gradient(ellipse 55% 55% at 50% 42%,#000 30%,transparent 75%)}
+.flow-svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.flow-svg path{fill:none;stroke:rgba(255,255,255,.75);stroke-width:1.6}
+.flow-svg .arrowdot{fill:#fff;filter:drop-shadow(0 0 6px rgba(255,255,255,.9))}
+.fnode{position:absolute;width:262px;background:linear-gradient(160deg,#141414,#090909);
+  border:1px solid var(--card-edge);border-radius:14px;padding:18px 22px 16px;
+  transform-style:preserve-3d;will-change:transform,opacity;
+  box-shadow:0 30px 60px rgba(0,0,0,.65), inset 0 1px 0 rgba(255,255,255,.07)}
+.fnode::before{content:'';position:absolute;inset:-1px;border-radius:14px;pointer-events:none;
+  background:linear-gradient(120deg,rgba(255,255,255,.22),transparent 30%,transparent 70%,rgba(255,255,255,.1));
+  -webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
+  -webkit-mask-composite:xor;mask-composite:exclude;padding:1px}
+.fnode .step{font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:.24em;color:var(--dim);text-transform:uppercase}
+.fnode h3{font-size:22px;font-weight:900;letter-spacing:-.02em;margin:6px 0 5px}
+.fnode .meta{font-size:13px;color:var(--mid);line-height:1.5}
+.fnode .meta b{color:var(--ink);font-weight:700}
+.fnode.goal{background:#fff;color:#000;border-color:#fff;text-align:center;width:190px;
+  box-shadow:0 0 70px rgba(255,255,255,.35),0 30px 60px rgba(0,0,0,.6)}
+.fnode.goal .step{color:#777}
+.fnode.goal h3{font-size:30px;color:#000;margin:6px 0 2px}
+.fnode.goal .meta{color:#444}
+.fnode .tag{display:inline-block;margin-top:8px;font-family:var(--mono);font-size:10px;letter-spacing:.2em;
+  color:var(--ink);border:1px solid #3a3a3a;border-radius:99px;padding:4px 12px;text-transform:uppercase}
+#n1{left:20px;top:200px}
+#n2{left:392px;top:200px}
+#n3{left:764px;top:200px}
+#n5{left:764px;top:420px}
+#n4{left:1082px;top:225px}
+.fnode.derived{border-style:dashed;border-color:#3f3f3f;background:rgba(255,255,255,.02)}
+.fnode.derived::before{display:none}
+.flow-svg path.dash{stroke-dasharray:6 8;stroke:rgba(255,255,255,.45)}
+.flow-legend{max-width:1480px;margin:4vh auto 0;width:100%;display:flex;gap:34px;padding-left:2vw;
+  font-family:var(--mono);font-size:11px;letter-spacing:.22em;color:var(--dim);text-transform:uppercase;flex-wrap:wrap}
+.flow-legend i{font-style:normal;color:var(--ink)}
+
+/* ---------- PEOPLE (48/12/5) ---------- */
+.people-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:26px}
+.pcard{position:relative;border:1px solid var(--card-edge);border-radius:18px;padding:44px 38px 38px;
+  background:linear-gradient(170deg,#121212,#070707);transform-style:preserve-3d;
+  transition:border-color .3s;overflow:hidden;will-change:transform}
+.pcard::after{content:'';position:absolute;inset:0;background:radial-gradient(600px circle at var(--mx,50%) var(--my,50%),rgba(255,255,255,.08),transparent 45%);
+  opacity:0;transition:opacity .3s;pointer-events:none}
+.pcard:hover{border-color:#4a4a4a}
+.pcard:hover::after{opacity:1}
+.pcard .big{font-size:clamp(88px,8.6vw,150px)}
+.pcard .big em{font-style:normal;font-size:.3em;font-weight:800;color:var(--mid);letter-spacing:0}
+.pcard h4{font-size:21px;font-weight:800;margin-top:8px;letter-spacing:-.01em}
+.pcard p{color:var(--mid);font-size:15px;margin-top:8px;line-height:1.65}
+.pcard .foot{margin-top:24px;padding-top:18px;border-top:1px solid var(--line);
+  font-family:var(--mono);font-size:11px;letter-spacing:.22em;color:var(--dim);text-transform:uppercase}
+.consultants{margin-top:44px;border:1px dashed #333;border-radius:14px;padding:24px 30px;display:flex;
+  align-items:center;gap:18px 30px;flex-wrap:wrap}
+.consultants .lab{font-family:var(--mono);font-size:11px;letter-spacing:.3em;color:var(--dim);text-transform:uppercase;flex:none}
+.consultants .name{font-weight:800;font-size:17px;position:relative;padding-left:16px}
+.consultants .name::before{content:'';position:absolute;left:0;top:50%;width:6px;height:6px;background:#fff;
+  border-radius:50%;transform:translateY(-50%);box-shadow:0 0 8px rgba(255,255,255,.8)}
+
+/* ---------- PHASE 공통 ---------- */
+.phase-num{position:absolute;right:2vw;top:8vh;font-weight:900;font-size:clamp(140px,22vw,360px);
+  line-height:1;letter-spacing:-.06em;color:transparent;-webkit-text-stroke:1px rgba(255,255,255,.09);
+  pointer-events:none;user-select:none;z-index:0}
+.weeks{display:grid;grid-template-columns:repeat(4,1fr);gap:22px;position:relative;z-index:2}
+.wk{border:1px solid var(--card-edge);border-radius:16px;padding:28px 26px;background:linear-gradient(165deg,#131313,#080808);
+  position:relative;transform-style:preserve-3d;will-change:transform}
+.wk .wtag{font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:.22em;color:var(--dim);text-transform:uppercase}
+.wk h4{font-size:20px;font-weight:900;margin:14px 0 10px;letter-spacing:-.01em}
+.wk p{font-size:14.5px;color:var(--mid);line-height:1.7}
+.wk p b{color:var(--ink);font-weight:700}
+.wk .bar{height:3px;background:var(--line);border-radius:2px;margin-top:22px;overflow:hidden}
+.wk .bar i{display:block;height:100%;width:0%;background:#fff;box-shadow:0 0 10px rgba(255,255,255,.8)}
+.wk.hot{background:#fff;border-color:#fff}
+.wk.hot .wtag{color:#767676}
+.wk.hot h4{color:#000}
+.wk.hot p{color:#444}
+.wk.hot p b{color:#000}
+.wk.hot .bar{background:#ddd}
+.wk.hot .bar i{background:#000;box-shadow:none}
+.wk .wdate{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 10px}
+.wk .wdate span{font-family:var(--mono);font-size:11.5px;letter-spacing:.05em;border:1px solid #4d4d4d;
+  border-radius:6px;padding:4px 10px;color:var(--mid);font-variant-numeric:tabular-nums;white-space:nowrap}
+.wk .wdate span b{color:var(--ink);font-weight:700;margin-right:7px}
+.wk.hot .wdate span{border-color:#c9c9c9;color:#555}
+.wk.hot .wdate span b{color:#000}
+.sched-legend{display:flex;gap:12px;margin:-3vh 0 4.5vh;position:relative;z-index:2;flex-wrap:wrap;align-items:center}
+.sched-legend .sl{font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;
+  border:1px solid #333;border-radius:99px;padding:8px 18px;color:var(--mid)}
+.sched-legend .sl b{color:var(--ink);margin-right:9px}
+.policy-note{margin-top:26px;font-family:var(--mono);font-size:12px;letter-spacing:.03em;color:var(--dim);line-height:1.8}
+.chips{margin-top:44px;position:relative;z-index:2}
+.chips .lab{font-family:var(--mono);font-size:11px;letter-spacing:.3em;color:var(--dim);text-transform:uppercase;margin-bottom:16px}
+.chips .row{display:flex;flex-wrap:wrap;gap:12px}
+.chip{border:1px solid #3a3a3a;border-radius:99px;padding:10px 20px;font-size:14.5px;font-weight:600;color:var(--ink);
+  background:rgba(255,255,255,.02);will-change:transform}
+.note-line{margin-top:30px;display:flex;gap:14px;align-items:flex-start;color:var(--mid);font-size:15px;position:relative;z-index:2}
+.note-line .dot{width:8px;height:8px;background:#fff;border-radius:50%;margin-top:8px;flex:none;
+  box-shadow:0 0 10px rgba(255,255,255,.9)}
+.note-line b{color:var(--ink)}
+.role p b{color:var(--ink);font-weight:700}
+.role.pm p b{color:#000}
+.bridge{margin-top:22px;border:1px dashed #3a3a3a;border-radius:14px;padding:20px 26px;display:flex;gap:22px;
+  align-items:center;position:relative;z-index:2;flex-wrap:wrap;background:rgba(255,255,255,.015)}
+.bridge .bl{font-family:var(--mono);font-size:10px;letter-spacing:.28em;color:var(--dim);text-transform:uppercase;flex:none}
+.bridge p{font-size:14.5px;color:var(--mid);line-height:1.65}
+.bridge b{color:var(--ink)}
+
+/* ---------- SELECT (48→5 핀) ---------- */
+#select{padding:0}
+.sel-pin{height:100vh;display:flex;align-items:center;overflow:hidden;padding:0 8vw 0 calc(56px + 6vw)}
+.sel-wrap{max-width:1480px;margin:0 auto;width:100%;display:grid;grid-template-columns:1fr 1.15fr;gap:6vw;align-items:center}
+.sel-copy .kicker{margin-bottom:26px}
+.sel-count{display:flex;align-items:baseline;gap:22px;margin:30px 0 22px}
+.sel-count .from{font-size:clamp(90px,9vw,160px)}
+.sel-count .arrow{font-size:clamp(30px,3vw,52px);font-weight:300;color:var(--dim)}
+.sel-count .to{font-size:clamp(90px,9vw,160px);color:transparent;-webkit-text-stroke:2px #fff;position:relative}
+.sel-count .to.lit{color:#fff;-webkit-text-stroke:0;text-shadow:0 0 40px rgba(255,255,255,.55)}
+.judges{display:flex;gap:12px;margin-top:30px;flex-wrap:wrap}
+.judge{border:1px solid #3a3a3a;border-radius:10px;padding:12px 20px;font-weight:800;font-size:15px;
+  font-family:var(--mono);letter-spacing:.08em}
+.judge.alt{border-style:dashed;color:var(--mid);font-weight:600}
+.bonus{margin-top:24px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.bonus .blab{font-family:var(--mono);font-size:10px;letter-spacing:.28em;color:var(--dim);text-transform:uppercase;margin-right:4px}
+.bonus .bitem{border:1px dashed #4a4a4a;border-radius:99px;padding:8px 18px;font-size:13.5px;font-weight:600;color:var(--ink)}
+.bonus .bitem::before{content:'+';margin-right:9px;font-weight:900;color:#fff}
+.dots-grid{display:grid;grid-template-columns:repeat(8,1fr);gap:clamp(12px,1.6vw,26px);perspective:900px}
+.pdot{aspect-ratio:1;border-radius:50%;background:#2c2c2c;position:relative;will-change:transform,opacity;
+  transform-style:preserve-3d}
+.pdot.win{background:#fff;box-shadow:0 0 26px rgba(255,255,255,.85),0 0 70px rgba(255,255,255,.3)}
+.pdot.win::after{content:'';position:absolute;inset:-9px;border:1px solid rgba(255,255,255,.5);border-radius:50%}
+.sel-cap{margin-top:26px;font-family:var(--mono);font-size:11px;letter-spacing:.26em;color:var(--dim);text-transform:uppercase;text-align:right}
+
+/* ---------- CONSULTING (트라이앵글) ---------- */
+.consult-grid{display:grid;grid-template-columns:1.05fr 1fr;gap:6vw;align-items:start;position:relative;z-index:2}
+.tri-wrap{perspective:1200px}
+.tri{position:relative;width:100%;aspect-ratio:1.04;transform-style:preserve-3d}
+.tri-svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.tri-svg path{fill:none;stroke:rgba(255,255,255,.35);stroke-width:1.4;stroke-dasharray:5 7}
+.role{position:absolute;width:min(240px,44%);border-radius:16px;padding:20px 22px;background:linear-gradient(165deg,#141414,#090909);
+  border:1px solid var(--card-edge);box-shadow:0 26px 50px rgba(0,0,0,.6);will-change:transform;transform-style:preserve-3d}
+.role .rlab{font-family:var(--mono);font-size:10px;letter-spacing:.3em;color:var(--dim);text-transform:uppercase}
+.role h4{font-size:21px;font-weight:900;margin:8px 0 4px}
+.role p{font-size:13.5px;color:var(--mid);line-height:1.6}
+.role.pm{left:50%;top:0;transform:translateX(-50%);background:#fff;border-color:#fff;
+  box-shadow:0 0 60px rgba(255,255,255,.28),0 26px 50px rgba(0,0,0,.55)}
+.role.pm .rlab{color:#777}.role.pm h4{color:#000}.role.pm p{color:#444}
+.role.staff{left:0;bottom:4%}
+.role.cons{right:0;bottom:4%}
+.tri-center{position:absolute;left:50%;top:56%;transform:translate(-50%,-50%);text-align:center;
+  font-family:var(--mono);font-size:10px;letter-spacing:.3em;color:var(--dim);text-transform:uppercase;line-height:2}
+.budget-block{border:1px solid var(--card-edge);border-radius:18px;padding:36px;background:linear-gradient(165deg,#111,#070707)}
+.budget-block .lab{font-family:var(--mono);font-size:11px;letter-spacing:.3em;color:var(--dim);text-transform:uppercase}
+.budget-block .amount{font-size:clamp(52px,4.6vw,78px);font-weight:900;letter-spacing:-.04em;margin:10px 0 4px;
+  font-variant-numeric:tabular-nums}
+.budget-block .amount em{font-style:normal;font-size:.4em;color:var(--mid);font-weight:700}
+.budget-block .per{color:var(--mid);font-size:14px;margin-bottom:26px}
+.brow{margin-top:18px}
+.brow .t{display:flex;justify-content:space-between;font-size:14px;margin-bottom:8px}
+.brow .t b{font-weight:700}
+.brow .t span{color:var(--mid);font-variant-numeric:tabular-nums}
+.brow .g{height:10px;background:#1c1c1c;border-radius:6px;overflow:hidden}
+.brow .g i{display:block;height:100%;width:0%;background:linear-gradient(90deg,#666,#fff);border-radius:6px}
+.brow.solid .g i{background:#fff;box-shadow:0 0 14px rgba(255,255,255,.5)}
+.budget-block .fine{margin-top:24px;padding-top:20px;border-top:1px solid var(--line);color:var(--dim);
+  font-size:13px;line-height:1.7}
+.budget-block .amount .pre{font-style:normal;font-size:.34em;font-weight:800;color:var(--mid);margin-right:10px;letter-spacing:0}
+.cover-list{list-style:none;margin-top:6px}
+.cover-list li{display:flex;align-items:center;gap:14px;padding:15px 2px;border-bottom:1px solid var(--line);
+  font-size:15.5px;font-weight:700}
+.cover-list li:last-child{border-bottom:none}
+.cover-list li::before{content:'';width:9px;height:9px;background:#fff;flex:none;box-shadow:0 0 10px rgba(255,255,255,.8)}
+.cover-list li .d{margin-left:auto;font-family:var(--mono);font-size:10px;letter-spacing:.14em;color:var(--dim);
+  font-weight:500;text-transform:uppercase;text-align:right}
+.ops-strip{margin-top:40px;display:grid;grid-template-columns:repeat(3,1fr);gap:18px;position:relative;z-index:2}
+.op{border:1px solid var(--card-edge);border-radius:14px;padding:22px 24px;background:#0b0b0b}
+.op .k{font-family:var(--mono);font-size:10px;letter-spacing:.28em;color:var(--dim);text-transform:uppercase;margin-bottom:10px}
+.op p{font-size:14.5px;color:var(--mid);line-height:1.65}
+.op p b{color:var(--ink)}
+
+/* ---------- 경고 콜아웃 ---------- */
+.warn{margin-top:44px;background:#fff;color:#000;border-radius:18px;padding:34px 38px;display:flex;
+  gap:26px;align-items:center;position:relative;z-index:2;overflow:hidden}
+.warn::before{content:'';position:absolute;left:0;top:0;bottom:0;width:8px;background:#000}
+.warn .sign{flex:none;width:58px;height:58px;border:3px solid #000;border-radius:50%;display:grid;place-items:center;
+  font-weight:900;font-size:30px}
+.warn h4{font-size:21px;font-weight:900;letter-spacing:-.01em}
+.warn p{color:#444;font-size:15px;margin-top:6px;line-height:1.65}
+.warn p b{color:#000}
+
+/* ---------- BUDGET (화이트 반전) ---------- */
+#budget{background:var(--paper);color:var(--paper-ink)}
+#budget .kicker{color:#8a8a8a}
+#budget .kicker::before{background:#111;box-shadow:none}
+#budget .lead{color:#555}
+#budget .lead b{color:#111}
+.total-row{display:flex;align-items:baseline;gap:26px;flex-wrap:wrap;margin:5vh 0 6vh}
+.total-row .tnum{font-size:clamp(96px,12vw,220px);font-weight:900;letter-spacing:-.055em;line-height:.9;
+  font-variant-numeric:tabular-nums;color:#111}
+.total-row .tunit{font-size:clamp(26px,3vw,46px);font-weight:800;color:#666}
+.bud-bars{max-width:980px}
+.bud-bars .brow .t{color:#111}
+.bud-bars .brow .t span{color:#777}
+.bud-bars .brow .g{background:#ddd}
+.bud-bars .brow .g i{background:#111;box-shadow:none}
+.bud-note{margin-top:34px;font-size:14px;color:#777;font-family:var(--mono);letter-spacing:.04em}
+#budget h2{color:#111;margin-top:26px}
+.two-money{display:grid;grid-template-columns:1fr auto 1fr;gap:clamp(24px,3.5vw,64px);margin-top:7vh;align-items:stretch}
+.money-block .mtag{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.24em;text-transform:uppercase;color:#767676}
+.money-block h3{font-size:clamp(22px,2vw,30px);font-weight:900;letter-spacing:-.02em;color:#111;margin:12px 0 4px}
+.money-block .bignum{font-weight:900;letter-spacing:-.045em;font-variant-numeric:tabular-nums;
+  font-size:clamp(56px,6vw,100px);line-height:.95;color:#111;margin:22px 0 4px}
+.money-block .bignum em{font-style:normal;font-size:.32em;color:#777;font-weight:800;letter-spacing:0}
+.money-block .bignum .pre{font-size:.32em;color:#999;margin-right:10px;font-weight:800}
+.money-block .podium{height:280px;max-width:none;margin-top:30px}
+.money-block .mnote{margin-top:24px;font-size:14.5px;line-height:1.75;color:#555}
+.money-block .mnote b{color:#111}
+.mlist{list-style:none;margin-top:24px}
+.mlist li{display:flex;align-items:center;gap:14px;padding:14px 2px;border-bottom:1px solid #ddd;
+  font-size:15.5px;font-weight:700;color:#111}
+.mlist li:last-child{border-bottom:none}
+.mlist li::before{content:'';width:9px;height:9px;background:#111;flex:none}
+.mlist li .d{margin-left:auto;font-family:var(--mono);font-size:10px;letter-spacing:.14em;color:#999;
+  text-transform:uppercase;text-align:right}
+.vdiv{display:flex;flex-direction:column;align-items:center;gap:14px}
+.vdiv::before,.vdiv::after{content:'';width:1px;flex:1;background:#d5d5d0}
+.vdiv span{font-family:var(--mono);font-size:10px;letter-spacing:.3em;color:#999;writing-mode:vertical-rl;
+  text-transform:uppercase;border:1px solid #d5d5d0;border-radius:99px;padding:16px 7px;background:#fff;white-space:nowrap}
+.total-row .tpre{font-size:clamp(22px,2.6vw,40px);font-weight:800;color:#999}
+.benefit-grid{display:grid;grid-template-columns:1.25fr 1fr 1fr;gap:22px;margin-top:1vh}
+.bcard{border:1px solid #d9d9d5;border-radius:18px;padding:32px 30px;background:#fff;position:relative;overflow:hidden}
+.bcard.main{background:#111;border-color:#111;
+  box-shadow:0 24px 50px rgba(0,0,0,.18)}
+.bcard .bk{font-family:var(--mono);font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:#999;margin-bottom:14px}
+.bcard.main .bk{color:#8a8a8a}
+.bcard h4{font-size:21px;font-weight:900;letter-spacing:-.01em;color:#111}
+.bcard.main h4{color:#fff}
+.bcard p{margin-top:10px;font-size:14.5px;line-height:1.7;color:#555}
+.bcard p b{color:#111}
+.bcard.main p{color:#b5b5b5}
+.bcard.main p b{color:#fff}
+.awards{margin-top:9vh}
+.awards .alab{font-family:var(--mono);font-size:11px;letter-spacing:.3em;color:#8a8a8a;text-transform:uppercase;margin-bottom:4.5vh}
+.podium{display:flex;align-items:flex-end;gap:24px;max-width:880px;height:360px}
+.pod{flex:1;display:flex;flex-direction:column;justify-content:flex-end;height:100%}
+.pod .info{margin-bottom:16px}
+.pod .rank{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.2em;color:#6e6e6e;text-transform:uppercase}
+.pod .prize{font-size:clamp(28px,3vw,46px);font-weight:900;letter-spacing:-.04em;color:#111;
+  font-variant-numeric:tabular-nums;margin-top:8px;line-height:1}
+.pod .prize em{font-style:normal;font-size:.42em;color:#777;font-weight:800;letter-spacing:0}
+.pod .prize .ea{margin-right:4px}
+.pod .pbar{background:#111;border-radius:12px 12px 0 0;height:0%;position:relative;overflow:hidden}
+.pod .pbar::after{content:'';position:absolute;top:0;left:0;right:0;height:5px;background:rgba(255,255,255,.25)}
+.pod.first .prize{font-size:clamp(36px,3.8vw,58px)}
+.pod.first .pbar{background:#000}
+
+/* ---------- OUTRO ---------- */
+#outro{min-height:100vh;display:flex;flex-direction:column;justify-content:center;position:relative;overflow:hidden}
+.outro-inner{max-width:1480px;margin:0 auto;width:100%;position:relative;z-index:2;padding:14vh 0}
+.outro-title .muted{color:var(--dim)}
+.outro-steps{display:flex;gap:0;margin-top:8vh;border-top:1px solid var(--line)}
+.ostep{flex:1;padding:34px 30px 8px;border-right:1px solid var(--line);position:relative}
+.ostep:last-child{border-right:none}
+.ostep .on{font-family:var(--mono);font-size:11px;letter-spacing:.3em;color:var(--dim)}
+.ostep h5{font-size:19px;font-weight:800;margin-top:14px}
+.ostep p{color:var(--mid);font-size:14px;margin-top:8px;line-height:1.65}
+footer{border-top:1px solid var(--line);padding:30px calc(56px + 6vw) 34px 8vw;display:flex;justify-content:space-between;
+  gap:20px;flex-wrap:wrap;font-family:var(--mono);font-size:11px;letter-spacing:.24em;color:var(--dim);text-transform:uppercase}
+footer b{color:var(--mid)}
+
+/* ---------- 리빌 기본 상태 ---------- */
+.rv{opacity:0;transform:translateY(60px)}
+.rv3{opacity:0;transform:perspective(1000px) rotateX(24deg) translateY(90px);transform-origin:50% 100%}
+
+/* ---------- 반응형 ---------- */
+@media (max-width:1100px){
+  .weeks{grid-template-columns:repeat(2,1fr)}
+  .people-grid{grid-template-columns:1fr}
+  .sel-wrap{grid-template-columns:1fr;gap:7vh}
+  .consult-grid{grid-template-columns:1fr;gap:8vh}
+  .ops-strip{grid-template-columns:1fr}
+  .benefit-grid{grid-template-columns:1fr}
+  .podium{height:300px;gap:14px}
+  .two-money{grid-template-columns:1fr;gap:5vh}
+  .vdiv{flex-direction:row;width:100%}
+  .vdiv::before,.vdiv::after{width:auto;height:1px;flex:1}
+  .vdiv span{writing-mode:horizontal-tb;padding:9px 22px}
+  .outro-steps{flex-direction:column}
+  .ostep{border-right:none;border-bottom:1px solid var(--line);padding-bottom:28px}
+  .hero-stats{flex-wrap:wrap}
+  .hstat{flex:1 1 46%;border-bottom:1px solid var(--line)}
+}
+@media (max-width:760px){
+  .rail{display:none}
+  section,.hero,.sel-pin,.flow-pin{padding-left:6vw;padding-right:6vw}
+  footer{padding-left:6vw}
+  .weeks{grid-template-columns:1fr}
+  .podium{height:230px;gap:12px}
+}
+@media (prefers-reduced-motion:reduce){
+  .grain,.scroll-cue .wire::after,.marquee .track-m{animation:none}
+  .rv,.rv3{opacity:1;transform:none}
+}
+</style>
+</head>
+<body>
+
+<div class="grain"></div>
+
+<!-- 사이드 레일 -->
+<nav class="rail" aria-hidden="true">
+  <div class="brand">CDSA · 2026</div>
+  <div class="track"><div class="fill" id="railFill"></div></div>
+  <div class="pct" id="railPct">00</div>
+</nav>
+
+<!-- ============ HERO ============ -->
+<header class="hero" id="hero">
+  <div id="stage3d"></div>
+  <div class="hero-content">
+    <div class="kicker">AI·데이터기반행정 전문인재 양성과정 — OPERATION PLAN 2026</div>
+    <h1 class="hero-title h-xl">
+      <span class="line"><span>개인으로 증명하고,</span></span>
+      <span class="line"><span class="ghost">팀으로 완성</span><span>한다</span></span>
+    </h1>
+    <p class="lead hero-sub rv">전문인재 과정의 완성형은 <strong>개인프로젝트 4주 + 팀프로젝트 4주</strong>입니다.
+      개인프로젝트에서 파생되는 <strong>기관컨설팅(5개 기관)</strong>은 선정자가 PM으로 이끄는 <strong>독립 트랙</strong>입니다.</p>
+  </div>
+  <div class="hero-stats">
+    <div class="hstat rv"><div class="v"><span data-count="48">0</span><em>명</em></div><div class="l">정원 · 1기 + 2기</div></div>
+    <div class="hstat rv"><div class="v"><span data-count="12">0</span><em>팀</em></div><div class="l">팀프로젝트</div></div>
+    <div class="hstat rv"><div class="v"><span data-count="5">0</span><em>개 기관</em></div><div class="l">파생 · 기관컨설팅</div></div>
+    <div class="hstat rv"><div class="v">10<em>월 말</em></div><div class="l">전체 완료 목표</div></div>
+  </div>
+  <div class="scroll-cue"><span>Scroll</span><span class="wire"></span></div>
+</header>
+
+<!-- 마퀴 -->
+<div class="marquee" aria-hidden="true">
+  <div class="track-m">
+    <span>개인프로젝트</span><span class="o">PERSONAL</span><span>평가·선발</span><span class="o">SELECTION</span>
+    <span>팀프로젝트</span><span class="o">TEAM</span><span>기관컨설팅</span><span class="o">CONSULTING</span>
+    <span>개인프로젝트</span><span class="o">PERSONAL</span><span>평가·선발</span><span class="o">SELECTION</span>
+    <span>팀프로젝트</span><span class="o">TEAM</span><span>기관컨설팅</span><span class="o">CONSULTING</span>
+  </div>
+</div>
+
+<!-- ============ FLOW : 3D 스테이지 플로우차트 (핀) ============ -->
+<section id="flow">
+  <div class="flow-pin">
+    <div class="flow-head">
+      <div class="kicker">MASTER FLOW — 전체 추진 흐름</div>
+      <h2 class="h-lg" style="margin-top:22px">본 트랙은 개인 → 팀,<br>기관컨설팅은 파생 트랙</h2>
+    </div>
+    <div class="flow-viewport">
+      <div class="flow-stage" id="flowStage">
+        <div class="flow-floor" id="flowFloor"></div>
+        <svg class="flow-svg" viewBox="0 0 1280 600" aria-hidden="true">
+          <path id="c1" d="M270,283 L404,283"/>
+          <path id="c2" d="M642,283 L776,283"/>
+          <path id="c3" class="dash" d="M523,348 C 523,448 656,485 780,485"/>
+          <path id="c4" d="M1014,283 L1094,283"/>
+          <path id="c5" class="dash" d="M1014,485 L1156,485"/>
+          <circle class="arrowdot" id="d1" r="4" opacity="0"/>
+          <circle class="arrowdot" id="d2" r="4" opacity="0"/>
+          <circle class="arrowdot" id="d3" r="4" opacity="0"/>
+        </svg>
+        <div class="fnode" id="n1">
+          <div class="step">Step 01 — 4 Weeks</div>
+          <h3>개인프로젝트</h3>
+          <div class="meta">08/06 ~ 09/04 · 주 1회<br><b>자유주제 2주</b> + <b>기관주제 2주</b></div>
+          <span class="tag">정원 48명</span>
+        </div>
+        <div class="fnode" id="n2">
+          <div class="step">Step 02 — Selection</div>
+          <h3>평가·선발</h3>
+          <div class="meta">NIA · 행정안전부 · CDSA (+외부)<br><b>동일 기준 순위화 → 5개 기관</b></div>
+          <span class="tag">파생 트랙 분기점</span>
+        </div>
+        <div class="fnode" id="n3">
+          <div class="step">Step 03 — 4 Weeks</div>
+          <h3>팀프로젝트</h3>
+          <div class="meta">09/17 ~ 10/23 · 4인 1팀<br>해커톤형 → <b>시상 · 책 발간</b></div>
+          <span class="tag">과정 완성형</span>
+        </div>
+        <div class="fnode derived" id="n5">
+          <div class="step">Spin-off — Independent</div>
+          <h3>기관컨설팅</h3>
+          <div class="meta">개인프로젝트에서 <b>파생된 독립 트랙</b><br>5개 기관 · 전문인재 = <b>PM</b> · ~10월 말</div>
+        </div>
+        <div class="fnode goal" id="n4">
+          <div class="step">Goal</div>
+          <h3>10월 말</h3>
+          <div class="meta">과정 완성</div>
+        </div>
+      </div>
+    </div>
+    <div class="flow-legend">
+      <div><i>—</i>&nbsp; 과정 본 트랙 : 개인 → 팀 → 완성</div>
+      <div><i>‑ ‑</i>&nbsp; 파생 독립 트랙 : 기관컨설팅</div>
+      <div><i>●</i>&nbsp; 화이트 노드 = 과정 완성</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PEOPLE ============ -->
+<section id="people">
+  <div class="sec-inner">
+    <div class="sec-head">
+      <div class="kicker">STRUCTURE — 추진체계</div>
+      <h2 class="h-lg rv" style="margin-top:24px">전국에서 모인<br>세 개의 숫자</h2>
+    </div>
+    <div class="people-grid">
+      <div class="pcard rv3 tilt">
+        <div class="num-huge big"><span data-count="48">0</span><em>명</em></div>
+        <h4>전문인재</h4>
+        <p>1기 · 2기 총 2개 기수, 기수당 24명. 전국 각 기관을 대표해 참여합니다.</p>
+        <div class="foot">Cohort 1 + 2 · Nationwide</div>
+      </div>
+      <div class="pcard rv3 tilt">
+        <div class="num-huge big"><span data-count="12">0</span><em>팀</em></div>
+        <h4>프로젝트 팀</h4>
+        <p>4인 1조 × 기수당 6팀. 서로 다른 기관이 섞인 다기관 혼성 팀입니다.</p>
+        <div class="foot">4 Members × 6 Teams × 2</div>
+      </div>
+      <div class="pcard rv3 tilt">
+        <div class="num-huge big"><span data-count="5">0</span><em>명</em></div>
+        <h4>CDSA 컨설턴트</h4>
+        <p>개인·팀 프로젝트 코칭부터 기관 PoC 설계·개발 리드까지 전 과정을 함께합니다.</p>
+        <div class="foot">Full-cycle Coaching</div>
+      </div>
+    </div>
+    <div class="consultants rv">
+      <span class="lab">CDSA Consultants</span>
+      <span class="name">이중균</span><span class="name">현중균</span><span class="name">신성진</span>
+      <span class="name">김용재</span><span class="name">김태유</span>
+    </div>
+    <div class="policy-note rv">* 48명 · 12팀은 정원 기준입니다 — 과정 진행 중 이탈 인원이 발생할 경우,
+    이후 단계의 참여 인원과 팀 편성은 수료 기준에 따라 조정될 수 있습니다.</div>
+  </div>
+</section>
+
+<!-- ============ PHASE 01 : 개인프로젝트 ============ -->
+<section id="phase1">
+  <div class="phase-num">01</div>
+  <div class="sec-inner">
+    <div class="sec-head">
+      <div class="kicker">PHASE 01 — 개인프로젝트 · 4주 · 주 1회</div>
+      <h2 class="h-lg rv" style="margin-top:24px">먼저, 혼자 힘으로<br>하나를 완성합니다</h2>
+      <p class="lead sub rv">전반 2주는 <b>개인 자유주제</b>, 후반 2주는 <b>소속 기관 주제</b> —
+      같은 기관 소속이라도 <b>1인당 1주제</b>입니다. 만들고, 발표하고, 기관 문제로 증명하는 4주.</p>
+    </div>
+    <div class="sched-legend">
+      <span class="sl"><b>목</b>1기 세션</span>
+      <span class="sl"><b>금</b>2기 세션</span>
+      <span class="sl">08/06 ~ 09/04</span>
+    </div>
+    <div class="weeks">
+      <div class="wk rv3">
+        <div class="wtag">Week 01</div>
+        <h4>자유주제 제작</h4>
+        <div class="wdate"><span><b>1기</b>08/06 목</span><span><b>2기</b>08/07 금</span></div>
+        <p>개인 자유주제 선정과 제작 착수. <b>CDSA 코칭</b>과 함께 첫 결과물을 만듭니다.</p>
+        <div class="bar"><i data-w="25%"></i></div>
+      </div>
+      <div class="wk rv3">
+        <div class="wtag">Week 02</div>
+        <h4>완성 · 발표 · 평가</h4>
+        <div class="wdate"><span><b>1기</b>08/13 목</span><span><b>2기</b>08/14 금</span></div>
+        <p><b>오전 완성</b> → <b>오후 발표 후 평가</b>. 자유주제 트랙은 여기서 마무리됩니다.</p>
+        <div class="bar"><i data-w="50%"></i></div>
+      </div>
+      <div class="wk rv3">
+        <div class="wtag">Week 03</div>
+        <h4>과제 확정 · PoC 개발</h4>
+        <div class="wdate"><span><b>1기</b>08/27 목</span><span><b>2기</b>08/28 금</span></div>
+        <p><b>오전 과제 확정</b> 후 개발 착수. 기관 데이터가 있으면 <b>실데이터</b>, 없으면 목업으로 만듭니다.</p>
+        <div class="bar"><i data-w="75%"></i></div>
+      </div>
+      <div class="wk hot rv3">
+        <div class="wtag">Week 04</div>
+        <h4>최종 발표 · 평가</h4>
+        <div class="wdate"><span><b>1기</b>09/03 목</span><span><b>2기</b>09/04 금</span></div>
+        <p><b>오전 마무리, 오후 발표</b>. NIA·행정안전부·CDSA 평가단(필요시 외부)이 평가해 상위 <b>5개 기관</b>을 선정합니다.</p>
+        <div class="bar"><i data-w="100%"></i></div>
+      </div>
+    </div>
+    <div class="bridge rv">
+      <span class="bl">Homework · W2 → W3</span>
+      <p>2주차 종료 후 과제 제출 — 소속 기관의 <b>페인포인트 도출과 문제정의</b>.
+      <b>인터뷰 · 설문조사</b>로 근거를 확보해 3주차 오전에 확정합니다.</p>
+    </div>
+    <div class="chips">
+      <div class="lab rv">자유주제 유형 — 무엇이든 좋습니다</div>
+      <div class="row">
+        <span class="chip rv">폐쇄망 작동 프로그램</span><span class="chip rv">외부 클라우드형 정보서비스</span>
+        <span class="chip rv">크롬 확장프로그램</span><span class="chip rv">웹앱</span><span class="chip rv">앱</span>
+        <span class="chip rv">논문</span><span class="chip rv">라즈베리파이 디바이스</span>
+      </div>
+    </div>
+    <div class="note-line rv"><span class="dot"></span>
+      <span>정규 세션 외 <b>주말 줌(Zoom) 비대면 개별코칭</b>을 지원합니다. 막히면 혼자 붙잡고 있지 마세요.</span></div>
+    <div class="note-line rv"><span class="dot"></span>
+      <span>개인프로젝트 <b>인증 수료</b> 시 <b>가점</b>이 부여됩니다.</span></div>
+  </div>
+</section>
+
+<!-- ============ SELECT : 48 → 5 (핀) ============ -->
+<section id="select">
+  <div class="sel-pin">
+    <div class="sel-wrap">
+      <div class="sel-copy">
+        <div class="kicker">SELECTION — 평가·선발</div>
+        <h2 class="h-lg">동일 평가자,<br>동일 기준</h2>
+        <div class="sel-count num-huge">
+          <span class="from" id="selFrom">48</span>
+          <span class="arrow">→</span>
+          <span class="to" id="selTo">5</span>
+        </div>
+        <p class="lead">1·2기 전원(정원 48명)을 <b>같은 평가자, 같은 기준</b>으로 순위화하여
+          상위 <b>5개 기관</b>을 컨설팅 대상으로 선정합니다. 선정된 순간, 여러분은
+          소속 기관 PoC의 <b>PM</b>이 됩니다.</p>
+        <div class="judges">
+          <span class="judge">NIA</span><span class="judge">행정안전부</span><span class="judge">CDSA</span>
+          <span class="judge alt">+ 외부 위원 (필요시)</span>
+        </div>
+        <div class="bonus">
+          <span class="blab">가점 요소</span>
+          <span class="bitem">개인프로젝트 인증 수료</span>
+          <span class="bitem">기관 실무진 참여확약서 제출</span>
+        </div>
+      </div>
+      <div>
+        <div class="dots-grid" id="dotsGrid"></div>
+        <div class="sel-cap">48 Candidates — 5 Institutions Selected</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PHASE 02 : 기관컨설팅 ============ -->
+<section id="phase2">
+  <div class="phase-num">02</div>
+  <div class="sec-inner">
+    <div class="sec-head">
+      <div class="kicker">PHASE 02 — 기관컨설팅 · 5개 기관 · ~10월 말</div>
+      <h2 class="h-lg rv" style="margin-top:24px">이번엔 여러분이<br>PM입니다</h2>
+      <p class="lead sub rv">선정된 전문인재는 소속 기관으로 돌아가 <b>기관 실무진과 CDSA 컨설턴트를 잇는 PM</b>이 됩니다.
+      <b>전문인재 과정과 별개의 독립 프로젝트</b>로, 팀프로젝트와 병행해 10월 말까지 완주합니다.</p>
+    </div>
+    <div class="consult-grid">
+      <div class="tri-wrap rv">
+        <div class="tri" id="triStage">
+          <svg class="tri-svg" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+            <path d="M50,16 L20,78"/><path d="M50,16 L80,78"/><path d="M22,84 L78,84"/>
+          </svg>
+          <div class="role pm">
+            <div class="rlab">Project Manager</div>
+            <h4>전문인재 1명</h4>
+            <p>해당 기관 소속. 워크샵·회의 조율, CDSA와 공동 기획서 작성.</p>
+          </div>
+          <div class="role staff">
+            <div class="rlab">Field Team</div>
+            <h4>기관 실무진 최소 5명</h4>
+            <p>AX팀 등. 요구사항·데이터 제공, PoC 검증. <b>참여확약서 제출</b>(가점).</p>
+          </div>
+          <div class="role cons">
+            <div class="rlab">Consultant</div>
+            <h4>CDSA 1명</h4>
+            <p>5인 풀에서 매칭. 기술 컨설팅, PoC 설계·개발 리드.</p>
+          </div>
+          <div class="tri-center">One Institution<br>One Squad</div>
+        </div>
+      </div>
+      <div class="budget-block rv3">
+        <div class="lab">Support per Institution — 기관당 실비지원</div>
+        <div class="amount num-huge"><em class="pre">최대</em><span data-count="300">0</span><em>여만원 / 기관</em></div>
+        <div class="per">기관컨설팅 참여 기관 대상 · 실사용 내역 기준 정산</div>
+        <ul class="cover-list">
+          <li>활동비<span class="d">Activity</span></li>
+          <li>AI 사용료 (구독 포함)<span class="d">AI Usage</span></li>
+          <li>참여확약서 제출 — 실무진 5명<span class="d">가점 부여</span></li>
+        </ul>
+        <div class="fine">실비지원 — 실제 사용 내역을 기준으로 정산하며, 세부 절차는 선정 후 별도 안내합니다.</div>
+      </div>
+    </div>
+    <div class="ops-strip">
+      <div class="op rv"><div class="k">Format</div><p><b>온라인 비대면 회의</b>와 <b>오프라인 워크샵</b>을 병행합니다.</p></div>
+      <div class="op rv"><div class="k">Planning</div><p><b>워크샵 단위</b>로 계획 수립 — CDSA와 전문인재가 <b>공동 기획서</b>를 작성합니다.</p></div>
+      <div class="op rv"><div class="k">Deadline</div><p>전문인재 과정과 <b>별개의 독립 트랙</b>으로 진행, <b>10월 말 완료</b>가 목표입니다.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PHASE 03 : 팀프로젝트 ============ -->
+<section id="phase3">
+  <div class="phase-num">03</div>
+  <div class="sec-inner">
+    <div class="sec-head">
+      <div class="kicker">PHASE 03 — 팀프로젝트 · 4주 · 수료 인원 전원</div>
+      <h2 class="h-lg rv" style="margin-top:24px">이제 팀으로,<br>해커톤처럼</h2>
+      <p class="lead sub rv">서로 다른 기관에서 온 <b>4인 1팀</b>. 특정 기관 과제가 아니라
+      <b>해커톤형 자유주제</b>로 판을 키웁니다. 결과물은 통일 양식 보고서로 묶어 <b>책으로 발간</b>합니다.</p>
+    </div>
+    <div class="sched-legend">
+      <span class="sl"><b>목</b>1기 세션</span>
+      <span class="sl"><b>금</b>2기 세션</span>
+      <span class="sl">09/17 ~ 10/23</span>
+    </div>
+    <div class="weeks">
+      <div class="wk rv3">
+        <div class="wtag">Week 01</div>
+        <h4>주제 선정 · 기획</h4>
+        <div class="wdate"><span><b>1기</b>09/17 목</span><span><b>2기</b>09/18 금</span></div>
+        <p>기획서 작성 + <b>컨설턴트 코칭</b>. 1주차 안에 주제를 확정합니다.</p>
+        <div class="bar"><i data-w="25%"></i></div>
+      </div>
+      <div class="wk rv3">
+        <div class="wtag">Week 02</div>
+        <h4>개발 착수</h4>
+        <div class="wdate"><span><b>1기</b>10/01 목</span><span><b>2기</b>10/02 금</span></div>
+        <p>본격 개발 시작. 팀당 <b>AI 구독료 30만원</b>을 지원합니다.</p>
+        <div class="bar"><i data-w="50%"></i></div>
+      </div>
+      <div class="wk rv3">
+        <div class="wtag">Week 03</div>
+        <h4>개발 · 보고서</h4>
+        <div class="wdate"><span><b>1기</b>10/15 목</span><span><b>2기</b>10/16 금</span></div>
+        <p>개발과 병행해 <b>HTML 통일 양식</b> 보고서 작성 — 책 발간의 원고가 됩니다.</p>
+        <div class="bar"><i data-w="75%"></i></div>
+      </div>
+      <div class="wk hot rv3">
+        <div class="wtag">Week 04</div>
+        <h4>발표 · 평가 · 시상</h4>
+        <div class="wdate"><span><b>1기</b>10/22 목</span><span><b>2기</b>10/23 금</span></div>
+        <p>오전 마무리 후 <b>최종 발표와 평가</b> — <b>5개 팀 시상</b>으로 4주를 마무리합니다.</p>
+        <div class="bar"><i data-w="100%"></i></div>
+      </div>
+    </div>
+    <div class="note-line rv"><span class="dot"></span>
+      <span><b>2개 기수 통합 5개 팀 시상</b> — 최우수 1팀 200만원 · 우수 1팀 100만원 · 혁신상 3팀 각 50만원.</span></div>
+    <div class="warn rv3">
+      <div class="sign">!</div>
+      <div>
+        <h4>무임승차 금지</h4>
+        <p>매 기수 반복된 문제입니다. 올해는 <b>역할 분담과 기여도 평가</b>를 명확히 반영합니다.
+        팀의 화합이 곧 결과물의 품질입니다.</p>
+      </div>
+    </div>
+    <div class="note-line rv"><span class="dot"></span>
+      <span>기관컨설팅에 선정된 5명은 <b>팀프로젝트 + 기관 PM을 병행</b>합니다. 일정 관리를 함께 설계합니다.</span></div>
+  </div>
+</section>
+
+<!-- ============ SUPPORT & AWARDS (화이트 반전) ============ -->
+<section id="budget">
+  <div class="sec-inner">
+    <div class="kicker">AWARDS &amp; SUPPORT — 시상과 지원</div>
+    <h2 class="h-lg rv">시상금과 활동지원비는<br>별개의 두 예산입니다</h2>
+    <div class="two-money">
+      <div class="money-block rv">
+        <div class="mtag">01 — 과정 본선 · Team Project Awards</div>
+        <h3>팀프로젝트 시상</h3>
+        <div class="podium">
+          <div class="pod">
+            <div class="info">
+              <div class="rank">우수 · 1팀</div>
+              <div class="prize"><span data-count="100">0</span><em>만원</em></div>
+            </div>
+            <div class="pbar" data-h="58%"></div>
+          </div>
+          <div class="pod first">
+            <div class="info">
+              <div class="rank">최우수 · 1팀</div>
+              <div class="prize"><span data-count="200">0</span><em>만원</em></div>
+            </div>
+            <div class="pbar" data-h="100%"></div>
+          </div>
+          <div class="pod">
+            <div class="info">
+              <div class="rank">혁신상 · 3팀</div>
+              <div class="prize"><em class="ea">각</em><span data-count="50">0</span><em>만원</em></div>
+            </div>
+            <div class="pbar" data-h="34%"></div>
+          </div>
+        </div>
+        <p class="mnote">1·2기 통합 <b>5개 팀</b> 시상 — 팀프로젝트 최종 발표·평가 결과에 따라 지급합니다.
+        개발 기간 <b>팀당 AI 구독료 30만원</b>은 시상과 별도로 지원합니다.</p>
+      </div>
+      <div class="vdiv" aria-hidden="true"><span>별개 예산 · Separate</span></div>
+      <div class="money-block rv">
+        <div class="mtag">02 — 파생 트랙 · Institution Support</div>
+        <h3>기관컨설팅 활동지원비</h3>
+        <div class="bignum"><span class="pre">최대</span><span data-count="300">0</span><em>여만원 / 기관</em></div>
+        <ul class="mlist">
+          <li>활동비<span class="d">Activity</span></li>
+          <li>AI 사용료 (구독 포함)<span class="d">AI Usage</span></li>
+          <li>실사용 내역 기준 정산<span class="d">실비지원</span></li>
+        </ul>
+        <p class="mnote">기관컨설팅에 <b>참여하는 기관당</b> 지원 — 기관 실무진 5명의
+        <b>참여확약서 제출 시 가점</b>이 부여됩니다.</p>
+      </div>
+    </div>
+    <div class="bud-note">* 시상금은 팀프로젝트 결과에, 활동지원비는 기관컨설팅 참여 기관에 각각 지급되는 서로 다른 예산입니다.</div>
+  </div>
+</section>
+
+<!-- ============ OUTRO ============ -->
+<section id="outro">
+  <div class="outro-inner">
+    <div class="kicker">CLOSING</div>
+    <h2 class="h-xl outro-title" style="margin-top:4vh">
+      <span class="line rv">이 과정의 마지막은,</span><br>
+      <span class="line rv"><span class="ghost">팀프로젝트</span>입니다</span>
+    </h2>
+    <div class="outro-steps">
+      <div class="ostep rv">
+        <div class="on">01</div>
+        <h5>혼자 완성한다</h5>
+        <p>개인프로젝트 4주 — 자유주제와 기관주제, 1인 1주제로 실력을 증명합니다.</p>
+      </div>
+      <div class="ostep rv">
+        <div class="on">02</div>
+        <h5>팀으로 완성한다</h5>
+        <p>팀프로젝트 4주 — 발표·평가·시상, 그리고 책 발간으로 과정을 완주합니다.</p>
+      </div>
+      <div class="ostep rv">
+        <div class="on">＋α</div>
+        <h5>기관으로 확장한다</h5>
+        <p>개인프로젝트에서 파생되는 독립 트랙 — 선정된 전문인재는 소속 기관 PoC를 PM으로 이끕니다.</p>
+      </div>
+    </div>
+  </div>
+  <footer>
+    <div><b>AI·데이터기반행정 전문인재 양성과정</b> — 프로젝트 · 기관컨설팅 연계 운영계획</div>
+    <div>행정안전부 · NIA · CDSA</div>
+  </footer>
+</section>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+<script>
+(function(){
+'use strict';
+var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+var hasGsap = typeof gsap !== 'undefined';
+if (hasGsap && typeof ScrollTrigger !== 'undefined') gsap.registerPlugin(ScrollTrigger);
+
+/* ============ 0. 48개 선발 도트 생성 ============ */
+var dotsGrid = document.getElementById('dotsGrid');
+var WINNERS = [4, 11, 21, 30, 43];
+for (var i = 0; i < 48; i++) {
+  var d = document.createElement('div');
+  d.className = 'pdot' + (WINNERS.indexOf(i) > -1 ? ' is-w' : '');
+  dotsGrid.appendChild(d);
+}
+
+/* ============ 1. THREE.JS 히어로 (그레이스케일 파티클 지형) ============ */
+(function initStage(){
+  if (reduced || typeof THREE === 'undefined') return;
+  var mount = document.getElementById('stage3d');
+  var W = mount.clientWidth || window.innerWidth;
+  var H = mount.clientHeight || window.innerHeight;
+
+  var scene = new THREE.Scene();
+  scene.fog = new THREE.FogExp2(0x050505, 0.0016);
+  var camera = new THREE.PerspectiveCamera(60, W/H, 1, 3000);
+  camera.position.set(0, 90, 380);
+
+  var renderer = new THREE.WebGLRenderer({ antialias:true, alpha:true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.setSize(W, H);
+  mount.appendChild(renderer.domElement);
+
+  // 파도치는 파티클 지형
+  var COLS = 130, ROWS = 60, SEP = 22;
+  var count = COLS * ROWS;
+  var positions = new Float32Array(count * 3);
+  var shades = new Float32Array(count * 3);
+  var idx = 0;
+  for (var ix = 0; ix < COLS; ix++) {
+    for (var iz = 0; iz < ROWS; iz++) {
+      positions[idx*3]   = ix * SEP - (COLS * SEP) / 2;
+      positions[idx*3+1] = 0;
+      positions[idx*3+2] = iz * SEP - (ROWS * SEP) / 2;
+      var s = 0.35 + Math.random() * 0.65;
+      shades[idx*3] = s; shades[idx*3+1] = s; shades[idx*3+2] = s;
+      idx++;
+    }
+  }
+  var geo = new THREE.BufferGeometry();
+  geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+  geo.setAttribute('color', new THREE.BufferAttribute(shades, 3));
+  var mat = new THREE.PointsMaterial({
+    size: 2.4, vertexColors: true, transparent: true, opacity: 0.85,
+    sizeAttenuation: true, depthWrite: false
+  });
+  var terrain = new THREE.Points(geo, mat);
+  terrain.position.y = -60;
+  scene.add(terrain);
+
+  // 와이어프레임 아이코사헤드론 (은은한 회전체)
+  var ico = new THREE.Mesh(
+    new THREE.IcosahedronGeometry(120, 1),
+    new THREE.MeshBasicMaterial({ color: 0xffffff, wireframe: true, transparent: true, opacity: 0.05 })
+  );
+  ico.position.set(200, 60, -160);
+  scene.add(ico);
+
+  var ico2 = new THREE.Mesh(
+    new THREE.IcosahedronGeometry(60, 0),
+    new THREE.MeshBasicMaterial({ color: 0xffffff, wireframe: true, transparent: true, opacity: 0.08 })
+  );
+  ico2.position.set(-320, 120, -240);
+  scene.add(ico2);
+
+  var mouseX = 0, mouseY = 0;
+  window.addEventListener('mousemove', function(e){
+    mouseX = (e.clientX / window.innerWidth - 0.5);
+    mouseY = (e.clientY / window.innerHeight - 0.5);
+  }, { passive: true });
+
+  var t = 0, visible = true, pos = geo.attributes.position;
+  var io = new IntersectionObserver(function(en){ visible = en[0].isIntersecting; }, { threshold: 0 });
+  io.observe(mount);
+
+  function animate(){
+    requestAnimationFrame(animate);
+    if (!visible) return;
+    t += 0.012;
+    var k = 0;
+    for (var x = 0; x < COLS; x++) {
+      for (var z = 0; z < ROWS; z++) {
+        pos.array[k*3+1] = Math.sin((x + t*2.2) * 0.28) * 14 + Math.cos((z + t*1.6) * 0.34) * 14;
+        k++;
+      }
+    }
+    pos.needsUpdate = true;
+    ico.rotation.y += 0.0016; ico.rotation.x += 0.0009;
+    ico2.rotation.y -= 0.002;
+    camera.position.x += (mouseX * 60 - camera.position.x) * 0.04;
+    camera.position.y += (90 - mouseY * 40 - camera.position.y) * 0.04;
+    camera.lookAt(0, -20, 0);
+    renderer.render(scene, camera);
+  }
+  animate();
+
+  window.addEventListener('resize', function(){
+    var w = mount.clientWidth || window.innerWidth, h = mount.clientHeight || window.innerHeight;
+    camera.aspect = w/h; camera.updateProjectionMatrix(); renderer.setSize(w, h);
+  });
+})();
+
+/* ============ 2. 카운트업 ============ */
+function fmt(n, comma){ n = Math.round(n); return comma ? n.toLocaleString('ko-KR') : String(n); }
+function bindCounters(){
+  document.querySelectorAll('[data-count]').forEach(function(el){
+    var target = parseFloat(el.getAttribute('data-count'));
+    var comma = el.getAttribute('data-comma') === '1';
+    if (!hasGsap || reduced) { el.textContent = fmt(target, comma); return; }
+    var obj = { v: 0 };
+    ScrollTrigger.create({
+      trigger: el, start: 'top 88%', once: true,
+      onEnter: function(){
+        gsap.to(obj, { v: target, duration: 1.6, ease: 'power3.out',
+          onUpdate: function(){ el.textContent = fmt(obj.v, comma); } });
+      }
+    });
+  });
+}
+
+/* ============ 3. GSAP 씬 구성 ============ */
+if (hasGsap && !reduced) {
+
+  /* — 히어로 타이틀 등장 — */
+  gsap.set('.hero-title .line>span', { yPercent: 115 });
+  var intro = gsap.timeline({ delay: 0.15 });
+  intro.to('.hero-title .line>span', { yPercent: 0, duration: 1.15, ease: 'power4.out', stagger: 0.14 })
+       .to('.hero .rv', { opacity: 1, y: 0, duration: 0.9, ease: 'power3.out', stagger: 0.1 }, '-=0.55')
+       .to('.hero-stats .rv', { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out', stagger: 0.08 }, '-=0.6');
+
+  /* — 히어로 패럴랙스 아웃 — */
+  gsap.to('.hero-content', {
+    yPercent: -18, opacity: 0.25, ease: 'none',
+    scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true }
+  });
+
+  /* — 사이드 레일 진행률 — */
+  var railFill = document.getElementById('railFill');
+  var railPct = document.getElementById('railPct');
+  ScrollTrigger.create({
+    trigger: document.body, start: 'top top', end: 'bottom bottom',
+    onUpdate: function(self){
+      var p = Math.round(self.progress * 100);
+      railFill.style.height = p + '%';
+      railPct.textContent = (p < 10 ? '0' : '') + p;
+    }
+  });
+
+  /* — 공통 리빌 — */
+  document.querySelectorAll('.rv').forEach(function(el){
+    if (el.closest('.hero')) return;
+    gsap.to(el, {
+      opacity: 1, y: 0, duration: 1.0, ease: 'power3.out',
+      scrollTrigger: { trigger: el, start: 'top 88%', once: true }
+    });
+  });
+  document.querySelectorAll('.rv3').forEach(function(el){
+    gsap.to(el, {
+      opacity: 1, y: 0, rotateX: 0, duration: 1.15, ease: 'power3.out',
+      transformPerspective: 1000,
+      scrollTrigger: { trigger: el, start: 'top 90%', once: true }
+    });
+  });
+  // 그룹 스태거 (주차 카드 / 통계 카드 / 칩)
+  [['.weeks', '.wk'], ['.people-grid', '.pcard'], ['.chips .row', '.chip']].forEach(function(pair){
+    document.querySelectorAll(pair[0]).forEach(function(wrap){
+      var items = wrap.querySelectorAll(pair[1]);
+      gsap.fromTo(items, { opacity: 0, y: 70, rotateX: 18 },
+        { opacity: 1, y: 0, rotateX: 0, duration: 1.05, ease: 'power3.out', stagger: 0.12,
+          transformPerspective: 900, overwrite: 'auto',
+          scrollTrigger: { trigger: wrap, start: 'top 86%', once: true } });
+    });
+  });
+
+  /* — 주차 진행바 & 예산바 — */
+  document.querySelectorAll('[data-w]').forEach(function(bar){
+    gsap.to(bar, {
+      width: bar.getAttribute('data-w'), duration: 1.3, ease: 'power3.inOut',
+      scrollTrigger: { trigger: bar, start: 'top 92%', once: true }
+    });
+  });
+  document.querySelectorAll('[data-h]').forEach(function(bar){
+    gsap.to(bar, {
+      height: bar.getAttribute('data-h'), duration: 1.4, ease: 'power3.inOut',
+      scrollTrigger: { trigger: bar, start: 'top 94%', once: true }
+    });
+  });
+
+  /* ============ FLOW : 핀 + 스크럽 3D 조립 ============ */
+  ScrollTrigger.matchMedia({
+    '(min-width: 900px)': function(){
+
+      // 스테이지 스케일 (1280 기준)
+      function fitStage(){
+        var vp = document.querySelector('.flow-viewport');
+        var st = document.getElementById('flowStage');
+        var s = Math.min(1, (vp.clientWidth - 20) / 1280, (window.innerHeight * 0.62) / 600);
+        st.style.transform = 'scale(' + s + ')';
+        st.style.marginTop = ((s - 1) * 300) + 'px';
+        st.style.marginBottom = ((s - 1) * 300) + 'px';
+      }
+      fitStage();
+      window.addEventListener('resize', fitStage);
+
+      // 커넥터 준비 — 본선(솔리드)은 드로우, 파생(점선)은 페이드
+      var drawPaths = ['c1','c2','c4'].map(function(id){ return document.getElementById(id); });
+      drawPaths.forEach(function(p){
+        var L = p.getTotalLength();
+        p.style.strokeDasharray = L;
+        p.style.strokeDashoffset = L;
+      });
+      gsap.set(['#c3','#c5'], { opacity: 0 });
+
+      gsap.set(['#n1','#n2','#n3','#n5','#n4'], { opacity: 0, z: -520, rotateY: -32, yPercent: 8 });
+      gsap.set('#n4', { rotateY: 0, scale: 0.6 });
+
+      var tl = gsap.timeline({
+        defaults: { ease: 'power2.out' },
+        scrollTrigger: {
+          trigger: '.flow-pin', start: 'top top', end: '+=270%',
+          pin: true, scrub: 0.6, anticipatePin: 1
+        }
+      });
+
+      tl.to('#flowFloor', { opacity: 1, duration: 0.6 })
+        .to('#n1', { opacity: 1, z: 0, rotateY: 0, yPercent: 0, duration: 0.9 }, 0.25)
+        .to('#c1', { strokeDashoffset: 0, duration: 0.45 }, '>-0.15')
+        .to('#n2', { opacity: 1, z: 0, rotateY: 0, yPercent: 0, duration: 0.9 }, '>-0.2')
+        .to('#c2', { strokeDashoffset: 0, duration: 0.5 }, '>-0.1')
+        .to('#n3', { opacity: 1, z: 0, rotateY: 0, yPercent: 0, duration: 0.85 }, '>-0.25')
+        .to('#c4', { strokeDashoffset: 0, duration: 0.4 }, '>-0.1')
+        .to('#n4', { opacity: 1, z: 0, scale: 1, yPercent: 0, duration: 0.8, ease: 'back.out(2.2)' }, '>-0.15')
+        .to('#n4', { boxShadow: '0 0 110px rgba(255,255,255,.55), 0 30px 60px rgba(0,0,0,.6)', duration: 0.5 }, '>-0.2')
+        .to('#c3', { opacity: 1, duration: 0.5 }, '>-0.1')
+        .to('#n5', { opacity: 1, z: 0, rotateY: 0, yPercent: 0, duration: 0.85 }, '>-0.25')
+        .to('#c5', { opacity: 1, duration: 0.4 }, '>-0.15')
+        .to({}, { duration: 0.5 });
+
+      // 커넥터 위 이동 도트 — 본선(개인→팀→완성)만 주행
+      [['d1','c1'],['d2','c2'],['d3','c4']].forEach(function(pair, pi){
+        var dot = document.getElementById(pair[0]);
+        var path = document.getElementById(pair[1]);
+        var L = path.getTotalLength();
+        var obj = { p: 0 };
+        gsap.to(obj, {
+          p: 1, duration: 2.2 + pi * 0.4, repeat: -1, ease: 'none', delay: pi * 0.6,
+          onUpdate: function(){
+            var pt = path.getPointAtLength(obj.p * L);
+            dot.setAttribute('cx', pt.x); dot.setAttribute('cy', pt.y);
+            dot.setAttribute('opacity', tl.progress() > 0.75 ? 0.9 : 0);
+          }
+        });
+      });
+    },
+    '(max-width: 899px)': function(){
+      // 모바일: 핀 해제, 정적 노출
+      gsap.set(['#n1','#n2','#n3','#n5','#n4','#flowFloor'], { clearProps: 'all', opacity: 1 });
+      ['c1','c2','c4'].forEach(function(id){
+        var p = document.getElementById(id);
+        p.style.strokeDasharray = 'none'; p.style.strokeDashoffset = 0;
+      });
+      gsap.set(['#c3','#c5'], { opacity: 1 });
+    }
+  });
+
+  /* ============ SELECT : 48 → 5 핀 스크럽 ============ */
+  ScrollTrigger.matchMedia({
+    '(min-width: 900px)': function(){
+      var dots = gsap.utils.toArray('.pdot');
+      var winners = gsap.utils.toArray('.pdot.is-w');
+      var losers = dots.filter(function(d){ return !d.classList.contains('is-w'); });
+      var selTo = document.getElementById('selTo');
+
+      gsap.set(dots, { opacity: 0, scale: 0, z: -260 });
+
+      var tl2 = gsap.timeline({
+        scrollTrigger: {
+          trigger: '.sel-pin', start: 'top top', end: '+=200%',
+          pin: true, scrub: 0.6, anticipatePin: 1
+        }
+      });
+      tl2.to(dots, { opacity: 1, scale: 1, z: 0, duration: 1.1, ease: 'power2.out',
+              stagger: { each: 0.018, from: 'random' } })
+         .to({}, { duration: 0.25 })
+         .to(losers, { opacity: 0.14, scale: 0.72, duration: 0.7, ease: 'power2.inOut' })
+         .to(winners, { scale: 1.5, duration: 0.7, ease: 'back.out(2.4)',
+              onStart: function(){ winners.forEach(function(w){ w.classList.add('win'); }); },
+              onReverseComplete: function(){ winners.forEach(function(w){ w.classList.remove('win'); }); }
+            }, '<')
+         .add(function(){ selTo.classList.add('lit'); })
+         .to({}, { duration: 0.45 });
+
+      tl2.eventCallback('onUpdate', function(){
+        if (tl2.progress() < 0.62) selTo.classList.remove('lit');
+        else selTo.classList.add('lit');
+      });
+    },
+    '(max-width: 899px)': function(){
+      gsap.set('.pdot', { clearProps: 'all', opacity: 1 });
+      document.querySelectorAll('.pdot.is-w').forEach(function(w){ w.classList.add('win'); });
+      document.getElementById('selTo').classList.add('lit');
+    }
+  });
+
+  /* — 트라이앵글 미세 부유 — */
+  gsap.to('.role.pm', { y: -8, duration: 2.6, yoyo: true, repeat: -1, ease: 'sine.inOut' });
+  gsap.to('.role.staff', { y: 7, duration: 3.1, yoyo: true, repeat: -1, ease: 'sine.inOut' });
+  gsap.to('.role.cons', { y: -6, duration: 2.9, yoyo: true, repeat: -1, ease: 'sine.inOut' });
+
+  /* — 거대 페이즈 넘버 패럴랙스 — */
+  document.querySelectorAll('.phase-num').forEach(function(el){
+    gsap.fromTo(el, { yPercent: 26 }, { yPercent: -26, ease: 'none',
+      scrollTrigger: { trigger: el.parentElement, start: 'top bottom', end: 'bottom top', scrub: true } });
+  });
+
+} else {
+  // GSAP 없음 / 모션 축소: 전부 정적 표시
+  document.querySelectorAll('.rv,.rv3').forEach(function(el){ el.style.opacity = 1; el.style.transform = 'none'; });
+  document.querySelectorAll('[data-w]').forEach(function(b){ b.style.width = b.getAttribute('data-w'); });
+  document.querySelectorAll('[data-h]').forEach(function(b){ b.style.height = b.getAttribute('data-h'); });
+  document.querySelectorAll('.pdot').forEach(function(d){ d.style.opacity = 1; });
+  document.querySelectorAll('.pdot.is-w').forEach(function(w){ w.classList.add('win'); });
+  var st = document.getElementById('selTo'); if (st) st.classList.add('lit');
+  if (hasGsap) gsap.set('.hero-title .line>span', { yPercent: 0 });
+}
+
+bindCounters();
+
+/* ============ 4. 3D 틸트 카드 ============ */
+if (!reduced) {
+  document.querySelectorAll('.tilt').forEach(function(card){
+    card.addEventListener('mousemove', function(e){
+      var r = card.getBoundingClientRect();
+      var px = (e.clientX - r.left) / r.width - 0.5;
+      var py = (e.clientY - r.top) / r.height - 0.5;
+      card.style.setProperty('--mx', ((px + 0.5) * 100) + '%');
+      card.style.setProperty('--my', ((py + 0.5) * 100) + '%');
+      if (hasGsap) gsap.to(card, { rotateY: px * 10, rotateX: -py * 10, transformPerspective: 900,
+        duration: 0.4, ease: 'power2.out' });
+    });
+    card.addEventListener('mouseleave', function(){
+      if (hasGsap) gsap.to(card, { rotateY: 0, rotateX: 0, duration: 0.7, ease: 'elastic.out(1,0.5)' });
+    });
+  });
+}
+})();
+</script>
+<script>/* kg-preview: #<heading> \uc704\uce58\ub85c \uc774\ub3d9 */
+(function(){function norm(t){return (t||'').replace(/\s+/g,'').toLowerCase()}
+function go(){var h=decodeURIComponent(location.hash.slice(1));if(!h)return;var k=norm(h).slice(0,24);if(!k)return;
+var best=null,bl=1e9,els=document.body.querySelectorAll('h1,h2,h3,h4,h5,p,div,span,li,td,text,tspan,section,article');
+for(var i=0;i<els.length;i++){var e=els[i],t=norm(e.textContent);if(t.length<bl&&t.indexOf(k)>-1){best=e;bl=t.length}}
+if(!best)return;var box=best.closest('section,[class*=slide],[class*=page],article')||best;
+box.scrollIntoView({block:'start'});box.style.outline='3px solid #c0504d';box.style.outlineOffset='4px';
+setTimeout(function(){box.style.outline=''},2600)}
+window.addEventListener('load',function(){setTimeout(go,400)});window.addEventListener('hashchange',go)})();</script></body>
+</html>

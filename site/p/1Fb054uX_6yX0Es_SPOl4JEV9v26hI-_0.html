@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head><meta name="robots" content="noindex, nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>6회차 — AI 에이전트 이해: 트랜스포머 기초부터 멀티 에이전트 실습까지</title>
+<link rel="preconnect" href="https://cdnjs.cloudflare.com">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+<style>
+:root{
+  --bg:#fafaf6; --panel:#ffffff; --ink:#1b1e24; --ink-soft:#5a6069; --ink-faint:#8b919b;
+  --line:#e7e6df; --line-soft:#f0efe9;
+  --teal:#127c71; --teal-d:#0c5249; --teal-bg:#e6f4f1;
+  --amber:#b9722a; --amber-bg:#fbf1e4;
+  --red:#c0392b; --red-bg:#fbe9e7;
+  --code-bg:#f6f6f0;
+  --mono:ui-monospace,"SF Mono","Cascadia Code","JetBrains Mono",Consolas,monospace;
+  --sans:-apple-system,BlinkMacSystemFont,"Pretendard","Apple SD Gothic Neo","Segoe UI","Malgun Gothic",sans-serif;
+  --rad:12px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);
+  font-size:16px;line-height:1.72;-webkit-font-smoothing:antialiased}
+
+/* layout */
+.shell{display:grid;grid-template-columns:300px minmax(0,1fr);max-width:1240px;margin:0 auto}
+.print-toc{display:none}
+.side{position:sticky;top:0;align-self:start;height:100vh;overflow-y:auto;
+  padding:30px 22px 60px;border-right:1px solid var(--line)}
+.main{min-width:0;padding:46px 60px 120px;max-width:880px}
+
+/* sidebar */
+.brand{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--teal);margin-bottom:6px}
+.brand-t{font-weight:700;font-size:17px;line-height:1.35;margin:0 0 4px}
+.brand-s{font-size:12.5px;color:var(--ink-faint);margin:0 0 24px;line-height:1.5}
+nav a{display:block;text-decoration:none;color:var(--ink-soft);border-left:2px solid transparent;
+  padding:3px 0 3px 12px;font-size:13.5px;transition:color .15s,border-color .15s}
+nav a:hover{color:var(--ink)}
+nav a.nav-h1{margin-top:16px;font-weight:700;color:var(--ink);font-size:13px;
+  font-family:var(--mono);letter-spacing:.02em}
+nav a.nav-h2{font-size:13px}
+nav a.active{color:var(--teal-d);border-left-color:var(--teal);font-weight:600}
+
+/* headings */
+h1.modhead{font-size:13px;font-family:var(--mono);letter-spacing:.06em;text-transform:uppercase;
+  color:var(--teal);margin:72px 0 0;padding-top:28px;border-top:2px solid var(--ink);
+  font-weight:700}
+h1.modhead::after{content:attr(data-full);display:block;font-family:var(--sans);
+  font-size:30px;letter-spacing:-.01em;text-transform:none;color:var(--ink);
+  margin-top:8px;font-weight:750;line-height:1.2}
+h1.modhead{font-size:0}            /* hide raw, show via ::after */
+h1.modhead.intro{font-size:13px}
+h2{font-size:21px;font-weight:720;letter-spacing:-.01em;margin:46px 0 14px;
+  padding-bottom:8px;border-bottom:1px solid var(--line)}
+h3{font-size:16.5px;font-weight:700;margin:32px 0 10px;color:var(--ink)}
+h2.starred,h3.starred{color:var(--teal-d)}
+h2.starred::before,h3.starred::before{content:"★ ";color:var(--teal);font-size:.85em}
+h2.starred,h3.starred{}
+.main h1:first-of-type{margin-top:0}
+
+p{margin:12px 0}
+a{color:var(--teal-d)}
+strong{font-weight:700;color:var(--ink)}
+ul,ol{padding-left:22px;margin:12px 0}
+li{margin:5px 0}
+hr{border:none;border-top:1px solid var(--line);margin:40px 0}
+
+/* intro hero */
+.hero{background:linear-gradient(135deg,#0c5249,#127c71);color:#eafaf6;
+  border-radius:16px;padding:34px 36px;margin:0 0 14px}
+.hero .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.16em;
+  text-transform:uppercase;color:#9fdfd2;margin-bottom:10px}
+.hero h1{font-size:32px;line-height:1.18;margin:0 0 12px;font-weight:780;letter-spacing:-.02em}
+.hero p{margin:0;color:#cfeee7;font-size:14.5px;line-height:1.6}
+
+/* tables */
+table{width:100%;border-collapse:collapse;margin:18px 0;font-size:14px;
+  border:1px solid var(--line);border-radius:var(--rad);overflow:hidden}
+thead th{background:var(--teal-bg);color:var(--teal-d);text-align:left;
+  font-weight:700;padding:10px 13px;font-size:13px}
+td{padding:10px 13px;border-top:1px solid var(--line-soft);vertical-align:top}
+tbody tr:nth-child(even){background:#fbfbf8}
+.tablescroll{overflow-x:auto}
+
+/* code */
+.codewrap{margin:16px 0;border:1px solid var(--line);border-radius:var(--rad);
+  overflow:hidden;background:var(--code-bg)}
+.codebar{display:flex;justify-content:space-between;align-items:center;
+  padding:7px 12px;background:#efeee7;border-bottom:1px solid var(--line)}
+.codelang{font-family:var(--mono);font-size:11px;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink-faint);font-weight:600}
+.copybtn{font-family:var(--mono);font-size:11px;border:1px solid var(--line);
+  background:#fff;color:var(--ink-soft);padding:3px 11px;border-radius:6px;cursor:pointer;
+  transition:all .15s}
+.copybtn:hover{border-color:var(--teal);color:var(--teal-d)}
+.copybtn.ok{background:var(--teal);color:#fff;border-color:var(--teal)}
+.codewrap pre{margin:0;padding:0}
+pre code,pre.hljs{display:block;padding:15px 16px;overflow-x:auto;
+  font-family:var(--mono);font-size:13px;line-height:1.6;background:var(--code-bg)!important}
+:not(pre)>code{font-family:var(--mono);font-size:.88em;background:#eeede6;
+  padding:1.5px 6px;border-radius:5px;color:var(--teal-d);white-space:nowrap}
+
+/* mermaid */
+pre.mermaid{background:var(--panel);border:1px solid var(--line);border-radius:var(--rad);
+  padding:22px;margin:20px 0;text-align:center;overflow-x:auto;line-height:1.4}
+
+/* callouts */
+.callout{position:relative;margin:18px 0;padding:14px 18px 14px 18px;border-radius:10px;
+  border-left:4px solid var(--ink-faint);background:#f4f4ee;font-size:14.5px}
+.callout p{margin:8px 0}
+.callout p:first-of-type{margin-top:0}
+.callout p:last-child{margin-bottom:0}
+.callout-badge{display:inline-block;font-family:var(--mono);font-size:10.5px;
+  letter-spacing:.1em;text-transform:uppercase;font-weight:700;
+  padding:2px 9px;border-radius:20px;margin-bottom:8px}
+.callout-note{border-left-color:#9aa0a8;background:#f3f3ee}
+.callout-note .callout-badge{background:#e4e4dd;color:#5a6069}
+.callout-key{border-left-color:var(--teal);background:var(--teal-bg)}
+.callout-key .callout-badge{background:var(--teal);color:#fff}
+.callout-warn{border-left-color:var(--amber);background:var(--amber-bg)}
+.callout-warn .callout-badge{background:var(--amber);color:#fff}
+.callout-add{border-left-color:var(--teal-d);background:#e9f3f1}
+.callout-add .callout-badge{background:var(--teal-d);color:#fff}
+
+/* topbar (mobile) */
+.topbar{display:none}
+
+@media (max-width:880px){
+  .shell{grid-template-columns:1fr}
+  .side{position:fixed;z-index:40;top:0;left:0;width:84%;max-width:320px;height:100vh;
+    background:var(--panel);transform:translateX(-105%);transition:transform .25s;
+    box-shadow:0 0 40px rgba(0,0,0,.18)}
+  .side.open{transform:translateX(0)}
+  .main{padding:70px 22px 90px}
+  .topbar{display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:30;
+    background:rgba(250,250,246,.92);backdrop-filter:blur(8px);
+    padding:12px 18px;border-bottom:1px solid var(--line)}
+  .menubtn{font-family:var(--mono);font-size:13px;border:1px solid var(--line);
+    background:#fff;padding:6px 12px;border-radius:8px;cursor:pointer}
+  .topbar .tt{font-family:var(--mono);font-size:12px;color:var(--teal);letter-spacing:.05em}
+  .scrim{display:none;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:35}
+  .scrim.show{display:block}
+  h1.modhead::after{font-size:25px}
+  .hero h1{font-size:25px}
+  .main{max-width:100%}
+}
+
+/* ── 인쇄 / PDF 저장 (출력 시 목차 먼저 → 본문) ── */
+@media print{
+  @page{margin:14mm 12mm}
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .topbar,.scrim,.menubtn,.copybtn{display:none!important}
+  .shell{display:block;max-width:none}
+  /* 화면용 사이드바는 인쇄에서 완전히 숨김 (변환 불안정 → 빈 페이지 방지) */
+  .side{display:none!important}
+  /* 인쇄 전용 목차: 본문 맨 앞 일반 블록으로 깔끔히 출력 후 페이지 넘김 */
+  .print-toc{display:block!important;break-after:page;page-break-after:always}
+  .print-toc .ptoc-title{font-size:19pt;font-weight:800;color:#0c5249;letter-spacing:-.01em;
+    margin:0 0 16px;padding-bottom:10px;border-bottom:2px solid #127c71}
+  .print-toc a{display:block;color:#1b1e24;text-decoration:none;padding:3px 0;font-size:11.5pt;border:none}
+  .print-toc a.nav-h1{margin-top:13px;font-weight:700;color:#0c5249;font-size:12.5pt}
+  .print-toc a.nav-h2{padding-left:16px;color:#3a3f47}
+  /* 본문 */
+  .main{padding:0;max-width:none}
+  body{font-size:10.5pt;line-height:1.5;background:#fff}
+  a{text-decoration:none;color:inherit}
+  .hero{break-inside:avoid;background:#fff!important;color:#1b1e24!important;
+    border:none;border-bottom:2px solid #127c71;border-radius:0;
+    padding:0 0 14px!important;margin:0 0 18px}
+  .hero .eyebrow{color:#127c71!important}
+  .hero h1{color:#0c5249!important}
+  .hero p{color:#444!important}
+  /* 주제 헤더가 페이지 맨 아래 외롭게 걸리지 않게만 (새 페이지 강제는 빼서 빈 페이지 방지) */
+  h1.modhead{break-after:avoid;page-break-after:avoid}
+  h2,h3{break-after:avoid;page-break-after:avoid}
+  /* 코드·콜아웃·표·다이어그램은 페이지 중간에서 잘리지 않게 */
+  .codewrap,.callout,pre.mermaid,.tablescroll,table{break-inside:avoid;page-break-inside:avoid}
+  pre code,pre.hljs{white-space:pre-wrap;word-break:break-word}
+  pre.mermaid{text-align:center;border:1px solid #ddd;padding:12px 8px;margin:14px auto}
+  pre.mermaid svg{max-width:100%!important;height:auto!important;
+    max-height:200mm!important;display:inline-block!important}
+  .codewrap{border-color:#ccc}
+}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <button class="menubtn" id="menubtn" aria-label="목차 열기">☰ 목차</button>
+  <span class="tt">강의노트 · 보강판</span>
+</div>
+<div class="scrim" id="scrim"></div>
+<div class="shell">
+  <aside class="side" id="side">
+    <div class="brand">강의노트 · 06회차</div>
+    <p class="brand-t">6회차 — AI 에이전트 이해: 트랜스포머 기초부터 멀티 에이전트 실습까지</p>
+    <p class="brand-s">현장 강의 · 기술 보강판</p>
+    <nav id="nav">
+<a class="nav-h1" href="#_1">들어가며 — 왜 &#x27;에이전트를 이해&#x27;하는가</a>
+<a class="nav-h1" href="#1">1부 · 모델은 어떻게 &#x27;말&#x27;을 배웠나 (딥러닝 → 트랜스포머)</a>
+<a class="nav-h2" href="#_2">퍼셉트론 — 딥러닝의 최소 단위</a>
+<a class="nav-h2" href="#_3">이미지에서 텍스트로 — 임베딩</a>
+<a class="nav-h2" href="#n-gram-rnnlstm">N-gram → RNN/LSTM — 그리고 그 한계</a>
+<a class="nav-h2" href="#attention-is-all-you-need-2017">Attention Is All You Need — 트랜스포머 (2017)</a>
+<a class="nav-h1" href="#2-ai">2부 · AI 에이전트란 무엇인가</a>
+<a class="nav-h2" href="#3">구성 3요소 — 두뇌·도구·기억</a>
+<a class="nav-h2" href="#_4">행동·설계·조건 — 그리고 &quot;왜 기억인가 = 돈&quot;</a>
+<a class="nav-h1" href="#3-6">3부 · 에이전트 6종 구조 — 싱글부터 멀티까지</a>
+<a class="nav-h2" href="#_5">싱글(바닐라) 에이전트</a>
+<a class="nav-h2" href="#_6">멀티 에이전트 — &quot;바통&quot;과 핸드오프</a>
+<a class="nav-h2" href="#_7">네트워크 에이전트 — &quot;팀장님 보고 싶어요&quot;</a>
+<a class="nav-h2" href="#as">슈퍼바이저 &amp;amp; 슈퍼바이저 as 툴 — 오케스트레이션</a>
+<a class="nav-h2" href="#hierarchical">계층형(hierarchical) &amp;amp; 커스텀</a>
+<a class="nav-h1" href="#4-1-openrouter">4부 · 실습 1 — 민원 초안 생성 멀티 에이전트 (OpenRouter)</a>
+<a class="nav-h2" href="#openrouter">OpenRouter — 키 하나로 수백 개 모델</a>
+<a class="nav-h2" href="#api-env">실제로 붙이는 법 — API 키와 .env</a>
+<a class="nav-h1" href="#5-git">5부 · 적정 에이전트 수 &amp;amp; 개발 습관 (플랜·기록·Git)</a>
+<a class="nav-h2" href="#_8">무조건 &#x27;플랜&#x27; 먼저 — 메타 프롬프트로</a>
+<a class="nav-h2" href="#planmd-git">변경 이유를 남겨라 — plan.md와 Git</a>
+<a class="nav-h1" href="#6-2">6부 · 실습 2 — 픽셀 에이전트 클론 &amp;amp; 커스텀</a>
+<a class="nav-h2" href="#git">Git 설치 확인 → 클론</a>
+<a class="nav-h2" href="#nodejs">의존성 설치 &amp;amp; 실행 (Node.js 프로젝트 기준)</a>
+<a class="nav-h2" href="#_9">뜯어고치기 — 순서와 요령</a>
+<a class="nav-h1" href="#7">7부 · 멀티 에이전트의 그림자 — 왜 돈이 눈덩이처럼 부나</a>
+<a class="nav-h2" href="#thinking">Thinking 기본 + 핸드오프는 공짜가 아니다</a>
+<a class="nav-h2" href="#latentmas">연구 최전선 — LatentMAS 논문</a>
+<a class="nav-h1" href="#_10">마무리 &amp;amp; 과제</a>
+<a class="nav-h1" href="#_11">부록 — 용어 사전 · 출처</a>
+<a class="nav-h2" href="#_12">용어 빠른 사전</a>
+<a class="nav-h2" href="#_13">검색으로 확인·보강한 출처</a>
+    </nav>
+  </aside>
+  <main class="main" id="main">
+<nav class="print-toc">
+<div class="ptoc-title">목차</div>
+<a class="nav-h1" href="#_1">들어가며 — 왜 &#x27;에이전트를 이해&#x27;하는가</a>
+<a class="nav-h1" href="#1">1부 · 모델은 어떻게 &#x27;말&#x27;을 배웠나 (딥러닝 → 트랜스포머)</a>
+<a class="nav-h2" href="#_2">퍼셉트론 — 딥러닝의 최소 단위</a>
+<a class="nav-h2" href="#_3">이미지에서 텍스트로 — 임베딩</a>
+<a class="nav-h2" href="#n-gram-rnnlstm">N-gram → RNN/LSTM — 그리고 그 한계</a>
+<a class="nav-h2" href="#attention-is-all-you-need-2017">Attention Is All You Need — 트랜스포머 (2017)</a>
+<a class="nav-h1" href="#2-ai">2부 · AI 에이전트란 무엇인가</a>
+<a class="nav-h2" href="#3">구성 3요소 — 두뇌·도구·기억</a>
+<a class="nav-h2" href="#_4">행동·설계·조건 — 그리고 &quot;왜 기억인가 = 돈&quot;</a>
+<a class="nav-h1" href="#3-6">3부 · 에이전트 6종 구조 — 싱글부터 멀티까지</a>
+<a class="nav-h2" href="#_5">싱글(바닐라) 에이전트</a>
+<a class="nav-h2" href="#_6">멀티 에이전트 — &quot;바통&quot;과 핸드오프</a>
+<a class="nav-h2" href="#_7">네트워크 에이전트 — &quot;팀장님 보고 싶어요&quot;</a>
+<a class="nav-h2" href="#as">슈퍼바이저 &amp;amp; 슈퍼바이저 as 툴 — 오케스트레이션</a>
+<a class="nav-h2" href="#hierarchical">계층형(hierarchical) &amp;amp; 커스텀</a>
+<a class="nav-h1" href="#4-1-openrouter">4부 · 실습 1 — 민원 초안 생성 멀티 에이전트 (OpenRouter)</a>
+<a class="nav-h2" href="#openrouter">OpenRouter — 키 하나로 수백 개 모델</a>
+<a class="nav-h2" href="#api-env">실제로 붙이는 법 — API 키와 .env</a>
+<a class="nav-h1" href="#5-git">5부 · 적정 에이전트 수 &amp;amp; 개발 습관 (플랜·기록·Git)</a>
+<a class="nav-h2" href="#_8">무조건 &#x27;플랜&#x27; 먼저 — 메타 프롬프트로</a>
+<a class="nav-h2" href="#planmd-git">변경 이유를 남겨라 — plan.md와 Git</a>
+<a class="nav-h1" href="#6-2">6부 · 실습 2 — 픽셀 에이전트 클론 &amp;amp; 커스텀</a>
+<a class="nav-h2" href="#git">Git 설치 확인 → 클론</a>
+<a class="nav-h2" href="#nodejs">의존성 설치 &amp;amp; 실행 (Node.js 프로젝트 기준)</a>
+<a class="nav-h2" href="#_9">뜯어고치기 — 순서와 요령</a>
+<a class="nav-h1" href="#7">7부 · 멀티 에이전트의 그림자 — 왜 돈이 눈덩이처럼 부나</a>
+<a class="nav-h2" href="#thinking">Thinking 기본 + 핸드오프는 공짜가 아니다</a>
+<a class="nav-h2" href="#latentmas">연구 최전선 — LatentMAS 논문</a>
+<a class="nav-h1" href="#_10">마무리 &amp;amp; 과제</a>
+<a class="nav-h1" href="#_11">부록 — 용어 사전 · 출처</a>
+<a class="nav-h2" href="#_12">용어 빠른 사전</a>
+<a class="nav-h2" href="#_13">검색으로 확인·보강한 출처</a>
+</nav>
+    <div class="hero">
+      <div class="eyebrow">Lecture Note · 기술 보강판</div>
+      <h1>6회차 — AI 에이전트 이해: 트랜스포머 기초부터 멀티 에이전트 실습까지</h1>
+      <p>현장 강의를 기술적으로 보강한 학습 레퍼런스 — 강사의 의도는 살리고, 빠지거나 틀린 기술은 정확히 채웠습니다.</p>
+    </div>
+
+<p>이 강의 하나로 무엇을 할 수 있게 하려는가 →
+<strong>"AI 에이전트가 '무엇으로 이루어졌고(두뇌·도구·기억), 어떤 구조로 협업하며(싱글~멀티 6종), 왜 돈이 드는지'를 이해하고, OpenRouter로 값싼 모델을 붙여 '민원 초안 생성 멀티 에이전트'와 '픽셀 에이전트'를 직접 뜯어 만들어보는 것."</strong></p>
+<blockquote class="callout callout-key"><span class="callout-badge">핵심</span>
+<p>★ 이 회차는 신성진 강사의 <strong>AI 에이전트 실습 세션</strong>이다. 원제는 "에이전트 툴 마스터리 기반 개발 입문"이었지만, 강사가 "도구는 이미 많이 써봤을 테니 <strong>에이전트 자체를 이해</strong>하는 쪽"으로 방향을 틀었다고 서두에 밝혔다. 큰 흐름은 다섯 덩어리 — ① 프롤로그(카파시·코딩=현대인 소양) ② 딥러닝/트랜스포머 기초 ③ 에이전트의 구성(두뇌·도구·기억)과 조건 ④ 에이전트 6종 구조 + 핸드오프·오케스트레이션 ⑤ 실습(OpenRouter 민원 에이전트 → 픽셀 에이전트) + 멀티 에이전트의 비용 그림자.</p>
+<p><strong>보강 안내</strong> — 강사가 화면으로 빠르게 지나간 실습(OpenRouter 등록·<code>.env</code>·<code>git clone</code>·<code>npm</code>·<code>plan.md</code>)을 초보자가 따라 할 수 있게 <strong>실제 동작하는 명령어/코드</strong>로 채웠다. 값·주장(모델 가격, Attention 논문 연도·저자, LatentMAS 논문, 에이전트 정의)은 웹으로 검증해 <strong>틀린 건 <code>[정정]</code>, 확인한 건 <code>(검색 보강)</code></strong>으로 표시하고 출처는 부록에 모았다. 운영성 멘트(쉬는시간·자리·"몇 분 남았다"·장비 인식 오류 등)는 뺐고, 학습에 도움 되는 비유·일화(세 얼간이·붕어·아보카도·레고·"폭군" 슈퍼바이저·3살 아이 심부름)는 살렸다.</p>
+</blockquote>
+<hr/>
+<h1 class="modhead" data-full="들어가며 — 왜 '에이전트를 이해'하는가" id="_1">들어가며 — 왜 '에이전트를 이해'하는가</h1>
+<p>강사가 이 회차를 통째로 '에이전트 이해'에 쓴 이유는 하나다. <strong>도구를 아무리 많이 써봐도, 그 도구가 어떻게 도는지 모르면 결국 남이 만든 걸 클릭만 하게 된다.</strong> 그래서 밑바닥(모델이 말을 배우는 원리)부터 위(에이전트가 협업하는 구조)까지 한 번 훑는다.</p>
+<p>프롤로그의 메시지 두 개:</p>
+<blockquote class="callout callout-key"><span class="callout-badge">핵심</span>
+<p>★ <strong>코딩은 개발자만의 기술이 아니라 현대인의 기본 소양이다.</strong> 코딩을 '배우라'는 게 아니라, <strong>AI가 짜준 코드와 주석을 읽고 "얘가 뭘 만들어줬구나"를 파악</strong>할 줄 알라는 것. 안드레이 카파시(전 테슬라 오토파일럿 AI 총괄)조차 "프로그래밍에서 이렇게 뒤처진다는 느낌은 처음"이라고 했을 만큼 발전이 빠르다.</p>
+<p><strong>보강 — "따라 하기 벅찬 시대"의 실체.</strong> 강사 말대로 모델 출시 주기가 급격히 짧아졌다. 이 회차엔 GPT-5.4/5.5/5.5 Pro, Claude Opus 4.8·Sonnet·Fable 5 같은 이름이 쏟아지는데, <strong>뒤에서 이 중 몇 개는 값을 웹으로 검증해 바로잡았다</strong>(모델 가격 파트 참고). 강사가 "우리나라 통신사 지분 때문에 특정 모델이 막혔다"류로 언급한 건 강사 스스로 <strong>"카더라(찌라시)"라고 못 박은 소문</strong>이므로 노트에서는 사실로 다루지 않는다.</p>
+</blockquote>
+<hr/>
+<h1 class="modhead" data-full="1부 · 모델은 어떻게 '말'을 배웠나 (딥러닝 → 트랜스포머)" id="1">1부 · 모델은 어떻게 '말'을 배웠나 (딥러닝 → 트랜스포머)</h1>
+<p>에이전트의 '두뇌'는 결국 LLM이다. 그 LLM이 어떻게 만들어졌는지를 역사 순으로 훑는다. <strong>핵심 한 줄: 다음 단어를 확률로 예측하는 기계</strong>다.</p>
+<div class="codewrap"><div class="codebar"><span class="codelang">code</span><button class="copybtn" type="button">복사</button></div><pre class="mermaid">flowchart LR
+  P["퍼셉트론&lt;br/&gt;(가중치 학습)"] --&gt; I["이미지 학습&lt;br/&gt;(RGB 숫자화)"]
+  I --&gt; E["텍스트 임베딩&lt;br/&gt;(단어→벡터)"]
+  E --&gt; N["N-gram&lt;br/&gt;(패턴 예측)"]
+  N --&gt; R["RNN·LSTM&lt;br/&gt;(시간·기억 추가)"]
+  R --&gt; T["트랜스포머&lt;br/&gt;(Attention, 2017)"]
+</pre></div>
+<h2 id="_2">퍼셉트론 — 딥러닝의 최소 단위</h2>
+<p><strong>퍼셉트론(perceptron)</strong> = 입력에 가중치를 곱해 더한 뒤, 결과를 보고 <strong>가중치를 조금씩 고쳐나가는</strong> 최소 학습 단위. 스위치와 다이얼 비유(웰치랩스 영상)가 딱 이거다 — "이쪽으로 올리면 양수, 저쪽이면 음수"를 패턴으로 익히며 다이얼(가중치)을 돌린다. '러닝(학습)'이란 곧 <strong>가중치를 고쳐나가는 것</strong>이다.</p>
+<blockquote class="callout callout-add"><span class="callout-badge">보강</span>
+<p><strong>보강 — 용어 한 줄씩.</strong> <em>가중치(weight)</em> = 각 입력의 중요도. <em>편향(bias)</em> = 기준선 조정값. <em>손실함수(loss)</em> = 정답과 얼마나 틀렸나. <em>순전파</em> = 입력→출력 계산, <em>역전파</em> = 틀린 만큼 거꾸로 가중치를 고치는 과정. 딥러닝은 이 손실을 줄이는 방향으로 가중치를 반복해서 고친다. NAND/OR/XOR 게이트 학습이 이 원리의 고전 예제다.</p>
+</blockquote>
+<h2 id="_3">이미지에서 텍스트로 — 임베딩</h2>
+<p>이미지는 컴퓨터에서 <strong>RGB 숫자</strong>(0,0,0 ~ 255,255,255)로 표현된다. 비트맵을 잘게 쪼개 각 칸에 색 값을 넣은 것 — 옛날 컴퓨터에서 확대하면 깨지던 건 <strong>하드웨어 한계로 크게 쪼갤 수밖에 없어서</strong>(=해상도 낮음)다.</p>
+<p>그럼 텍스트는? <strong>임베딩(embedding) = 단어를 숫자 벡터로 바꾸는 것.</strong> 자주 같이 나오는 단어끼리 가깝게, 안 나오는 단어끼리 멀게 좌표를 찍는다. 2·3차원으론 부족해서 수백~수천 차원으로 늘려 저장한다.</p>
+<blockquote class="callout callout-warn"><span class="callout-badge">주의</span>
+<p>⚠ <strong>주의 — "1036차원"은 예시 숫자.</strong> 강사가 든 "1036차원"은 개념 설명용 숫자다. 실제 임베딩 차원은 모델마다 다르지만 <strong>768 / 1024 / 1536 / 4096</strong> 같은 값이 흔하다("1036"이라는 표준 차원은 없다). 요점은 <strong>"엄청나게 넓은 공간에 점 하나 찍기"</strong> 이고, 이게 가능해진 건 하드웨어(메모리·연산) 발전 덕이다.</p>
+</blockquote>
+<h2 id="n-gram-rnnlstm">N-gram → RNN/LSTM — 그리고 그 한계</h2>
+<ul>
+<li><strong>N-gram</strong>: 앞의 몇 단어 패턴을 보고 다음 단어를 예측. 문장이 길어지면 패턴을 못 잡고, "안 되잖아 영어는" ↔ "영어는 안 되잖아" 같은 어순 변형에 취약. 리뷰 감성분석(긍/부정)에서 문장이 길어지면 엉뚱하게 판정하던 게 이 한계다.</li>
+<li><strong>RNN / LSTM</strong>: 여기에 <strong>시간·기억</strong>을 더해 "앞의 것을 기억하며 다음을 예측"하게 만든 것. 하지만 <strong>앞 단어가 많아질수록 맨 처음 단어를 잊는다</strong>(사람이 어제 건 기억해도 1년 전은 흐릿한 것과 같다). 긴 문맥에서 결국 실패에 가까웠다.</li>
+</ul>
+<h2 id="attention-is-all-you-need-2017">Attention Is All You Need — 트랜스포머 (2017)</h2>
+<p>손 놓고 있던 판을 뒤집은 게 <strong>트랜스포머</strong>다.</p>
+<blockquote class="callout callout-key"><span class="callout-badge">핵심</span>
+<p>★ <strong>핵심 (검색 보강) — 논문 사실 확인.</strong> "Attention Is All You Need"는 <strong>2017년, 구글(Google Brain/Research)의 Vaswani 외 8인</strong>이 발표했다(2017년 6월 공개, NeurIPS 2017 게재). 강사가 말한 <strong>"2017년, 구글"은 정확하다.</strong> BERT·GPT 등 오늘날 거의 모든 LLM의 뿌리이며, 핵심 메커니즘이 <strong>어텐션(attention)</strong>이다.</p>
+</blockquote>
+<p><strong>셀프 어텐션(self-attention)</strong>의 QKV를 초보용으로 풀면:</p>
+<ul>
+<li><strong>Q(쿼리)</strong> = "나는 누구와 관련 있지?"라고 묻는 값</li>
+<li><strong>K(키)</strong> = 후보 단어들의 '이름표'</li>
+<li><strong>V(밸류)</strong> = 실제로 가져올 '내용'</li>
+</ul>
+<p>예: "고양이가 매트 위에 앉았다"에서 "앉았다"가 <strong>Q</strong>로 "누가 앉았나?"를 물으면, 후보(고양이·매트·위에) 중 <strong>고양이</strong>와의 연관도가 제일 높게 계산된다. 이걸 패턴으로 학습한다.</p>
+<div class="codewrap"><div class="codebar"><span class="codelang">code</span><button class="copybtn" type="button">복사</button></div><pre class="mermaid">flowchart LR
+  IN["입력 문장"] --&gt; ENC["인코딩&lt;br/&gt;(임베딩)"]
+  ENC --&gt; ATT["셀프 어텐션&lt;br/&gt;Q·K·V"]
+  ATT --&gt; MLP["MLP 여러 층&lt;br/&gt;(퍼셉트론 반복)"]
+  MLP --&gt; LOG["로짓(logit)"]
+  LOG --&gt; SM["소프트맥스&lt;br/&gt;(0~1 확률)"]
+  SM --&gt; OUT["다음 단어 선택"]
+</pre></div>
+<p>용어 정리:
+- <strong>인코딩/디코딩(LLM 관점)</strong>: 인코더 = 입력을 '읽고 이해'하는 부분, 디코더 = 그 의미로 <strong>다음 단어를 하나씩 생성</strong>하는 부분. (문자 인코딩/디코딩과는 다른 개념.)
+- <strong>MLP(멀티레이어 퍼셉트론)</strong>: 어텐션 결과를 앞서 배운 딥러닝(퍼셉트론)으로 수십 층 반복 가공. 파라미터가 70억·80억·800억 개로 커질수록 다양한 패턴을 학습.
+- <strong>로짓(logit) → 소프트맥스(softmax)</strong>: 후보 단어별 '점수(로짓)'를 <strong>0~1 사이 확률</strong>로 바꿔, 가장 높은 걸 다음 단어로 뽑는다.</p>
+<blockquote class="callout callout-add"><span class="callout-badge">보강</span>
+<p><strong>보강 — 왜 지금 되나.</strong> 2017년엔 6→5나노 공정이었는데 지금은 3나노, 2나노까지 왔다. 하드웨어가 기하급수적으로 좋아지며 훨씬 많은 패턴을 학습할 수 있게 된 게 오늘의 모델이다. 구글이 예전 PaLM에서 삐끗했다가 Gemini로 갈아엎은 것도 이 흐름 위에 있다.</p>
+</blockquote>
+<hr/>
+<h1 class="modhead" data-full="2부 · AI 에이전트란 무엇인가" id="2-ai">2부 · AI 에이전트란 무엇인가</h1>
+<p>멀티모달(텍스트+이미지)을 지나 지금 화두는 <strong>AI 에이전트</strong>다. 정의부터 못 박는다.</p>
+<blockquote class="callout callout-key"><span class="callout-badge">핵심</span>
+<p>★ <strong>핵심 — 에이전트 = 자율적으로 도구를 골라 쓰는 AI.</strong> '에이전트'는 원래 있던 말(스포츠 에이전시, 요원)이고, 거기 'AI'를 붙인 것. 규칙대로만 도는 게 아니라 <strong>사람처럼 필요할 때 필요한 도구를 알아서 가져다 쓰는</strong> 게 핵심. 젠슨 황(NVIDIA)이 "사람 한 명당 수십~수백 개 에이전트가 붙어 일할 것"이라 한 그 개념이다.</p>
+</blockquote>
+<h2 id="3">구성 3요소 — 두뇌·도구·기억</h2>
+<div class="codewrap"><div class="codebar"><span class="codelang">code</span><button class="copybtn" type="button">복사</button></div><pre class="mermaid">flowchart TD
+  A["AI 에이전트"]
+  A --&gt; B["두뇌&lt;br/&gt;(LLM · 판단 주체)"]
+  A --&gt; C["도구&lt;br/&gt;(검색 · 계산 · API)"]
+  A --&gt; D["기억&lt;br/&gt;(컨텍스트 · 메모리)"]
+</pre></div>
+<ul>
+<li><strong>두뇌</strong> = LLM. 어떤 도구를 쓸지 판단하는 주체.</li>
+<li><strong>도구</strong> = 계산기·검색·외부 API 등. 두뇌가 못하는 일(예: 정확한 수 계산)을 맡긴다.</li>
+<li><strong>기억</strong> = 컨텍스트/메모리. 지금까지의 대화·결과를 담아둔다.</li>
+</ul>
+<blockquote class="callout callout-add"><span class="callout-badge">보강</span>
+<p><strong>보강 (검색 보강) — 강사의 정의는 Anthropic과 일치한다.</strong> Anthropic의 <em>"Building Effective Agents"</em>는 에이전트의 기본 블록을 <strong>"증강된 LLM(augmented LLM) = LLM + 검색(retrieval) + 도구(tools) + 기억(memory)"</strong>로 정의한다. 강사가 "Anthropic은 '검색'을 따로 두는데 나는 그걸 '도구'에 포함시켰다"고 한 대목은 <strong>정확한 대조</strong>다 — 검색도 결국 도구의 하나로 볼 수 있어서다. 강사 말대로 이 분야는 "아직 정의가 굳지 않은 학문"이라, 회사·문서마다 구분이 조금씩 다르고 시간이 지나면 또 바뀐다.</p>
+</blockquote>
+<h2 id="_4">행동·설계·조건 — 그리고 "왜 기억인가 = 돈"</h2>
+<p>에이전트는 결국 <strong>구조</strong>다. 사용자의 질문을 받아 → 어떤 도구를 쓸지 계획하고 → 넘기고 → 답을 생성하는 <strong>4단계 흐름</strong>으로 돈다. 여기서 강사가 강조한 세 조건:</p>
+<ol>
+<li><strong>행동</strong> — 실제로 도구를 써서 결과를 만들어내야 에이전트다.</li>
+<li><strong>설계</strong> — 어떤 도구를 몇 개 붙일지 정한다(계산기 하나만 있으면 그것만 함).</li>
+<li><strong>조건(기억)</strong> — 중간 기억을 반드시 설계해야 한다.</li>
+</ol>
+<blockquote class="callout callout-key"><span class="callout-badge">핵심</span>
+<p>★ <strong>핵심 — 기억을 설계하는 진짜 이유는 '돈'이다.</strong> 기억이 없으면 에이전트는 매번 초기화되는 <strong>"붕어 같은 존재"</strong>가 된다. 바로 전 단계 결과를 가져오면 될 걸 똑같은 작업을 반복하고, <strong>그때마다 두뇌(LLM) 호출 = 토큰 = 돈</strong>이 나간다. 일관성·일회성 문제도 있지만, <strong>가장 근본은 비용 효율</strong>이다. "에이전트를 만들 때 1순위로 생각할 것 = 기억 설계"라고 강사가 못 박았다.</p>
+<p><strong>보강 — RPA와의 차이.</strong> 에이전트 이전의 각광주였던 <strong>RPA(Robotic Process Automation)</strong>는 <strong>룰 베이스(규칙 기반)</strong>라, 예상 밖(튀는) 값이 들어오면 무너진다. '스마트팜/스마트팩토리'가 대개 RPA 기반이었는데 지금은 소리가 쏙 들어갔다. <strong>알고리즘도 규칙 기반이라 그 자체는 'AI 에이전트'가 아니다</strong> — 두뇌(자율 판단)가 있어야 AI 에이전트다. 두뇌가 빠지면 그냥 RPA다.</p>
+</blockquote>
+<hr/>
+<h1 class="modhead" data-full="3부 · 에이전트 6종 구조 — 싱글부터 멀티까지" id="3-6">3부 · 에이전트 6종 구조 — 싱글부터 멀티까지</h1>
+<p>강사가 정리한 대표 6종. <strong>위계가 실제로 있는 건 계층형뿐</strong>이니, 나머지를 억지로 "N계층"으로 세우지 말 것. (LangChain의 LangGraph 문서가 정리한 멀티 에이전트 구조 — network / supervisor / supervisor(tool-calling) / hierarchical / custom — 와 거의 일치한다. <strong>검색 보강</strong>.)</p>
+<div class="tablescroll"><table>
+<thead>
+<tr>
+<th>구조</th>
+<th>한 줄 정의</th>
+<th>강점</th>
+<th>약점</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>싱글(바닐라)</strong></td>
+<td>한 에이전트가 다 함</td>
+<td>목적 명확하면 간단(100줄이면 끝)</td>
+<td>도구 많아지면 "뭘 써야 하지" 판단 부담 폭증</td>
+</tr>
+<tr>
+<td><strong>네트워크</strong></td>
+<td>모두가 서로 직접 대화(그물망)</td>
+<td>병렬·유연·애자일</td>
+<td>리더 없어 헤맴, 이상치 하나에 전체 오염, 코드 수백 줄</td>
+</tr>
+<tr>
+<td><strong>슈퍼바이저(+서브)</strong></td>
+<td>팀장 1 + 서브 에이전트 N</td>
+<td>조율자 존재, 병렬·유지보수 용이</td>
+<td>팀장에 요청 몰리면 <strong>병목</strong>, 팀장 API 비용 급증</td>
+</tr>
+<tr>
+<td><strong>슈퍼바이저 as 툴</strong></td>
+<td>서브를 '도구'로만 취급</td>
+<td>통제 강함</td>
+<td><strong>"폭군"</strong> — 서브 의견 무시, 사실상 싱글과 유사</td>
+</tr>
+<tr>
+<td><strong>계층형(hierarchical)</strong></td>
+<td>팀장의 팀장의 팀장…</td>
+<td>전문성 있게 세밀 운영</td>
+<td>비용·시간 큼</td>
+</tr>
+<tr>
+<td><strong>커스텀</strong></td>
+<td>내가 흐름을 직접 설계</td>
+<td>완전 자유</td>
+<td>유지보수 지옥</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="_5">싱글(바닐라) 에이전트</h2>
+<p>에이전트 하나가 계획·설계·테스트·검증·유지보수를 다 한다(지금 우리가 Claude 데스크탑 등으로 쓰는 대부분이 이것). 목적이 명확하면 툴 선택도 명확하다. 문제는 <strong>커질수록</strong> 생긴다 — "나도 써", "우리 팀도 연결해줘"로 도구가 늘면, <strong>같은 질문에도 "어떤 툴을 써야 하지?"라는 판단 부담</strong>이 폭증한다. "팀원 한 명이 회사 일 다 하면 죽어난다"와 같은 이치.</p>
+<blockquote class="callout callout-warn"><span class="callout-badge">주의</span>
+<p><strong>보강 — "그럼 좋은 모델 쓰면 되잖아?" 의 함정 = 가격.</strong> 여기서 강사가 모델 가격을 예로 들었다. 값 검증 결과는 아래 [정정] 참고.</p>
+<p>⚠ <strong>[정정] — Claude Fable 5 가격.</strong> 강사는 Claude Fable 5를 <strong>"입력 100만 토큰당 $20, 출력 $1,150"</strong>로 소개했는데, 이는 <strong>사실과 다르다.</strong> Anthropic 공식 기준(2026년) <strong>Claude Fable 5 = 입력 $10 / 출력 $50 (100만 토큰당)</strong> 이다(Fable 5는 Anthropic의 가장 강력한 상용 모델). 출력 $1,150은 실제값($50)의 20배가 넘는 큰 오차다. (검색 보강: platform.claude.com 모델/가격)</p>
+<p>★ <strong>핵심 (검색 보강) — GPT-5.5 가격은 강사가 맞다.</strong> 강사가 말한 <strong>"GPT-5.5 = 입력 $5 / 출력 $30 (100만 토큰당)"</strong>은 정확하다(2026년 6월 기준, 1M 컨텍스트). 참고로 GPT-5.5 Pro는 $30/$180로 더 비싸다. 요점은 그대로 유효하다 — <strong>고성능 모델은 개인이 감당하기 어렵다.</strong> 그래서 실습에선 값싼 모델을 쓴다(4부).</p>
+</blockquote>
+<h2 id="_6">멀티 에이전트 — "바통"과 핸드오프</h2>
+<p>멀티 에이전트 = 팀장·팀원 A·B·C처럼 <strong>컨텍스트가 분리된</strong> 여러 에이전트가 협업. 나눈 이유는 크게 넷:</p>
+<ol>
+<li><strong>컨텍스트 분리</strong> — 대기업처럼 역할이 명확 → 전문성(좁고 깊게)</li>
+<li><strong>병렬 처리</strong> — 한 번에 뿌리고 한 번에 받음</li>
+<li><strong>관심사 분리</strong> — 스파게티처럼 얽히지 않음</li>
+<li><strong>유지보수</strong> — 문제 있는 에이전트만 쏙 빼서 교체</li>
+</ol>
+<p>에이전트끼리 결과를 넘기는 걸 강사는 <strong>"바통"</strong>이라 불렀다. 전문 용어로 <strong>핸드오프(handoff)</strong> — "무엇을 / 언제 / 누구 책임으로" 넘길지의 경계 설정이다.</p>
+<blockquote class="callout callout-key"><span class="callout-badge">핵심</span>
+<p>★ <strong>핵심 — 핸드오프 vs 델리게이트.</strong> 팀장에게 보고서를 올리고 <strong>손 털면 핸드오프</strong>, 팀장이 "다시 해" 해서 <strong>되돌아와 다시 하면 델리게이트(위임)</strong>. 그래서 일반 멀티 에이전트는 "100% 핸드오프"가 아니다(돌아올 수 있으니까). <strong>순차(탑다운) 에이전트</strong>만 무조건 아래로만 흐르므로 100% 핸드오프 — 대신 <strong>앞 단계가 잘못 넘기면 뒤가 다 무너진다</strong>는 게 순차의 최대 약점.</p>
+</blockquote>
+<h2 id="_7">네트워크 에이전트 — "팀장님 보고 싶어요"</h2>
+<p>모든 에이전트가 서로 직접 대화(카카오톡 친구망 같은 그물망). 병렬로 빠르고 유연하지만, <strong>리더(결정권자)가 없어</strong> 서로 헤맨다. 이상치 하나가 등장하면 옆으로 옆으로 번져 전체가 오염된다. 같은 일을 싱글은 100줄, 네트워크는 수백 줄이 필요할 만큼 복잡해진다.</p>
+<div class="codewrap"><div class="codebar"><span class="codelang">code</span><button class="copybtn" type="button">복사</button></div><pre class="mermaid">flowchart LR
+  A1["에이전트 A"] &lt;--&gt; A2["에이전트 B"]
+  A2 &lt;--&gt; A3["에이전트 C"]
+  A3 &lt;--&gt; A1
+  A1 &lt;--&gt; A4["에이전트 D"]
+  A2 &lt;--&gt; A4
+</pre></div>
+<blockquote class="callout callout-add"><span class="callout-badge">보강</span>
+<p><strong>보강 — 언제 쓰나.</strong> 창의성을 억누르고 <strong>정확한 답</strong>이 필요한 업무(예: <strong>법령 검토</strong> — 계속 검수 필요)에 어울린다. 대신 최적화하려는 개발자는 예외 처리 지옥에 빠지므로, <strong>에이전트 수를 최대한 줄여</strong> 구성하는 게 요령.</p>
+</blockquote>
+<h2 id="as">슈퍼바이저 &amp; 슈퍼바이저 as 툴 — 오케스트레이션</h2>
+<p>네트워크의 "리더 없음"을 푸는 게 <strong>오케스트레이션(orchestration)</strong> — 전체를 조율하는 팀장(슈퍼바이저)을 하나 둔다. 뉴스에 나오는 "서브 에이전트/멀티 에이전트"가 대개 이 그림이다. (서브 에이전트는 멀티 에이전트의 <strong>하위 개념</strong> — 반대 개념이 아니다.)</p>
+<div class="codewrap"><div class="codebar"><span class="codelang">code</span><button class="copybtn" type="button">복사</button></div><pre class="mermaid">flowchart TD
+  S["슈퍼바이저&lt;br/&gt;(오케스트레이터 · 팀장)"]
+  S --&gt; A["서브 A"]
+  S --&gt; B["서브 B"]
+  S --&gt; C["서브 C"]
+  S --&gt; D["서브 D"]
+</pre></div>
+<ul>
+<li><strong>슈퍼바이저</strong>: 팀장이 요청을 나눠주고 서브와 어느 정도 대화·재요청도 함. 단, <strong>요청이 몰리면 팀장이 병목</strong>에 빠지고, 팀장에 붙인 모델의 <strong>API 비용이 기하급수적으로</strong> 든다.</li>
+<li><strong>슈퍼바이저 as 툴</strong>: 서브를 아예 <strong>'도구'로만</strong> 본다. <strong>"너네는 내 노예야"</strong> 식 — 서브가 "이것도 검토하면 좋을 것 같은데요" 하면 <strong>"감히 도구가 의견을 내? 시키는 것만 해"</strong>. 통제는 강하지만 사실상 싱글 에이전트와 비슷해진다("폭군" 비유).</li>
+</ul>
+<h2 id="hierarchical">계층형(hierarchical) &amp; 커스텀</h2>
+<ul>
+<li><strong>계층형</strong>: 슈퍼바이저 위에 또 슈퍼바이저. 주간보고가 팀장→과장→그 위로 올라가는 <strong>회사 조직도</strong> 그대로. 전문성 있게 돌지만 <strong>비용·시간</strong>이 크다.</li>
+<li><strong>커스텀</strong>: "둘이 어딨어, 내 맘대로 짤래." 내가 흐름을 직접 설계("너는 얘한테만 보내", "너는 쟤랑 답변하지 마"). 자유롭지만 <strong>유지보수가 지옥</strong>이다.</li>
+</ul>
+<div class="codewrap"><div class="codebar"><span class="codelang">code</span><button class="copybtn" type="button">복사</button></div><pre class="mermaid">flowchart TD
+  T["최상위 슈퍼바이저"]
+  T --&gt; S1["팀장 A"]
+  T --&gt; S2["팀장 B"]
+  S1 --&gt; W1["팀원"]
+  S1 --&gt; W2["팀원"]
+  S2 --&gt; W3["팀원"]
+  S2 --&gt; W4["팀원"]
+</pre></div>
+<blockquote class="callout callout-warn"><span class="callout-badge">주의</span>
+<p><strong>보강 — 레고 비유(커스텀의 함정).</strong> 탱크 레고는 <strong>설명서</strong>가 있어 쉽다. 그런데 그 부품으로 <strong>공룡</strong>을 만들려면 전부 내 머리로 설계해야 하고, 놀다 보면 부품이 없어져 유지보수가 힘들어진다. 커스텀 구조가 딱 이렇다.</p>
+</blockquote>
+<hr/>
+<h1 class="modhead" data-full="4부 · 실습 1 — 민원 초안 생성 멀티 에이전트 (OpenRouter)" id="4-1-openrouter">4부 · 실습 1 — 민원 초안 생성 멀티 에이전트 (OpenRouter)</h1>
+<p>이제 위 구조를 손으로 만든다. 주제는 <strong>"민원 초안 생성 멀티 에이전트"</strong>. 입력은 배포된 <strong>민원 예제 40개</strong>(번호·제목·본문, 실제 인사혁신처 민원 기반)이고, 이걸 읽어 <strong>답변 초안</strong>을 만드는 게 목표.</p>
+<div class="codewrap"><div class="codebar"><span class="codelang">code</span><button class="copybtn" type="button">복사</button></div><pre class="mermaid">flowchart LR
+  M["민원 접수&lt;br/&gt;(번호·제목·본문)"] --&gt; C["분류 에이전트"]
+  C --&gt; S["검색 에이전트&lt;br/&gt;(법령·과거답변, 예시)"]
+  S --&gt; W["작성 에이전트"]
+  W --&gt; R["검수 에이전트"]
+  R --&gt; O["답변 초안"]
+</pre></div>
+<p>각 에이전트는 <strong>페르소나 + 쓸 수 있는 도구</strong>를 함께 줘야 한다.</p>
+<blockquote class="callout callout-key"><span class="callout-badge">핵심</span>
+<p>★ <strong>핵심 — 페르소나만 주면 '챗봇', 도구까지 줘야 '에이전트'.</strong> "너는 분류 담당이야"만 주면 전용 챗봇이고, <strong>도구를 붙여 결과를 만들어내야 에이전트</strong>다. 구조(순차/슈퍼바이저/계층형/커스텀)는 자유롭게 골라도 된다. 실습에선 검색·법령 API는 <strong>"예시 도구"로 대체</strong>해도 된다(진짜 API를 붙이면 너무 커진다).</p>
+</blockquote>
+<h2 id="openrouter">OpenRouter — 키 하나로 수백 개 모델</h2>
+<p>강사가 값싼 모델을 쓰라고 한 배경이 <strong>OpenRouter</strong>다.</p>
+<blockquote class="callout callout-add"><span class="callout-badge">보강</span>
+<p><strong>보강 (검색 보강) — OpenRouter란.</strong> <strong>키 하나로 60여 개 공급자의 400~500+ 개 모델</strong>(OpenAI·Anthropic·Google·Meta·Mistral 등)을 <strong>OpenAI 호환 방식</strong>으로 부르는 통합 게이트웨이다. 공급자별로 인증·결제·SDK를 따로 만들 필요가 없고, 장애 시 다른 모델로 <strong>폴백</strong>도 된다. 실습에선 <strong>한도 2달러/인</strong>이라 <strong>작은(싼) 모델만</strong> 쓰라고 제한했다(어떤 모델을 썼는지 대시보드에 다 뜬다). 중국 모델은 보안 우려로 제외. (출처: openrouter.ai)</p>
+<p>★ <strong>핵심 — 작은 모델을 쓰게 한 진짜 의도.</strong> "기관에 가면 어차피 좋은 모델 못 쓴다. <strong>싼 모델로도 되는지</strong>를 미리 체감하고, '이 정도면 우리 기관에 도입할 만하다'를 테스트해보라"는 것.</p>
+</blockquote>
+<h2 id="api-env">실제로 붙이는 법 — API 키와 <code>.env</code></h2>
+<p>강사가 "AI에 잘 얘기하면 다 연결된다"며 건너뛴 부분을 <strong>동작하는 형태</strong>로 채운다. 핵심: <strong>API 키를 코드에 박지 말고 <code>.env</code>(환경변수)에 둔다.</strong></p>
+<p><code>.env</code> 파일 (프로젝트 루트에 두고, <strong>깃에 올리지 않는다</strong>):</p>
+<div class="codewrap"><div class="codebar"><span class="codelang">Shell</span><button class="copybtn" type="button">복사</button></div><pre><code class="language-bash">OPENROUTER_API_KEY=sk-or-v1-여기에_본인_키
+</code></pre></div>
+<p><code>.gitignore</code>에 반드시 추가:</p>
+<div class="codewrap"><div class="codebar"><span class="codelang">gitignore</span><button class="copybtn" type="button">복사</button></div><pre><code class="language-gitignore">.env
+node_modules/
+</code></pre></div>
+<p>파이썬에서 부르기(OpenAI 호환 방식):</p>
+<div class="codewrap"><div class="codebar"><span class="codelang">python</span><button class="copybtn" type="button">복사</button></div><pre><code class="language-python"># pip install openai python-dotenv
+import os
+from dotenv import load_dotenv
+from openai import OpenAI
+
+load_dotenv()  # .env 읽어 환경변수로
+
+client = OpenAI(
+    base_url="https://openrouter.ai/api/v1",     # ← OpenRouter 엔드포인트
+    api_key=os.environ["OPENROUTER_API_KEY"],
+)
+
+resp = client.chat.completions.create(
+    model="openai/gpt-5.5",                       # ← 싼 모델로 바꿔 쓰기(예시)
+    messages=[
+        {"role": "system", "content": "너는 민원 분류 담당이다. 카테고리만 한 단어로 답하라."},
+        {"role": "user",   "content": "민원 본문: ..."},
+    ],
+)
+print(resp.choices[0].message.content)
+</code></pre></div>
+<blockquote class="callout callout-warn"><span class="callout-badge">주의</span>
+<p>⚠ <strong>주의 — 키는 절대 코드/HTML에 노출하지 마라.</strong> 강사도 "그건 내 개인 키니 등록하지 말라"고 했다. <code>.env</code>에 넣고 <code>.gitignore</code>로 깃 추적에서 빼는 게 표준. HTML 프론트에서 직접 키를 부르면 브라우저에 그대로 노출되니, <strong>키를 쓰는 호출은 서버(백엔드)나 로컬 스크립트에서</strong> 해야 한다.</p>
+</blockquote>
+<p>각 에이전트마다 <strong>다른 모델</strong>을 붙이고 싶으면, 위 <code>create(model=...)</code>의 모델 문자열만 에이전트별로 바꾸면 된다(예: 분류=싼 모델, 검수=조금 더 나은 모델). 웹/파이썬 서버/Node.js 등 <strong>형식은 자유</strong> — "제대로 돌기만 하면 된다."</p>
+<blockquote class="callout callout-add"><span class="callout-badge">보강</span>
+<p><strong>보강 — 잘 모르겠으면 역공학.</strong> 배포된 <code>.ipynb</code>(주피터) 예제나, 좋아요 많은 오픈 멀티 에이전트(4개 에이전트 제공)를 <strong>하나만 뜯어보며(리버스 엔지니어링)</strong> 어떻게 구성했는지 따라가는 것도 방법. "모방은 창조의 어머니."</p>
+</blockquote>
+<hr/>
+<h1 class="modhead" data-full="5부 · 적정 에이전트 수 &amp; 개발 습관 (플랜·기록·Git)" id="5-git">5부 · 적정 에이전트 수 &amp; 개발 습관 (플랜·기록·Git)</h1>
+<p>만들고 나면 "에이전트가 너무 많나 적나"가 헷갈린다. 강사의 지침.</p>
+<blockquote class="callout callout-key"><span class="callout-badge">핵심</span>
+<p>★ <strong>핵심 — "적정 에이전트 수"를 정하라.</strong> "백지장도 맞들면 낫다"지만, 너무 잘게 쪼개면 <strong>"사공이 많으면 배가 산으로 간다"</strong>. 에이전트가 7~8개로 계속 왔다 갔다 하는 건 <strong>각자 일이 명확하지 않아서</strong>다. "누가 어디까지 하고 넘길지"를 명확히 하고, <strong>의심스러우면 줄여라(줄이는 게 최고).</strong></p>
+<p><strong>보강 — 의사결정나무 depth 비유.</strong> 머신러닝에서 정확도를 가장 크게 좌우하는 게 <strong>의사결정나무의 깊이(depth)</strong> 이듯, 에이전트 수도 너무 적어도·많아도 안 된다. 최적값은 결국 <strong>경험(측정)</strong>으로 찾는다 — 에이전트별 소비 금액을 기록하고, 예컨대 민원 100건을 돌려 구조별 비용·정확도를 비교한다. (게임의 클로즈베타→오픈베타처럼, 최적은 처음부터 못 찾는다.)</p>
+</blockquote>
+<h2 id="_8">무조건 '플랜' 먼저 — 메타 프롬프트로</h2>
+<blockquote class="callout callout-key"><span class="callout-badge">핵심</span>
+<p>★ <strong>핵심 — "뭐 만들어줘" 금지, 플랜부터.</strong> 바로 만들라고 하지 말고 <strong>① 목표 ② 범위 ③ 단계 ④ 완료 기준</strong>을 먼저 세우게 하라. 오늘 처음 본 멀티 에이전트를 어떻게 다 설명하나? → <strong>메타 프롬프트</strong>로: <em>"내가 지금 이런 상황이니, 그 프롬프트(플랜)를 더 명확하게 네가 만들어줘."</em> 만든 플랜은 <strong>다른 AI에게 교차 검토</strong>시킨다: <em>"이 플랜에서 가장 크리티컬한 부분이 뭐야? 냉정하게 검토해."</em></p>
+<p><strong>보강 — "코딩은 3살 아이 심부름 + 아보카도 사건."</strong> 3살짜리에게 "우유 사와" 하면 별의별 변수가 다 생긴다. 컴퓨터도 하나하나 다 지정해줘야 한다. 유명한 밈: <em>"우유 사는데 아보카도 있으면 6개 사와"</em> → 남자가 아보카도가 있길래 <strong>우유를 6개</strong> 사왔다. 사람 말은 생각보다 안 명확하다. (정가자 포항공대 편 "개발자 빡치게 하는 법"이 같은 맥락 — 숟가락 드는 것조차 각도·거리를 다 지정해야 한다.) 그래서 <strong>플랜을 최대한 구체적으로</strong> 먼저 세우는 것이다.</p>
+</blockquote>
+<h2 id="planmd-git">변경 이유를 남겨라 — <code>plan.md</code>와 Git</h2>
+<blockquote class="callout callout-key"><span class="callout-badge">핵심</span>
+<p>★ <strong>핵심 — 계획은 변해도 되지만, '바뀐 이유'가 사라지면 안 된다.</strong> 강사가 신입 때 가장 많이 혼난 것도 <em>"고쳤으면 제발 어딘가에 남겨라"</em>. 그래서 <strong><code>plan.md</code> 하나를 만들어</strong> "언제/왜/어디를 바꿨는지"를 기록하거나, 코드에 <strong>주석</strong>으로 설명을 남긴다.</p>
+</blockquote>
+<p><code>plan.md</code> 최소 뼈대(그대로 복붙해 시작 가능):</p>
+<div class="codewrap"><div class="codebar"><span class="codelang">markdown</span><button class="copybtn" type="button">복사</button></div><pre><code class="language-markdown"># 민원 초안 멀티 에이전트 — plan
+
+## 목표
+- 민원(번호·제목·본문) → 답변 초안 자동 생성
+
+## 범위
+- 분류 → (예시)검색 → 작성 → 검수 (순차 or 슈퍼바이저)
+- 모델: OpenRouter의 값싼 모델 (한도 2달러/인)
+
+## 단계
+1. .env 에 OPENROUTER_API_KEY 등록
+2. 분류 에이전트 (카테고리 1단어)
+3. 작성/검수 에이전트
+4. 결과 확인
+
+## 완료 기준
+- 민원 1건 넣으면 답변 초안 1건이 나온다
+
+## 변경 이력
+- 2026-07-01: 검색 에이전트는 API 대신 '예시 도구'로 대체 (이유: 범위 폭증 방지)
+</code></pre></div>
+<p>Git으로 기록·관리(가장 표준적인 방법):</p>
+<div class="codewrap"><div class="codebar"><span class="codelang">Shell</span><button class="copybtn" type="button">복사</button></div><pre><code class="language-bash">git init
+git add plan.md
+git commit -m "plan: 민원 멀티 에이전트 초기 계획"
+# 이후 변경마다
+git add -A
+git commit -m "fix: 검색 에이전트를 예시 도구로 대체 (범위 축소)"
+</code></pre></div>
+<blockquote class="callout callout-add"><span class="callout-badge">보강</span>
+<p><strong>보강 — 커밋(commit) = "언제 뭘 했다"의 영구 기록.</strong> 픽셀 에이전트 레포를 보면 원저자가 <strong>커밋을 145개</strong> 남겨놨는데, 그게 다 "언제 무엇을 고쳤나"의 이력이다. 개발자가 GitHub를 쓰는 가장 큰 이유가 이 관리 편의성이다.</p>
+</blockquote>
+<hr/>
+<h1 class="modhead" data-full="6부 · 실습 2 — 픽셀 에이전트 클론 &amp; 커스텀" id="6-2">6부 · 실습 2 — 픽셀 에이전트 클론 &amp; 커스텀</h1>
+<p>두 번째 실습은 남이 만든 걸 <strong>뜯어고치는</strong> 것. <strong>픽셀 에이전트</strong>를 <code>git clone</code>으로 내 PC에 복제해, 회의 주제("다음 달 AI 교육 계획")로 멀티 에이전트를 돌려본다.</p>
+<blockquote class="callout callout-add"><span class="callout-badge">보강</span>
+<p><strong>보강 (검색 보강) — 픽셀 에이전트란.</strong> 멀티 에이전트의 활동을 <strong>픽셀아트 '사무실'로 시각화</strong>하는 오픈소스류다(각 에이전트가 캐릭터로 등장해 코딩할 땐 타이핑, 검색할 땐 읽기, 대기 시 물음표 등으로 표현). GitHub에 <code>pixel-agents</code>·<code>pixtuoid</code>·<code>agentroom</code>·<code>claude-office</code> 등 여러 구현이 있고, 대개 <strong>Claude Code(CLI) 훅</strong>에 연동돼 돈다. 강사가 쓴 정확한 레포는 <strong>강의 단톡방에 배포된 링크로 확인</strong>하는 게 안전하다(동명 레포가 여럿). 목적은 하나 — <strong>에이전트가 어떻게 왔다 갔다 하는지 눈으로 보는 것.</strong></p>
+</blockquote>
+<h2 id="git">Git 설치 확인 → 클론</h2>
+<p>먼저 Git이 있는지 확인(강사가 알려준 그 명령):</p>
+<div class="codewrap"><div class="codebar"><span class="codelang">Shell</span><button class="copybtn" type="button">복사</button></div><pre><code class="language-bash">git -v
+# 예: git version 2.52.0  ← 이렇게 숫자가 나오면 설치됨
+</code></pre></div>
+<p>없으면 git-scm.com(구글에 <strong>"Git"</strong>, GitHub 아님)에서 설치. <strong>이미 있으면 재설치 금지</strong>(충돌 남).</p>
+<p>바탕화면에 클론(≈80~90MB):</p>
+<div class="codewrap"><div class="codebar"><span class="codelang">Shell</span><button class="copybtn" type="button">복사</button></div><pre><code class="language-bash">cd ~/Desktop            # 윈도우: cd %USERPROFILE%\Desktop
+git clone &lt;배포된_픽셀에이전트_레포_URL&gt;
+cd &lt;클론된_폴더명&gt;
+</code></pre></div>
+<h2 id="nodejs">의존성 설치 &amp; 실행 (Node.js 프로젝트 기준)</h2>
+<p>대부분 이 계열은 Node.js 기반이라, 폴더 안에 <code>package.json</code>이 있으면:</p>
+<div class="codewrap"><div class="codebar"><span class="codelang">Shell</span><button class="copybtn" type="button">복사</button></div><pre><code class="language-bash">npm install             # package.json의 의존성 설치 → node_modules/ 생성
+npm run dev             # 또는 npm start (레포의 scripts에 맞춰)
+</code></pre></div>
+<blockquote class="callout callout-warn"><span class="callout-badge">주의</span>
+<p>⚠ <strong>주의 — 어떤 스크립트인지는 <code>package.json</code>에서 확인.</strong> 실행 명령(<code>dev</code>/<code>start</code>/<code>build</code>)은 레포마다 다르다. 폴더에서 <code>package.json</code>의 <code>"scripts"</code> 항목을 보거나, README를 따르거나, <strong>막히면 오류 메시지를 그대로 캡처해 AI에 물어보면</strong> 된다(표준 디버깅 루프). 로컬 서버가 뜨면 브라우저로 <code>localhost</code> 주소에 접속해 사무실 화면을 본다.</p>
+</blockquote>
+<h2 id="_9">뜯어고치기 — 순서와 요령</h2>
+<p>강사가 정한 순서:
+1. <strong>먼저 파악</strong> — "이 프로젝트가 뭐 하는 건지" AI에게 질문(가설 검증)으로 구조를 이해. (계획은 그 다음.)
+2. VS Code / Claude Code / Codex 등으로 <strong>해당 폴더 열기</strong> → 대화로 커스텀.
+3. <strong>"Claude Code 없이도 동작하게"</strong> 고치기 — 원본은 Claude CLI 전용이라, "터미널 창을 새로 띄우고, 뒷단 모델은 붙이지 말고, 내가 텍스트를 주면 거기 나타나게" 식으로 요청.
+4. <strong>전부 한국어로</strong> 번역 요청(안 그러면 영어로만 답한다).</p>
+<blockquote class="callout callout-add"><span class="callout-badge">보강</span>
+<p><strong>보강 — "다 뜯어보라"의 의미.</strong> 겁먹지 말고(한숨 금지) 구조를 파악한 뒤 플랜을 세우고, <strong>변경을 기록하며</strong> 조금씩 고친다. 에이전트별로 다른 OpenRouter 모델을 붙이고 싶으면 "추가할 때마다 이 모델로 체결" 식으로 지시하면 된다.</p>
+</blockquote>
+<hr/>
+<h1 class="modhead" data-full="7부 · 멀티 에이전트의 그림자 — 왜 돈이 눈덩이처럼 부나" id="7">7부 · 멀티 에이전트의 그림자 — 왜 돈이 눈덩이처럼 부나</h1>
+<p>멀티 에이전트의 최대 단점은 <strong>비용</strong>이고, 그게 왜 선형이 아니라 눈덩이처럼 커지는지가 이 파트의 핵심.</p>
+<h2 id="thinking">Thinking 기본 + 핸드오프는 공짜가 아니다</h2>
+<blockquote class="callout callout-warn"><span class="callout-badge">주의</span>
+<p>⚠ <strong>주의 — 요즘 모델은 'Thinking(추론)'이 기본.</strong> 질문을 던지면 무조건 추론부터 하는데, <strong>그 추론 과정도 전부 토큰으로 과금</strong>된다. 그래서 입력 대비 출력 가격 차이가 크게는 몇 배까지 벌어진다. (강사가 "effort: high/medium/low 같은 레벨이 왜 생겼냐"고 한 게 이 <strong>추론량 조절</strong> 장치다.)</p>
+<p><strong>보강 (검색 보강) — 현재 Claude 가격 감각(2026).</strong> 참고로 Anthropic 공식 기준 <strong>Opus 4.8 = 입력 $5 / 출력 $25</strong>, <strong>Sonnet(5·4.6) = $3 / $15</strong> 정도다(100만 토큰당). 강사가 "Opus 4.8은 비싸니 Sonnet이나 4.6으로 바꿔 써도 충분"이라 한 방향은 맞다. (강사가 예로 든 "4.5 시절 $2.5/$10 → Thinking 붙으며 급등"이라는 <strong>추세 자체는 타당</strong>하나, 세부 숫자는 모델·시점마다 다르니 값이 필요하면 공식 페이지로 재확인.)</p>
+</blockquote>
+<div class="codewrap"><div class="codebar"><span class="codelang">code</span><button class="copybtn" type="button">복사</button></div><pre class="mermaid">flowchart LR
+  A["에이전트 A&lt;br/&gt;추론+출력"] --&gt;|전체 전달| B["에이전트 B&lt;br/&gt;입력+추론+출력"]
+  B --&gt;|누적 전달| C["에이전트 C&lt;br/&gt;입력+추론+출력"]
+  C --&gt;|또 누적| D["…"]
+</pre></div>
+<blockquote class="callout callout-key"><span class="callout-badge">핵심</span>
+<p>★ <strong>핵심 — 토큰 스노우볼.</strong> A가 "여기까지 했어"라며 작업 파일을 넘기면, B는 그걸 <strong>전부 입력 토큰</strong>으로 받고 → 다시 추론(추론 토큰) → 출력(출력 토큰). 이게 다음, 그다음으로 <strong>누적</strong>되며 비용이 <strong>일차함수가 아니라 로그·지수처럼</strong> 불어난다. 왔다 갔다가 잦을수록 더. <strong>에이전트를 너무 많이 만들면 과금 폭탄</strong>이 되는 이유.</p>
+</blockquote>
+<h2 id="latentmas">연구 최전선 — LatentMAS 논문</h2>
+<p>강사가 "요즘 학자들은 이렇게 접근한다"며 소개한 신박한 논문.</p>
+<blockquote class="callout callout-add"><span class="callout-badge">보강</span>
+<p><strong>보강 (검색 보강) — "Latent Collaboration in Multi-Agent Systems (LatentMAS)".</strong> arXiv:2511.20639, <strong>2025년 11월 25일</strong> 공개(Gen-Verse/LatentMAS, 학습 불필요 프레임워크). 아이디어: 모델 사이에 굳이 <strong>사람 말(디코딩)로 바꾸지 말고</strong>, 마지막 층 <strong>잠재(latent) 표현을 그대로 넘기자</strong>(공유 잠재 메모리로 무손실 전달). 논문 주장은 9개 벤치마크에서 <strong>토큰 70.8~83.7% 절감, 속도 4~4.3배, 정확도 최대 +14.6%</strong>. 강사가 말한 "비용 70~80% 절감"은 이 수치와 정확히 맞다.</p>
+<p>⚠ <strong>[정정]·확인 필요 — 날짜와 '정확도' 뉘앙스.</strong> ① 강사가 "2025년 6월쯤"이라 했는데 실제는 <strong>2025년 11월</strong>이다(arXiv 2511 = 25년 11월). ② 강사는 "자기들은 정확도 올렸다지만 실제론 대화가 길어질수록 떨어진다"고 했는데, <strong>원 논문은 정확도 상승(+14.6%)을 보고</strong>한다. 강사가 지적한 <strong>"모델마다 토크나이저·임베딩이 달라 여러 홉을 거치면 본래 값을 잃는다"</strong>는 문제는, <strong>서로 다른 모델(이종, heterogeneous)</strong> 사이 잠재 전달에서 실제로 제기되는 연구 쟁점이다(후속 연구들이 이 열화를 다룬다). 즉 <strong>강사의 직관(이종 모델 간 열화)은 방향이 타당하되, "이 논문이 정확도를 떨어뜨렸다"는 단정은 원문과 어긋난다.</strong> 이 대목은 오케스트레이터가 한 번 더 확인하면 좋다.</p>
+<p>★ <strong>핵심 — 왜 토크나이저가 문제인가.</strong> 같은 단어라도 GPT계열과 Gemini계열은 <strong>임베딩 값이 다르다</strong>(각자 만든 임베딩·<code>tokenizer.json</code>). 잠재값을 그대로 넘기면 보정을 넣어도 100%는 못 맞추고, <strong>대화가 길어질수록 원래 뜻을 잃는다.</strong> 해결책으로 학생들이 낸 "어휘(vocabulary) 통일"이 이론상 최선이지만 — <strong>구글·OpenAI가 서로 표준을 통일해줄 리 없다</strong>(마케팅상). 정답 없는 열린 문제.</p>
+</blockquote>
+<hr/>
+<h1 class="modhead" data-full="마무리 &amp; 과제" id="_10">마무리 &amp; 과제</h1>
+<blockquote class="callout callout-key"><span class="callout-badge">핵심</span>
+<p>★ 오늘의 한 줄: <strong>에이전트는 결국 '구조'다.</strong> 두뇌·도구·기억으로 이루어지고, 행동·설계·조건(특히 <strong>기억=비용</strong>)으로 돌며, 싱글~멀티 6종의 구조 중 목적에 맞는 걸 고른다. 도구는 쉽고, <strong>어디에·어떻게 나눌지가 어렵다.</strong></p>
+</blockquote>
+<p><strong>과제</strong> — 실습에서 만든 걸 <strong>GitHub에 업로드하고 그 주소를 제출</strong>한다.
+- 에이전트 하나만 만들었으면 싱글 에이전트를 구현한 것(강사가 "멀티로 만들라"고 강제하진 않았다 — 픽셀 에이전트를 <strong>고쳐서 구현</strong>해보는 게 핵심).
+- 완벽할 필요는 없고 <strong>어느 정도 성공한 상태</strong>로 올리면 된다.</p>
+<p><strong>다음 주(7회차) 예고</strong> — <strong>RAG</strong>를 직접 구축한다. RAG가 무엇인지, <strong>청크(chunk) 사이즈</strong>를 어떻게 나눌지, 그리고 RAG의 역사(<strong>Naive → Advanced → Modular → GraphRAG</strong>)까지 훑고 하나씩 구현해본다.</p>
+<hr/>
+<h1 class="modhead" data-full="부록 — 용어 사전 · 출처" id="_11">부록 — 용어 사전 · 출처</h1>
+<h2 id="_12">용어 빠른 사전</h2>
+<div class="tablescroll"><table>
+<thead>
+<tr>
+<th>용어</th>
+<th>한 줄 정의</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>퍼셉트론</td>
+<td>가중치를 고쳐가며 학습하는 딥러닝 최소 단위</td>
+</tr>
+<tr>
+<td>임베딩</td>
+<td>단어·이미지를 숫자 벡터(좌표)로 바꾸는 것</td>
+</tr>
+<tr>
+<td>N-gram</td>
+<td>앞 몇 단어 패턴으로 다음 단어를 예측(구식)</td>
+</tr>
+<tr>
+<td>RNN / LSTM</td>
+<td>시간·기억을 더한 예측 모델(긴 문맥엔 약함)</td>
+</tr>
+<tr>
+<td>트랜스포머 / 어텐션</td>
+<td>"Attention Is All You Need"(2017, 구글)의 구조 / 연관도 계산 메커니즘</td>
+</tr>
+<tr>
+<td>QKV(셀프 어텐션)</td>
+<td>쿼리·키·밸류로 "누구와 관련 있나"를 계산</td>
+</tr>
+<tr>
+<td>MLP</td>
+<td>멀티레이어 퍼셉트론, 어텐션 결과를 여러 층 가공</td>
+</tr>
+<tr>
+<td>로짓 / 소프트맥스</td>
+<td>후보 단어 점수 / 이를 0~1 확률로 변환</td>
+</tr>
+<tr>
+<td>인코딩 / 디코딩(LLM)</td>
+<td>입력을 이해하는 부분 / 다음 단어를 생성하는 부분</td>
+</tr>
+<tr>
+<td>에이전트 3요소</td>
+<td>두뇌(LLM) · 도구 · 기억(컨텍스트)</td>
+</tr>
+<tr>
+<td>RPA</td>
+<td>룰(규칙) 기반 자동화 — 튀는 값에 약함, 두뇌 없음</td>
+</tr>
+<tr>
+<td>핸드오프 / 델리게이트</td>
+<td>손 털고 넘김 / 되돌아와 다시 함(위임)</td>
+</tr>
+<tr>
+<td>오케스트레이션</td>
+<td>전체를 조율하는 팀장(슈퍼바이저)을 두는 것</td>
+</tr>
+<tr>
+<td>슈퍼바이저 / as 툴</td>
+<td>팀장+서브 / 서브를 '도구'로만 취급("폭군")</td>
+</tr>
+<tr>
+<td>계층형 / 커스텀</td>
+<td>슈퍼바이저의 슈퍼바이저 / 내가 흐름 직접 설계</td>
+</tr>
+<tr>
+<td>순차 에이전트</td>
+<td>위→아래 일방향(100% 핸드오프, 앞이 틀리면 다 무너짐)</td>
+</tr>
+<tr>
+<td>OpenRouter</td>
+<td>키 하나로 수백 개 모델을 부르는 통합 게이트웨이</td>
+</tr>
+<tr>
+<td><code>.env</code></td>
+<td>API 키 등 비밀값을 담는 환경변수 파일(깃 제외)</td>
+</tr>
+<tr>
+<td><code>git clone</code> / commit</td>
+<td>레포를 내 PC로 복제 / "언제 뭘 했다" 기록</td>
+</tr>
+<tr>
+<td>plan.md</td>
+<td>목표·범위·단계·완료기준·변경이력을 남기는 계획 문서</td>
+</tr>
+<tr>
+<td>Thinking(추론) 토큰</td>
+<td>답 전 추론 과정도 과금되는 토큰</td>
+</tr>
+<tr>
+<td>토큰 스노우볼</td>
+<td>핸드오프마다 입력·추론·출력이 누적돼 비용 급증</td>
+</tr>
+<tr>
+<td>LatentMAS</td>
+<td>사람 말 대신 잠재(latent) 표현을 넘기는 멀티 에이전트 연구</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="_13">검색으로 확인·보강한 출처</h2>
+<ul>
+<li><strong>Attention Is All You Need</strong> (2017, Vaswani 외 8인, 구글; 2017-06 공개 / NeurIPS 2017): <a href="https://en.wikipedia.org/wiki/Attention_Is_All_You_Need">Wikipedia</a></li>
+<li><strong>GPT-5.5 가격</strong> ($5/$30 per 1M, 2026): <a href="https://openrouter.ai/openai/gpt-5.5">OpenRouter — GPT-5.5</a>, <a href="https://www.morphllm.com/openai-api-pricing">Morph — OpenAI API Pricing 2026</a></li>
+<li><strong>Claude Fable 5 가격</strong> ($10/$50 per 1M; 강사값 $20/$1150 정정): Anthropic 공식 모델/가격(platform.claude.com) — claude-api 스킬 캐시 기준(2026)</li>
+<li><strong>OpenRouter</strong> (키 하나·400~500+ 모델·60+ 공급자·OpenAI 호환): <a href="https://openrouter.ai/">openrouter.ai</a>, <a href="https://openrouter.ai/docs/guides/overview/models">OpenRouter Docs</a></li>
+<li><strong>Anthropic "Building Effective Agents"</strong> (augmented LLM = retrieval+tools+memory): <a href="https://www.anthropic.com/research/building-effective-agents">anthropic.com/research/building-effective-agents</a></li>
+<li><strong>LangGraph 멀티 에이전트 구조</strong> (network/supervisor/hierarchical/custom): <a href="https://reference.langchain.com/python/langgraph-supervisor">LangGraph Supervisor</a>, <a href="https://github.com/langchain-ai/langgraph-supervisor-py">langgraph-supervisor-py</a></li>
+<li><strong>LatentMAS 논문</strong> (arXiv:2511.20639, 2025-11-25 공개; 토큰 70.8~83.7%↓, 속도 4~4.3배, 정확도 최대 +14.6%): <a href="https://arxiv.org/abs/2511.20639">arXiv</a>, <a href="https://github.com/Gen-Verse/LatentMAS">GitHub Gen-Verse/LatentMAS</a></li>
+<li><strong>픽셀 에이전트류</strong> (멀티 에이전트를 픽셀아트 사무실로 시각화, Claude Code 연동): <a href="https://github.com/pixel-agents-hq/pixel-agents">pixel-agents-hq/pixel-agents</a>, <a href="https://github.com/paulrobello/claude-office">paulrobello/claude-office</a> — <em>정확한 레포는 강의 배포 링크로 확인 필요</em></li>
+</ul>
+  </main>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/powershell.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/vbscript.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.9.1/mermaid.min.js"></script>
+<script>
+// 주제 헤더 raw 텍스트를 data-full로 옮겨 ::after 표시
+document.querySelectorAll('h1.modhead').forEach(function(h){
+  h.setAttribute('data-full', h.textContent);
+});
+
+// highlight.js
+if(window.hljs){
+  document.querySelectorAll('.codewrap pre code').forEach(function(b){
+    try{hljs.highlightElement(b);}catch(e){}
+  });
+}
+
+// mermaid
+if(window.mermaid){
+  mermaid.initialize({
+    startOnLoad:true, theme:'base',
+    htmlLabels:false,
+    themeVariables:{
+      fontFamily:'-apple-system,Pretendard,"Malgun Gothic",sans-serif',
+      fontSize:'13px',
+      primaryColor:'#e6f4f1', primaryBorderColor:'#127c71', primaryTextColor:'#0c5249',
+      lineColor:'#9aa0a8', secondaryColor:'#f4f1ea', tertiaryColor:'#fbf1e4',
+      clusterBkg:'#f6f6f0', clusterBorder:'#cfd3cb'
+    },
+    flowchart:{curve:'basis', useMaxWidth:true, htmlLabels:false},
+    sequence:{useMaxWidth:true}
+  });
+}
+
+// 복사 버튼
+document.querySelectorAll('.copybtn').forEach(function(btn){
+  btn.addEventListener('click', function(){
+    var code = btn.closest('.codewrap').querySelector('pre code');
+    var txt = code ? code.innerText : '';
+    navigator.clipboard.writeText(txt).then(function(){
+      btn.textContent='복사됨'; btn.classList.add('ok');
+      setTimeout(function(){btn.textContent='복사'; btn.classList.remove('ok');},1400);
+    });
+  });
+});
+
+// 스크롤 스파이
+var links = Array.from(document.querySelectorAll('#nav a'));
+var map = {};
+links.forEach(function(a){ map[a.getAttribute('href').slice(1)] = a; });
+var heads = Array.from(document.querySelectorAll('.main h1[id], .main h2[id]'));
+var spy = new IntersectionObserver(function(entries){
+  entries.forEach(function(en){
+    if(en.isIntersecting){
+      links.forEach(function(l){l.classList.remove('active');});
+      var act = map[en.target.id];
+      if(act){act.classList.add('active');
+        act.scrollIntoView({block:'nearest'});}
+    }
+  });
+}, {rootMargin:'-10% 0px -75% 0px', threshold:0});
+heads.forEach(function(h){spy.observe(h);});
+
+// 모바일 사이드바
+var side=document.getElementById('side'), scrim=document.getElementById('scrim'),
+    mb=document.getElementById('menubtn');
+function toggle(open){side.classList.toggle('open',open);scrim.classList.toggle('show',open);}
+if(mb){mb.addEventListener('click',function(){toggle(!side.classList.contains('open'));});}
+if(scrim){scrim.addEventListener('click',function(){toggle(false);});}
+links.forEach(function(a){a.addEventListener('click',function(){if(window.innerWidth<=880)toggle(false);});});
+</script>
+<script>/* kg-preview: #<heading> \uc704\uce58\ub85c \uc774\ub3d9 */
+(function(){function norm(t){return (t||'').replace(/\s+/g,'').toLowerCase()}
+function go(){var h=decodeURIComponent(location.hash.slice(1));if(!h)return;var k=norm(h).slice(0,24);if(!k)return;
+var best=null,bl=1e9,els=document.body.querySelectorAll('h1,h2,h3,h4,h5,p,div,span,li,td,text,tspan,section,article');
+for(var i=0;i<els.length;i++){var e=els[i],t=norm(e.textContent);if(t.length<bl&&t.indexOf(k)>-1){best=e;bl=t.length}}
+if(!best)return;var box=best.closest('section,[class*=slide],[class*=page],article')||best;
+box.scrollIntoView({block:'start'});box.style.outline='3px solid #c0504d';box.style.outlineOffset='4px';
+setTimeout(function(){box.style.outline=''},2600)}
+window.addEventListener('load',function(){setTimeout(go,400)});window.addEventListener('hashchange',go)})();</script></body>
+</html>

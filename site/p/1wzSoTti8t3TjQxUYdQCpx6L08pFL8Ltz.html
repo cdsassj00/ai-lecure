@@ -1,0 +1,3085 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head><meta name="robots" content="noindex, nofollow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>삼성전자 [AI+] 칼퇴러의 AI 데이터 분석 실무 (60장 완결형 마스터 덱 · 기존 정본)</title>
+<style>
+
+  @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700;800&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background-color: #0b0f19;
+    color: #102139;
+    font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 20px;
+    overflow-x: hidden;
+  }
+
+  #deck-container {
+    position: relative;
+    width: 1280px;
+    height: 720px;
+    background: #f8f9fa;
+    box-shadow: 0 25px 60px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.1);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 1280px;
+    height: 720px;
+    display: none;
+  }
+  .slide.active {
+    display: block;
+  }
+
+  svg {
+    width: 1280px;
+    height: 720px;
+    display: block;
+  }
+
+  #controls {
+    margin-top: 18px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background: rgba(16, 24, 39, 0.85);
+    padding: 10px 24px;
+    border-radius: 30px;
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255,255,255,0.12);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+  }
+
+  .btn {
+    background: #1e293b;
+    color: #f8fafc;
+    border: 1px solid rgba(255,255,255,0.15);
+    padding: 8px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 13.5px;
+    font-weight: 700;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .btn:hover {
+    background: #002b49;
+    border-color: #38bdf8;
+    color: #38bdf8;
+    transform: translateY(-1px);
+  }
+
+  #page-info {
+    color: #f8fafc;
+    font-size: 14.5px;
+    font-weight: 800;
+    min-width: 90px;
+    text-align: center;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  #jump-input {
+    width: 54px;
+    padding: 6px 8px;
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.2);
+    background: #0f172a;
+    color: #fff;
+    font-size: 13.5px;
+    text-align: center;
+    font-weight: 700;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  /* Typography helper classes */
+  text { font-family: 'Pretendard', sans-serif; }
+  text.top { font-size: 11.5px; font-weight: 800; fill: #94a3b8; letter-spacing: 1px; }
+  text.eyebrow { font-size: 13px; font-weight: 850; fill: #002b49; letter-spacing: 0.5px; }
+  text.title { font-size: 26px; font-weight: 900; fill: #102139; letter-spacing: -0.5px; }
+  text.subtitle { font-size: 13px; font-weight: 600; fill: #475569; }
+  text.foot { font-size: 11.5px; font-weight: 700; fill: #64748b; }
+  text.h { font-size: 15.5px; font-weight: 850; fill: #102139; }
+  text.body { font-size: 13px; font-weight: 600; fill: #1e293b; }
+  text.small { font-size: 11.5px; font-weight: 600; fill: #64748b; }
+  text.mono { font-family: 'JetBrains Mono', monospace; }
+  text.num { font-family: 'JetBrains Mono', monospace; font-weight: 800; }
+
+</style>
+</head>
+<body>
+
+<div id="deck-container">
+  <div id="slide-wrapper"></div>
+</div>
+
+<div id="controls">
+  <button class="btn" id="prev-btn" onclick="prevSlide()">◀ 이전 (Left)</button>
+  <span id="page-info">01 / 60</span>
+  <button class="btn" id="next-btn" onclick="nextSlide()">다음 (Right) ▶</button>
+  <div style="display:flex;align-items:center;gap:6px;margin-left:12px;">
+    <input type="number" id="jump-input" min="1" max="60" value="1" onkeydown="if(event.key==='Enter') jumpSlide()">
+    <button class="btn" onclick="jumpSlide()">이동</button>
+  </div>
+  <button class="btn" style="margin-left:10px;background:#002b49;color:#38bdf8;" onclick="toggleFullScreen()">전체화면 (F)</button>
+</div>
+
+<script>
+
+const C = {
+  paper: '#f8f9fa',
+  white: '#ffffff',
+  navy: '#101827',
+  navyLight: '#1e293b',
+  blue: '#0284c7',
+  blueDark: '#002b49',
+  blueSoft: '#e0f2fe',
+  coral: '#ea580c',
+  coralSoft: '#ffedd5',
+  wine: '#b94a48',
+  wineSoft: '#fee2e2',
+  green: '#15803d',
+  greenSoft: '#dcfce7',
+  gold: '#b45309',
+  goldSoft: '#fef3c7',
+  red: '#dc2626',
+  redSoft: '#fee2e2',
+  ink: '#102139',
+  body: '#1e293b',
+  muted: '#64748b',
+  line: '#cbd5e1',
+  grayBg: '#f1f5f9'
+};
+
+const SVG_NS = 'http://www.w3.org/2000/svg';
+
+function el(name, attrs={}, children=[]) {
+  const elem = document.createElementNS(SVG_NS, name);
+  for (const [k, v] of Object.entries(attrs)) {
+    elem.setAttribute(k, v);
+  }
+  if (typeof children === 'string') {
+    elem.textContent = children;
+  } else if (Array.isArray(children)) {
+    children.forEach(c => elem.appendChild(c));
+  }
+  return elem;
+}
+
+function R(s, x, y, w, h, fill=C.white, stroke='none', rx=0, sw=1){
+  const r = el('rect', { x, y, width: w, height: h, fill, stroke, rx, 'stroke-width': sw });
+  s.appendChild(r);
+  return r;
+}
+
+function CIRC(s, cx, cy, r, fill=C.blue, stroke='none'){
+  const c = el('circle', { cx, cy, r, fill, stroke });
+  s.appendChild(c);
+  return c;
+}
+
+function L(s, x1, y1, x2, y2, stroke=C.line, sw=1, dash=null){
+  const attrs = { x1, y1, x2, y2, stroke, 'stroke-width': sw };
+  if(dash) attrs['stroke-dasharray'] = dash;
+  const l = el('line', attrs);
+  s.appendChild(l);
+  return l;
+}
+
+function T(s, x, y, text, cls='', sz=null, extra={}){
+  const attrs = { x, y, class: cls };
+  if(sz) attrs['font-size'] = sz;
+  for(const [k,v] of Object.entries(extra)) attrs[k] = v;
+  const t = el('text', attrs, text);
+  s.appendChild(t);
+  return t;
+}
+
+function M(s, x, y, lines, cls='', lh=20, extra={}){
+  const t = el('text', { x, y, class: cls });
+  for(const [k,v] of Object.entries(extra)) t.setAttribute(k, v);
+  lines.forEach((line, i)=>{
+    const ts = el('tspan', { x, dy: i===0?0:lh }, line);
+    t.appendChild(ts);
+  });
+  s.appendChild(t);
+  return t;
+}
+
+// 엄격한 텍스트 줄바꿈 및 글자 수 제한 알고리즘 (박스 밖 1px 탈출 방지)
+function wrapText(text, maxW, sz=12.5, maxLines=3){
+  if(!text) return [];
+  const words = text.split(' ');
+  const lines = [];
+  let curLine = '';
+  let curW = 0;
+  
+  const charW = (c) => {
+    const code = c.charCodeAt(0);
+    if((code >= 0xac00 && code <= 0xd7a3) || (code >= 0x1100 && code <= 0x11ff) || (code >= 0x3130 && code <= 0x318f)) return sz * 1.05;
+    if(c === ' ') return sz * 0.35;
+    if(/[A-Z]/.test(c)) return sz * 0.65;
+    if(/[0-9]/.test(c)) return sz * 0.58;
+    return sz * 0.52;
+  };
+  
+  const getStrW = (str) => {
+    let w = 0;
+    for(let i=0; i<str.length; i++) w += charW(str[i]);
+    return w;
+  };
+  
+  for(const word of words){
+    const wordW = getStrW(word);
+    const spaceW = curLine ? charW(' ') : 0;
+    if(curW + spaceW + wordW <= maxW){
+      curLine = curLine ? curLine + ' ' + word : word;
+      curW += spaceW + wordW;
+    } else {
+      if(curLine) lines.push(curLine);
+      if(wordW > maxW){
+        let chunk = '', chunkW = 0;
+        for(let i=0; i<word.length; i++){
+          const cw = charW(word[i]);
+          if(chunkW + cw > maxW){
+            lines.push(chunk);
+            chunk = word[i];
+            chunkW = cw;
+          } else {
+            chunk += word[i];
+            chunkW += cw;
+          }
+        }
+        curLine = chunk;
+        curW = chunkW;
+      } else {
+        curLine = word;
+        curW = wordW;
+      }
+    }
+  }
+  if(curLine) lines.push(curLine);
+  
+  if(lines.length > maxLines){
+    lines.splice(maxLines);
+    if(lines[maxLines-1].length > 3){
+      lines[maxLines-1] = lines[maxLines-1].slice(0, -2) + '...';
+    }
+  }
+  return lines;
+}
+
+function W(s, x, y, text, maxW, cls='', sz=12.5, lh=18, extra={}, maxLines=3){
+  let lines = [];
+  if(Array.isArray(text)){
+    text.forEach(t => {
+      const wrapped = wrapText(t, maxW, sz, maxLines);
+      lines.push(...wrapped);
+    });
+  } else {
+    lines = wrapText(text, maxW, sz, maxLines);
+  }
+  return M(s, x, y, lines, cls, lh, {...extra, 'font-size': sz});
+}
+
+
+// ==================== STRICT ZERO-OVERFLOW SVG ENGINE ====================
+
+function base(s, section, title, sub, page, totalPage=60){
+  R(s,0,0,1280,720,C.paper);
+  R(s,0,0,1280,44,C.navy);
+  T(s,56,27,'SAMSUNG ELECTRONICS · GENERATIVE AI DATA ANALYSIS & VIBE CODING','top');
+  T(s,1224,27,'SAMSUNG DS / DX','top',null,{'text-anchor':'end'});
+  
+  T(s,56,76,section,'eyebrow');
+  T(s,56,108,title,'title fit-title');
+  if(sub) T(s,56,134,sub,'subtitle');
+  
+  L(s,56,680,1224,680,C.line,1);
+  T(s,56,700,'삼성전자 [AI+] 칼퇴러의 AI 데이터 분석 실무 · 신성진 대표','foot');
+  T(s,1224,700,String(page).padStart(2,'0') + ' / ' + String(totalPage).padStart(2,'0'),'foot',null,{'text-anchor':'end'});
+}
+
+function anchor(s, msg){
+  R(s,56,624,1168,42,C.navy,'none',8);
+  T(s,640,650,msg,'',14.5,{fill:'#fff','font-weight':850,'text-anchor':'middle'});
+}
+
+// 글자 수 기반 정밀 줄바꿈 알고리즘 (한글/영문 가중치 완벽 반영)
+function wrapText(text, maxW, sz=13, maxLines=4){
+  if(!text) return [];
+  const words = text.split(' ');
+  const lines = [];
+  let curLine = '';
+  let curW = 0;
+  
+  const charW = (c) => {
+    const code = c.charCodeAt(0);
+    if((code >= 0xac00 && code <= 0xd7a3) || (code >= 0x1100 && code <= 0x11ff) || (code >= 0x3130 && code <= 0x318f)) return sz * 1.05;
+    if(c === ' ') return sz * 0.35;
+    if(/[A-Z]/.test(c)) return sz * 0.65;
+    if(/[0-9]/.test(c)) return sz * 0.58;
+    return sz * 0.52;
+  };
+  
+  const getStrW = (str) => {
+    let w = 0;
+    for(let i=0; i<str.length; i++) w += charW(str[i]);
+    return w;
+  };
+  
+  for(const word of words){
+    const wordW = getStrW(word);
+    const spaceW = curLine ? charW(' ') : 0;
+    if(curW + spaceW + wordW <= maxW){
+      curLine = curLine ? curLine + ' ' + word : word;
+      curW += spaceW + wordW;
+    } else {
+      if(curLine) lines.push(curLine);
+      if(wordW > maxW){
+        let chunk = '', chunkW = 0;
+        for(let i=0; i<word.length; i++){
+          const cw = charW(word[i]);
+          if(chunkW + cw > maxW){
+            lines.push(chunk);
+            chunk = word[i];
+            chunkW = cw;
+          } else {
+            chunk += word[i];
+            chunkW += cw;
+          }
+        }
+        curLine = chunk;
+        curW = chunkW;
+      } else {
+        curLine = word;
+        curW = wordW;
+      }
+    }
+  }
+  if(curLine) lines.push(curLine);
+  
+  // 만약 최대 줄 수를 초과하면 마지막 줄 끝에 말줄임표 처리하여 박스 탈출 원천 차단
+  if(lines.length > maxLines){
+    lines.splice(maxLines);
+    if(lines[maxLines-1].length > 3){
+      lines[maxLines-1] = lines[maxLines-1].slice(0, -2) + '...';
+    }
+  }
+  return lines;
+}
+
+function W(s, x, y, text, maxW, cls='', sz=13, lh=20, extra={{}}, maxLines=4){{
+  let lines = [];
+  if(Array.isArray(text)){{
+    text.forEach(t => {{
+      const wrapped = wrapText(t, maxW, sz, maxLines);
+      lines.push(...wrapped);
+    }});
+  }} else {{
+    lines = wrapText(text, maxW, sz, maxLines);
+  }}
+  return M(s, x, y, lines, cls, lh, {{...extra, 'font-size': sz}});
+}}
+
+
+// ==================== 60 SLIDES (ORIGINAL MASTER) ====================
+
+// Slide 01: [과정 표지] program:cover
+function render1(s){
+  s.setAttribute('data-layout', 'program:cover');
+  s.setAttribute('data-role', 'cover');
+  
+  R(s,0,0,1280,720,C.navy);
+  CIRC(s,1160,100,280,C.navyLight);
+  CIRC(s,1240,640,320,C.navyLight);
+  
+  R(s,80,64,380,34,C.blue,'none',6);
+  T(s,270,86,'2026 SAMSUNG ELECTRONICS AX SPECIAL COURSE','',12,{fill:'#fff','font-weight':900,'text-anchor':'middle','letter-spacing':'1.5px'});
+  
+  T(s,80,172,'[AI+] 칼퇴러의','',44,{fill:'#93c5fd','font-weight':900,'letter-spacing':'-1px'});
+  T(s,80,238,'AI 데이터 분석 & 바이브코딩 실무','',52,{fill:'#ffffff','font-weight':900,'letter-spacing':'-2px'});
+  
+  W(s,80,296,[
+    '자연어 지시로 엑셀 수식·피벗 완전 자동화부터 파이썬 EDA, 머신러닝 예측,',
+    'API 실시간 파이프라인 수집, 그리고 1분 만에 완성하는 웹 대시보드 배포까지'
+  ],1120,'',16,26,{fill:'#cbd3dc','font-weight':600});
+
+  const tracks = [
+    ['01','AI 융합 트렌드','Google Labs & NotebookLM\n자율 Agent 3종 비교 분석'],
+    ['02','분석 기획 & 통계','본질 4원칙 & 조작적 정의\n1,500만 CRM 메타데이터 설계'],
+    ['03','엑셀·시트 자동화','수식·피벗·VBA 매크로 자동화\nGoogle Apps Script 무인화'],
+    ['04','파이썬 환경 구축','Google Colab 클라우드 실습\n사내망 로컬 Anaconda 가상환경'],
+    ['05','5대 현업 실전','CRM 군집 · 식스시그마 4.23σ\nHR 이직예측 · DS 3D 수율'],
+    ['06','API 실시간 수집','Easy Scraper 웹 크롤링\nSERP 검색량 & RSS 피드 파이프라인'],
+    ['07','바이브코딩 배포','5대 도구 비교 & Netlify 배포\nClaude Code CLI 터미널 에이전트']
+  ];
+  tracks.forEach((t, i)=>{
+    const xx = 80 + i * 160;
+    R(s, xx, 382, 150, 210, 'rgba(255,255,255,0.07)', 'rgba(255,255,255,0.18)', 8, 1);
+    R(s, xx+14, 396, 32, 26, C.blue, 'none', 4);
+    T(s, xx+30, 414, t[0], '', 12, {fill:'#fff','font-weight':900,'text-anchor':'middle'});
+    T(s, xx+14, 452, t[1], '', 13.5, {fill:'#fff','font-weight':900});
+    L(s, xx+14, 468, xx+136, 468, 'rgba(255,255,255,0.2)', 1);
+    W(s, xx+14, 492, t[2].split('\n'), 122, '', 11.5, 17, {fill:'#94a3b8','font-weight':600});
+  });
+
+  R(s,80,616,1120,54,'rgba(255,255,255,0.08)','rgba(255,255,255,0.2)',8);
+  T(s,110,648,'강사 : 신성진 대표 (한국데이터사이언티스트협회 대표이사 · 경영지도사 · 前 유한건강생활 경영지원실장)','',13.5,{fill:'#fff','font-weight':700});
+  T(s,1170,648,'SAMSUNG DS / DX 인재개발원','',13.5,{fill:C.blueSoft,'font-weight':800,'text-anchor':'end'});
+}
+
+// Slide 02: [강사 프로필] profile:split-biography
+function render2(s){
+  base(s,'00 · INSTRUCTOR PROFILE','데이터와 AI로 현업의 비즈니스 문제를 해결하는 전문가','경영 전략 실무 총괄부터 공공·대기업 AI 데이터 분석 컨설팅 및 공인 자격 과정 주임교수',2,'profile:split-biography');
+
+  R(s,56,158,400,450,C.white,C.line,12,1.2);
+  R(s,56,158,400,105,C.navy,'none',12);
+  R(s,56,243,400,20,C.navy);
+  CIRC(s,116,210,38,C.blue);
+  T(s,116,216,'신성진','',16,{fill:'#fff','font-weight':900,'text-anchor':'middle'});
+  T(s,172,200,'신 성 진 대표','',20,{fill:'#fff','font-weight':900});
+  T(s,172,228,'AI 빅데이터 경영학 석사 · 경영지도사','',13,{fill:C.blueSoft,'font-weight':600});
+
+  const titles = [
+    '現 한국데이터사이언티스트협회 대표이사',
+    '現 행정안전부 AI데이터분석 전문인재과정 주임교수',
+    '現 과학기술정보통신부 데이터기반행정 자문위원',
+    '現 인사혁신처 / 국민권익위원회 데이터 자문위원',
+    '現 이패스코리아 AICE 자격증 전문교수',
+    '前 유한건강생활 경영지원실장 (데이터 전략 총괄)',
+    '前 매일유업, 삼양식품, 대웅제약 실무 총괄',
+    '사회조사분석사(1급) · 경영지도사(중기부)'
+  ];
+  titles.forEach((t, i)=>{
+    const yy = 290 + i * 36;
+    CIRC(s, 78, yy-4, 4, C.blue);
+    T(s, 94, yy, t, '', 13.5, {fill:C.ink,'font-weight':750});
+  });
+
+  R(s,476,158,748,215,C.white,C.line,12,1.2);
+  R(s,476,158,748,38,C.navyLight,'none',12);
+  R(s,476,176,748,20,C.navyLight);
+  T(s,498,184,'주요 공공기관 및 대기업 데이터분석 / AI 교육 & 프로젝트 실적','',14.5,{fill:'#fff','font-weight':900});
+
+  const refs = [
+    ['공공기관', '행정안전부, 과기정통부, 인사혁신처, 식약처, 국민권익위, 방사청, 서울시 등 다수 기관 데이터 역량 강화'],
+    ['대기업 DT', '삼성전자, LG그룹, SK텔레콤, 카카오엔터테인먼트, 한진그룹, CJ올리브네트웍스, 한국전력공사 등'],
+    ['대학/학술', '명지대 융합SW학부 겸임교수, 연세대 · KAIST · 한국외대 K-DATA 빅데이터 청년인재 분석과정 특강']
+  ];
+  refs.forEach((rf, i)=>{
+    const yy = 222 + i * 48;
+    R(s, 498, yy, 90, 28, C.blueSoft, 'none', 5);
+    T(s, 543, yy+19, rf[0], '', 12.5, {fill:C.blueDark,'font-weight':900,'text-anchor':'middle'});
+    W(s, 604, yy+19, rf[1], 600, '', 13, 18, {fill:C.ink,'font-weight':700});
+  });
+
+  R(s,476,393,748,215,C.white,C.green,12,1.2);
+  R(s,476,393,748,38,C.green,'none',12);
+  R(s,476,411,748,20,C.green);
+  T(s,498,419,'본 과정의 핵심 지향점 : “실무 중심의 즉시 실행성 & 칼퇴 자동화”','',14.5,{fill:'#fff','font-weight':900});
+
+  const points = [
+    ['문법 암기 탈피', '파이썬/SQL 코드를 외우지 않고 2026 최신 자연어 프롬프트 엔지니어링으로 100% 무오류 코드 도출'],
+    ['현업 데이터 직결', '실제 사내 엑셀 시트(SDC 디스플레이, DX 가전, HR 인사, DS 반도체) 구조를 1:1로 반영한 실전 실습'],
+    ['1인 풀스택 완성', '비즈니스 문제 정의 ➔ 엑셀 자동화 ➔ 파이썬 EDA ➔ 머신러닝 모델링 ➔ 웹 대시보드 배포 원스톱 정복']
+  ];
+  points.forEach((pt, i)=>{
+    const yy = 456 + i * 48;
+    R(s, 498, yy, 130, 28, C.greenSoft, 'none', 5);
+    T(s, 563, yy+19, pt[0], '', 12.5, {fill:C.green,'font-weight':900,'text-anchor':'middle'});
+    W(s, 644, yy+19, pt[1], 560, '', 13, 18, {fill:C.ink,'font-weight':750});
+  });
+
+  anchor(s,'“데이터 분석은 어려운 코딩이 아니라, 올바른 질문을 던지고 AI와 협업하여 가치를 만드는 과정입니다.”');
+}
+
+// Slide 03: [커리큘럼 원장 표] program:curriculum-ledger
+function render3(s){
+  base(s,'00 · COURSE CURRICULUM','삼성전자 실무자를 위한 7대 모듈 완결 로드맵 (커리큘럼 원장)','기초 개념부터 엑셀, 파이썬, 머신러닝, API 파이프라인, 바이브코딩 배포까지 체계적 단계별 학습',3,'program:curriculum-ledger');
+
+  const cHeads = ['모듈 구분', '주요 학습 주제', '실습 데이터셋 & 도구', '최종 핵심 산출물'];
+  const cWidths = [180, 420, 310, 258];
+  R(s,56,158,1168,34,C.navy,'none',6);
+  cHeads.forEach((h, i)=>{
+    const ox = 56 + cWidths.slice(0, i).reduce((a,b)=>a+b, 0);
+    T(s, ox + cWidths[i]/2, 180, h, '', 13, {fill:'#fff','font-weight':900,'text-anchor':'middle'});
+  });
+
+  const cRows = [
+    ['01. AI 융합 트렌드', 'DX vs AX 패러다임, 메타프롬프트, 멀티모달 30인 컨센서스', 'Google Labs, Claude 3.7, Gemini 2.0', '6단계 전문 분석 보고서'],
+    ['02. 지식비서 & 에이전트', 'NotebookLM 50개 문서 RAG, 파워포인트 Office.js, 자율 Agent 3종', '사내 규정집, Manus, Skywork, Cursor', 'AI 지식비서 & PPT 자동생성'],
+    ['03. 분석 기획 본질', '부바키키 직관 배제, 3대 편향 극복, 조작적 정의, 온더힐 스몰데이터', '와인 품질 데이터셋, 현장 관찰 로그', '비즈니스 지표 산식 정의서'],
+    ['04. 5단계 프로세스 & 통계', '표준 5단계, 1,500만 CRM 메타데이터, 대표값/산포도, 신뢰구간 추론', '글로벌 CRM DB, 임직원 만족도 표본', '20대 과제-알고리즘 매핑표'],
+    ['05. 엑셀·시트 자동화', '엑셀-LLM 싱크 5대 전략, CPC/CPA/ROAS 수식, 10대 피벗, VBA 매크로', 'MKT_Marketing.xlsx, Apps Script', '채널별 자동 분할 시트 & 피벗'],
+    ['06. 파이썬 & 5대 머신러닝', 'Colab/Anaconda, SDC 식스시그마 4.23σ, CRM 군집, HR 이직, 3D 수율', 'SDC_Display, HR 이직 데이터셋', '품질 벨커브 & 3D 최적 레시피'],
+    ['07. API 수집 & 바이브코딩', 'Easy Scraper 크롤링, SERP API, 5대 바이브코딩 도구, Netlify 1분 배포', '빅카인즈 뉴스, Claude Code CLI', '글로벌 라이브 웹 대시보드']
+  ];
+  cRows.forEach((r, i)=>{
+    const yy = 196 + i * 60;
+    R(s, 56, yy, 1168, 56, i%2===0?C.white:'#f8fafc', C.line, 0, 0.6);
+    
+    // 모듈명
+    R(s, 70, yy+12, 150, 32, i%2===0?C.blueSoft:C.greenSoft, 'none', 6);
+    T(s, 145, yy+33, r[0], '', 12.5, {fill:C.ink,'font-weight':900,'text-anchor':'middle'});
+    
+    // 주요 내용
+    W(s, 250, yy+20, r[1], 390, '', 12, 17, {fill:C.ink,'font-weight':750});
+    
+    // 도구 (cyan)
+    R(s, 660, yy+12, 290, 32, 'rgba(56,189,248,0.12)', 'rgba(56,189,248,0.3)', 4, 0.8);
+    W(s, 670, yy+26, r[2], 270, 'mono', 11.5, 15, {fill:C.blueDark,'font-weight':800});
+    
+    // 산출물 (warm cream)
+    R(s, 976, yy+12, 236, 32, 'rgba(251,191,36,0.15)', 'rgba(251,191,36,0.4)', 4, 0.8);
+    T(s, 1094, yy+33, '📌 ' + r[3], '', 12, {fill:C.gold,'font-weight':900,'text-anchor':'middle'});
+  });
+
+  anchor(s,'학습 로드맵 : 기초 원리와 기획부터 시작하여 도구 실습을 거쳐 완전 자동화 웹 서비스 배포까지 단계별로 마스터합니다.');
+}
+
+// Slide 04: [단원 간지 01] chapter-gate
+function render4(s){
+  chapterGate(s, '01', '생성형 AI와 데이터 분석의\n융합 트렌드 및 도구 생태계', 'MODULE 01 · AI TRANSFORMATION', [
+    '“AI 시대, 비개발자인 내가 왜 데이터 분석을 주도해야 하는가?”',
+    '전통적 데이터 분석(DX)과 최신 생성형 AI(AX)의 결합 원리를 이해하고,',
+    'Google Labs 및 차세대 멀티모달 도구 생태계를 마스터합니다.'
+  ], 4);
+}
+
+// Slide 05: [패러다임 전환] typo:quote-contrast
+function render5(s){
+  base(s,'01 · 생성형 AI와 데이터 분석의 융합 트렌드','교과서 없는 超학문의 등장과 실험·창작 중심 체계','정답이 고정된 전통적 학문이 아닌, 실시간 실험과 탐색이 곧 이론이 되는 2026 최신 패러다임 전환',5,'typo:quote-contrast');
+
+  R(s,56,158,570,445,C.white,C.blue,12,1.2);
+  R(s,56,158,570,42,C.navy,'none',12);
+  R(s,56,180,570,20,C.navy);
+  T(s,76,186,'과거의 고전적 학문 체계 (정리·검증 중심)','',15,{fill:'#fff','font-weight':900});
+
+  const p1 = [
+    ['체계적인 이론 정립 후 실무 적용', '수백 페이지의 프로그래밍 문법과 통계 공식을 수개월간 암기한 후 실무에 진입하며, 정해진 정답 틀에 갇혀 새로운 시도를 회피함'],
+    ['느린 지식 전파 속도 (수년 소요)', '학계 논문 ➔ 교재 집필 ➔ 대학 강의 ➔ 현업 도입까지 최소 2~3년이 소요되어 급변하는 비즈니스 환경에 전혀 대응하지 못함'],
+    ['전문 개발자만의 전유물과 높은 장벽', '복잡한 터미널 환경 설정과 난해한 에러 디버깅이 거대한 진입 장벽으로 작용하여 현업 기획자와 관리자가 데이터 분석에서 철저히 소외됨']
+  ];
+  p1.forEach((it, i)=>{
+    const yy = 220 + i * 124;
+    R(s, 76, yy, 530, 112, '#f8fafc', C.line, 8, 1);
+    T(s, 96, yy+26, it[0], '', 14.5, {fill:C.body,'font-weight':850});
+    W(s, 96, yy+52, it[1], 490, '', 13, 20, {fill:C.muted,'font-weight':600});
+  });
+
+  R(s,654,158,570,445,C.white,C.blue,12,1.2);
+  R(s,654,158,570,42,C.blue,'none',12);
+  R(s,654,180,570,20,C.blue);
+  T(s,674,186,'2026 생성형 AI 시대의 超학문 (실험·창작·실천 중심)','',15,{fill:'#fff','font-weight':900});
+
+  const p2 = [
+    ['빛의 속도로 진화하는 오픈 AI 생태계', 'Claude 3.7 Sonnet, Gemini 2.0, Cursor 등이 매월 비약적으로 진화하며, 매일 현장에서 직접 부딪히며 실험하는 실무자가 가장 앞서감'],
+    ['현장의 프롬프트와 성공 사례가 곧 글로벌 표준', '교과서 저자보다 현업 엔지니어가 작성한 정교한 메타프롬프트가 더 강력한 성능을 발휘하며, 실무 비즈니스 문제 정의가 핵심 지혜로 부상'],
+    ['도구의 완전한 민주화와 1인 풀스택 혁신', '코딩 지식이 없어도 자연어 대화만으로 엑셀 자동화부터 머신러닝 예측 모델, 풀스택 웹 대시보드까지 10분 만에 완성하는 1인 풀스택 시대']
+  ];
+  p2.forEach((it, i)=>{
+    const yy = 220 + i * 124;
+    R(s, 674, yy, 530, 112, C.blueSoft, C.blue, 8, 1.2);
+    T(s, 694, yy+26, it[0], '', 14.5, {fill:C.blueDark,'font-weight':900});
+    W(s, 694, yy+52, it[1], 490, '', 13, 20, {fill:C.ink,'font-weight':750});
+  });
+
+  anchor(s,'핵심 통찰 : 코드를 완벽하게 외우는 시대는 끝났습니다. 문제를 정의하고 AI를 지휘하는 기획력이 핵심입니다.');
+}
+
+// Slide 06: [역방향 학습] flow:pipeline-4step
+function render6(s){
+  base(s,'01 · 생성형 AI와 데이터 분석의 융합 트렌드','실천이 이론을 앞서는 시대와 역방향 학습 프로세스','실무 문제를 먼저 해결하며 필요한 원리를 역으로 체득하는 가장 빠르고 확실한 데이터 분석 학습법',6,'flow:pipeline-4step');
+
+  R(s,56,158,1168,445,C.white,C.wine,12,1.2);
+  R(s,56,158,1168,42,C.wine,'none',12);
+  R(s,56,180,1168,20,C.wine);
+  T(s,76,186,'과거 순방향 학습 vs 2026 생성형 AI 시대 역방향 학습 프로세스 비교','',15,{fill:'#fff','font-weight':900});
+
+  R(s,76,216,1128,154,'#faf9f7',C.line,8,1);
+  T(s,96,244,'과거 전통적 학습 방식 (수개월 소요 · 80% 이상 높은 중도 포기율)','h',15,{fill:C.muted});
+  
+  const oldSteps = [
+    ['1단계 : 기초 문법 암기', '변수, 조건문, 반복문, 함수 등 파이썬 기초 문법 수주일간 암기'],
+    ['2단계 : 패키지 함수 학습', 'Pandas DataFrame, Numpy 배열 사용법과 파라미터 수백 개 숙달'],
+    ['3단계 : 토이 예제 실습', '타이타닉 생존자 예측 등 현업과 무관한 정형화된 데이터 실습'],
+    ['4단계 : 실무 적용 시도', '현업 데이터 적용 시 패키지 충돌과 오류를 해결하지 못해 포기']
+  ];
+  oldSteps.forEach((os, i)=>{
+    const xx = 96 + i * 275;
+    R(s, xx, 264, 260, 92, C.white, C.line, 6);
+    T(s, xx+14, 288, os[0], '', 13.5, {fill:C.ink,'font-weight':850});
+    W(s, xx+14, 312, os[1], 230, '', 12, 17, {fill:C.muted,'font-weight':600});
+  });
+
+  R(s,76,386,1128,200,C.wineSoft,C.wine,8,1.2);
+  T(s,96,414,'2026 역방향 학습 모델 (10분 만에 실무 완결 ➔ 동작 원리 역체득)','h',16,{fill:C.wine});
+
+  const newSteps = [
+    ['1단계 : 실무 문제 정의', '해결할 비즈니스 과제와 실제 사내 엑셀 시트의 컬럼 구조 명확화'],
+    ['2단계 : 프롬프트 지시', 'LLM(Claude 3.7 / Gemini 2.0)에게 목적을 설명하고 완성형 코드 즉시 생성'],
+    ['3단계 : 원클릭 실행 & 시각화', 'Google Colab에서 즉시 실행하여 Seaborn/Plotly 고품질 결과 확인'],
+    ['4단계 : 코드 구조 역체득', '완벽하게 동작하는 코드를 한 줄씩 뜯어보며 라이브러리 원리를 역체득']
+  ];
+  newSteps.forEach((ns, i)=>{
+    const xx = 96 + i * 275;
+    R(s, xx, 434, 260, 138, C.white, C.wine, 6, 1);
+    CIRC(s, xx+22, 458, 10, C.wine);
+    T(s, xx+22, 462, String(i+1), '', 11, {fill:'#fff','font-weight':900,'text-anchor':'middle'});
+    T(s, xx+38, 460, ns[0].split(':')[1]||ns[0], '', 14, {fill:C.wine,'font-weight':900});
+    W(s, xx+14, 490, ns[1], 230, '', 12.5, 19, {fill:C.ink,'font-weight':750});
+  });
+
+  anchor(s,'학습 혁신 : 복잡한 문법을 먼저 외우지 않고, 당장 필요한 실무 결과물을 만들며 원리를 체득합니다.');
+}
+
+// Slide 07: [DX vs AX] compare:asymmetric-split
+function render7(s){
+  base(s,'01 · 생성형 AI와 데이터 분석의 융합 트렌드','DX(데이터 분석 AI)와 AX(생성형 AI)의 상호보완 융합 구조','예측·분류 AI의 과학적 의사결정 기반 위에 생성형 AI의 업무 생산성을 결합합니다.',7,'compare:asymmetric-split');
+
+  R(s,56,158,570,445,C.white,C.blue,12,1.2);
+  R(s,56,158,570,42,C.blue,'none',12);
+  R(s,56,180,570,20,C.blue);
+  T(s,76,186,'DX (Digital Transformation) · 전통적 데이터 분석 AI','',15,{fill:'#fff','font-weight':900});
+
+  const dxItems = [
+    ['핵심 역할 & 목적', '과거/현재 대용량 데이터를 기반으로 인과관계 규명, 패턴 발견, 미래 수치 예측 및 그룹 분류 수행'],
+    ['주요 기술 & 알고리즘', 'Scikit-learn, XGBoost, LightGBM, 회귀분석, 군집분석(K-Means), 시계열(ARIMA/Prophet)'],
+    ['결정적 강점', '수학적·통계적 신뢰도 100%, 객관적 재현성 보장, 수치 기반 명확한 근거(P-value, R², RMSE) 제시'],
+    ['실무 한계점', '비전문가가 모델을 튜닝하기 어렵고, 데이터 전처리 및 결과 시각화 보고서 작성에 많은 시간 소요']
+  ];
+  dxItems.forEach((it, i)=>{
+    const yy = 216 + i * 98;
+    R(s, 76, yy, 530, 88, C.blueSoft, C.blue, 8, 0.8);
+    T(s, 96, yy+26, it[0], '', 14, {fill:C.blueDark,'font-weight':900});
+    W(s, 96, yy+50, it[1], 490, '', 12.5, 18, {fill:C.ink,'font-weight':750});
+  });
+
+  R(s,654,158,570,445,C.white,C.green,12,1.2);
+  R(s,654,158,570,42,C.green,'none',12);
+  R(s,654,180,570,20,C.green);
+  T(s,674,186,'AX (AI Transformation) · 2026 최신 생성형 AI & 에이전트','',15,{fill:'#fff','font-weight':900});
+
+  const axItems = [
+    ['핵심 역할 & 목적', '자연어 대화를 통해 분석 가설 수립, 전처리 코드 작성, 오류 자동 디버깅, 의사결정 보고서 자동 생성'],
+    ['주요 기술 & 모델', 'Claude 3.7 Sonnet(Hybrid Thinking), Gemini 2.0 Flash, Cursor Composer 2.0, Deep Research'],
+    ['결정적 강점', '압도적인 작업 속도(생산성 10배 향상), 비개발자 친화적 자연어 UI, 비정형 텍스트·이미지 완벽 해석'],
+    ['융합 완성 가치', 'DX의 정밀한 통계 수치 분석 결과 + AX의 자동화 파이프라인이 결합되어 완전 무인화 달성']
+  ];
+  axItems.forEach((it, i)=>{
+    const yy = 216 + i * 98;
+    R(s, 674, yy, 530, 88, C.greenSoft, C.green, 8, 0.8);
+    T(s, 694, yy+26, it[0], '', 14, {fill:C.green,'font-weight':900});
+    W(s, 694, yy+50, it[1], 490, '', 12.5, 18, {fill:C.ink,'font-weight':750});
+  });
+
+  anchor(s,'융합 시너지 : DX는 의사결정의 과학적 팩트를 제공하고, AX는 그 팩트를 실행 가능한 코드로 바꾸어줍니다.');
+}
+
+// Slide 08: [메타프롬프트] split:concept-code
+function render8(s){
+  base(s,'01 · 생성형 AI와 데이터 분석의 융합 트렌드','메타프롬프트 (Meta-Prompt) 기법과 프롬프트 템플릿 설계','직접 고민하여 길게 쓰는 대신 AI에게 최적의 프롬프트를 만들도록 지시하는 고효율 비법',8,'split:concept-code');
+
+  R(s,56,158,570,445,C.white,C.gold,12,1.2);
+  R(s,56,158,570,42,C.navy,'none',12);
+  R(s,56,180,570,20,C.navy);
+  T(s,76,186,'➊ 메타프롬프트의 개념과 3대 설계 원칙','',15,{fill:'#fff','font-weight':900});
+
+  W(s, 76, 222, [
+    '메타프롬프트(Meta-Prompt)는 “프롬프트를 만들기 위한 프롬프트”입니다.',
+    '실무자가 모든 세부 지시사항을 고민하지 않고, AI에게 질문의 논리적 구조와',
+    '예외 처리 규칙을 먼저 설계하도록 위임하여 답변 품질을 극대화합니다.'
+  ], 530, 'body', 13.5, 22);
+
+  R(s,76,306,530,274,C.goldSoft,C.gold,8,1.2);
+  T(s,96,334,'[메타프롬프트 프레임워크 4대 구성 요소]','num',{'font-size':14,fill:C.gold});
+  const rules = [
+    '1. 페르소나 (Role) : “너는 삼성전자 수석 데이터 분석가이자 통계 컨설턴트야.”',
+    '2. 비즈니스 맥락 (Context) : “현재 [SDC 공정/CRM 마케팅]에서 [핵심 과제]를 해결해야 해.”',
+    '3. 구조화된 질의 (Task) : “내가 분석을 위해 준비해야 할 컬럼 목록과 최적의 질문 프롬프트를 짜줘.”',
+    '4. 출력 제약 (Constraint) : “전문가 보고서 양식(Markdown 표, 수식, 코드)으로 구조화해줘.”'
+  ];
+  rules.forEach((rl, rli)=>{
+    W(s, 96, 362 + rli * 52, rl, 490, '', 13, 19, {fill:C.ink,'font-weight':750});
+  });
+
+  R(s,654,158,570,445,C.white,C.gold,12,1.2);
+  R(s,654,158,570,42,C.gold,'none',12);
+  R(s,654,180,570,20,C.gold);
+  T(s,674,186,'➋ 메타프롬프트 실전 템플릿 예시 (Claude / Gemini)','',15,{fill:'#fff','font-weight':900});
+
+  R(s,674,220,530,360,'#0f172a','#1e293b',8,1.4);
+  const promptCode = [
+    '“나는 삼성전자 데이터 분석 실무자야.',
+    '우리 부서에서 보유한 [데이터명/엑셀시트]를 바탕으로',
+    '[원인규명/미래예측/최적화] 비즈니스 문제를 해결하려고 해.',
+    '',
+    '이 목적을 완벽히 달성하기 위해 내가 너(AI)에게 던져야 할',
+    '가장 완성도 높은 단계별 프롬프트 5개와,',
+    '필요한 핵심 데이터 컬럼 명세서, 경영/엔지니어링 분석 관점,',
+    '그리고 발생 가능한 예외 상황 대응 지침을 포함한',
+    '구조화된 마스터 프롬프트 템플릿을 작성해줘.”'
+  ];
+  promptCode.forEach((pc, pci)=>{
+    T(s, 694, 256 + pci * 30, pc, 'mono', 12.5, {fill:pci===0||pci===4?'#38bdf8':'#f8fafc','font-weight':700});
+  });
+
+  anchor(s,'활용 팁 : 메타프롬프트를 먼저 실행하면 내가 미처 생각하지 못했던 예외 상황과 고급 통계 지표까지 완벽히 추천받습니다.');
+}
+
+// Slide 09: [멀티모달 1] split:visual-matrix
+function render9(s){
+  base(s,'01 · 생성형 AI와 데이터 분석의 융합 트렌드','멀티모달 비전 AI 실전 1 (차트 이미지 기술적 분석 컨센서스)','복잡한 차트 캡처 이미지를 업로드하고 전문가 30인의 시각을 종합한 매매 의견 도출',9,'split:visual-matrix');
+
+  R(s,56,158,570,445,C.white,C.blue,12,1.2);
+  R(s,56,158,570,42,C.navy,'none',12);
+  R(s,56,180,570,20,C.navy);
+  T(s,76,186,'멀티모달 이미지 프롬프트 지시어 & 분석 메커니즘','',15,{fill:'#fff','font-weight':900});
+
+  R(s,76,218,530,150,C.blueSoft,C.blue,8,1.2);
+  T(s,96,246,'[실행 프롬프트]','num',{'font-size':13.5,fill:C.blueDark});
+  W(s, 96, 276, [
+    '“첨부된 차트 이미지를 바탕으로 기술적 분석 전문가 30인의',
+    '관점을 시뮬레이션하여 주요 지지선, 저항선, 거래량 패턴을 해석하고',
+    '[투자 관점별 종합 의견 및 액션 플랜]을 구조화된 표로 요약해줘.”'
+  ], 490, '', 13.5, 22, {fill:C.ink,'font-weight':750});
+
+  R(s,76,386,530,200,C.white,C.line,8);
+  T(s,96,414,'2026 비전 AI(Gemini 2.0 Flash Vision / Claude 3.7) 인식 원리','h',14.5);
+  const vPrinciples = [
+    '• 픽셀 좌표 정밀 분석 : 캔들차트 고가, 저가, 종가, 20/60/120일 이평선 골든크로스 인식',
+    '• 거래량 패턴 파악 : 대량 거래 동반 장대양봉/음봉 시그널 및 매물대 집중 구간 자동 감지',
+    '• 다중 관점 시뮬레이션 : 단기 트레이딩, 중기 스윙, 장기 가치투자 관점별 리스크 분할 평가'
+  ];
+  vPrinciples.forEach((vp, vpi)=>{
+    W(s, 96, 442 + vpi * 44, vp, 490, '', 12.5, 18, {fill:C.ink,'font-weight':650});
+  });
+
+  R(s,654,158,570,445,C.white,C.green,12,1.2);
+  R(s,654,158,570,42,C.green,'none',12);
+  R(s,654,180,570,20,C.green);
+  T(s,674,186,'AI 전문가 30인 종합 컨센서스 도출 결과 표','',15,{fill:'#fff','font-weight':900});
+
+  const tHeads = ['투자 관점', '전문가 종합 의견', '핵심 근거 및 구체적 액션'];
+  const tW = [130, 160, 240];
+  R(s,674,218,530,32,C.navyLight,'none',4);
+  tHeads.forEach((h, i)=>{
+    const ox = 674 + tW.slice(0, i).reduce((a,b)=>a+b, 0);
+    T(s, ox + tW[i]/2, 239, h, '', 12.5, {fill:'#fff','font-weight':900,'text-anchor':'middle'});
+  });
+
+  const tRows = [
+    ['단기 트레이딩', '약매수 (분할 접근)', '단기 지지선 38.5만 원 지지 확인 시 분할 진입, 손절선 37만 원 설정'],
+    ['중기 스윙 투자', '관망 (돌파 확인 후)', '주요 저항선 41.5만 원 돌파 및 5일 연속 거래량 증가 확인 후 비중 확대'],
+    ['리스크 관리', '37.0만 원 이탈 시', '전저점 이탈 시 추세 훼손으로 판단하여 즉시 리스크 관리 및 50% 비중 축소'],
+    ['추세 확정 신호', '41.5만 원 안착 시', '20일 이동평균선이 60일선을 상향 돌파하는 골든크로스 발생 확인']
+  ];
+  tRows.forEach((r, i)=>{
+    const yy = 254 + i * 80;
+    R(s, 674, yy, 530, 74, i%2===0?C.white:C.greenSoft, C.line, 0, 0.5);
+    r.forEach((cell, ci)=>{
+      const ox = 674 + tW.slice(0, ci).reduce((a,b)=>a+b, 0);
+      if(ci === 0){
+        T(s, ox + tW[ci]/2, yy + 42, cell, '', 12.5, {fill:C.blueDark,'font-weight':900,'text-anchor':'middle'});
+      } else if(ci === 1){
+        T(s, ox + 10, yy + 42, cell, '', 12.5, {fill:C.green,'font-weight':900});
+      } else {
+        W(s, ox + 10, yy + 24, cell, tW[ci] - 20, '', 11.5, 17, {fill:C.ink,'font-weight':600});
+      }
+    });
+  });
+
+  anchor(s,'응용 분야 : 주식 차트뿐 아니라 사내 생산 공정 수율 그래프, 마케팅 유입 차트도 동일하게 전문가 시각으로 해석합니다.');
+}
+
+// Slide 10: [멀티모달 2] grid:6-card-report
+function render10(s){
+  base(s,'01 · 생성형 AI와 데이터 분석의 융합 트렌드','멀티모달 비전 AI 실전 2 (6단계 전문 보고서 자동 작성)','차트나 표 이미지를 삽입하고 A4 1~2쪽 분량의 완성형 전문가 분석 보고서를 생성하는 프롬프트',10,'grid:6-card-report');
+
+  R(s,56,158,1168,445,C.white,C.blue,12,1.2);
+  R(s,56,158,1168,42,C.navy,'none',12);
+  R(s,56,180,1168,20,C.navy);
+  T(s,76,186,'전문 보고서 형식을 완성하는 6대 구성 요소 & 프롬프트 구조','',15,{fill:'#fff','font-weight':900});
+
+  const repSteps = [
+    { n: '①', t: '보고서 제목', d: '분석 대상과 핵심 결론을 직관적으로 전달하는 헤드라인 작성', ex: '예: [2026 Q1 SDC 디스플레이 수율 추이 및 품질 개선 보고]', col: C.blueSoft, stroke: C.blue },
+    { n: '②', t: '핵심 요약 (Executive Summary)', d: '의사결정권자가 3초 만에 파악할 수 있는 2~3줄 결론 요약', ex: '예: 수율 98.6% 달성, 챔버 3구역 온도 산포 통제로 불량률 45% 급감', col: C.greenSoft, stroke: C.green },
+    { n: '③', t: '시각화 메트릭 설명', d: 'X/Y축 단위, 범례, 색상, 비교 그룹 등 차트의 물리적 구성 설명', ex: '예: X축(공정온도 ℃), Y축(결함률 %), 4개 라인별 색상 구분', col: C.goldSoft, stroke: C.gold },
+    { n: '④', t: '정량적 주요 패턴 분석', d: '상승·하락률, 집중도, 최대/최소값 등 정량적 수치 구체화', ex: '예: 22~23℃ 구간 결함률 0.20%로 최저, 26℃ 초과 시 급증', col: C.wineSoft, stroke: C.wine },
+    { n: '⑤', t: '원인 규명 & 비즈니스 시사점', d: '수치 변동의 근본 원인(Root Cause)과 비즈니스 영향 분석', ex: '예: 냉각 팬 회전수 저하로 인한 챔버 과열이 주요 원인으로 판명', col: C.redSoft, stroke: C.red },
+    { n: '⑥', t: '제언 & 실행 액션플랜', d: '실무/경영/엔지니어링 관점에서의 향후 구체적 실행 로드맵 제시', ex: '예: 냉각 팬 교체 및 예방정비 주기 2주로 단축, 일간 모니터링 강화', col: C.blueSoft, stroke: C.blue }
+  ];
+
+  repSteps.forEach((rs, i)=>{
+    const col = i % 3, row = Math.floor(i / 3);
+    const xx = 76 + col * 380, yy = 216 + row * 185;
+    R(s, xx, yy, 360, 168, rs.col, rs.stroke, 8, 1.2);
+    
+    CIRC(s, xx+26, yy+26, 14, rs.stroke);
+    T(s, xx+26, yy+31, rs.n, '', 13, {fill:'#fff','font-weight':900,'text-anchor':'middle'});
+    T(s, xx+48, yy+31, rs.t, '', 15, {fill:C.ink,'font-weight':900});
+    
+    L(s, xx+16, yy+48, xx+344, yy+48, rs.stroke, 1, '2 2');
+    W(s, xx+16, yy+70, rs.d, 328, 'body', 12.5, 18, {'font-weight':750});
+    W(s, xx+16, yy+116, rs.ex, 328, '', 11.5, 16, {fill:rs.stroke,'font-weight':700});
+  });
+
+  anchor(s,'실행 요령 : 차트 이미지를 붙여넣고 “위 6단계 구성으로 경영전략 관점의 A4 1쪽 보고서를 써줘”라고 지시합니다.');
+}
+
+// Slide 11: [Google Labs 12대 도구] matrix:3x4-catalog
+function render11(s){
+  base(s,'01 · 생성형 AI와 데이터 분석의 융합 트렌드','Google Labs 12대 차세대 AI 창작 & 분석 도구 생태계 (2026 최신)','구글이 제공하는 최첨단 멀티모달 실험실 도구를 통해 텍스트, 이미지, 음성, 데이터를 자유자재로 연결',11,'matrix:3x4-catalog');
+
+  const tools = [
+    ['Whisk', '이미지 기반 스타일 결합', '다양한 이미지 소스를 결합하여 새로운 비주얼 생성', C.blueSoft, C.blue],
+    ['ImageFX (Imagen 3)', '초고화질 포토/일러스트 생성', '포토리얼리스틱 이미지 및 발표 시각 자료 자동 제작', C.greenSoft, C.green],
+    ['MusicFX / VideoFX', '텍스트 기반 음악/영상 제작', '분석 리포트 영상 및 데이터 브리핑 배경음악 생성', C.goldSoft, C.gold],
+    ['GenType', '알파벳 폰트 디자인 생성', '지정한 테마와 질감을 반영한 맞춤형 영문 타이포 제작', C.wineSoft, C.wine],
+    ['TextFX', '언어·문장 특화 실험 도구', '은유, 연상, 문장 재구성을 통한 강력한 카피라이팅', C.redSoft, C.red],
+    ['NotebookLM', '지식기반 AI 연구 비서', '내 문서 기반 요약 · Q&A · 한국어 Audio Overview', C.blueSoft, C.blue],
+    ['Gemini 2.0 Flash', '차세대 초고속 멀티모달', '실시간 비전/오디오 스트리밍 처리 및 코드 실행', C.greenSoft, C.green],
+    ['Deep Research', '심층 웹 리서치 에이전트', '수십 개 웹 소스를 탐색하여 A4 10쪽 보고서 작성', C.goldSoft, C.gold],
+    ['Gemini Live', '화면 공유 실시간 음성 분석', '모니터 화면과 엑셀 시트를 직접 보며 대화형 코칭', C.wineSoft, C.wine],
+    ['Code Experiments', '개발자용 인터랙티브 코드', '자연어로 데이터 처리 및 웹 프로토타입 실시간 구현', C.blueSoft, C.blue],
+    ['Search Labs', '검색 엔진 내 AI 오버뷰', '구글 검색 결과에 LLM의 심층 분석과 요약 결합', C.redSoft, C.red],
+    ['Doppl / Flow', 'AI 기반 인터랙티브 시퀀스', '사용자 경험 시뮬레이션 및 데이터 스토리텔링', C.greenSoft, C.green]
+  ];
+
+  tools.forEach((tl, i)=>{
+    const col = i % 4, row = Math.floor(i / 4);
+    const xx = 56 + col * 296, yy = 158 + row * 148;
+    R(s, xx, yy, 284, 136, C.white, tl[4], 8, 1.2);
+    
+    R(s, xx+14, yy+14, 30, 24, tl[3], 'none', 4);
+    T(s, xx+29, yy+30, String(i+1), '', 12, {fill:tl[4],'font-weight':900,'text-anchor':'middle'});
+    
+    T(s, xx+52, yy+31, tl[0], '', 14, {fill:C.ink,'font-weight':900});
+    T(s, xx+14, yy+62, tl[1], '', 12, {fill:tl[4],'font-weight':850});
+    W(s, xx+14, yy+84, tl[2], 256, 'body', 11.5, 17, {'font-weight':600});
+  });
+
+  anchor(s,'생태계 확장 : 단순 챗봇을 넘어 텍스트, 이미지, 음성, 코드가 유기적으로 연결되는 2026 멀티모달 환경이 완성되었습니다.');
+}
+
+
+// Slide 12: [단원 간지 02] chapter-gate
+function render12(s){
+  chapterGate(s, '02', '지식 비서 NotebookLM과\n차세대 자율 에이전트 실무', 'MODULE 02 · KNOWLEDGE ASSISTANT & AGENTS', [
+    '“수백 쪽의 사내 규정집과 매뉴얼에서 원하는 정보를 1초 만에 찾을 수 없을까?”',
+    '환각(Hallucination) 없는 50개 문서 RAG 지식 비서 NotebookLM과,',
+    '파워포인트 Office.js 자동화 및 Manus/Operator 자율 에이전트를 실무에 적용합니다.'
+  ], 12);
+}
+
+// Slide 13: [NotebookLM 1] compare:rag-vs-llm
+function render13(s){
+  base(s,'02 · 지식 비서 NotebookLM & 자율 에이전트','NotebookLM 1 · 지식기반 AI 연구 비서의 작동 원리와 RAG 패러다임','내가 업로드한 신뢰할 수 있는 문서만을 근거(Grounding)로 완벽하게 요약하고 답변하는 지식 비서',13,'compare:rag-vs-llm');
+
+  R(s,56,158,570,445,C.white,C.blue,12,1.2);
+  R(s,56,158,570,42,C.navy,'none',12);
+  R(s,56,180,570,20,C.navy);
+  T(s,76,186,'일반 범용 LLM의 근본적 한계와 취약점','',15,{fill:'#fff','font-weight':900});
+
+  const lims = [
+    ['인터넷 학습 데이터 기반의 환각 (Hallucination)', '존재하지 않는 가짜 논문, 왜곡된 통계 수치를 마치 사실인 것처럼 그럴듯하게 지어내는 치명적 결함 발생'],
+    ['사내 보안 문서 및 비공개 데이터 접근 불가', '기업 내부 업무 매뉴얼, 기밀 프로젝트 보고서, 최신 사규에 대해 전혀 학습되어 있지 않아 실무 답변 불가'],
+    ['출처(Citation) 검증의 불가능성', '답변의 근거가 되는 원본 문서의 페이지나 문장을 정확히 추적할 수 없어 의사결정 신뢰성 저하']
+  ];
+  lims.forEach((lm, i)=>{
+    const yy = 220 + i * 124;
+    R(s, 76, yy, 530, 112, '#f8fafc', C.line, 8, 1);
+    T(s, 96, yy+26, lm[0], '', 14.5, {fill:C.body,'font-weight':850});
+    W(s, 96, yy+52, lm[1], 490, '', 13, 20, {fill:C.muted,'font-weight':600});
+  });
+
+  R(s,654,158,570,445,C.white,C.green,12,1.2);
+  R(s,654,158,570,42,C.green,'none',12);
+  R(s,654,180,570,20,C.green);
+  T(s,674,186,'Google NotebookLM (2026 최신)의 RAG 아키텍처 혁신','',15,{fill:'#fff','font-weight':900});
+
+  const rags = [
+    ['Source Grounding (철저한 원문 기반 답변)', '사용자가 업로드한 PDF, 웹 URL, 유튜브 영상, 구글 드라이브 문서 내의 팩트만으로 답변을 완벽히 한정'],
+    ['클릭 가능한 실시간 인라인 각주 출처 (Citations)', '답변 문장마다 번호가 매겨져 클릭 시 원본 문서의 해당 페이지와 단락으로 즉시 이동하여 1초 만에 검증'],
+    ['2026 대규모 소스 지원 (최대 50개 · 50만 토큰)', '수천 페이지 분량의 방대한 사내 규정집, 수개년 사업보고서, 특허 문서를 한꺼번에 적재하여 교차 분석']
+  ];
+  rags.forEach((rg, i)=>{
+    const yy = 220 + i * 124;
+    R(s, 674, yy, 530, 112, C.greenSoft, C.green, 8, 1.2);
+    T(s, 694, yy+26, rg[0], '', 14.5, {fill:C.green,'font-weight':900});
+    W(s, 694, yy+52, rg[1], 490, '', 13, 20, {fill:C.ink,'font-weight':750});
+  });
+
+  anchor(s,'핵심 가치 : 수백 페이지의 매뉴얼을 다 읽지 않고, NotebookLM에 업로드하여 1초 만에 팩트 기반 정답을 도출합니다.');
+}
+
+// Slide 14: [NotebookLM 2] grid:4-panel-quad
+function render14(s){
+  base(s,'02 · 지식 비서 NotebookLM & 자율 에이전트','NotebookLM 2 · 4대 핵심 패널 구조와 한국어 Audio Overview','소스 업로드, 가이드 요약, 대화형 채팅, 그리고 2인 대화형 한국어 오디오 팟캐스트 기능',14,'grid:4-panel-quad');
+
+  const panels = [
+    {
+      num: '01',
+      name: '소스 관리 패널 (Sources)',
+      desc: 'PDF, Google Docs, 웹사이트 링크, YouTube 영상 등 최대 50개 소스를 업로드하고 선택적으로 활성화/비활성화',
+      tip: '💡 팁: 주제별로 소스를 체크 해제하며 특정 문서만 타겟팅하여 비교 분석 가능',
+      col: C.blueSoft, stroke: C.blue
+    },
+    {
+      num: '02',
+      name: '노트북 가이드 (Notebook Guide)',
+      desc: '문서 적재 즉시 전체 핵심 요약본을 자동 생성하고, 주요 FAQ, 스터디 가이드, 타임라인 브리핑을 1클릭 자동 생성',
+      tip: '💡 팁: 전체 문서의 거시적 구조를 3초 만에 파악할 때 가장 효과적',
+      col: C.greenSoft, stroke: C.green
+    },
+    {
+      num: '03',
+      name: '대화형 채팅 & 각주 (Chat & Citation)',
+      desc: '자연어로 복잡한 조건을 질문하면 각주 번호와 함께 정확한 출처 단락을 하이라이트 표시하며 완벽한 신뢰성 보장',
+      tip: '💡 팁: “3조 2항의 예외 규정과 페널티 조항을 표로 정리해줘”처럼 구체적 지시',
+      col: C.goldSoft, stroke: C.gold
+    },
+    {
+      num: '04',
+      name: '한국어 Audio Overview (오디오 심층 분석)',
+      desc: '2026 최신 기능으로, 두 명의 AI 호스트가 내 문서를 바탕으로 자연스러운 억양의 한국어 라디오 팟캐스트 대화 생성',
+      tip: '💡 팁: 출퇴근길이나 이동 중에 복잡한 보고서 핵심 내용을 귀로 청취 학습',
+      col: C.wineSoft, stroke: C.wine
+    }
+  ];
+
+  panels.forEach((p, i)=>{
+    const col = i % 2, row = Math.floor(i / 2);
+    const xx = 56 + col * 598, yy = 158 + row * 230;
+    R(s, xx, yy, 570, 215, C.white, p.stroke, 10, 1.2);
+    
+    R(s, xx+16, yy+16, 42, 28, p.col, 'none', 6);
+    T(s, xx+37, yy+35, p.num, '', 14, {fill:p.stroke,'font-weight':900,'text-anchor':'middle'});
+    
+    T(s, xx+70, yy+36, p.name, '', 15.5, {fill:C.ink,'font-weight':900});
+    L(s, xx+16, yy+54, xx+554, yy+54, p.stroke, 1, '2 2');
+
+    W(s, xx+16, yy+78, p.desc, 538, 'body', 13, 20, {'font-weight':700});
+
+    R(s, xx+16, yy+144, 538, 56, p.col, p.stroke, 6, 0.8);
+    W(s, xx+26, yy+166, p.tip, 518, '', 12.5, 18, {fill:p.stroke,'font-weight':800});
+  });
+
+  anchor(s,'실무 추천 : 사내 보안 규정, 신임 팀장 매뉴얼, 신제품 사양서를 NotebookLM에 넣으면 최고의 사내 지식 비서가 됩니다.');
+}
+
+// Slide 15: [파워포인트 Office.js] split:step-script
+function render15(s){
+  base(s,'02 · 지식 비서 NotebookLM & 자율 에이전트','파워포인트 자동화 · Claude 3.7 + Office.js 기반 슬라이드 생성','지루한 수작업 PPT 제작에서 벗어나 AI 프롬프트와 Office.js 스크립트로 10장의 발표자료를 10초 만에 생성',15,'split:step-script');
+
+  R(s,56,158,570,445,C.white,C.wine,12,1.2);
+  R(s,56,158,570,42,C.navy,'none',12);
+  R(s,56,180,570,20,C.navy);
+  T(s,76,186,'파워포인트 자동화 4단계 워크플로우','',15,{fill:'#fff','font-weight':900});
+
+  const steps = [
+    ['1단계 : 보고서 원문 준비', 'A4 1~2쪽 분량의 기획서, 데이터 분석 결과, 회의록 텍스트를 준비'],
+    ['2단계 : 메타프롬프트 지시', '“이 보고서를 10장의 파워포인트 슬라이드로 변환하는 Office.js 코드를 작성해줘”'],
+    ['3단계 : Office.js 코드 복사', 'Claude 3.7이 생성한 슬라이드 타이틀, 본문, 도형 배치 스크립트 복사'],
+    ['4단계 : PPT 스크립트 실행', '파워포인트 웹/데스크톱 [스크립트 편집기]에 붙여넣고 실행 ➔ 10장 즉시 생성']
+  ];
+  steps.forEach((st, i)=>{
+    const yy = 220 + i * 94;
+    R(s, 76, yy, 530, 84, C.wineSoft, C.wine, 6, 0.8);
+    T(s, 96, yy+26, st[0], '', 14, {fill:C.wine,'font-weight':900});
+    W(s, 96, yy+50, st[1], 490, '', 12.5, 18, {fill:C.ink,'font-weight':750});
+  });
+
+  R(s,654,158,570,445,'#0f172a','#1e293b',12,1.4);
+  R(s,654,158,570,42,'#1e293b','none',12);
+  R(s,654,180,570,20,'#1e293b');
+  CIRC(s,676,179,5,'#ef4444');
+  CIRC(s,692,179,5,'#eab308');
+  CIRC(s,708,179,5,'#22c55e');
+  T(s,730,184,'Office.js · generate_slides.ts (2026 최신)','mono',12,{fill:'#94a3b8','font-weight':700});
+
+  const codePpt = [
+    'async function createSlideDeck() {',
+    '  await PowerPoint.run(async (context) => {',
+    '    const slides = context.presentation.slides;',
+    '    ',
+    '    // 슬라이드 1: 표지 생성',
+    '    const slide1 = slides.add(PowerPoint.SlideLayout.title);',
+    '    slide1.shapes.getItemAt(0).textFrame.text = "2026 데이터 분석 보고서";',
+    '    slide1.shapes.getItemAt(1).textFrame.text = "삼성전자 DS/DX 인재개발원";',
+    '    ',
+    '    // 슬라이드 2: 핵심 지표 3단 카드 자동 배치',
+    '    const slide2 = slides.add(PowerPoint.SlideLayout.blank);',
+    '    // Office.js 도형 생성 및 스타일링 자동화...',
+    '    await context.sync();',
+    '  });',
+    '}'
+  ];
+  codePpt.forEach((cd, i)=>{
+    T(s, 674, 222 + i * 24, cd, 'mono', 11.5, {fill:cd.startsWith('//')?'#94a3b8':(cd.startsWith('async')||cd.startsWith('const')?'#38bdf8':'#f8fafc'),'font-weight':700});
+  });
+
+  anchor(s,'생산성 혁신 : 텍스트 복사/붙여넣기와 도형 크기 맞추기에 쏟던 2시간을 단 10초의 스크립트 실행으로 단축합니다.');
+}
+
+// Slide 16: [자율 Agent 3종] cards:3-agent-showcase
+function render16(s){
+  base(s,'02 · 지식 비서 NotebookLM & 자율 에이전트','차세대 자율 에이전트 3종 비교 (Manus vs Skywork vs Operator)','사람의 개입 없이 스스로 웹을 브라우징하고 문서를 작성하여 결과물을 완성하는 2026 자율 Agent',16,'cards:3-agent-showcase');
+
+  const agents = [
+    {
+      name: 'Manus (마누스)',
+      tag: '범용 자율 작업 실행 에이전트',
+      features: [
+        '• 복잡한 다단계 목표를 스스로 하위 과제로 분해하여 계획 수립',
+        '• 가상 브라우저 환경에서 검색, 파일 다운로드, 데이터 가공 자율 완결',
+        '• 최종 결과물을 마크다운, PDF 보고서, 코드로 자동 패키징하여 제공'
+      ],
+      useCase: '🎯 추천 : 수십 개 사이트의 시장 가격 조사 및 경쟁사 동향 분석',
+      col: C.blueSoft, stroke: C.blue
+    },
+    {
+      name: 'Skywork (스카이워크)',
+      tag: '심층 학술 연구 & 문서 생성 에이전트',
+      features: [
+        '• 전 세계 수천만 건의 학술 논문, 특허, 기술 백서를 심층 탐색',
+        '• 각주와 참고문헌이 완벽히 포함된 20~30쪽 분량의 전문 기술 보고서 작성',
+        '• 논리적 비약과 모순을 스스로 교정하는 심층 추론(Deep Reasoning) 탑재'
+      ],
+      useCase: '🎯 추천 : 반도체 신소재 특허 분석 및 신규 사업 타당성 검토서',
+      col: C.greenSoft, stroke: C.green
+    },
+    {
+      name: 'OpenAI Operator / GenSpark',
+      tag: '실시간 GUI 웹 액션 실행 에이전트',
+      features: [
+        '• 사용자의 웹 화면을 직접 보며 마우스 클릭과 키보드 입력을 자동 수행',
+        '• 호텔/항공권 예약, 사내 인트라넷 양식 입력, 복잡한 폼 자동 제출',
+        '• 웹 크롤링 및 실시간 시각화 대시보드 자동 배포까지 원스톱 완결'
+      ],
+      useCase: '🎯 추천 : 반복적인 사내 시스템 데이터 입력 및 정기 웹 수집 업무',
+      col: C.wineSoft, stroke: C.wine
+    }
+  ];
+
+  agents.forEach((ag, i)=>{
+    const xx = 56 + i * 398;
+    R(s, xx, 158, 376, 445, C.white, ag.stroke, 10, 1.2);
+    
+    R(s, xx+16, 174, 180, 28, ag.col, 'none', 6);
+    T(s, xx+26, 193, ag.name, '', 15, {fill:ag.stroke,'font-weight':900});
+    
+    T(s, xx+16, 226, ag.tag, '', 13, {fill:C.ink,'font-weight':850});
+    L(s, xx+16, 244, xx+360, 244, ag.stroke, 1, '2 2');
+
+    ag.features.forEach((ft, fi)=>{
+      W(s, xx+16, 268 + fi * 62, ft, 344, 'body', 12.5, 18, {'font-weight':700});
+    });
+
+    R(s, xx+16, 490, 344, 95, ag.col, ag.stroke, 8, 0.8);
+    W(s, xx+26, 514, ag.useCase, 324, '', 12.5, 18, {fill:ag.stroke,'font-weight':900});
+  });
+
+  anchor(s,'에이전트 혁신 : 챗봇에게 답변을 요구하던 단계에서, 에이전트에게 실제 행동과 작업을 위임하는 단계로 진화했습니다.');
+}
+
+// Slide 17: [차세대 IDE 3종] cards:3-ide-flow
+function render17(s){
+  base(s,'02 · 지식 비서 NotebookLM & 자율 에이전트','차세대 AI IDE 생태계 (Cursor vs Windsurf vs Antigravity)','코드 어시스턴트를 넘어 프로젝트 전체 맥락을 이해하고 스스로 디버깅하는 최신 개발 도구',17,'cards:3-ide-flow');
+
+  const ides = [
+    {
+      name: 'Cursor (커서)',
+      ver: 'Composer 2.0 탑재',
+      desc: 'VS Code 기반으로 전체 코드베이스(@Codebase)를 인덱싱하여 다중 파일 동시 수정 및 버그 자동 수정',
+      merits: [
+        '• @Files, @Docs, @Web 등 유연한 컨텍스트 참조',
+        '• [Ctrl + I] / [Ctrl + K] 인라인 초고속 코드 편집',
+        '• 전 세계 개발자 점유율 1위의 검증된 안정성'
+      ],
+      col: C.blueSoft, stroke: C.blue
+    },
+    {
+      name: 'Windsurf (윈드서프)',
+      ver: 'Cascade 2.0 엔진 탑재',
+      desc: 'Codeium에서 개발한 차세대 에이전트로, 에디터와 터미널의 실시간 상태를 자율적으로 감지하고 선제적 제안',
+      merits: [
+        '• Flow 패러다임 : 작업 맥락을 유지하며 끊김 없는 협업',
+        '• 터미널 명령어 실행과 에러 로그 자동 자가치유',
+        '• 복잡한 데이터 파이프라인 구축에 최적화'
+      ],
+      col: C.greenSoft, stroke: C.green
+    },
+    {
+      name: 'Google Antigravity',
+      ver: 'Agentic IDE (2026 최신)',
+      desc: '구글 DeepMind가 설계한 차세대 에이전틱 코딩 IDE로, 다중 전문 서브에이전트 협업 및 실시간 브라우저 인터랙션',
+      merits: [
+        '• Planner, Developer, Reviewer 자율 팀 오케스트레이션',
+        '• 가상 DOM 시각화 검증 및 텍스트 래핑 자동 최적화',
+        '• Google Gemini 2.0의 200만 토큰 초대형 컨텍스트 결합'
+      ],
+      col: C.wineSoft, stroke: C.wine
+    }
+  ];
+
+  ides.forEach((id, i)=>{
+    const xx = 56 + i * 398;
+    R(s, xx, 158, 376, 445, C.white, id.stroke, 10, 1.2);
+    
+    R(s, xx+16, 174, 180, 28, id.col, 'none', 6);
+    T(s, xx+26, 193, id.name, '', 15, {fill:id.stroke,'font-weight':900});
+    
+    T(s, xx+16, 226, id.ver, '', 13, {fill:C.ink,'font-weight':850});
+    L(s, xx+16, 244, xx+360, 244, id.stroke, 1, '2 2');
+
+    W(s, xx+16, 268, id.desc, 344, 'body', 12.5, 18, {'font-weight':750});
+
+    R(s, xx+16, 360, 344, 225, id.col, id.stroke, 8, 0.8);
+    T(s, xx+26, 388, '⚡ 핵심 차별화 강점', '', 13, {fill:id.stroke,'font-weight':900});
+    id.merits.forEach((m, mi)=>{
+      W(s, xx+26, 416 + mi * 52, m, 324, '', 12, 17, {fill:C.ink,'font-weight':700});
+    });
+  });
+
+  anchor(s,'도구 전환 : 단순 코드 작성을 넘어 전체 프로젝트를 자율적으로 조율하는 차세대 IDE가 실무의 표준이 되었습니다.');
+}
+
+
+// Slide 18: [단원 간지 03] chapter-gate
+function render18(s){
+  chapterGate(s, '03', '데이터 분석 기획의 본질\n4대 핵심 원칙과 설계', 'MODULE 03 · 4 PRINCIPLES OF DATA PLANNING', [
+    '“우리는 왜 데이터를 보고도 잘못된 의사결정을 내리는가?”',
+    '직관의 함정을 깨는 부바키키 테스트부터 보이지 않는 현상을 측정하는 조작적 정의,',
+    '그리고 스몰데이터 기반의 가설 검증 4대 원칙을 체득합니다.'
+  ], 18);
+}
+
+// Slide 19: [원칙 1: 직관 불신] visual:bouba-kiki
+function render19(s){
+  base(s,'03 · 데이터 분석 기획의 본질 4대 원칙','원칙 1 · DON’T TRUST YOUR GUT (부바키키 테스트와 직관의 한계)','인간의 뇌가 시각과 언어를 무의식적으로 연결하는 공감각 현상을 통해 직관의 왜곡을 입증',19,'visual:bouba-kiki');
+
+  R(s,56,158,570,445,C.white,C.wine,12,1.2);
+  R(s,56,158,570,42,C.navy,'none',12);
+  R(s,56,180,570,20,C.navy);
+  T(s,76,186,'부바-키키 (Bouba-Kiki) 심리학 공감각 실험','',15,{fill:'#fff','font-weight':900});
+
+  // 둥근 도형 (Bouba)
+  const boubaPath = "M 136 310 C 136 240 186 210 246 230 C 306 210 336 260 326 310 C 346 360 296 400 236 390 C 176 410 136 360 136 310 Z";
+  const bShape = el('path',{d:boubaPath,fill:C.blueSoft,stroke:C.blue,'stroke-width':3});
+  s.appendChild(bShape);
+  T(s,236,316,'부바 (Bouba)','',15,{fill:C.blueDark,'font-weight':900,'text-anchor':'middle'});
+  T(s,236,340,'95% 이상 둥근 도형 선택','',12,{fill:C.ink,'font-weight':700,'text-anchor':'middle'});
+
+  // 뾰족한 도형 (Kiki)
+  const kikiPoints = "426,220 466,270 526,230 486,290 536,340 476,330 466,390 426,340 376,370 406,300 366,250 416,270";
+  const kShape = el('polygon',{points:kikiPoints,fill:C.redSoft,stroke:C.red,'stroke-width':3});
+  s.appendChild(kShape);
+  T(s,456,316,'키키 (Kiki)','',15,{fill:C.red,'font-weight':900,'text-anchor':'middle'});
+  T(s,456,340,'95% 이상 뾰족한 도형 선택','',12,{fill:C.ink,'font-weight':700,'text-anchor':'middle'});
+
+  W(s, 76, 440, [
+    '• 전 세계 95%의 인간은 언어·문화와 무관하게 둥근 것을 "부바", 뾰족한 것을 "키키"라 명명',
+    '• 인간의 뇌는 감각과 경험을 객관적 사실이 아닌 [주관적 직관과 연상]으로 자동 왜곡함',
+    '• 비즈니스 의사결정에서 “내 감(Gut Feeling)”을 믿는 순간 치명적인 실패가 시작됨'
+  ], 530, 'body', 13, 20, {'font-weight':700});
+
+  R(s,654,158,570,445,C.white,C.wine,12,1.2);
+  R(s,654,158,570,42,C.wine,'none',12);
+  R(s,654,180,570,20,C.wine);
+  T(s,674,186,'직관에 의존한 의사결정이 부르는 3대 비즈니스 참사','',15,{fill:'#fff','font-weight':900});
+
+  const disasters = [
+    ['1. 잘못된 타겟 고객 페르소나 설정', '의사결정권자 개인의 성향을 전체 고객의 대표 취향으로 착각하여 막대한 신제품 마케팅 예산 낭비'],
+    ['2. 계절성/일시적 유행의 영구화 착각', '특정 월의 깜짝 매출 상승을 장기적 성장 추세로 오판하여 과도한 설비 투자 및 재고 누적 참사'],
+    ['3. 상관관계를 인과관계로 둔갑', '단순히 함께 증가한 두 변수(예: 아이스크림 판매량과 익사 사고)를 원인과 결과로 착각해 엉뚱한 정책 수립']
+  ];
+  disasters.forEach((ds, i)=>{
+    const yy = 220 + i * 124;
+    R(s, 674, yy, 530, 112, C.wineSoft, C.wine, 8, 1);
+    T(s, 694, yy+26, ds[0], '', 14.5, {fill:C.wine,'font-weight':900});
+    W(s, 694, yy+50, ds[1], 490, '', 12.5, 18, {fill:C.ink,'font-weight':750});
+  });
+
+  anchor(s,'원칙 1의 결론 : “데이터 분석의 첫걸음은 내 직관이 틀릴 수 있음을 인정하고 숫자로 검증하는 것입니다.”');
+}
+
+// Slide 20: [원칙 1 심화] ledger:3-bias-solution
+function render20(s){
+  base(s,'03 · 데이터 분석 기획의 본질 4대 원칙','원칙 1 심화 · 직관의 함정을 극복하는 3대 인지편향 교정 솔루션','가용성 편향, 확증 편향, 기본적 귀인 오류를 극복하고 완벽한 객관성을 확보하는 기법',20,'ledger:3-bias-solution');
+
+  const biases = [
+    {
+      name: '1. 가용성 편향 (Availability Bias)',
+      caseStr: '최근 발생한 대형 불량 사고나 강렬했던 고객 불만 1건에 매몰되어 전체 공정이 불안정하다고 과도하게 판단하는 오류',
+      sol: '데이터 솔루션 : 감정이 아닌 전체 기간의 평균, 중앙값, 3시그마 관리한계선(UCL/LCL) 기반으로 객관적 평가',
+      col: C.blueSoft, stroke: C.blue
+    },
+    {
+      name: '2. 확증 편향 (Confirmation Bias)',
+      caseStr: '자신이 미리 정해둔 가설이나 결론(예: "우리 제품 가격이 비싸서 안 팔린다")에 들어맞는 데이터만 편향되게 수집하고 반대 증거는 무시',
+      sol: '데이터 솔루션 : 가설을 반증(Falsification)하는 대조군 데이터와 반대 가설을 의도적으로 분석 설계에 포함',
+      col: C.greenSoft, stroke: C.green
+    },
+    {
+      name: '3. 기본적 귀인 오류 (Attribution Error)',
+      caseStr: '매출 하락이나 공정 불량이 발생했을 때 외부 환경(시장 침체, 원자재 품질) 대신 담당자 개인의 태만이나 역량 탓으로 돌리는 오류',
+      sol: '데이터 솔루션 : 다변량 회귀분석을 통해 외부 거시경제 지표와 내부 공정 변수의 상대적 영향력(기여도)을 수치 분리',
+      col: C.wineSoft, stroke: C.wine
+    }
+  ];
+
+  biases.forEach((b, i)=>{
+    const yy = 158 + i * 148;
+    R(s, 56, yy, 1168, 138, C.white, b.stroke, 10, 1.2);
+    
+    R(s, 76, yy+14, 300, 28, b.col, 'none', 6);
+    T(s, 90, yy+33, b.name, '', 14.5, {fill:b.stroke,'font-weight':900});
+
+    W(s, 76, yy+56, '• 실제 오류 사례 : ' + b.caseStr, 1120, 'body', 12.5, 18, {'font-weight':700});
+
+    R(s, 76, yy+88, 1128, 38, b.col, b.stroke, 6, 0.8);
+    T(s, 96, yy+112, '👉 ' + b.sol, '', 13, {fill:b.stroke,'font-weight':900});
+  });
+
+  anchor(s,'데이터의 역할 : 데이터 분석은 보고서를 꾸미는 도구가 아니라, 인간의 편향된 시각을 교정하는 렌즈입니다.');
+}
+
+// Slide 21: [원칙 2: UNSEEN] grid:3-transform-stream
+function render21(s){
+  base(s,'03 · 데이터 분석 기획의 본질 4대 원칙','원칙 2 · SEE THE UNSEEN (보이지 않는 현상을 측정 가능한 데이터로)','물리적 신호(음성, 시각, 텍스트)를 4단계 기계어 변환 파이프라인을 거쳐 정량적 숫자로 전환',21,'grid:3-transform-stream');
+
+  const streams = [
+    {
+      title: '1. 음성 / 소리 (Voice & Audio)',
+      raw: '공기 진동 음파 (Sound Wave)',
+      steps: ['① 마이크 샘플링 (44.1kHz)', '② STFT 시간-주파수 변환', '③ Mel-Spectrogram 생성', '④ 데시벨(dB) / 주파수 행렬'],
+      biz: '🎯 적용 : 설비 이상 소음 감지 & 모터 고장 사전 예측',
+      col: C.blueSoft, stroke: C.blue
+    },
+    {
+      title: '2. 이미지 / 시각 (Vision & Defect)',
+      raw: '빛의 파장 및 반사 (Photon)',
+      steps: ['① 카메라 CCD 센서 수광', '② RGB 3채널 2차원 그리드', '③ 0~255 정수 텐서 변환', '④ CNN 픽셀 밝기/패턴 행렬'],
+      biz: '🎯 적용 : 웨이퍼 미세 스크래치 & 디스플레이 암점 검사',
+      col: C.greenSoft, stroke: C.green
+    },
+    {
+      title: '3. 언어 / 텍스트 (Text & VOC)',
+      raw: '인간의 언어 및 감정 (Natural Lang)',
+      steps: ['① 형태소 분석 및 토큰화', '② 불용어 제거 및 정규화', '③ Embedding 벡터 공간 매핑', '④ 1536차원 의미 밀집 벡터'],
+      biz: '🎯 적용 : 글로벌 고객 리뷰 감성 분석 & VOC 자동 분류',
+      col: C.wineSoft, stroke: C.wine
+    }
+  ];
+
+  streams.forEach((st, i)=>{
+    const xx = 56 + i * 398;
+    R(s, xx, 158, 376, 445, C.white, st.stroke, 10, 1.2);
+    
+    R(s, xx+16, 174, 260, 28, st.col, 'none', 6);
+    T(s, xx+26, 193, st.title, '', 14.5, {fill:st.stroke,'font-weight':900});
+
+    T(s, xx+16, 226, '원시 형태 : ' + st.raw, '', 12.5, {fill:C.muted,'font-weight':700});
+    L(s, xx+16, 242, xx+360, 242, st.stroke, 1, '2 2');
+
+    T(s, xx+16, 266, '[4단계 기계어 변환 파이프라인]', '', 12.5, {fill:st.stroke,'font-weight':900});
+    st.steps.forEach((step, si)=>{
+      const yy = 286 + si * 42;
+      R(s, xx+16, yy, 344, 34, st.col, 'none', 4);
+      T(s, xx+26, yy+22, step, '', 12.5, {fill:C.ink,'font-weight':800});
+    });
+
+    R(s, xx+16, 464, 344, 120, st.col, st.stroke, 8, 0.8);
+    W(s, xx+26, 490, st.biz, 324, '', 12.5, 18, {fill:st.stroke,'font-weight':900});
+  });
+
+  anchor(s,'원칙 2의 결론 : “측정할 수 없으면 관리할 수 없다. 세상의 모든 정성적 현상은 기계어로 변환되어 숫자가 됩니다.”');
+}
+
+// Slide 22: [원칙 2 심화] matrix:operational-def
+function render22(s){
+  base(s,'03 · 데이터 분석 기획의 본질 4대 원칙','원칙 2 심화 · 비즈니스 조작적 정의 (Operational Definition) 4대 매트릭스','추상적인 비즈니스 개념을 누구나 동일하게 측정할 수 있는 객관적 수학 수식으로 정의',22,'matrix:operational-def');
+
+  const defs = [
+    {
+      concept: '① 충성 고객 (Loyal Customer)',
+      meaning: '단순히 브랜드를 좋아하거나 호감을 표시하는 고객 (정성적 느낌)',
+      formula: '최근 6개월 이내 3회 이상 구매 AND 누적 결제금액 상위 10% AND NPS 추천 9점 이상',
+      biz: 'VIP 전담 케어 & 신제품 사전 독점 체험 혜택 부여'
+    },
+    {
+      concept: '② 이탈 위험 (Churn Risk)',
+      meaning: '서비스에 불만을 품고 곧 떠날 것 같은 고객 (막연한 불안감)',
+      formula: '마지막 접속일 경과 45일 초과 AND 장바구니 담은 후 이탈 3회 AND 최근 3개월간 CS 불만 접수 1회 이상',
+      biz: '웰컴백 30% 할인 쿠폰 발송 & 불만 사항 선제 해피콜'
+    },
+    {
+      concept: '③ 공정 안정성 (Process Stability)',
+      meaning: '공장이 큰 문제 없이 잘 돌아가고 있다는 주관적 보고 (경험적 직관)',
+      formula: '공정능력지수 Cpk ≥ 1.33 AND 8점 연속 중심선 한쪽 위치(Run) 0건 AND 규격 이탈(DPMO) ≤ 3,400개',
+      biz: '추가 설비 조정 없이 현재 공정 레시피 유지'
+    },
+    {
+      concept: '④ 임직원 직무 몰입도 (Engagement)',
+      meaning: '직원들이 회사에 대한 열정과 애사심을 갖고 열심히 일하는 상태',
+      formula: '월평균 정시퇴근율(18:30 이전) ≥ 85% AND 사내 교육 이수시간 ≥ 연 40h AND 분기 서베이 몰입도 ≥ 80점',
+      biz: '우수 조직 포상 및 자율 근무제 확대 거점 지정'
+    }
+  ];
+
+  defs.forEach((df, i)=>{
+    const yy = 158 + i * 112;
+    R(s, 56, yy, 1168, 102, C.white, C.line, 8, 1.2);
+    
+    R(s, 76, yy+12, 280, 26, C.blueSoft, 'none', 5);
+    T(s, 86, yy+30, df.concept, '', 13.5, {fill:C.blueDark,'font-weight':900});
+
+    W(s, 76, yy+48, '• 기존 추상적 관념 : ' + df.meaning, 530, '', 12, 16, {fill:C.muted,'font-weight':600});
+
+    L(s, 620, yy+12, 620, yy+90, C.line, 1);
+
+    T(s, 640, yy+28, '📐 조작적 정의 수식 :', '', 12.5, {fill:C.green,'font-weight':900});
+    W(s, 640, yy+48, df.formula, 520, '', 12.5, 17, {fill:C.ink,'font-weight':800});
+    T(s, 640, yy+86, '🎯 실행 액션 : ' + df.biz, '', 11.5, {fill:C.blueDark,'font-weight':750});
+  });
+
+  anchor(s,'기획의 핵심 : 모호한 현상을 명확한 계산 공식으로 정의할 때 비로소 진정한 데이터 기반 경영이 시작됩니다.');
+}
+
+// Slide 23: [원칙 3: 와인 가설 수립] split:wine-variables
+function render23(s){
+  base(s,'03 · 데이터 분석 기획의 본질 4대 원칙','원칙 3 · ASK THE BEST QUESTION (와인 품질 X1~X11 가설 수립)','데이터를 열기 전에 도메인 지식과 상식에 기반하여 가설(Hypothesis)을 먼저 수립하는 훈련',23,'split:wine-variables');
+
+  R(s,56,158,570,445,C.white,C.wine,12,1.2);
+  R(s,56,158,570,42,C.navy,'none',12);
+  R(s,56,180,570,20,C.navy);
+  T(s,76,186,'와인 품질(Y)을 결정하는 11가지 독립변수 (X1~X11)','',15,{fill:'#fff','font-weight':900});
+
+  const vars = [
+    ['X1. 고정 산도', '와인의 뼈대를 이루는 주석산 농도', 'X7. 총 이산화황', '산화 방지제의 총량'],
+    ['X2. 휘발성 산도', '식초 냄새를 유발하는 아세트산', 'X8. 밀도 (Density)', '알코올/당분에 따른 무게감'],
+    ['X3. 구연산 함량', '신선함과 풍미를 더하는 유기산', 'X9. 산도 (pH)', '와인의 산성도 수치'],
+    ['X4. 잔당 (Sugar)', '발효 후 남은 잔여 설탕량', 'X10. 황산염 함량', '항균 및 신선도 유지제'],
+    ['X5. 염화물 (Salt)', '와인에 포함된 짠맛 염분량', 'X11. 알코올 도수', '와인의 바디감과 취기'],
+    ['X6. 유리 이산화황', '자유 상태로 보존을 돕는 물질', 'Y. 와인 품질 점수', '0~10점 전문가 블라인드 평가']
+  ];
+  vars.forEach((v, i)=>{
+    const yy = 220 + i * 62;
+    R(s, 76, yy, 258, 54, '#f8fafc', C.line, 6);
+    T(s, 86, yy+22, v[0], '', 13, {fill:C.ink,'font-weight':850});
+    T(s, 86, yy+42, v[1], '', 11, {fill:C.muted,'font-weight':600});
+
+    R(s, 348, yy, 258, 54, v[2].startsWith('Y')?C.wineSoft:'#f8fafc', v[2].startsWith('Y')?C.wine:C.line, 6);
+    T(s, 358, yy+22, v[2], '', 13, {fill:v[2].startsWith('Y')?C.wine:C.ink,'font-weight':900});
+    T(s, 358, yy+42, v[3], '', 11, {fill:v[2].startsWith('Y')?C.wine:C.muted,'font-weight':600});
+  });
+
+  R(s,654,158,570,445,C.white,C.wine,12,1.2);
+  R(s,654,158,570,42,C.wine,'none',12);
+  R(s,654,180,570,20,C.wine);
+  T(s,674,186,'분석 전 수립한 4대 가설 vs 머신러닝 실제 검증 결과','',15,{fill:'#fff','font-weight':900});
+
+  const hypos = [
+    ['가설 1 : 알코올 도수(X11)가 높을수록 품질이 좋을 것이다.', '✅ 채택 : 상관계수 +0.48로 품질과 가장 강한 양의 상관관계 확인', C.greenSoft, C.green],
+    ['가설 2 : 단맛(X4 잔당)이 강할수록 대중적 평가가 높을 것이다.', '❌ 기각 : 잔당과 품질 간 상관관계는 거의 0에 수렴 (-0.01)', C.redSoft, C.red],
+    ['가설 3 : 식초 냄새(X2 휘발산)가 높을수록 품질이 떨어질 것이다.', '✅ 채택 : 상관계수 -0.39로 품질을 떨어뜨리는 최대 부정 요인', C.greenSoft, C.green],
+    ['가설 4 : 구연산(X3)과 황산염(X10)은 풍미를 높여줄 것이다.', '✅ 채택 : 산뜻한 산미와 보존력이 품질을 유의미하게 향상', C.greenSoft, C.green]
+  ];
+  hypos.forEach((hp, i)=>{
+    const yy = 220 + i * 94;
+    R(s, 674, yy, 530, 84, hp[2], hp[3], 6, 0.8);
+    T(s, 694, yy+24, hp[0], '', 13.5, {fill:C.ink,'font-weight':850});
+    W(s, 694, yy+48, hp[1], 490, '', 12.5, 18, {fill:hp[3],'font-weight':900});
+  });
+
+  anchor(s,'원칙 3의 결론 : “가설 없이 데이터를 열면 숫자의 바다에 빠집니다. 날카로운 질문을 먼저 던지고 검증하십시오.”');
+}
+
+// Slide 24: [원칙 4: SIMPLE] compare:big-vs-small
+function render24(s){
+  base(s,'03 · 데이터 분석 기획의 본질 4대 원칙','원칙 4 · SIMPLE IS ENOUGH (빅데이터의 환상 vs 스몰데이터의 힘)','수백억 원짜리 거대 빅데이터 플랫폼보다 현장의 맥락이 담긴 스몰데이터 10개가 더 강력한 이유',24,'compare:big-vs-small');
+
+  R(s,56,158,570,445,C.white,C.blue,12,1.2);
+  R(s,56,158,570,42,C.navy,'none',12);
+  R(s,56,180,570,20,C.navy);
+  T(s,76,186,'빅데이터 (Big Data)의 치명적 한계와 비효율','',15,{fill:'#fff','font-weight':900});
+
+  const bigItems = [
+    ['수십억 원의 막대한 인프라 구축 비용', '하둡(Hadoop), 스파크(Spark), 대규모 데이터 레이크 구축에 수년의 시간과 막대한 IT 예산 소모'],
+    ['맥락(Context) 부재와 엄청난 노이즈(Noise)', '로그 데이터가 수억 건 쌓여도 "왜 고객이 제품을 결제하지 않고 나갔는지" 진짜 속마음(Why)은 알 수 없음'],
+    ['의사결정 지연 및 분석 피로감', '데이터 정제와 추출에만 수개월이 걸려 정작 마케팅 타이밍을 놓치고 경영진에게 외면받음']
+  ];
+  bigItems.forEach((bi, i)=>{
+    const yy = 220 + i * 124;
+    R(s, 76, yy, 530, 112, '#f8fafc', C.line, 8, 1);
+    T(s, 96, yy+26, bi[0], '', 14.5, {fill:C.body,'font-weight':850});
+    W(s, 96, yy+50, bi[1], 490, '', 12.5, 18, {fill:C.muted,'font-weight':600});
+  });
+
+  R(s,654,158,570,445,C.white,C.green,12,1.2);
+  R(s,654,158,570,42,C.green,'none',12);
+  R(s,654,180,570,20,C.green);
+  T(s,674,186,'스몰데이터 (Small Data)의 실전적 파워와 강점','',15,{fill:'#fff','font-weight':900});
+
+  const smallItems = [
+    ['현장의 구체적 맥락과 인간 행동의 단서', '고객 10명의 매장 내 동선, 표정, 손짓, 머무름 시간 관찰만으로 즉각적인 개선 아이디어 도출'],
+    ['10분 만에 끝나는 초경량 실무 분석', '별도 서버 없이 엑셀 시트 1개와 LLM 프롬프트만으로 당일 즉시 의사결정 및 현업 실행'],
+    ['행동을 바꾸는 직접적이고 명확한 인과관계', '단순 상관관계를 넘어 "무엇을 바꾸면 매출이 오르는지" 명확한 인과 솔루션 제공']
+  ];
+  smallItems.forEach((si, i)=>{
+    const yy = 220 + i * 124;
+    R(s, 674, yy, 530, 112, C.greenSoft, C.green, 8, 1.2);
+    T(s, 694, yy+26, si[0], '', 14.5, {fill:C.green,'font-weight':900});
+    W(s, 694, yy+50, si[1], 490, '', 12.5, 18, {fill:C.ink,'font-weight':750});
+  });
+
+  anchor(s,'원칙 4의 결론 : “데이터의 크기가 중요한 것이 아니라, 그 데이터가 담고 있는 통찰의 밀도가 중요합니다.”');
+}
+
+// Slide 25: [원칙 4 심화] grid:6-pattern-retail
+function render25(s){
+  base(s,'03 · 데이터 분석 기획의 본질 4대 원칙','원칙 4 심화 · 온더힐 (On The Hill) 쇼핑행동 스몰데이터 6대 패턴','파코 언더힐의 환경심리학 기반 매장 내 고객 관찰 데이터가 비즈니스를 바꾼 6대 혁신 사례',25,'grid:6-pattern-retail');
+
+  const retailPatterns = [
+    { n: '①', t: '감속 구간 (Decompression Zone)', d: '매장 입구 3~5m는 적응 구역이므로 전단지나 메인 상품을 배치하면 안 됨 (안쪽 배치 시 구매율 +30%)', col: C.blueSoft, stroke: C.blue },
+    { n: '②', t: '우측 통행 편향 (Right-Hand Bias)', d: '고객의 85%는 매장 진입 시 오른쪽을 먼저 바라봄 (주력 고수익 신제품은 반드시 우측에 배치)', col: C.greenSoft, stroke: C.green },
+    { n: '③', t: '비접촉 효과 (Butt-Brush Effect)', d: '여성 고객은 통로가 좁아 뒤에서 타인과 옷깃이 스치면 즉시 매장을 이탈함 (통로 1.2m 확보 필수)', col: C.redSoft, stroke: C.red },
+    { n: '④', t: '체류 시간과 구매율 비례', d: '매장에 머무는 시간이 1분 증가할 때마다 객단가가 1.3배씩 증가 (휴식 의자와 체험존 설치)', col: C.goldSoft, stroke: C.gold },
+    { n: '⑤', t: '접촉 효과 (Touch Effect)', d: '제품을 손으로 직접 만져본 고객은 그렇지 않은 고객보다 구매 확률이 3배 이상 급증', col: C.wineSoft, stroke: C.wine },
+    { n: '⑥', t: '계산대 미끼 상품 (Impulse Buy)', d: '결제를 위해 줄을 서는 대기선 옆에 껌, 배터리 등 소액 스낵을 배치하여 추가 매출 15% 창출', col: C.blueSoft, stroke: C.blue }
+  ];
+
+  retailPatterns.forEach((rp, i)=>{
+    const col = i % 3, row = Math.floor(i / 3);
+    const xx = 56 + col * 398, yy = 158 + row * 225;
+    R(s, xx, yy, 376, 210, rp.col, rp.stroke, 8, 1.2);
+    
+    CIRC(s, xx+26, yy+26, 14, rp.stroke);
+    T(s, xx+26, yy+31, rp.n, '', 13, {fill:'#fff','font-weight':900,'text-anchor':'middle'});
+    T(s, xx+48, yy+31, rp.t, '', 15, {fill:C.ink,'font-weight':900});
+    
+    L(s, xx+16, yy+48, xx+360, yy+48, rp.stroke, 1, '2 2');
+    W(s, xx+16, yy+74, rp.d, 344, 'body', 13, 20, {'font-weight':750});
+  });
+
+  anchor(s,'스몰데이터 통찰 : 복잡한 서버 로그 없이도 매장 내 고객의 발걸음과 시선을 관찰하는 것만으로 매출을 35% 올릴 수 있습니다.');
+}
+
+// Slide 26: [단원 간지 04] chapter-gate
+function render26(s){
+  chapterGate(s, '04', '데이터 분석 표준 5단계 프로세스와\n기초 통계 추론의 본질', 'MODULE 04 · 5-STAGE PIPELINE & STATISTICS', [
+    '“실무 데이터 분석 프로젝트는 어떤 순서로 진행해야 하는가?”',
+    '문제 정의부터 배포까지의 5단계 표준 파이프라인과,',
+    '1,500만 CRM 메타데이터 설계 및 95% 신뢰구간 추론 통계를 마스터합니다.'
+  ], 26);
+}
+
+// Slide 27: [5단계 워크플로우] flow:5-stage-pipeline
+function render27(s){
+  base(s,'04 · 데이터 분석 5단계 프로세스 & 통계 기초','데이터 분석 표준 5단계 워크플로우 (문제정의 ➔ 배포)','기획부터 수집, 전처리, 모델링, 비즈니스 의사결정 배포까지 한눈에 보는 완결형 파이프라인',27,'flow:5-stage-pipeline');
+
+  const steps5 = [
+    { n: '01', t: '문제 정의 & 가설', d: '비즈니스 과제 도출 및 X/Y 변수 조작적 정의 수식 수립', out: '📄 분석 기획서 & 가설 목록', col: C.blueSoft, stroke: C.blue },
+    { n: '02', t: '데이터 수집 & 결합', d: '사내 DB, 엑셀, ERP, 외부 API 및 크롤링 데이터 확보', out: '📊 원시 통합 데이터셋', col: C.greenSoft, stroke: C.green },
+    { n: '03', t: '탐색적 분석 (EDA)', d: '결측치/이상치 정제, 기술통계량 산출, 상관관계 시각화', out: '📈 통계 요약표 & 히트맵', col: C.goldSoft, stroke: C.gold },
+    { n: '04', t: '통계/ML 모델링', d: '회귀, 분류, 군집(K-Means), 시계열 예측 알고리즘 학습', out: '🤖 학습 완료 예측 모델', col: C.wineSoft, stroke: C.wine },
+    { n: '05', t: '배포 & 의사결정', d: '웹 대시보드 배포, 현업 액션플랜 수립 및 비즈니스 적용', out: '🚀 라이브 대시보드 URL', col: C.redSoft, stroke: C.red }
+  ];
+
+  steps5.forEach((st, i)=>{
+    const xx = 56 + i * 236;
+    R(s, xx, 158, 224, 445, C.white, st.stroke, 10, 1.2);
+    
+    R(s, xx+16, 174, 40, 30, st.col, 'none', 6);
+    T(s, xx+36, 195, st.n, '', 14, {fill:st.stroke,'font-weight':900,'text-anchor':'middle'});
+    
+    T(s, xx+16, 232, st.t, '', 14.5, {fill:C.ink,'font-weight':900});
+    L(s, xx+16, 250, xx+208, 250, st.stroke, 1, '2 2');
+
+    W(s, xx+16, 276, st.d, 192, 'body', 12.5, 18, {'font-weight':750});
+
+    R(s, xx+14, 490, 196, 95, st.col, st.stroke, 6, 0.8);
+    T(s, xx+24, 516, '핵심 산출물 :', '', 11.5, {fill:C.muted,'font-weight':700});
+    W(s, xx+24, 540, st.out, 176, '', 12, 17, {fill:st.stroke,'font-weight':900});
+  });
+
+  anchor(s,'프로세스 원칙 : 각 단계의 산출물이 다음 단계의 입력이 되는 체계적인 파이프라인을 구축해야 프로젝트 실패가 없습니다.');
+}
+
+// Slide 28: [사업보고서 과제 도출] split:prompt-task-map
+function render28(s){
+  base(s,'04 · 데이터 분석 5단계 프로세스 & 통계 기초','실제 사내 공시 사업보고서를 활용한 부문별 분석 과제 도출','DART 전자공시 사업보고서 텍스트를 LLM에 주입하여 DS/DX/SDC 부문별 최우선 데이터 과제 발굴',28,'split:prompt-task-map');
+
+  R(s,56,158,570,445,C.white,C.blue,12,1.2);
+  R(s,56,158,570,42,C.navy,'none',12);
+  R(s,56,180,570,20,C.navy);
+  T(s,76,186,'사업보고서 분석 메타프롬프트 실행 템플릿','',15,{fill:'#fff','font-weight':900});
+
+  R(s,76,220,530,360,'#0f172a','#1e293b',8,1.4);
+  const prD = [
+    '“너는 삼성전자 경영전략실 수석 컨설턴트야.',
+    '첨부된 [2026_삼성전자_사업보고서_사업의내용.txt]를 분석하여,',
+    '',
+    '1. DS(반도체), DX(가전/모바일), SDC(디스플레이) 부문별',
+    '   핵심 경영 리스크 요인 3가지를 도출하고,',
+    '2. 각 리스크를 해결하기 위해 사내 데이터로 해결 가능한',
+    '   [최우선 머신러닝/통계 분석 과제 5개]를 제안해줘.',
+    '',
+    '출력 형식: [부문명 | 핵심 당면과제 | 필요 데이터 | 추천 알고리즘 | 기대효과]”'
+  ];
+  prD.forEach((pd, pdi)=>{
+    T(s, 96, 256 + pdi * 28, pd, 'mono', 12, {fill:pdi===0||pdi===8?'#38bdf8':'#f8fafc','font-weight':700});
+  });
+
+  R(s,654,158,570,445,C.white,C.green,12,1.2);
+  R(s,654,158,570,42,C.green,'none',12);
+  R(s,654,180,570,20,C.green);
+  T(s,674,186,'도출된 부문별 핵심 분석 과제 Top 3','',15,{fill:'#fff','font-weight':900});
+
+  const secTasks = [
+    { sec: 'DS 부문 (반도체)', task: '첨단 2nm 공정 웨이퍼 수율 조기 안정화', sol: '온도/가스압력 3D 반응표면 최적화 모델 (수율 +2.5%p)', col: C.blueSoft, stroke: C.blue },
+    { sec: 'SDC 부문 (디스플레이)', task: 'OLED 패널 두께 균일도 산포 극소화', sol: '식스시그마 4.23σ 품질 SPC 관리 (연 12억 원 절감)', col: C.greenSoft, stroke: C.green },
+    { sec: 'DX 부문 (글로벌 CRM)', task: '프리미엄 스마트폰 고객 이탈 방어', sol: 'K-Means 3대 군집화 & LTV 극대화 마케팅 (재구매율 +35%)', col: C.wineSoft, stroke: C.wine }
+  ];
+  secTasks.forEach((st, i)=>{
+    const yy = 220 + i * 124;
+    R(s, 674, yy, 530, 112, st.col, st.stroke, 8, 1);
+    T(s, 694, yy+26, st.sec, '', 14.5, {fill:st.stroke,'font-weight':900});
+    T(s, 694, yy+54, '• 당면 과제 : ' + st.task, '', 13, {fill:C.ink,'font-weight':750});
+    W(s, 694, yy+78, '👉 데이터 솔루션 : ' + st.sol, 490, '', 12.5, 18, {fill:st.stroke,'font-weight':900});
+  });
+
+  anchor(s,'과제 도출의 힘 : 경영진의 고민이 담긴 사업보고서에서 출발할 때 데이터 분석이 조직의 핵심 무기가 됩니다.');
+}
+
+// Slide 29: [CRM 메타데이터] ledger:5-area-metadata
+function render29(s){
+  base(s,'04 · 데이터 분석 5단계 프로세스 & 통계 기초','1,500만 글로벌 CRM 데이터셋 20개 컬럼 메타데이터 명세서','고객식별, 인구통계, 거래이력, 상호작용, 디지털행동 등 5대 영역 20개 핵심 변수 구조 설계',29,'ledger:5-area-metadata');
+
+  const metaAreas = [
+    { title: '1. 고객 식별 & 인구통계 (Demographics)', cols: '고객ID, 가입일자, 연령대, 성별, 거주국가(24개국), 거주도시구분', type: '명목형 / 범주형 (Categorical)', desc: '고객 세그먼테이션 기본 축' },
+    { title: '2. 거래 & 구매 이력 (Transaction RFM)', cols: '총구매금액($), 구매건수, 최근구매경과일(Recency), 평균객단가', type: '연속형 수치 (Continuous Numeric)', desc: 'RFM 기반 고객 가치 평가' },
+    { title: '3. 제품 선호 & 카테고리 (Preference)', cols: '선호카테고리(스마트폰/TV/가전), 주요결제수단, 환불반품횟수', type: '순서형 / 범주형 (Ordinal & Cat)', desc: '교차판매 및 프로모션 타겟팅' },
+    { title: '4. 서비스 상호작용 & VOC (Service)', cols: 'CS문의건수, 고객만족도(NPS 0~10), 멤버십등급(4단계)', type: '이산형 수치 & 순서형 (Discrete)', desc: '이탈 징후 감지 및 전담 케어' },
+    { title: '5. 디지털 행동 로그 (Digital Footprint)', cols: '앱접속일수, 푸시클릭률(%), 장바구니포기건수, 체류시간(분)', type: '비율 척도 (Ratio Scale)', desc: '실시간 앱 UI/UX 개인화' }
+  ];
+
+  metaAreas.forEach((ma, i)=>{
+    const yy = 158 + i * 88;
+    R(s, 56, yy, 1168, 78, C.white, C.line, 8, 1.2);
+    
+    R(s, 76, yy+12, 330, 26, C.blueSoft, 'none', 5);
+    T(s, 86, yy+30, ma.title, '', 13, {fill:C.blueDark,'font-weight':900});
+
+    W(s, 76, yy+48, '컬럼 구성 : ' + ma.cols, 560, 'mono', 11.5, 15, {fill:C.ink,'font-weight':750});
+
+    L(s, 660, yy+12, 660, yy+66, C.line, 1);
+
+    T(s, 680, yy+28, '📊 데이터 타입 : ' + ma.type, '', 12, {fill:C.green,'font-weight':850});
+    T(s, 680, yy+50, '🎯 비즈니스 활용 : ' + ma.desc, '', 12, {fill:C.body,'font-weight':700});
+  });
+
+  anchor(s,'메타데이터 설계 : 완벽한 메타데이터 정의서가 있어야 데이터 분석가와 현업 기획자가 동일한 언어로 소통할 수 있습니다.');
+}
+
+// Slide 30: [20대 과제 매핑] ledger:20-task-algorithms
+function render30(s){
+  base(s,'04 · 데이터 분석 5단계 프로세스 & 통계 기초','1,500만 CRM 메타데이터 기반 20대 분석과제 매핑 매트릭스','기술통계, 가설검정, 머신러닝 지도학습(분류/회귀), 비지도학습(군집)으로 체계화된 과제 맵',30,'ledger:20-task-algorithms');
+
+  const tasks4 = [
+    {
+      cat: '➊ 기술통계 & 교차집계 (EDA 과제 5개)',
+      list: '① 국가별 평균 구매금액 비교  ② 연령대별 선호 제품 교차표  ③ 월별 결제수단 비중 추이  ④ NPS 만족도 분포  ⑤ 반품률 상위 품목',
+      algo: '피벗테이블, 기술통계량(평균/중앙값), 교차분석표(Crosstab)',
+      col: C.blueSoft, stroke: C.blue
+    },
+    {
+      cat: '➋ 추론통계 & 가설검정 (통계 검정 과제 5개)',
+      list: '⑥ 성별에 따른 NPS 차이(T-test)  ⑦ 24개국 간 객단가 분산분석(ANOVA)  ⑧ 푸시클릭과 구매의 독립성(카이제곱)  ⑨ 95% 신뢰구간',
+      algo: '독립표본 t-검정, 일원배치 분산분석, 카이제곱 독립성 검정',
+      col: C.greenSoft, stroke: C.green
+    },
+    {
+      cat: '➌ 지도학습 머신러닝 (예측/분류 과제 5개)',
+      list: '⑪ 고객 이탈 여부 분류(Classification)  ⑫ 연간 총구매액 다중회귀예측  ⑬ 멤버십 등급 판별  ⑭ 장바구니 구매전환 확률  ⑮ LTV 예측',
+      algo: 'Random Forest, XGBoost, 로지스틱 회귀, 다중 선형 회귀',
+      col: C.goldSoft, stroke: C.gold
+    },
+    {
+      cat: '➍ 비지도학습 & 추천 (패턴 발견 과제 5개)',
+      list: '⑯ K-Means 고객 군집화(VIP/실속/이탈)  ⑰ 동시구매 연관성(장바구니 분석)  ⑱ 차원축소(PCA)  ⑲ 이상 결제 FDS  ⑳ 맞춤 상품 추천',
+      algo: 'K-Means Clustering, Apriori 연관규칙, Isolation Forest',
+      col: C.wineSoft, stroke: C.wine
+    }
+  ];
+
+  tasks4.forEach((tk, i)=>{
+    const yy = 158 + i * 112;
+    R(s, 56, yy, 1168, 102, C.white, tk.stroke, 8, 1.2);
+    
+    R(s, 76, yy+12, 330, 26, tk.col, 'none', 5);
+    T(s, 86, yy+30, tk.cat, '', 13.5, {fill:tk.stroke,'font-weight':900});
+
+    W(s, 76, yy+48, tk.list, 600, 'body', 12, 17, {'font-weight':750});
+
+    L(s, 700, yy+12, 700, yy+90, C.line, 1);
+
+    T(s, 720, yy+28, '🤖 적용 핵심 알고리즘 & 도구 :', '', 12, {fill:tk.stroke,'font-weight':900});
+    W(s, 720, yy+48, tk.algo, 450, 'mono', 12, 16, {fill:C.ink,'font-weight':800});
+  });
+
+  anchor(s,'체계적 접근 : 하나의 데이터셋에서도 비즈니스 목적에 따라 기술통계부터 머신러닝까지 20개 이상의 과제가 도출됩니다.');
+}
+
+// Slide 31: [대표값 & 산포도] split:stats-center-disp
+function render31(s){
+  base(s,'04 · 데이터 분석 5단계 프로세스 & 통계 기초','통계 기초 1 · 대표값(평균/중앙값/최빈값)과 산포도(분산/표준편차/IQR)','데이터의 중심 위치와 흩어진 정도를 파악하여 왜곡된 평균의 함정을 피하는 법',31,'split:stats-center-disp');
+
+  R(s,56,158,570,445,C.white,C.blue,12,1.2);
+  R(s,56,158,570,42,C.navy,'none',12);
+  R(s,56,180,570,20,C.navy);
+  T(s,76,186,'데이터의 중심 위치 · 대표값 3총사 비교','',15,{fill:'#fff','font-weight':900});
+
+  const reps = [
+    ['산술 평균 (Mean)', '전체 합계 / 개수', '극단적 이상치(Outlier)에 매우 취약함 (예: 억대 연봉자 1명이 평균 급여 왜곡)'],
+    ['중앙값 (Median)', '크기 순 정렬 시 정중앙 값', '이상치에 매우 강건함(Robust) ➔ 소득, 자산, 체류시간 분석 시 필수 적용'],
+    ['최빈값 (Mode)', '가장 자주 등장한 최다 빈도', '범주형 데이터(선호 색상, 결제 수단, 방문 요일)의 대표값으로 활용']
+  ];
+  reps.forEach((rp, i)=>{
+    const yy = 218 + i * 124;
+    R(s, 76, yy, 530, 112, C.blueSoft, C.blue, 8, 1);
+    T(s, 96, yy+26, rp[0], '', 14.5, {fill:C.blueDark,'font-weight':900});
+    T(s, 280, yy+26, '공식: ' + rp[1], 'mono', 12, {fill:C.ink,'font-weight':750});
+    W(s, 96, yy+52, rp[2], 490, 'body', 12.5, 18, {'font-weight':700});
+  });
+
+  R(s,654,158,570,445,C.white,C.green,12,1.2);
+  R(s,654,158,570,42,C.green,'none',12);
+  R(s,654,180,570,20,C.green);
+  T(s,674,186,'데이터의 흩어짐 정도 · 산포도 3대 지표','',15,{fill:'#fff','font-weight':900});
+
+  const disps = [
+    ['분산 (Variance · s²)', '편차 제곱의 평균', '데이터가 평균으로부터 얼마나 멀리 퍼져 있는지 수치화 (단위가 제곱되어 직관성 저하)'],
+    ['표준편차 (Std Dev · s)', '분산의 제곱근 (√s²)', '원래 데이터와 동일한 단위를 가지며 공정 관리(식스시그마 σ)의 핵심 표준 지표'],
+    ['사분위범위 (IQR)', 'Q3(75%) - Q1(25%)', '데이터 중앙 50%의 구간 폭 ➔ 이상치 판별 박스플롯(Boxplot)의 기준선']
+  ];
+  disps.forEach((dp, i)=>{
+    const yy = 218 + i * 124;
+    R(s, 674, yy, 530, 112, C.greenSoft, C.green, 8, 1);
+    T(s, 694, yy+26, dp[0], '', 14.5, {fill:C.green,'font-weight':900});
+    T(s, 890, yy+26, '공식: ' + dp[1], 'mono', 12, {fill:C.ink,'font-weight':750});
+    W(s, 694, yy+52, dp[2], 490, 'body', 12.5, 18, {'font-weight':700});
+  });
+
+  anchor(s,'대표값의 함정 : “평균 25세, 평균 연봉 5천만 원”이라는 한 줄 뒤에 숨겨진 표준편차와 중앙값을 함께 보아야 진실이 보입니다.');
+}
+
+// Slide 32: [왜도 & 정제] split:distribution-cleanse
+function render32(s){
+  base(s,'04 · 데이터 분석 5단계 프로세스 & 통계 기초','통계 기초 2 · 왜도/첨도와 결측치/이상치 정제 기법','비대칭 분포를 정규분포로 변환하는 로그변환과 실무 결측치 4대 대체 전략',32,'split:distribution-cleanse');
+
+  R(s,56,158,570,445,C.white,C.wine,12,1.2);
+  R(s,56,158,570,42,C.navy,'none',12);
+  R(s,56,180,570,20,C.navy);
+  T(s,76,186,'왜도 (Skewness) & 첨도 (Kurtosis) 분포 진단','',15,{fill:'#fff','font-weight':900});
+
+  const skews = [
+    ['우측 꼬리 분포 (Positive Skew > 0)', '소득, 매출, 웹 체류시간처럼 소수의 대박 데이터가 우측으로 길게 늘어진 형태 ➔ [로그 변환 np.log1p()] 적용하여 정규화'],
+    ['좌측 꼬리 분포 (Negative Skew < 0)', '시험 점수, 쉬운 만족도 조사처럼 대부분 고득점에 쏠려 있는 형태 ➔ 지수/제곱 변환 적용'],
+    ['첨도 (Kurtosis > 3 ➔ 뾰족한 분포)', '중심에 데이터가 지나치게 밀집되고 꼬리가 두꺼운 형태(Heavy-tailed) ➔ 이상치 철저 검증']
+  ];
+  skews.forEach((sk, i)=>{
+    const yy = 220 + i * 124;
+    R(s, 76, yy, 530, 112, C.wineSoft, C.wine, 8, 1);
+    T(s, 96, yy+26, sk[0], '', 14, {fill:C.wine,'font-weight':900});
+    W(s, 96, yy+50, sk[1], 490, 'body', 12.5, 18, {'font-weight':700});
+  });
+
+  R(s,654,158,570,445,C.white,C.wine,12,1.2);
+  R(s,654,158,570,42,C.wine,'none',12);
+  R(s,654,180,570,20,C.wine);
+  T(s,674,186,'실무 결측치(Null) & 이상치(Outlier) 4대 정제 전략','',15,{fill:'#fff','font-weight':900});
+
+  const clns = [
+    ['1. 행 일괄 삭제 (Dropna)', '결측치 비율이 전체의 3% 미만일 때만 안전하게 적용 (정보 손실 최소화)'],
+    ['2. 대표값 대체 (Imputation)', '수치형은 [중앙값], 범주형은 [최빈값] 또는 직무/그룹별 평균으로 세분화 대체'],
+    ['3. IQR 1.5배 이상치 클리핑', 'Q1 - 1.5×IQR 미만 / Q3 + 1.5×IQR 초과 값을 경계값으로 클리핑(Winsorizing)'],
+    ['4. 머신러닝 기반 대체 (KNN/MICE)', '다른 변수들과의 관계를 학습하여 가장 가능성 높은 값으로 정밀 추정 대체']
+  ];
+  clns.forEach((cl, i)=>{
+    const yy = 220 + i * 94;
+    R(s, 674, yy, 530, 84, '#f8fafc', C.line, 6, 1);
+    T(s, 694, yy+24, cl[0], '', 13.5, {fill:C.ink,'font-weight':850});
+    W(s, 694, yy+48, cl[1], 490, '', 12, 17, {fill:C.muted,'font-weight':600});
+  });
+
+  anchor(s,'전처리의 중요성 : “Garbage In, Garbage Out” — 정제되지 않은 데이터로 돌린 머신러닝은 100% 왜곡된 결과를 냅니다.');
+}
+
+// Slide 33: [추론통계 실전] split:confidence-interval
+function render33(s){
+  base(s,'04 · 데이터 분석 5단계 프로세스 & 통계 기초','통계 기초 3 · 표본에서 모집단 추론 (95% 신뢰구간 실무 브리핑)','임직원 5,000명 중 표본 300명의 직무만족도(78.5점)로 전사 신뢰구간을 경영진에게 브리핑하는 법',33,'split:confidence-interval');
+
+  R(s,56,158,570,445,C.white,C.blue,12,1.2);
+  R(s,56,158,570,42,C.navy,'none',12);
+  R(s,56,180,570,20,C.navy);
+  T(s,76,186,'95% 신뢰구간 (Confidence Interval) 수학적 산출','',15,{fill:'#fff','font-weight':900});
+
+  const ciSteps = [
+    ['표본 데이터', '표본 크기 n = 300 명, 표본 평균 x̄ = 78.5 점, 표본 표준편차 s = 12.4 점'],
+    ['표준 오차 (SE)', 'SE = s / √n = 12.4 / √300 = 0.716 점'],
+    ['오차 한계 (Margin)', 'ME = 1.96 × SE = 1.96 × 0.716 = ± 1.40 점 (95% 신뢰수준 Z=1.96)'],
+    ['최종 95% 신뢰구간', '78.5 ± 1.40 점 ➔ [ 77.10 점 ~ 79.90 점 ]']
+  ];
+  ciSteps.forEach((cs, i)=>{
+    const yy = 220 + i * 94;
+    R(s, 76, yy, 530, 84, i===3?C.blueSoft:'#f8fafc', i===3?C.blue:C.line, 6, i===3?1.2:1);
+    T(s, 96, yy+24, cs[0], '', 13.5, {fill:i===3?C.blueDark:C.ink,'font-weight':900});
+    T(s, 96, yy+50, cs[1], i===3?'mono':'', 13, {fill:i===3?C.blueDark:C.body,'font-weight':800});
+  });
+
+  R(s,654,158,570,445,C.white,C.green,12,1.2);
+  R(s,654,158,570,42,C.green,'none',12);
+  R(s,654,180,570,20,C.green);
+  T(s,674,186,'경영진 보고용 표준 스크립트 (완벽한 실무 멘트)','',15,{fill:'#fff','font-weight':900});
+
+  R(s,674,220,530,360,C.greenSoft,C.green,8,1.2);
+  const scriptText = [
+    '“대표이사님 및 임원진 여러분,',
+    '',
+    '전사 5,000명 중 무작위 표본 300명을 대상으로 조사한 결과,',
+    '직무 만족도 평균은 78.5점으로 나타났습니다.',
+    '',
+    '95% 신뢰수준 하에서 표본오차는 ±1.40점이며,',
+    '전체 5,000명 임직원의 실제 만족도는 [77.1점에서 79.9점 사이]에',
+    '존재할 확률이 95%입니다.',
+    '',
+    '따라서 전사 목표치인 75점을 유의미하게 상회하고 있습니다.”'
+  ];
+  scriptText.forEach((st, sti)=>{
+    T(s, 694, 250 + sti * 27, st, '', 13, {fill:sti===3||sti===6?C.green:C.ink,'font-weight':sti===3||sti===6?900:650});
+  });
+
+  anchor(s,'추론통계의 가치 : 전수조사에 수천만 원을 쓰지 않고도 300명 표본으로 전사 상태를 95% 정확도로 추정합니다.');
+}
+
+// Slide 34: [머신러닝 지도 vs 비지도 맵] matrix:ml-supervised-unsupervised
+function render34(s){
+  base(s,'04 · 데이터 분석 5단계 프로세스 & 통계 기초','머신러닝 지도학습(회귀/분류) vs 비지도학습(군집/연관) 전체 조감도','정답(Y)의 유무에 따라 최적의 알고리즘을 선택하는 머신러닝 종합 맵',34,'matrix:ml-supervised-unsupervised');
+
+  R(s,56,158,570,445,C.white,C.blue,12,1.2);
+  R(s,56,158,570,42,C.blue,'none',12);
+  R(s,56,180,570,20,C.blue);
+  T(s,76,186,'지도학습 (Supervised Learning) · 정답(라벨 Y)이 있는 경우','',15,{fill:'#fff','font-weight':900});
+
+  const sup = [
+    ['회귀 (Regression · 연속형 Y 예측)', '매출액, 공정 온도, 웨이퍼 수율, 고객 LTV 예측', 'Linear Regression, Ridge, Lasso, XGBoost Regressor'],
+    ['분류 (Classification · 범주형 Y 판별)', '고객 이탈 여부(0/1), 반도체 결함 유무, 스팸 분류', 'Logistic Regression, Random Forest, LightGBM, SVM']
+  ];
+  sup.forEach((sp, i)=>{
+    const yy = 220 + i * 184;
+    R(s, 76, yy, 530, 168, C.blueSoft, C.blue, 8, 1);
+    T(s, 96, yy+28, sp[0], '', 14.5, {fill:C.blueDark,'font-weight':900});
+    T(s, 96, yy+62, '🎯 실무 과제 : ' + sp[1], '', 12.5, {fill:C.ink,'font-weight':750});
+    W(s, 96, yy+94, '🤖 대표 알고리즘 : ' + sp[2], 490, 'mono', 12, 18, {fill:C.blueDark,'font-weight':800});
+  });
+
+  R(s,654,158,570,445,C.white,C.green,12,1.2);
+  R(s,654,158,570,42,C.green,'none',12);
+  R(s,654,180,570,20,C.green);
+  T(s,674,186,'비지도학습 (Unsupervised Learning) · 정답(라벨 Y)이 없는 경우','',15,{fill:'#fff','font-weight':900});
+
+  const unsup = [
+    ['군집화 (Clustering · 유사 그룹 묶기)', '1,500만 고객 세분화, 매장 유형화, 결함 패턴 군집', 'K-Means, DBSCAN, 계층적 군집분석(Hierarchical)'],
+    ['차원축소 & 연관 (Dimensionality / Assoc)', '수백 개 센서 변수 압축, 장바구니 동시구매 추천', 'PCA(주성분분석), t-SNE, Apriori 연관규칙']
+  ];
+  unsup.forEach((usp, i)=>{
+    const yy = 220 + i * 184;
+    R(s, 674, yy, 530, 168, C.greenSoft, C.green, 8, 1);
+    T(s, 694, yy+28, usp[0], '', 14.5, {fill:C.green,'font-weight':900});
+    T(s, 694, yy+62, '🎯 실무 과제 : ' + usp[1], '', 12.5, {fill:C.ink,'font-weight':750});
+    W(s, 694, yy+94, '🤖 대표 알고리즘 : ' + usp[2], 490, 'mono', 12, 18, {fill:C.green,'font-weight':800});
+  });
+
+  anchor(s,'알고리즘 선택 공식 : “내가 예측하고 싶은 정답 컬럼(Y)이 있는가?” ➔ 있으면 지도학습, 없으면 비지도학습입니다.');
+}
+
+
+// Slide 35: [단원 간지 05] chapter-gate
+function render35(s){
+  chapterGate(s, '05', '엑셀(구글시트)과 LLM의 결합\n실무 완전 자동화 파이프라인', 'MODULE 05 · EXCEL & AI AUTOMATION', [
+    '“엑셀 수식과 피벗테이블을 외우지 않고 1초 만에 짤 수는 없을까?”',
+    '엑셀-LLM 5대 동기화 전략부터 복합 파생변수(CPC/CPA/ROAS),',
+    '다차원 피벗테이블 및 VBA/Apps Script 자동 분할을 마스터합니다.'
+  ], 35);
+}
+
+// Slide 36: [엑셀-LLM 동기화 5대 전략] ledger:5-sync-strategies
+function render36(s){
+  base(s,'05 · 엑셀 & 구글시트 AI 실무 파이프라인','엑셀 시트와 LLM을 연동하는 5대 실무 동기화(Sync) 전략','사내 보안 규정과 업무 환경에 맞춰 텍스트부터 파일, 화면공유까지 최적의 연동 방식 선택',36,'ledger:5-sync-strategies');
+
+  const syncs = [
+    {
+      name: '1. 컬럼 헤더 & 샘플 텍스트 전달',
+      how: 'A1:H10 범위의 컬럼명과 5개 행 샘플을 복사하여 프롬프트 창에 텍스트로 붙여넣기',
+      merit: '⚡ 데이터 유출 없는 최고 수준 보안성 · 수식 설계에 최적화',
+      col: C.blueSoft, stroke: C.blue
+    },
+    {
+      name: '2. 클립보드 직접 복사/붙여넣기',
+      how: '엑셀에서 수백 개 행 범위를 [Ctrl + C] ➔ 챗봇 대화창에 [Ctrl + V] 탭 구분자 형태 입력',
+      merit: '⚡ 100행 미만 소규모 데이터 이상치 탐색 및 빠른 표 요약',
+      col: C.greenSoft, stroke: C.green
+    },
+    {
+      name: '3. 정제된 엑셀/CSV 파일 통째 업로드',
+      how: 'SDC_Display.xlsx 파일을 Claude/Gemini 파일 첨부 버튼으로 직접 업로드',
+      merit: '⚡ 수만 행 대용량 데이터의 고급 EDA 및 다차원 피벗 일괄 분석',
+      col: C.goldSoft, stroke: C.gold
+    },
+    {
+      name: '4. 화면 캡처 이미지 멀티모달 인식',
+      how: '복잡한 서식의 결재 보고서나 피벗 테이블 화면을 캡처([Win+Shift+S])하여 이미지 전달',
+      merit: '⚡ 서식 레이아웃 유지 분석 및 시각적 이상 징후 즉시 포착',
+      col: C.wineSoft, stroke: C.wine
+    },
+    {
+      name: '5. Gemini Live 실시간 화면 공유 코칭',
+      how: '모니터 전체 또는 엑셀 창을 실시간 공유하며 음성으로 실시간 수식 디버깅 질의',
+      merit: '⚡ 2026 최신 대화형 실시간 1:1 과외식 실무 코칭 환경',
+      col: C.redSoft, stroke: C.red
+    }
+  ];
+
+  syncs.forEach((sc, i)=>{
+    const yy = 158 + i * 88;
+    R(s, 56, yy, 1168, 78, C.white, sc.stroke, 8, 1.2);
+    
+    R(s, 76, yy+12, 280, 26, sc.col, 'none', 5);
+    T(s, 86, yy+30, sc.name, '', 13.5, {fill:sc.stroke,'font-weight':900});
+
+    W(s, 76, yy+48, '방법 : ' + sc.how, 560, '', 12, 16, {fill:C.ink,'font-weight':750});
+
+    L(s, 670, yy+12, 670, yy+66, C.line, 1);
+
+    W(s, 690, yy+36, sc.merit, 460, '', 12.5, 18, {fill:sc.stroke,'font-weight':850});
+  });
+
+  anchor(s,'보안 팁 : 민감 정보가 포함된 원본 대신 컬럼명과 메타데이터만 전달하는 [1번 전략]이 사내 보안 규정에 가장 안전합니다.');
+}
+
+// Slide 37: [실습 1: K열 CPC 수식] split:formula-prompt-cpc
+function render37(s){
+  base(s,'05 · 엑셀 & 구글시트 AI 실무 파이프라인','실습 1 · MKT 시트 파생변수 K열 클릭당비용 (CPC) 수식 설계','광고비와 클릭수 데이터를 바탕으로 클릭 1회당 발생 비용을 계산하고 0 나누기 에러 방지',37,'split:formula-prompt-cpc');
+
+  R(s,56,158,570,445,C.white,C.blue,12,1.2);
+  R(s,56,158,570,42,C.navy,'none',12);
+  R(s,56,180,570,20,C.navy);
+  T(s,76,186,'➊ 비즈니스 정의 & 프롬프트 작성','',15,{fill:'#fff','font-weight':900});
+
+  const cpcDesc = [
+    '• 비즈니스 정의 : 광고 클릭 1회를 유도하기 위해 지출된 평균 비용',
+    '• 입력 컬럼 : D열 [총광고비 (원)], F열 [총클릭수 (회)]',
+    '• 실무 핵심 주의사항 : 클릭수가 0인 경우 발생하는 #DIV/0! 오류를 IFERROR로 완벽 방어'
+  ];
+  cpcDesc.forEach((line, li)=>{
+    W(s, 76, 222 + li * 40, line, 530, 'body', 13, 18, {'font-weight':700});
+  });
+
+  R(s,76,360,530,224,C.blueSoft,C.blue,8,1.2);
+  T(s,96,388,'[AI에게 던진 질문 프롬프트]','num',{'font-size':13.5,fill:C.blueDark});
+  W(s, 96, 418, [
+    '“엑셀 MKT 시트에서 D열(광고비)과 F열(클릭수)을 이용하여',
+    '클릭당비용(CPC)을 계산하는 K2 셀 수식을 작성해줘.',
+    '단, 클릭수가 0이거나 결측치일 때 발생하는 #DIV/0! 에러를 방지하고',
+    '천단위 콤마 및 통화 서식 적용 가이드를 포함해줘.”'
+  ], 490, '', 13, 20, {fill:C.ink,'font-weight':750});
+
+  R(s,654,158,570,445,C.white,C.green,12,1.2);
+  R(s,654,158,570,42,C.green,'none',12);
+  R(s,654,180,570,20,C.green);
+  T(s,674,186,'➋ 완성된 K2 셀 엑셀 수식 & 실무 팁','',15,{fill:'#fff','font-weight':900});
+
+  R(s,674,220,530,135,C.white,C.green,8,1.2);
+  T(s,694,248,'[K2 셀 입력 수식]','num',{'font-size':13.5,fill:C.green});
+  T(s,694,286,'=IFERROR(D2/F2, 0)', 'mono', 17, {fill:C.green,'font-weight':900});
+  T(s,694,322,'(서식: [셀 서식] ➔ [통화] ➔ 통화기호 ₩, 소수점 0자리)', '', 12.5, {fill:C.muted,'font-weight':600});
+
+  R(s,674,370,530,214,C.greenSoft,C.green,8,1.2);
+  T(s,694,398,'[CPC 분석 인사이트 및 의사결정]','num',{'font-size':13.5,fill:C.green});
+  const cpcIns = [
+    '• 채널별 CPC 벤치마크 : 검색광고 850원 vs 소셜 배너 230원',
+    '• 고효율 판별 : CPC가 낮으면서 구매 전환율이 높은 채널 발굴',
+    '• 예산 최적화 : CPC가 지나치게 높은 비효율 키워드 즉시 입찰 중단'
+  ];
+  cpcIns.forEach((ci, cii)=>{
+    W(s, 694, 426 + cii * 42, ci, 490, 'body', 12.5, 18, {'font-weight':750});
+  });
+
+  anchor(s,'수식 자동화 : 수식을 외울 필요 없이 컬럼명과 조건만 AI에게 전달하면 완벽한 예외 처리 수식이 1초 만에 완성됩니다.');
+}
+
+// Slide 38: [실습 2: L열 CPA & M열 ROAS] split:cpa-roas-benchmark
+function render38(s){
+  base(s,'05 · 엑셀 & 구글시트 AI 실무 파이프라인','실습 2 · 파생변수 L열 전환당비용(CPA) & M열 광고수익률(ROAS)','신규 구매 고객 1명 획득 비용(CPA)과 집행 광고비 대비 매출 효율(ROAS)의 복합 수식 설계',38,'split:cpa-roas-benchmark');
+
+  R(s,56,158,570,445,C.white,C.gold,12,1.2);
+  R(s,56,158,570,42,C.navy,'none',12);
+  R(s,56,180,570,20,C.navy);
+  T(s,76,186,'L열 · 고객 획득 비용 (CPA : Cost Per Action)','',15,{fill:'#fff','font-weight':900});
+
+  R(s,76,218,530,120,C.white,C.gold,8,1.2);
+  T(s,96,246,'[L2 셀 입력 수식]','num',{'font-size':13.5,fill:C.gold});
+  T(s,96,284,'=IFERROR(D2/H2, 0)', 'mono', 17, {fill:C.gold,'font-weight':900});
+  T(s,96,316,'(D2: 총광고비 / H2: 구매전환수 · 통화 ₩ 서식)', '', 12.5, {fill:C.muted,'font-weight':600});
+
+  R(s,76,350,530,234,C.goldSoft,C.gold,8,1);
+  T(s,96,378,'[CPA 비즈니스 기준 및 벤치마크]','num',{'font-size':13.5,fill:C.gold});
+  const cpaDesc = [
+    '• 객단가(AOV) 대비 CPA가 30% 이하일 때 우수 채널로 판정',
+    '• 신규 획득 CPA가 너무 높으면 유입 채널의 랜딩페이지 UI 개선 필요',
+    '• 리타겟팅 광고의 경우 CPA가 신규 유입 대비 50% 이상 저렴함'
+  ];
+  cpaDesc.forEach((cd, cdi)=>{
+    W(s, 96, 406 + cdi * 44, cd, 490, 'body', 12.5, 18, {'font-weight':750});
+  });
+
+  R(s,654,158,570,445,C.white,C.wine,12,1.2);
+  R(s,654,158,570,42,C.wine,'none',12);
+  R(s,654,180,570,20,C.wine);
+  T(s,674,186,'M열 · 광고 수익률 (ROAS : Return On Ad Spend)','',15,{fill:'#fff','font-weight':900});
+
+  R(s,674,218,530,120,C.white,C.wine,8,1.2);
+  T(s,694,246,'[M2 셀 입력 수식]','num',{'font-size':13.5,fill:C.wine});
+  T(s,694,284,'=IFERROR(J2/D2, 0)', 'mono', 17, {fill:C.wine,'font-weight':900});
+  T(s,694,316,'(J2: 총매출액 / D2: 총광고비 · 백분율 0.0% 서식)', '', 12.5, {fill:C.muted,'font-weight':600});
+
+  R(s,674,350,530,234,C.wineSoft,C.wine,8,1);
+  T(s,694,378,'[ROAS 성과 평가 4대 구간]','num',{'font-size':13.5,fill:C.wine});
+  const roasDesc = [
+    '• 500% 이상 (초우수) : 즉시 예산 증액 투입 및 스케일업',
+    '• 300% ~ 500% (우수) : 안정적 수익 창출 구간, 효율 유지',
+    '• 200% ~ 300% (손익분기) : 마진율에 따라 미세 조정 필요',
+    '• 200% 미만 (적자위험) : 즉시 광고 집행 중단 및 크리에이티브 교체'
+  ];
+  roasDesc.forEach((rd, rdi)=>{
+    W(s, 694, 406 + rdi * 38, rd, 490, 'body', 12.5, 17, {'font-weight':750});
+  });
+
+  anchor(s,'지표 결합 : CPA(고객획득비용)와 ROAS(매출수익률)를 교차 비교하여 진정한 고수익 마케팅 채널을 선별합니다.');
+}
+
+// Slide 39: [실습 3: N열 신규고객기여도] split:weighted-index-formula
+function render39(s){
+  base(s,'05 · 엑셀 & 구글시트 AI 실무 파이프라인','실습 3 · MKT 파생변수 N열 신규고객기여도 지수 수식 설계','신규고객수, 객단가, 전환율 가중치를 조합하여 마케팅 채널의 미래 성장 기여도를 수치화',39,'split:weighted-index-formula');
+
+  R(s,56,158,570,445,C.white,C.wine,12,1.2);
+  R(s,56,158,570,42,C.navy,'none',12);
+  R(s,56,180,570,20,C.navy);
+  T(s,76,186,'➊ 신규고객기여도 지수의 기획 배경 & 가중치 설계','',15,{fill:'#fff','font-weight':900});
+
+  const nDesc = [
+    '• 단순 매출(ROAS)만 보면 기존 충성고객 대상 리타겟팅 광고만 선호되는 왜곡 발생',
+    '• 브랜드의 장기적 생존과 성장을 위해서는 신규 유입 고객의 유치가 필수적',
+    '• 따라서 [신규고객 획득 비율 60%] + [ROAS 성과 40%]를 반영한 종합 지수 설계'
+  ];
+  nDesc.forEach((line, li)=>{
+    W(s, 76, 222 + li * 40, line, 530, 'body', 13, 18, {'font-weight':700});
+  });
+
+  R(s,76,360,530,224,C.wineSoft,C.wine,8,1.2);
+  T(s,96,388,'[복합 가중치 지수 산출 공식]','num',{'font-size':13.5,fill:C.wine});
+  W(s,96,420,'신규고객기여도 = (신규고객비율 × 0.6) + (MIN(ROAS/5, 1) × 0.4)', 490, '', 13.5, 18, {fill:C.ink,'font-weight':900});
+  T(s,96,458,'• 신규고객비율 : 신규전환수(H열) / 전체유입클릭수(F열)', '', 12.5, {fill:C.body,'font-weight':700});
+  T(s,96,488,'• ROAS 정규화 : MIN(ROAS / 500%, 1.0) ➔ 최대 1.0 캡 적용', '', 12.5, {fill:C.body,'font-weight':700});
+  T(s,96,518,'• 최종 점수 : 0.00 ~ 1.00 사이의 인덱스 점수 (높을수록 미래 성장 기여)', '', 12.5, {fill:C.wine,'font-weight':900});
+
+  R(s,654,158,570,445,C.white,C.wine,12,1.2);
+  R(s,654,158,570,42,C.wine,'none',12);
+  R(s,654,180,570,20,C.wine);
+  T(s,674,186,'➋ 완성된 N2 셀 엑셀 수식 & 적용 결과 해석','',15,{fill:'#fff','font-weight':900});
+
+  R(s,674,220,530,135,C.white,C.wine,8,1.2);
+  T(s,694,248,'[N2 셀 입력 수식]','num',{'font-size':13.5,fill:C.wine});
+  T(s,694,286,'=IFERROR((H2/F2)*0.6 + MIN(M2/5, 1)*0.4, 0)', 'mono', 15.5, {fill:C.wine,'font-weight':900});
+  T(s,694,322,'(소수점 둘째 자리 서식 적용 : 0.00)', '', 12.5, {fill:C.muted,'font-weight':600});
+
+  R(s,674,370,530,214,'#0f172a','#1e293b',8,1.4);
+  const codeN = [
+    '// 파생변수 N열 채널별 적용 결과 해석',
+    '• 검색광고 (Search) : 기여도 0.85 (신규 유입 + 고효율)',
+    '• 인스타그램 (SNS) : 기여도 0.72 (신규 유입 탁월)',
+    '• 리타겟팅 배너 : 기여도 0.35 (기존 고객 편중)',
+    '',
+    '👉 의사결정: 신규 고객 확보를 위해 인스타그램 예산 25% 증액'
+  ];
+  codeN.forEach((cn, cni)=>{
+    T(s, 694, 404 + cni * 26, cn, 'mono', 12.5, {fill:cni===0?'#94a3b8':(cni===5?'#4ade80':'#f8fafc'),'font-weight':700});
+  });
+
+  anchor(s,'기획력의 승리 : 단순 합계나 평균을 넘어 비즈니스 전략이 담긴 독창적인 파생변수를 설계하는 것이 핵심입니다.');
+}
+
+// Slide 40: [실습 4: 교차 요약표 5종] ledger:5-cross-summary
+function render40(s){
+  base(s,'05 · 엑셀 & 구글시트 AI 실무 파이프라인','실습 4 · 다차원 교차 요약표 5종 자동 집계 템플릿','SUMIFS, AVERAGEIFS, COUNTIFS 복합 함수를 활용하여 채널별·월별·기기별 실적을 1초 만에 요약',40,'ledger:5-cross-summary');
+
+  const tmpls = [
+    ['1. 채널별 월간 광고비 집계표', '=SUMIFS(광고비, 채널, "검색광고", 월, "2026-03")', '월별 채널 예산 집행 추이 모니터링', '예산 초과 사전 방지', C.blueSoft, C.blue],
+    ['2. 기기(PC/Mobile)별 평균 ROAS', '=AVERAGEIFS(ROAS, 기기, "Mobile", 채널, A2)', '모바일 vs 데스크톱 성과 격차 검증', '모바일 UI/UX 개선', C.greenSoft, C.green],
+    ['3. 고성과 캠페인 건수 카운팅', '=COUNTIFS(ROAS, ">=300%", 전환수, ">=50")', '우수 캠페인 발굴 및 레퍼런스화', '우수 사례 전사 확산', C.goldSoft, C.gold],
+    ['4. 지점별 반품률 교차 분석표', '=SUMIFS(반품액, 지점, B2) / SUMIFS(매출, 지점, B2)', '지역별 품질 불만 집중도 파악', '품질 취약 거점 관리', C.wineSoft, C.wine],
+    ['5. 타겟 연령대별 객단가 요약', '=AVERAGEIFS(객단가, 연령대, "30대", 성별, "여")', '핵심 타겟 고객 세그먼트 수익성 검증', '타겟 맞춤 프로모션', C.redSoft, C.red]
+  ];
+
+  tmpls.forEach((tp, i)=>{
+    const yy = 158 + i * 88;
+    R(s, 56, yy, 1168, 78, C.white, tp[5], 8, 1.2);
+    
+    R(s, 76, yy+14, 270, 26, tp[4], 'none', 5);
+    T(s, 86, yy+32, tp[0], '', 13.5, {fill:tp[5],'font-weight':900});
+    
+    W(s, 360, yy+30, '수식 : ' + tp[1], 530, 'mono', 12, 16, {fill:C.ink,'font-weight':750});
+    W(s, 360, yy+52, '목적 : ' + tp[2], 530, '', 11.5, 16, {fill:C.muted,'font-weight':600});
+
+    R(s, 920, yy+16, 280, 44, tp[4], tp[5], 6, 0.8);
+    T(s, 1060, yy+42, '🎯 ' + tp[3], '', 12.5, {fill:tp[5],'font-weight':900,'text-anchor':'middle'});
+  });
+
+  anchor(s,'함수 자동화 : 수식 구조를 외울 필요 없이 “이 조건으로 교차 집계하는 SUMIFS 수식을 짜줘”라고 요청하면 끝납니다.');
+}
+
+// Slide 41: [실습 5: 심화 피벗 10대 추천] ledger:10-pivot-recommendations
+function render41(s){
+  base(s,'05 · 엑셀 & 구글시트 AI 실무 파이프라인','실습 5 · MKT 시트 심화 피벗테이블 10대 추천 가이드','A열부터 N열까지의 데이터를 다차원으로 분석하는 10가지 피벗테이블 행·열·값 필드 배치법',41,'ledger:10-pivot-recommendations');
+
+  const pivots = [
+    ['01. 채널별 월별 매출 & ROAS 추이', '행: 년월, 채널 / 값: 매출합계, 평균 ROAS', '월별 채널 성과 트렌드 분석', '예산 재배분 기준 수립', C.blueSoft, C.blue],
+    ['02. 디바이스별 전환율 & CPA 비교', '행: 기기구분 / 값: 평균 클릭률, 평균 CPA', '모바일 vs PC 전환 효율 진단', '모바일 전용 랜딩페이지 기획', C.greenSoft, C.green],
+    ['03. 캠페인 유형별 신규고객 기여도', '행: 캠페인명 / 값: 신규고객수, 평균 기여도', '신규 획득 효율 최우수 캠페인 선별', '브랜드 인지도 강화', C.goldSoft, C.gold],
+    ['04. 요일별/시간대별 효율 히트맵', '행: 요일 / 열: 시간대 / 값: 평균 ROAS', '광고 입찰 가중치 스케줄링 설정', '심야 광고비 누수 차단', C.wineSoft, C.wine],
+    ['05. 지역별/지점별 매출 & 반품 현황', '행: 지점명 / 값: 총매출, 반품률(%비율)', '지역별 거점 영업소 성과 평가', '반품 다발 지점 원인 조사', C.redSoft, C.red]
+  ];
+
+  pivots.forEach((pv, i)=>{
+    const yy = 158 + i * 88;
+    R(s, 56, yy, 1168, 78, C.white, pv[5], 8, 1.2);
+    
+    R(s, 76, yy+14, 290, 26, pv[4], 'none', 5);
+    T(s, 86, yy+32, pv[0], '', 13.5, {fill:pv[5],'font-weight':900});
+    
+    W(s, 380, yy+30, '필드 배치 : ' + pv[1], 520, '', 12.5, 16, {fill:C.ink,'font-weight':750});
+    W(s, 380, yy+52, '분석 목적 : ' + pv[2], 520, '', 11.5, 16, {fill:C.muted,'font-weight':600});
+
+    R(s, 930, yy+16, 270, 44, pv[4], pv[5], 6, 0.8);
+    T(s, 1065, yy+42, '💡 ' + pv[3], '', 12.5, {fill:pv[5],'font-weight':900,'text-anchor':'middle'});
+  });
+
+  anchor(s,'피벗 팁 : 피벗테이블 생성 후 [슬라이서(Slicer)]와 [타임라인]을 추가하면 경영진이 직접 조작하는 대시보드가 됩니다.');
+}
+
+// Slide 42: [실습 6: IFS & 3D 지도] split:ifs-map-visualization
+function render42(s){
+  base(s,'05 · 엑셀 & 구글시트 AI 실무 파이프라인','실습 6 · 10등급 분류 중첩함수 (IFS) & 동적 지도차트 시각화','ROAS 점수에 따라 1~10등급을 부여하는 다중 조건문과 지역별 실적을 한눈에 보는 3D 맵',42,'split:ifs-map-visualization');
+
+  R(s,56,158,570,445,C.white,C.blue,12,1.2);
+  R(s,56,158,570,42,C.navy,'none',12);
+  R(s,56,180,570,20,C.navy);
+  T(s,76,186,'➊ O열 · 10등급 평가 다중 IFS 중첩 수식 공식','',15,{fill:'#fff','font-weight':900});
+
+  R(s,76,218,530,175,C.white,C.blue,8,1.2);
+  T(s,96,246,'[O2 셀 입력 IFS 공식]','num',{'font-size':13.5,fill:C.blueDark});
+  const ifsCode = [
+    '=IFS(',
+    '  M2>=5.0, "1등급 (초우수)",',
+    '  M2>=4.0, "2등급 (우수)",',
+    '  M2>=3.0, "3등급 (양호)",',
+    '  M2>=2.0, "4등급 (보통)",',
+    '  TRUE, "5등급 이하 (개선필요)"',
+    ')'
+  ];
+  ifsCode.forEach((ic, ici)=>{
+    T(s, 96, 272 + ici * 18, ic, 'mono', 12, {fill:C.ink,'font-weight':750});
+  });
+
+  W(s, 76, 420, [
+    '• 과거 10번 중첩된 복잡하고 오류 잦은 IF문 대신 깔끔한 IFS 함수 적용',
+    '• 조건 불일치 시 에러를 방지하기 위해 마지막에 TRUE 기본값 안전 배치'
+  ], 530, 'body', 13, 20, {'font-weight':700});
+
+  R(s,654,158,570,445,C.white,C.green,12,1.2);
+  R(s,654,158,570,42,C.green,'none',12);
+  R(s,654,180,570,20,C.green);
+  T(s,674,186,'➋ 엑셀 3D 지도(Map) 차트 시각화 4대 팁','',15,{fill:'#fff','font-weight':900});
+
+  const mapTips = [
+    ['1. 지역명 표준화 필수', '시도/구군 명칭을 "서울특별시", "경기도 수원시" 등 국가 표준 행정구역명 통일'],
+    ['2. 3D 등치지역도 삽입', '데이터 영역 선택 ➔ [삽입] ➔ [지도] ➔ [등치지역도] 클릭하여 지리적 히트맵 생성'],
+    ['3. 성과 그라데이션 적용', '매출 및 ROAS 높은 지역은 진한 삼성 블루, 낮은 취약 지역은 연한 회색 설정'],
+    ['4. 동적 슬라이서 연동', '제품군 슬라이서를 클릭하면 해당 제품의 지역별 매출 지도가 실시간으로 동적 갱신']
+  ];
+  mapTips.forEach((mt, i)=>{
+    const yy = 220 + i * 94;
+    R(s, 674, yy, 530, 84, C.greenSoft, C.green, 6, 0.8);
+    T(s, 694, yy+24, mt[0], '', 14, {fill:C.green,'font-weight':900});
+    W(s, 694, yy+48, '➔ ' + mt[1], 490, '', 12.5, 18, {fill:C.ink,'font-weight':750});
+  });
+
+  anchor(s,'시각화 효과 : 복잡한 숫자를 지역별 지도와 10등급 뱃지로 바꾸면 보고를 받는 임원의 이해 속도가 10배 빨라집니다.');
+}
+
+// Slide 43: [실습 7: VBA & 구글시트] split:vba-apps-script
+function render43(s){
+  base(s,'05 · 엑셀 & 구글시트 AI 실무 파이프라인','실습 7 · 10대 VBA 매크로 자동화 & 구글시트 Apps Script 무인화','클릭 한 번으로 채널별 시트를 자동 분할하는 VBA와 매일 아침 자동 브리핑하는 Apps Script',43,'split:vba-apps-script');
+
+  R(s,56,158,570,445,'#0f172a','#1e293b',12,1.4);
+  R(s,56,158,570,42,'#1e293b','none',12);
+  R(s,56,180,570,20,'#1e293b');
+  CIRC(s,76,179,5,'#ef4444');
+  CIRC(s,92,179,5,'#eab308');
+  CIRC(s,108,179,5,'#22c55e');
+  T(s,130,184,'VBA Module · SplitSheetsByChannel.bas','mono',12,{fill:'#94a3b8','font-weight':700});
+
+  const vbaCode = [
+    'Sub SplitByChannel()',
+    '    Dim ws As Worksheet, newWs As Worksheet',
+    '    Dim lastRow As Long, i As Long, chName As String',
+    '    Set ws = ThisWorkbook.Sheets("MKT_Marketing")',
+    '    lastRow = ws.Cells(ws.Rows.Count, "A").End(xlUp).Row',
+    '    ',
+    '    Rem 고유 채널별 필터링 및 새 시트 복사',
+    '    For i = 2 To lastRow',
+    '        chName = ws.Cells(i, "B").Value',
+    '        If Not SheetExists(chName) Then',
+    '            Set newWs = Sheets.Add(After:=Sheets(Sheets.Count))',
+    '            newWs.Name = chName',
+    '            ws.Rows(1).Copy newWs.Rows(1)',
+    '        End If',
+    '    Next i',
+    '    MsgBox "채널별 시트 분할 완료!", vbInformation',
+    'End Sub'
+  ];
+  vbaCode.forEach((cd, i)=>{
+    T(s, 76, 222 + i * 22, cd, 'mono', 11, {fill:cd.startsWith('Rem')?'#4ade80':(cd.startsWith('Sub')||cd.startsWith('For')?'#38bdf8':'#f8fafc'),'font-weight':700});
+  });
+
+  R(s,654,158,570,445,C.white,C.green,12,1.2);
+  R(s,654,158,570,42,C.green,'none',12);
+  R(s,654,180,570,20,C.green);
+  T(s,674,186,'구글시트 2026 AI 함수 & Apps Script 무인화','',15,{fill:'#fff','font-weight':900});
+
+  const gFuncs = [
+    { f: '=AI("이 고객 리뷰의 감성을 긍정/부정/중립으로 분류해줘", A2)', desc: '텍스트 감성 분석 및 자동 라벨링 분류' },
+    { f: '=AI_EXTRACT(B2, "이메일 주소 및 연락처")', desc: '비정형 이메일 본문에서 특정 핵심 정보만 정밀 추출' },
+    { f: '=AI_TRANSLATE(C2, "영어", "한국어")', desc: '글로벌 고객 문의 VOC 실시간 다국어 번역' }
+  ];
+  gFuncs.forEach((gf, i)=>{
+    const yy = 220 + i * 78;
+    R(s, 674, yy, 530, 68, C.greenSoft, C.green, 6, 0.8);
+    T(s, 694, yy+24, gf.f, 'mono', 11.5, {fill:C.green,'font-weight':900});
+    T(s, 694, yy+48, '➔ ' + gf.desc, '', 12.5, {fill:C.ink,'font-weight':750});
+  });
+
+  R(s,674,466,530,114,C.blueSoft,C.blue,8,1);
+  T(s,694,492,'[Apps Script 무인 스케줄링]','num',{'font-size':13,fill:C.blueDark});
+  W(s, 694, 518, [
+    '“매일 아침 8시 MKT 시트의 어제 매출액과 ROAS를 요약하여',
+    '담당자 이메일(Gmail)과 사내 슬랙으로 자동 발송”'
+  ], 490, '', 12.5, 18, {fill:C.ink,'font-weight':750});
+
+  anchor(s,'자동화의 정점 : 엑셀의 강력한 분석 기능에 구글 Apps Script의 무인 스케줄링을 결합하여 완벽한 자동화를 완성합니다.');
+}
+
+// Slide 44: [단원 간지 06] chapter-gate
+function render44(s){
+  chapterGate(s, '06', '파이썬 & 머신러닝 기반의\n현업 5대 실전 시나리오 분석', 'MODULE 06 · PYTHON & MACHINE LEARNING', [
+    '“엑셀의 한계를 넘어 수백만 건의 데이터를 파이썬으로 다룰 수 있을까?”',
+    'Google Colab 및 사내 보안 Anaconda 환경에서 SDC 디스플레이 식스시그마 4.23σ,',
+    'CRM 고객 군집화, HR 이직예측, DS 반도체 3D 수율 최적화를 실습합니다.'
+  ], 44);
+}
+
+
+// Slide 45: [환경 구축] compare:cloud-vs-local-conda
+function render45(s){
+  base(s,'06 · 파이썬 환경 구축 & 현업 5대 머신러닝','파이썬 실습 환경 구축 (Google Colab vs 사내 보안 Anaconda)','설치 없는 클라우드 브라우저 실습과 데이터 유출 없는 사내망 로컬 가상환경의 장단점 비교',45,'compare:cloud-vs-local-conda');
+
+  R(s,56,158,570,445,C.white,C.blue,12,1.2);
+  R(s,56,158,570,42,C.navy,'none',12);
+  R(s,56,180,570,20,C.navy);
+  T(s,76,186,'Google Colab 클라우드 실습 환경 (무설치 1초 진입)','',15,{fill:'#fff','font-weight':900});
+
+  const colabSteps = [
+    ['1. colab.research.google.com 접속', '별도 파이썬 설치 없이 구글 계정으로 로그인 후 [새 노트] 클릭 즉시 시작'],
+    ['2. 무료 클라우드 GPU/CPU 즉시 할당', '복잡한 하드웨어 설정 없이 판다스, 넘파이, 텐서플로우가 완벽 사전 설치된 환경'],
+    ['3. 파일 업로드 & 프롬프트 코드 복사', 'SDC_Display.xlsx 파일을 드래그 앤 드롭하고 LLM 생성 코드를 붙여넣기 실행'],
+    ['4. [Shift + Enter] 즉시 시각화 렌더링', 'Seaborn 상관관계 히트맵과 인터랙티브 차트를 1초 만에 렌더링 확인']
+  ];
+  colabSteps.forEach((cs, i)=>{
+    const yy = 220 + i * 94;
+    R(s, 76, yy, 530, 84, C.blueSoft, C.blue, 6, 0.8);
+    T(s, 96, yy+24, cs[0], '', 13.5, {fill:C.blueDark,'font-weight':900});
+    W(s, 96, yy+48, cs[1], 490, '', 12, 17, {fill:C.ink,'font-weight':750});
+  });
+
+  R(s,654,158,570,445,C.white,C.green,12,1.2);
+  R(s,654,158,570,42,C.green,'none',12);
+  R(s,654,180,570,20,C.green);
+  T(s,674,186,'로컬 Anaconda 보안 가상환경 (사내망 완벽 대응)','',15,{fill:'#fff','font-weight':900});
+
+  const condaChecks = [
+    ['1. 순수 영문 설치 경로 설정', '한글 계정명 오류 방지를 위해 C:\Anaconda3 등 영문 폴더에 관리자 권한 설치'],
+    ['2. conda create -n openapi python=3.10', '사내 보안 정책과 패키지 충돌을 방지하는 독립 격리 가상환경 생성'],
+    ['3. pip install pandas scikit-learn jupyterlab', '핵심 데이터 분석 및 머신러닝 라이브러리 일괄 패키징 설치'],
+    ['4. 100% 로컬 연산 데이터 유출 원천 차단', '모든 데이터와 연산이 내 PC 안에서만 작동하므로 극비 데이터도 안심 분석']
+  ];
+  condaChecks.forEach((cc, i)=>{
+    const yy = 220 + i * 94;
+    R(s, 674, yy, 530, 84, C.greenSoft, C.green, 6, 0.8);
+    T(s, 694, yy+24, cc[0], '', 13.5, {fill:C.green,'font-weight':900});
+    W(s, 694, yy+48, cc[1], 490, '', 12, 17, {fill:C.ink,'font-weight':750});
+  });
+
+  anchor(s,'환경 선택 : 빠른 실습은 [Google Colab], 사내 기밀 데이터 실무 분석은 [로컬 Anaconda]를 사용합니다.');
+}
+
+// Slide 46: [SDC 기술통계 EDA] ledger:sdc-eda-5topics
+function render46(s){
+  base(s,'06 · 파이썬 환경 구축 & 현업 5대 머신러닝','SDC_Display 시트 파이썬 기술통계 EDA & 5대 심화 분석 주제','공정라인, 패널타입, 온도, 밝기, 두께, 결함률 데이터를 파이썬으로 로드하고 5대 비즈니스 과제 도출',46,'ledger:sdc-eda-5topics');
+
+  const sHeads = ['공정라인', '패널타입', '평균 온도(℃)', '평균 밝기(nit)', '평균 두께(mm)', '생산량 합계', '평균 결함률', '품질 등급'];
+  const sWidths = [110, 140, 140, 140, 140, 150, 140, 208];
+  R(s,56,158,1168,28,C.navy,'none',6);
+  sHeads.forEach((h, i)=>{
+    const ox = 56 + sWidths.slice(0, i).reduce((a,b)=>a+b, 0);
+    T(s, ox + sWidths[i]/2, 176, h, '', 11.5, {fill:'#fff','font-weight':900,'text-anchor':'middle'});
+  });
+
+  const sRows = [
+    ['Line 1 (L1)', '태블릿 OLED', '25.7 ℃', '739 nit', '1.20 mm', '72,890 개', '0.56 %', 'A 등급 (우수)'],
+    ['Line 4 (L4)', '스마트폰 OLED', '24.5 ℃', '895 nit', '1.34 mm', '36,800 개', '0.52 %', 'A 등급 (우수)'],
+    ['Line 6 (L6)', '태블릿 OLED', '23.1 ℃', '939 nit', '1.10 mm', '35,360 개', '0.34 %', 'S 등급 (최우수)'],
+    ['Line 7 (L7)', '스마트폰 OLED', '22.4 ℃', '884 nit', '1.00 mm', '55,990 개', '0.20 %', 'S 등급 (최우수)']
+  ];
+  sRows.forEach((r, i)=>{
+    const yy = 190 + i * 32;
+    R(s, 56, yy, 1168, 28, i%2===0?C.white:'#f8fafc', C.line, 0, 0.5);
+    r.forEach((cell, ci)=>{
+      const ox = 56 + sWidths.slice(0, ci).reduce((a,b)=>a+b, 0);
+      T(s, ox + sWidths[ci]/2, yy + 18, cell, '', 12, {
+        fill: ci===6?C.red:(ci===0?C.blueDark:C.ink),
+        'font-weight': ci===0||ci===6?900:600,
+        'text-anchor': 'middle'
+      });
+    });
+  });
+
+  R(s,56,326,1168,290,C.white,C.green,10,1.2);
+  R(s,56,326,1168,32,C.green,'none',10);
+  R(s,56,340,1168,18,C.green);
+  T(s,76,348,'SDC_Display 데이터 기반 5대 심화 파이썬 분석 주제 & 실행 코드','',13.5,{fill:'#fff','font-weight':900});
+
+  const deepTopics = [
+    ['① 공정라인별 결함률 비교', '생산성과 품질 동시 비교 분석', "df.groupby('공정라인')[['생산량','결함률']].mean()"],
+    ['② 패널타입별 불량률 패턴', '제품군별 품질 안정성 Boxplot', "sns.boxplot(x='패널타입', y='결함률', data=df)"],
+    ['③ 검사등급에 따른 생산성 차이', 'A/B 등급 간 결함률 통계 검정', "df.groupby('검사등급')[['생산량','결함률']].mean()"],
+    ['④ 변수 간 다변량 상관관계', '온도·밝기·두께·결함률 산점도 행렬', "sns.pairplot(df[['온도','밝기','두께','결함률']])"],
+    ['⑤ 시간에 따른 결함률 시계열 추이', '공정 이상 징후 일별 추적 라인플롯', "sns.lineplot(x='일자', y='결함률', data=df)"]
+  ];
+  deepTopics.forEach((dt, i)=>{
+    const yy = 372 + i * 46;
+    R(s, 76, yy, 1128, 40, i%2===0?C.greenSoft:C.white, C.line, 4, 0.6);
+    T(s, 96, yy+24, dt[0], '', 13, {fill:C.green,'font-weight':900});
+    T(s, 360, yy+24, dt[1], '', 12.5, {fill:C.ink,'font-weight':750});
+    T(s, 640, yy+24, dt[2], 'mono', 12, {fill:C.blueDark,'font-weight':800});
+  });
+
+  anchor(s,'분석 도출 : SDC 데이터 분석 결과 Line 7이 결함률 0.20%로 최우수 공정이며, 온도가 22~23℃일 때 최적 품질이 유지됩니다.');
+}
+
+// Slide 47: [실전 1-A: CRM 군집 K-Means] split:cluster-profile-scatter
+function render47(s){
+  base(s,'06 · 파이썬 환경 구축 & 현업 5대 머신러닝','[실전 1-A] 글로벌 CRM 고객 군집분석 (K-Means Clustering)','1,500만 고객 데이터를 구매 빈도, 총 구매액, NPS 만족도 기반으로 3개 핵심 군집으로 세분화',47,'split:cluster-profile-scatter');
+
+  R(s,56,158,570,445,C.white,C.blue,12,1.2);
+  R(s,56,158,570,42,C.navy,'none',12);
+  R(s,56,180,570,20,C.navy);
+  T(s,76,186,'3개 고객 군집(Cluster) 프로파일링 요약','',15,{fill:'#fff','font-weight':900});
+
+  const clusters = [
+    { name: 'Cluster 0 · VIP 충성 고객군', size: '28% (420만 명)', spend: '연 $4,850', nps: '9.2점', act: '전담 케어 & 얼리어답터 독점 체험 프로그램', col: C.blueSoft, stroke: C.blue },
+    { name: 'Cluster 1 · 가성비 실속 고객군', size: '48% (720만 명)', spend: '연 $1,240', nps: '7.8점', act: '할인 프로모션 & 액세서리 번들 패키지 제안', col: C.greenSoft, stroke: C.green },
+    { name: 'Cluster 2 · 이탈 위험 경고군', size: '24% (360만 명)', spend: '연 $410', nps: '4.5점', act: '불만 해소 서베이 & 웰컴백 30% 쿠폰 발송', col: C.redSoft, stroke: C.red }
+  ];
+  clusters.forEach((cl, i)=>{
+    const yy = 220 + i * 124;
+    R(s, 76, yy, 530, 112, cl.col, cl.stroke, 8, 1.2);
+    T(s, 96, yy+26, cl.name, '', 14.5, {fill:cl.stroke,'font-weight':900});
+    T(s, 420, yy+26, '규모 : ' + cl.size, '', 12.5, {fill:C.ink,'font-weight':850});
+    T(s, 96, yy+54, '• 평균 구매액 : ' + cl.spend + '  |  평균 NPS 만족도 : ' + cl.nps, '', 13, {fill:C.ink,'font-weight':750});
+    W(s, 96, yy+80, '👉 추천 액션 : ' + cl.act, 490, '', 12.5, 18, {fill:cl.stroke,'font-weight':900});
+  });
+
+  R(s,654,158,570,445,C.white,C.blue,12,1.2);
+  R(s,654,158,570,42,C.blue,'none',12);
+  R(s,654,180,570,20,C.blue);
+  T(s,674,186,'K-Means 2D 클러스터 산점도 시각화','',15,{fill:'#fff','font-weight':900});
+
+  R(s,674,216,530,360,'#f8fafc',C.line,8);
+  L(s,734,510,1154,510,C.ink,1.5);
+  L(s,734,260,734,510,C.ink,1.5);
+  T(s,1154,534,'총 구매액 ($)', '', 12, {fill:C.ink,'font-weight':800,'text-anchor':'end'});
+  T(s,704,266,'구매 빈도', '', 12, {fill:C.ink,'font-weight':800});
+
+  // Cluster 0 VIP (Top Right - Blue)
+  [[980,310],[1020,330],[950,350],[1060,320],[1010,370],[1080,340]].forEach(pt=>CIRC(s,pt[0],pt[1],8,C.blue));
+  T(s,1020,290,'Cluster 0 (VIP)', '', 12.5, {fill:C.blueDark,'font-weight':900,'text-anchor':'middle'});
+
+  // Cluster 1 가성비 (Middle - Green)
+  [[840,410],[880,430],[820,450],[890,390],[860,440],[830,390]].forEach(pt=>CIRC(s,pt[0],pt[1],8,C.green));
+  T(s,860,370,'Cluster 1 (가성비)', '', 12.5, {fill:C.green,'font-weight':900,'text-anchor':'middle'});
+
+  // Cluster 2 이탈 위험 (Bottom Left - Red)
+  [[760,480],[790,490],[770,460],[750,495],[800,475]].forEach(pt=>CIRC(s,pt[0],pt[1],8,C.red));
+  T(s,770,440,'Cluster 2 (위험군)', '', 12.5, {fill:C.red,'font-weight':900,'text-anchor':'middle'});
+
+  anchor(s,'비즈니스 임팩트 : 전체 고객에게 동일한 마케팅을 하던 방식에서 벗어나 3개 군집별 맞춤 액션을 취해 마케팅 ROI 45% 개선');
+}
+
+// Slide 48: [실전 1-B: CRM 마케팅 전략] ledger:3-cluster-action-plans
+function render48(s){
+  base(s,'06 · 파이썬 환경 구축 & 현업 5대 머신러닝','[실전 1-B] CRM 군집별 글로벌 마케팅 액션플랜 전략 보고서','K-Means 군집분석 결과를 바탕으로 국가별·고객 세그먼트별 차별화된 비즈니스 실행 전략 수립',48,'ledger:3-cluster-action-plans');
+
+  const plans = [
+    {
+      title: 'Cluster 0 (VIP 충성 고객군) 전용 전략',
+      kpi: '고객 생애 가치(LTV) 극대화 & 브랜드 옹호자(Advocate) 육성',
+      actions: [
+        '• 프리미엄 신제품(Galaxy Z Fold/Flip 2026) 사전 독점 체험 기회 제공 및 전용 VIP 케어 라인 배정',
+        '• 1:1 VIP 전담 상담 컨시어지 채널 상시 가동 및 무상 보증 기간 1년 자동 연장 혜택 부여',
+        '• 브랜드 커뮤니티 VIP 앰버서더 위촉 및 비공개 오프라인 신제품 개발 피드백 세션 정기 초대'
+      ],
+      roi: 'LTV +35% 향상',
+      col: C.blueSoft, stroke: C.blue
+    },
+    {
+      title: 'Cluster 1 (가성비 실속 고객군) 전용 전략',
+      kpi: '객단가(AOV) 증대 & 스마트 생태계 크로스셀링(Cross-selling)',
+      actions: [
+        '• 구매 이력 기반 맞춤형 액세서리(Galaxy Buds, Watch) 묶음 번들 15% 할인 쿠폰 자동 발송',
+        '• 무이자 24개월 할부 및 보상 판매(Trade-in) 전용 프로그램을 결제 화면에 적극 노출',
+        '• 시즌별 정기 프로모션 알림 및 멤버십 포인트 2배 적립 프로모션 주기적 진행'
+      ],
+      roi: '객단가 +25% 증대',
+      col: C.greenSoft, stroke: C.green
+    },
+    {
+      title: 'Cluster 2 (이탈 위험 경고군) 전용 전략',
+      kpi: '이탈률(Churn Rate) 10%p 방어 & 고객 불만 원인 선제 해소',
+      actions: [
+        '• 최근 3개월간 접속 없는 고객 대상 파격적인 30% 웰컴백 전용 리타겟팅 할인 쿠폰 발송',
+        '• 최근 1년간 CS 불만 접수 이력이 있는 고객 전담 해피콜 진행 및 불편 사항 신속 보상',
+        '• 복잡한 설문 대신 클릭 1회로 끝나는 간편 피드백 수렴 서베이 및 스타벅스 기프티콘 증정'
+      ],
+      roi: '이탈률 12%p 방어',
+      col: C.redSoft, stroke: C.red
+    }
+  ];
+
+  plans.forEach((pl, i)=>{
+    const yy = 158 + i * 148;
+    R(s, 56, yy, 1168, 138, C.white, pl.stroke, 10, 1.2);
+    
+    R(s, 76, yy+14, 380, 28, pl.col, 'none', 6);
+    T(s, 90, yy+33, pl.title, '', 14.5, {fill:pl.stroke,'font-weight':900});
+    
+    T(s, 480, yy+33, '🎯 목표 : ' + pl.kpi, '', 13, {fill:C.ink,'font-weight':800});
+    
+    R(s, 1030, yy+12, 170, 32, pl.stroke, 'none', 6);
+    T(s, 1115, yy+33, pl.roi, '', 12.5, {fill:'#fff','font-weight':900,'text-anchor':'middle'});
+
+    L(s, 76, yy+50, 1204, yy+50, pl.stroke, 1, '2 2');
+
+    pl.actions.forEach((act, ai)=>{
+      W(s, 76, yy + 68 + ai * 22, act, 1100, '', 12.5, 17, {fill:C.body,'font-weight':650});
+    });
+  });
+
+  anchor(s,'전략 완결 : 머신러닝 분석의 최종 목표는 숫자가 아니라, 고객의 지갑을 열게 만드는 구체적인 현업 액션플랜입니다.');
+}
+
+// Slide 49: [실전 2-A: SDC 식스시그마 지표] matrix:sigma-metrics-formulas
+function render49(s){
+  base(s,'06 · 파이썬 환경 구축 & 현업 5대 머신러닝','[실전 2-A] SDC_Display 식스시그마 공정 품질 지표 (4.23σ)','디스플레이 패널 두께·온도 공정 데이터를 바탕으로 Cp, Cpk, 시그마 수준, DPMO 완벽 산출',49,'matrix:sigma-metrics-formulas');
+
+  const metrics = [
+    { title: '공정 능력 지수 (Cp)', val: '1.48', desc: '규격 폭 대비 산포 여유도\n(1.33 이상 초우수 수준)', col: C.blueSoft, stroke: C.blue },
+    { title: '치우침 보정 지수 (Cpk)', val: '1.41', desc: '중심 치우침 반영 실질 능력\n(공정 매우 안정적 통제)', col: C.greenSoft, stroke: C.green },
+    { title: '식스시그마 수준 (Z)', val: '4.23 σ', desc: '초일류 제조 품질 표준 달성\n(사내 관리 목표 4.0σ 초과)', col: C.goldSoft, stroke: C.gold },
+    { title: '백만 개당 불량 수 (DPMO)', val: '3,140', desc: '100만 개 생산 시 3,140개 이하\n(불량률 0.31% 극소화)', col: C.wineSoft, stroke: C.wine }
+  ];
+
+  metrics.forEach((mt, i)=>{
+    const xx = 56 + i * 296;
+    R(s, xx, 158, 284, 184, mt.col, mt.stroke, 10, 1.2);
+    
+    T(s, xx+20, 190, mt.title, '', 14.5, {fill:C.ink,'font-weight':900});
+    T(s, xx+20, 246, mt.val, 'num', 36, {fill:mt.stroke});
+    W(s, xx+20, 286, mt.desc.split('\n'), 244, 'small', 12, 18, {'font-weight':750});
+  });
+
+  R(s,56,360,1168,245,C.white,C.green,10,1.2);
+  R(s,56,360,1168,36,C.navy,'none',10);
+  R(s,56,378,1168,18,C.navy);
+  T(s,76,384,'식스시그마 핵심 지표 표준 산출 공식 및 실무 파이썬 연산 코드','',14,{fill:'#fff','font-weight':900});
+
+  const formulas = [
+    ['Cp 공식', 'Cp = (USL - LSL) / (6 × σ)', '규격 상한(USL: 1.50mm) - 규격 하한(LSL: 0.80mm) 분자 대비 공정 산포(6σ) 비율'],
+    ['Cpk 공식', 'Cpk = MIN((USL - μ)/(3σ), (μ - LSL)/(3σ))', '공정 평균(μ: 1.15mm)의 목표 규격 중심 타겟 정렬도 및 치우침 정도를 동시 반영'],
+    ['DPMO 공식', 'DPMO = (1 - Norm.CDF(Z)) × 1,000,000', '가우시안 정규분포 누적확률 밀도함수 기반 100만 개 생산 시 기대 결함 수'],
+    ['파이썬 코드', 'z_score = (USL - df["두께"].mean()) / df["두께"].std()', 'scipy.stats.norm.sf(z_score)*1e6 라이브러리로 1줄 만에 자동 연산']
+  ];
+  formulas.forEach((fm, i)=>{
+    const yy = 414 + i * 46;
+    R(s, 76, yy, 1128, 40, fm[0]==='파이썬 코드'?C.blueSoft:C.greenSoft, C.line, 4, 0.6);
+    T(s, 96, yy+24, fm[0], '', 13.5, {fill:C.green,'font-weight':900});
+    T(s, 240, yy+24, fm[1], 'mono', 12, {fill:C.ink,'font-weight':850});
+    W(s, 700, yy+24, fm[2], 490, '', 11.5, 16, {fill:C.muted,'font-weight':650});
+  });
+
+  anchor(s,'품질 진단 : Cpk 1.41 및 4.23σ는 공정이 매우 안정적으로 통제되고 있음을 뜻하며 추가 설비 투자 없이 현 상태 유지가 권장됩니다.');
+}
+
+// Slide 50: [실전 2-B: SDC 정규분포 USL 벨커브] visual:gaussian-bell-usl
+function render50(s){
+  base(s,'06 · 파이썬 환경 구축 & 현업 5대 머신러닝','[실전 2-B] SDC 식스시그마 가우시안 정규분포 USL 벨 커브','두께 데이터의 가우시안 정규분포 곡선과 규격 상한(USL) 초과 불량 영역을 시각적으로 검증',50,'visual:gaussian-bell-usl');
+
+  R(s,56,158,680,445,C.white,C.green,12,1.2);
+  R(s,56,158,680,42,C.navy,'none',12);
+  R(s,56,180,680,20,C.navy);
+  T(s,76,186,'패널 두께 가우시안 정규분포 곡선 (Gaussian Bell Curve)','',15,{fill:'#fff','font-weight':900});
+
+  L(s,96,520,696,520,C.ink,1.5);
+  L(s,396,240,396,520,C.blueDark,1.5,'4 4');
+  T(s,396,230,'평균 μ = 1.15 mm', '', 12.5, {fill:C.blueDark,'font-weight':900,'text-anchor':'middle'});
+
+  L(s,176,280,176,520,C.red,1.5,'3 3');
+  T(s,176,270,'LSL = 0.80 mm', '', 12, {fill:C.red,'font-weight':850,'text-anchor':'middle'});
+
+  L(s,616,280,616,520,C.red,1.5,'3 3');
+  T(s,616,270,'USL = 1.50 mm', '', 12, {fill:C.red,'font-weight':850,'text-anchor':'middle'});
+
+  const bellPath = "M 116 515 C 196 515 276 505 326 380 C 366 280 396 280 426 280 C 456 280 496 380 546 505 C 596 515 676 515 676 515";
+  const bEl = el('path',{d:bellPath,fill:'none',stroke:C.green,'stroke-width':3.5});
+  s.appendChild(bEl);
+
+  R(s,616,480,60,38,'rgba(239,68,68,0.25)','none');
+  T(s,646,504,'불량 영역', '', 11, {fill:C.red,'font-weight':900,'text-anchor':'middle'});
+
+  T(s,396,550,'두께 (mm) ➔', '', 12.5, {fill:C.ink,'font-weight':800,'text-anchor':'middle'});
+
+  R(s,760,158,464,445,C.white,C.green,12,1.2);
+  R(s,760,158,464,42,C.green,'none',12);
+  R(s,760,180,464,20,C.green);
+  T(s,780,186,'통계적 공정 품질 관리(SPC) 결과 보고','',15,{fill:'#fff','font-weight':900});
+
+  const repItems = [
+    ['정규성 검정 (Normality Test)', 'Shapiro-Wilk 검정 p-value = 0.42 ➔ 유의수준 0.05보다 훨씬 크므로 완벽한 정규분포 데이터 형성 확인'],
+    ['불량 발생 근본 원인 규명', '전체 평균 두께는 1.15mm로 매우 이상적이나, 챔버 3구역 온도 급상승 시 일부 두께 1.50mm USL 초과'],
+    ['엔지니어링 개선 권고안', '챔버 3구역 냉각 팬 회전수(RPM)를 15% 상향하여 온도 산포를 ±0.3℃ 이내로 정밀 제어'],
+    ['품질 개선 기대 효과', 'DPMO를 3,140개에서 850개(5.0σ 수준)로 대폭 개선하여 연간 품질비용 약 12억 원 절감']
+  ];
+  repItems.forEach((ri, i)=>{
+    const yy = 220 + i * 94;
+    R(s, 780, yy, 424, 84, C.greenSoft, C.green, 6, 0.8);
+    T(s, 796, yy+24, ri[0], '', 13.5, {fill:C.green,'font-weight':900});
+    W(s, 796, yy+48, ri[1], 390, 'body', 12, 17, {'font-weight':700});
+  });
+
+  anchor(s,'시각적 보고 : 수식 테이블만 제시하는 것보다 벨 커브와 USL 한계선을 함께 보여줄 때 의사결정 속도가 극대화됩니다.');
+}
+
+// Slide 51: [실전 3: HR 이직 예측] split:rf-metrics-slider-ui
+function render51(s){
+  base(s,'06 · 파이썬 환경 구축 & 현업 5대 머신러닝','[실전 3] HR 핵심 인재 이직 예측 모델 & 대화형 시뮬레이션','근무시간, 직무만족도, 급여인상률, 승진연차를 기반으로 이직 확률(0~100%)을 실시간 예측',51,'split:rf-metrics-slider-ui');
+
+  R(s,56,158,570,445,C.white,C.wine,12,1.2);
+  R(s,56,158,570,42,C.navy,'none',12);
+  R(s,56,180,570,20,C.navy);
+  T(s,76,186,'분류 모델 (Random Forest) Classification Report','',15,{fill:'#fff','font-weight':900});
+
+  const repHeads = ['구분', '정밀도 (Precision)', '재현율 (Recall)', 'F1-Score', '표본 수'];
+  const repW = [110, 110, 110, 100, 100];
+  R(s,76,220,530,28,C.navyLight,'none',4);
+  repHeads.forEach((h, i)=>{
+    const ox = 76 + repW.slice(0, i).reduce((a,b)=>a+b, 0);
+    T(s, ox + repW[i]/2, 238, h, '', 11.5, {fill:'#fff','font-weight':900,'text-anchor':'middle'});
+  });
+
+  const repRows = [
+    ['0 (잔류)', '0.94', '0.96', '0.95', '2,400 명'],
+    ['1 (이직)', '0.88', '0.82', '0.85', '600 명'],
+    ['전체 평균', '0.92', '0.93', '0.93', '3,000 명']
+  ];
+  repRows.forEach((r, i)=>{
+    const yy = 250 + i * 36;
+    R(s, 76, yy, 530, 32, i===1?C.redSoft:(i%2===0?C.white:C.wineSoft), C.line, 0, 0.5);
+    r.forEach((cell, ci)=>{
+      const ox = 76 + repW.slice(0, ci).reduce((a,b)=>a+b, 0);
+      T(s, ox + repW[ci]/2, yy + 21, cell, '', 12, {
+        fill: i===1&&ci===0?C.red:C.ink,
+        'font-weight': i===1||ci===0?900:600,
+        'text-anchor': 'middle'
+      });
+    });
+  });
+
+  R(s,76,380,530,205,C.wineSoft,C.wine,8,1);
+  T(s,96,408,'[이직에 영향을 미치는 핵심 변수 중요도 Top 3]','num',{'font-size':13.5,fill:C.wine});
+  T(s,96,440,'1위 : 월평균 초과근무 시간 (기여도 38.5% · 핵심 요인)', '', 13, {fill:C.ink,'font-weight':800});
+  T(s,96,472,'2위 : 최근 승진 이후 경과 연수 (기여도 26.2% · 성장 정체)', '', 13, {fill:C.ink,'font-weight':800});
+  T(s,96,504,'3위 : 직무 만족도 서베이 점수 (기여도 19.8% · 조직 분위기)', '', 13, {fill:C.ink,'font-weight':800});
+  T(s,96,550,'👉 결론 : 과도한 야근과 승진 정체가 이직의 결정적 원인', '', 13.5, {fill:C.wine,'font-weight':900});
+
+  R(s,654,158,570,445,C.white,C.wine,12,1.2);
+  R(s,654,158,570,42,C.wine,'none',12);
+  R(s,654,180,570,20,C.wine);
+  T(s,674,186,'대화형 이직 확률 시뮬레이터 (ipywidgets UI)','',15,{fill:'#fff','font-weight':900});
+
+  const sliders = [
+    ['월 초과근무 시간 : 45 시간 (과다)', 45, 100],
+    ['직무 만족도 서베이 : 65 점 (보통)', 65, 100],
+    ['최근 승진 경과 : 4 년 (정체)', 80, 100],
+    ['급여 인상률 : 3.5 % (평균)', 35, 100]
+  ];
+  sliders.forEach((sl, i)=>{
+    const yy = 224 + i * 62;
+    T(s, 674, yy+18, sl[0], '', 13, {fill:C.ink,'font-weight':750});
+    R(s, 674, yy+28, 530, 12, '#e2e8f0', 'none', 6);
+    R(s, 674, yy+28, 530 * (sl[1]/100), 12, C.wine, 'none', 6);
+    CIRC(s, 674 + 530 * (sl[1]/100), yy+34, 9, C.navy);
+  });
+
+  R(s,674,480,530,105,C.redSoft,C.red,8,1.2);
+  T(s,694,510,'[실시간 예측 결과] 이 임직원의 이직 위험도 : 78.4 % (고위험)', '', 14.5, {fill:C.red,'font-weight':900});
+  W(s,694,542,'👉 추천 조치 : 초과근무 축소(20시간 이하) & 직무 순환 면담 즉시 시행', 490, '', 12.5, 17, {fill:C.ink,'font-weight':750});
+
+  anchor(s,'HR 인사이트 : 이직이 발생한 후 후회하는 대신, 머신러닝 시뮬레이터로 사전에 징후를 포착하고 선제적으로 면담합니다.');
+}
+
+// Slide 52: [실전 4: DS 반도체 3D 반응표면] visual:3d-response-surface
+function render52(s){
+  base(s,'06 · 파이썬 환경 구축 & 현업 5대 머신러닝','[실전 4] DS 반도체 수율 3D 반응표면 최적화 시뮬레이션','챔버 온도, 가스 압력, 습도 조건에 따른 웨이퍼 수율(Yield)의 3차원 반응표면 모델링',52,'visual:3d-response-surface');
+
+  R(s,56,158,570,445,C.white,C.gold,12,1.2);
+  R(s,56,158,570,42,C.navy,'none',12);
+  R(s,56,180,570,20,C.navy);
+  T(s,76,186,'반도체 챔버 공정 수율 3D 반응표면 (Response Surface)','',15,{fill:'#fff','font-weight':900});
+
+  const p1 = el('polygon',{points:'176,460 336,510 546,450 386,400',fill:C.grayBg,stroke:C.line,'stroke-width':1.5});
+  s.appendChild(p1);
+  const p2 = el('polygon',{points:'216,420 336,320 486,360 386,440',fill:C.goldSoft,stroke:C.gold,'stroke-width':2});
+  s.appendChild(p2);
+  const p3 = el('polygon',{points:'286,350 356,260 436,290 386,370',fill:'#fde68a',stroke:C.gold,'stroke-width':2});
+  s.appendChild(p3);
+
+  CIRC(s,356,260,10,C.red);
+  CIRC(s,356,260,16,'rgba(239,68,68,0.3)');
+  T(s,380,256,'최적점 (수율 98.6%)', '', 13, {fill:C.red,'font-weight':900});
+
+  T(s,216,490,'온도 (℃) ➔', '', 12, {fill:C.ink,'font-weight':800});
+  T(s,486,490,'가스 압력 (Pa) ➔', '', 12, {fill:C.ink,'font-weight':800});
+
+  W(s, 76, 545, [
+    '• 반응표면분석법(RSM)을 적용하여 복잡한 비선형 공정 상호작용 규명',
+    '• 온도가 185℃이고 압력이 45Pa일 때 수율이 극대화되는 볼록(Convex) 곡면 형성'
+  ], 530, 'body', 12, 18, {'font-weight':700});
+
+  R(s,654,158,570,445,C.white,C.green,12,1.2);
+  R(s,654,158,570,42,C.green,'none',12);
+  R(s,654,180,570,20,C.green);
+  T(s,674,186,'4대 핵심 공정별 AI 최적 공정 레시피 (Recipe)','',15,{fill:'#fff','font-weight':900});
+
+  const recipes = [
+    { name: '포토 공정 (Photo)', temp: '185.4 ℃', hum: '45.2 %', yield: '98.6 %', tip: '노광 시간 0.2초 단축 권장' },
+    { name: '식각 공정 (Etch)', temp: '192.1 ℃', hum: '38.5 %', yield: '97.8 %', tip: '플라즈마 파워 850W 유지' },
+    { name: '증착 공정 (CVD)', temp: '210.0 ℃', hum: '30.1 %', yield: '99.1 %', tip: '챔버 진공도 사전 캘리브레이션' },
+    { name: '세정 공정 (Clean)', temp: '165.8 ℃', hum: '50.0 %', yield: '99.4 %', tip: '초순수 유량 10L/min 유지' }
+  ];
+  recipes.forEach((rc, i)=>{
+    const yy = 220 + i * 94;
+    R(s, 674, yy, 530, 84, C.greenSoft, C.green, 6, 0.8);
+    T(s, 694, yy+24, rc.name, '', 14, {fill:C.green,'font-weight':900});
+    W(s, 694, yy+48, '최적 조건: ' + rc.temp + ' / ' + rc.hum + '  ➔  ' + rc.tip, 390, '', 12, 17, {fill:C.ink,'font-weight':750});
+    R(s, 1100, yy+18, 84, 30, C.white, C.green, 4, 1);
+    T(s, 1142, yy+38, rc.yield, '', 13.5, {fill:C.green,'font-weight':900,'text-anchor':'middle'});
+  });
+
+  anchor(s,'엔지니어링 가치 : 수백 번의 웨이퍼 파괴 실험을 줄이고 가상 3D 시뮬레이션으로 최적 레시피를 단 1분 만에 도출합니다.');
+}
+
+// Slide 53: [실전 5: DX 매장 파일 일괄 병합] split:manual-vs-python-concat
+function render53(s){
+  base(s,'06 · 파이썬 환경 구축 & 현업 5대 머신러닝','[실전 5] DX_Consumer 다차원 매출 분석 & 매장별 파일 일괄 병합','전국 50개 매장에서 보내온 엑셀 파일을 파이썬 glob + concat으로 1초 만에 통합하고 다차원 분석',53,'split:manual-vs-python-concat');
+
+  R(s,56,158,570,445,C.white,C.blue,12,1.2);
+  R(s,56,158,570,42,C.navy,'none',12);
+  R(s,56,180,570,20,C.navy);
+  T(s,76,186,'수작업 복사/붙여넣기 vs 파이썬 파일 일괄 병합','',15,{fill:'#fff','font-weight':900});
+
+  const fComp = [
+    ['과거 수작업 병합 방식 (2시간 이상 소요)', [
+      '• 50개 개별 엑셀 파일을 하나씩 더블클릭하여 오픈',
+      '• 마스터 시트 아래에 복사/붙여넣기 무한 반복 노가다',
+      '• 복사 도중 특정 매장 행 누락 및 열 위치 불일치 휴먼 에러 발생'
+    ]],
+    ['파이썬 자동 병합 파이프라인 (단 1초 완성)', [
+      '• glob 라이브러리로 폴더 내 *.xlsx 파일 경로 일괄 자동 탐색',
+      '• pd.concat() 함수로 50개 시트 수직 병합 및 데이터 타입 정규화',
+      '• 파일명에서 [지점명, 판매일자]를 추출하여 분석용 파생변수 자동 생성'
+    ]]
+  ];
+  fComp.forEach((fc, i)=>{
+    const yy = 220 + i * 184;
+    R(s, 76, yy, 530, 168, i===0?'#f8fafc':C.blueSoft, i===0?C.line:C.blue, 8, 1.2);
+    T(s, 96, yy+28, fc[0], '', 14.5, {fill:i===0?C.ink:C.blueDark,'font-weight':900});
+    fc[1].forEach((line, li)=>{
+      W(s, 96, yy + 56 + li * 34, line, 490, 'body', 12.5, 18, {'font-weight':650});
+    });
+  });
+
+  R(s,654,158,570,445,'#0f172a','#1e293b',12,1.4);
+  R(s,654,158,570,42,'#1e293b','none',12);
+  R(s,654,180,570,20,'#1e293b');
+  CIRC(s,676,179,5,'#ef4444');
+  CIRC(s,692,179,5,'#eab308');
+  CIRC(s,708,179,5,'#22c55e');
+  T(s,730,184,'Python · merge_excel_files.py (2026 표준)','mono',12,{fill:'#94a3b8','font-weight':700});
+
+  const pyCode = [
+    'import glob',
+    'import pandas as pd',
+    '',
+    '# 1. 폴더 내 모든 엑셀 파일 경로 탐색',
+    'file_list = glob.glob("./store_sales/*.xlsx")',
+    '',
+    '# 2. 각 파일 로드 및 지점명 파생변수 자동 생성',
+    'df_list = []',
+    'for file in file_list:',
+    '    temp_df = pd.read_excel(file)',
+    '    temp_df["지점명"] = file.split("_")[-1].replace(".xlsx", "")',
+    '    df_list.append(temp_df)',
+    '',
+    '# 3. 1초 만에 전체 통합 및 마스터 엑셀 저장',
+    'merged_df = pd.concat(df_list, ignore_index=True)',
+    'merged_df.to_excel("전국_매장_통합매출_정본.xlsx", index=False)',
+    'print(f"총 {len(file_list)}개 파일 병합 완료!")'
+  ];
+  pyCode.forEach((cd, i)=>{
+    T(s, 674, 222 + i * 22, cd, 'mono', 11.5, {fill:cd.startsWith('#')?'#94a3b8':(cd.startsWith('import')||cd.startsWith('for')?'#38bdf8':'#f8fafc'),'font-weight':700});
+  });
+
+  anchor(s,'업무 혁신 : 월말마다 반나절씩 걸리던 전국 매장 매출 취합 업무가 단 3줄의 파이썬 코드로 1초 만에 해결됩니다.');
+}
+
+// Slide 54: [단원 간지 07] chapter-gate
+function render54(s){
+  chapterGate(s, '07', 'API 실시간 데이터 수집과\n바이브코딩 대시보드 웹 배포', 'MODULE 07 · API & VIBE CODING DEPLOY', [
+    '“코딩을 몰라도 내 분석 결과물을 전 세계가 접속하는 웹앱으로 띄울 수 있을까?”',
+    'Easy Scraper 크롤링 및 SERP/RSS 실시간 수집 파이프라인과,',
+    '5대 바이브코딩 도구 및 Netlify 1분 배포로 1인 풀스택을 완성합니다.'
+  ], 54);
+}
+
+// Slide 55: [크롤링 & GenSpark] flow:easy-scraper-genspark
+function render55(s){
+  base(s,'07 · API 실시간 수집 & 바이브코딩 배포','Easy Scraper 웹 크롤링과 GenSpark AI 슬라이드 자동 보고서','코딩 없이 언론사 뉴스를 수집하고 GenSpark AI를 통해 동향 분석 슬라이드를 5분 만에 생성',55,'flow:easy-scraper-genspark');
+
+  R(s,56,158,570,445,C.white,C.blue,12,1.2);
+  R(s,56,158,570,42,C.navy,'none',12);
+  R(s,56,180,570,20,C.navy);
+  T(s,76,186,'➊ Easy Scraper 무코딩 웹 크롤링 4단계','',15,{fill:'#fff','font-weight':900});
+
+  const scSteps = [
+    ['1. 크롬 웹스토어 확장도구 설치', 'Easy Scraper 설치 후 브라우저 상단 툴바에 고정'],
+    ['2. 빅카인즈 뉴스 포털 검색', 'www.bigkinds.or.kr 접속 ➔ “삼성전자 AI 반도체” 검색'],
+    ['3. 요소 패턴 자동 선택', '첫 번째 기사 제목 클릭 시 전체 100개 기사 자동 감지 및 추출'],
+    ['4. CSV / JSON 일괄 다운로드', 'Download CSV 클릭하여 분석용 정형 데이터 1초 확보']
+  ];
+  scSteps.forEach((st, i)=>{
+    const yy = 220 + i * 94;
+    R(s, 76, yy, 530, 84, C.blueSoft, C.blue, 6, 0.8);
+    T(s, 96, yy+24, st[0], '', 14, {fill:C.blueDark,'font-weight':900});
+    W(s, 96, yy+48, st[1], 490, '', 12.5, 17, {fill:C.ink,'font-weight':700});
+  });
+
+  R(s,654,158,570,445,C.white,C.green,12,1.2);
+  R(s,654,158,570,42,C.green,'none',12);
+  R(s,654,180,570,20,C.green);
+  T(s,674,186,'➋ GenSpark AI 업로드 및 분석 슬라이드 생성','',15,{fill:'#fff','font-weight':900});
+
+  const gsRes = [
+    ['키워드 1위 : HBM3E 공급망', '전체 기사의 42% 점유. 주요 빅테크 퀄테스트 통과 및 수율 확보에 집중'],
+    ['감성 분석 : 긍정 68% vs 부정 32%', '상반기 우려에서 하반기 턴어라운드 및 차세대 AI 반도체 기대감으로 전환'],
+    ['3대 리스크 요인 정밀 도출', '① 미중 반도체 수출 규제  ② 차세대 패키징 수율  ③ 거시경제 환율 변동성'],
+    ['원클릭 인터랙티브 슬라이드 공유', '팀원들에게 URL 링크 하나로 반응형 웹 슬라이드 및 비교 대시보드 즉시 배포']
+  ];
+  gsRes.forEach((gr, i)=>{
+    const yy = 220 + i * 94;
+    R(s, 674, yy, 530, 84, C.greenSoft, C.green, 6, 0.8);
+    T(s, 694, yy+24, gr[0], '', 14, {fill:C.green,'font-weight':900});
+    W(s, 694, yy+48, gr[1], 490, '', 12.5, 17, {fill:C.ink,'font-weight':700});
+  });
+
+  anchor(s,'데이터-보고서 직결 : 수집된 원시 데이터가 AI를 거쳐 5분 만에 완성형 프레젠테이션 슬라이드로 탈바꿈합니다.');
+}
+
+// Slide 56: [SERP & RSS] split:serp-rss-automation
+function render56(s){
+  base(s,'07 · API 실시간 수집 & 바이브코딩 배포','SERP API 검색 트렌드 연동 & RSS 피드 자동 브리핑 파이프라인','외부 실시간 검색 관심도 API와 학술/뉴스 RSS 피드를 파이썬으로 연결하여 사내 DB 자동 갱신',56,'split:serp-rss-automation');
+
+  R(s,56,158,570,445,'#0f172a','#1e293b',12,1.4);
+  R(s,56,158,570,42,'#1e293b','none',12);
+  R(s,56,180,570,20,'#1e293b');
+  CIRC(s,76,179,5,'#ef4444');
+  CIRC(s,92,179,5,'#eab308');
+  CIRC(s,108,179,5,'#22c55e');
+  T(s,130,184,'Python · serp_trend_api.py (2026 최신)','mono',12,{fill:'#94a3b8','font-weight':700});
+
+  const serpCode = [
+    'import requests, pandas as pd',
+    'import plotly.express as px',
+    '',
+    '# 1. 2026 SERP API 호출 (Galaxy S26, iPhone 17)',
+    'params = {',
+    '  "api_key": "YOUR_SERP_API_KEY",',
+    '  "engine": "google_trends",',
+    '  "q": "Galaxy S26, iPhone 17",',
+    '  "date": "today 3-y"',
+    '}',
+    'res = requests.get("https://serpapi.com/search", params=params)',
+    'df = pd.DataFrame(res.json()["interest_over_time"])',
+    '',
+    '# 2. Plotly 반응형 인터랙티브 차트 렌더링',
+    'fig = px.line(df, x="date", y="value", color="keyword")',
+    'fig.show()'
+  ];
+  serpCode.forEach((cd, i)=>{
+    T(s, 76, 222 + i * 22, cd, 'mono', 11.5, {fill:cd.startsWith('#')?'#94a3b8':(cd.startsWith('import')||cd.startsWith('fig')?'#38bdf8':'#f8fafc'),'font-weight':700});
+  });
+
+  R(s,654,158,570,445,C.white,C.green,12,1.2);
+  R(s,654,158,570,42,C.green,'none',12);
+  R(s,654,180,570,20,C.green);
+  T(s,674,186,'RSS 피드 4단계 일간 브리핑 파이프라인','',15,{fill:'#fff','font-weight':900});
+
+  const rssPipe = [
+    ['1. 글로벌 테크 미디어 RSS 등록', 'TechCrunch, IEEE Spectrum, 전자신문 등 핵심 매체 RSS 등록'],
+    ['2. feedparser 자동 크롤링', '10분 주기로 신규 기사 제목, 링크, 본문 파싱 및 중복 제거'],
+    ['3. LLM 3줄 핵심 요약 & 번역', 'Claude 3.7 / Gemini 2.0으로 외신 기사 한국어 번역 및 3줄 요약'],
+    ['4. 사내 슬랙/이메일 자동 발행', '매일 아침 8시 팀 채널에 [글로벌 AI 반도체 동향] 자동 발송']
+  ];
+  rssPipe.forEach((rp, i)=>{
+    const yy = 220 + i * 94;
+    R(s, 674, yy, 530, 84, C.greenSoft, C.green, 6, 0.8);
+    T(s, 694, yy+24, rp[0], '', 14, {fill:C.green,'font-weight':900});
+    W(s, 694, yy+48, rp[1], 490, '', 12.5, 17, {fill:C.ink,'font-weight':700});
+  });
+
+  anchor(s,'무인 지식화 : 매일 아침 뉴스를 찾아 헤매지 않고, AI가 자동으로 선별·요약한 핵심 트렌드만 받아봅니다.');
+}
+
+// Slide 57: [바이브코딩 패러다임] compare:waterfall-vs-vibecoding
+function render57(s){
+  base(s,'07 · API 실시간 수집 & 바이브코딩 배포','바이브코딩 (Vibe Coding) 패러다임과 1인 풀스택 혁신','“개발자도 기획자가 되고, 기획자도 풀스택 개발자가 된다” — 아이디어가 곧바로 제품이 되는 2026 최신 혁신',57,'compare:waterfall-vs-vibecoding');
+
+  R(s,56,158,570,445,C.white,C.blue,12,1.2);
+  R(s,56,158,570,42,C.navy,'none',12);
+  R(s,56,180,570,20,C.navy);
+  T(s,76,186,'과거의 전통적 개발 방식 (수개월 지연 & 소통 단절)','',15,{fill:'#fff','font-weight':900});
+
+  const oldVibe = [
+    ['기획자의 끝없는 요구사항 정의서 작성', '수십 장의 파워포인트 화면 기획서와 기능 정의서를 작성하는 데 수주일 소요'],
+    ['기획 ➔ 디자인 ➔ 개발 끝없는 핑퐁 지연', '직군 간 의사소통 오해와 해석 차이로 인해 당초 기획 의도와 완전히 다른 결과물 발생'],
+    ['높은 외주 개발 비용 및 인프라 배포 장벽', '단순한 내부용 대시보드 하나를 띄우는 데도 수천만 원의 외주비와 복잡한 서버 인프라 구축 필요']
+  ];
+  oldVibe.forEach((ov, i)=>{
+    const yy = 220 + i * 122;
+    R(s, 76, yy, 530, 110, '#f8fafc', C.line, 8, 1);
+    T(s, 96, yy+26, ov[0], '', 14.5, {fill:C.body,'font-weight':850});
+    W(s, 96, yy+50, '➔ ' + ov[1], 490, '', 12.5, 18, {fill:C.muted,'font-weight':650});
+  });
+
+  R(s,654,158,570,445,C.white,C.blue,12,1.2);
+  R(s,654,158,570,42,C.blue,'none',12);
+  R(s,654,180,570,20,C.blue);
+  T(s,674,186,'2026 바이브코딩 시대의 1인 풀스택 워크플로우 (10분 완성)','',15,{fill:'#fff','font-weight':900});
+
+  const newVibe = [
+    ['자연어로 느낌(Vibe)과 핵심 기능 즉시 지시', '“삼성전자 톤앤매너(#002B49)로 SDC 결함률 4.23σ 분석 반응형 웹 대시보드를 만들어줘”'],
+    ['AI가 프론트엔드/백엔드/시각화 동시 자동 구현', 'React, Tailwind CSS, Chart.js, Recharts를 결합한 완성형 풀스택 코드를 실시간 조립'],
+    ['1분 만에 글로벌 라이브 무료 웹 배포', 'Netlify / Vercel을 통해 팀원과 경영진이 스마트폰과 PC에서 즉시 볼 수 있는 라이브 URL 생성']
+  ];
+  newVibe.forEach((nv, i)=>{
+    const yy = 220 + i * 122;
+    R(s, 674, yy, 530, 110, C.blueSoft, C.blue, 8, 1.2);
+    T(s, 694, yy+26, nv[0], '', 14.5, {fill:C.blueDark,'font-weight':900});
+    W(s, 694, yy+50, '➔ ' + nv[1], 490, '', 12.5, 18, {fill:C.ink,'font-weight':750});
+  });
+
+  anchor(s,'패러다임 전환 : 코딩 기술 자체의 가치는 낮아지고, 현업의 문제를 꿰뚫어보는 기획과 비즈니스 감각의 가치가 최고가 되었습니다.');
+}
+
+// Slide 58: [5대 도구 비교] matrix:5-vibecoding-tools
+function render58(s){
+  base(s,'07 · API 실시간 수집 & 바이브코딩 배포','5대 바이브코딩 도구 종합 비교 매트릭스 (2026 최신 생태계)','Cursor, Windsurf, Bolt.new, Lovable.dev, Replit의 타겟, 핵심 신기술, 실무 프로젝트 완벽 비교',58,'matrix:5-vibecoding-tools');
+
+  const toolsMat = [
+    {
+      name: 'Cursor (커서)',
+      target: '프로 개발자 & 데이터 분석가',
+      tech: 'Composer 2.0 다중 파일 동시 수정 & @Codebase 전체 인덱싱',
+      project: '사내 엑셀/파이썬 데이터 분석 및 대규모 백엔드 구축',
+      grade: '최우수 (S+)',
+      bg: C.blueSoft, stroke: C.blue
+    },
+    {
+      name: 'Windsurf (윈드서프)',
+      target: '풀스택 엔지니어 & 파이프라인 설계자',
+      tech: 'Cascade 2.0 엔진 기반 에디터-터미널 자율 협업 및 Flow 지능형 제안',
+      project: '데이터 전처리 파이프라인 및 복합 웹 서비스 구현',
+      grade: '우수 (S)',
+      bg: C.greenSoft, stroke: C.green
+    },
+    {
+      name: 'Bolt.new',
+      target: '비개발자, 기획자 & PM',
+      tech: '브라우저 내 WebContainers 풀스택 Node.js 구동 & 원클릭 앱 완성',
+      project: '10분 만에 끝내는 사내 프로토타입 웹앱 제작',
+      grade: '매우 우수 (A+)',
+      bg: C.goldSoft, stroke: C.gold
+    },
+    {
+      name: 'Lovable.dev / v0',
+      target: 'UI/UX 디자이너 & 프로덕트 매니저',
+      tech: '자연어 대화형 SaaS 프론트엔드 실시간 조립 & GitHub 양방향 동기화',
+      project: '경영진 보고용 미려한 반응형 데이터 대시보드',
+      grade: '매우 우수 (A+)',
+      bg: C.wineSoft, stroke: C.wine
+    },
+    {
+      name: 'Replit Agent 2.0',
+      target: '아이디어 프로토타이퍼 & 스타트업',
+      tech: '자연어 지시로 클라우드 DB 구축, API 연동, 호스팅까지 전자동 완결',
+      project: '완전 독립형 데이터 수집/알림 자동화 웹 서비스',
+      grade: '우수 (A)',
+      bg: C.redSoft, stroke: C.red
+    }
+  ];
+
+  toolsMat.forEach((tm, i)=>{
+    const yy = 158 + i * 88;
+    R(s, 56, yy, 1168, 80, C.white, tm.stroke, 8, 1.2);
+    
+    // 1. 도구명
+    R(s, 72, yy+12, 170, 32, tm.bg, 'none', 6);
+    T(s, 157, yy+33, tm.name, '', 14.5, {fill:tm.stroke,'font-weight':900,'text-anchor':'middle'});
+    T(s, 157, yy+62, '🎯 ' + tm.target, '', 11.5, {fill:C.body,'font-weight':700,'text-anchor':'middle'});
+
+    // 구분선 1
+    L(s, 254, yy+12, 254, yy+68, C.line, 1);
+
+    // 2. 2026 핵심 신기술
+    T(s, 270, yy+28, '⚡ 2026 핵심 기술 & 기능', '', 12.5, {fill:tm.stroke,'font-weight':900});
+    W(s, 270, yy+50, tm.tech, 460, '', 12.5, 17, {fill:C.ink,'font-weight':750});
+
+    // 구분선 2
+    L(s, 744, yy+12, 744, yy+68, C.line, 1);
+
+    // 3. 실무 추천 프로젝트
+    T(s, 760, yy+28, '📌 실무 최적 추천 프로젝트', '', 12.5, {fill:C.ink,'font-weight':900});
+    W(s, 760, yy+50, tm.project, 270, '', 12, 16, {fill:C.muted,'font-weight':650});
+
+    // 4. 종합 평가
+    R(s, 1044, yy+18, 160, 44, tm.stroke, 'none', 6);
+    T(s, 1124, yy+44, tm.grade, '', 14, {fill:'#fff','font-weight':900,'text-anchor':'middle'});
+  });
+
+  anchor(s,'도구 선택 가이드 : 사내 엑셀/파이썬 데이터 분석은 [Cursor], 빠른 대시보드 프로토타이핑은 [Bolt.new / Lovable]을 추천합니다.');
+}
+
+// Slide 59: [Netlify & Claude Code CLI] split:deploy-cli-agents
+function render59(s){
+  base(s,'07 · API 실시간 수집 & 바이브코딩 배포','Netlify 1분 배포 4단계 & 로컬 터미널 Claude Code CLI 에이전트','완성된 HTML 대시보드를 전 세계로 1분 배포하고 내 PC 터미널에서 자율 작업하는 CLI 에이전트',59,'split:deploy-cli-agents');
+
+  R(s,56,158,570,445,C.white,C.blue,12,1.2);
+  R(s,56,158,570,42,C.navy,'none',12);
+  R(s,56,180,570,20,C.navy);
+  T(s,76,186,'Netlify 1분 무료 웹 대시보드 배포 4단계','',15,{fill:'#fff','font-weight':900});
+
+  const netSteps = [
+    ['01. index.html 로컬 저장', 'Cursor에서 완성된 대시보드를 단일 index.html 파일로 저장'],
+    ['02. app.netlify.com/drop 접속', '회원가입 없이도 즉시 브라우저 드롭 영역 오픈'],
+    ['03. 폴더 통째로 드래그 앤 드롭', 'html 파일이 든 폴더를 끌어다 놓으면 5초 만에 자동 빌드'],
+    ['04. 글로벌 라이브 URL 발급', 'samsung-analytics.netlify.app 보안 HTTPS 주소 즉시 발급']
+  ];
+  netSteps.forEach((ns, i)=>{
+    const yy = 220 + i * 94;
+    R(s, 76, yy, 530, 84, C.blueSoft, C.blue, 6, 0.8);
+    T(s, 96, yy+24, ns[0], '', 14, {fill:C.blueDark,'font-weight':900});
+    W(s, 96, yy+48, ns[1], 490, '', 12.5, 17, {fill:C.ink,'font-weight':700});
+  });
+
+  R(s,654,158,570,445,'#0f172a','#1e293b',12,1.4);
+  R(s,654,158,570,42,'#1e293b','none',12);
+  R(s,654,180,570,20,'#1e293b');
+  CIRC(s,676,179,5,'#ef4444');
+  CIRC(s,692,179,5,'#eab308');
+  CIRC(s,708,179,5,'#22c55e');
+  T(s,730,184,'Terminal · Claude Code CLI (Zero-Copy Agent)','mono',12,{fill:'#94a3b8','font-weight':700});
+
+  const cliCmds = [
+    '# 1. Anthropic 공식 Claude Code CLI 글로벌 설치',
+    'npm install -g @anthropic-ai/claude-code',
+    '',
+    '# 2. 터미널에서 즉시 실행',
+    'claude   # 현재 폴더 전체 맥락을 자동 인덱싱',
+    '',
+    '# 3. CLI 에이전트의 3대 압도적 장점',
+    '• 복사/붙여넣기 제로 (Zero-Copy) : 로컬 파일 직접 수정',
+    '• 터미널 에러 자동 자가치유 (Self-Healing Debug)',
+    '• 수백 개 엑셀 파일 배치 일괄 자동 변환 처리'
+  ];
+  cliCmds.forEach((cd, i)=>{
+    T(s, 674, 222 + i * 26, cd, 'mono', 12, {fill:cd.startsWith('#')?'#94a3b8':(cd.startsWith('npm')||cd.startsWith('claude')?'#38bdf8':'#4ade80'),'font-weight':700});
+  });
+
+  anchor(s,'배포의 민주화 : 복잡한 서버 설정 없이도 내가 만든 데이터 대시보드를 전 세계 어디서나 볼 수 있는 라이브 웹으로 띄웁니다.');
+}
+
+// Slide 60: [수료 에필로그] grid:4-mindset-vision
+function render60(s){
+  base(s,'07 · API 실시간 수집 & 바이브코딩 배포','AI 데이터 분석 실무자의 4대 마인드셋과 수료 비전','기술을 두려워하지 않고 비즈니스 문제를 주도적으로 해결하는 삼성전자 최고의 AI 혁신 인재',60,'grid:4-mindset-vision');
+
+  const mindsets = [
+    { num: '01', title: '질문 설계자 (Architect)', desc: '단순 코더가 아닌 비즈니스 문제의 본질을 꿰뚫고 AI에게 정교한 메타프롬프트를 던지는 분석 기획자', col: C.blueSoft, stroke: C.blue },
+    { num: '02', title: 'AI 총괄 지휘관 (Director)', desc: 'Claude, Gemini, Cursor 등 최적의 AI 도구를 적재적소에 배치하여 10배의 성과를 도출하는 총괄 지휘관', col: C.greenSoft, stroke: C.green },
+    { num: '03', title: '빠른 프로토타이퍼 (Maker)', desc: '고민만 하지 않고 10분 만에 엑셀/파이썬 실무 프로토타입을 만들어 현업 부서와 시장에서 즉시 검증', col: C.goldSoft, stroke: C.gold },
+    { num: '04', title: '1인 풀스택 마스터', desc: '문제 정의부터 데이터 수집, EDA, 머신러닝 예측, 그리고 웹 대시보드 배포까지 혼자서 완결하는 핵심 인재', col: C.wineSoft, stroke: C.wine }
+  ];
+
+  mindsets.forEach((m, i)=>{
+    const xx = 56 + i * 296;
+    R(s, xx, 158, 284, 445, C.white, m.stroke, 10, 1.4);
+    
+    R(s, xx+16, 174, 42, 32, m.col, 'none', 6);
+    T(s, xx+37, 196, m.num, '', 15, {fill:m.stroke,'font-weight':900,'text-anchor':'middle'});
+    
+    T(s, xx+16, 234, m.title, '', 14, {fill:C.ink,'font-weight':900});
+    L(s, xx+16, 254, xx+268, 254, m.stroke, 1, '2 2');
+
+    R(s, xx+14, 276, 256, 224, m.col, m.stroke, 8, 0.8);
+    CIRC(s, xx+28, 300, 4, m.stroke);
+    W(s, xx+38, 304, m.desc, 204, 'body', 13, 24, {'font-weight':750});
+  });
+
+  anchor(s,'수료 축하 : “데이터와 AI는 여러분의 칼퇴를 돕고, 여러분을 가장 가치 있는 일에 집중하게 만들어줄 것입니다!”');
+}
+
+
+
+const totalSlides = 60;
+let currentSlide = 1;
+const wrapper = document.getElementById('slide-wrapper');
+
+for(let i=1; i<=totalSlides; i++){
+  const slideDiv = document.createElement('div');
+  slideDiv.className = 'slide' + (i===1 ? ' active' : '');
+  slideDiv.id = 'slide-' + i;
+  
+  const svg = document.createElementNS(SVG_NS, 'svg');
+  svg.setAttribute('viewBox', '0 0 1280 720');
+  
+  const fnName = 'render' + i;
+  if(typeof window[fnName] === 'function'){
+    window[fnName](svg);
+  } else {
+    base(svg, '삼성전자 AI 데이터 분석 실무', 'Slide ' + i, '상세 분석 및 실습 화면', i);
+  }
+  
+  slideDiv.appendChild(svg);
+  wrapper.appendChild(slideDiv);
+}
+
+function showSlide(n){
+  if(n < 1) n = 1;
+  if(n > totalSlides) n = totalSlides;
+  
+  document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
+  const target = document.getElementById('slide-' + n);
+  if(target) target.classList.add('active');
+  
+  currentSlide = n;
+  document.getElementById('page-info').textContent = String(n).padStart(2,'0') + ' / ' + String(totalSlides).padStart(2,'0');
+  document.getElementById('jump-input').value = n;
+}
+
+function prevSlide(){ showSlide(currentSlide - 1); }
+function nextSlide(){ showSlide(currentSlide + 1); }
+function jumpSlide(){
+  const val = parseInt(document.getElementById('jump-input').value, 10);
+  if(!isNaN(val)) showSlide(val);
+}
+
+function toggleFullScreen(){
+  if(!document.fullscreenElement){
+    document.getElementById('deck-container').requestFullscreen().catch(err=>alert(err.message));
+  } else {
+    document.exitFullscreen();
+  }
+}
+
+document.addEventListener('keydown', (e)=>{
+  if(e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') {
+    e.preventDefault();
+    nextSlide();
+  } else if(e.key === 'ArrowLeft' || e.key === 'PageUp') {
+    e.preventDefault();
+    prevSlide();
+  } else if(e.key === 'f' || e.key === 'F') {
+    toggleFullScreen();
+  } else if(e.key === 'Home') {
+    showSlide(1);
+  } else if(e.key === 'End') {
+    showSlide(totalSlides);
+  }
+});
+
+</script>
+<script>/* kg-preview: #<heading> \uc704\uce58\ub85c \uc774\ub3d9 */
+(function(){function norm(t){return (t||'').replace(/\s+/g,'').toLowerCase()}
+function go(){var h=decodeURIComponent(location.hash.slice(1));if(!h)return;var k=norm(h).slice(0,24);if(!k)return;
+var best=null,bl=1e9,els=document.body.querySelectorAll('h1,h2,h3,h4,h5,p,div,span,li,td,text,tspan,section,article');
+for(var i=0;i<els.length;i++){var e=els[i],t=norm(e.textContent);if(t.length<bl&&t.indexOf(k)>-1){best=e;bl=t.length}}
+if(!best)return;var box=best.closest('section,[class*=slide],[class*=page],article')||best;
+box.scrollIntoView({block:'start'});box.style.outline='3px solid #c0504d';box.style.outlineOffset='4px';
+setTimeout(function(){box.style.outline=''},2600)}
+window.addEventListener('load',function(){setTimeout(go,400)});window.addEventListener('hashchange',go)})();</script></body>
+</html>

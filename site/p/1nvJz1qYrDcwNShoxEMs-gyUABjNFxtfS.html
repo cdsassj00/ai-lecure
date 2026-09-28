@@ -1,0 +1,1813 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head><meta name="robots" content="noindex, nofollow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>제1차시 — AI 에이전트 시대의 개막과 공공 구현 지형도</title>
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Noto+Serif+KR:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f5efe4;--bg2:#ede4d3;--bg3:#e3d6bb;
+  --ink:#2b2015;--ink2:#5a4a38;--ink3:#8a7659;--ink4:#b3a17f;
+  --acc:#b8532a;--acc2:#8b3e1f;--acc3:#d49575;
+  --ln:#d8c8ae;--ln2:#e6d9bf;
+  --dk:#1a1612;--dk2:#241e17;--on:#ede4d3;--on2:#a89172;
+  --serif:'Fraunces','Noto Serif KR',Georgia,serif;
+  --sans:'Pretendard Variable',Pretendard,-apple-system,sans-serif;
+  --mono:'JetBrains Mono',ui-monospace,Consolas,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:#0e0a06;font-family:var(--sans);-webkit-font-smoothing:antialiased}
+
+.deck{height:100vh;overflow-y:scroll;scroll-snap-type:y mandatory;scroll-behavior:smooth}
+.stage{width:100vw;min-height:100vh;display:flex;align-items:center;justify-content:center;scroll-snap-align:start;padding:16px}
+.slide{width:1600px;height:900px;background:var(--bg);position:relative;overflow:hidden;transform-origin:center;
+  box-shadow:0 40px 90px -30px rgba(0,0,0,0.7);
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' seed='3'/%3E%3CfeColorMatrix values='0 0 0 0 0.16  0 0 0 0 0.12  0 0 0 0 0.08  0 0 0 0.025 0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E")}
+
+.hbar{position:absolute;top:0;left:0;right:0;height:52px;background:var(--dk);display:flex;align-items:center;justify-content:space-between;padding:0 80px}
+.hbar-l{display:flex;align-items:center;gap:12px;font-family:var(--mono);font-size:10.5px;color:#fff;letter-spacing:2.5px;font-weight:600}
+.hbar-l::before{content:"";width:22px;height:8px;background:var(--acc)}
+.hbar-r{font-family:var(--mono);font-size:10.5px;color:#bbb;letter-spacing:1.5px}
+
+.hl{position:absolute;left:80px;right:80px;top:68px}
+.hl-kicker{font-family:var(--mono);font-size:10.5px;color:var(--ink3);letter-spacing:2.5px;font-weight:700;margin-bottom:8px}
+.hl-title{font-family:var(--serif);font-weight:700;font-size:30px;line-height:1.2;letter-spacing:-0.3px;color:var(--ink)}
+.hl-lede{font-size:13px;color:var(--ink2);margin-top:6px;line-height:1.6;font-style:italic;max-width:1200px}
+.hl-bar{width:48px;height:3px;background:var(--ink);margin-top:6px}
+.hl-rule{position:absolute;left:80px;right:80px;top:188px;height:1px;background:var(--ln2)}
+
+.bd{position:absolute;left:80px;right:80px;top:198px;bottom:52px;display:grid;gap:1px;background:var(--ln2)}
+.bd.col3{grid-template-columns:1fr 1fr 1fr}
+.bd.col2{grid-template-columns:1fr 1fr}
+.bd.col2w{grid-template-columns:1.3fr 1fr}
+.bd.col1{grid-template-columns:1fr;background:transparent;gap:0}
+.col{background:var(--bg);padding:14px 18px;display:flex;flex-direction:column;overflow:hidden;min-width:0}
+
+.fbar{position:absolute;bottom:0;left:0;right:0;height:52px;background:#f0e8d8;border-top:3px solid var(--ln);display:flex;align-items:center;justify-content:space-between;padding:0 80px}
+.fbar-l,.fbar-r{display:flex;flex-direction:column;gap:2px}
+.fbar-r{align-items:flex-end}
+.fbar-label{font-family:var(--mono);font-size:10px;color:var(--ink3);letter-spacing:2.5px;font-weight:700}
+.fbar-title{font-size:13px;color:var(--ink)}
+
+.sh{display:flex;align-items:baseline;gap:10px;margin-bottom:8px}
+.sh-n{font-family:var(--mono);font-size:10.5px;color:var(--ink3);letter-spacing:2.5px;font-weight:700;text-transform:uppercase;white-space:nowrap}
+.sh-t{font-size:11px;color:var(--ink2)}
+.sh-line{height:1px;background:var(--ln2);margin-bottom:10px}
+
+.bth{font-size:14px;color:var(--ink);font-weight:600;margin-bottom:6px;line-height:1.35}
+.bt{font-size:13px;line-height:1.7;color:var(--ink2);margin-bottom:6px}
+.bt strong{color:var(--ink);font-weight:600}
+
+.mtbl{width:100%;border-collapse:collapse;font-size:12px;margin:6px 0}
+.mtbl thead th{font-family:var(--mono);font-size:10px;color:var(--ink3);letter-spacing:1.5px;font-weight:700;text-align:left;padding:6px 8px;border-bottom:1.2px solid var(--ink)}
+.mtbl tbody td{padding:5px 8px;border-bottom:1px solid var(--ln2);color:var(--ink2);vertical-align:top;line-height:1.5}
+.mtbl tbody td:first-child{color:var(--ink);font-weight:600}
+
+.co{background:var(--bg2);border-left:3px solid var(--acc);padding:10px 14px;margin:6px 0}
+.co-lb{font-family:var(--mono);font-size:10px;color:var(--acc);letter-spacing:2px;font-weight:700;margin-bottom:4px}
+.co-main{font-size:14px;color:var(--ink);font-weight:600;line-height:1.35;margin-bottom:4px}
+.co p{font-size:12px;color:var(--ink2);line-height:1.6}
+
+.cod{background:var(--dk);padding:10px 14px;margin:6px 0;position:relative;overflow:hidden}
+.cod::before{content:"";position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='nd'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' seed='5'/%3E%3CfeColorMatrix values='0 0 0 0 1  0 0 0 0 0.92  0 0 0 0 0.78  0 0 0 0.04 0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23nd)'/%3E%3C/svg%3E");opacity:0.6;pointer-events:none}
+.cod>*{position:relative}
+.cod-lb{font-family:var(--mono);font-size:10px;color:var(--on2);letter-spacing:2px;font-weight:700;margin-bottom:5px}
+.cod-main{font-size:15px;color:var(--on);font-weight:700;line-height:1.3;margin-bottom:5px}
+.cod p{font-size:12px;color:var(--on2);line-height:1.65}
+
+.dstrip{background:var(--dk);padding:6px 14px;margin:6px 0;display:grid;grid-template-columns:repeat(3,1fr);position:relative;overflow:hidden}
+.dstrip::before{content:"";position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='ns'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' seed='7'/%3E%3CfeColorMatrix values='0 0 0 0 1  0 0 0 0 0.92  0 0 0 0 0.78  0 0 0 0.04 0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23ns)'/%3E%3C/svg%3E");opacity:0.6;pointer-events:none}
+.dstrip>*{position:relative}
+.ds-c:not(:first-child){border-left:1px solid rgba(255,255,255,0.12);padding-left:14px}
+.ds-a{font-family:var(--mono);font-size:9px;color:var(--on2);letter-spacing:1.5px;font-weight:700}
+.ds-n{font-size:20px;color:var(--on);font-weight:800;margin-top:2px}
+.ds-d{font-size:9px;color:var(--on2);margin-top:1px}
+
+.pit{border-left:3px solid var(--ink);padding:8px 14px;margin:6px 0}
+.pit-lb{font-family:var(--mono);font-size:10px;color:var(--ink3);letter-spacing:2px;font-weight:700;margin-bottom:4px}
+.pit-h{font-size:12.5px;color:var(--ink);font-weight:700;line-height:1.3}
+.pit-d{font-size:11px;color:var(--ink2);line-height:1.5;margin-bottom:5px}
+
+.quote{border-left:3px solid var(--ink);padding:8px 14px;margin:6px 0}
+.quote-src{font-family:var(--mono);font-size:10px;color:var(--ink3);letter-spacing:2px;font-weight:700;margin-bottom:4px}
+.quote-q{font-family:var(--serif);font-size:13px;color:var(--ink);font-weight:700;font-style:italic;line-height:1.4}
+.quote-a{font-size:11px;color:var(--ink2);margin-top:2px}
+
+.cblk{background:var(--dk);color:var(--on);padding:8px 12px;font-family:var(--mono);font-size:11px;line-height:1.6;border-left:2px solid var(--acc);margin:6px 0;white-space:pre-wrap}
+.cblk .cm{color:var(--acc3);opacity:0.8}
+.cblk .kw{color:var(--acc3);font-weight:600}
+.cblk .cap{font-size:9.5px;color:var(--on2);margin-top:4px;letter-spacing:0.1em;white-space:normal}
+
+.icard{background:var(--bg2);border:1px solid var(--ln);padding:8px 12px;margin-bottom:5px}
+.icard-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px}
+.icard-lb{font-family:var(--mono);font-size:9px;color:var(--acc);letter-spacing:2px;font-weight:700}
+.icard-sess{font-family:var(--mono);font-size:9px;color:var(--ink3);letter-spacing:1.5px;font-weight:600}
+.icard.dark{background:var(--dk);border-color:var(--dk)}
+.icard.dark .icard-lb{color:var(--acc3)}
+.icard.dark .icard-sess{color:var(--on2)}
+.icard.dark .bth{color:var(--on)}
+.icard.dark .bt{color:var(--on2)}
+.icard.dark .bt strong{color:var(--on)}
+
+.pill{display:inline-block;font-family:var(--mono);font-size:9px;color:var(--acc);background:rgba(184,83,42,0.1);padding:1px 5px;letter-spacing:0.08em;text-transform:uppercase;font-weight:600;border-radius:2px;margin:1px 2px 0 0}
+.fig{font-family:var(--mono);font-size:10px;color:var(--ink3);letter-spacing:1.5px;font-weight:700;margin:6px 0 4px}
+.spacer{flex:1}
+
+
+
+
+/* ═══ PRESENTATION MODE ═══ */
+html,body{margin:0;padding:0;overflow:hidden;height:100vh;width:100vw;background:#0e0a06}
+.deck{scrollbar-width:none;-ms-overflow-style:none;background:#0e0a06}
+.deck::-webkit-scrollbar{display:none}
+.stage{padding:0;background:#0e0a06;display:flex;align-items:center;justify-content:center}
+
+/* ═══ TOOLBAR (항상 상단 고정) ═══ */
+.toolbar{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:center;justify-content:center;gap:6px;padding:6px 20px;background:rgba(14,10,6,0.92);backdrop-filter:blur(10px);border-bottom:1px solid rgba(255,255,255,0.08);transition:opacity .3s}
+.toolbar button{background:rgba(255,255,255,0.08);color:#ccc;border:1px solid rgba(255,255,255,0.12);padding:5px 14px;font-family:var(--mono);font-size:10px;letter-spacing:1.5px;cursor:pointer;border-radius:3px;text-transform:uppercase;font-weight:600;transition:all .15s}
+.toolbar button:hover{background:var(--acc);color:#fff;border-color:var(--acc)}
+.toolbar button.on{background:var(--acc2);color:#fff;border-color:var(--acc)}
+.toolbar .pg{background:none;border:none;color:rgba(255,255,255,0.5);cursor:default;font-size:11px;padding:5px 10px;min-width:70px;text-align:center}
+.toolbar .pg:hover{background:none;color:rgba(255,255,255,0.5)}
+.toolbar .sep{width:1px;height:18px;background:rgba(255,255,255,0.1);margin:0 4px}
+
+/* ═══ EDIT MODE ═══ */
+body.editing .bth,body.editing .bt,body.editing .co-main,body.editing .co p,
+body.editing .cod-main,body.editing .cod p,body.editing .hl-title,body.editing .hl-lede,
+body.editing .pit-h,body.editing .pit-d,body.editing .quote-q,body.editing .chk-t{
+  outline:1px dashed rgba(184,83,42,0.35);outline-offset:1px;cursor:text}
+body.editing .bth:focus,body.editing .bt:focus,body.editing .co-main:focus,
+body.editing .hl-title:focus,body.editing .hl-lede:focus,
+body.editing .cod-main:focus,body.editing .pit-h:focus,body.editing .quote-q:focus{
+  outline:2px solid var(--acc);background:rgba(184,83,42,0.06)}
+
+
+
+/* ═══ PRINT / PDF — 1:1 스케일, 16:9 정확 ═══ */
+@media print{
+  @page{size:423.33mm 237.5mm;margin:0}
+  *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
+  html,body{overflow:visible!important;height:auto!important;width:auto!important;background:#fff!important;margin:0!important;padding:0!important}
+  .deck{overflow:visible!important;height:auto!important;scroll-snap-type:none!important;background:#fff!important}
+  .stage{min-height:0!important;height:auto!important;width:auto!important;page-break-after:always;page-break-inside:avoid;padding:0!important;margin:0!important;background:#fff!important;display:block!important;overflow:visible!important}
+  .stage:last-child{page-break-after:avoid}
+  .slide{transform:none!important;box-shadow:none!important;width:1600px!important;height:900px!important;margin:0!important;position:relative!important;overflow:visible!important}
+  .toolbar{display:none!important}
+  .hbar,.fbar,.bd,.hl,.hl-rule{position:absolute!important}
+}
+
+</style>
+</head>
+<body>
+<div class="deck" id="deck">
+
+<!-- ══════════════════════════════════════════════════════════
+     SLIDE 01 — COVER
+     ══════════════════════════════════════════════════════════ -->
+<div class="stage"><div class="slide" data-title="Cover">
+  <div class="hbar"><div class="hbar-l">SESSION 01 · ORIENTATION</div><div class="hbar-r">공공 AI 전문인재 양성과정 · 8주 실전 여정</div></div>
+
+  <div style="position:absolute;top:56px;left:80px;display:flex;align-items:center;gap:14px;font-family:var(--mono);font-size:10px;color:var(--acc);letter-spacing:2.5px;font-weight:600"><div style="width:22px;height:8px;background:var(--acc)"></div>PUBLIC AI EXPERT PROGRAM · 2026</div>
+  <div style="position:absolute;top:56px;right:80px;font-family:var(--mono);font-size:10px;color:var(--ink3);letter-spacing:2px;text-align:right;line-height:1.6">Module 01 / Session 01<br>Hub Leader Track</div>
+  <div style="position:absolute;top:140px;right:80px;font-family:var(--serif);font-size:260px;line-height:1;color:var(--acc);font-weight:300;opacity:0.07;letter-spacing:-0.06em;pointer-events:none;font-style:italic">01</div>
+
+  <div style="position:absolute;top:180px;left:80px;right:80px;bottom:120px;display:grid;grid-template-columns:1fr 360px;gap:56px">
+    <div>
+      <div style="font-family:var(--mono);font-size:10px;color:var(--acc);letter-spacing:3px;font-weight:700;margin-bottom:12px">SESSION 01</div>
+      <div style="font-family:var(--serif);font-weight:700;font-size:56px;line-height:1.06;letter-spacing:-0.03em;color:var(--ink)">AI 에이전트 시대의 개막과 공공 구현 지형도</div>
+      <div style="width:56px;height:2px;background:var(--acc);margin:18px 0 14px"></div>
+      <div style="font-family:var(--serif);font-size:17px;color:var(--ink);font-weight:600;line-height:1.45">공공 AI 거점리더의 기술 지형과 환경 세팅</div>
+      <p style="margin-top:14px;font-size:13px;color:var(--ink2);line-height:1.7;max-width:580px"><strong style="color:var(--ink)">Part A.</strong> LLM의 구조와 트렌드 지형 — MicroGPT 터치, 10개 키워드, 프롬프트 4단계(Skills·Rules·Plugins 포함). <strong style="color:var(--ink)">Part B.</strong> 오케스트레이션과 공공 현실 — 거시/미시, 골목길 문제, NIA 7개 카테고리 매핑, 거버넌스 5층위. <strong style="color:var(--ink)">Part C.</strong> 공공 민첩 AI 구현 유형 시연 8가지. <strong style="color:var(--ink)">Part D.</strong> 환경 세팅 + 거점 미션 카드 작성.</p>
+    </div>
+    <div style="align-self:end;border-top:1px solid var(--ink);padding-top:14px">
+      <div style="display:grid;grid-template-columns:85px 1fr;gap:10px;padding:7px 0;border-bottom:1px solid var(--ln);font-size:12px"><span style="font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--ink3);font-weight:700">PROGRAM</span><span style="font-family:var(--serif);color:var(--ink);font-weight:600">공공 AI 전문인재 양성과정</span></div>
+      <div style="display:grid;grid-template-columns:85px 1fr;gap:10px;padding:7px 0;border-bottom:1px solid var(--ln);font-size:12px"><span style="font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--ink3);font-weight:700">SESSION</span><span style="font-family:var(--serif);color:var(--ink);font-weight:600">01 / 08</span></div>
+      <div style="display:grid;grid-template-columns:85px 1fr;gap:10px;padding:7px 0;border-bottom:1px solid var(--ln);font-size:12px"><span style="font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--ink3);font-weight:700">AUDIENCE</span><span style="font-family:var(--serif);color:var(--ink);font-weight:600">AI 전공·경험 공공 전문인력</span></div>
+      <div style="display:grid;grid-template-columns:85px 1fr;gap:10px;padding:7px 0;border-bottom:1px solid var(--ln);font-size:12px"><span style="font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--ink3);font-weight:700">FORMAT</span><span style="font-family:var(--serif);color:var(--ink);font-weight:600">강의 100m + 시연 40m + 워크샵 40m</span></div>
+      <div style="display:grid;grid-template-columns:85px 1fr;gap:10px;padding:7px 0;border-bottom:1px solid var(--ln);font-size:12px"><span style="font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--ink3);font-weight:700">DURATION</span><span style="font-family:var(--serif);color:var(--ink);font-weight:600">3 hours (180 min)</span></div>
+      <div style="display:grid;grid-template-columns:85px 1fr;gap:10px;padding:7px 0;font-size:12px"><span style="font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--ink3);font-weight:700">EDITION</span><span style="font-family:var(--serif);color:var(--ink);font-weight:600">2026.04 · v1.0</span></div>
+    </div>
+  </div>
+
+  <div style="position:absolute;bottom:56px;left:80px;font-family:var(--mono);font-size:10px;color:var(--ink3);letter-spacing:2px">— Editorial Warm Edition</div>
+  <div style="position:absolute;bottom:56px;right:80px;font-size:12px;color:var(--ink2);text-align:right;line-height:1.6;max-width:480px">거점리더는 기술자가 아니다 — 아키텍처를 설계하고 에이전트에 위임하는 사람이다.<br>구현은 에이전트가 한다.</div>
+</div></div>
+
+<!-- ══════════════════════════════════════════════════════════
+     SLIDE 02 — ORIENTATION · 이 과정에서 배우는 것
+     ══════════════════════════════════════════════════════════ -->
+<div class="stage"><div class="slide" data-title="Orientation">
+  <div class="hbar"><div class="hbar-l">MODULE 01 · SESSION OPENING</div><div class="hbar-r">공공 AI 전문인재 양성과정 · 8주 실전 여정</div></div>
+  <div class="hl">
+    <div class="hl-kicker">SESSION OPENING · 이 과정에서 배우는 것</div>
+    <div class="hl-title">이 과정에서 배우는 것 — 로컬·클라우드 AI 자원을 업무에 연결하는 방법</div>
+    <div class="hl-lede">거점리더는 로컬이든 클라우드든, 내부망이든 외부망이든, AI라는 새로운 뇌를 기존 업무 흐름에 어떻게 꽂을지를 설계하는 사람이다. 코드를 짜는 사람이 아니라 연결을 짜는 사람이다.</div>
+    <div class="hl-bar"></div>
+  </div>
+  <div class="hl-rule"></div>
+
+  <div class="bd col3">
+    <!-- COL 1: 거점리더의 역할 -->
+    <div class="col">
+      <div class="sh"><span class="sh-n">01 · HUB LEADER</span><span class="sh-t">거점리더란 누구인가</span></div>
+      <div class="sh-line"></div>
+
+      <div class="bth">기술자가 아니라, 연결을 설계하는 사람</div>
+      <p class="bt">거점리더는 AI 모델을 직접 학습시키거나 코드를 처음부터 작성하는 사람이 아니다. <strong>어떤 자원(모델·API·데이터·도구)을 어떤 순서로 엮으면 우리 부서의 문제가 풀리는가</strong>를 설계하고, 그 설계를 에이전트에 위임하며, 완성된 결과를 동료에게 전파하는 사람이다.</p>
+
+      <div class="fig">FIGURE 1 · 거점리더의 5가지 역할</div>
+      <table class="mtbl">
+        <thead><tr><th>역할</th><th>내용</th></tr></thead>
+        <tbody>
+          <tr><td>번역</td><td>현장 문제를 AI가 처리 가능한 형태로 재정의</td></tr>
+          <tr><td>설계</td><td>모델·API·MCP·데이터를 조합한 아키텍처 구상</td></tr>
+          <tr><td>위임</td><td>에이전트 도구(Claude Code 등)에 구현을 맡김</td></tr>
+          <tr><td>검증</td><td>산출물의 정확성·보안·적합성을 확인</td></tr>
+          <tr><td>전파</td><td>완성된 도구를 동료에게 배포하고 사용법을 코칭</td></tr>
+        </tbody>
+      </table>
+
+      <div class="spacer"></div>
+
+      <div class="co">
+        <div class="co-lb">KEY MESSAGE</div>
+        <div class="co-main">최종 산출물은 코드가 아니라 아키텍처 1장이다</div>
+        <p>8회차 캡스톤에서 발표하는 것은 프로그램이 아니라 <strong>AI 아키텍처 캔버스</strong> — 트리거·재료·처리·시스템 프롬프트·출력·배포 6칸을 채운 설계도 1장이다.</p>
+      </div>
+    </div>
+
+    <!-- COL 2: 새로운 뇌를 연결한다는 것 -->
+    <div class="col">
+      <div class="sh"><span class="sh-n">02 · NEW BRAIN</span><span class="sh-t">새로운 뇌를 어떻게 연결하는가</span></div>
+      <div class="sh-line"></div>
+
+      <div class="bth">LLM은 범용 뇌다 — 어디에 꽂느냐가 설계다</div>
+      <p class="bt">GPT·Claude·Gemini 같은 프론티어 모델, Gemma·Phi·Qwen 같은 소형 모델 — 이 <strong>"뇌"</strong>는 이미 존재한다. 거점리더가 결정해야 하는 것은 이 뇌를 <strong>어디에(데이터), 어떻게(파이프라인), 무엇과 함께(도구)</strong> 연결할지다.</p>
+
+      <div class="icard">
+        <div class="icard-top"><span class="icard-lb">로컬 연결</span><span class="icard-sess">내부망 · 보안 우선</span></div>
+        <div class="bth">내 PC 안에서 돌아가는 AI</div>
+        <p class="bt">Ollama로 소형 모델을 PC에 설치. 엑셀 VBA에서 AI 함수 호출. 부서 PDF 위에서 RAG 질의응답. <strong>데이터가 밖으로 한 바이트도 나가지 않는다.</strong> 가장 안전하고, 비용 0원이고, 지금 당장 가능하다.</p>
+      </div>
+
+      <div class="icard">
+        <div class="icard-top"><span class="icard-lb">클라우드 연결</span><span class="icard-sess">외부망 · 성능 우선</span></div>
+        <div class="bth">프론티어 모델의 풀파워 활용</div>
+        <p class="bt">GPT-5, Claude Opus 4.6, Gemini 2.5 Pro — 복잡한 추론·긴 문서·멀티모달 처리는 프론티어 모델이 압도적이다. 보안 중요도 낮은 업무에 한해 외부망에서 활용하거나, 외부에서 코드를 받아 내부에서 실행하는 <strong>어시스트 모드</strong>로 사용.</p>
+      </div>
+
+      <div class="icard dark">
+        <div class="icard-top"><span class="icard-lb">하이브리드 연결</span><span class="icard-sess">내부+외부 · 최적 조합</span></div>
+        <div class="bth">외부에서 설계하고, 내부에서 실행한다</div>
+        <p class="bt">외부망에서 Claude Code·Cursor로 코드를 생성하고, 비식별화 후 내부망에 반입해 실행. <strong>로컬 sLLM + 공통기반 API + MCP 서버</strong>를 조합하면 완전 내부망 풀스택 서비스도 가능. 이것이 8차시 도착점.</p>
+      </div>
+
+      <div class="spacer"></div>
+
+      <div class="dstrip">
+        <div class="ds-c"><div class="ds-a">LOCAL</div><div class="ds-n">S04–05</div><div class="ds-d">어시스트 바이브 코딩</div></div>
+        <div class="ds-c"><div class="ds-a">AGENT</div><div class="ds-n">S06–08</div><div class="ds-d">에이전트 풀스택</div></div>
+        <div class="ds-c"><div class="ds-a">COST</div><div class="ds-n">0원</div><div class="ds-d">오픈소스 · 무료 도구</div></div>
+      </div>
+    </div>
+
+    <!-- COL 3: 8주 흐름 + 자원 지도 -->
+    <div class="col">
+      <div class="sh"><span class="sh-n">03 · 8-WEEK MAP</span><span class="sh-t">어떤 순서로 배우는가</span></div>
+      <div class="sh-line"></div>
+
+      <div class="fig">TABLE 1 · 8주 3개 스테이지</div>
+      <table class="mtbl">
+        <thead><tr><th>스테이지</th><th>회차</th><th>키워드</th></tr></thead>
+        <tbody>
+          <tr><td>A · 재료</td><td>1–3</td><td>지형 파악, 도구 50선, 메타 프롬프트, 워크플로우</td></tr>
+          <tr><td>B · 어시스트</td><td>4–5</td><td>외부 코드 수령 → 내부 실행, VBA+sLLM, 시각화</td></tr>
+          <tr><td>C · 에이전트</td><td>6–8</td><td>에이전트 도구, RAG, API·MCP, 아키텍처 캔버스</td></tr>
+        </tbody>
+      </table>
+
+      <div class="bth">연결할 수 있는 자원의 종류</div>
+      <table class="mtbl">
+        <thead><tr><th>자원</th><th>위치</th><th>예시</th></tr></thead>
+        <tbody>
+          <tr><td>프론티어 LLM</td><td>외부</td><td>GPT-5, Claude, Gemini</td></tr>
+          <tr><td>소형 LLM</td><td>내부 PC</td><td>Gemma 2B, Phi-4, Qwen 3</td></tr>
+          <tr><td>공공 API</td><td>내/외</td><td>기상청, 법령정보, 공공데이터포털</td></tr>
+          <tr><td>MCP 서버</td><td>내/외</td><td>DB, 파일시스템, Slack, Notion</td></tr>
+          <tr><td>오픈소스</td><td>외부→내부</td><td>HuggingFace 200만+ 모델, npm, PyPI</td></tr>
+          <tr><td>부서 데이터</td><td>내부</td><td>민원 DB, 법령 PDF, 엑셀, HWP</td></tr>
+        </tbody>
+      </table>
+
+      <div class="spacer"></div>
+
+      <div class="cod">
+        <div class="cod-lb">CORE METAPHOR</div>
+        <div class="cod-main">오케스트라 지휘자와 악기</div>
+        <p>거점리더 = 지휘자. LLM·API·MCP·DB·오픈소스 = 악기. 지휘자가 악기를 직접 연주할 필요는 없지만, <strong>어떤 악기가 있는지, 어떤 조합이 어떤 소리를 내는지</strong>는 알아야 한다. 이 감각을 8주에 걸쳐 체질화한다.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">01 · AI 에이전트 시대의 개막과 공공 구현 지형도</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">002 / 016</span></div></div>
+</div></div>
+
+<!-- ══════════════════════════════════════════════════════════
+     SLIDE 03 — A-1. MicroGPT 트랜스포머 터치 (3칼럼 고밀도)
+     ══════════════════════════════════════════════════════════ -->
+<div class="stage"><div class="slide" data-title="A-1 Transformer">
+  <div class="hbar"><div class="hbar-l">MODULE 01 · PART A-1 · TRANSFORMER TOUCH</div><div class="hbar-r">공공 AI 전문인재 양성과정 · 8주 실전 여정</div></div>
+  <div class="hl">
+    <div class="hl-kicker">PART A-1 · MICROGPT로 트랜스포머 핵심 구조 확인 · 10MIN</div>
+    <div class="hl-title">트랜스포머 핵심 구조와 공공 AI 설계에 주는 3가지 함의</div>
+    <div class="hl-lede">Karpathy의 microGPT(243줄, 순수 Python, 프레임워크 0)로 Self-Attention과 Multi-Head를 확인한다. 모델을 만들기 위해서가 아니라, 환각·컨텍스트 윈도우·RAG 필요성의 아키텍처적 근거를 갖추기 위해서다.</div>
+    <div class="hl-bar"></div>
+  </div>
+  <div class="hl-rule"></div>
+
+  <div class="bd col3">
+    <!-- ── COL 1: microGPT 소개 + Q·K·V ── -->
+    <div class="col">
+      <div class="sh"><span class="sh-n">01 · MICROGPT</span><span class="sh-t">243줄로 이해하는 GPT</span></div>
+      <div class="sh-line"></div>
+
+      <div class="bth">microGPT — 프레임워크 없이 구현한 GPT-2</div>
+      <p class="bt">Andrej Karpathy가 2026년 2월 공개한 243줄짜리 트랜스포머 구현체. <strong>PyTorch·NumPy·GPU 없이</strong> Python 내장 모듈만으로 GPT-2 아키텍처(Multi-Head Attention, RMSNorm, FFN)를 완전히 구현했다. <code>python microgpt.py</code> 한 줄로 훈련~생성 전 과정이 돌아간다.</p>
+
+      <div class="fig">TABLE 1 · Q·K·V Self-Attention 비유</div>
+      <table class="mtbl">
+        <thead><tr><th>구성</th><th>비유</th><th>역할</th></tr></thead>
+        <tbody>
+          <tr><td>Q · Query</td><td>"내가 궁금한 것"</td><td>현재 단어가 다른 단어에 보내는 질의</td></tr>
+          <tr><td>K · Key</td><td>"각 단어의 색인표"</td><td>각 단어가 갖는 검색 색인</td></tr>
+          <tr><td>V · Value</td><td>"실제 의미 내용"</td><td>색인에 매칭된 정보</td></tr>
+          <tr><td>Softmax</td><td>"누구를 얼마나 볼지"</td><td>Q·K 내적으로 가중치 계산</td></tr>
+        </tbody>
+      </table>
+
+      <div class="co">
+        <div class="co-lb">MULTI-HEAD ATTENTION</div>
+        <div class="co-main">같은 문장을 여러 명이 동시에 다른 관점으로 읽는다</div>
+        <p>Head 1은 문법 관계, Head 2는 의미·주제, Head 3은 시제·종결을 본다. 각 관점을 결합해 다음 토큰을 결정한다. GPT-2는 12개, GPT-4급은 96개 이상의 Head를 운용한다. microGPT는 교육용으로 2~4개만 사용한다.</p>
+      </div>
+
+      <div class="spacer"></div>
+
+      <div class="dstrip">
+        <div class="ds-c"><div class="ds-a">CODE</div><div class="ds-n">243줄</div><div class="ds-d">순수 Python · 프레임워크 0</div></div>
+        <div class="ds-c"><div class="ds-a">DEPS</div><div class="ds-n">0</div><div class="ds-d">PyTorch·NumPy 없음</div></div>
+        <div class="ds-c"><div class="ds-a">NEXT</div><div class="ds-n">nanochat</div><div class="ds-d">$100 · 4시간 · ChatGPT급</div></div>
+      </div>
+    </div>
+
+    <!-- ── COL 2: 아키텍처적 함의 3가지 ── -->
+    <div class="col">
+      <div class="sh"><span class="sh-n">02 · IMPLICATIONS</span><span class="sh-t">이 구조가 의미하는 3가지</span></div>
+      <div class="sh-line"></div>
+
+      <div class="bth">수강생이 이미 아는 것을 "공공 맥락"으로 다시 읽는다</div>
+      <p class="bt">트랜스포머 자체는 설명 대상이 아니다. 이 구조에서 <strong>공공 AI 아키텍처 설계에 직접 영향을 주는 3가지 함의</strong>를 확인하는 것이 이 10분의 목적이다.</p>
+
+      <div class="icard">
+        <div class="icard-top"><span class="icard-lb">함의 ①</span><span class="icard-sess">→ 7차시 RAG</span></div>
+        <div class="bth">환각은 구조적으로 불가피하다</div>
+        <p class="bt">트랜스포머는 "이전 토큰들의 패턴을 바탕으로 다음 토큰의 확률 분포를 계산"하는 구조다. <strong>사실 여부를 검증하는 메커니즘이 모델 안에 없다.</strong> 그래서 외부 지식을 연결하는 RAG가 필요해진다. 7차시의 존재 이유.</p>
+      </div>
+
+      <div class="icard">
+        <div class="icard-top"><span class="icard-lb">함의 ②</span><span class="icard-sess">→ 7차시 RAG 파이프라인</span></div>
+        <div class="bth">컨텍스트 윈도우 한계가 RAG 설계를 결정한다</div>
+        <p class="bt">모든 LLM은 한 번에 처리할 수 있는 토큰 수에 제한이 있다(GPT-4: 128K, Claude: 200K, Gemini: 1M+). 이 한계를 넘는 문서를 다루려면 <strong>"쪼개서 검색한 뒤 관련 조각만 모델에 넣는"</strong> RAG 파이프라인이 필수. 넣기→쪼개기→찾기→답하기 4단계.</p>
+      </div>
+
+      <div class="icard">
+        <div class="icard-top"><span class="icard-lb">함의 ③</span><span class="icard-sess">→ 3차시 메타 프롬프트</span></div>
+        <div class="bth">토큰 단위 과금 → 프롬프트 구조화가 비용을 결정</div>
+        <p class="bt">입력·출력 모두 토큰 수 기준으로 과금된다. 불필요하게 긴 프롬프트 = 불필요한 비용. 3차시 메타 프롬프트의 "구조화" 필요성이 여기서 나온다. 같은 결과를 더 적은 토큰으로 얻는 것이 효율적 설계.</p>
+      </div>
+
+      <div class="spacer"></div>
+
+      <div class="co">
+        <div class="co-lb">KEY TAKEAWAY</div>
+        <div class="co-main">구조를 아는 것은 "왜"를 설명하기 위해서다</div>
+        <p>거점리더가 동료에게 "왜 환각이 나는가", "왜 RAG가 필요한가", "왜 프롬프트가 길면 비용이 올라가는가"를 설명할 수 있어야 한다. 트랜스포머를 구현하기 위해서가 아니다.</p>
+      </div>
+    </div>
+
+    <!-- ── COL 3: 코드 + 참고 + PITFALL ── -->
+    <div class="col">
+      <div class="sh"><span class="sh-n">03 · CODE & REFS</span><span class="sh-t">코드 확인 + 참고 자료</span></div>
+      <div class="sh-line"></div>
+
+      <div class="fig">CODE · microGPT Self-Attention 의사코드</div>
+      <div class="cblk"><span class="cm"># microGPT — 243줄 중 핵심</span>
+<span class="kw">class</span> Head:
+  <span class="kw">def</span> forward(self, x):
+    q = self.query(x)  <span class="cm"># 질의 — "무엇이 궁금한가"</span>
+    k = self.key(x)    <span class="cm"># 색인 — "각 단어의 색인표"</span>
+    v = self.value(x)  <span class="cm"># 의미 — "실제 정보 내용"</span>
+    w = softmax(q @ k.T / sqrt(d))
+    <span class="kw">return</span> w @ v        <span class="cm"># 가중 결합 → 다음 토큰</span>
+
+<span class="cm"># Multi-Head: 여러 Head를 결합</span>
+heads = [Head() <span class="kw">for</span> _ <span class="kw">in</span> range(n_head)]
+out = concat([h(x) <span class="kw">for</span> h <span class="kw">in</span> heads])
+<div class="cap">Karpathy microGPT 기반 의사코드 · gist.github.com/karpathy</div></div>
+
+      <div class="fig">REFERENCE · 시연 및 심화 자료</div>
+      <table class="mtbl">
+        <thead><tr><th>자료</th><th>내용</th></tr></thead>
+        <tbody>
+          <tr><td>microGPT</td><td>gist.github.com/karpathy — 243줄, 순수 Python</td></tr>
+          <tr><td>nanoGPT</td><td>github.com/karpathy/nanoGPT — 300줄, PyTorch</td></tr>
+          <tr><td>nanochat</td><td>github.com/karpathy/nanochat — $100/4h ChatGPT 훈련</td></tr>
+          <tr><td>유튜브</td><td>"Let's build GPT from scratch" — 2시간, 전 과정 라이브코딩</td></tr>
+          <tr><td>해설 기사</td><td>Analytics Vidhya "243 Lines" (2026.02)</td></tr>
+        </tbody>
+      </table>
+
+      <div class="spacer"></div>
+
+      <div class="pit">
+        <div class="pit-lb">PITFALL · 이 10분에서 빠지기 쉬운 실수</div>
+        <div class="pit-h">▸ 수식에 매몰된다</div>
+        <div class="pit-d">"Q·K·V = 질의·색인·내용" 한 줄이면 충분하다. 행렬 곱 유도는 이 과정의 범위 밖이다.</div>
+        <div class="pit-h">▸ "환각은 왜 생기나요?" 에 당황한다</div>
+        <div class="pit-d">→ "모델은 확률적으로 그럴듯한 다음 단어를 생성할 뿐, 사실 여부를 검증하지 않는다." 이 한 줄이 정답이다.</div>
+        <div class="pit-h">▸ "그러면 RAG를 쓰면 환각이 없어지나요?"</div>
+        <div class="pit-d">→ 줄어들 뿐 사라지지는 않는다. RAG의 "찾기" 단계가 틀린 조각을 가져오면 여전히 틀린 답이 나온다. 7차시에서 상세히 다룬다.</div>
+      </div>
+
+      <div class="quote">
+        <div class="quote-src">KARPATHY · 2026.02</div>
+        <div class="quote-q">"microGPT is a masterclass in minimalist AI engineering. By removing the abstractions, it reveals the elegance of the Transformer."</div>
+        <div class="quote-a">— Analytics Vidhya, "243 Lines of Code"</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">01 · AI 에이전트 시대의 개막과 공공 구현 지형도</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">003 / 016</span></div></div>
+</div></div>
+
+<!-- ══════════════════════════════════════════════════════════
+     SLIDE 04 — A-2. LLM 트렌드 지형도 ①~⑤
+     ══════════════════════════════════════════════════════════ -->
+<div class="stage"><div class="slide" data-title="A-2 Trends 1-5">
+  <div class="hbar"><div class="hbar-l">MODULE 01 · PART A-2 · LLM TREND ATLAS</div><div class="hbar-r">공공 AI 전문인재 양성과정 · 8주 실전 여정</div></div>
+  <div class="hl">
+    <div class="hl-kicker">PART A-2 · LLM 트렌드 지형도 — 10개 키워드 전반부 · 30MIN</div>
+    <div class="hl-title">LLM 트렌드 10개 키워드 전반부 — ①텍스트LLM ②멀티모달 ③sLM ④오픈소스 ⑤파인튜닝</div>
+    <div class="hl-lede">각 키워드를 "공공에서 왜 중요한가" 한 줄과 함께 소개한다. 이 지형도가 2차시 50선 도구 투어의 출발점이 되고, 3~8차시의 학습 주제로 분기한다.</div>
+    <div class="hl-bar"></div>
+  </div>
+  <div class="hl-rule"></div>
+
+  <div class="bd col3">
+    <div class="col">
+      <div class="sh"><span class="sh-n">①②③</span><span class="sh-t">텍스트 LLM · 멀티모달 · sLM</span></div>
+      <div class="sh-line"></div>
+
+      <div class="icard">
+        <div class="icard-top"><span class="icard-lb">① 텍스트 LLM의 진화</span><span class="icard-sess">전 회차 기반</span></div>
+        <div class="bth">크기 경쟁은 끝났다 — 추론 품질 경쟁으로 전환</div>
+        <p class="bt">GPT-3.5(2022) → GPT-5 · Claude Opus 4.6 · Gemini 2.5(2026). Chinchilla 논문이 전환점: <strong>"모델을 키우는 것보다 데이터 품질을 높이는 게 효율적."</strong> Phi 시리즈가 실증. 업무에 맞는 모델 선택이 거점리더의 판단.</p>
+      </div>
+
+      <div class="icard">
+        <div class="icard-top"><span class="icard-lb">② 멀티모달</span><span class="icard-sess">S02 도구 투어</span></div>
+        <div class="bth">텍스트+이미지+음성+영상+코드가 한 모델에서</div>
+        <p class="bt">GPT-4o "Omni" — 실시간 음성+화면 공유. Gemini 2.0이 1M+ 토큰에서 영상까지 처리. <strong>민원 사진·음성 녹취·문서 스캔이 한 모델에서 동시 처리 가능.</strong></p>
+      </div>
+
+      <div class="icard dark">
+        <div class="icard-top"><span class="icard-lb">③ sLM 소형 언어모델</span><span class="icard-sess">S05 · S07</span></div>
+        <div class="bth">CPU에서 돌아간다 — 폐쇄망의 핵심 자원</div>
+        <p class="bt">Gemma 2B, Phi-4(3.8B), Qwen 3, Llama 3.2(1B/3B). 사무용 PC(16GB)에서 초당 6~9토큰. <strong>Gartner: 2027년까지 작업 특화 SLM을 3배 더 사용.</strong> Ollama 한 줄로 설치. 비용 0원.</p>
+      </div>
+
+      <div class="spacer"></div>
+
+      <div class="dstrip">
+        <div class="ds-c"><div class="ds-a">GEMMA 2B</div><div class="ds-n">1.6GB</div><div class="ds-d">CPU · 분류·요약</div></div>
+        <div class="ds-c"><div class="ds-a">PHI-4</div><div class="ds-n">3.8B</div><div class="ds-d">벤치마크 1위급</div></div>
+        <div class="ds-c"><div class="ds-a">INSTALL</div><div class="ds-n">1줄</div><div class="ds-d">ollama pull gemma2:2b</div></div>
+      </div>
+    </div>
+
+    <div class="col">
+      <div class="sh"><span class="sh-n">④⑤</span><span class="sh-t">오픈소스 · 파인튜닝</span></div>
+      <div class="sh-line"></div>
+
+      <div class="icard">
+        <div class="icard-top"><span class="icard-lb">④ 오픈소스 생태계</span><span class="icard-sess">전 회차 기반</span></div>
+        <div class="bth">HuggingFace 200만+ 모델 — 비용 0원의 공공 부품창고</div>
+        <p class="bt">2026.3 기준 <strong>200만 개 이상 모델</strong>. 첫 100만은 1,000일, 두 번째 100만은 335일(65% 단축). 월 1,800만 방문, 500만 사용자. 로컬 실행 도구: <strong>Ollama</strong>(터미널), <strong>LM Studio</strong>(GUI), <strong>AnythingLLM</strong>(문서 Q&A).</p>
+      </div>
+
+      <div class="co">
+        <div class="co-lb">공공 부품창고 제안</div>
+        <div class="co-main">"검증된 오픈소스만 모아놓는 공공 저장소"</div>
+        <p>앱스토어가 아닌 <strong>부품창고</strong>. 라이브러리·MCP 서버·스킬·프롬프트를 축적하는 생태계. 이 과정의 "공용 아카이브"가 시작점.</p>
+      </div>
+
+      <div class="icard">
+        <div class="icard-top"><span class="icard-lb">⑤ 파인튜닝</span><span class="icard-sess">개념 이해</span></div>
+        <div class="bth">범용 모델을 우리 도메인에 맞게 재학습</div>
+        <p class="bt">LoRA/QLoRA로 GPU 1장이면 가능. 거점리더가 직접 하지 않지만 <strong>"요청할 수 있는 수준"</strong>까지 이해. 핵심 판단: <strong>RAG로 충분한가, 파인튜닝이 필요한가?</strong></p>
+      </div>
+
+      <div class="spacer"></div>
+
+      <div class="pit">
+        <div class="pit-lb">PITFALL · RAG vs 파인튜닝 판단</div>
+        <div class="pit-h">▸ 자주 바뀌는 문서(법령 개정, 민원) → RAG</div>
+        <div class="pit-d">외부 지식을 검색해서 넣어주는 방식. 문서 업데이트만 하면 됨.</div>
+        <div class="pit-h">▸ 고정된 도메인 어휘·스타일 → 파인튜닝</div>
+        <div class="pit-d">행정 문체, 특수 분류 체계 등. 대부분 공공 업무는 RAG만으로 80% 해결.</div>
+      </div>
+
+      <div class="quote">
+        <div class="quote-src">HUGGING FACE · 2026.03</div>
+        <div class="quote-q">"첫 100만 모델은 1,000일, 두 번째 100만은 335일."</div>
+        <div class="quote-a">— State of Open Source on Hugging Face</div>
+      </div>
+    </div>
+
+    <div class="col">
+      <div class="sh"><span class="sh-n">REFERENCES</span><span class="sh-t">①~⑤ 사이트 · 도구</span></div>
+      <div class="sh-line"></div>
+
+      <div class="fig">TABLE · 브라우저에서 보여줄 사이트</div>
+      <table class="mtbl">
+        <thead><tr><th>사이트</th><th>용도</th></tr></thead>
+        <tbody>
+          <tr><td>LifeArchitect.ai</td><td>모델 타임라인 · 전체 LLM 출시 연표</td></tr>
+          <tr><td>HuggingFace</td><td>200만+ 모델 검색·비교 · 라이선스 필터</td></tr>
+          <tr><td>Ollama.com</td><td>로컬 모델 카탈로그 · pull 명령어</td></tr>
+          <tr><td>LM Studio</td><td>GUI 기반 로컬 모델 관리 · GGUF</td></tr>
+          <tr><td>AnythingLLM</td><td>문서→RAG Q&A · Ollama 연동</td></tr>
+        </tbody>
+      </table>
+
+      <div class="fig">CODE · Ollama 설치 미리보기</div>
+      <div class="cblk"><span class="cm"># macOS / Linux</span>
+curl -fsSL https://ollama.com/install.sh | sh
+
+<span class="cm"># 모델 다운로드</span>
+ollama pull gemma2:2b      <span class="cm"># 1.6GB</span>
+ollama pull phi4-mini:3.8b <span class="cm"># 벤치마크 1위</span>
+
+<span class="cm"># 동작 확인</span>
+ollama run gemma2:2b "대한민국 수도는?"
+<div class="cap">D-1 환경 세팅에서 반복 · 여기서는 미리보기</div></div>
+
+      <div class="spacer"></div>
+
+      <div class="cod">
+        <div class="cod-lb">FIELD CASE · 공공 sLM 시나리오</div>
+        <div class="cod-main">Gemma 2B + 엑셀 VBA = 셀 단위 AI 함수</div>
+        <p>=AI_SUMMARIZE(A1), =AI_CLASSIFY(A1,"긍정/부정"). Ollama 로컬 API를 VBA가 호출. 외부 API 없이 완전 내부망. 5차시에서 직접 구현. <strong>"GPT for Sheets의 공공 버전."</strong></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">01 · AI 에이전트 시대의 개막과 공공 구현 지형도</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">004 / 016</span></div></div>
+</div></div>
+
+<!-- ══════════════════════════════════════════════════════════
+     SLIDE 05 — A-2. LLM 트렌드 지형도 ⑥~⑩
+     ══════════════════════════════════════════════════════════ -->
+<div class="stage"><div class="slide" data-title="A-2 Trends 6-10">
+  <div class="hbar"><div class="hbar-l">MODULE 01 · PART A-2 · LLM TREND ATLAS</div><div class="hbar-r">공공 AI 전문인재 양성과정 · 8주 실전 여정</div></div>
+  <div class="hl">
+    <div class="hl-kicker">PART A-2 · LLM 트렌드 지형도 — 10개 키워드 후반부 · 30MIN</div>
+    <div class="hl-title">LLM 트렌드 10개 키워드 후반부 — ⑥Reasoning ⑦RAG ⑧MCP ⑨A2A ⑩에이전트 도구</div>
+    <div class="hl-lede">Reasoning, RAG, MCP, A2A, 에이전트 도구 — 에이전트 시대의 핵심 인프라. 6~8차시에서 직접 다루게 될 기술들을 미리 지형 파악한다.</div>
+    <div class="hl-bar"></div>
+  </div>
+  <div class="hl-rule"></div>
+
+  <div class="bd col3">
+    <div class="col">
+      <div class="sh"><span class="sh-n">⑥⑦</span><span class="sh-t">Reasoning · RAG</span></div>
+      <div class="sh-line"></div>
+
+      <div class="icard">
+        <div class="icard-top"><span class="icard-lb">⑥ REASONING 모델</span><span class="icard-sess">고급 활용</span></div>
+        <div class="bth">"생각하는 시간"을 주면 정확도가 올라간다</div>
+        <p class="bt">o1 → o3 → o4-mini. Claude extended thinking. 답변 전에 <strong>내부 추론 체인을 생성</strong>한 뒤 최종 답 출력. 수학·코딩·복잡 추론에서 정확도 대폭 상승. 대신 응답 시간·비용 증가.</p>
+        <p class="bt"><strong>공공:</strong> 법령 해석, 다단계 행정 판단에 적합. 단순 요약·분류에는 과잉.</p>
+      </div>
+
+      <div class="icard">
+        <div class="icard-top"><span class="icard-lb">⑦ RAG</span><span class="icard-sess">S07 핵심</span></div>
+        <div class="bth">환각을 줄이는 가장 현실적 방법</div>
+        <p class="bt"><strong>웹 RAG:</strong> Perplexity 방식 — 실시간 검색 주입. <strong>문서 RAG:</strong> 내부 PDF·법령을 벡터 DB에 저장 → 유사 조각 검색 → 모델에 주입. 4단계: 넣기→쪼개기→찾기→답하기.</p>
+      </div>
+
+      <div class="spacer"></div>
+
+      <div class="co">
+        <div class="co-lb">현실적 접근법</div>
+        <div class="co-main">키워드 필터링 + 128K 모델이면 80%는 된다</div>
+        <p>관련 단락만 뽑아서 128K 모델(Llama 3.2, Phi-3.5)에 넣는다. 벡터 DB 없이도 공공 내부 문서 질의 수준은 충분히 작동.</p>
+      </div>
+
+      <div class="dstrip">
+        <div class="ds-c"><div class="ds-a">REASONING</div><div class="ds-n">+40%</div><div class="ds-d">복잡 추론 정확도</div></div>
+        <div class="ds-c"><div class="ds-a">RAG</div><div class="ds-n">4단계</div><div class="ds-d">넣기→쪼개기→찾기→답</div></div>
+        <div class="ds-c"><div class="ds-a">128K</div><div class="ds-n">~50p</div><div class="ds-d">A4 50쪽 한 번에 처리</div></div>
+      </div>
+    </div>
+
+    <div class="col">
+      <div class="sh"><span class="sh-n">⑧⑨</span><span class="sh-t">MCP · A2A — 연결의 표준</span></div>
+      <div class="sh-line"></div>
+
+      <div class="icard">
+        <div class="icard-top"><span class="icard-lb">⑧ MCP</span><span class="icard-sess">S08 핵심</span></div>
+        <div class="bth">에이전트가 외부 도구를 꽂아 쓰는 표준 콘센트</div>
+        <p class="bt">Anthropic 2024.11. DB·Slack·Notion·GitHub을 모델에 연결하는 오픈 프로토콜. <strong>2026.3 기준 월 9,700만 DL</strong>. 모든 주요 제공자 지원. MCP 이전: N×M 문제. 이후: N+M.</p>
+      </div>
+
+      <div class="icard">
+        <div class="icard-top"><span class="icard-lb">⑨ A2A</span><span class="icard-sess">S08 심화</span></div>
+        <div class="bth">에이전트끼리 협업하는 프로토콜</div>
+        <p class="bt">Google 2025.4 출시. Linux Foundation. <strong>2026.4 기준 150+ 조직, v1.0.</strong> Agent Card(JSON 명함) 게시 → 다른 에이전트가 읽고 협업. MCP=콘센트, A2A=전화선.</p>
+      </div>
+
+      <div class="spacer"></div>
+
+      <div class="cod">
+        <div class="cod-lb">공공 시나리오 · MCP + A2A</div>
+        <div class="cod-main">민원→분류 에이전트→법률 검토 에이전트→회신 초안</div>
+        <p>분류 에이전트가 MCP로 민원 DB 조회, A2A로 법률 에이전트에 의뢰. 검토 결과를 받아 회신 초안 생성. 전부 내부망. 8차시 아키텍처 캔버스의 최종 형태.</p>
+      </div>
+
+      <div class="quote">
+        <div class="quote-src">MCP ADOPTION · 18개월</div>
+        <div class="quote-q">"2M → 22M → 45M → 68M → 97M/월. 18개월 만에 50배."</div>
+        <div class="quote-a">— Anthropic → OpenAI → MS → AWS → 전체</div>
+      </div>
+    </div>
+
+    <div class="col">
+      <div class="sh"><span class="sh-n">⑩ AGENT TOOLS</span><span class="sh-t">에이전트 도구 생태계</span></div>
+      <div class="sh-line"></div>
+
+      <div class="bth">"답변"이 아닌 "완성된 결과물"을 돌려준다</div>
+      <p class="bt">사용자 역할: 작업자 → <strong>기획자·설계자</strong>. 에이전트가 파일을 읽고, 코드를 쓰고, 테스트·디버그까지 자율 실행.</p>
+
+      <div class="fig">TABLE · 주요 에이전트 도구</div>
+      <table class="mtbl">
+        <thead><tr><th>도구</th><th>특징</th><th>회차</th></tr></thead>
+        <tbody>
+          <tr><td>Claude Code</td><td>터미널, CLAUDE.md Rules, Sub-agent, Skills, MCP</td><td>S06–08</td></tr>
+          <tr><td>Cursor</td><td>VS Code, .cursorrules, Composer</td><td>S06</td></tr>
+          <tr><td>Antigravity</td><td>한국형 에이전트 IDE, Torvalds 사용</td><td>S06</td></tr>
+          <tr><td>Codex</td><td>OpenAI, 클라우드 샌드박스, GitHub</td><td>S06</td></tr>
+          <tr><td>OpenCode</td><td>오픈소스 터미널, 다양한 모델 연결</td><td>S06</td></tr>
+        </tbody>
+      </table>
+
+      <div class="co">
+        <div class="co-lb">KARPATHY · 2026.02</div>
+        <div class="co-main">Vibe Coding → Agentic Engineering</div>
+        <p>"에이전트가 코드를 쓰되, 사람이 설계·감독·품질 보증. <strong>'agentic'은 직접 안 쓴다는 뜻, 'engineering'은 전문성이 여전히 필요하다는 뜻.</strong>" Collins 2025 올해의 단어 → 1년 만에 진화.</p>
+      </div>
+
+      <div class="spacer"></div>
+
+      <div class="fig">REFERENCE · ⑧⑨⑩ 사이트</div>
+      <table class="mtbl">
+        <thead><tr><th>사이트</th><th>내용</th></tr></thead>
+        <tbody>
+          <tr><td>smithery.ai</td><td>MCP 서버 카탈로그 · 검색·설치</td></tr>
+          <tr><td>a2a-protocol.org</td><td>A2A 공식 스펙 · Agent Card</td></tr>
+          <tr><td>code.claude.com</td><td>Claude Code · Skills · Rules</td></tr>
+          <tr><td>cursor.sh</td><td>Cursor IDE · .cursorrules</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">01 · AI 에이전트 시대의 개막과 공공 구현 지형도</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">005 / 016</span></div></div>
+</div></div>
+
+<!-- ══════════════════════════════════════════════════════════
+     SLIDE 06 — A-3. 프롬프트 진화 ①②③ (3칼럼)
+     ══════════════════════════════════════════════════════════ -->
+<div class="stage"><div class="slide" data-title="A-3 Prompt Evolution">
+  <div class="hbar"><div class="hbar-l">MODULE 01 · PART A-3 · PROMPTING EVOLUTION</div><div class="hbar-r">공공 AI 전문인재 양성과정 · 8주 실전 여정</div></div>
+  <div class="hl">
+    <div class="hl-kicker">PART A-3 · 프롬프트의 진화 — 4단계와 각 단계의 도구들 · 20MIN</div>
+    <div class="hl-title">프롬프트 4단계 ①Prompt ②Meta Prompt ③Context — Custom GPT·Projects·Skills·Gems</div>
+    <div class="hl-lede">이 4단계가 8주 전체 로드맵의 골격이다. 각 단계의 실제 도구·기능을 함께 소개한다. ③까지는 "대화 안에서의 환경 설정"이다.</div>
+    <div class="hl-bar"></div>
+  </div>
+  <div class="hl-rule"></div>
+  <div class="bd col3">
+    <div class="col">
+      <div class="sh"><span class="sh-n">① PROMPT</span><span class="sh-t">한 번의 질문과 답</span></div>
+      <div class="sh-line"></div>
+      <div class="bth">가장 단순한 형태 — 매번 맥락을 다시 입력</div>
+      <p class="bt">"요약해줘" "번역해줘" 한 마디로 입출력이 끝난다. 대화가 끊기면 맥락이 사라진다. <strong>1~2차시 수준.</strong></p>
+      <div class="sh" style="margin-top:12px"><span class="sh-n">② META PROMPT</span><span class="sh-t">프롬프트를 AI에게 만들게</span></div>
+      <div class="sh-line"></div>
+      <div class="bth">"내 상황은 이렇고, 최적 프롬프트를 설계해달라"</div>
+      <p class="bt">생성된 프롬프트를 다른 모델에 돌려 교차 검증하고 개선한다. <strong>3차시 핵심.</strong> 3차시 공유 활동: 수강생 각자 프롬프트 2개를 메타 프롬프트로 변환 → 80개 시드 라이브러리.</p>
+      <div class="spacer"></div>
+      <div class="co">
+        <div class="co-lb">①→② 전환의 핵심</div>
+        <div class="co-main">"프롬프트를 외우지 않는다, 프롬프트를 설계한다"</div>
+        <p>거점리더는 매번 새 프롬프트를 짜는 사람이 아니라, 부서 단위 재사용 가능한 메타 프롬프트 자산을 누적하는 사람이다.</p>
+      </div>
+      <div class="dstrip">
+        <div class="ds-c"><div class="ds-a">STAGE A</div><div class="ds-n">S01–02</div><div class="ds-d">① 프롬프트 수준</div></div>
+        <div class="ds-c"><div class="ds-a">STAGE A</div><div class="ds-n">S03</div><div class="ds-d">②③ 메타+컨텍스트</div></div>
+        <div class="ds-c"><div class="ds-a">STAGE C</div><div class="ds-n">S06–08</div><div class="ds-d">④ 하네스 (다음 장)</div></div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">③ CONTEXT</span><span class="sh-t">역할+자료+제약을 패키지로</span></div>
+      <div class="sh-line"></div>
+      <div class="bth">"한 번 설정하면 매번 맥락을 다시 설명하지 않아도 된다"</div>
+      <p class="bt">시스템 프롬프트·참고 문서·역할 규칙·예시를 한 패키지로 묶어두고 반복 작업하는 단계. 이 단계를 구현하는 도구들이 각 플랫폼에 이미 나와 있다.</p>
+      <div class="fig">TABLE · ③ 컨텍스트 단계의 도구들</div>
+      <table class="mtbl">
+        <thead><tr><th>플랫폼</th><th>도구</th><th>핵심 기능</th></tr></thead>
+        <tbody>
+          <tr><td>ChatGPT</td><td>Custom GPTs</td><td>시스템 프롬프트+파일+API(Actions) 묶음</td></tr>
+          <tr><td>ChatGPT</td><td>Plugins/Actions</td><td>외부 서비스 API 호출. MCP 전 단계</td></tr>
+          <tr><td>Claude</td><td>Projects</td><td>프로젝트 단위 프롬프트+문서 묶음</td></tr>
+          <tr><td>Claude</td><td>Skills</td><td>반복 작업 패턴 저장·재사용 (SKILL.md)</td></tr>
+          <tr><td>Claude</td><td>Styles</td><td>톤·길이·형식 프리셋 ("공문서체" 등)</td></tr>
+          <tr><td>Gemini</td><td>Gems</td><td>시스템 지침 설정 → 맥락 유지</td></tr>
+          <tr><td>Gemini</td><td>Workspace 통합</td><td>Gmail·Drive·Docs 직접 연결</td></tr>
+          <tr><td>Perplexity</td><td>Spaces</td><td>주제별 소스·지침 묶음. 팀 공유</td></tr>
+        </tbody>
+      </table>
+      <div class="spacer"></div>
+      <div class="cod">
+        <div class="cod-lb">CLAUDE SKILLS · 2025.10 공개</div>
+        <div class="cod-main">커뮤니티 1,234+ 스킬 · SKILL.md 형식</div>
+        <p>반복 작업 패턴(문서 스타일·분석 절차·출력 형식)을 모듈화. 다른 프로젝트에서도 재사용. <strong>거점리더가 부서용 스킬을 만들어 동료에 배포하는 시나리오에 직결.</strong></p>
+      </div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">③ → ④ 경계</span><span class="sh-t">대화 안 vs 대화 밖</span></div>
+      <div class="sh-line"></div>
+      <div class="bth">③까지는 "대화 안에서의 환경 설정"</div>
+      <p class="bt">Custom GPT·Projects·Gems — 모두 <strong>채팅 인터페이스 안</strong>에서 맥락을 설정한다. 사용자가 대화창에서 AI와 주고받는 구조는 변하지 않는다.</p>
+      <div class="bth" style="margin-top:8px">④에서는 "대화 밖에서의 환경 설정"</div>
+      <p class="bt">AI가 대화창 밖으로 나와 <strong>파일을 읽고, 코드를 실행하고, 터미널을 조작하고, 다른 에이전트를 호출</strong>한다. 이것이 어시스트→에이전트 전환이다. 다음 장에서 상세히.</p>
+      <div class="co">
+        <div class="co-lb">KEY MESSAGE</div>
+        <div class="co-main">③에서 ④로의 전환이 4~5차시와 6~8차시를 가르는 경계선</div>
+        <p>③의 Skills·Custom GPTs = 대화 안 환경 설정. ④의 Rules·MCP·Sub-agent = 대화 밖 환경 설정. 이 구분이 본 과정의 구조를 이해하는 핵심.</p>
+      </div>
+      <div class="spacer"></div>
+      <div class="pit">
+        <div class="pit-lb">PITFALL · 혼동하기 쉬운 것</div>
+        <div class="pit-h">▸ Claude Skills ≠ Claude Code Skills</div>
+        <div class="pit-d">전자는 ③(대화 안 패턴 저장), 후자는 ④(에이전트 행동 모듈). 이름이 같아서 혼동하기 쉽다.</div>
+        <div class="pit-h">▸ Custom GPT Actions ≠ MCP</div>
+        <div class="pit-d">Actions는 ChatGPT 전용·폐쇄적, MCP는 범용·오픈. MCP가 Actions를 대체하는 방향.</div>
+      </div>
+      <div class="quote">
+        <div class="quote-src">ANTHROPIC · 2025</div>
+        <div class="quote-q">"좋은 프롬프트는 작성하는 것이 아니라 구조화하는 것이다."</div>
+        <div class="quote-a">— Constructing Effective Prompts for Agentic Workflows</div>
+      </div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">01 · AI 에이전트 시대의 개막과 공공 구현 지형도</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">006 / 016</span></div></div>
+</div></div>
+
+<!-- ══════════════════════════════════════════════════════════
+     SLIDE 07 — A-3. 프롬프트 진화 ④ 하네스 (3칼럼)
+     ══════════════════════════════════════════════════════════ -->
+<div class="stage"><div class="slide" data-title="A-3 Harness">
+  <div class="hbar"><div class="hbar-l">MODULE 01 · PART A-3 · HARNESS LAYER</div><div class="hbar-r">공공 AI 전문인재 양성과정 · 8주 실전 여정</div></div>
+  <div class="hl">
+    <div class="hl-kicker">PART A-3 · ④ 하네스 — AI가 대화 밖으로 나와 직접 일한다 · 20MIN</div>
+    <div class="hl-title">프롬프트 4단계 ④Harness — Claude Code·Cursor·Antigravity의 Rules·Skills·Sub-agent</div>
+    <div class="hl-lede">④에서는 AI가 파일을 읽고, 코드를 실행하고, 터미널을 조작하고, 다른 에이전트를 호출한다. 거점리더가 Rules를 잘 설계하면 산출물 품질이 달라진다.</div>
+    <div class="hl-bar"></div>
+  </div>
+  <div class="hl-rule"></div>
+  <div class="bd col3">
+    <div class="col">
+      <div class="sh"><span class="sh-n">CLAUDE CODE</span><span class="sh-t">5개 제어 계층</span></div>
+      <div class="sh-line"></div>
+      <div class="fig">TABLE · Claude Code 계층 구조</div>
+      <table class="mtbl">
+        <thead><tr><th>계층</th><th>파일</th><th>역할</th></tr></thead>
+        <tbody>
+          <tr><td>Rules</td><td>CLAUDE.md</td><td>프로젝트별 규칙. 코딩 스타일·금지 사항</td></tr>
+          <tr><td>Skills</td><td>.claude/skills/</td><td>반복 작업 모듈. SKILL.md 형식. 자동 로딩</td></tr>
+          <tr><td>Sub-agents</td><td>.claude/agents/</td><td>전문 AI 어시스턴트. 독립 컨텍스트</td></tr>
+          <tr><td>Hooks</td><td>이벤트 트리거</td><td>작업 완료·에러 시 자동 반응</td></tr>
+          <tr><td>MCP</td><td>설정 파일</td><td>외부 도구(DB·API) 연결</td></tr>
+        </tbody>
+      </table>
+      <div class="co">
+        <div class="co-lb">SUB-AGENT 파이프라인</div>
+        <div class="co-main">Explore → Plan → Execute</div>
+        <p>탐색 에이전트가 코드베이스를 읽고 → 계획 에이전트가 설계하고 → 실행 에이전트가 수정한다. <strong>Plan과 Execute 사이에 사람 검토 게이트</strong>를 두는 것이 핵심.</p>
+      </div>
+      <div class="spacer"></div>
+      <div class="cblk"><span class="cm"># CLAUDE.md 예시</span>
+## 프로젝트 규칙
+- 한국어 주석 필수
+- 함수명은 snake_case
+- 테스트 커버리지 80% 이상
+- <span class="kw">민감정보 마스킹</span> 규칙 적용
+<div class="cap">6차시에서 직접 작성 실습</div></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">OTHER TOOLS</span><span class="sh-t">Cursor · Antigravity · Codex</span></div>
+      <div class="sh-line"></div>
+      <div class="icard">
+        <div class="icard-top"><span class="icard-lb">CURSOR</span><span class="icard-sess">S06</span></div>
+        <div class="bth">VS Code 기반 · .cursorrules · Composer</div>
+        <p class="bt">.cursorrules 파일로 코딩 스타일·아키텍처 규칙 설정. Composer 모드에서 여러 파일 동시 수정. 코드 전체를 맥락으로 읽고 수정 제안.</p>
+      </div>
+      <div class="icard">
+        <div class="icard-top"><span class="icard-lb">ANTIGRAVITY</span><span class="icard-sess">S06</span></div>
+        <div class="bth">한국형 에이전트 IDE · 자연어로 프로젝트 생성</div>
+        <p class="bt">자연어 지시로 프로젝트 통째 생성·수정. Linus Torvalds가 AudioNoise 프로젝트에서 사용 언급(2026.1). 1,234+ 커뮤니티 스킬 패키지 제공.</p>
+      </div>
+      <div class="icard">
+        <div class="icard-top"><span class="icard-lb">CODEX · OPENCODE</span><span class="icard-sess">S06</span></div>
+        <div class="bth">OpenAI 클라우드 샌드박스 / 오픈소스 터미널</div>
+        <p class="bt">Codex: GitHub 연동 클라우드 실행. OpenCode: 다양한 모델 연결 가능한 오픈소스 터미널 에이전트.</p>
+      </div>
+      <div class="spacer"></div>
+      <div class="cod">
+        <div class="cod-lb">공통 패턴 · 모든 에이전트 도구</div>
+        <div class="cod-main">Rules로 기준 → Skills로 자동화 → MCP로 연결</div>
+        <p>Claude Code든 Cursor든 같은 패턴이다. <strong>거점리더가 Rules를 잘 설계하면 어떤 에이전트를 쓰든 산출물 품질이 일관된다.</strong> 도구 종속이 아니라 설계 종속.</p>
+      </div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">4단계 요약</span><span class="sh-t">전체 흐름 한 눈에</span></div>
+      <div class="sh-line"></div>
+      <div class="fig">TABLE · 4단계 비교 요약</div>
+      <table class="mtbl">
+        <thead><tr><th>단계</th><th>대표 도구</th><th>회차</th></tr></thead>
+        <tbody>
+          <tr><td>① Prompt</td><td>ChatGPT 기본 채팅</td><td>S01–02</td></tr>
+          <tr><td>② Meta</td><td>AI에 프롬프트 설계 요청</td><td>S03</td></tr>
+          <tr><td>③ Context</td><td>Custom GPT, Projects, Gems</td><td>S03</td></tr>
+          <tr><td>④ Harness</td><td>Claude Code, Cursor, Antigravity</td><td>S06–08</td></tr>
+        </tbody>
+      </table>
+      <div class="co">
+        <div class="co-lb">KEY MESSAGE</div>
+        <div class="co-main">거점리더는 동료에게 "지금 니가 하고 있는 건 ①이야, ③까지 가면 이렇게 달라져"라고 말할 수 있어야 한다</div>
+        <p>이 4단계를 아는 것이 왜 중요하냐면, 거점리더의 코칭 역할에 직결되기 때문이다. 현재 수준을 진단하고 다음 단계를 안내할 수 있어야 한다.</p>
+      </div>
+      <div class="spacer"></div>
+      <div class="pit">
+        <div class="pit-lb">PITFALL · 에이전트 도구 사용 시</div>
+        <div class="pit-h">▸ Rules 없이 에이전트를 돌리면 품질이 랜덤</div>
+        <div class="pit-d">CLAUDE.md / .cursorrules 없이 쓰는 것은 신입에게 아무 지침 없이 일을 맡기는 것과 같다.</div>
+        <div class="pit-h">▸ 에이전트 도구는 어시스트 경험 후에 도입</div>
+        <div class="pit-d">4·5차시에서 AI 어시스트로 코드를 받아보고 한계를 체감한 뒤, 6차시에서 에이전트로 넘어가야 차이를 느낀다.</div>
+      </div>
+      <div class="dstrip">
+        <div class="ds-c"><div class="ds-a">SKILLS</div><div class="ds-n">1,234+</div><div class="ds-d">커뮤니티 스킬 (2026.3)</div></div>
+        <div class="ds-c"><div class="ds-a">RULES</div><div class="ds-n">CLAUDE.md</div><div class="ds-d">프로젝트 규칙 파일</div></div>
+        <div class="ds-c"><div class="ds-a">SUB-AGENT</div><div class="ds-n">3단계</div><div class="ds-d">Explore→Plan→Execute</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">01 · AI 에이전트 시대의 개막과 공공 구현 지형도</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">007 / 016</span></div></div>
+</div></div>
+
+<!-- ══════════════════════════════════════════════════════════
+     SLIDE 08 — B-1. 거시/미시 + NIA 7개 카테고리
+     ══════════════════════════════════════════════════════════ -->
+<div class="stage"><div class="slide" data-title="B-1 Macro Micro">
+  <div class="hbar"><div class="hbar-l">MODULE 01 · PART B-1 · MACRO × MICRO</div><div class="hbar-r">공공 AI 전문인재 양성과정 · 8주 실전 여정</div></div>
+  <div class="hl">
+    <div class="hl-kicker">PART B-1 · 거시와 미시, 두 개의 축 — 골목길 문제 · 10MIN</div>
+    <div class="hl-title">거시 AX vs 미시 AX — 행안부·NIA 7개 카테고리와 본 과정의 매핑</div>
+    <div class="hl-lede">행안부·NIA의 공공부문 AI 도입 7개 카테고리와 본 과정의 구현 유형을 매핑한다. 거시적 AX와 미시적 AX가 만나야 진짜 Transformation이다.</div>
+    <div class="hl-bar"></div>
+  </div>
+  <div class="hl-rule"></div>
+  <div class="bd col3">
+    <div class="col">
+      <div class="sh"><span class="sh-n">TWO AXES</span><span class="sh-t">거시 vs 미시</span></div>
+      <div class="sh-line"></div>
+      <div class="icard">
+        <div class="icard-top"><span class="icard-lb">거시적 AX</span><span class="icard-sess">고속도로형</span></div>
+        <div class="bth">소버린 AI · K-AI · GPU 확보 · 공통기반</div>
+        <p class="bt">국가 차원 전략. 하드웨어·파운데이션 모델·온나라 결합. 시간과 예산이 필요하다. 중요하지만 <strong>골목길까지 닿지 않는다.</strong></p>
+      </div>
+      <div class="icard dark">
+        <div class="icard-top"><span class="icard-lb">미시적 AX</span><span class="icard-sess">본 과정 집중</span></div>
+        <div class="bth">직원 한 사람이 반복 업무를 AI로 해결</div>
+        <p class="bt">바이브 코딩·에이전트 엔지니어링으로 자신에게 필요한 도구를 직접 만드는 혁신. <strong>비용 0원, 지금 당장 가능.</strong> 큰 벤더·큰 컨설팅이 돌봐주지 않는 문제를 푼다.</p>
+      </div>
+      <div class="spacer"></div>
+      <div class="co">
+        <div class="co-lb">VIBE CODING → AGENTIC ENGINEERING</div>
+        <div class="co-main">Karpathy (2025.2 → 2026.2)</div>
+        <p>"문제를 안다. 풀린 모습을 상상한다. '어떻게'는 AI와 함께." Collins 2025 올해의 단어. 1년 후 "에이전트가 쓰되, 사람이 설계·감독" — Agentic Engineering으로 업데이트.</p>
+      </div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">NIA 7 CATEGORIES</span><span class="sh-t">공공부문 AI 도입 카테고리</span></div>
+      <div class="sh-line"></div>
+      <div class="fig">TABLE · NIA 7개 카테고리 ↔ 커리큘럼 매핑</div>
+      <table class="mtbl">
+        <thead><tr><th>NIA</th><th>설명</th><th>회차</th></tr></thead>
+        <tbody>
+          <tr><td>① 내부서버</td><td>기관 GPU에 LLM 직접 설치</td><td>S07</td></tr>
+          <tr><td>② 개인로컬</td><td>Ollama로 PC에 sLLM 구동</td><td>S05</td></tr>
+          <tr><td>③ 로컬웹</td><td>HTML/JS 단일 파일 내부 반입</td><td>S04·06</td></tr>
+          <tr><td>④ 외부이관</td><td>외부 개발 → 내부망 이관</td><td>S04·06</td></tr>
+          <tr><td>⑤ 코드자동화</td><td>외부 AI에 코드 요청, 내부 실행</td><td>S04·05</td></tr>
+          <tr><td>⑥ 민간SaaS</td><td>ChatGPT·Claude 직접 활용</td><td>S01–03</td></tr>
+          <tr><td>⑦ 공통플랫폼</td><td>행안부·NIA 공공 API 호출</td><td>S08</td></tr>
+        </tbody>
+      </table>
+      <div class="spacer"></div>
+      <div class="cod">
+        <div class="cod-lb">INSIGHT · 공식 프레임과의 정렬</div>
+        <div class="cod-main">"이 과정에서 배우는 유형은 행안부 AI 도입 가이드 7개 카테고리와 대응된다"</div>
+        <p>개인 의견이 아니라 공식 정책 프레임. 수강생 기관의 AI 도입 보고서 작성 시 이 분류를 직접 활용할 수 있다.</p>
+      </div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">2×2 MATRIX</span><span class="sh-t">NIA 거시/미시 × Direct/Assist</span></div>
+      <div class="sh-line"></div>
+      <div class="fig">TABLE · 도입활용 관점 매트릭스</div>
+      <table class="mtbl">
+        <thead><tr><th></th><th>Direct (대화형)</th><th>Assist (구축형)</th></tr></thead>
+        <tbody>
+          <tr><td>거시 Task</td><td>①내부서버 ⑦공통플랫폼 ⑥SaaS</td><td class="hi"><strong>④외부이관</strong> → S06–08</td></tr>
+          <tr><td>미시 Task</td><td>②개인로컬 sLLM</td><td class="hi"><strong>③로컬웹 ⑤코드자동화</strong> → S04–05</td></tr>
+        </tbody>
+      </table>
+      <p class="bt" style="margin-top:8px">본 과정은 주로 우측(Assist·Vibe Coding)에 위치한다. 좌측(Direct)은 1~3차시에서 도구 사용법으로 다루고, 우측은 4~8차시에서 직접 만든다.</p>
+      <div class="spacer"></div>
+      <div class="quote">
+        <div class="quote-src">강연 · 신성진</div>
+        <div class="quote-q">"거시적 AX와 미시적 AX가 만나는 순간, 그때 비로소 AX의 'X' — Transformation을 우리가 당당히 말할 수 있게 된다."</div>
+        <div class="quote-a">— 거시와 미시가 만날 때, 진짜 소버린 AI가 시작된다</div>
+      </div>
+      <div class="dstrip">
+        <div class="ds-c"><div class="ds-a">NIA</div><div class="ds-n">7개</div><div class="ds-d">공공 AI 도입 카테고리</div></div>
+        <div class="ds-c"><div class="ds-a">본 과정</div><div class="ds-n">8주</div><div class="ds-d">미시 AX 집중</div></div>
+        <div class="ds-c"><div class="ds-a">비용</div><div class="ds-n">0원</div><div class="ds-d">전부 오픈소스·무료</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">01 · AI 에이전트 시대의 개막과 공공 구현 지형도</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">008 / 016</span></div></div>
+</div></div>
+
+<!-- ══════════════════════════════════════════════════════════
+     SLIDE 09 — 민첩한 AI 구현 유형 ①~⑤ (3칼럼)
+     ══════════════════════════════════════════════════════════ -->
+<div class="stage"><div class="slide" data-title="Agile AI Types 1-5">
+  <div class="hbar"><div class="hbar-l">MODULE 01 · AGILE AI TYPES ①~⑤</div><div class="hbar-r">공공 AI 전문인재 양성과정 · 8주 실전 여정</div></div>
+  <div class="hl">
+    <div class="hl-kicker">민첩한 AI 구현 유형 — 폐쇄망에서 돌아가는 것들 ①~⑤</div>
+    <div class="hl-title">민첩한 AI 구현 유형 ①~⑤ — HTML, Python, Electron, Node.js, VBA+Ollama</div>
+    <div class="hl-lede">각 유형은 기술 난이도 순이 아니라 배포 형태 순이다. 같은 업무 자동화를 HTML 단일 파일로도, Python 패키징으로도, VBA+Ollama로도 구현할 수 있다.</div>
+    <div class="hl-bar"></div>
+  </div>
+  <div class="hl-rule"></div>
+  <div class="bd col3">
+    <div class="col">
+      <div class="sh"><span class="sh-n">① HTML/JS 단일 파일</span><span class="sh-t">브라우저만 있으면 동작</span></div>
+      <div class="sh-line"></div>
+      <div class="bth">CDN 라이브러리를 파일 안에 통째로 삽입</div>
+      <p class="bt">USB에 담아 행정망 PC에서 더블클릭. <strong>설치 0, 네트워크 0, 관리자 권한 0.</strong> Chart.js·ECharts·D3 같은 시각화 라이브러리를 인라인으로 포함. 수천 개 JS 라이브러리가 파일 형태로 동작 가능.</p>
+      <div class="fig">산출물 예시</div>
+      <table class="mtbl">
+        <thead><tr><th>산출물</th><th>설명</th></tr></thead>
+        <tbody>
+          <tr><td>민원 대시보드</td><td>CSV 드래그&드롭 → 즉석 차트+통계</td></tr>
+          <tr><td>세액 계산기</td><td>지방세·취득세 자동 계산</td></tr>
+          <tr><td>간트차트</td><td>프로젝트 일정 관리 도구</td></tr>
+          <tr><td>병해충 시뮬레이터</td><td>확산 모델 시각화 (스마트팜)</td></tr>
+          <tr><td>개인정보 비식별화</td><td>주민번호 마스킹 웹 도구</td></tr>
+        </tbody>
+      </table>
+      <div class="spacer"></div>
+      <div class="cblk"><span class="cm">&lt;!-- 단일 .html 파일 구조 --&gt;</span>
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+  <span class="cm">&lt;!-- Chart.js 전체를 인라인 --&gt;</span>
+  &lt;script&gt;/* Chart.js 소스 */&lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;input type="file" id="csv"&gt;
+  &lt;canvas id="chart"&gt;&lt;/canvas&gt;
+  &lt;script&gt;
+    <span class="cm">// CSV 파싱 → 차트 생성</span>
+  &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+<div class="cap">파일 1개 · 500KB 이하 · 더블클릭 실행</div></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">②③ PYTHON</span><span class="sh-t">오프라인 패키징 + 독립 실행</span></div>
+      <div class="sh-line"></div>
+      <div class="icard">
+        <div class="icard-top"><span class="icard-lb">② 파이썬 오프라인 패키징</span><span class="icard-sess">S04·05</span></div>
+        <div class="bth">pip install --target으로 라이브러리 폴더째 반입</div>
+        <p class="bt">외부망에서 AI에 코드 요청 → .py + libs 폴더를 USB로 내부망 이동 → 인터넷 없이 실행. <strong>엑셀·파워포인트·PDF·HWP 파일 제어, 데이터 분석, 자동 보고서</strong> 모두 가능.</p>
+      </div>
+      <div class="fig">산출물 예시</div>
+      <table class="mtbl">
+        <thead><tr><th>산출물</th><th>라이브러리</th></tr></thead>
+        <tbody>
+          <tr><td>HWPX 보고서 자동생성</td><td>pyhwpx · 행안부 가이드라인 적용</td></tr>
+          <tr><td>PDF 텍스트 추출+요약</td><td>PyMuPDF · pdfplumber</td></tr>
+          <tr><td>개인정보 일괄 마스킹</td><td>정규식 + openpyxl</td></tr>
+          <tr><td>엑셀 자동 정리·분석</td><td>pandas · openpyxl</td></tr>
+          <tr><td>파워포인트 자동 생성</td><td>python-pptx</td></tr>
+        </tbody>
+      </table>
+      <div class="icard" style="margin-top:6px">
+        <div class="icard-top"><span class="icard-lb">③ PyInstaller / Electron</span><span class="icard-sess">S06</span></div>
+        <div class="bth">.exe 패키징 — 더블클릭으로 독립 실행</div>
+        <p class="bt">tkinter/PyQt로 GUI → <code>pyinstaller --onefile app.py</code> → .exe 생성. 기존 소프트웨어 배포 절차와 동일하게 보안 심의·설치 가능. Electron은 웹 기술로 데스크톱 앱 구현.</p>
+      </div>
+      <div class="spacer"></div>
+      <div class="cblk"><span class="cm"># 오프라인 패키징 3줄</span>
+pip install --target ./libs \
+  pandas openpyxl pyhwpx PyMuPDF
+
+<span class="cm"># 내부망에서 실행</span>
+<span class="kw">import</span> sys; sys.path.insert(0,'./libs')
+<span class="kw">import</span> pandas <span class="kw">as</span> pd
+<div class="cap">libs 폴더째 USB 이동 · 인터넷 불필요</div></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">④⑤ NODE · VBA+OLLAMA</span><span class="sh-t">자바스크립트 확장 + 엑셀 AI</span></div>
+      <div class="sh-line"></div>
+      <div class="icard">
+        <div class="icard-top"><span class="icard-lb">④ NODE.JS 오프라인</span><span class="icard-sess">S05·06</span></div>
+        <div class="bth">node_modules 폴더째 내부망 반입</div>
+        <p class="bt">npm install → node_modules 생성 → USB로 이동. 브라우저 밖에서 JS의 다양한 기능 활용. 파일 정리·로그 파싱·대량 변환 등 복잡한 자동화. MCP 서버 구축의 런타임 기반.</p>
+      </div>
+      <div class="icard dark">
+        <div class="icard-top"><span class="icard-lb">⑤ VBA + OLLAMA ★</span><span class="icard-sess">S05 핵심</span></div>
+        <div class="bth">엑셀 셀에서 AI 함수 직접 호출 — 외부 API 0</div>
+        <p class="bt"><strong>=AI_SUMMARIZE(A1)</strong> "이 민원을 3줄로 요약"<br><strong>=AI_CLASSIFY(A1,"긍정/부정/중립")</strong><br><strong>=AI_EXTRACT(A1,"날짜")</strong><br><strong>=AI_TRANSLATE(A1,"영어")</strong><br>Ollama localhost:11434 API를 VBA가 호출. 완전 내부망. <strong>"GPT for Sheets의 공공 버전"</strong>을 우리가 직접 만든다.</p>
+      </div>
+      <div class="spacer"></div>
+      <div class="cblk"><span class="cm">' VBA · Ollama 호출 함수</span>
+<span class="kw">Function</span> AI_SUMMARIZE(cell) <span class="kw">As String</span>
+  <span class="kw">Dim</span> xhr <span class="kw">As Object</span>
+  <span class="kw">Set</span> xhr = CreateObject( _
+    "MSXML2.XMLHTTP")
+  xhr.Open "POST", _
+    "http://localhost:11434/api/generate"
+  xhr.Send "{""model"":""gemma2""," _
+    & """prompt"":""3줄 요약: " _
+    & cell.Value & """}"
+  AI_SUMMARIZE = ParseJSON(xhr)
+<span class="kw">End Function</span>
+<div class="cap">localhost · 외부 통신 0 · 5차시 구현</div></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">01 · AI 에이전트 시대의 개막과 공공 구현 지형도</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">009 / 016</span></div></div>
+</div></div>
+
+<!-- ══════════════════════════════════════════════════════════
+     SLIDE 10 — 민첩한 AI 구현 유형 ⑥~⑨ (3칼럼)
+     ══════════════════════════════════════════════════════════ -->
+<div class="stage"><div class="slide" data-title="Agile AI Types 6-9">
+  <div class="hbar"><div class="hbar-l">MODULE 01 · AGILE AI TYPES ⑥~⑨</div><div class="hbar-r">공공 AI 전문인재 양성과정 · 8주 실전 여정</div></div>
+  <div class="hl">
+    <div class="hl-kicker">민첩한 AI 구현 유형 — 폐쇄망에서 돌아가는 것들 ⑥~⑨</div>
+    <div class="hl-title">민첩한 AI 구현 유형 ⑥~⑨ — 로컬 RAG, 내부망 에이전트, MCP+SQL, 풀스택</div>
+    <div class="hl-lede">⑥~⑧은 모두 Ollama 기반 완전 내부망 구현이다. 데이터가 밖으로 한 바이트도 나가지 않는다. ⑨는 여러 도구를 API·MCP로 조합한 풀스택 서비스.</div>
+    <div class="hl-bar"></div>
+  </div>
+  <div class="hl-rule"></div>
+  <div class="bd col3">
+    <div class="col">
+      <div class="sh"><span class="sh-n">⑥ OLLAMA + RAG</span><span class="sh-t">부서 문서 위에서 답하는 AI</span></div>
+      <div class="sh-line"></div>
+      <div class="bth">넣기 → 쪼개기 → 찾기 → 답하기</div>
+      <p class="bt">부서 PDF·법령·매뉴얼을 로컬 AI가 읽고 답변한다. 완전 내부망. 현실적 접근: 벡터 DB 없이 <strong>키워드 필터링 + 128K 컨텍스트 모델</strong>이면 공공 내부 문서 질의의 80%를 해결한다.</p>
+      <div class="fig">산출물 예시</div>
+      <table class="mtbl">
+        <thead><tr><th>RAG 대상</th><th>질문 예시</th></tr></thead>
+        <tbody>
+          <tr><td>내부 규정 PDF 10개</td><td>"출장 정산 절차가 어떻게 되나요?"</td></tr>
+          <tr><td>법령 전문</td><td>"개인정보 제3자 제공 기준은?"</td></tr>
+          <tr><td>민원 매뉴얼</td><td>"건축 허가 민원 처리 기한은?"</td></tr>
+          <tr><td>회의록 아카이브</td><td>"지난 분기 예산 관련 결정 사항은?"</td></tr>
+        </tbody>
+      </table>
+      <div class="spacer"></div>
+      <div class="cblk"><span class="cm"># 현실적 RAG · 벡터 DB 없이</span>
+<span class="cm"># 1) 문서 텍스트 추출</span>
+text = extract_pdf("규정.pdf")
+
+<span class="cm"># 2) 키워드로 관련 단락 필터</span>
+chunks = keyword_search(
+  text, "출장 정산")
+
+<span class="cm"># 3) 128K 모델에 주입</span>
+answer = ollama.generate(
+  model="llama3.2",
+  prompt=chunks + question)
+<div class="cap">벡터 DB 없이 키워드 필터링으로 80% 해결</div></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">⑦⑧ 에이전트 · MCP+SQL</span><span class="sh-t">AI가 직접 일을 수행</span></div>
+      <div class="sh-line"></div>
+      <div class="icard">
+        <div class="icard-top"><span class="icard-lb">⑦ 내부망 AI 에이전트</span><span class="icard-sess">S07</span></div>
+        <div class="bth">OpenHands/Goose + Ollama — 파일→보고서까지</div>
+        <p class="bt">"지난달 민원 요약해서 보고서 초안 만들어줘." 파일 열기→데이터 검색→문서 작성→저장까지 <strong>AI가 자율 실행</strong>. 반나절 작업 → 5분. 정부 AI 공통기반 API 연결 시 완전 적법한 내부 에이전트.</p>
+      </div>
+      <div class="icard dark">
+        <div class="icard-top"><span class="icard-lb">⑧ MCP + Text-to-SQL ★</span><span class="icard-sess">S08 핵심</span></div>
+        <div class="bth">"부서별 민원 건수 뽑아줘" — SQL 없이 자연어로 DB 조회</div>
+        <p class="bt">사용자 자연어 → Ollama가 MCP 서버에서 DB 테이블 명세(테이블명·컬럼명·의미) 수신 → SQL 생성 → 내부 DB 실행 → 결과 반환. <strong>전부 내부망. SQL 오류는 즉시 감지</strong>되므로 RAG보다 검증이 명확.</p>
+      </div>
+      <div class="spacer"></div>
+      <div class="cblk"><span class="cm"># ⑧ Text-to-SQL 흐름</span>
+사용자: "지난달 민원 부서별 건수"
+  ↓
+Ollama → MCP 서버: 테이블 명세 요청
+  ↓
+MCP: {complaints: [id,dept,date]}
+  ↓
+Ollama → SQL 생성:
+  <span class="kw">SELECT</span> dept, <span class="kw">COUNT</span>(*)
+  <span class="kw">FROM</span> complaints
+  <span class="kw">WHERE</span> date >= '2026-03-01'
+  <span class="kw">GROUP BY</span> dept
+  ↓
+내부 DB: 실행 → 결과 반환
+<div class="cap">전부 내부망 · SQL 몰라도 자연어로</div></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">⑨ 풀스택 + 보안</span><span class="sh-t">API·MCP 조합 서비스 + 보안 분류</span></div>
+      <div class="sh-line"></div>
+      <div class="icard">
+        <div class="icard-top"><span class="icard-lb">⑨ API·MCP 풀스택 멀티 에이전트</span><span class="icard-sess">S08 캡스톤</span></div>
+        <div class="bth">여러 API + MCP 서버를 조합한 자율 서비스</div>
+        <p class="bt">기상청 API + 법령 API + 공공데이터포털 + Ollama + MCP 서버 = <strong>자율 동작 서비스</strong>. 8차시 아키텍처 캔버스 워크숍의 최종 결과물. 에이전트가 여러 도구를 호출하며 업무 흐름 전체를 자동 처리.</p>
+      </div>
+      <div class="fig">TABLE · 전체 유형 보안 위험 분류</div>
+      <table class="mtbl">
+        <thead><tr><th>유형</th><th>외부통신</th><th>데이터유출</th><th>비용</th></tr></thead>
+        <tbody>
+          <tr><td>① HTML/JS</td><td>없음</td><td>없음</td><td>0원</td></tr>
+          <tr><td>② Python</td><td>없음</td><td>없음</td><td>0원</td></tr>
+          <tr><td>③ EXE</td><td>없음</td><td>없음</td><td>0원</td></tr>
+          <tr><td>④ Node.js</td><td>없음</td><td>없음</td><td>0원</td></tr>
+          <tr><td>⑤ VBA+Ollama</td><td>없음</td><td>없음</td><td>0원</td></tr>
+          <tr><td>⑥ 로컬 RAG</td><td>없음</td><td>없음</td><td>0원</td></tr>
+          <tr><td>⑦ 에이전트</td><td>내부만</td><td>없음</td><td>0원</td></tr>
+          <tr><td>⑧ MCP+SQL</td><td>없음</td><td>없음</td><td>0원</td></tr>
+          <tr><td>⑨ 풀스택</td><td>설계 따라</td><td>설계 따라</td><td>0원~</td></tr>
+        </tbody>
+      </table>
+      <div class="spacer"></div>
+      <div class="cod">
+        <div class="cod-lb">비용 구조의 진실</div>
+        <div class="cod-main">①~⑧ 전부 비용 0원. 필요한 것은 정책의 허용 결정 하나.</div>
+        <p>Ollama — 무료. Gemma, Llama, Phi — 무료. OpenHands, Goose — 무료. MCP — 무료. <strong>수십억 예산은 집행할 수 있는데, 무료 오픈소스는 보안 때문에 못 쓴다.</strong></p>
+      </div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">01 · AI 에이전트 시대의 개막과 공공 구현 지형도</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">010 / 016</span></div></div>
+</div></div>
+
+<!-- ══════════════════════════════════════════════════════════
+     SLIDE 11 — B-2/B-3. 오케스트레이션 + 거버넌스 (3칼럼)
+     ══════════════════════════════════════════════════════════ -->
+<div class="stage"><div class="slide" data-title="B-2 B-3 Orchestration Governance">
+  <div class="hbar"><div class="hbar-l">MODULE 01 · PART B-2·3 · ORCHESTRATION & GOVERNANCE</div><div class="hbar-r">공공 AI 전문인재 양성과정 · 8주 실전 여정</div></div>
+  <div class="hl">
+    <div class="hl-kicker">PART B-2·3 · 오케스트레이션과 거버넌스 현실 · 30MIN</div>
+    <div class="hl-title">오케스트레이션 5가지 질문 + 거버넌스 5층위 + 외부/내부망 이관 절차</div>
+    <div class="hl-lede">LLM이 다 해주는데 왜 우리가 알아야 하냐 — 이 질문에 답한다. 그리고 거버넌스 5층위 중 3·4·5층이 비어있는 현실을 직시한다.</div>
+    <div class="hl-bar"></div>
+  </div>
+  <div class="hl-rule"></div>
+  <div class="bd col3">
+    <div class="col">
+      <div class="sh"><span class="sh-n">ORCHESTRATION</span><span class="sh-t">왜 기술을 알아야 하는가</span></div>
+      <div class="sh-line"></div>
+      <div class="bth">LLM은 실행 엔진이다 — 무엇을 연결할지는 사람이 결정</div>
+      <p class="bt">거점리더 = 지휘자. LLM·API·MCP·DB·오픈소스 = 악기. 지휘자가 악기를 직접 연주하지 않지만 <strong>어떤 악기가 있고, 어떤 조합이 어떤 소리를 내는지</strong>는 알아야 한다.</p>
+      <div class="fig">TABLE · 거점리더가 알아야 할 5가지 질문</div>
+      <table class="mtbl">
+        <thead><tr><th>#</th><th>질문</th><th>예시</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>API가 있는가?</td><td>기상청→JSON, 법령→텍스트</td></tr>
+          <tr><td>2</td><td>MCP 서버가 있는가?</td><td>Slack, Notion, 파일시스템</td></tr>
+          <tr><td>3</td><td>데이터 위치·형식은?</td><td>엑셀, DB, HWP, PDF</td></tr>
+          <tr><td>4</td><td>LLM 개입 지점은?</td><td>분류→요약→초안→검토</td></tr>
+          <tr><td>5</td><td>오픈소스가 있는가?</td><td>GitHub, HF, npm, PyPI</td></tr>
+        </tbody>
+      </table>
+      <div class="spacer"></div>
+      <div class="co">
+        <div class="co-lb">이 감각이 Part A의 목적</div>
+        <div class="co-main">10개 키워드 → 50선 도구 투어(2차시) → 워크플로우 조립(3차시)</div>
+        <p>"재료 감각"을 체질화하는 것이 1~3차시 Stage A의 전부다.</p>
+      </div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">GOVERNANCE</span><span class="sh-t">5층위 중 3층이 비어있다</span></div>
+      <div class="sh-line"></div>
+      <div class="fig">TABLE · 거버넌스 5층위 현황</div>
+      <table class="mtbl">
+        <thead><tr><th>층위</th><th>내용</th><th>현재</th></tr></thead>
+        <tbody>
+          <tr><td>1층</td><td>법·제도 (국가AI법 등)</td><td>있음</td></tr>
+          <tr><td>2층</td><td>원칙·윤리 (가이드라인)</td><td>있음</td></tr>
+          <tr><td>3층</td><td>정책·절차 (심의 기준)</td><td>대부분 없음</td></tr>
+          <tr><td>4층</td><td>기술적 통제 (허용/차단)</td><td>대부분 없음</td></tr>
+          <tr><td>5층</td><td>조직문화·역량 (판단력)</td><td>거의 없음</td></tr>
+        </tbody>
+      </table>
+      <p class="bt">1·2층만 있는 거버넌스. 문서는 있는데 작동이 없다. <strong>"막는다"와 "모른 척한다" 두 가지뿐.</strong> 이 빈자리를 채우는 것이 거점리더의 역할.</p>
+      <div class="spacer"></div>
+      <div class="cod">
+        <div class="cod-lb">외부/내부망 이관 절차</div>
+        <div class="cod-main">외부에서 코드 수령 → 검증 → 비식별화 → 내부 반입 → 실행</div>
+        <p>에러 시 로그를 다시 외부망에 가져가 수정 요청 (사이클 반복). 이 절차를 4·5회차에서 체질화한다. 6차시부터는 에이전트 도구가 이 사이클을 자동화.</p>
+      </div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">조건부 허용</span><span class="sh-t">막는 정책에서 작동하는 정책으로</span></div>
+      <div class="sh-line"></div>
+      <div class="bth">현재: "인가 안 된 것은 전부 불허"</div>
+      <div class="bth">제안: "위험 분류 → 조건 정의 → 조건 충족 시 허용"</div>
+      <div class="fig">TABLE · 보안 위험 분류 (미리보기)</div>
+      <table class="mtbl">
+        <thead><tr><th>도구</th><th>외부통신</th><th>권장 조건</th></tr></thead>
+        <tbody>
+          <tr><td>HTML 단일파일</td><td>0</td><td>네트워크 호출 없음 검증 후 허용</td></tr>
+          <tr><td>Python 패키징</td><td>0</td><td>라이브러리 목록 검토 후 허용</td></tr>
+          <tr><td>Ollama 로컬</td><td>0</td><td>검증 모델 한정+외부 차단</td></tr>
+          <tr><td>VBA+Ollama</td><td>0</td><td>Ollama 조건과 동일</td></tr>
+          <tr><td>MCP+SQL</td><td>0</td><td>내부 DB+MCP 서버 전용</td></tr>
+        </tbody>
+      </table>
+      <div class="spacer"></div>
+      <div class="co">
+        <div class="co-lb">KEY MESSAGE</div>
+        <div class="co-main">오늘 보여드릴 유형 대부분은 외부 통신 0, 비용 0원</div>
+        <p>"서버가 필요한가? 기관 PC 한 대. GPU가 필요한가? Gemma 2B는 CPU에서 돌아간다. <strong>필요한 것은 정책의 허용 결정 하나다.</strong>"</p>
+      </div>
+      <div class="quote">
+        <div class="quote-src">강연 · 신성진</div>
+        <div class="quote-q">"쓰지 못하고 있는 것들 중에, 비용도 없고 위험도 낮은 것들이 분명히 존재한다. 그것마저 막고 있다면, 그건 보안이 아니라 관성이다."</div>
+        <div class="quote-a">— 민첩한 AI 시대, 거버넌스의 실체를 묻는다</div>
+      </div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">01 · AI 에이전트 시대의 개막과 공공 구현 지형도</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">011 / 016</span></div></div>
+</div></div>
+
+<!-- ══════════════════════════════════════════════════════════
+     SLIDE 12 — C. 구현 유형 시연 A~D (3칼럼)
+     ══════════════════════════════════════════════════════════ -->
+<div class="stage"><div class="slide" data-title="C Types A-D">
+  <div class="hbar"><div class="hbar-l">MODULE 01 · PART C · IMPLEMENTATION TYPES</div><div class="hbar-r">공공 AI 전문인재 양성과정 · 8주 실전 여정</div></div>
+  <div class="hl">
+    <div class="hl-kicker">PART C · 공공 민첩 AI 구현 유형 시연 — 전반부 · 40MIN</div>
+    <div class="hl-title">유형 A~D — HTML 단일파일, 파이썬 패키징, 독립 실행, VBA+Ollama</div>
+    <div class="hl-lede">각 유형을 실제 화면으로 시연한다. "만드는 데 얼마나 걸렸고, 비용이 얼마이고, 보안 위험은 어떤 수준인지"를 함께 확인한다.</div>
+    <div class="hl-bar"></div>
+  </div>
+  <div class="hl-rule"></div>
+  <div class="bd col3">
+    <div class="col">
+      <div class="sh"><span class="sh-n">TYPE A · B</span><span class="sh-t">HTML 단일파일 · 파이썬 패키징</span></div>
+      <div class="sh-line"></div>
+      <div class="icard">
+        <div class="icard-top"><span class="icard-lb">A · HTML/JS 단일 파일</span><span class="icard-sess">NIA ③</span></div>
+        <div class="bth">브라우저만 있으면 동작 — 설치 0, 네트워크 0</div>
+        <p class="bt">CDN 라이브러리를 파일 안에 통째로 삽입. USB→행정망 PC→더블클릭. 관리자 권한 불필요. <strong>시연:</strong> 민원 CSV→즉석 대시보드, 간트차트, 세액 계산기. <strong>제작:</strong> AI 요청 후 5~15분. <strong>비용:</strong> 0원.</p>
+      </div>
+      <div class="icard">
+        <div class="icard-top"><span class="icard-lb">B · 파이썬 오프라인 패키징</span><span class="icard-sess">NIA ④⑤</span></div>
+        <div class="bth">pip install --target으로 라이브러리 폴더째 반입</div>
+        <p class="bt">인터넷 없이 Python 돌아감. <strong>시연:</strong> HWPX 보고서 자동생성(행안부 가이드라인), PDF 텍스트 추출, 개인정보 마스킹. <strong>제작:</strong> 30분~1시간. <strong>비용:</strong> 0원.</p>
+      </div>
+      <div class="spacer"></div>
+      <div class="cblk"><span class="cm"># 파이썬 오프라인 패키징</span>
+pip install --target ./libs \
+  pandas openpyxl pyhwpx
+
+<span class="cm"># USB → 내부망 이동 후</span>
+<span class="kw">import</span> sys
+sys.path.insert(0, './libs')
+<span class="kw">import</span> pandas <span class="kw">as</span> pd
+<div class="cap">라이브러리 폴더째 반입 · 인터넷 불필요</div></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">TYPE C · D</span><span class="sh-t">독립 실행 · VBA+Ollama</span></div>
+      <div class="sh-line"></div>
+      <div class="icard">
+        <div class="icard-top"><span class="icard-lb">C · PyInstaller/Electron</span><span class="icard-sess">NIA ④</span></div>
+        <div class="bth">.exe 패키징 — 기존 SW 배포 절차와 동일</div>
+        <p class="bt">tkinter/PyQt로 GUI 작성 → .exe 패키징. 기존 소프트웨어 심의와 동일 수준으로 배포 가능. <strong>시연:</strong> 개인정보 마스킹 도구, 파일 통합, 민원 분류.</p>
+      </div>
+      <div class="icard dark">
+        <div class="icard-top"><span class="icard-lb">D · VBA + Ollama ★</span><span class="icard-sess">NIA ②</span></div>
+        <div class="bth">엑셀 셀에서 AI 함수 직접 호출 — 외부 API 0</div>
+        <p class="bt">=AI_SUMMARIZE(A1), =AI_CLASSIFY(), =AI_EXTRACT(). Ollama 로컬 API를 VBA가 호출. <strong>완전 내부망에서 셀마다 AI 처리.</strong> "GPT for Sheets의 공공 버전." 5차시에서 직접 구현.</p>
+      </div>
+      <div class="spacer"></div>
+      <div class="cblk"><span class="cm">' VBA에서 Ollama 호출</span>
+<span class="kw">Function</span> AskOllama(prompt) <span class="kw">As String</span>
+  <span class="kw">Dim</span> xhr <span class="kw">As Object</span>
+  <span class="kw">Set</span> xhr = CreateObject("MSXML2.XMLHTTP")
+  xhr.Open "POST", _
+    "http://localhost:11434/api/generate"
+  xhr.Send "{""model"":""gemma2""," & _
+    """prompt"":""" & prompt & """}"
+<span class="kw">End Function</span>
+<div class="cap">Ollama localhost API · 외부 통신 0</div></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">DEMO GUIDE</span><span class="sh-t">시연 시 함께 보여줄 것</span></div>
+      <div class="sh-line"></div>
+      <div class="fig">TABLE · 유형 A~D 비교</div>
+      <table class="mtbl">
+        <thead><tr><th>유형</th><th>제작시간</th><th>외부통신</th><th>비용</th></tr></thead>
+        <tbody>
+          <tr><td>A HTML</td><td>5~15분</td><td>0</td><td>0원</td></tr>
+          <tr><td>B Python</td><td>30분~1h</td><td>0</td><td>0원</td></tr>
+          <tr><td>C EXE</td><td>1~2h</td><td>0</td><td>0원</td></tr>
+          <tr><td>D VBA+AI</td><td>30분</td><td>0</td><td>0원</td></tr>
+        </tbody>
+      </table>
+      <div class="co">
+        <div class="co-lb">FIELD CASE · 강연</div>
+        <div class="co-main">"Claude Code가 있으면 한 시간 안에 열 개 이상 만들 수 있다"</div>
+        <p>파일 통합, 개인정보 마스킹, 민원 분류 — 생성형 AI를 개입시키지 않고도 이 기술만으로 충분히 구현 가능하다.</p>
+      </div>
+      <div class="spacer"></div>
+      <div class="pit">
+        <div class="pit-lb">PITFALL · 시연 시 주의</div>
+        <div class="pit-h">▸ "이거 보안에 위배 아닌가요?" 질문 대비</div>
+        <div class="pit-d">외부 통신 0, 데이터 유출 0이라는 사실을 보안 위험 분류표로 먼저 보여준다.</div>
+        <div class="pit-h">▸ Ollama 미설치 환경에서 D 유형 시연 불가</div>
+        <div class="pit-d">D-1 환경 세팅에서 Ollama를 먼저 설치한 후 시연하거나, 강사 PC에서 시연 후 수강생은 워크샵에서 따라하기.</div>
+      </div>
+      <div class="dstrip">
+        <div class="ds-c"><div class="ds-a">ALL TYPES</div><div class="ds-n">0원</div><div class="ds-d">전부 오픈소스·무료</div></div>
+        <div class="ds-c"><div class="ds-a">EXTERNAL</div><div class="ds-n">0</div><div class="ds-d">외부 통신 없음</div></div>
+        <div class="ds-c"><div class="ds-a">SESSION</div><div class="ds-n">S04–06</div><div class="ds-d">직접 만드는 회차</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">01 · AI 에이전트 시대의 개막과 공공 구현 지형도</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">012 / 016</span></div></div>
+</div></div>
+
+<!-- ══════════════════════════════════════════════════════════
+     SLIDE 13 — C. 구현 유형 시연 E~H + 보안 분류표 (3칼럼)
+     ══════════════════════════════════════════════════════════ -->
+<div class="stage"><div class="slide" data-title="C Types E-H">
+  <div class="hbar"><div class="hbar-l">MODULE 01 · PART C · IMPLEMENTATION TYPES</div><div class="hbar-r">공공 AI 전문인재 양성과정 · 8주 실전 여정</div></div>
+  <div class="hl">
+    <div class="hl-kicker">PART C · 공공 민첩 AI 구현 유형 시연 — 후반부 · 40MIN</div>
+    <div class="hl-title">유형 E~H — 로컬 RAG, 내부망 에이전트, MCP+Text-to-SQL, 외부 SaaS</div>
+    <div class="hl-lede">E~G는 모두 내부망 완결형이다. 데이터가 밖으로 한 바이트도 나가지 않는다. H는 외부망 학습용.</div>
+    <div class="hl-bar"></div>
+  </div>
+  <div class="hl-rule"></div>
+  <div class="bd col3">
+    <div class="col">
+      <div class="sh"><span class="sh-n">TYPE E · F</span><span class="sh-t">로컬 RAG · 내부망 에이전트</span></div>
+      <div class="sh-line"></div>
+      <div class="icard">
+        <div class="icard-top"><span class="icard-lb">E · Ollama 로컬 RAG</span><span class="icard-sess">NIA ①② · S07</span></div>
+        <div class="bth">부서 PDF·법령 위에서 답변하는 AI — 완전 내부망</div>
+        <p class="bt">넣기→쪼개기→찾기→답하기. 현실적 접근: 128K 모델 + 키워드 필터링이면 80% 해결. 벡터 DB 없이도 작동. <strong>시연:</strong> 내부 규정 10개 PDF→질의응답.</p>
+      </div>
+      <div class="icard">
+        <div class="icard-top"><span class="icard-lb">F · 내부망 AI 에이전트</span><span class="icard-sess">NIA ① · S07</span></div>
+        <div class="bth">OpenHands/Goose + Ollama — 파일→보고서까지 자동</div>
+        <p class="bt">"지난달 민원 요약해서 보고서 초안 만들어줘." 파일 열기→데이터 검색→문서 작성→저장까지 AI가 실행. 반나절 → 5분. 또는 정부 AI 공통기반 API 연결.</p>
+      </div>
+      <div class="spacer"></div>
+      <div class="co">
+        <div class="co-lb">비용 구조의 진실</div>
+        <div class="co-main">"수억짜리 RAG가 하는 일을 80%는 키워드 필터링+오픈소스로 해낸다"</div>
+        <p>나머지 20%를 위해 수억을 더 썼는지, 복잡도를 유지하기 위해 썼는지 — 판단할 수 있어야 한다. 그게 거버넌스.</p>
+      </div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">TYPE G · H</span><span class="sh-t">MCP+SQL · 외부 SaaS</span></div>
+      <div class="sh-line"></div>
+      <div class="icard dark">
+        <div class="icard-top"><span class="icard-lb">G · MCP + Text-to-SQL ★</span><span class="icard-sess">NIA ⑦ · S08</span></div>
+        <div class="bth">자연어로 DB 조회 — "부서별 민원 건수 뽑아줘"</div>
+        <p class="bt">사용자 자연어→Ollama가 MCP 서버에서 DB 명세 수신→SQL 생성→내부 DB 실행→결과 반환. <strong>전부 내부망. SQL 몰라도 자연어로 조회.</strong> Text-to-SQL은 소형 모델이 잘 처리하고, SQL 오류는 즉시 감지되므로 RAG보다 검증이 명확.</p>
+      </div>
+      <div class="icard">
+        <div class="icard-top"><span class="icard-lb">H · 외부 AI SaaS</span><span class="icard-sess">NIA ⑥ · S01–03</span></div>
+        <div class="bth">보안 낮은 업무에 한해 프론티어 모델 직접 활용</div>
+        <p class="bt">ChatGPT·Claude·Gemini 외부망 활용. 정책 트렌드 조사, 해외 사례, 초안 아이디어, 홍보 문구. 1~3차시 기본 학습 환경.</p>
+      </div>
+      <div class="spacer"></div>
+      <div class="cblk"><span class="cm"># G 유형 · Text-to-SQL 흐름</span>
+사용자: "지난달 민원 부서별 건수"
+  ↓
+Ollama: MCP 서버에 테이블 명세 요청
+  ↓
+MCP: {complaints: [id, dept, date...]}
+  ↓
+Ollama: SELECT dept, COUNT(*)
+        FROM complaints
+        WHERE date >= '2026-03-01'
+        GROUP BY dept
+  ↓
+내부 DB: 실행 → 결과 반환
+<div class="cap">전부 내부망 · SQL 몰라도 자연어로</div></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">SECURITY MAP</span><span class="sh-t">전체 보안 위험 분류표</span></div>
+      <div class="sh-line"></div>
+      <div class="fig">TABLE · 유형별 보안 위험 종합</div>
+      <table class="mtbl">
+        <thead><tr><th>유형</th><th>외부통신</th><th>데이터유출</th><th>비용</th></tr></thead>
+        <tbody>
+          <tr><td>A HTML</td><td>없음</td><td>없음</td><td>0원</td></tr>
+          <tr><td>B Python</td><td>없음</td><td>없음</td><td>0원</td></tr>
+          <tr><td>C EXE</td><td>없음</td><td>없음</td><td>0원</td></tr>
+          <tr><td>D VBA+AI</td><td>없음</td><td>없음</td><td>0원</td></tr>
+          <tr><td>E RAG</td><td>없음</td><td>없음</td><td>0원</td></tr>
+          <tr><td>F 에이전트</td><td>내부만</td><td>없음</td><td>0원</td></tr>
+          <tr><td>G MCP+SQL</td><td>없음</td><td>없음</td><td>0원</td></tr>
+          <tr><td>H SaaS</td><td>있음</td><td>주의</td><td>구독료</td></tr>
+        </tbody>
+      </table>
+      <div class="spacer"></div>
+      <div class="cod">
+        <div class="cod-lb">CLOSING MESSAGE · PART C</div>
+        <div class="cod-main">A~G 전부 비용 0원, 외부 통신 0. 필요한 것은 정책의 허용 결정 하나.</div>
+        <p>서버가 필요한가? 기관 PC 한 대. GPU가 필요한가? Gemma 2B는 CPU에서 돌아간다. <strong>수십억 예산은 집행할 수 있는데, 무료 오픈소스는 보안 때문에 못 쓴다 — 이 아이러니를 직시해야 한다.</strong></p>
+      </div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">01 · AI 에이전트 시대의 개막과 공공 구현 지형도</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">013 / 016</span></div></div>
+</div></div>
+
+<!-- ══════════════════════════════════════════════════════════
+     SLIDE 14 — D-1. 환경 세팅 (3칼럼)
+     ══════════════════════════════════════════════════════════ -->
+<div class="stage"><div class="slide" data-title="D-1 Setup">
+  <div class="hbar"><div class="hbar-l">MODULE 01 · PART D-1 · ENVIRONMENT SETUP</div><div class="hbar-r">공공 AI 전문인재 양성과정 · 8주 실전 여정</div></div>
+  <div class="hl">
+    <div class="hl-kicker">PART D-1 · 환경 세팅 체크리스트 — 확인 + 공공 특화 도구 집중 · 25MIN</div>
+    <div class="hl-title">환경 세팅 체크리스트 — LLM 4종 + 개발 도구 6종 + Ollama·Claude Code</div>
+    <div class="hl-lede">AI 전공자라 대부분 이미 설치되어 있을 것. 확인 + Ollama·Claude Code 등 공공 특화 도구에 집중한다.</div>
+    <div class="hl-bar"></div>
+  </div>
+  <div class="hl-rule"></div>
+  <div class="bd col3">
+    <div class="col">
+      <div class="sh"><span class="sh-n">LLM ACCOUNTS</span><span class="sh-t">외부망 학습용 4종</span></div>
+      <div class="sh-line"></div>
+      <div class="fig">TABLE · LLM 계정 체크리스트</div>
+      <table class="mtbl">
+        <thead><tr><th>서비스</th><th>플랜</th><th>확인 사항</th></tr></thead>
+        <tbody>
+          <tr><td>ChatGPT</td><td>Plus/Team</td><td>GPT-5/o3, Custom GPTs, Canvas</td></tr>
+          <tr><td>Claude</td><td>Pro</td><td>Opus 4.6, Projects, Skills</td></tr>
+          <tr><td>Gemini</td><td>AI Pro</td><td>2.5 Pro, Deep Research, Gems</td></tr>
+          <tr><td>Perplexity</td><td>Pro</td><td>Spaces, Pages, Focus 모드</td></tr>
+        </tbody>
+      </table>
+      <div class="spacer"></div>
+      <div class="co">
+        <div class="co-lb">AI 전공자 기준</div>
+        <div class="co-main">대부분 이미 1~2개는 쓰고 있을 것</div>
+        <p>4종 모두 가입·결제 확인. 특히 Claude Pro는 6차시 Claude Code 사용의 전제 조건.</p>
+      </div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">DEV TOOLS</span><span class="sh-t">개발·배포 도구 6종</span></div>
+      <div class="sh-line"></div>
+      <div class="fig">TABLE · 개발 도구 체크리스트</div>
+      <table class="mtbl">
+        <thead><tr><th>도구</th><th>확인</th><th>용도</th></tr></thead>
+        <tbody>
+          <tr><td>Git · GitHub</td><td>계정+레포</td><td>버전 관리 · 산출물 저장</td></tr>
+          <tr><td>Node.js LTS</td><td>+WSL(Win)</td><td>5·6차시 Node 도구 기반</td></tr>
+          <tr><td>Python 3.11+</td><td>가상환경</td><td>4·5차시 데이터분석·자동화</td></tr>
+          <tr><td>VS Code</td><td>한국어팩</td><td>전 회차 공통 IDE</td></tr>
+          <tr><td>Vercel/Netlify</td><td>GitHub연결</td><td>7차시 웹서비스 배포</td></tr>
+          <tr><td>Power BI</td><td>선택</td><td>4차시 시각화 선택 모듈</td></tr>
+        </tbody>
+      </table>
+      <div class="spacer"></div>
+      <div class="pit">
+        <div class="pit-lb">TROUBLE · 자주 발생하는 문제</div>
+        <div class="pit-h">▸ Windows에서 Node.js PATH 안 잡힘</div>
+        <div class="pit-d">WSL2 위에서 설치 권장. 또는 시스템 환경변수에 수동 추가.</div>
+        <div class="pit-h">▸ Python 가상환경 활성화 안 됨</div>
+        <div class="pit-d">PowerShell 실행 정책: Set-ExecutionPolicy RemoteSigned</div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">PUBLIC AI</span><span class="sh-t">공공 특화 도구 (집중)</span></div>
+      <div class="sh-line"></div>
+      <div class="bth">Ollama + 소형 모델 설치</div>
+      <div class="cblk"><span class="cm"># 설치</span>
+curl -fsSL https://ollama.com/install.sh | sh
+<span class="cm"># Windows: ollama.com/download</span>
+
+<span class="cm"># 모델 (택 1~2)</span>
+ollama pull gemma2:2b
+ollama pull phi4-mini:3.8b
+
+<span class="cm"># 확인</span>
+ollama run gemma2:2b "수도는?"
+<div class="cap">CPU 동작 · 외부 통신 0 · 5차시 VBA 복선</div></div>
+      <div class="bth" style="margin-top:8px">Claude Code CLI 설치</div>
+      <div class="cblk"><span class="cm"># Node.js 18+ 필요</span>
+npm install -g @anthropic-ai/claude-code
+claude --version
+<div class="cap">6차시 에이전트 도구 · Pro 계정 필요</div></div>
+      <div class="spacer"></div>
+      <div class="dstrip">
+        <div class="ds-c"><div class="ds-a">LLM</div><div class="ds-n">4종</div><div class="ds-d">외부망 학습용</div></div>
+        <div class="ds-c"><div class="ds-a">DEV</div><div class="ds-n">6종</div><div class="ds-d">개발·배포·분석</div></div>
+        <div class="ds-c"><div class="ds-a">PUBLIC</div><div class="ds-n">2종</div><div class="ds-d">Ollama + Claude Code</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">01 · AI 에이전트 시대의 개막과 공공 구현 지형도</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">014 / 016</span></div></div>
+</div></div>
+
+<!-- ══════════════════════════════════════════════════════════
+     SLIDE 15 — D-2/D-3. 아카이브 + 거점 미션 카드 (3칼럼)
+     ══════════════════════════════════════════════════════════ -->
+<div class="stage"><div class="slide" data-title="D-2 D-3 Archive Mission">
+  <div class="hbar"><div class="hbar-l">MODULE 01 · PART D-2·3 · ARCHIVE & MISSION</div><div class="hbar-r">공공 AI 전문인재 양성과정 · 8주 실전 여정</div></div>
+  <div class="hl">
+    <div class="hl-kicker">PART D-2·3 · 공용 아카이브 가입 + 거점 미션 카드 작성 · 15MIN</div>
+    <div class="hl-title">공용 아카이브 가입 + 거점 미션 카드 작성</div>
+    <div class="hl-lede">아카이브는 8주간 발견한 도구·프롬프트·코드의 공유 저장소다. 미션 카드는 8회차 캡스톤에서 결과물과 함께 다시 사용된다.</div>
+    <div class="hl-bar"></div>
+  </div>
+  <div class="hl-rule"></div>
+  <div class="bd col3">
+    <div class="col">
+      <div class="sh"><span class="sh-n">ARCHIVE</span><span class="sh-t">공용 발굴 노트</span></div>
+      <div class="sh-line"></div>
+      <div class="bth">8주간 발견한 모든 것을 함께 축적한다</div>
+      <p class="bt">강사·수강생이 <strong>도구·실패한 프롬프트·성공한 워크플로우·완성한 코드</strong>를 함께 쌓는다. 거점리더가 부서 복귀 시 가장 먼저 꺼낼 수 있는 자산.</p>
+      <div class="fig">TABLE · 아카이브 구성</div>
+      <table class="mtbl">
+        <thead><tr><th>채널</th><th>내용</th></tr></thead>
+        <tbody>
+          <tr><td>Notion</td><td>저장소 본체 · 권한 분리</td></tr>
+          <tr><td>Discord/Slack</td><td>실시간 발굴·질문 채널</td></tr>
+          <tr><td>Prompt Lib</td><td>3차시 80개 시드 누적</td></tr>
+          <tr><td>Code Archive</td><td>4~8차시 산출물 정리</td></tr>
+        </tbody>
+      </table>
+      <div class="spacer"></div>
+      <div class="co">
+        <div class="co-lb">운영 원칙 3가지</div>
+        <div class="co-main">만든 즉시 · 실패도 · 변형하여</div>
+        <p>① 완성 후 보관하지 말고 <strong>즉시 업로드</strong>. ② 안 된 프롬프트·실패 사례도 <strong>등록 가치 있음</strong>. ③ 동료 자료를 <strong>자기 부서 맥락으로 수정</strong>·재등록.</p>
+      </div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">MISSION CARD</span><span class="sh-t">거점 미션 카드</span></div>
+      <div class="sh-line"></div>
+      <div class="bth">현업 과제 1개 + 목표 유형 1개 = 미션 카드 1장</div>
+      <div class="cod">
+        <div class="cod-lb">HUB MISSION CARD</div>
+        <div class="cod-main">No. 001</div>
+        <p style="border-bottom:1px solid rgba(255,255,255,0.1);padding-bottom:6px;margin-bottom:6px"><strong style="color:var(--acc3)">작성자</strong> __________ 주무관 · ___과</p>
+        <p style="border-bottom:1px solid rgba(255,255,255,0.1);padding-bottom:6px;margin-bottom:6px"><strong style="color:var(--acc3)">현업 과제</strong> 부서가 매주 반복하는 업무 1개</p>
+        <p style="border-bottom:1px solid rgba(255,255,255,0.1);padding-bottom:6px;margin-bottom:6px"><strong style="color:var(--acc3)">목표 유형</strong> A~H 중 1개 (예: E 로컬 RAG)</p>
+        <p style="border-bottom:1px solid rgba(255,255,255,0.1);padding-bottom:6px;margin-bottom:6px"><strong style="color:var(--acc3)">기대 효과</strong> 동료 N명의 시간 절감</p>
+        <p><strong style="color:var(--acc3)">전파 계획</strong> 완성 후 누구에게 어떤 방식으로</p>
+      </div>
+      <div class="spacer"></div>
+      <div class="co">
+        <div class="co-lb">CAPSTONE · S08</div>
+        <div class="co-main">같은 카드로 8회차에 결과 발표</div>
+        <p>오늘 작성한 미션 카드가 8차시 아키텍처 캔버스 워크숍의 출발점이 된다.</p>
+      </div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">WORKSHOP</span><span class="sh-t">작성 후 발표·토론</span></div>
+      <div class="sh-line"></div>
+      <div class="bth">작성 10분 → 발표 2~3명 → 토론 5분</div>
+      <p class="bt">AI 전공자들이라 9유형을 보고 바로 "이건 이걸로 풀어야지" 판단이 빠를 것. 미션 카드 작성 후 <strong>2~3명이 발표하고 기술적 토론</strong>까지 진행한다.</p>
+      <div class="fig">TABLE · 토론 포인트 예시</div>
+      <table class="mtbl">
+        <thead><tr><th>질문</th><th>의도</th></tr></thead>
+        <tbody>
+          <tr><td>왜 그 유형을 선택했나?</td><td>배포 형태 판단 근거</td></tr>
+          <tr><td>내부망에서 가능한가?</td><td>보안 현실 검토</td></tr>
+          <tr><td>동료 몇 명이 쓸 수 있나?</td><td>전파 범위 추정</td></tr>
+          <tr><td>8주 안에 완성 가능한가?</td><td>범위 조정 필요성</td></tr>
+        </tbody>
+      </table>
+      <div class="spacer"></div>
+      <div class="dstrip">
+        <div class="ds-c"><div class="ds-a">TODAY</div><div class="ds-n">1장</div><div class="ds-d">미션 카드 작성</div></div>
+        <div class="ds-c"><div class="ds-a">S08</div><div class="ds-n">발표</div><div class="ds-d">결과물 + 캔버스</div></div>
+        <div class="ds-c"><div class="ds-a">ARCHIVE</div><div class="ds-n">즉시</div><div class="ds-d">카드 등록</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">01 · AI 에이전트 시대의 개막과 공공 구현 지형도</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">015 / 016</span></div></div>
+</div></div>
+
+<!-- ══════════════════════════════════════════════════════════
+     SLIDE 16 — CLOSING (3칼럼)
+     ══════════════════════════════════════════════════════════ -->
+<div class="stage"><div class="slide" data-title="Closing">
+  <div class="hbar"><div class="hbar-l">MODULE 01 · CLOSING</div><div class="hbar-r">공공 AI 전문인재 양성과정 · 8주 실전 여정</div></div>
+  <div class="hl">
+    <div class="hl-kicker">CLOSING · 1차시 정리 + 8주 로드맵 + 다음 차시 안내</div>
+    <div class="hl-title">1차시 정리 — 오늘 다룬 3가지 + 8주 로드맵 + 2차시 안내</div>
+    <div class="hl-lede">1차시는 지도를 펼친 시간이다. 2차시부터는 그 지도 위에서 실제로 걸어간다.</div>
+    <div class="hl-bar"></div>
+  </div>
+  <div class="hl-rule"></div>
+  <div class="bd col3">
+    <div class="col">
+      <div class="sh"><span class="sh-n">SUMMARY</span><span class="sh-t">오늘 다룬 3가지</span></div>
+      <div class="sh-line"></div>
+      <div class="icard">
+        <div class="icard-top"><span class="icard-lb">01</span></div>
+        <div class="bth">기술 지형 파악</div>
+        <p class="bt">MicroGPT로 트랜스포머 구조 확인, 10개 키워드로 LLM 생태계 조감, 프롬프트 4단계(Prompt→Meta→Context→Harness)로 8주 로드맵 골격 이해.</p>
+      </div>
+      <div class="icard">
+        <div class="icard-top"><span class="icard-lb">02</span></div>
+        <div class="bth">구현 유형 확인</div>
+        <p class="bt">A~H 8가지 유형 시연. 대부분 외부 통신 0·비용 0원. NIA 7개 카테고리와의 매핑. 거버넌스 5층위 중 3·4·5층 빈자리 진단.</p>
+      </div>
+      <div class="icard">
+        <div class="icard-top"><span class="icard-lb">03</span></div>
+        <div class="bth">미션 선언</div>
+        <p class="bt">환경 세팅 완료, 아카이브 가입, 거점 미션 카드 1장 작성. 8회차 캡스톤의 출발점.</p>
+      </div>
+      <div class="spacer"></div>
+      <div class="co">
+        <div class="co-lb">CORE MESSAGE</div>
+        <div class="co-main">거점리더는 설계자, 구현은 에이전트가 한다</div>
+        <p>최종 산출물은 코드가 아니라 <strong>아키텍처 1장</strong>이다. 오늘 작성한 미션 카드가 그 시작.</p>
+      </div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">8-WEEK MAP</span><span class="sh-t">3개 스테이지 로드맵</span></div>
+      <div class="sh-line"></div>
+      <div class="fig">TABLE · 8주 전체 구조</div>
+      <table class="mtbl">
+        <thead><tr><th>회차</th><th>주제</th><th>키워드</th></tr></thead>
+        <tbody>
+          <tr><td>S01</td><td>AI 에이전트 시대 · 지형도</td><td>오늘</td></tr>
+          <tr><td>S02</td><td>프론티어 + 도구 50선</td><td>재료 창고</td></tr>
+          <tr><td>S03</td><td>메타 프롬프트 · 워크플로우</td><td>오케스트레이션</td></tr>
+          <tr><td>S04</td><td>어시스트 바이브 ① 시각화</td><td>유형 A·B·E</td></tr>
+          <tr><td>S05</td><td>어시스트 바이브 ② 자동화</td><td>유형 C·D</td></tr>
+          <tr><td>S06</td><td>에이전트 도구 마스터리</td><td>Claude Code·Cursor</td></tr>
+          <tr><td>S07</td><td>RAG 파이프라인 · 웹서비스</td><td>유형 E·F</td></tr>
+          <tr><td>S08</td><td>API·MCP · 아키텍처 캔버스</td><td>유형 G · 캡스톤</td></tr>
+        </tbody>
+      </table>
+      <div class="spacer"></div>
+      <div class="cod">
+        <div class="cod-lb">STAGE 구분</div>
+        <div class="cod-main">A 재료(1–3) → B 어시스트(4–5) → C 에이전트(6–8)</div>
+        <p>Stage A: 코드 없이 기획·재료 수집. Stage B: 외부 코드 수령→내부 실행. Stage C: 에이전트로 본격 개발. <strong>같은 유형을 어시스트→에이전트 두 번 학습.</strong></p>
+      </div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">NEXT SESSION</span><span class="sh-t">2차시 안내</span></div>
+      <div class="sh-line"></div>
+      <div class="icard dark">
+        <div class="icard-top"><span class="icard-lb">SESSION 02</span></div>
+        <div class="bth">프론티어 모델 심층 탐구와 AI 도구 생태계 50선</div>
+        <p class="bt">오늘 훑은 10개 키워드를 50개 구체적 도구·서비스로 확장한다. ChatGPT·Claude·Gemini의 <strong>"잘 알려지지 않은 활용법"</strong> 중심. 같은 프롬프트를 3개 모델에 동시에 던져 응답 차이를 비교하는 라이브 시연 포함.</p>
+      </div>
+      <div class="co">
+        <div class="co-lb">2차시 준비물</div>
+        <div class="co-main">오늘 세팅한 LLM 4종 계정 + 호기심</div>
+        <p>4종 모두 로그인 상태 확인. 2차시는 직접 따라하면서 도구를 체험하는 시간이므로 개인 노트북 필수.</p>
+      </div>
+      <div class="spacer"></div>
+      <div class="quote">
+        <div class="quote-src">KARPATHY · 2026.02</div>
+        <div class="quote-q">"2026년에는 모델 레이어와 에이전트 레이어 양쪽 모두에서 개선이 이어질 것이다. 둘의 곱이 만들어낼 진전에 기대가 크다."</div>
+        <div class="quote-a">— Andrej Karpathy on Agentic Engineering</div>
+      </div>
+      <div class="dstrip">
+        <div class="ds-c"><div class="ds-a">NEXT</div><div class="ds-n">S02</div><div class="ds-d">도구 50선 투어</div></div>
+        <div class="ds-c"><div class="ds-a">TOOLS</div><div class="ds-n">50+</div><div class="ds-d">직접 체험</div></div>
+        <div class="ds-c"><div class="ds-a">BRING</div><div class="ds-n">노트북</div><div class="ds-d">LLM 4종 로그인</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">01 · AI 에이전트 시대의 개막과 공공 구현 지형도</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">016 / 016</span></div></div>
+</div></div>
+
+</div>
+
+
+<script>
+
+// ═══ TOOLBAR ═══
+(function(){
+  // Remove old toolbar/nav if exists
+  document.querySelectorAll('.toolbar,.deck-nav').forEach(e=>e.remove());
+  
+  const tb = document.createElement('div');
+  tb.className = 'toolbar';
+  tb.innerHTML = `
+    <button onclick="pNav(-1)" title="← 이전">◀</button>
+    <span class="pg" id="pgInd">1 / 1</span>
+    <button onclick="pNav(1)" title="→ 다음">▶</button>
+    <span class="sep"></span>
+    <button id="ebtn" onclick="tEdit()" title="E 텍스트 편집">✎ EDIT</button>
+    <button onclick="window.print()" title="Ctrl+P PDF 저장">⬇ PDF</button>
+    <button onclick="tFull()" title="F 전체화면">⛶ FULL</button>
+  `;
+  document.body.appendChild(tb);
+})();
+
+// ═══ SCALING ═══
+const allSlides = document.querySelectorAll('.slide');
+const allStages = document.querySelectorAll('.stage');
+function fitSlides(){
+  const vw=innerWidth, vh=innerHeight;
+  const r = Math.min(vw/1600, vh/900);
+  allSlides.forEach(s=>{s.style.transform=`scale(${r})`;s.style.transformOrigin='center center'});
+}
+addEventListener('resize', fitSlides);
+fitSlides();
+
+// ═══ NAVIGATION ═══
+function curIdx(){let i=0,m=1e9;allStages.forEach((s,x)=>{const d=Math.abs(s.getBoundingClientRect().top+s.getBoundingClientRect().height/2-innerHeight/2);if(d<m){m=d;i=x}});return i}
+function pNav(dir){const i=curIdx()+dir;if(i>=0&&i<allStages.length)allStages[i].scrollIntoView({behavior:'smooth'})}
+function updPg(){document.getElementById('pgInd').textContent=`${curIdx()+1} / ${allStages.length}`}
+const dk=document.getElementById('deck');
+dk.addEventListener('scroll',updPg);
+updPg();
+
+// ═══ EDIT MODE ═══
+let isEdit=false;
+const editEls = () => document.querySelectorAll('.bth,.bt,.co-main,.co p,.cod-main,.cod p,.hl-title,.hl-lede,.pit-h,.pit-d,.quote-q,.chk-t');
+function tEdit(){
+  isEdit=!isEdit;
+  document.body.classList.toggle('editing',isEdit);
+  document.getElementById('ebtn').classList.toggle('on',isEdit);
+  editEls().forEach(el=>el.contentEditable=isEdit?'true':'false');
+}
+
+// ═══ FULLSCREEN ═══
+function tFull(){
+  if(document.fullscreenElement)document.exitFullscreen();
+  else document.documentElement.requestFullscreen().catch(()=>{});
+}
+
+// ═══ KEYBOARD ═══
+document.addEventListener('keydown',e=>{
+  if(isEdit&&!['Escape','F11'].includes(e.key)&&!e.key.startsWith('Arrow')&&e.key!=='e') return;
+  if(e.key==='ArrowRight'||e.key==='ArrowDown'||e.key===' '||e.key==='PageDown'){if(!isEdit){e.preventDefault();pNav(1)}}
+  else if(e.key==='ArrowLeft'||e.key==='ArrowUp'||e.key==='PageUp'){if(!isEdit){e.preventDefault();pNav(-1)}}
+  else if(e.key==='f'||e.key==='F11'){e.preventDefault();tFull()}
+  else if(e.key==='e'&&!isEdit){e.preventDefault();tEdit()}
+  else if(e.key==='Escape'){if(isEdit)tEdit();else if(document.fullscreenElement)document.exitFullscreen()}
+});
+
+</script>
+<script>/* kg-preview: #<heading> \uc704\uce58\ub85c \uc774\ub3d9 */
+(function(){function norm(t){return (t||'').replace(/\s+/g,'').toLowerCase()}
+function go(){var h=decodeURIComponent(location.hash.slice(1));if(!h)return;var k=norm(h).slice(0,24);if(!k)return;
+var best=null,bl=1e9,els=document.body.querySelectorAll('h1,h2,h3,h4,h5,p,div,span,li,td,text,tspan,section,article');
+for(var i=0;i<els.length;i++){var e=els[i],t=norm(e.textContent);if(t.length<bl&&t.indexOf(k)>-1){best=e;bl=t.length}}
+if(!best)return;var box=best.closest('section,[class*=slide],[class*=page],article')||best;
+box.scrollIntoView({block:'start'});box.style.outline='3px solid #c0504d';box.style.outlineOffset='4px';
+setTimeout(function(){box.style.outline=''},2600)}
+window.addEventListener('load',function(){setTimeout(go,400)});window.addEventListener('hashchange',go)})();</script></body>
+</html>

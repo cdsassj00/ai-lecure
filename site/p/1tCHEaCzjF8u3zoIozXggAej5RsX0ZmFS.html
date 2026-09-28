@@ -1,0 +1,1749 @@
+<!doctype html>
+<html lang="ko"><head><meta name="robots" content="noindex, nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="data:,">
+<title>AI챔피언 교육의 취지와 방향 · 국가공무원인재원 10분 발표</title>
+<!--
+  사용법: 이 파일을 결과 경로로 복사한 뒤, <section class="slide"> 들을 주제에 맞게 채운다.
+  CSS는 손대지 말고 그대로 둔다(디자인 일관성). 아래 슬라이드들은 레이아웃 예시이며,
+  필요한 것만 골라 복제·편집하고 나머지는 지운다. 캔버스는 1280x720(16:9) 고정.
+  팔레트는 <body data-palette="..."> 값으로 고른다. 색상 버튼은 미리보기용이며 저장 시 유지된다.
+-->
+<style>
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css");
+@import url("https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500;600;700;900&family=JetBrains+Mono:wght@400;600&display=swap");
+:root{
+  --pagebg:#cfc8ba; --presentbg:#0c0907;
+  --paper:#f8f4ed; --paper2:#fbf8f1; --band:#efe8d7; --band2:#e7dcc6;
+  --dark:#1a130f; --ink:#211913; --ink2:#473d33; --muted:#8c8275;
+  --rust:#bf571d; --rust2:#9c440f; --gold:#c98a3a; --line:#ddd1ba; --line2:#cabb9c;
+  --soft-bg:#eef1e9; --soft-fg:#3a5240; --force-bg:#34190f; --force-fg:#ffcfa8;
+  --stack1:#9c440f; --stack2:#b35a26; --stack3:#c47a45; --stack4:#caa06e; --stack4fg:#2a1d12;
+  --fail-bg:#2a1812; --fail-title:#ffd9bb; --fail-text:#d3c6b8;
+}
+body[data-palette="slate-teal"]{
+  --pagebg:#c6d0ce; --presentbg:#071819;
+  --paper:#f4f7f4; --paper2:#fbfcf9; --band:#e4ece8; --band2:#d5e1dd;
+  --dark:#102425; --ink:#172223; --ink2:#3d4b4c; --muted:#738181;
+  --rust:#00756f; --rust2:#005f5a; --gold:#b97923; --line:#cedbd8; --line2:#b8c9c5;
+  --soft-bg:#e8f0e6; --soft-fg:#34533b; --force-bg:#123331; --force-fg:#aee7df;
+  --stack1:#005f5a; --stack2:#087c75; --stack3:#39978e; --stack4:#9fc9bd; --stack4fg:#123331;
+  --fail-bg:#182a2c; --fail-title:#bceee7; --fail-text:#d0dddc;
+}
+body[data-palette="forest-gold"]{
+  --pagebg:#c9c8b8; --presentbg:#0b160d;
+  --paper:#f6f5ec; --paper2:#fbfaf4; --band:#e6ead9; --band2:#d7ddc3;
+  --dark:#172719; --ink:#1f271f; --ink2:#454c42; --muted:#7b8173;
+  --rust:#5d7c2f; --rust2:#46651f; --gold:#b98222; --line:#d7dcc9; --line2:#bdc7a8;
+  --soft-bg:#edf0df; --soft-fg:#405225; --force-bg:#263317; --force-fg:#d6e89a;
+  --stack1:#46651f; --stack2:#5d7c2f; --stack3:#819b4b; --stack4:#c6c983; --stack4fg:#263317;
+  --fail-bg:#1f2b18; --fail-title:#e3efad; --fail-text:#d4dbc8;
+}
+body[data-palette="navy-coral"]{
+  --pagebg:#c8ccd3; --presentbg:#070d18;
+  --paper:#f5f6f8; --paper2:#fbfbfd; --band:#e5e9ef; --band2:#d7dde6;
+  --dark:#101827; --ink:#171d2a; --ink2:#424a59; --muted:#767f90;
+  --rust:#b94a48; --rust2:#943539; --gold:#c38424; --line:#d6dce5; --line2:#bdc7d4;
+  --soft-bg:#e8edf3; --soft-fg:#314760; --force-bg:#241d2c; --force-fg:#ffc9c5;
+  --stack1:#943539; --stack2:#b94a48; --stack3:#c96c63; --stack4:#dba89d; --stack4fg:#2b1e24;
+  --fail-bg:#241d2c; --fail-title:#ffc9c5; --fail-text:#d8d3dc;
+}
+body[data-palette="graphite-rose"]{
+  --pagebg:#cbc7c8; --presentbg:#101011;
+  --paper:#f7f5f4; --paper2:#fcfaf9; --band:#e9e3e2; --band2:#ddd4d2;
+  --dark:#202022; --ink:#222122; --ink2:#4c4849; --muted:#807879;
+  --rust:#a8485c; --rust2:#873447; --gold:#b47a2f; --line:#ded6d3; --line2:#c8bdb9;
+  --soft-bg:#eee8e6; --soft-fg:#4c4748; --force-bg:#332026; --force-fg:#ffd2dc;
+  --stack1:#873447; --stack2:#a8485c; --stack3:#bd6c79; --stack4:#d4a7ad; --stack4fg:#332026;
+  --fail-bg:#332026; --fail-title:#ffd2dc; --fail-text:#ded1d4;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;background:var(--pagebg);font-family:Pretendard,"Apple SD Gothic Neo","Noto Sans KR",sans-serif;color:var(--ink);-webkit-font-smoothing:antialiased;}
+.deck{display:flex;flex-direction:column;align-items:center;gap:22px;padding:22px 0 40px;}
+.slide{position:relative;width:1280px;height:720px;background:var(--paper);overflow:hidden;box-shadow:0 10px 34px rgba(0,0,0,.22);}
+h1,h2,h3,h4,p,ul,ol,li{margin:0;padding:0;}
+
+/* 머리글: 솔리드 다크 마스트헤드 (그림자/그라데이션 금지) */
+.hdr{position:absolute;top:0;left:0;right:0;height:44px;display:flex;align-items:center;justify-content:space-between;padding:0 46px;background:var(--dark);z-index:3;}
+.hdr .ht{font-size:12.5px;font-weight:700;color:#f3ede2;letter-spacing:.2px;}
+.hdr .ht span{color:rgba(243,237,226,.42);font-weight:600;letter-spacing:1px;font-size:10px;margin-left:7px;}
+.hdr .hr{font-size:10.5px;font-weight:600;letter-spacing:1.2px;color:rgba(243,237,226,.55);}
+
+.stage{position:absolute;top:44px;left:0;right:0;bottom:0;padding:26px 50px 38px;display:flex;flex-direction:column;}
+.crumb{font-size:14px;font-weight:600;color:var(--rust);letter-spacing:.3px;margin-bottom:6px;}
+.atitle{font-family:"Noto Serif KR",serif;font-weight:700;font-size:28px;line-height:1.28;color:#13100c;letter-spacing:-.4px;}
+.atitle .lbl{color:var(--rust2);}
+.atitle .sub{font-weight:500;color:#3a322a;}
+.titlerule{height:0;border-bottom:1.5px solid var(--line2);margin:14px 0 0;}
+
+.body{flex:1;min-height:0;display:grid;gap:26px;padding-top:18px;}
+.split{grid-template-columns:1fr 1fr;}
+.split-l{grid-template-columns:1.08fr .92fr;}
+.split-r{grid-template-columns:.9fr 1.1fr;}
+.colflow{display:flex;flex-direction:column;min-height:0;}
+
+/* 인트로 설명문(합니다체) */
+.lead{font-size:16.5px;line-height:1.82;color:var(--ink);font-weight:400;}
+.lead b{font-weight:700;color:#13100c;}
+.lead .hl{color:var(--rust2);font-weight:700;}
+
+/* 번호 개념 정의 — 박스 그리드 대신 이것을 쓴다 */
+.concepts{display:flex;flex-direction:column;}
+.concepts.fill{flex:1;justify-content:flex-start;}          /* 칼럼 높이를 균등 분배해 채움 */
+.concepts.fill .concept{flex:1;align-items:center;}
+.concept{padding:16px 0 17px;border-bottom:1px solid var(--line);display:flex;gap:16px;}
+.concept:first-child{padding-top:5px;}
+.concept .no{flex:0 0 auto;font-family:"Noto Serif KR",serif;font-size:22px;font-weight:700;color:var(--rust);line-height:1.25;width:30px;}
+.concept .cbody{flex:1;}
+.concept .cbody .cn{font-size:17.5px;font-weight:700;color:#15100c;line-height:1.3;}
+.concept .cbody .cn .en{font-size:12px;font-weight:600;color:var(--muted);letter-spacing:.6px;margin-left:8px;}
+.concept .cbody p{font-size:15px;line-height:1.7;color:var(--ink2);margin-top:6px;font-weight:400;}
+.concept .cbody p b{color:#2a231c;font-weight:700;}
+.concepts.big .concept .cbody .cn{font-size:19px;}
+.concepts.big .concept .cbody p{font-size:16px;line-height:1.74;}
+.boxmore{display:block;margin-top:6px;color:var(--rust2);font-weight:650;}
+.boxcheck{display:block;margin-top:3px;color:#5d5044;font-weight:500;}
+
+/* 하단 정리/캡션 바 — 슬로건 금지, 사실 설명만 */
+.note{margin-top:auto;display:flex;gap:16px;align-items:flex-start;padding:16px 20px;background:var(--band);border-left:3px solid var(--rust);border-radius:0 3px 3px 0;}
+.note .nl{flex:0 0 auto;font-size:12px;font-weight:700;letter-spacing:1px;color:var(--rust2);padding-top:2px;}
+.note p{font-size:15px;line-height:1.66;color:var(--ink);font-weight:400;}
+.note p b{font-weight:700;color:var(--rust2);}
+.srcline{position:absolute;left:50px;bottom:15px;font-size:11px;color:var(--muted);font-weight:400;}
+.pageno{position:absolute;right:30px;bottom:13px;font-size:13.5px;font-weight:700;color:var(--rust);}
+
+/* 표 */
+.tablefill{flex:1;min-height:0;display:flex;align-items:stretch;}
+.tablefill table.grid{height:100%;}
+table.grid{width:100%;border-collapse:collapse;font-size:14.2px;}
+table.grid th{background:var(--dark);color:#f1ebe0;font-weight:700;font-size:13.4px;padding:9.5px 12px;text-align:left;}
+table.grid td{padding:10px 12px;border-bottom:1px solid var(--line);color:var(--ink2);vertical-align:top;line-height:1.52;}
+table.grid tr:nth-child(even) td{background:rgba(231,220,198,.36);}
+table.grid td b{color:#1c1610;font-weight:700;}
+.grp td{background:var(--band2)!important;color:var(--rust2);font-weight:700;font-size:13px;letter-spacing:.5px;}
+table.grid.even{--rows:3;--head-h:44px;height:100%;table-layout:fixed;}
+table.grid.even th,table.grid.even td{vertical-align:middle;}
+table.grid.even tr:first-child{height:var(--head-h);}
+table.grid.even .grp{height:34px;}
+table.grid.even tr:not(:first-child):not(.grp){height:calc((100% - var(--head-h)) / var(--rows));}
+table.grid.roomy{font-size:14.7px;}
+table.grid.roomy th{font-size:13.8px;padding:11px 13px;}
+table.grid.roomy td{padding:12px 13px;line-height:1.58;}
+table.grid.tight{font-size:13px;}
+table.grid.tight th,table.grid.tight td{padding:6.5px 12px;}
+table.grid.tight td{line-height:1.45;}
+.pill{display:inline-block;font-size:11px;font-weight:700;padding:2px 8px;border-radius:3px;white-space:nowrap;}
+.pill.soft{background:var(--soft-bg);color:var(--soft-fg);}
+.pill.force{background:var(--force-bg);color:var(--force-fg);}
+
+/* === 도식 === */
+.figcap{font-size:12px;font-weight:700;letter-spacing:1px;color:var(--muted);margin-bottom:16px;text-transform:uppercase;}
+.figwrap{display:flex;flex-direction:column;justify-content:center;min-height:0;height:100%;}
+.figwrap.flow .veri{flex:1;justify-content:space-between;}  /* 5단 이상 흐름만 채우기. 항목 3개 이하면 .flow 빼기 */
+
+/* 가로 타임라인 */
+.lineage{display:flex;align-items:stretch;}
+.lineage .ln{flex:1;text-align:center;padding:0 10px;position:relative;}
+.lineage .ln .dot{width:17px;height:17px;border-radius:50%;background:var(--paper);border:4px solid var(--rust);margin:0 auto 16px;position:relative;z-index:2;}
+.lineage .ln.hot .dot{background:var(--rust);}
+.lineage .ln::before{content:"";position:absolute;top:8px;left:0;right:0;height:2px;background:var(--line2);z-index:1;}
+.lineage .ln:first-child::before{left:50%;}.lineage .ln:last-child::before{right:50%;}
+.lineage .ln .yr{font-size:12px;font-weight:700;color:var(--muted);margin-bottom:5px;}
+.lineage .ln .tm{font-size:16px;font-weight:700;color:#15100c;line-height:1.25;margin-bottom:8px;}
+.lineage .ln p{font-size:13.5px;line-height:1.5;color:var(--ink2);}
+
+/* 2계층 스택(대비) */
+.layer2{display:flex;flex-direction:column;gap:15px;}
+.layer2 .lay{border-radius:6px;padding:21px 24px;}
+.layer2 .lay.top{background:var(--band);border:1.5px solid var(--line2);}
+.layer2 .lay.bot{background:var(--dark);color:#efe7da;}
+.layer2 .lay .lh{font-size:17.5px;font-weight:700;margin-bottom:6px;}
+.layer2 .lay.top .lh{color:#15100c;}
+.layer2 .lay .lt{font-size:12.5px;font-weight:600;color:var(--rust);letter-spacing:.5px;margin-bottom:9px;}
+.layer2 .lay.bot .lt{color:var(--gold);}
+.layer2 .lay p{font-size:14px;line-height:1.6;}
+.layer2 .lay.top p{color:var(--ink2);}.layer2 .lay.bot p{color:#cabfb0;}
+.layer2 .conn{text-align:center;color:var(--muted);font-size:13px;font-weight:600;}
+.layer2.big .lay{padding:25px 28px;}
+.layer2.big .lay .lh{font-size:20px;}
+.layer2.big .lay p{font-size:15.5px;line-height:1.68;}
+
+/* 순서 흐름 도식(반복 포함) */
+.loop{display:flex;flex-direction:column;gap:13px;}
+.loop .lp{display:flex;align-items:center;gap:14px;background:var(--paper2);border:1px solid var(--line);border-radius:5px;padding:15px 18px;}
+.loop .lp .lpn{flex:0 0 auto;width:27px;height:27px;border-radius:50%;background:var(--dark);color:#f1ebe0;font-size:12.5px;font-weight:700;display:flex;align-items:center;justify-content:center;}
+.loop .lp .lpt{font-size:15px;color:var(--ink);line-height:1.4;}
+.loop .lp .lpt b{font-weight:700;color:#15100c;}
+.loop .back{font-size:13px;color:var(--rust2);font-weight:700;text-align:center;align-self:center;margin-top:5px;background:var(--band);border:1px dashed var(--line2);border-radius:20px;padding:7px 18px;}
+.loop.big .lp{padding:18px 20px;}
+.loop.big .lp .lpt{font-size:16.5px;line-height:1.55;}
+
+/* 폭 증가 계층 스택 */
+.stack{display:flex;flex-direction:column;gap:12px;align-items:center;}
+.stack .sb{border-radius:5px;padding:16px 22px;color:#fff;text-align:left;}
+.stack .sb .sh{font-size:16px;font-weight:700;}
+.stack .sb .sd{font-size:13px;opacity:.92;margin-top:3px;line-height:1.45;}
+.stack .s1{width:56%;background:var(--stack1);}.stack .s2{width:70%;background:var(--stack2);}
+.stack .s3{width:84%;background:var(--stack3);}.stack .s4{width:98%;background:var(--stack4);color:var(--stack4fg);}
+
+/* 분기 흐름(검증/판정) */
+.veri{display:flex;flex-direction:column;gap:11px;}
+.veri .vrow{display:flex;align-items:center;gap:13px;}
+.veri .vbox{flex:1;background:var(--paper2);border:1px solid var(--line);border-radius:5px;padding:15px 18px;}
+.veri .vbox .vt{font-size:15px;font-weight:700;color:#15100c;}
+.veri .vbox p{font-size:13.5px;color:var(--ink2);line-height:1.5;margin-top:3px;}
+.veri .vbox.fail{background:var(--fail-bg);border-color:var(--fail-bg);}
+.veri .vbox.fail .vt{color:var(--fail-title);}.veri .vbox.fail p{color:var(--fail-text);}
+.veri .arr{color:var(--rust);font-size:18px;font-weight:700;flex:0 0 auto;}
+.veri.big .vbox{padding:18px 21px;}
+.veri.big .vbox .vt{font-size:16.5px;}
+.veri.big .vbox p{font-size:14.8px;line-height:1.58;}
+
+/* 가로 단계(좌→우) */
+.steps{display:flex;align-items:stretch;}
+.steps .st{flex:1;padding:0 18px;position:relative;}
+.steps .st:not(:last-child)::after{content:"›";position:absolute;right:-7px;top:15px;color:var(--rust);font-size:24px;font-weight:700;}
+.steps .st .sn{font-size:12px;font-weight:700;color:var(--rust);letter-spacing:.5px;margin-bottom:7px;}
+.steps .st .sh{font-size:16.5px;font-weight:700;color:#15100c;margin-bottom:7px;}
+.steps .st p{font-size:14.5px;line-height:1.58;color:var(--ink2);}
+.steps.big .st .sh{font-size:18.2px;}
+.steps.big .st p{font-size:15.6px;line-height:1.64;}
+
+/* 단계 사이 데이터 릴레이 바 */
+.relay{display:flex;align-items:stretch;gap:9px;}
+.relay .rc{flex:1;background:var(--band);border:1px solid var(--line2);border-radius:5px;padding:13px 12px;text-align:center;display:flex;flex-direction:column;justify-content:center;}
+.relay .rc .rk{font-size:11px;font-weight:700;color:var(--rust2);letter-spacing:.5px;margin-bottom:5px;}
+.relay .rc .rv{font-size:14.5px;font-weight:700;color:#15100c;}
+.relay .ra{display:flex;align-items:center;color:var(--rust);font-size:17px;font-weight:700;}
+.relay.big .rc{padding:16px 14px;}
+.relay.big .rc .rk{font-size:12px;margin-bottom:7px;}
+.relay.big .rc .rv{font-size:16.6px;line-height:1.35;}
+
+/* 영역 카드(3열) */
+.domain{flex:1;background:var(--paper2);border:1px solid var(--line);border-top:3px solid var(--rust);border-radius:5px;padding:18px 19px;display:flex;flex-direction:column;}
+.domain .dh{font-size:17.5px;font-weight:700;color:#15100c;margin-bottom:6px;}
+.domain .dh span{font-size:12px;font-weight:600;color:var(--muted);margin-left:7px;}
+.dl{list-style:none;display:flex;flex-direction:column;flex:1;justify-content:space-around;padding-top:4px;}
+.dl li{position:relative;padding-left:16px;font-size:14.5px;line-height:1.55;color:var(--ink2);}
+.dl li::before{content:"";position:absolute;left:0;top:9px;width:6px;height:6px;background:var(--rust);border-radius:1px;}
+.dl li b{color:var(--rust2);font-weight:700;margin-right:5px;}
+.domain.big{padding:21px 22px;}
+.domain.big .dh{font-size:20px;margin-bottom:8px;}
+.domain.big .dl li{font-size:15.8px;line-height:1.64;}
+
+/* 인용(좌측 빈 중단 채울 때) */
+.pull{border-left:3px solid var(--rust);padding:6px 0 6px 20px;font-family:"Noto Serif KR",serif;font-size:19.5px;font-weight:600;color:#15100c;line-height:1.5;}
+.pull span{display:block;font-family:Pretendard,sans-serif;font-size:14px;font-weight:400;color:var(--ink2);line-height:1.65;margin-top:11px;}
+
+/* 수치 강조 */
+.stats{display:flex;gap:16px;margin-top:8px;}
+.stat{flex:1;text-align:center;background:var(--paper2);border:1px solid var(--line);border-radius:5px;padding:16px 12px;}
+.stat .sv{font-family:"Noto Serif KR",serif;font-size:28px;font-weight:700;color:var(--rust2);line-height:1;}
+.stat .sl{font-size:13px;color:var(--ink2);margin-top:7px;line-height:1.4;}
+
+/* 다크 표지/마무리 */
+.slide.dark{background:var(--dark);color:#f1ebe0;}
+.slide.dark .hdr{background:transparent;border-bottom:1px solid rgba(255,255,255,.1);}
+.dwrap{position:absolute;inset:44px 0 0;display:flex;flex-direction:column;justify-content:center;padding:0 80px;}
+.dwrap .eye{font-size:13px;font-weight:600;letter-spacing:3px;color:var(--gold);margin-bottom:20px;text-transform:uppercase;}
+.dwrap h1{font-family:"Noto Serif KR",serif;font-weight:700;font-size:56px;line-height:1.16;color:#fdfbf6;letter-spacing:-1px;}
+.dwrap h1 .ac{color:var(--rust);}
+.dwrap .ds{font-size:19px;color:#c6bbac;font-weight:400;margin-top:20px;line-height:1.65;max-width:900px;}
+.dwrap .den{font-family:"Noto Serif KR",serif;font-size:17px;font-weight:500;letter-spacing:5px;color:rgba(255,255,255,.14);margin-top:16px;text-transform:uppercase;}
+.dmeta{position:absolute;left:80px;right:80px;bottom:52px;display:flex;justify-content:space-between;align-items:flex-end;border-top:1px solid rgba(255,255,255,.14);padding-top:18px;}
+.dmeta .who{font-size:14.5px;color:#e6ddd0;font-weight:600;}
+.dmeta .who span{display:block;font-size:12px;color:var(--muted);font-weight:400;margin-top:3px;}
+.dmeta .topic{font-size:13px;color:#c6bbac;text-align:right;line-height:1.55;max-width:520px;}
+.dmeta .topic b{color:var(--gold);font-weight:600;}
+.recap{position:absolute;inset:44px 0 0;display:flex;flex-direction:column;justify-content:center;padding:0 80px;}
+.recap .eye{font-size:13px;font-weight:600;letter-spacing:3px;color:var(--gold);margin-bottom:16px;}
+.recap h1{font-family:"Noto Serif KR",serif;font-size:40px;font-weight:700;color:#fdfbf6;line-height:1.3;margin-bottom:30px;}
+.recap .ritems{display:flex;flex-direction:column;gap:18px;max-width:960px;}
+.recap .ri{display:flex;gap:16px;align-items:baseline;}
+.recap .ri .rn{font-family:"Noto Serif KR",serif;color:var(--rust);font-size:19px;font-weight:700;flex:0 0 auto;}
+.recap .ri p{font-size:16.5px;color:#d8cdbe;line-height:1.62;}
+.recap .ri p b{color:#fdfbf6;font-weight:700;}
+
+/* === 강의 도구: 편집 · PDF · 발표 (인쇄/발표 시 자동 숨김) === */
+.tool{position:fixed;top:12px;right:12px;z-index:9999;display:flex;gap:6px;font-family:Pretendard,sans-serif;}
+.tool button{font-size:12px;font-weight:700;padding:7px 12px;border-radius:6px;border:1px solid var(--line2);background:#fffdf8;color:#3a322a;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.18);}
+.tool button:hover{background:var(--band);}
+.tool button.on{background:var(--rust);color:#fff;border-color:var(--rust);}
+body.editing .slide{outline:2px dashed rgba(191,87,29,.45);outline-offset:-2px;}
+body.presenting{overflow:hidden;background:var(--presentbg);}
+body.presenting .tool,body.presenting .pnav{display:none!important;}
+body.presenting .deck{display:block;padding:0;gap:0;margin:0;}
+body.presenting .slide{display:none!important;}
+body.presenting .slide.present-current{display:block!important;position:fixed;left:50%;top:50%;transform:translate(-50%,-50%) scale(var(--ps,1));box-shadow:0 0 70px rgba(0,0,0,.6);}
+.pnav{position:fixed;bottom:14px;left:0;right:0;text-align:center;color:rgba(255,255,255,.55);font-size:13px;font-family:Pretendard,sans-serif;z-index:9999;display:none;}
+body.presenting .pnav{display:block;}
+
+/* 밝은 키노트 변형 — 내용과 배치는 유지하고 명도·대비만 조정 */
+body[data-palette="navy-coral"]{--pagebg:#e3e8ef;--presentbg:#dbe2eb;--rust:#d94a54;--rust2:#a63842;--gold:#b7791f;}
+.slide.bright{background:#f3f5f8;color:#172033;}
+.slide.bright .hdr{background:#fff;border-bottom:1px solid #d6dde7;}
+.slide.bright .hdr .ht{color:#172033;}
+.slide.bright .hdr .ht span{color:#7a8597;}
+.slide.bright .hdr .hr{color:#647084;}
+.slide.bright .pageno{color:var(--rust);}
+.slide.bright [style*="background:#151f31"]{background:#fff!important;border-color:#d5dce7!important;box-shadow:0 8px 22px rgba(25,39,61,.06);}
+.slide.bright [style*="background:#202a3d"]{background:#e8edf4!important;border-color:#d5dce7!important;}
+.slide.bright [style*="background:#182336"]{background:#fff!important;border-color:#d5dce7!important;}
+.slide.bright [style*="border:1px solid rgba(255,255,255,.14)"],
+.slide.bright [style*="border:1px solid rgba(255,255,255,.13)"]{border-color:#d5dce7!important;}
+.slide.bright [style*="border-right:1px solid rgba(255,255,255,.13)"]{border-color:#d5dce7!important;}
+.slide.bright [style*="color:#fff"]{color:#172033!important;}
+.slide.bright [style*="color:#aeb8c9"]{color:#566175!important;}
+.slide.bright [style*="color:#cbd3df"],
+.slide.bright [style*="color:#d8dee8"],
+.slide.bright [style*="color:#c7ceda"],
+.slide.bright [style*="color:#b7c1d0"],
+.slide.bright [style*="color:#d6dce5"]{color:#465267!important;}
+.slide.bright [style*="color:#98a4b7"],
+.slide.bright [style*="color:#8f9bad"],
+.slide.bright [style*="color:#9cabc1"],
+.slide.bright [style*="color:#8d98aa"],
+.slide.bright [style*="color:#7f8ba0"]{color:#53637a!important;}
+.slide.bright [style*="background:var(--rust)"][style*="color:#fff"],
+.slide.bright [style*="background:var(--rust)"] [style*="color:#fff"],
+.slide.bright [style*="background:#315c4b"][style*="color:#fff"],
+.slide.bright [style*="background:#315c4b"] [style*="color:#fff"],
+.slide.bright [style*="background:#294f77"][style*="color:#fff"],
+.slide.bright [style*="background:#294f77"] [style*="color:#fff"],
+.slide.bright [style*="background:#0c1018"][style*="color:#fff"],
+.slide.bright [style*="background:#0c1018"] [style*="color:#fff"]{color:#fff!important;}
+.slide.bright [style*="background:var(--rust)"] [style*="color:#ffd7d6"],
+.slide.bright [style*="background:var(--rust)"] [style*="color:#ffe7e6"],
+.slide.bright [style*="background:var(--rust)"] [style*="color:#ffe9e8"],
+.slide.bright [style*="background:var(--rust)"] [style*="color:#ffe0df"]{color:#fff!important;}
+.slide.bright [style*="background:#0c1018"]{box-shadow:none!important;}
+@page{size:1280px 720px;margin:0;}
+@media print{
+  html,body{margin:0;padding:0;background:#fff;width:1280px;}
+  .tool,.pnav{display:none!important;}
+  .deck{display:block;gap:0;padding:0;margin:0;}
+  .slide{margin:0;box-shadow:none;page-break-after:always;break-after:page;}
+  .slide:last-child{page-break-after:auto;break-after:auto;}
+  *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}
+}
+/* ===== 2026-07 dense executive layout ===== */
+.dense-stage{position:absolute;inset:44px 0 0;padding:18px 34px 16px;display:flex;flex-direction:column;gap:8px;color:#122238}
+.dense-head{flex:0 0 auto;min-width:0}
+.dense-head .kicker{font-size:10.5px;font-weight:900;letter-spacing:1.7px;color:var(--rust2);margin-bottom:4px}
+.dense-head h1{font-family:Pretendard,sans-serif;font-size:31px;line-height:1.08;letter-spacing:-1.25px;font-weight:900;color:#102139;margin:0}
+.dense-head p{font-size:13.2px;line-height:1.42;color:#526074;margin:5px 0 0}
+.dense-head p b{color:#102139}
+.dense-body{flex:1;min-height:0;display:flex;flex-direction:column;gap:8px}
+.dense-foot{flex:0 0 auto;font-size:8.8px;line-height:1.25;color:#6c7789;border-top:1px solid #d8dee7;padding-top:4px}
+.dcard{background:#fff;border:1px solid #d7dee8;box-shadow:0 5px 13px rgba(24,43,68,.06)}
+.dlabel{font-size:9px;font-weight:900;letter-spacing:1px;color:#66748a}
+.dtitle{font-size:17px;font-weight:900;letter-spacing:-.35px;color:#14243a}
+.dcopy{font-size:11.5px;line-height:1.43;color:#536075}
+.tag{display:inline-flex;align-items:center;padding:3px 6px;border-radius:3px;background:#eef2f6;color:#43516a;font-size:9.5px;font-weight:800;white-space:nowrap}
+.tag.hot{background:#fde9e9;color:#a7333d}.tag.gold{background:#f4ead7;color:#805717}.tag.green{background:#e3f1ea;color:#245f49}.tag.blue{background:#e4edf7;color:#25547d}.tag.black{background:#182235;color:#fff}
+.arrow{display:flex;align-items:center;justify-content:center;color:var(--rust);font-size:18px;font-weight:900}
+
+/* 01 */
+.evolution-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;flex:1.15;min-height:0}
+.evo{padding:12px 13px 10px;border-top:4px solid var(--rust);display:flex;flex-direction:column;min-height:0}
+.evo:nth-child(2){border-top-color:var(--gold)}.evo:nth-child(3){border-top-color:#df777f}
+.evo .dtitle{font-size:18px;margin:6px 0 4px}.evo .dcopy{font-size:11.3px}
+.evo .check{margin-top:auto;background:#f0f3f7;padding:7px 8px;font-size:10.2px;font-weight:800;color:#34445e;border-left:3px solid currentColor}
+.change-board{display:grid;grid-template-columns:1.08fr 1fr;gap:9px;flex:.85;min-height:0}
+.model-box,.scale-box{padding:10px 12px;display:flex;flex-direction:column;min-height:0}
+.model-chips{display:grid;grid-template-columns:repeat(5,1fr);gap:5px;margin-top:7px;flex:1}
+.model-chips span{display:flex;align-items:center;justify-content:center;text-align:center;background:#eef2f6;border-bottom:3px solid #8190a7;font-size:10.3px;font-weight:900;color:#283b56}
+.scale-flow{display:grid;grid-template-columns:1fr 22px 1fr 22px 1.15fr;gap:3px;align-items:stretch;margin-top:7px;flex:1}
+.scale-node{display:flex;flex-direction:column;justify-content:center;padding:8px;background:#eef2f6;border-left:4px solid var(--gold);font-size:11.2px;font-weight:900;color:#263851}
+.scale-node:first-child{border-color:var(--rust)}.scale-node:last-child{background:#fde9e9;border-color:var(--rust);color:#7f2932}
+.scale-node small{display:block;font-size:8.8px;color:#6b778a;margin-top:3px;font-weight:700}
+
+/* 02 */
+.sovereign-chain{display:grid;grid-template-columns:1fr 24px 1fr 24px 1.08fr 24px 1.18fr;gap:4px;flex:.75;min-height:0}
+.sov-node{padding:10px 11px;display:flex;flex-direction:column;justify-content:center;border-top:4px solid #7e8ca3}
+.sov-node.model{border-color:var(--gold)}.sov-node.domain{border-color:#d07a78}.sov-node.service{border-color:var(--rust);background:#df4f59;color:#fff}
+.sov-node.service .dtitle,.sov-node.service .dcopy{color:#fff}.sov-node .dtitle{font-size:16.5px;margin:4px 0}.sov-node .dcopy{font-size:10.6px}
+.people-proof{display:grid;grid-template-columns:1.03fr .97fr;gap:9px;flex:1.25;min-height:0}
+.hack-proof{padding:12px 14px;display:grid;grid-template-columns:132px 1fr;gap:14px;align-items:center;border-left:5px solid var(--rust)}
+.hack-stat{font-size:30px;line-height:1;font-weight:950;color:var(--rust2);letter-spacing:-1px}.hack-stat small{display:block;font-size:9px;letter-spacing:.7px;color:#7e899a;margin-top:6px}
+.hack-list{display:flex;flex-direction:column;gap:6px}.hack-row{display:grid;grid-template-columns:40px 1fr;align-items:center;background:#f0f3f7;padding:7px 9px}.hack-row b{color:var(--rust2);font-size:15px}.hack-row span{font-size:11.3px;color:#3e4d64}.hack-row span strong{display:block;color:#15253a;font-size:12.2px}
+.domain-work{padding:11px 13px;display:flex;flex-direction:column}.domain-work .dtitle{margin-bottom:7px}.domain-work ol{display:grid;grid-template-rows:repeat(3,1fr);gap:5px;margin:0;padding:0;list-style:none;flex:1}.domain-work li{display:grid;grid-template-columns:24px 1fr;align-items:center;background:#f2f5f8;padding:6px 8px;font-size:10.8px;color:#405069}.domain-work li b{font-size:15px;color:var(--gold)}
+
+/* 03 */
+.agile-dense{display:grid;grid-template-columns:.82fr 1.18fr;gap:10px;flex:1;min-height:0}
+.agile-lead{padding:16px 17px;display:flex;flex-direction:column;justify-content:center;border-left:6px solid var(--rust)}
+.agile-lead .big{font-size:34px;line-height:1.03;font-weight:950;letter-spacing:-1.6px;color:#102139}.agile-lead .big span{color:var(--rust)}
+.agile-lead .sub{font-size:13px;font-weight:900;color:#253851;margin-top:10px}.agile-lead p{font-size:11.5px;line-height:1.5;color:#5c687a;margin:8px 0 0}
+.agile-lead .gate{margin-top:auto;background:#f5ead9;padding:9px 10px;border-left:4px solid var(--gold);font-size:10.8px;font-weight:800;color:#5f461b}
+.agile-loop{display:grid;grid-template-rows:1fr 43px;gap:8px;min-height:0}.agile-steps{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:7px}.agile-step{padding:10px 11px;border-left:4px solid var(--rust);display:grid;grid-template-columns:29px 1fr;gap:8px;align-items:center}.agile-step:nth-child(2),.agile-step:nth-child(4){border-color:var(--gold)}.agile-step .no{font-size:20px;font-weight:950;color:var(--rust)}.agile-step:nth-child(2) .no,.agile-step:nth-child(4) .no{color:var(--gold)}.agile-step b{font-size:13.2px;color:#12243a}.agile-step p{font-size:10.5px;line-height:1.35;color:#667286;margin:2px 0 0}.agile-cycle{display:grid;grid-template-columns:1fr 24px 1fr 24px 1fr;align-items:stretch}.agile-cycle div{display:flex;align-items:center;justify-content:center;background:#eef2f6;font-size:10.5px;font-weight:900;color:#35445d}.agile-cycle .pass{background:#fde8e8;color:#942f39}
+
+/* 04 */
+.edu-shifts{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;flex:1.05;min-height:0}.edu-shift{padding:10px 12px;display:flex;flex-direction:column;border-top:4px solid var(--rust)}.edu-shift:nth-child(2){border-color:var(--gold)}.edu-shift:nth-child(3){border-color:#7186a2}.edu-shift .before{font-size:9.7px;font-weight:800;color:#8a95a6}.edu-shift .dtitle{font-size:15.5px;margin:4px 0}.edu-shift .dcopy{font-size:10.7px}.edu-shift .after{margin-top:auto;padding:6px 7px;background:#eef2f6;font-size:10.1px;font-weight:900;color:#33455f}
+.verify-pipeline{display:grid;grid-template-columns:1fr 22px 1fr 22px 1.15fr 22px 1fr;gap:3px;flex:.62;min-height:0}.verify-node{padding:8px 9px;display:flex;flex-direction:column;justify-content:center;border-left:4px solid #8190a7}.verify-node:nth-of-type(3){border-color:var(--gold)}.verify-node:nth-of-type(5){border-color:var(--rust)}.verify-node:last-child{background:#df4f59;border-color:#ab343d}.verify-node:last-child .dlabel,.verify-node:last-child .dtitle{color:#fff}.verify-node .dtitle{font-size:12.2px;margin-top:2px}.verify-node .dlabel{font-size:8.3px}
+.edu-fields{display:grid;grid-template-columns:1fr 1fr 1fr 1.15fr;gap:7px;flex:.55;min-height:0}.edu-field{padding:7px 9px;background:#eef2f6;border-bottom:4px solid #7e8ca3}.edu-field:nth-child(2){border-color:var(--gold)}.edu-field:nth-child(3){border-color:var(--rust)}.edu-field:last-child{background:#17253a;border-color:#df4f59;color:#fff}.edu-field b{display:block;font-size:11.2px}.edu-field span{display:block;font-size:9.2px;line-height:1.25;color:#637086;margin-top:3px}.edu-field:last-child span{color:#dce4ef}
+
+/* 05 */
+.case-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;flex:1;min-height:0}.case-card{padding:10px 11px;display:flex;flex-direction:column;border-top:5px solid #7f8da3}.case-card:nth-child(2){border-color:var(--gold)}.case-card:nth-child(3){border-color:var(--rust)}.case-card .dtitle{font-size:16px;margin:4px 0 7px}.case-step{display:grid;grid-template-columns:46px 1fr;gap:6px;padding:6px 7px;background:#f1f4f7;margin-bottom:5px;align-items:start}.case-step b{font-size:9.2px;color:#7b8798}.case-step span{font-size:10.6px;line-height:1.3;color:#34445d;font-weight:700}.case-result{margin-top:auto;background:#18273c;color:#fff;padding:7px 8px;font-size:10.3px;line-height:1.35;font-weight:800}.case-card:nth-child(2) .case-result{background:#6d531e}.case-card:nth-child(3) .case-result{background:#a53540}
+.demo-flow{display:grid;grid-template-columns:1fr 20px 1fr 20px 1fr 20px 1fr;gap:3px;align-items:stretch;flex:0 0 48px}.demo-flow .demo-node{display:flex;align-items:center;justify-content:center;text-align:center;background:#eef2f6;padding:6px;font-size:10.4px;font-weight:900;color:#35455f}.demo-flow .demo-node:last-child{background:#fde8e8;color:#912e38}
+
+/* 06 architecture */
+.arch-map{display:grid;grid-template-columns:215px 1fr 187px;gap:9px;flex:1;min-height:0;position:relative}.arch-col{min-height:0;display:flex;flex-direction:column}.arch-label{height:22px;display:flex;align-items:center;padding:0 8px;background:#17253a;color:#fff;font-size:9.5px;font-weight:900;letter-spacing:.6px}.cap-list{display:grid;grid-template-rows:repeat(5,1fr);gap:5px;flex:1;margin-top:5px}.cap-pair{display:grid;grid-template-columns:27px 1fr;padding:5px 7px;background:#fff;border:1px solid #d8dfe8;border-left:4px solid var(--rust);align-items:center}.cap-pair:nth-child(2){border-left-color:var(--gold)}.cap-pair:nth-child(3){border-left-color:#6685a7}.cap-pair:nth-child(4){border-left-color:#c96a73}.cap-pair:nth-child(5){border-left-color:#728095}.cap-pair .nums{font-size:9px;line-height:1.4;font-weight:950;color:var(--rust2)}.cap-pair b{display:block;font-size:11px;color:#18283d}.cap-pair span{display:block;font-size:9.2px;color:#637084;margin-top:2px}
+.track-stack{display:grid;grid-template-rows:1.08fr 1.08fr .9fr .78fr;gap:5px;flex:1;margin-top:5px}.track-group{background:#fff;border:1px solid #d8dfe8;padding:5px 6px;display:grid;grid-template-columns:92px 1fr;gap:6px;min-height:0}.track-name{display:flex;flex-direction:column;justify-content:center;padding:6px 7px;background:#e9eef4;border-left:4px solid #7789a4}.track-group.fusion .track-name{background:#e7f2ec;border-color:#2f7258}.track-group.dev .track-name{background:#e7eff8;border-color:#315f89}.track-group.master .track-name{background:#1b2638;border-color:#0b111b;color:#fff}.track-name b{font-size:11.5px}.track-name span{font-size:8.7px;line-height:1.25;color:#647187;margin-top:3px}.track-group.master .track-name span{color:#cbd5e2}.course-row{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;min-height:0}.track-group.dev .course-row{grid-template-columns:repeat(2,1fr)}.track-group.master .course-row{grid-template-columns:1fr}.course-node{padding:5px 6px;background:#f4f6f9;border-top:3px solid #7a8ba5;display:flex;flex-direction:column;justify-content:center;min-width:0}.fusion .course-node{border-color:#3b7b62}.dev .course-node{border-color:#3b6d98}.master .course-node{background:#f2e4e5;border-color:#aa3742}.course-node b{font-size:10.3px;color:#18283d}.course-node strong{font-size:9px;color:#41526b;margin-top:2px}.course-node span{font-size:8.1px;line-height:1.25;color:#758094;margin-top:3px}
+.level-stack{display:grid;grid-template-rows:1fr 1fr 1.15fr;gap:5px;flex:1;margin-top:5px}.level-card{padding:8px 9px;background:#315c4b;color:#fff;display:flex;flex-direction:column;justify-content:center;border-left:5px solid #1e4538}.level-card.blue{background:#294f77;border-color:#1d3855}.level-card.black{background:#101827;border-color:#000}.level-card b{font-size:14px}.level-card strong{font-size:10.8px;margin-top:3px}.level-card span{font-size:8.9px;line-height:1.3;color:#dcebe4;margin-top:4px}.level-card.blue span{color:#dce8f4}.level-card.black span{color:#d7deea}.level-card em{font-style:normal;font-size:8.3px;margin-top:5px;padding-top:4px;border-top:1px solid rgba(255,255,255,.22)}
+.arch-bridge{position:absolute;left:211px;right:182px;top:27px;bottom:0;pointer-events:none;z-index:0}.arch-map .arch-col{position:relative;z-index:1}.arch-note{font-size:8.6px;color:#6a7689;padding-top:2px}
+
+/* 07 exam lanes */
+.exam-lanes{display:grid;grid-template-rows:repeat(3,1fr);gap:5px;flex:1;min-height:0}.exam-lane{display:grid;grid-template-columns:67px 83px 1fr 19px 1fr 19px 1fr 160px;gap:4px;align-items:stretch;background:#fff;border:1px solid #d5dde7;padding:5px;min-height:0}.lane-level{display:flex;flex-direction:column;align-items:center;justify-content:center;background:#315c4b;color:#fff}.exam-lane.blue .lane-level{background:#294f77}.exam-lane.black .lane-level{background:#101827}.lane-level b{font-size:13px}.lane-level span{font-size:8px;margin-top:4px;text-align:center;line-height:1.25}.lane-course{display:flex;flex-direction:column;justify-content:center;background:#edf2f6;padding:6px}.lane-course b{font-size:10.5px;color:#243852}.lane-course span{font-size:8.4px;line-height:1.25;color:#6d788a;margin-top:3px}.qnode{display:flex;flex-direction:column;justify-content:center;padding:5px 6px;background:#f7f8fa;border-top:3px solid #8795a9;min-width:0}.exam-lane.green .qnode{border-color:#3a775f}.exam-lane.blue .qnode{border-color:#3b6d98}.exam-lane.black .qnode{border-color:#a53a44}.qnode b{font-size:9.4px;line-height:1.2;color:#1c2d43}.qnode span{font-size:7.9px;line-height:1.25;color:#657186;margin-top:3px}.lane-out{display:flex;flex-direction:column;justify-content:center;background:#18273b;color:#fff;padding:6px 7px}.lane-out b{font-size:9.7px}.lane-out span{font-size:7.9px;line-height:1.28;color:#dbe3ee;margin-top:3px}.lane-arrow{display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:950;color:var(--rust)}
+.transfer-flow{display:grid;grid-template-columns:1.18fr 24px .8fr 24px .92fr 24px 1.25fr;gap:4px;flex:0 0 67px;align-items:stretch}.transfer-node{padding:7px 9px;background:#eef2f6;display:flex;flex-direction:column;justify-content:center;border-left:4px solid #75869f}.transfer-node b{font-size:10.7px;color:#1d3048}.transfer-node span{font-size:8.6px;line-height:1.25;color:#68758a;margin-top:3px}.transfer-node.stat{background:#f2eadb;border-color:var(--gold)}.transfer-node.mois{background:#e8eff7;border-color:#315f89}.transfer-node.ask{background:#df4f59;border-color:#ab343d}.transfer-node.ask b,.transfer-node.ask span{color:#fff}.agency-chips{display:flex;flex-wrap:wrap;gap:3px;margin-top:4px}.agency-chips i{font-style:normal;font-size:7.8px;font-weight:800;background:#fff;padding:2px 4px;color:#43526a;border:1px solid #d5dde7}
+
+/* 카드 안의 실제 정보가 세로 공간을 점유하도록 한 최종 밀도 보정 */
+.dense-head h1{line-height:1.14;padding-bottom:1px}
+.evo .dtitle{font-size:20.5px}.evo .dcopy{font-size:13px;line-height:1.52;flex:1;display:flex;align-items:center;padding:5px 0}.evo .check{padding:9px 10px;font-size:10.8px}
+.arch-bridge svg{display:block}
+.agile-lead .big{font-size:42px;line-height:1.12}.agile-lead .sub{font-size:14px;line-height:1.45}.agile-lead p{font-size:13px;line-height:1.55;flex:1;display:flex;align-items:center;margin:10px 0}.agile-lead .gate{font-size:11.3px;line-height:1.45}
+.agile-step .no{font-size:24px}.agile-step b{font-size:14.5px}.agile-step p{font-size:11.8px;line-height:1.45;margin-top:5px}
+.edu-shift .dtitle{font-size:17px}.edu-shift .dcopy{font-size:12px;line-height:1.5;flex:1;display:flex;align-items:center;padding:5px 0}.edu-shift .after{font-size:10.7px;padding:8px}
+.edu-field{display:flex;flex-direction:column;justify-content:center;padding:9px 11px}.edu-field b{font-size:12.3px}.edu-field span{font-size:10px;line-height:1.35}
+.case-card .dtitle{font-size:18px}.case-step{flex:1;align-items:center;padding:7px 8px}.case-step b{font-size:10px}.case-step span{font-size:11.8px;line-height:1.42}.case-result{font-size:11px;padding:9px 10px}
+.qnode b{font-size:10px}.qnode span{font-size:8.5px;line-height:1.32}.lane-out b{font-size:10.2px}.lane-out span{font-size:8.4px}.lane-course b{font-size:11px}.lane-course span{font-size:8.8px}
+
+/* ===== V3 · 내용 자체로 채우는 고밀도 정보 그래픽 ===== */
+.v3-stage{position:absolute;inset:44px 0 0;padding:15px 34px 14px;display:flex;flex-direction:column;gap:7px;color:#122238}
+.v3-head{flex:0 0 auto}.v3-head .kicker{font-size:10px;font-weight:900;letter-spacing:1.5px;color:var(--rust2);margin-bottom:3px}.v3-head h1{font-size:30px;line-height:1.12;letter-spacing:-1.15px;font-weight:950;color:#102139;margin:0}.v3-head p{font-size:12.8px;line-height:1.38;color:#526074;margin:4px 0 0}.v3-head p b{color:#102139}
+.v3-body{flex:1;min-height:0;display:flex;flex-direction:column;gap:7px}.v3-foot{flex:0 0 auto;font-size:8.7px;line-height:1.22;color:#68758a;border-top:1px solid #d7dee8;padding-top:4px}
+.band-title{height:23px;display:flex;align-items:center;padding:0 9px;background:#17253a;color:#fff;font-size:9.2px;font-weight:900;letter-spacing:.55px}
+.v3-panel{background:#fff;border:1px solid #d5dde7;box-shadow:0 4px 12px rgba(24,43,68,.05);min-height:0}
+.v3-cell{padding:6px 9px;border-right:1px solid #d9e0e8;border-bottom:1px solid #d9e0e8;display:flex;flex-direction:column;justify-content:center;min-width:0;font-size:11.2px;line-height:1.32;color:#415068}.v3-cell b{font-size:11.8px;color:#15263c}.v3-cell small{font-size:9.4px;line-height:1.25;color:#718096;margin-top:2px}.v3-cell.head{background:#1b2a40;color:#fff;font-size:10.5px;font-weight:900;align-items:flex-start}.v3-cell.head b{color:#fff}.v3-cell.rowhead{background:#edf1f5;color:#243852;font-size:10.5px;font-weight:900}.v3-cell.hot{background:#fff0f0}.v3-cell.gold{background:#fff8e9}.v3-cell.blue{background:#eef4fa}.v3-cell.green{background:#edf6f1}
+
+/* 01 · 전환 비교표 */
+.usage-matrix{display:grid;grid-template-columns:112px repeat(3,1fr);grid-template-rows:28px repeat(5,1fr);flex:1.22;min-height:0}.usage-matrix .v3-cell:nth-child(4n){border-right:0}.usage-matrix .v3-cell:nth-last-child(-n+4){border-bottom:0}
+.signal-split{display:grid;grid-template-columns:1.05fr .95fr;gap:7px;flex:.78;min-height:0}.signal-box{display:flex;flex-direction:column;min-height:0}.role-row{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;padding:5px;flex:1}.role-item{display:flex;flex-direction:column;justify-content:center;padding:5px 6px;background:#eef2f6;border-top:3px solid #7b8da6}.role-item:nth-child(2){border-color:#b47c26}.role-item:nth-child(3){border-color:#d5525c}.role-item:nth-child(4){border-color:#8b6e9e}.role-item:nth-child(5){border-color:#3d755e}.role-item b{font-size:10.2px;color:#1a2c43}.role-item span{font-size:8.6px;line-height:1.22;color:#617086;margin-top:3px}
+.scale-v3{display:grid;grid-template-columns:1fr 17px 1fr 17px 1.12fr;gap:3px;padding:5px;flex:1}.scale-v3-node{display:flex;flex-direction:column;justify-content:center;padding:6px 7px;background:#eef2f6;border-left:4px solid #7588a3}.scale-v3-node:nth-of-type(3){border-color:#b47c26}.scale-v3-node:last-child{background:#fff0f0;border-color:#d5525c}.scale-v3-node b{font-size:10.5px;color:#20344c}.scale-v3-node span{font-size:8.6px;line-height:1.23;color:#66758a;margin-top:3px}.v3-arr{display:flex;align-items:center;justify-content:center;color:#d84b55;font-weight:950;font-size:15px}
+
+/* 02 · 소버린 구성표와 해커톤 증거 */
+.sov-matrix-v3{display:grid;grid-template-columns:105px 1.05fr 1.25fr 1fr;grid-template-rows:27px repeat(4,1fr);flex:.96;min-height:0}.sov-matrix-v3 .v3-cell:nth-child(4n){border-right:0}.sov-matrix-v3 .v3-cell:nth-last-child(-n+4){border-bottom:0}
+.evidence-v3{display:grid;grid-template-columns:1.35fr .65fr;gap:7px;flex:1.04;min-height:0}.hack-v3{display:flex;flex-direction:column}.hack-head{height:31px;display:grid;grid-template-columns:120px 1fr;align-items:center;background:#fff0f0;padding:0 10px;border-left:5px solid #d84b55}.hack-head b{font-size:15px;color:#a4303a}.hack-head span{font-size:9.4px;color:#6d5860}.hack-table{display:grid;grid-template-columns:52px 92px 1fr 1.12fr;grid-template-rows:22px repeat(2,1fr);flex:1}.hack-table .v3-cell:nth-child(4n){border-right:0}.hack-table .v3-cell:nth-last-child(-n+4){border-bottom:0}.field-actions{display:grid;grid-template-rows:23px repeat(4,1fr)}.field-action{display:grid;grid-template-columns:28px 1fr;gap:6px;align-items:center;padding:5px 7px;border-bottom:1px solid #d9e0e8}.field-action:last-child{border-bottom:0}.field-action b{font-size:15px;color:#b47c26}.field-action strong{display:block;font-size:10.5px;color:#182b43}.field-action span{display:block;font-size:8.7px;line-height:1.22;color:#6a788c;margin-top:2px}
+
+/* 03 · Agile 절차와 실패 수정표 */
+.agile-v3-process{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;flex:1.02;min-height:0}.agile-v3-card{display:grid;grid-template-rows:48px repeat(3,1fr);border-top:5px solid #d84b55}.agile-v3-card:nth-child(2){border-color:#b47c26}.agile-v3-card:nth-child(3){border-color:#3d6e9b}.agile-v3-card:nth-child(4){border-color:#6a788d}.agile-v3-title{padding:7px 9px;background:#edf1f5}.agile-v3-title b{display:block;font-size:13.8px;color:#15263c}.agile-v3-title span{font-size:8.7px;color:#6b798d}.step-detail{display:grid;grid-template-columns:45px 1fr;gap:5px;align-items:center;padding:5px 7px;border-top:1px solid #d9e0e8}.step-detail b{font-size:9.2px;color:#7a8799}.step-detail span{font-size:10px;line-height:1.28;color:#34465e;font-weight:700}
+.failure-v3{display:grid;grid-template-columns:112px 1.05fr 1fr 1.25fr;grid-template-rows:24px repeat(4,1fr);flex:.78;min-height:0}.failure-v3 .v3-cell:nth-child(4n){border-right:0}.failure-v3 .v3-cell:nth-last-child(-n+4){border-bottom:0}
+.gate-v3{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;flex:0 0 43px}.gate-v3 div{display:grid;grid-template-columns:78px 1fr;align-items:center;background:#eaf0f5;border-left:4px solid #7588a3;padding:5px 8px}.gate-v3 div:nth-child(2){border-color:#b47c26}.gate-v3 div:nth-child(3){border-color:#d84b55;background:#fff0f0}.gate-v3 b{font-size:9.4px;color:#22364f}.gate-v3 span{font-size:9px;color:#5f6f84}
+
+/* 04 · 교육 운영표 */
+.edu-matrix-v3{display:grid;grid-template-columns:103px 1fr 1.24fr 1fr;grid-template-rows:26px repeat(3,1fr);flex:.86;min-height:0}.edu-matrix-v3 .v3-cell:nth-child(4n){border-right:0}.edu-matrix-v3 .v3-cell:nth-last-child(-n+4){border-bottom:0}
+.verify-v3{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;flex:.46;min-height:0}.verify-v3-node{display:grid;grid-template-columns:32px 1fr;gap:6px;align-items:center;padding:6px 8px;border-left:4px solid #7588a3}.verify-v3-node:nth-child(2){border-color:#b47c26}.verify-v3-node:nth-child(3){border-color:#d84b55}.verify-v3-node:nth-child(4){background:#17253a;border-color:#0b111b}.verify-v3-node b{font-size:15px;color:#d84b55}.verify-v3-node strong{display:block;font-size:10.5px;color:#15263c}.verify-v3-node span{display:block;font-size:8.7px;line-height:1.2;color:#68768a;margin-top:2px}.verify-v3-node:nth-child(4) strong,.verify-v3-node:nth-child(4) span{color:#fff}
+.field-v3-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;flex:.68;min-height:0}.field-v3-card{padding:7px 9px;border-top:4px solid #7588a3;display:flex;flex-direction:column}.field-v3-card:nth-child(2){border-color:#b47c26}.field-v3-card:nth-child(3){border-color:#d84b55}.field-v3-card:nth-child(4){background:#17253a;border-color:#d84b55}.field-v3-card b{font-size:11.5px;color:#15263c}.field-v3-card dl{display:grid;grid-template-columns:45px 1fr;grid-template-rows:repeat(3,1fr);align-items:center;flex:1;gap:3px 5px;margin:5px 0 0}.field-v3-card dt{font-size:8.5px;color:#7b8798;font-weight:900}.field-v3-card dd{font-size:8.8px;line-height:1.2;color:#536177;margin:0}.field-v3-card:nth-child(4) b,.field-v3-card:nth-child(4) dt,.field-v3-card:nth-child(4) dd{color:#fff}
+
+/* 05 · 사례별 입력–처리–산출물–검증 */
+.case-v3-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;flex:1;min-height:0}.case-v3-card{display:grid;grid-template-rows:53px repeat(5,1fr);border-top:5px solid #7588a3}.case-v3-card:nth-child(2){border-color:#b47c26}.case-v3-card:nth-child(3){border-color:#d84b55}.case-v3-head{padding:7px 10px;background:#edf1f5}.case-v3-head span{font-size:8.4px;font-weight:900;letter-spacing:.5px;color:#6f7d91}.case-v3-head b{display:block;font-size:15px;color:#15263c;margin-top:2px}.case-v3-row{display:grid;grid-template-columns:52px 1fr;gap:6px;align-items:center;padding:5px 8px;border-top:1px solid #d9e0e8}.case-v3-row b{font-size:9px;color:#7b8798}.case-v3-row span{font-size:9.8px;line-height:1.28;color:#34455d;font-weight:700}.case-v3-row.result{background:#eef2f6}.case-v3-row.result b,.case-v3-row.result span{color:#15263c}.case-v3-row.check{background:#fff8e9}.case-v3-row.check b{color:#8a611e}
+.demo-v3{display:grid;grid-template-columns:1fr 16px 1fr 16px 1fr 16px 1fr 16px 1fr;gap:3px;flex:0 0 48px}.demo-v3 div:not(.v3-arr){display:flex;align-items:center;justify-content:center;text-align:center;background:#eaf0f5;padding:4px 6px;font-size:9.6px;line-height:1.2;font-weight:900;color:#31445d}.demo-v3 div:last-child{background:#fff0f0;color:#98303a}
+
+/* ===== V4 · SSJ/컨설팅 그리드 기반 여백 위계 보정 =====
+   큰 구획 20px, 같은 구획 안 세부 항목 6~10px, 표의 연속 행은 1px 선으로 구분한다. */
+.v3-stage,.dense-stage{padding-left:56px;padding-right:56px}
+.v3-stage{padding-top:14px;padding-bottom:14px;gap:12px}
+.dense-stage{padding-top:16px;padding-bottom:14px;gap:12px}
+.v3-body,.dense-body{gap:20px}
+.v3-head p,.dense-head p{margin-top:6px}
+.v3-foot,.dense-foot{padding-top:5px}
+.v3-panel,.dcard{box-shadow:0 5px 14px rgba(24,43,68,.055)}
+
+/* 01 · 표는 한 덩어리로, 하단 두 분석 영역은 넓은 거터로 분리 */
+.signal-split{gap:20px}
+.band-title{height:26px;padding:0 11px}
+.role-row{gap:8px;padding:8px}
+.role-item{padding:7px 8px}
+.scale-v3{grid-template-columns:1fr 20px 1fr 20px 1.12fr;gap:6px;padding:8px}
+.scale-v3-node{padding:8px 9px}
+
+/* 02 · 근거표와 역할 패널을 별도 분석 블록으로 보이게 함 */
+.evidence-v3{gap:20px}
+.hack-head{height:34px;padding:0 12px}
+.field-action{gap:8px;padding:7px 9px}
+
+/* 03 · 단계 카드, 오류표, 확대 관문 사이에 명확한 세로 리듬 부여 */
+.agile-v3-process{gap:16px}
+.agile-v3-card{grid-template-rows:50px repeat(3,1fr)}
+.agile-v3-title{padding:8px 10px}
+.step-detail{gap:7px;padding:6px 9px}
+.gate-v3{gap:12px;flex-basis:46px}
+.gate-v3 div{padding:6px 10px}
+
+/* 04 · 검증 단계와 교육 분야는 서로 다른 정보층으로 분리 */
+.verify-v3{gap:12px}
+.verify-v3-node{gap:8px;padding:8px 10px}
+.field-v3-grid{gap:12px}
+.field-v3-card{padding:9px 11px}
+
+/* 05 · 사례 3개를 독립 패널로 읽히게 하고 시연 흐름은 연속 밴드로 유지 */
+.case-v3-grid{gap:20px}
+.case-v3-card{grid-template-rows:55px repeat(5,1fr)}
+.case-v3-head{padding:8px 11px}
+.case-v3-row{gap:8px;padding:6px 9px}
+.demo-v3{gap:6px;flex-basis:50px}
+
+/* 06 · 역량-과목-등급의 세 개 대영역을 20px 거터로 분리 */
+.arch-map{grid-template-columns:205px 1fr 177px;gap:20px}
+.arch-bridge{left:200px;right:172px}
+.cap-list,.track-stack,.level-stack{gap:8px;margin-top:8px}
+.track-group{gap:8px;padding:7px 8px}
+.course-row{gap:7px}
+.cap-pair{padding:6px 8px}
+.level-card{padding:9px 10px}
+
+/* 07 · 등급별 시험 레인과 기관 전수 제안을 분리하고, 레인 내부는 단계 관계를 유지 */
+.exam-lanes{gap:10px}
+.exam-lane{gap:7px;padding:7px}
+.qnode{padding:7px 8px}
+.lane-course,.lane-out{padding:7px 8px}
+.transfer-flow{gap:8px;flex-basis:70px}
+.transfer-node{padding:8px 10px}
+
+/* ===== V5 · 빈 박스 제거 + 발표용 글자 확대 =====
+   내용이 적은 하단 카드는 높이를 줄이고, 확보한 공간은 주 표의 글자와 행 높이에 돌린다. */
+.slide-01 .v3-body{gap:18px}
+.slide-01 .usage-matrix{flex:0 0 397px;grid-template-rows:32px repeat(5,1fr)}
+.slide-01 .usage-matrix .v3-cell{padding:8px 10px;font-size:12.4px;line-height:1.34}
+.slide-01 .usage-matrix .v3-cell b{font-size:13.4px}
+.slide-01 .usage-matrix .v3-cell small{font-size:10.7px;line-height:1.28;margin-top:4px}
+.slide-01 .usage-matrix .v3-cell.head,
+.slide-01 .usage-matrix .v3-cell.rowhead{font-size:11.4px}
+.slide-01 .usage-matrix .v3-cell.head small{color:#bac6d6}
+.slide-01 .signal-split{flex:0 0 118px}
+.slide-01 .band-title{height:28px;font-size:10.4px}
+.slide-01 .role-row{align-items:center;padding:9px;gap:8px}
+.slide-01 .role-item{height:72px;padding:9px 10px}
+.slide-01 .role-item b{font-size:12.6px}
+.slide-01 .role-item span{font-size:10.3px;line-height:1.25;margin-top:5px}
+.slide-01 .scale-v3{padding:9px 8px;align-items:center}
+.slide-01 .scale-v3-node{height:72px;padding:9px 10px}
+.slide-01 .scale-v3-node b{font-size:12.6px}
+.slide-01 .scale-v3-node span{font-size:10.2px;line-height:1.24;margin-top:5px}
+
+.slide-04 .v3-body{gap:18px}
+.slide-04 .edu-matrix-v3{flex:0 0 255px;grid-template-rows:30px repeat(3,1fr)}
+.slide-04 .edu-matrix-v3 .v3-cell{padding:8px 10px;font-size:12px;line-height:1.34}
+.slide-04 .edu-matrix-v3 .v3-cell b{font-size:13px}
+.slide-04 .edu-matrix-v3 .v3-cell small{font-size:10.5px;line-height:1.28;margin-top:4px}
+.slide-04 .edu-matrix-v3 .v3-cell.head,
+.slide-04 .edu-matrix-v3 .v3-cell.rowhead{font-size:11.2px}
+.slide-04 .verify-v3{flex:0 0 92px;gap:14px}
+.slide-04 .verify-v3-node{grid-template-columns:36px 1fr;gap:10px;padding:10px 12px}
+.slide-04 .verify-v3-node b{font-size:20px}
+.slide-04 .verify-v3-node strong{font-size:12.8px}
+.slide-04 .verify-v3-node span{font-size:10.2px;line-height:1.25;margin-top:4px}
+.slide-04 .field-v3-grid{flex:0 0 150px;gap:14px}
+.slide-04 .field-v3-card{padding:12px 13px}
+.slide-04 .field-v3-card b{font-size:13.2px;line-height:1.25}
+.slide-04 .field-v3-card dl{grid-template-columns:48px 1fr;gap:4px 7px;margin-top:8px}
+.slide-04 .field-v3-card dt{font-size:9.6px}
+.slide-04 .field-v3-card dd{font-size:10.7px;line-height:1.28}
+
+/* ===== V6 · 마지막 두 장 재설계 ===== */
+.slide-06 .dense-body{gap:12px}
+.slide-06 .arch-map{grid-template-columns:220px 1fr 198px;gap:18px}
+.slide-06 .arch-label{height:29px;padding:0 10px;font-size:10.8px;letter-spacing:.35px}
+.slide-06 .cap-list,.slide-06 .track-stack,.slide-06 .level-stack{gap:8px;margin-top:8px}
+.slide-06 .cap-pair{grid-template-columns:31px 1fr;padding:8px 9px}
+.slide-06 .cap-pair .nums{font-size:10.4px;line-height:1.35}
+.slide-06 .cap-pair b{font-size:12.5px;line-height:1.25}
+.slide-06 .cap-pair span{font-size:10.2px;line-height:1.28;margin-top:4px}
+.slide-06 .track-group{grid-template-columns:98px 1fr;gap:8px;padding:8px}
+.slide-06 .track-name{padding:8px 9px}
+.slide-06 .track-name b{font-size:13px}
+.slide-06 .track-name span{font-size:9.6px;line-height:1.3;margin-top:5px}
+.slide-06 .course-row{gap:7px}
+.slide-06 .course-node{padding:8px 9px}
+.slide-06 .course-node b{font-size:11.5px;line-height:1.25}
+.slide-06 .course-node strong{font-size:10.2px;margin-top:5px}
+.slide-06 .course-node span{display:none}
+.slide-06 .level-card{padding:12px 13px}
+.slide-06 .level-card b{font-size:16.5px}
+.slide-06 .level-card strong{font-size:11.8px;line-height:1.25;margin-top:5px}
+.slide-06 .level-card span{font-size:10.2px;line-height:1.32;margin-top:7px}
+.slide-06 .level-card em{font-size:9.4px;line-height:1.25;margin-top:8px;padding-top:7px}
+.slide-06 .arch-bridge{left:216px;right:194px;opacity:.62}
+.slide-06 .arch-note{flex:0 0 34px;display:flex;align-items:center;padding:6px 10px;background:#e9eff5;border-left:4px solid #7588a3;font-size:10.2px;line-height:1.28;color:#43536a}
+.slide-06 .dense-foot{font-size:9.6px}
+
+.slide-07 .dense-body{gap:12px}
+.exam-standard{flex:0 0 40px;display:grid;grid-template-columns:190px 1fr 170px;align-items:center;padding:0 16px;background:#17253a;color:#fff}
+.exam-standard b{font-size:12.2px;color:#f0bd56}
+.exam-standard span{font-size:11.4px}
+.exam-standard strong{font-size:11.8px;text-align:right}
+.slide-07 .exam-lanes{gap:10px}
+.slide-07 .exam-lane{grid-template-columns:74px 102px repeat(3,1fr) 168px;gap:8px;padding:8px}
+.slide-07 .lane-arrow{display:none}
+.slide-07 .lane-level b{font-size:15.5px}
+.slide-07 .lane-level span{font-size:9.3px;line-height:1.3;margin-top:6px}
+.slide-07 .lane-course{padding:9px}
+.slide-07 .lane-course b{font-size:12.3px}
+.slide-07 .lane-course span{font-size:9.6px;line-height:1.3;margin-top:5px}
+.slide-07 .qnode{padding:9px 11px;border-top-width:4px}
+.slide-07 .qnode b{font-size:12.2px;line-height:1.25}
+.slide-07 .qnode span{font-size:10.2px;line-height:1.3;margin-top:6px}
+.slide-07 .lane-out{padding:10px 12px}
+.slide-07 .lane-out b{font-size:12.3px}
+.slide-07 .lane-out span{font-size:10px;line-height:1.32;margin-top:6px}
+.slide-07 .transfer-flow{grid-template-columns:1.18fr 22px .8fr 22px .92fr 22px 1.25fr;gap:5px;flex-basis:84px}
+.slide-07 .transfer-node{padding:10px 12px}
+.slide-07 .transfer-node b{font-size:12.2px}
+.slide-07 .transfer-node span{font-size:10px;line-height:1.3;margin-top:5px}
+.slide-07 .agency-chips{gap:4px;margin-top:6px}
+.slide-07 .agency-chips i{font-size:8.7px;padding:3px 5px}
+.slide-07 .dense-foot{font-size:9.6px}
+
+/* ===== V7 · 05/07 구조 전면 교체 ===== */
+.slide-05 .v3-body{gap:12px}
+.slide-05 .case-v3-grid{grid-template-columns:1fr;grid-template-rows:repeat(3,1fr);gap:12px}
+.slide-05 .case-v3-card{grid-template-columns:145px 1.05fr 1.05fr 1.32fr 1.08fr 1.22fr;grid-template-rows:1fr;border-top:0;border-left:6px solid #7588a3}
+.slide-05 .case-v3-card:nth-child(2){border-left-color:#b47c26}
+.slide-05 .case-v3-card:nth-child(3){border-left-color:#d84b55}
+.slide-05 .case-v3-head{display:flex;flex-direction:column;justify-content:center;padding:12px 14px;background:#e9eff5}
+.slide-05 .case-v3-head span{font-size:9.5px;line-height:1.25}
+.slide-05 .case-v3-head b{font-size:18px;line-height:1.2;margin-top:6px}
+.slide-05 .case-v3-row{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:7px;padding:11px 12px;border-top:0;border-left:1px solid #d9e0e8}
+.slide-05 .case-v3-row b{font-size:10.6px;letter-spacing:.2px}
+.slide-05 .case-v3-row span{font-size:11.8px;line-height:1.38}
+.slide-05 .case-v3-row.result{background:#edf3f7}
+.slide-05 .case-v3-row.check{background:#fff7e7}
+.slide-05 .demo-v3{flex-basis:56px;gap:6px}
+.slide-05 .demo-v3 div:not(.v3-arr){font-size:10.8px;line-height:1.28;padding:7px 8px}
+
+.slide-07 .exam-lanes{grid-template-rows:30px repeat(3,1fr);gap:7px}
+.exam-columns{display:grid;grid-template-columns:74px 102px repeat(3,1fr) 168px;gap:8px;padding:0 8px;align-items:center;background:#17253a;color:#fff;font-size:10.2px;font-weight:900;text-align:center}
+.exam-columns span:nth-child(3),.exam-columns span:nth-child(4),.exam-columns span:nth-child(5){color:#f0bd56}
+.slide-07 .exam-lane{border:0;background:transparent;padding:0;gap:8px}
+.slide-07 .lane-level,.slide-07 .lane-course,.slide-07 .qnode,.slide-07 .lane-out{box-shadow:0 4px 10px rgba(24,43,68,.045)}
+.slide-07 .lane-course{background:#e8eef4}
+.slide-07 .qnode{background:#fff;border:1px solid #d8dfe8;border-top:4px solid #8795a9}
+.slide-07 .lane-level b{font-size:16px}
+.slide-07 .lane-course b{font-size:13px}
+.slide-07 .lane-course span{font-size:10.1px}
+.slide-07 .qnode b{font-size:13.5px}
+.slide-07 .qnode span{font-size:11px}
+.slide-07 .lane-out b{font-size:13.3px}
+.slide-07 .lane-out span{font-size:10.7px}
+
+/* 07 · 문제유형과 측정역량을 한 칸 안에서 직접 연결 */
+.slide-07 .dense-head h1{font-size:29px}
+.slide-07 .dense-head p{font-size:13.2px}
+.slide-07 .exam-standard{flex-basis:38px}
+.slide-07 .exam-columns{font-size:10px}
+.slide-07 .qnode{justify-content:flex-start;padding:8px 9px}
+.slide-07 .qnode b{font-size:12.2px;line-height:1.18;color:#172b43}
+.slide-07 .qnode .qexample{font-size:9.9px;line-height:1.28;color:#5d6a7d;margin-top:5px}
+.slide-07 .qnode .qmeasure{margin-top:auto;padding-top:5px;border-top:1px solid #dce3eb;font-size:9.7px;line-height:1.22;font-weight:850;color:#263e58}
+.slide-07 .qnode .qmeasure em{display:inline-block;font-style:normal;font-size:8.5px;line-height:1;padding:3px 5px;margin-right:4px;background:#e9eff4;color:#355873;vertical-align:1px}
+.slide-07 .exam-lane.green .qmeasure em{background:#e3f0e9;color:#2f6c55}
+.slide-07 .exam-lane.blue .qmeasure em{background:#e3edf6;color:#2e638f}
+.slide-07 .exam-lane.black .qmeasure em{background:#f6e6e8;color:#983641}
+.slide-07 .lane-out{padding:8px 10px}
+.slide-07 .lane-out b{font-size:11.8px}
+.slide-07 .lane-out span{font-size:9.6px;line-height:1.28;margin-top:5px}
+.slide-07 .transfer-flow{flex-basis:78px}
+.slide-07 .transfer-node{padding:8px 10px}
+.slide-07 .transfer-node b{font-size:11.6px}
+.slide-07 .transfer-node span{font-size:9.4px;margin-top:4px}
+
+/* COVER · 밝은 임원보고형 표지 */
+.cover-slide{background:#f4f7fb;color:#14253c}
+.cover-slide .cover-stage{position:absolute;inset:44px 0 0;padding:50px 58px 40px;display:grid;grid-template-columns:1.22fr .78fr;gap:42px;overflow:hidden}
+.cover-slide .cover-stage:before{content:"";position:absolute;left:0;top:0;width:12px;height:100%;background:#df4f59}
+.cover-copy{position:relative;z-index:1;display:flex;flex-direction:column;min-width:0}
+.cover-kicker{font-size:13px;font-weight:900;letter-spacing:2px;color:#c43f49}
+.cover-title{margin-top:24px;font-family:Pretendard,"Noto Sans KR",sans-serif;font-size:56px;line-height:1.06;letter-spacing:-2.6px;font-weight:950;color:#14253c}
+.cover-title span{display:block;color:#285f91}
+.cover-sub{margin-top:23px;font-size:17px;line-height:1.5;color:#4b5d72;font-weight:700}
+.cover-rule{width:100%;height:1px;background:#cfd8e3;margin-top:auto}
+.cover-meta{display:flex;justify-content:space-between;align-items:flex-end;margin-top:17px;font-size:12px;color:#64748a;font-weight:800}
+.cover-meta b{font-size:13px;color:#273b55}
+.cover-system{position:relative;z-index:1;background:#fff;border:1px solid #d5dde7;border-top:7px solid #df4f59;padding:24px 24px 21px;display:flex;flex-direction:column;box-shadow:0 12px 30px rgba(24,43,68,.08)}
+.cover-system h2{font-size:15px;letter-spacing:.2px;color:#243a55}
+.cover-system>p{font-size:11.5px;line-height:1.4;color:#6a7789;margin-top:6px}
+.cover-system-flow{display:grid;grid-template-rows:1fr 18px 1fr 18px 1fr;gap:3px;flex:1;margin-top:18px}
+.cover-system-node{display:grid;grid-template-columns:66px 1fr;align-items:center;padding:12px 13px;background:#edf2f6;border-left:5px solid #70829b}
+.cover-system-node.green{background:#e8f1ec;border-color:#37735d}
+.cover-system-node.blue{background:#e8eff6;border-color:#2f6591}
+.cover-system-node strong{font-size:34px;line-height:1;color:#1d3551}
+.cover-system-node b{display:block;font-size:13px;color:#203650}
+.cover-system-node span{display:block;font-size:10.5px;line-height:1.35;color:#607087;margin-top:4px}
+.cover-system-arr{display:flex;align-items:center;justify-content:center;color:#df4f59;font-size:20px;font-weight:950}
+.cover-ask{margin-top:16px;padding:11px 12px;background:#17263b;color:#fff;font-size:11.7px;line-height:1.35;font-weight:800;border-left:5px solid #f0b84e}
+
+/* 06 · 10대 역량 × 8개 과목 × 인증등급 매트릭스 */
+.slide-06 .cm-body{gap:10px}
+.cm-map{display:grid;grid-template-columns:minmax(0,1fr) 284px;gap:12px;flex:1;min-height:0}
+.cm-matrix{min-width:0;min-height:0;background:#fff;border:1px solid #d1dae5}
+.cm-table{width:100%;height:100%;border-collapse:collapse;table-layout:fixed}
+.cm-table col.capcol{width:336px}
+.cm-table th,.cm-table td{border-right:1px solid #d7dfe8;border-bottom:1px solid #d7dfe8;text-align:center;vertical-align:middle;padding:0}
+.cm-table tr>*:last-child{border-right:0}
+.cm-table tbody tr:last-child>*{border-bottom:0}
+.cm-table .group-row{height:25px}
+.cm-table .group-row th{font-size:9.4px;letter-spacing:.2px;font-weight:900;color:#fff}
+.cm-table .group-row .caphead{background:#17263b;font-size:10.5px}
+.cm-table .group-row .common{background:#697b91}
+.cm-table .group-row .green{background:#37735d}
+.cm-table .group-row .blue{background:#2f6591}
+.cm-table .cm-course-row{height:55px}
+.cm-table .cm-course-row th{height:55px;background:#eef2f6;padding:5px 1px;color:#263b55;overflow:hidden}
+.cm-table .cm-course-row th.green{background:#e9f1ed}
+.cm-table .cm-course-row th.blue{background:#e7eef6}
+.cm-table .cm-course-row b{display:block;font-size:10.5px;line-height:1;color:#172c45}
+.cm-table .cm-course-row small{display:block;font-size:8.6px;line-height:1.12;letter-spacing:-.2px;color:#5f6e81;margin-top:4px;font-weight:800;overflow:hidden}
+.cm-table .cm-course-row small span{display:block;white-space:nowrap}
+.cm-table tbody tr{height:34px}
+.cm-table .capability{text-align:left;padding:0 9px;background:#f8fafc;color:#19304b;font-size:11.3px;line-height:1.15;font-weight:850;white-space:nowrap}
+.cm-table .capability em{display:inline-flex;width:24px;height:21px;align-items:center;justify-content:center;margin-right:7px;background:#e7edf3;color:#38546f;font-size:9.5px;font-style:normal;font-weight:950}
+.cm-table td{background:#fff;color:#c6d0dc;font-size:16px;font-weight:950}
+.cm-table td.mark-common{color:#657990;background:#f5f7fa}
+.cm-table td.mark-green{color:#37735d;background:#f4f8f5}
+.cm-table td.mark-blue{color:#2f6591;background:#f3f7fa}
+.cm-levels{display:grid;grid-template-rows:72px 14px 86px 14px 91px 14px 1fr;min-height:0}
+.cm-level-card{padding:9px 12px;display:flex;flex-direction:column;justify-content:center;border-left:6px solid #6d7f95;background:#edf2f6;color:#203650}
+.cm-level-card.green{background:#e7f0eb;border-color:#37735d}
+.cm-level-card.blue{background:#e5edf5;border-color:#2f6591}
+.cm-level-card.black{background:#17263b;border-color:#df4f59;color:#fff}
+.cm-level-card .leveltop{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.cm-level-card b{font-size:13.5px}
+.cm-level-card strong{font-size:9.5px;padding:3px 6px;background:rgba(255,255,255,.72);color:#27445f}
+.cm-level-card.black strong{background:#df4f59;color:#fff}
+.cm-level-card p{font-size:10.5px;line-height:1.28;margin-top:5px;font-weight:750;color:#52657a}
+.cm-level-card.black p{color:#dbe3ee}
+.cm-level-card span{font-size:9.3px;line-height:1.25;margin-top:4px;color:#67778a}
+.cm-level-card.black span{color:#aebbc9}
+.cm-level-arrow{display:flex;align-items:center;justify-content:center;color:#d94a55;font-size:18px;font-weight:950}
+.cm-note{flex:0 0 42px;display:grid;grid-template-columns:170px 1fr;align-items:center;background:#17263b;color:#fff;border-left:6px solid #f0b84e}
+.cm-note b{font-size:10.8px;padding-left:12px;color:#f0bd56}
+.cm-note span{font-size:10.2px;line-height:1.28;padding:0 12px;border-left:1px solid rgba(255,255,255,.2)}
+.slide-06 .dense-foot{font-size:9.6px}
+</style>
+</head>
+<body data-palette="navy-coral">
+<div class="tool">
+  <button id="btnPalette">색상: 네이비 코랄</button>
+  <button id="btnEdit">편집</button>
+  <button id="btnSave">저장(HTML)</button>
+  <button id="btnPdf">PDF</button>
+  <button id="btnPlay">발표</button>
+</div>
+<div class="pnav"></div>
+<div class="deck">
+
+<!-- ===== COVER · 사용자 확정 제목 ===== -->
+<section class="slide bright cover-slide" aria-label="AI챔피언 교육방향성 및 체계 표지">
+  <div class="hdr"><div class="ht">AI CHAMPION <span>EXECUTIVE BRIEFING</span></div><div class="hr">국가공무원인재개발원장 보고 · 2026. 7. 16.</div></div>
+  <div class="cover-stage">
+    <div class="cover-copy">
+      <div class="cover-kicker">AI CHAMPION · 10 MINUTE BRIEFING</div>
+      <h1 class="cover-title"><span>AI챔피언</span>교육방향성 및 체계</h1>
+      <p class="cover-sub">교육 지향점 · 8개 과목 · Green/Blue/Black 인증평가<br>현장사례 · 기관맞춤형 전수 · 국가인재원 직접 운영 제안</p>
+      <div class="cover-rule"></div>
+      <div class="cover-meta"><b>행정안전부 AI·데이터 기반행정 역량강화</b><span>국가공무원인재개발원</span></div>
+    </div>
+    <div class="cover-system">
+      <h2>교육체계 구성</h2>
+      <p>현장에 필요한 역량을 과목에서 훈련하고 인증평가로 확인합니다.</p>
+      <div class="cover-system-flow">
+        <div class="cover-system-node"><strong>10</strong><div><b>현장 적용 역량</b><span>변화민감성·문제정의·검증·도구조합·구현</span></div></div>
+        <div class="cover-system-arr">↓</div>
+        <div class="cover-system-node green"><strong>8</strong><div><b>공통·융합·개발 과목</b><span>C01–C08에서 역량을 반복 훈련</span></div></div>
+        <div class="cover-system-arr">↓</div>
+        <div class="cover-system-node blue"><strong>3</strong><div><b>인증 수준</b><span>Green 기본적용 · Blue 복합수행 · Black 통합운영</span></div></div>
+      </div>
+      <div class="cover-ask">검증된 AI챔피언 교육과 인증체계를 국가인재원이 전수받아 직접 운영하는 방안을 제안드립니다.</div>
+    </div>
+  </div>
+  <div class="pageno">COVER</div>
+</section>
+
+<!-- ===== 2026-07-14 · 국가인재원장 보고용 최종 활성 슬라이드 ===== -->
+<!-- ===== V3 01 · AI 활용방식 전환 ===== -->
+<section class="slide bright slide-01" aria-label="AI 활용방식의 전환 비교표">
+  <div class="hdr"><div class="ht">AI CHAMPION <span>10 MINUTE KEYNOTE</span></div><div class="hr">01 · 변화 · 50초</div></div>
+  <div class="v3-stage">
+    <div class="v3-head"><div class="kicker">[변화] AI 활용방식</div><h1>Prompt·Context·Harness — 입력·실행·검증 방식의 변화</h1><p>모델을 고르는 문제에서 <b>업무 맥락·도구·검증 절차를 함께 설계하는 문제</b>로 범위가 넓어졌습니다.</p></div>
+    <div class="v3-body">
+      <div class="usage-matrix v3-panel">
+        <div class="v3-cell head">비교 항목</div><div class="v3-cell head"><b>01 · PROMPT</b><small>한 번 묻고 초안을 받음</small></div><div class="v3-cell head"><b>02 · CONTEXT</b><small>업무 근거를 함께 제공</small></div><div class="v3-cell head"><b>03 · HARNESS</b><small>실행·검증·재시도 구조</small></div>
+        <div class="v3-cell rowhead">업무 단위</div><div class="v3-cell hot"><b>한 번의 질문</b><small>요약·번역·초안처럼 단일 결과</small></div><div class="v3-cell gold"><b>하나의 업무 과제</b><small>원문 근거와 조건을 반영한 결과</small></div><div class="v3-cell blue"><b>여러 단계의 업무 흐름</b><small>완료 조건과 중단 조건까지 포함</small></div>
+        <div class="v3-cell rowhead">입력 정보</div><div class="v3-cell"><b>지시문·결과 형식</b><small>대상·분량·말투·표 형식</small></div><div class="v3-cell"><b>원문·규정·예외·좋은 예</b><small>업무 이력과 판단 기준을 함께 투입</small></div><div class="v3-cell"><b>목표·도구·권한·완료 기준</b><small>파일·검색·코드·DB 접근 범위 설정</small></div>
+        <div class="v3-cell rowhead">실행 방식</div><div class="v3-cell"><b>모델 1개가 생성</b><small>질문 → 응답</small></div><div class="v3-cell"><b>검색·파일·메모리 활용</b><small>근거를 찾고 필요한 부분을 선택</small></div><div class="v3-cell"><b>계획 → 실행 → 확인 → 재시도</b><small>에이전트와 스킬이 단계별 작업 수행</small></div>
+        <div class="v3-cell rowhead">검증 방식</div><div class="v3-cell"><b>사람이 전체를 다시 검토</b><small>사실·누락·형식을 수작업 확인</small></div><div class="v3-cell"><b>출처·수치·규정 대조</b><small>인용 위치와 적용 조항을 확인</small></div><div class="v3-cell"><b>테스트·로그·교차검토</b><small>다른 에이전트와 실제 실행결과로 판정</small></div>
+        <div class="v3-cell rowhead">최종 산출물</div><div class="v3-cell"><b>수정 전제의 초안</b><small>문장·표·아이디어</small></div><div class="v3-cell"><b>근거가 표시된 업무 문서</b><small>보고서·검토표·분석 결과</small></div><div class="v3-cell"><b>반복 가능한 업무 워크플로우</b><small>코드·화면·DB·실행기록</small></div>
+      </div>
+      <div class="signal-split">
+        <div class="signal-box v3-panel"><div class="band-title">모델 역할의 분화 · 같은 모델을 모든 일에 쓰지 않음</div><div class="role-row"><div class="role-item"><b>범용 LLM</b><span>문서·질의응답</span></div><div class="role-item"><b>추론 모델</b><span>복합 판단·계획</span></div><div class="role-item"><b>코딩 에이전트</b><span>파일·코드·테스트</span></div><div class="role-item"><b>멀티모달</b><span>이미지·음성·영상</span></div><div class="role-item"><b>로컬 SLM</b><span>폐쇄망·민감자료</span></div></div></div>
+        <div class="signal-box v3-panel"><div class="band-title">적용 범위의 확장 · 다음 단계로 넘어가는 조건</div><div class="scale-v3"><div class="scale-v3-node"><b>PoC</b><span>내 실제 파일로 작동<br>한 업무의 시간·오류 확인</span></div><div class="v3-arr">›</div><div class="scale-v3-node"><b>Scale-up</b><span>동료가 반복 사용<br>권한·예외·운영 절차 표준화</span></div><div class="v3-arr">›</div><div class="scale-v3-node"><b>Sovereign AI</b><span>우리 데이터·업무규칙·책임<br>기관 내부에 운영 역량 축적</span></div></div></div>
+      </div>
+    </div>
+    <div class="v3-foot">발표 연결 · AI챔피언 교육은 제품 사용법보다 컨텍스트 구성, 도구 조합, 실행 검증, 반복 개선을 중심으로 설계합니다.</div>
+  </div><div class="pageno">01 / 07</div>
+</section>
+
+<!-- ===== V3 02 · 소버린 AI ===== -->
+<section class="slide bright" aria-label="소버린 AI 구성요소와 현장 실무자 역할">
+  <div class="hdr"><div class="ht">AI CHAMPION <span>SOVEREIGN AI</span></div><div class="hr">02 · 관점 · 1분</div></div>
+  <div class="v3-stage">
+    <div class="v3-head"><div class="kicker">[구성] 소버린 AI</div><h1>인프라·모델·현장기획·운영책임 — 빠질 수 없는 4개 요소</h1><p>소버린 AI는 국산 모델 보유 여부만이 아니라, <b>현장 문제를 서비스로 정의하고 검증·운영하는 능력</b>까지 포함합니다.</p></div>
+    <div class="v3-body">
+      <div class="sov-matrix-v3 v3-panel">
+        <div class="v3-cell head">구성요소</div><div class="v3-cell head">확보해야 할 것</div><div class="v3-cell head">현장 실무자의 역할</div><div class="v3-cell head">빠졌을 때 발생하는 문제</div>
+        <div class="v3-cell rowhead">AI 인프라</div><div class="v3-cell"><b>컴퓨팅·데이터 저장·접근권한</b><small>폐쇄망, 개인정보, 기록 보존 조건</small></div><div class="v3-cell"><b>업무별 데이터 위치와 민감도 구분</b><small>누가 무엇을 조회·수정할지 정의</small></div><div class="v3-cell hot"><b>도입은 했지만 실제 자료를 쓰지 못함</b><small>외부 반출·권한 문제로 PoC에서 중단</small></div>
+        <div class="v3-cell rowhead">AI 모델</div><div class="v3-cell"><b>범용·추론·멀티모달·로컬 모델</b><small>정확도·비용·보안·속도 비교</small></div><div class="v3-cell"><b>업무 목적에 맞는 모델과 도구 선택</b><small>한 제품에 고정하지 않고 조합</small></div><div class="v3-cell hot"><b>모델 성능은 높지만 업무 조건과 불일치</b><small>비용 과다·응답 지연·근거 부족</small></div>
+        <div class="v3-cell rowhead">현장 기획</div><div class="v3-cell"><b>문제·대상·입력·출력·성공기준</b><small>규정·예외·사용자 불편을 구조화</small></div><div class="v3-cell"><b>반복·지연·누락이 큰 업무를 발굴</b><small>작은 PoC로 만들 수 있게 범위 설정</small></div><div class="v3-cell hot"><b>기술 시연은 되지만 사용할 이유가 없음</b><small>현장 문제와 서비스 기능이 분리</small></div>
+        <div class="v3-cell rowhead">운영 책임</div><div class="v3-cell"><b>검증·로그·권한·보수교육·개선 절차</b><small>모델 변경과 오류 대응 기준</small></div><div class="v3-cell"><b>원문 대조와 최종 채택 책임</b><small>사용자 피드백을 다음 버전에 반영</small></div><div class="v3-cell hot"><b>정확도·보안 문제가 생겨도 고칠 주체가 없음</b><small>일회성 시범사업으로 종료</small></div>
+      </div>
+      <div class="evidence-v3">
+        <div class="hack-v3 v3-panel"><div class="hack-head"><b>수상자 5명 중 4명</b><span>Anthropic Built with Opus 4.6 · 전문 개발자가 아닌 현장 전문가</span></div><div class="hack-table"><div class="v3-cell head">순위</div><div class="v3-cell head">직무</div><div class="v3-cell head">현장에서 발견한 문제</div><div class="v3-cell head">구현한 서비스·검증 방식</div><div class="v3-cell rowhead">1위</div><div class="v3-cell"><b>개인상해 변호사</b></div><div class="v3-cell"><b>건축허가 서류의 반복 반려</b><small>도면·보정서·코드 누락 때문에 평균 6개월 지연</small></div><div class="v3-cell"><b>CrossBeam</b><small>병렬 에이전트가 보정 항목을 나누어 검토하고 승인계획 생성</small></div><div class="v3-cell rowhead">3위</div><div class="v3-cell"><b>심장내과 의사</b></div><div class="v3-cell"><b>진료 후 환자의 설명·관리 공백</b><small>진료기록과 의학 근거가 환자에게 연결되지 않음</small></div><div class="v3-cell"><b>PostVisit.ai</b><small>진료기록·근거자료·환자 안내를 연결하고 의사가 최종 감독</small></div></div></div>
+        <div class="field-actions v3-panel"><div class="band-title">실무자에게 필요한 역할</div><div class="field-action"><b>1</b><div><strong>문제 발견</strong><span>반복·지연·누락이 큰 업무 장면을 특정</span></div></div><div class="field-action"><b>2</b><div><strong>서비스 정의</strong><span>사용자·입력·출력·성공기준을 문장으로 작성</span></div></div><div class="field-action"><b>3</b><div><strong>자료·규정 구성</strong><span>AI가 참고할 원문과 예외를 컨텍스트로 정리</span></div></div><div class="field-action"><b>4</b><div><strong>검증·운영</strong><span>실행결과·로그·사용자 반응으로 수정 여부 판정</span></div></div></div>
+      </div>
+    </div>
+    <div class="v3-foot">관점 · 빅테크와 오픈소스의 혁신을 지속적으로 활용하되, 문제 선택·데이터 접근·최종 판단·운영 책임을 기관 내부에 축적합니다.</div>
+  </div><div class="pageno">02 / 07</div>
+</section>
+
+<!-- ===== V3 03 · Agile ===== -->
+<section class="slide bright" aria-label="Agile 적용 절차와 실패 수정표">
+  <div class="hdr"><div class="ht">AI CHAMPION <span>AGILE ADOPTION</span></div><div class="hr">03 · 적용 절차 · 45초</div></div>
+  <div class="v3-stage">
+    <div class="v3-head"><div class="kicker">[절차] TRY &amp; ERROR</div><h1>Find·Build·Use·Revise — 작은 업무를 검증 가능한 단위로 반복</h1><p>‘일단 해본다’가 아니라 <b>현재 상태·실행 결과·수정 근거를 남기는 반복 절차</b>로 운영합니다.</p></div>
+    <div class="v3-body">
+      <div class="agile-v3-process">
+        <div class="agile-v3-card v3-panel"><div class="agile-v3-title"><b>01 · FIND</b><span>업무 병목을 한 장면으로 제한</span></div><div class="step-detail"><b>질문</b><span>어디에서 반복·대기·누락이 가장 많이 생기는가?</span></div><div class="step-detail"><b>실행</b><span>한 사용자·한 입력·한 결과로 범위를 줄입니다.</span></div><div class="step-detail"><b>증거</b><span>현재 처리시간·오류유형·재작업 횟수를 기록합니다.</span></div></div>
+        <div class="agile-v3-card v3-panel"><div class="agile-v3-title"><b>02 · BUILD</b><span>당일 확인 가능한 최소 기능 구현</span></div><div class="step-detail"><b>질문</b><span>사용자가 가장 먼저 확인해야 할 결과는 무엇인가?</span></div><div class="step-detail"><b>실행</b><span>프롬프트·데이터·코드를 조합해 첫 버전을 만듭니다.</span></div><div class="step-detail"><b>증거</b><span>실행 파일·화면·생성 문서와 실행 명령을 남깁니다.</span></div></div>
+        <div class="agile-v3-card v3-panel"><div class="agile-v3-title"><b>03 · USE</b><span>실제 파일과 실제 사용자로 시험</span></div><div class="step-detail"><b>질문</b><span>예시가 아닌 내 문서·규정에서도 같은 결과가 나오는가?</span></div><div class="step-detail"><b>실행</b><span>정상 사례와 예외 사례를 함께 넣어 사용합니다.</span></div><div class="step-detail"><b>증거</b><span>결과 캡처·오류 목록·사용자 피드백을 수집합니다.</span></div></div>
+        <div class="agile-v3-card v3-panel"><div class="agile-v3-title"><b>04 · REVISE</b><span>실패 원인에 맞는 부분만 수정</span></div><div class="step-detail"><b>질문</b><span>자료·규칙·도구·화면 중 어디가 실패를 만들었는가?</span></div><div class="step-detail"><b>실행</b><span>컨텍스트·검증식·UI·권한을 구분해 수정합니다.</span></div><div class="step-detail"><b>증거</b><span>수정 전후 결과와 남은 예외를 비교합니다.</span></div></div>
+      </div>
+      <div class="failure-v3 v3-panel">
+        <div class="v3-cell head">발견한 실패</div><div class="v3-cell head">주요 원인</div><div class="v3-cell head">수정 대상</div><div class="v3-cell head">다시 확인할 증거</div>
+        <div class="v3-cell rowhead">자료 누락</div><div class="v3-cell"><b>원문·규정·예외가 컨텍스트에 없음</b></div><div class="v3-cell"><b>검색 범위·파일 구성·메타데이터</b></div><div class="v3-cell"><b>답변 근거에 원문 위치와 적용 조항이 표시되는지 확인</b></div>
+        <div class="v3-cell rowhead">결과 오류</div><div class="v3-cell"><b>계산식·추출 규칙·모델 판단이 잘못됨</b></div><div class="v3-cell"><b>검증식·테스트 사례·교차검토</b></div><div class="v3-cell"><b>정답이 알려진 표본과 경계값에서 결과 비교</b></div>
+        <div class="v3-cell rowhead">사용 불편</div><div class="v3-cell"><b>입력 단계가 많거나 결과 위치가 불명확</b></div><div class="v3-cell"><b>화면 흐름·자동입력·오류 안내</b></div><div class="v3-cell"><b>사용자가 설명 없이 완료하는지 관찰</b></div>
+        <div class="v3-cell rowhead">운영 위험</div><div class="v3-cell"><b>권한·개인정보·로그·모델 변경을 고려하지 않음</b></div><div class="v3-cell"><b>접근권한·폐쇄망·기록·중단 조건</b></div><div class="v3-cell"><b>허용되지 않은 파일·요청에서 실행이 멈추는지 확인</b></div>
+      </div>
+      <div class="gate-v3"><div><b>확대 관문 ①</b><span>실제 파일에서 반복 작동</span></div><div><b>확대 관문 ②</b><span>사용자가 업무시간 안에 완료</span></div><div><b>확대 관문 ③</b><span>보안·권한·운영 책임 통과</span></div></div>
+    </div>
+    <div class="v3-foot">교육 적용 · 행정직의 Python·VBA, 개발직의 기획·콘텐츠처럼 직무 경계를 작은 과제로 넘고, 검증된 결과만 다음 업무로 확장합니다.</div>
+  </div><div class="pageno">03 / 07</div>
+</section>
+
+<!-- ===== V3 04 · 교육 운영 ===== -->
+<section class="slide bright slide-04" aria-label="AI챔피언 교육운영 방식">
+  <div class="hdr"><div class="ht">AI CHAMPION <span>EDUCATION DIRECTION</span></div><div class="hr">04 · 교육 방향 · 1분 15초</div></div>
+  <div class="v3-stage">
+    <div class="v3-head"><div class="kicker">[운영] AI챔피언 교육</div><h1>현장과제·반복검증·완결형 산출물 — 수업과 평가의 공통 구조</h1><p>특정 제품의 메뉴를 따라 하는 대신, <b>실제 자료를 넣고 결과를 검증해 제출 가능한 파일까지 완성</b>합니다.</p></div>
+    <div class="v3-body">
+      <div class="edu-matrix-v3 v3-panel">
+        <div class="v3-cell head">전환 항목</div><div class="v3-cell head">기존 교육 방식</div><div class="v3-cell head">AI챔피언 수업에서 하는 일</div><div class="v3-cell head">평가에서 확인하는 증거</div>
+        <div class="v3-cell rowhead">과제 시작</div><div class="v3-cell"><b>도구 메뉴와 예제 따라 하기</b><small>정해진 입력을 그대로 사용</small></div><div class="v3-cell green"><b>보도자료·민원·통계·여비 등 현장 시나리오</b><small>실제 파일과 규정, 예외 조건을 먼저 확인</small></div><div class="v3-cell"><b>원문·첨부자료를 정확히 읽었는가</b><small>답변·표·코드에 근거가 반영됐는지 판정</small></div>
+        <div class="v3-cell rowhead">실행 과정</div><div class="v3-cell"><b>한 번 생성한 답을 다듬기</b><small>사람이 문장만 수정</small></div><div class="v3-cell gold"><b>초안 → 반례 → 원문 대조 → 재실행</b><small>에이전트 간 교차비판과 검증식을 함께 사용</small></div><div class="v3-cell"><b>의도적으로 넣은 오류를 발견했는가</b><small>수치·조항·누락·불일치를 정량 채점</small></div>
+        <div class="v3-cell rowhead">완료 기준</div><div class="v3-cell"><b>문서 한 장 또는 화면 시연</b><small>실행환경과 재사용 조건은 제외</small></div><div class="v3-cell blue"><b>입력 → 처리 → 화면 → 저장·배포까지 연결</b><small>API·MCP·DB·로컬 모델을 필요한 만큼 조합</small></div><div class="v3-cell"><b>제출 파일이 실제로 다시 실행되는가</b><small>CSV·Python·HTML·DB·URL·실행 캡처 확인</small></div>
+      </div>
+      <div class="verify-v3">
+        <div class="verify-v3-node v3-panel"><b>1</b><div><strong>AI 초안 생성</strong><span>목표·대상·출력형식에 맞춰 첫 결과 작성</span></div></div><div class="verify-v3-node v3-panel"><b>2</b><div><strong>반대가설·교차비판</strong><span>누락·반례·실패 원인을 다른 에이전트가 점검</span></div></div><div class="verify-v3-node v3-panel"><b>3</b><div><strong>원문·수치·실행 대조</strong><span>인용 위치·계산값·코드 실행결과로 확인</span></div></div><div class="verify-v3-node"><b>4</b><div><strong>사람의 최종 판단</strong><span>채택·수정·보류 결정과 책임 기록</span></div></div>
+      </div>
+      <div class="field-v3-grid">
+        <div class="field-v3-card v3-panel"><b>문서작성 · Prompt/Context/Agent</b><dl><dt>입력</dt><dd>원문·규정·회의록·기존 보고서</dd><dt>산출물</dt><dd>비교표·검토서·FAQ·근거 포함 보고서</dd><dt>검증</dt><dd>인용 위치·수치·조항·누락 확인</dd></dl></div>
+        <div class="field-v3-card v3-panel"><b>콘텐츠 제작 · Multimodal</b><dl><dt>입력</dt><dd>정책자료·표·이미지·음성</dd><dt>산출물</dt><dd>카드뉴스·설명자료·영상·시각화</dd><dt>검증</dt><dd>대상별 표현·원문 일치·저작권 확인</dd></dl></div>
+        <div class="field-v3-card v3-panel"><b>바이브코딩 · 분석/자동화/서비스</b><dl><dt>입력</dt><dd>CSV·문서·업무규칙·공공 API</dd><dt>산출물</dt><dd>Python·VBA·HTML·DB·배포 URL</dd><dt>검증</dt><dd>정상/예외 실행·재현·오류 안내 확인</dd></dl></div>
+        <div class="field-v3-card"><b>최신 적용 · Coding Agent/Harness/Skill</b><dl><dt>구성</dt><dd>에이전트·스킬·MCP·RAG·Ollama</dd><dt>운영</dt><dd>권한·로그·모델 변경·폐쇄망 조건</dd><dt>판정</dt><dd>특정 제품이 바뀌어도 같은 업무를 재구성</dd></dl></div>
+      </div>
+    </div>
+    <div class="v3-foot">교육 지향점 · 도구명 암기가 아니라 문제정의, 맥락 구성, 도구 선택, 결과 검증, 산출물 완성까지 이어지는 전이 가능한 업무 역량을 훈련합니다.</div>
+  </div><div class="pageno">04 / 07</div>
+</section>
+
+<!-- ===== V3 05 · 현장 사례 ===== -->
+<section class="slide bright slide-05" aria-label="바이브코딩 현장 사례의 입력 처리 산출물 검증">
+  <div class="hdr"><div class="ht">AI CHAMPION <span>FIELD IMPACT</span></div><div class="hr">05 · 사례 시연 · 1분 15초</div></div>
+  <div class="v3-stage">
+    <div class="v3-head"><div class="kicker">[사례] 바이브코딩 현장 적용</div><h1>서무실록·AI 여비몬·범피스 — 입력자료부터 검증 결과까지</h1><p>사례 시연은 서비스 이름보다 <b>무엇을 넣고, 어떻게 처리하며, 어떤 증거를 사람이 확인하는지</b>를 중심으로 설명합니다.</p></div>
+    <div class="v3-body">
+      <div class="case-v3-grid">
+        <div class="case-v3-card v3-panel"><div class="case-v3-head"><span>CASE 01 · 인수인계·업무검색</span><b>서무실록</b></div><div class="case-v3-row"><b>문제</b><span>흩어진 인수인계 문서와 전임자의 처리 경험을 매번 다시 찾습니다.</span></div><div class="case-v3-row"><b>입력</b><span>업무매뉴얼·과거 공문·회의자료·처리이력·파일 메타정보</span></div><div class="case-v3-row"><b>처리</b><span>문서 분할 → 검색 색인 → 관련 자료 선택 → RAG 답변과 근거 표시</span></div><div class="case-v3-row result"><b>산출물</b><span>질문 답변·원문 파일명·근거 문장·과거 처리내역</span></div><div class="case-v3-row check"><b>검증</b><span>원문을 열어 인용 위치와 최신 규정 적용 여부를 담당자가 확인합니다.</span></div></div>
+        <div class="case-v3-card v3-panel"><div class="case-v3-head"><span>CASE 02 · 여비정산 자동화</span><b>AI 여비몬</b></div><div class="case-v3-row"><b>문제</b><span>영수증 확인, 출장규정 조회, 금액 계산, 정산서 입력이 분절됩니다.</span></div><div class="case-v3-row"><b>입력</b><span>영수증 이미지·출장지·기간·교통수단·직급·여비 규정</span></div><div class="case-v3-row"><b>처리</b><span>OCR 추출 → 규정 조회 → 항목별 계산 → 누락 점검 → 문서 생성</span></div><div class="case-v3-row result"><b>산출물</b><span>정산 초안·항목별 계산내역·누락 증빙·확인 필요 예외 목록</span></div><div class="case-v3-row check"><b>검증</b><span>영수증 금액, 적용 조항, 상한액, 예외 사유를 담당자가 대조합니다.</span></div></div>
+        <div class="case-v3-card v3-panel"><div class="case-v3-head"><span>CASE 03 · 반복 한글문서 자동화</span><b>범피스</b></div><div class="case-v3-row"><b>문제</b><span>같은 항목과 서식을 여러 한글문서에서 손으로 반복 편집합니다.</span></div><div class="case-v3-row"><b>입력</b><span>원본 HWP·표준 양식·치환 항목·문서별 편집 규칙·파일 목록</span></div><div class="case-v3-row"><b>처리</b><span>문서 구조 파악 → 항목 추출 → 규칙 적용 → 일괄 편집·저장</span></div><div class="case-v3-row result"><b>산출물</b><span>표준화된 한글문서·처리 파일 목록·오류 파일·작업 기록</span></div><div class="case-v3-row check"><b>검증</b><span>원문과 결과를 비교하고 표·쪽번호·누락 항목을 표본 점검합니다.</span></div></div>
+      </div>
+      <div class="demo-v3"><div>① 실제 입력자료 선택<br>문서·영수증·HWP</div><div class="v3-arr">›</div><div>② AI가 읽을 맥락 구성<br>규정·이력·편집규칙</div><div class="v3-arr">›</div><div>③ AI+코드 실행<br>검색·계산·자동편집</div><div class="v3-arr">›</div><div>④ 결과와 근거 표시<br>문서·표·오류목록</div><div class="v3-arr">›</div><div>⑤ 담당자 검증 후 사용<br>채택·수정·재실행</div></div>
+    </div>
+    <div class="v3-foot">시연 순서 · 입력자료 10초 → 실행 화면 20초 → 근거·오류·산출물 20초 → 담당자 확인과 업무효과 15초. 사례 설명은 C08 바이브코딩 교재 기준.</div>
+  </div><div class="pageno">05 / 07</div>
+</section>
+
+<!-- 직전 희소 버전은 비교용 템플릿으로 보존 -->
+<template id="dense-v2-sparse-slides">
+<!-- ===== 01 · AI 변화 ===== -->
+<section class="slide bright" aria-label="AI 활용의 변화">
+  <div class="hdr"><div class="ht">AI CHAMPION <span>10 MINUTE KEYNOTE</span></div><div class="hr">01 · 변화 · 50초</div></div>
+  <div class="dense-stage">
+    <div class="dense-head">
+      <div class="kicker">AI의 빠른 변화</div>
+      <h1>AI 활용은 ‘질문’에서 ‘업무 실행’으로 바뀌고 있습니다</h1>
+      <p>모델 하나를 잘 쓰는 시대를 지나, <b>업무 맥락과 여러 도구를 묶어 결과를 완성하는 시대</b>로 이동했습니다.</p>
+    </div>
+    <div class="dense-body">
+      <div class="evolution-grid">
+        <div class="evo dcard">
+          <div class="dlabel">01 · PROMPT</div>
+          <div class="dtitle">무엇을 할지 묻는다</div>
+          <div class="dcopy">목표와 결과 형식을 적어 AI에게 한 번 질문합니다.</div>
+          <div class="check">입력 → 생성 → 사람이 수정</div>
+        </div>
+        <div class="evo dcard">
+          <div class="dlabel">02 · CONTEXT</div>
+          <div class="dtitle">업무를 이해시킨다</div>
+          <div class="dcopy">원문·규정·데이터·예외를 넣어 우리 업무의 판단 기준을 알려줍니다.</div>
+          <div class="check">근거 투입 → 생성 → 원문 대조</div>
+        </div>
+        <div class="evo dcard">
+          <div class="dlabel">03 · HARNESS</div>
+          <div class="dtitle">일하는 구조를 만든다</div>
+          <div class="dcopy">에이전트·스킬·API·DB를 연결해 실행·검증·기록을 반복합니다.</div>
+          <div class="check">계획 → 실행 → 검증 → 재시도</div>
+        </div>
+      </div>
+      <div class="change-board">
+        <div class="model-box dcard">
+          <div class="dlabel">모델의 다양화 · 역할별 선택</div>
+          <div class="model-chips"><span>범용<br>LLM</span><span>추론<br>모델</span><span>코딩<br>에이전트</span><span>멀티<br>모달</span><span>로컬<br>SLM</span></div>
+        </div>
+        <div class="scale-box dcard">
+          <div class="dlabel">적용의 변화 · 작은 성공에서 조직 역량으로</div>
+          <div class="scale-flow">
+            <div class="scale-node">PoC<small>작은 업무를 직접 해결</small></div><div class="arrow">›</div>
+            <div class="scale-node">Scale-up<small>표준화·공유·재사용</small></div><div class="arrow">›</div>
+            <div class="scale-node">Sovereign AI<small>우리 데이터·업무·책임으로 운영</small></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="dense-foot">핵심 메시지 · 교육의 목표도 ‘도구 사용법’이 아니라 변화하는 AI를 업무에 빠르게 적용하는 능력으로 바뀌어야 합니다.</div>
+  </div>
+  <div class="pageno">01 / 07</div>
+</section>
+
+<!-- ===== 02 · 소버린 AI ===== -->
+<section class="slide bright" aria-label="소버린 AI와 현장 실무자">
+  <div class="hdr"><div class="ht">AI CHAMPION <span>SOVEREIGN AI</span></div><div class="hr">02 · 관점 · 1분</div></div>
+  <div class="dense-stage">
+    <div class="dense-head">
+      <div class="kicker">SOVEREIGN AI</div>
+      <h1>인프라와 모델만으로는 ‘우리의 AI’가 되지 않습니다</h1>
+      <p><b>현장을 아는 사람의 문제 발견과 서비스 기획</b>이 연결될 때, 국가가 통제하고 책임지는 AI가 실제 업무에서 작동합니다.</p>
+    </div>
+    <div class="dense-body">
+      <div class="sovereign-chain">
+        <div class="sov-node dcard"><div class="dlabel">FOUNDATION</div><div class="dtitle">AI 인프라</div><div class="dcopy">컴퓨팅·데이터·보안</div></div><div class="arrow">＋</div>
+        <div class="sov-node model dcard"><div class="dlabel">INTELLIGENCE</div><div class="dtitle">AI 모델</div><div class="dcopy">범용·특화·로컬 모델</div></div><div class="arrow">＋</div>
+        <div class="sov-node domain dcard"><div class="dlabel">DOMAIN EYES</div><div class="dtitle">현장 문제·기획</div><div class="dcopy">규정·예외·사용자 맥락</div></div><div class="arrow">＝</div>
+        <div class="sov-node service dcard"><div class="dlabel">SOVEREIGN CAPABILITY</div><div class="dtitle">책임지는 공공 AI</div><div class="dcopy">직접 설계·검증·운영·개선</div></div>
+      </div>
+      <div class="people-proof">
+        <div class="hack-proof dcard">
+          <div class="hack-stat">5명 중 4명<small>해커톤 상위 수상자 · 비개발 직군</small></div>
+          <div class="hack-list">
+            <div class="hack-row"><b>1위</b><span><strong>변호사</strong>법률 현장의 병목을 서비스로 구현</span></div>
+            <div class="hack-row"><b>3위</b><span><strong>심장내과 의사</strong>진료 경험을 AI 워크플로우로 전환</span></div>
+            <div class="hack-row"><b>공통</b><span><strong>전문성 × AI 구현력</strong>코딩 경력보다 문제를 보는 눈이 출발점</span></div>
+          </div>
+        </div>
+        <div class="domain-work dcard">
+          <div class="dtitle">그래서 실무자의 시야를 넓혀야 합니다</div>
+          <ol>
+            <li><b>1</b><span><strong>문제 발견</strong> 반복·지연·누락이 생기는 지점을 찾는다</span></li>
+            <li><b>2</b><span><strong>서비스 기획</strong> 누구에게 어떤 결과를 줄지 정의한다</span></li>
+            <li><b>3</b><span><strong>직접 구현·검증</strong> 작은 PoC를 만들고 현장에서 확인한다</span></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="dense-foot">소버린은 고립이 아닙니다 · 빅테크와 오픈소스의 혁신을 계속 관찰하되, 최종 판단·데이터·운영 책임을 우리 손에 둡니다. 사례: Anthropic ‘Built with Opus 4.6’ 발표(2026.4).</div>
+  </div>
+  <div class="pageno">02 / 07</div>
+</section>
+
+<!-- ===== 03 · Agile ===== -->
+<section class="slide bright" aria-label="애자일 적용 방식">
+  <div class="hdr"><div class="ht">AI CHAMPION <span>AGILE ADOPTION</span></div><div class="hr">03 · 방법 · 45초</div></div>
+  <div class="dense-stage">
+    <div class="dense-head">
+      <div class="kicker">AGILE = TRY &amp; ERROR = ADAPTING TO CHANGE</div>
+      <h1>완벽한 계획보다, 작게 만들고 바로 써보는 속도가 중요합니다</h1>
+      <p>AI는 정답을 외워 적용하는 기술이 아니라, <b>실제 업무에서 만들고 검증하며 바꾸는 기술</b>입니다.</p>
+    </div>
+    <div class="dense-body">
+      <div class="agile-dense">
+        <div class="agile-lead dcard">
+          <div class="big">작게 만들고<br><span>바로 써본다</span></div>
+          <div class="sub">행정직은 Python을, 개발직은 기획·콘텐츠를 시도합니다.</div>
+          <p>해보지 않았던 영역을 AI와 함께 넘어가면서, 자기 업무의 병목을 직접 해결합니다.</p>
+          <div class="gate">확대 조건 · 실제 파일에서 작동 + 사용자가 쓸 수 있음 + 보안·운영 기준 통과</div>
+        </div>
+        <div class="agile-loop">
+          <div class="agile-steps">
+            <div class="agile-step dcard"><div class="no">1</div><div><b>FIND · 병목 찾기</b><p>반복·대기·오류가 많은 한 장면을 고른다</p></div></div>
+            <div class="agile-step dcard"><div class="no">2</div><div><b>BUILD · 작게 구현</b><p>프롬프트·데이터·코드로 당일 PoC를 만든다</p></div></div>
+            <div class="agile-step dcard"><div class="no">3</div><div><b>USE · 실제로 사용</b><p>내 문서와 규정, 실제 사용자로 결과를 확인한다</p></div></div>
+            <div class="agile-step dcard"><div class="no">4</div><div><b>REVISE · 실패를 반영</b><p>오류·예외·피드백을 다음 버전에 다시 넣는다</p></div></div>
+          </div>
+          <div class="agile-cycle"><div>실제 파일</div><div class="arrow">›</div><div>사용자 피드백</div><div class="arrow">›</div><div class="pass">검증 후 확장</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="dense-foot">교육 설계 원칙 · 설명 30, 실습 70이 아니라 ‘업무 문제 → 구현 → 실패 → 수정 → 공유’의 한 사이클을 반복합니다.</div>
+  </div>
+  <div class="pageno">03 / 07</div>
+</section>
+
+<!-- ===== 04 · 교육 방향 ===== -->
+<section class="slide bright" aria-label="AI 챔피언 교육 방향">
+  <div class="hdr"><div class="ht">AI CHAMPION <span>EDUCATION DIRECTION</span></div><div class="hr">04 · 교육 · 1분 15초</div></div>
+  <div class="dense-stage">
+    <div class="dense-head">
+      <div class="kicker">교육 지향점</div>
+      <h1>도구를 배우는 교육에서, 업무를 끝내는 교육으로</h1>
+      <p>이미 교육과정에 <b>에이전틱 AI·코딩 에이전트·하네스·스킬</b>을 반영하고, 사람의 비판적 판단을 마지막 단계에 둡니다.</p>
+    </div>
+    <div class="dense-body">
+      <div class="edu-shifts">
+        <div class="edu-shift dcard"><div class="before">BEFORE · 메뉴 따라하기</div><div class="dtitle">현장 시나리오로 시작</div><div class="dcopy">보도자료, 여비, 민원, 통계처럼 실제 업무의 입력과 제약을 그대로 둡니다.</div><div class="after">업무 장면 → 필요한 도구 선택</div></div>
+        <div class="edu-shift dcard"><div class="before">BEFORE · 한 번에 정답</div><div class="dtitle">Try &amp; Error를 훈련</div><div class="dcopy">첫 결과의 오류와 예외를 찾아 프롬프트·데이터·코드를 다시 고칩니다.</div><div class="after">생성 → 비판 → 수정 → 재검증</div></div>
+        <div class="edu-shift dcard"><div class="before">BEFORE · 기능 한 조각</div><div class="dtitle">완결된 흐름을 구현</div><div class="dcopy">문서·데이터·API·DB·배포를 묶어 사용 가능한 산출물까지 만듭니다.</div><div class="after">입력 → 처리 → 화면 → 제출·배포</div></div>
+      </div>
+      <div class="verify-pipeline">
+        <div class="verify-node dcard"><div class="dlabel">STEP 1</div><div class="dtitle">AI 초안</div></div><div class="arrow">›</div>
+        <div class="verify-node dcard"><div class="dlabel">STEP 2</div><div class="dtitle">에이전트 교차비판</div></div><div class="arrow">›</div>
+        <div class="verify-node dcard"><div class="dlabel">STEP 3</div><div class="dtitle">원문·수치·규정 대조</div></div><div class="arrow">›</div>
+        <div class="verify-node"><div class="dlabel">STEP 4</div><div class="dtitle">사람의 최종 판단</div></div>
+      </div>
+      <div class="edu-fields">
+        <div class="edu-field"><b>문서작성</b><span>프롬프트·컨텍스트·에이전트</span></div>
+        <div class="edu-field"><b>콘텐츠 제작</b><span>이미지·음성·영상·멀티모달</span></div>
+        <div class="edu-field"><b>바이브코딩</b><span>분석·자동화·서비스 개발</span></div>
+        <div class="edu-field"><b>최신 적용</b><span>코딩 에이전트·하네스·스킬·로컬 AI</span></div>
+      </div>
+    </div>
+    <div class="dense-foot">AI챔피언의 차별점 · 특정 제품 숙련이 아니라, 도구가 바뀌어도 문제를 정의하고 조합하고 검증해 결과를 내는 전이 가능한 역량을 기릅니다.</div>
+  </div>
+  <div class="pageno">04 / 07</div>
+</section>
+
+<!-- ===== 05 · 현장 변화 ===== -->
+<section class="slide bright" aria-label="바이브코딩 현장 사례">
+  <div class="hdr"><div class="ht">AI CHAMPION <span>FIELD IMPACT</span></div><div class="hr">05 · 사례 시연 · 1분 15초</div></div>
+  <div class="dense-stage">
+    <div class="dense-head">
+      <div class="kicker">바이브코딩을 통한 현장의 변화</div>
+      <h1>담당자가 자기 문제를 직접 해결하면, 업무 도구가 바로 만들어집니다</h1>
+      <p>개발 요청서를 쓰고 기다리는 대신, <b>현장 지식이 있는 사람이 AI와 함께 작동하는 첫 버전</b>을 만듭니다.</p>
+    </div>
+    <div class="dense-body">
+      <div class="case-grid">
+        <div class="case-card dcard">
+          <div class="dlabel">CASE 01 · 인수인계·업무검색</div><div class="dtitle">서무실록</div>
+          <div class="case-step"><b>문제</b><span>흩어진 문서와 전임자 경험을 매번 다시 찾음</span></div>
+          <div class="case-step"><b>구현</b><span>문서 수집 → 검색·RAG → 근거 문장 표시</span></div>
+          <div class="case-step"><b>사용</b><span>질문하면 과거 처리내역과 출처를 함께 제시</span></div>
+          <div class="case-result">사람이 바뀌어도 업무 맥락은 남는다</div>
+        </div>
+        <div class="case-card dcard">
+          <div class="dlabel">CASE 02 · 여비정산 자동화</div><div class="dtitle">AI 여비몬</div>
+          <div class="case-step"><b>문제</b><span>영수증·출장규정·계산·서식 입력이 분절됨</span></div>
+          <div class="case-step"><b>구현</b><span>OCR → 규정 조회 → 금액 계산 → 문서 생성</span></div>
+          <div class="case-step"><b>사용</b><span>증빙을 넣으면 누락 점검과 정산 초안 제공</span></div>
+          <div class="case-result">반복 계산은 줄이고, 담당자는 예외를 판단한다</div>
+        </div>
+        <div class="case-card dcard">
+          <div class="dlabel">CASE 03 · 반복 문서 자동화</div><div class="dtitle">범피스</div>
+          <div class="case-step"><b>문제</b><span>한글문서의 같은 항목과 서식을 매번 손으로 편집</span></div>
+          <div class="case-step"><b>구현</b><span>문서 구조 파악 → 편집 규칙 적용 → 일괄 생성</span></div>
+          <div class="case-step"><b>사용</b><span>처리 결과와 원문을 대조한 뒤 표준 문서로 활용</span></div>
+          <div class="case-result">개인 노하우가 반복 가능한 조직 도구로 바뀐다</div>
+        </div>
+      </div>
+      <div class="demo-flow"><div class="demo-node">원문·영수증·한글문서</div><div class="arrow">›</div><div class="demo-node">AI + 코드로 처리</div><div class="arrow">›</div><div class="demo-node">검색·계산·자동편집</div><div class="arrow">›</div><div class="demo-node">담당자 검증 후 사용</div></div>
+    </div>
+    <div class="dense-foot">시연 포인트 · 입력자료 → 작동 화면 → 근거·검증 → 업무효과의 순서로 짧게 보여줍니다. 사례 설명은 C08 바이브코딩 교재 기준.</div>
+  </div>
+  <div class="pageno">05 / 07</div>
+</section>
+
+</template>
+
+<!-- ===== 06 · 역량-교육-등급 ===== -->
+<section class="slide bright slide-06" aria-label="10대 역량 8개 과목 인증등급 연결도">
+  <div class="hdr"><div class="ht">AI CHAMPION <span>COMPETENCY ARCHITECTURE</span></div><div class="hr">06 · 핵심 도식 · 2분 30초</div></div>
+  <div class="dense-stage">
+    <div class="dense-head">
+      <div class="kicker">역량체계·교육과정·인증등급</div>
+      <h1>10대 역량 × 8개 과목 × Green·Blue·Black 연결도</h1>
+      <p>현장의 AI챔피언에게 필요한 <b>10개 역량을 과목별 핵심 훈련 지점과 인증 수준</b>으로 연결했습니다.</p>
+    </div>
+    <div class="dense-body cm-body">
+      <div class="cm-map">
+        <div class="cm-matrix">
+          <table class="cm-table" aria-label="10대 역량과 8개 과목 연결 매트릭스">
+            <colgroup><col class="capcol"><col><col><col><col><col><col><col><col></colgroup>
+            <thead>
+              <tr class="group-row"><th class="caphead" rowspan="2">① 현장 적용 10대 역량</th><th class="common" colspan="3">공통 기반 · 전 등급</th><th class="green" colspan="3">AI 융합 · GREEN 연계</th><th class="blue" colspan="2">AI 개발 · BLUE 연계</th></tr>
+              <tr class="cm-course-row">
+                <th><b>C01</b><small><span>AI 리터러시</span><span>업무활용</span></small></th>
+                <th><b>C02</b><small><span>데이터</span><span>리터러시</span></small></th>
+                <th><b>C03</b><small><span>관리자</span><span>AI 리더십</span></small></th>
+                <th class="green"><b>C04</b><small><span>생성형AI 활용</span><span>노코드</span><span>데이터분석</span></small></th>
+                <th class="green"><b>C05</b><small><span>AI행정</span><span>융합기획</span></small></th>
+                <th class="green"><b>C06</b><small><span>노코드</span><span>AI서비스 구현</span></small></th>
+                <th class="blue"><b>C07</b><small><span>생성형AI 활용</span><span>데이터분석 심화</span></small></th>
+                <th class="blue"><b>C08</b><small><span>바이브코딩</span><span>LLM서비스 개발</span></small></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><th class="capability"><em>01</em>급변하는 AI기술에 대한 변화민감성</th><td class="mark-common">●</td><td></td><td class="mark-common">●</td><td></td><td></td><td></td><td></td><td class="mark-blue">●</td></tr>
+              <tr><th class="capability"><em>02</em>기술 평준화 시대의 문제정의 역량</th><td></td><td class="mark-common">●</td><td class="mark-common">●</td><td class="mark-green">●</td><td class="mark-green">●</td><td></td><td class="mark-blue">●</td><td></td></tr>
+              <tr><th class="capability"><em>03</em>직무 경계를 넘어서는 역할확장 역량</th><td></td><td></td><td class="mark-common">●</td><td></td><td></td><td class="mark-green">●</td><td></td><td></td></tr>
+              <tr><th class="capability"><em>04</em>업무 맥락·근거·제약조건 설계 역량</th><td class="mark-common">●</td><td></td><td></td><td></td><td class="mark-green">●</td><td></td><td></td><td class="mark-blue">●</td></tr>
+              <tr><th class="capability"><em>05</em>AI 산출물에 대한 비판적 검증 역량</th><td class="mark-common">●</td><td class="mark-common">●</td><td></td><td class="mark-green">●</td><td></td><td></td><td class="mark-blue">●</td><td></td></tr>
+              <tr><th class="capability"><em>06</em>비종속적 도구조합 역량(API·MCP·DB·로컬모델)</th><td></td><td></td><td></td><td></td><td class="mark-green">●</td><td class="mark-green">●</td><td></td><td class="mark-blue">●</td></tr>
+              <tr><th class="capability"><em>07</em>데이터 정제·분석·모델링 역량</th><td></td><td class="mark-common">●</td><td></td><td class="mark-green">●</td><td></td><td></td><td class="mark-blue">●</td><td></td></tr>
+              <tr><th class="capability"><em>08</em>문서작성·멀티모달 콘텐츠 제작 역량</th><td class="mark-common">●</td><td></td><td></td><td></td><td class="mark-green">●</td><td></td><td></td><td></td></tr>
+              <tr><th class="capability"><em>09</em>바이브코딩 기반 자기문제 해결 역량</th><td></td><td></td><td></td><td class="mark-green">●</td><td></td><td class="mark-green">●</td><td class="mark-blue">●</td><td class="mark-blue">●</td></tr>
+              <tr><th class="capability"><em>10</em>글로벌·오픈소스 기술탐색 및 조직확산 역량</th><td></td><td></td><td class="mark-common">●</td><td></td><td></td><td class="mark-green">●</td><td></td><td class="mark-blue">●</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="cm-levels" aria-label="과목과 인증등급 누적 연결">
+          <div class="cm-level-card"><div class="leveltop"><b>공통 기반</b><strong>C01–C03</strong></div><p>변화·데이터·리더십을 모든 트랙의 선수역량으로 학습</p></div>
+          <div class="cm-level-arrow">↓</div>
+          <div class="cm-level-card green"><div class="leveltop"><b>GREEN · 기본 적용</b><strong>C01–C06 누적</strong></div><p>10대 역량을 단일 업무에서 적용</p><span>문서 비교 · 단일 데이터 · 정적 웹서비스</span></div>
+          <div class="cm-level-arrow">↓</div>
+          <div class="cm-level-card blue"><div class="leveltop"><b>BLUE · 복합 수행</b><strong>C01–C08 누적</strong></div><p>10대 역량을 복수 자료와 도구 흐름에서 심화</p><span>다문서 · Python/ML · DB·자동화 서비스</span></div>
+          <div class="cm-level-arrow">↓</div>
+          <div class="cm-level-card black"><div class="leveltop"><b>BLACK · 통합 운영</b><strong>전문 9모듈·프로젝트</strong></div><p>10대 역량을 하나의 실행 가능한 시스템으로 통합</p><span>에이전트 · RAG · 로컬 AI · 보안 · 조직 전수</span></div>
+        </div>
+      </div>
+      <div class="cm-note"><b>● 과목별 핵심 훈련 지점</b><span>C01–C03 공통기반 → C04–C06 Green 실무적용 → C07–C08 Blue 복합수행 → 전문과정 Black 통합운영</span></div>
+    </div>
+    <div class="dense-foot">등급은 역량의 종류를 바꾸는 것이 아니라, 동일한 10대 역량의 수행 복잡도와 책임 범위를 높여 검증합니다.</div>
+  </div>
+  <div class="pageno">06 / 07</div>
+</section>
+
+<!-- ===== 07 · 교육-시험-전수 ===== -->
+<section class="slide bright slide-07" aria-label="교육 시험문제 전수운영 연결도">
+  <div class="hdr"><div class="ht">AI CHAMPION <span>LEARNING TO EVIDENCE</span></div><div class="hr">07 · 평가·전수·건의 · 2분 25초</div></div>
+  <div class="dense-stage">
+    <div class="dense-head">
+      <div class="kicker">역량을 어떻게 측정하는가</div>
+      <h1>등급별 문제유형과 측정역량 — 문서·콘텐츠·데이터·서비스</h1>
+      <p><b>어떤 문제를 내고, 그 문제로 어떤 능력을 확인하는지</b> Green·Blue·Black 등급별로 연결했습니다.</p>
+    </div>
+    <div class="dense-body">
+      <div class="exam-standard"><b>GREEN·BLUE 표준평가</b><span>공통이론 10 + 문서·콘텐츠 30 + 데이터 30 + 자동화·서비스 30</span><strong>90분 · 75점 이상</strong></div>
+      <div class="exam-lanes">
+        <div class="exam-columns"><span>인증등급</span><span>연계과목</span><span>① 문서·콘텐츠</span><span>② 데이터</span><span>③ 자동화·서비스</span><span>제출·판정 증거</span></div>
+        <div class="exam-lane green">
+          <div class="lane-level"><b>GREEN</b><span>기본 실행력<br>융합 트랙 연계</span></div>
+          <div class="lane-course"><b>C04–C06</b><span>노코드 분석<br>행정기획<br>서비스 구현</span></div>
+          <div class="qnode"><b>사실 추출·분류 문제</b><span class="qexample">보도자료 6개에서 중복·핵심 사실을 정리해 분류표 작성</span><span class="qmeasure"><em>측정</em>문서이해 · 맥락구성 · 근거검증</span></div><div class="lane-arrow">›</div>
+          <div class="qnode"><b>단일 데이터 집계 문제</b><span class="qexample">주민등록 CSV를 17개 시도로 필터·집계·정렬</span><span class="qmeasure"><em>측정</em>데이터 정제 · 기초분석 · 결과검증</span></div><div class="lane-arrow">›</div>
+          <div class="qnode"><b>콘텐츠형 웹서비스 문제</b><span class="qexample">카드뉴스 8장을 HTML로 제작하고 정적 배포</span><span class="qmeasure"><em>측정</em>콘텐츠 구성 · 기본구현 · 배포</span></div>
+          <div class="lane-out"><b>제출 증거</b><span>분류표.csv · 요약표.csv · index.html · 배포_URL.txt</span></div>
+        </div>
+        <div class="exam-lane blue">
+          <div class="lane-level"><b>BLUE</b><span>복합 해결력<br>개발 트랙 연계</span></div>
+          <div class="lane-course"><b>C07–C08</b><span>Python 분석<br>바이브코딩<br>LLM 서비스</span></div>
+          <div class="qnode"><b>다문서 규칙검토 문제</b><span class="qexample">Markdown 5개를 Python 정규식으로 부서·연도·금액 검토</span><span class="qmeasure"><em>측정</em>문서 구조화 · 코드자동화 · 교차검증</span></div><div class="lane-arrow">›</div>
+          <div class="qnode"><b>복합 데이터 분석 문제</b><span class="qexample">CSV 2개 병합, 결측·이상치 처리, 회귀 4종과 시각화</span><span class="qmeasure"><em>측정</em>데이터 결합 · 모델링 · 해석·설명</span></div><div class="lane-arrow">›</div>
+          <div class="qnode"><b>DB 연계 서비스 문제</b><span class="qexample">SQLite·SQL 검색·Chart.js 대시보드 구현·배포</span><span class="qmeasure"><em>측정</em>도구조합 · 서비스 구현 · 재현성</span></div>
+          <div class="lane-out"><b>제출 증거</b><span>Python · 분석보고서 · SQLite · index.html · 배포 URL</span></div>
+        </div>
+        <div class="exam-lane black">
+          <div class="lane-level"><b>BLACK</b><span>전문 운영력<br>교육기반 인증</span></div>
+          <div class="lane-course"><b>전문 9모듈</b><span>컨텍스트·하네스<br>에이전트·로컬 AI<br>프로젝트</span></div>
+          <div class="qnode"><b>근거 선별·컨텍스트 과제</b><span class="qexample">XML·FAQ·규정에서 근거를 골라 RAG용 컨텍스트 구성</span><span class="qmeasure"><em>측정</em>맥락설계 · 비판적 검증 · 근거설명</span></div><div class="lane-arrow">›</div>
+          <div class="qnode"><b>모델링·기술판단 과제</b><span class="qexample">Python 모델 비교 후 오류 원인과 실제 적용 조건 판단</span><span class="qmeasure"><em>측정</em>문제정의 · 분석·모델링 · 책임판단</span></div><div class="lane-arrow">›</div>
+          <div class="qnode"><b>로컬 AI 프로젝트</b><span class="qexample">Ollama·RAG·에이전트·DB를 묶어 실행 가능한 앱 완성</span><span class="qmeasure"><em>측정</em>도구조합 · 직접구현 · 보안·운영</span></div>
+          <div class="lane-out"><b>교육기반 인증</b><span>문제유형은 과제·프로젝트 예시<br>출석 20 · 과제 40 · 발표 40</span></div>
+        </div>
+      </div>
+      <div class="transfer-flow">
+        <div class="transfer-node"><b>2026 기관맞춤형 5개 기관</b><div class="agency-chips"><i>문체부</i><i>복지부</i><i>농진청</i><i>해수부</i><i>방사청</i></div></div><div class="arrow">›</div>
+        <div class="transfer-node stat"><b>18회 · 약 560명</b><span>기관 자체교육 양성</span></div><div class="arrow">›</div>
+        <div class="transfer-node mois"><b>행안부·NIA 표준평가</b><span>월 1회 인증평가 협업 지원</span></div><div class="arrow">›</div>
+        <div class="transfer-node ask"><b>국가인재원 직접 운영을 제안드립니다</b><span>검증된 과정 전수 · 2026년 하반기 컨설팅 기관 8월경 모집 예정</span></div>
+      </div>
+    </div>
+    <div class="dense-foot">건의 · 국가인재원이 검증된 AI챔피언 과정을 전수받아 직접 운영하고, 행안부·NIA 표준평가와 연계해 주시길 요청드립니다. 기관 수치·일정은 발표 브리프 기준.</div>
+  </div>
+  <div class="pageno">07 / 07</div>
+</section>
+
+<!-- 기존 초안은 편집 비교용으로만 보존하며 화면·인쇄·발표에서는 제외 -->
+<template id="legacy-active-slides">
+<!-- ===== 01 · AI 변화 ===== -->
+<section class="slide bright" aria-label="AI를 배웠는데 현장의 일은 얼마나 달라졌는가">
+  <div class="hdr"><div class="ht">AI CHAMPION <span>10 MINUTE KEYNOTE</span></div><div class="hr">01 · 변화 · 1분 15초</div></div>
+  <div style="position:absolute;inset:44px 0 0;padding:38px 62px 34px;display:flex;flex-direction:column;">
+    <div style="font-size:13px;font-weight:800;letter-spacing:2.4px;color:var(--gold);margin-bottom:10px;">AI의 빠른 변화</div>
+    <h1 style="font-family:Pretendard,sans-serif;font-size:38px;line-height:1.13;letter-spacing:-1.5px;font-weight:900;color:#fff;">AI를 배웠는데, 일은 얼마나 바뀌었습니까?</h1>
+    <p style="font-size:17px;color:#aeb8c9;line-height:1.55;margin-top:10px;">보고서 한 장을 빨리 쓰는 데서 끝났다면, 아직 AI를 <b style="color:#fff;">‘배우기만’ 한 것</b>입니다.</p>
+
+    <div style="display:flex;align-items:stretch;gap:13px;margin-top:26px;height:178px;">
+      <div style="flex:1;border:1px solid rgba(255,255,255,.16);border-top:4px solid var(--rust);padding:18px 20px;background:#151f31;">
+        <div style="font-size:12px;font-weight:800;color:var(--rust);letter-spacing:1.5px;">01 · PROMPT</div>
+        <div style="font-size:25px;font-weight:900;color:#fff;margin-top:9px;">묻고 답을 받는다</div>
+        <div style="font-size:14px;line-height:1.55;color:#aeb8c9;margin-top:9px;">할 일과 결과 형식을 적어<br>한 번 질문한다</div>
+      </div>
+      <div style="width:26px;display:flex;align-items:center;justify-content:center;font-size:28px;color:var(--rust);font-weight:900;">›</div>
+      <div style="flex:1;border:1px solid rgba(255,255,255,.16);border-top:4px solid var(--gold);padding:18px 20px;background:#151f31;">
+        <div style="font-size:12px;font-weight:800;color:var(--gold);letter-spacing:1.5px;">02 · CONTEXT</div>
+        <div style="font-size:25px;font-weight:900;color:#fff;margin-top:9px;">업무를 알려준다</div>
+        <div style="font-size:14px;line-height:1.55;color:#aeb8c9;margin-top:9px;">원문·규정·예외·기준을<br>함께 제공한다</div>
+      </div>
+      <div style="width:26px;display:flex;align-items:center;justify-content:center;font-size:28px;color:var(--rust);font-weight:900;">›</div>
+      <div style="flex:1;border:1px solid rgba(255,255,255,.16);border-top:4px solid #e7a6a4;padding:18px 20px;background:#151f31;">
+        <div style="font-size:12px;font-weight:800;color:#e7a6a4;letter-spacing:1.5px;">03 · HARNESS</div>
+        <div style="font-size:25px;font-weight:900;color:#fff;margin-top:9px;">끝날 때까지 시킨다</div>
+        <div style="font-size:14px;line-height:1.55;color:#aeb8c9;margin-top:9px;">도구로 실행하고 확인하며<br>다시 고치게 한다</div>
+      </div>
+    </div>
+
+    <div style="margin-top:24px;display:flex;align-items:center;gap:13px;">
+      <div style="font-size:12px;font-weight:800;color:#fff;background:var(--rust);padding:9px 14px;letter-spacing:.5px;">지금의 변화</div>
+      <div style="font-size:15px;color:#cbd3df;">범용 · 추론 · 멀티모달 · 코딩 · 로컬 모델이 동시에 진화</div>
+    </div>
+    <div style="margin-top:15px;display:flex;align-items:center;gap:0;height:58px;">
+      <div style="flex:1;background:#202a3d;padding:13px 18px;border-left:4px solid var(--rust);font-size:16px;font-weight:800;color:#fff;">작은 업무를 바꾼다</div>
+      <div style="width:46px;text-align:center;color:var(--rust);font-size:24px;font-weight:900;">→</div>
+      <div style="flex:1;background:#202a3d;padding:13px 18px;border-left:4px solid var(--gold);font-size:16px;font-weight:800;color:#fff;">기관 전체로 넓힌다</div>
+      <div style="width:46px;text-align:center;color:var(--rust);font-size:24px;font-weight:900;">→</div>
+      <div style="flex:1;background:#f3f5f8;padding:13px 18px;border-left:4px solid var(--rust);font-size:16px;font-weight:900;color:#171d2a;">우리 문제를 우리 방식으로 푼다</div>
+    </div>
+    <div style="margin-top:auto;font-size:11px;color:#69758a;">근거: Anthropic, Effective context engineering for AI agents / Demystifying evals for AI agents; OpenAI, Unlocking the Codex harness</div>
+  </div>
+  <div class="pageno">01</div>
+</section>
+
+<!-- ===== 02 · 소버린 AI ===== -->
+<section class="slide bright" aria-label="소버린 AI와 현장 아이디어">
+  <div class="hdr"><div class="ht">AI CHAMPION <span>10 MINUTE KEYNOTE</span></div><div class="hr">02 · 소버린 AI · 1분 20초</div></div>
+  <div style="position:absolute;inset:44px 0 0;padding:34px 62px 34px;display:flex;flex-direction:column;">
+    <div style="font-size:13px;font-weight:800;letter-spacing:2.4px;color:var(--gold);margin-bottom:9px;">SOVEREIGN AI</div>
+    <h1 style="font-family:Pretendard,sans-serif;font-size:37px;line-height:1.14;letter-spacing:-1.5px;font-weight:900;color:#fff;">소버린 AI에는 현장을 아는 사람이 필요합니다</h1>
+    <p style="font-size:16px;color:#aeb8c9;line-height:1.55;margin-top:9px;">인프라와 모델만으로는 서비스가 만들어지지 않습니다. <b style="color:#fff;">어떤 문제를 풀지 정하는 사람</b>이 필요합니다.</p>
+
+    <div style="display:flex;align-items:stretch;gap:12px;margin-top:23px;height:150px;">
+      <div style="flex:1;background:#f4f6f9;color:#171d2a;padding:17px 18px;border-top:5px solid #67758e;">
+        <div style="font-size:11px;font-weight:900;color:#67758e;letter-spacing:1.3px;">FOUNDATION</div>
+        <div style="font-size:21px;font-weight:900;margin-top:8px;">AI 인프라</div>
+        <div style="font-size:13.5px;line-height:1.5;color:#566074;margin-top:8px;">안전하게 쓸 수 있는 기반</div>
+      </div>
+      <div style="flex:1;background:#f4f6f9;color:#171d2a;padding:17px 18px;border-top:5px solid var(--gold);">
+        <div style="font-size:11px;font-weight:900;color:#9a681d;letter-spacing:1.3px;">INTELLIGENCE</div>
+        <div style="font-size:21px;font-weight:900;margin-top:8px;">AI 모델</div>
+        <div style="font-size:13.5px;line-height:1.5;color:#566074;margin-top:8px;">목적에 맞게 고르는 지능</div>
+      </div>
+      <div style="flex:1;background:#f4f6f9;color:#171d2a;padding:17px 18px;border-top:5px solid #c36a69;">
+        <div style="font-size:11px;font-weight:900;color:#9d4447;letter-spacing:1.3px;">DOMAIN</div>
+        <div style="font-size:21px;font-weight:900;margin-top:8px;">현장 문제</div>
+        <div style="font-size:13.5px;line-height:1.5;color:#566074;margin-top:8px;">규정과 예외를 아는 사람</div>
+      </div>
+      <div style="flex:1;background:var(--rust);color:#fff;padding:17px 18px;border-top:5px solid #ffb8b7;">
+        <div style="font-size:11px;font-weight:900;color:#ffd7d6;letter-spacing:1.3px;">LAST MILE</div>
+        <div style="font-size:21px;font-weight:900;margin-top:8px;">작동하는 서비스</div>
+        <div style="font-size:13.5px;line-height:1.5;color:#ffe7e6;margin-top:8px;">시민이 체감하는 결과</div>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1.03fr .97fr;gap:16px;margin-top:18px;height:192px;">
+      <div style="background:#151f31;border:1px solid rgba(255,255,255,.14);padding:20px 22px;display:flex;flex-direction:column;justify-content:center;">
+        <div style="font-size:12px;font-weight:900;color:var(--gold);letter-spacing:1.6px;">CLAUDE CODE HACKATHON · 2026</div>
+        <div style="font-size:28px;font-weight:900;color:#fff;margin-top:8px;letter-spacing:-.7px;">수상자 5명 중 4명은<br>전문 개발자가 아니었습니다</div>
+        <div style="font-size:13px;color:#8f9bad;margin-top:10px;">공통점: 자신이 풀 문제를 정확히 알고 있었습니다</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div style="flex:1;background:#202a3d;padding:14px 18px;border-left:4px solid var(--rust);display:flex;align-items:center;gap:16px;">
+          <div style="font-size:22px;font-weight:900;color:var(--rust);min-width:55px;">1위</div>
+          <div><b style="font-size:16px;color:#fff;">변호사</b><div style="font-size:13px;color:#aeb8c9;margin-top:4px;">건축허가 도면·보정서 검토 AI</div></div>
+        </div>
+        <div style="flex:1;background:#202a3d;padding:14px 18px;border-left:4px solid var(--gold);display:flex;align-items:center;gap:16px;">
+          <div style="font-size:22px;font-weight:900;color:var(--gold);min-width:55px;">3위</div>
+          <div><b style="font-size:16px;color:#fff;">심장내과 의사</b><div style="font-size:13px;color:#aeb8c9;margin-top:4px;">진료 후 안내·근거 연결 AI</div></div>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top:auto;font-size:11px;color:#69758a;">근거: 과기정통부 독자 AI 정의(2026.1), NIA 생성형 AI 가치사슬, UK Compute Roadmap, Anthropic Built with Opus 4.6 수상자 발표</div>
+  </div>
+  <div class="pageno">02</div>
+</section>
+
+<!-- ===== 03 · Agile ===== -->
+<section class="slide bright" aria-label="애자일과 시행착오">
+  <div class="hdr"><div class="ht">AI CHAMPION <span>10 MINUTE KEYNOTE</span></div><div class="hr">03 · AGILE · 1분</div></div>
+  <div style="position:absolute;inset:44px 0 0;padding:38px 62px 36px;display:grid;grid-template-columns:.88fr 1.12fr;gap:38px;">
+    <div style="display:flex;flex-direction:column;justify-content:center;border-right:1px solid rgba(255,255,255,.13);padding-right:38px;">
+      <div style="font-size:13px;font-weight:800;letter-spacing:2.4px;color:var(--gold);">AGILE = 직접 해보는 방법</div>
+      <div style="font-size:48px;line-height:1.07;font-weight:900;color:#fff;letter-spacing:-2px;margin-top:18px;">작게 만들고<br><span style="color:var(--rust);">바로 써봅니다</span></div>
+      <div style="font-size:20px;font-weight:800;color:#fff;margin-top:23px;">안 되면 이유를 찾고, 다시 고칩니다</div>
+      <p style="font-size:16px;line-height:1.65;color:#aeb8c9;margin-top:17px;">완벽한 계획을 기다리는 대신,<br>내 업무 하나로 먼저 시험합니다.</p>
+      <div style="margin-top:28px;border-left:4px solid var(--gold);padding:13px 16px;background:#151f31;font-size:15px;line-height:1.5;color:#d8dee8;">작게 실패하면<br><b style="color:#fff;">크게 확장하기 전에 고칠 수 있습니다.</b></div>
+    </div>
+    <div style="display:flex;flex-direction:column;justify-content:center;">
+      <div style="font-size:12px;font-weight:800;color:#7f8ba0;letter-spacing:1.4px;margin-bottom:16px;">AI챔피언이 일하는 4단계</div>
+      <div style="display:grid;grid-template-columns:1fr 44px 1fr;align-items:stretch;row-gap:14px;">
+        <div style="background:#202a3d;padding:17px 19px;border-left:4px solid var(--rust);"><b style="font-size:18px;color:#fff;">01 · 반복 문제를 찾는다</b><div style="font-size:13.5px;color:#aeb8c9;margin-top:6px;">지연·누락·재작업 하나를 고른다</div></div>
+        <div style="display:flex;align-items:center;justify-content:center;color:var(--rust);font-size:25px;font-weight:900;">→</div>
+        <div style="background:#202a3d;padding:17px 19px;border-left:4px solid var(--gold);"><b style="font-size:18px;color:#fff;">02 · 작게 만든다</b><div style="font-size:13.5px;color:#aeb8c9;margin-top:6px;">한 파일·한 자동화로 시작한다</div></div>
+
+        <div style="background:#202a3d;padding:17px 19px;border-left:4px solid var(--gold);"><b style="font-size:18px;color:#fff;">04 · 고쳐서 다시 쓴다</b><div style="font-size:13.5px;color:#aeb8c9;margin-top:6px;">오류와 반응을 다음 버전에 반영한다</div></div>
+        <div style="display:flex;align-items:center;justify-content:center;color:var(--rust);font-size:25px;font-weight:900;">←</div>
+        <div style="background:#202a3d;padding:17px 19px;border-left:4px solid var(--rust);"><b style="font-size:18px;color:#fff;">03 · 실제로 써본다</b><div style="font-size:13.5px;color:#aeb8c9;margin-top:6px;">내 파일·내 절차·사용자로 확인한다</div></div>
+      </div>
+      <div style="margin-top:20px;background:#f4f6f9;color:#171d2a;padding:18px 22px;display:flex;align-items:center;justify-content:space-between;">
+        <div><div style="font-size:12px;font-weight:900;color:var(--rust2);letter-spacing:1px;">다음 버전</div><div style="font-size:19px;font-weight:900;margin-top:4px;">더 정확한 규칙 · 더 쉬운 흐름 · 더 안전한 결과</div></div>
+        <div style="font-size:34px;font-weight:900;color:var(--rust);">↻</div>
+      </div>
+    </div>
+  </div>
+  <div class="pageno">03</div>
+</section>
+
+<!-- ===== 04 · 교육 방향 ===== -->
+<section class="slide bright" aria-label="AI챔피언 교육 방향">
+  <div class="hdr"><div class="ht">AI CHAMPION <span>10 MINUTE KEYNOTE</span></div><div class="hr">04 · 교육 방향 · 1분 20초</div></div>
+  <div style="position:absolute;inset:44px 0 0;padding:34px 62px 34px;display:flex;flex-direction:column;">
+    <div style="font-size:13px;font-weight:800;letter-spacing:2.4px;color:var(--gold);margin-bottom:9px;">무엇을 배워야 합니까</div>
+    <h1 style="font-family:Pretendard,sans-serif;font-size:39px;line-height:1.14;letter-spacing:-1.5px;font-weight:900;color:#fff;">수료 다음 날, 실제 업무에 바로 써야 합니다</h1>
+    <p style="font-size:16px;color:#aeb8c9;line-height:1.55;margin-top:9px;">그래서 메뉴가 아니라 내 파일·규정·데이터로 <b style="color:#fff;">업무를 끝내는 흐름</b>을 훈련합니다.</p>
+
+    <div style="display:flex;gap:15px;height:180px;margin-top:23px;">
+      <div style="flex:1;background:#151f31;border:1px solid rgba(255,255,255,.14);padding:20px 21px;">
+        <div style="font-size:30px;font-weight:900;color:var(--rust);">01</div>
+        <div style="font-size:20px;font-weight:900;color:#fff;margin-top:7px;">메뉴 대신 현업 과제</div>
+        <div style="font-size:14px;line-height:1.55;color:#aeb8c9;margin-top:9px;">보고서·민원·집계처럼<br>내가 하는 일로 시작</div>
+      </div>
+      <div style="flex:1;background:#151f31;border:1px solid rgba(255,255,255,.14);padding:20px 21px;">
+        <div style="font-size:30px;font-weight:900;color:var(--gold);">02</div>
+        <div style="font-size:20px;font-weight:900;color:#fff;margin-top:7px;">한 번의 답 대신 반복</div>
+        <div style="font-size:14px;line-height:1.55;color:#aeb8c9;margin-top:9px;">초안 → 비판 → 원문 확인 → 수정<br>필요한 도구를 함께 연결</div>
+      </div>
+      <div style="flex:1;background:#f4f6f9;border-top:5px solid var(--rust);padding:17px 21px;">
+        <div style="font-size:30px;font-weight:900;color:var(--rust);">03</div>
+        <div style="font-size:20px;font-weight:900;color:#171d2a;margin-top:7px;">파일 하나 대신 전체 흐름</div>
+        <div style="font-size:14px;line-height:1.55;color:#566074;margin-top:9px;">수집 → 정리 → 분석 → 배포까지<br>끝까지 만들고 확인</div>
+      </div>
+    </div>
+
+    <div style="margin-top:21px;display:flex;align-items:center;gap:10px;">
+      <div style="flex:1;background:#202a3d;padding:16px 18px;border-left:4px solid #71809a;"><div style="font-size:11px;color:#8793a7;font-weight:800;letter-spacing:1px;">AI 1</div><div style="font-size:16px;color:#fff;font-weight:800;margin-top:4px;">초안을 만든다</div></div>
+      <div style="color:var(--rust);font-size:22px;font-weight:900;">→</div>
+      <div style="flex:1;background:#202a3d;padding:16px 18px;border-left:4px solid var(--gold);"><div style="font-size:11px;color:var(--gold);font-weight:800;letter-spacing:1px;">AI 2</div><div style="font-size:16px;color:#fff;font-weight:800;margin-top:4px;">반례를 찾는다</div></div>
+      <div style="color:var(--rust);font-size:22px;font-weight:900;">→</div>
+      <div style="flex:1;background:#202a3d;padding:16px 18px;border-left:4px solid var(--rust);"><div style="font-size:11px;color:var(--rust);font-weight:800;letter-spacing:1px;">근거</div><div style="font-size:16px;color:#fff;font-weight:800;margin-top:4px;">원문·수치를 확인한다</div></div>
+      <div style="color:var(--rust);font-size:22px;font-weight:900;">→</div>
+      <div style="flex:1;background:var(--rust);padding:16px 18px;border-left:4px solid #ffb8b7;"><div style="font-size:11px;color:#ffd7d6;font-weight:800;letter-spacing:1px;">사람</div><div style="font-size:16px;color:#fff;font-weight:900;margin-top:4px;">결정하고 책임진다</div></div>
+    </div>
+    <div style="margin-top:auto;font-size:12px;color:#69758a;">AI가 만들고, 다른 AI가 비판하고, 사람이 원문·수치·작동 결과로 결정합니다.</div>
+  </div>
+  <div class="pageno">04</div>
+</section>
+
+<!-- ===== 05 · 교육 영역 ===== -->
+<section class="slide bright" aria-label="세 가지 교육 영역">
+  <div class="hdr"><div class="ht">AI CHAMPION <span>10 MINUTE KEYNOTE</span></div><div class="hr">05 · 교육 영역 · 1분 15초</div></div>
+  <div style="position:absolute;inset:44px 0 0;padding:34px 62px 34px;display:flex;flex-direction:column;">
+    <div style="font-size:13px;font-weight:800;letter-spacing:2.4px;color:var(--gold);margin-bottom:9px;">공직자는 무엇을 직접 만들 수 있습니까</div>
+    <h1 style="font-family:Pretendard,sans-serif;font-size:37px;line-height:1.14;letter-spacing:-1.5px;font-weight:900;color:#fff;">문제를 아는 공직자가 직접 도구를 만듭니다</h1>
+    <p style="font-size:16px;color:#aeb8c9;line-height:1.55;margin-top:9px;">개발자가 될 필요는 없습니다. <b style="color:#fff;">자기 문제를 도구의 형태로 설명하고 직접 시험</b>하면 됩니다.</p>
+
+    <div style="display:flex;gap:16px;flex:1;margin-top:24px;min-height:0;">
+      <div style="flex:1;background:#f4f6f9;color:#171d2a;padding:22px 22px 18px;border-top:6px solid #67758e;display:flex;flex-direction:column;">
+        <div style="font-size:12px;font-weight:900;color:#67758e;letter-spacing:1.4px;">01 · DOCUMENT</div>
+        <div style="font-size:25px;font-weight:900;margin-top:8px;">문서작성</div>
+        <div style="height:1px;background:#d7dde6;margin:14px 0;"></div>
+        <div style="font-size:14px;line-height:1.75;color:#4f596c;">보고서 · FAQ · 인수인계<br>AI 초안 · 원문 근거 확인<br>문서 에이전트</div>
+        <div style="margin-top:auto;background:#e5e9ef;padding:11px 13px;font-size:13px;font-weight:800;color:#31405a;">서무실록 · 인수인계 공백을 줄임</div>
+      </div>
+      <div style="flex:1;background:#f4f6f9;color:#171d2a;padding:22px 22px 18px;border-top:6px solid var(--gold);display:flex;flex-direction:column;">
+        <div style="font-size:12px;font-weight:900;color:#9a681d;letter-spacing:1.4px;">02 · MULTIMODAL</div>
+        <div style="font-size:25px;font-weight:900;margin-top:8px;">콘텐츠 제작</div>
+        <div style="height:1px;background:#d7dde6;margin:14px 0;"></div>
+        <div style="font-size:14px;line-height:1.75;color:#4f596c;">표 · 이미지 · 설명자료<br>텍스트를 시민 눈높이로<br>멀티모달 콘텐츠</div>
+        <div style="margin-top:auto;background:#eee8dc;padding:11px 13px;font-size:13px;font-weight:800;color:#6f501c;">정책을 이해하기 쉽게 설명</div>
+      </div>
+      <div style="flex:1;background:var(--rust);color:#fff;padding:22px 22px 18px;border-top:6px solid #ffb8b7;display:flex;flex-direction:column;">
+        <div style="font-size:12px;font-weight:900;color:#ffd7d6;letter-spacing:1.4px;">03 · VIBE CODING</div>
+        <div style="font-size:25px;font-weight:900;margin-top:8px;">바이브코딩</div>
+        <div style="height:1px;background:rgba(255,255,255,.28);margin:14px 0;"></div>
+        <div style="font-size:14px;line-height:1.75;color:#ffe9e8;">데이터분석 · 업무자동화<br>Python · VBA · HTML<br>내 업무용 서비스</div>
+        <div style="margin-top:auto;background:rgba(33,12,18,.28);padding:11px 13px;font-size:13px;font-weight:900;color:#fff;">여비몬 · 범피스 · 반복업무 자동화</div>
+      </div>
+    </div>
+    <div style="margin-top:17px;display:flex;align-items:center;font-size:15px;font-weight:900;">
+      <div style="flex:1;color:#c7ceda;">문제를 찾는다</div><div style="color:var(--rust);font-size:22px;">→</div>
+      <div style="flex:1;text-align:center;color:#c7ceda;">작은 도구로 만든다</div><div style="color:var(--rust);font-size:22px;">→</div>
+      <div style="flex:1;text-align:right;color:#fff;">실제 업무에서 써본다</div>
+    </div>
+  </div>
+  <div class="pageno">05</div>
+</section>
+
+<!-- ===== 06 · 역량체계 ===== -->
+<section class="slide bright" aria-label="10대 역량과 8개 과목 및 등급 설계">
+  <div class="hdr"><div class="ht">AI CHAMPION <span>10 MINUTE KEYNOTE</span></div><div class="hr">06 · 역량체계 · 2분</div></div>
+  <div style="position:absolute;inset:44px 0 0;padding:28px 54px 30px;display:flex;flex-direction:column;">
+    <div style="display:flex;align-items:flex-end;justify-content:space-between;">
+      <div><div style="font-size:12px;font-weight:800;letter-spacing:2.2px;color:var(--gold);margin-bottom:7px;">어떤 역량을 키워야 합니까</div><h1 style="font-family:Pretendard,sans-serif;font-size:34px;line-height:1.14;letter-spacing:-1.3px;font-weight:900;color:#fff;">필요한 행동 10가지를 8개 과목으로 키웁니다</h1></div>
+      <div style="font-size:12px;color:#8d98aa;text-align:right;line-height:1.5;">과목은 활용·융합·개발 3트랙<br>인증은 Green·Blue / 전문인재는 Black*</div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px 13px;margin-top:17px;">
+      <div style="background:#182336;border-left:4px solid var(--rust);padding:9px 13px;display:flex;gap:12px;align-items:center;"><b style="font-size:19px;color:var(--rust);">01</b><div><b style="font-size:14.5px;color:#fff;">변화를 읽는다</b><span style="font-size:12.5px;color:#98a4b7;margin-left:8px;">새 모델·에이전트를 내 업무 관점에서 고른다</span></div></div>
+      <div style="background:#182336;border-left:4px solid var(--rust);padding:9px 13px;display:flex;gap:12px;align-items:center;"><b style="font-size:19px;color:var(--rust);">02</b><div><b style="font-size:14.5px;color:#fff;">문제를 작게 자른다</b><span style="font-size:12.5px;color:#98a4b7;margin-left:8px;">반복·지연·누락 하나를 PoC로 만든다</span></div></div>
+      <div style="background:#182336;border-left:4px solid var(--gold);padding:9px 13px;display:flex;gap:12px;align-items:center;"><b style="font-size:19px;color:var(--gold);">03</b><div><b style="font-size:14.5px;color:#fff;">필요한 맥락을 준다</b><span style="font-size:12.5px;color:#98a4b7;margin-left:8px;">원문·규정·예외·결과 기준을 넣는다</span></div></div>
+      <div style="background:#182336;border-left:4px solid var(--gold);padding:9px 13px;display:flex;gap:12px;align-items:center;"><b style="font-size:19px;color:var(--gold);">04</b><div><b style="font-size:14.5px;color:#fff;">의심하고 확인한다</b><span style="font-size:12.5px;color:#98a4b7;margin-left:8px;">원문·수치·실행 결과로 검증한다</span></div></div>
+      <div style="background:#182336;border-left:4px solid #8ea2c2;padding:9px 13px;display:flex;gap:12px;align-items:center;"><b style="font-size:19px;color:#8ea2c2;">05</b><div><b style="font-size:14.5px;color:#fff;">여러 도구를 연결한다</b><span style="font-size:12.5px;color:#98a4b7;margin-left:8px;">API·MCP·Skills·DB·Ollama를 엮는다</span></div></div>
+      <div style="background:#182336;border-left:4px solid #8ea2c2;padding:9px 13px;display:flex;gap:12px;align-items:center;"><b style="font-size:19px;color:#8ea2c2;">06</b><div><b style="font-size:14.5px;color:#fff;">데이터를 판단에 쓴다</b><span style="font-size:12.5px;color:#98a4b7;margin-left:8px;">정제·분석·시각화해 근거로 바꾼다</span></div></div>
+      <div style="background:#182336;border-left:4px solid #c88285;padding:9px 13px;display:flex;gap:12px;align-items:center;"><b style="font-size:19px;color:#c88285;">07</b><div><b style="font-size:14.5px;color:#fff;">문서와 이미지를 바꿔 만든다</b><span style="font-size:12.5px;color:#98a4b7;margin-left:8px;">대상에 맞는 콘텐츠로 다시 보여준다</span></div></div>
+      <div style="background:#182336;border-left:4px solid #c88285;padding:9px 13px;display:flex;gap:12px;align-items:center;"><b style="font-size:19px;color:#c88285;">08</b><div><b style="font-size:14.5px;color:#fff;">내 문제를 직접 구현한다</b><span style="font-size:12.5px;color:#98a4b7;margin-left:8px;">Python·VBA·HTML로 도구를 만든다</span></div></div>
+      <div style="background:#182336;border-left:4px solid #a6b5cc;padding:9px 13px;display:flex;gap:12px;align-items:center;"><b style="font-size:19px;color:#a6b5cc;">09</b><div><b style="font-size:14.5px;color:#fff;">열린 기술을 안전하게 쓴다</b><span style="font-size:12.5px;color:#98a4b7;margin-left:8px;">글로벌 혁신을 폐쇄망·로컬에 맞춘다</span></div></div>
+      <div style="background:#182336;border-left:4px solid #a6b5cc;padding:9px 13px;display:flex;gap:12px;align-items:center;"><b style="font-size:19px;color:#a6b5cc;">10</b><div><b style="font-size:14.5px;color:#fff;">조직이 다시 쓰게 남긴다</b><span style="font-size:12.5px;color:#98a4b7;margin-left:8px;">재사용·운영·교육 가능한 형태로 전수한다</span></div></div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1.55fr 1fr;gap:13px;margin-top:14px;">
+      <div style="background:#f4f6f9;padding:13px 15px;color:#171d2a;">
+        <div style="font-size:11px;font-weight:900;color:#6d788c;letter-spacing:1px;margin-bottom:9px;">8개 교육과정 · 어디서 연습합니까</div>
+        <div style="display:flex;align-items:stretch;gap:7px;">
+          <div style="flex:1;background:#e5e9ef;padding:9px 10px;border-left:4px solid #71809a;"><b style="font-size:13px;">활용</b><div style="font-size:11.5px;color:#596477;margin-top:4px;line-height:1.4;">C01 AI리터러시<br>C02 데이터리터러시<br>C03 관리자리더십</div></div>
+          <div style="flex:1;background:#eee8dc;padding:9px 10px;border-left:4px solid var(--gold);"><b style="font-size:13px;">융합</b><div style="font-size:11.5px;color:#6a593b;margin-top:4px;line-height:1.4;">C04 노코드 분석<br>C05 AI행정 기획<br>C06 노코드 서비스</div></div>
+          <div style="flex:1;background:#f0dddd;padding:9px 10px;border-left:4px solid var(--rust);"><b style="font-size:13px;">개발</b><div style="font-size:11.5px;color:#704a4f;margin-top:4px;line-height:1.4;">C07 데이터분석 심화<br>C08 LLM 서비스 개발</div></div>
+        </div>
+      </div>
+      <div style="background:#202a3d;padding:13px 15px;">
+        <div style="font-size:11px;font-weight:900;color:#8f9bad;letter-spacing:1px;margin-bottom:9px;">3개 검증 수준 · 무엇까지 해냅니까</div>
+        <div style="display:flex;gap:7px;height:74px;">
+          <div style="flex:1;background:#315c4b;padding:9px 8px;color:#fff;"><b style="font-size:13px;">GREEN</b><div style="font-size:10.5px;color:#c7e7d9;margin-top:5px;line-height:1.35;">한 업무를<br>끝낸다</div></div>
+          <div style="flex:1;background:#294f77;padding:9px 8px;color:#fff;"><b style="font-size:13px;">BLUE</b><div style="font-size:10.5px;color:#c8d9ec;margin-top:5px;line-height:1.35;">여러 흐름을<br>연결한다</div></div>
+          <div style="flex:1;background:#0c1018;padding:9px 8px;color:#fff;border:1px solid #4f5b70;"><b style="font-size:13px;">BLACK*</b><div style="font-size:10.5px;color:#b7c0cf;margin-top:5px;line-height:1.35;">전체 시스템을<br>구현한다</div></div>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top:auto;font-size:10.5px;color:#69758a;">* 공식 종합안내서는 Green·Blue 인증을 규정합니다. Black은 본 프로젝트의 별도 전문인재 과정·평가 명칭입니다.</div>
+  </div>
+  <div class="pageno">06</div>
+</section>
+
+<!-- ===== 07 · 평가와 제안 ===== -->
+<section class="slide bright" aria-label="역량 과목 평가 연결 및 운영 제안">
+  <div class="hdr"><div class="ht">AI CHAMPION <span>10 MINUTE KEYNOTE</span></div><div class="hr">07 · 인증·전수 · 1분 50초</div></div>
+  <div style="position:absolute;inset:44px 0 0;padding:28px 54px 29px;display:flex;flex-direction:column;">
+    <div style="display:flex;align-items:flex-end;justify-content:space-between;">
+      <div><div style="font-size:12px;font-weight:800;letter-spacing:2.2px;color:var(--gold);margin-bottom:7px;">교육을 어떻게 증명합니까</div><h1 style="font-family:Pretendard,sans-serif;font-size:34px;line-height:1.14;letter-spacing:-1.3px;font-weight:900;color:#fff;">인증은 ‘아는 것’보다 ‘해내는 것’을 봅니다</h1></div>
+      <div style="font-size:13px;font-weight:800;color:#fff;background:var(--rust);padding:9px 13px;">인증 기준 75점 이상</div>
+    </div>
+
+    <div style="display:flex;align-items:center;gap:9px;margin-top:16px;height:62px;">
+      <div style="flex:1;background:#202a3d;border-left:4px solid var(--gold);padding:13px 16px;"><div style="font-size:11px;color:var(--gold);font-weight:900;">현장 행동</div><div style="font-size:16px;color:#fff;font-weight:900;margin-top:3px;">10가지 역량</div></div>
+      <div style="color:var(--rust);font-size:22px;font-weight:900;">→</div>
+      <div style="flex:1;background:#202a3d;border-left:4px solid #8294b0;padding:13px 16px;"><div style="font-size:11px;color:#9cabc1;font-weight:900;">교육</div><div style="font-size:16px;color:#fff;font-weight:900;margin-top:3px;">8개 과목에서 연습</div></div>
+      <div style="color:var(--rust);font-size:22px;font-weight:900;">→</div>
+      <div style="flex:1;background:var(--rust);border-left:4px solid #ffb8b7;padding:13px 16px;"><div style="font-size:11px;color:#ffd7d6;font-weight:900;">검증</div><div style="font-size:16px;color:#fff;font-weight:900;margin-top:3px;">Green · Blue · Black*</div></div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:11px;margin-top:13px;height:131px;">
+      <div style="background:#f4f6f9;color:#171d2a;padding:15px 17px;border-top:5px solid #71809a;"><div style="font-size:11px;color:#71809a;font-weight:900;letter-spacing:1px;">작업형 100점</div><div style="font-size:19px;font-weight:900;margin-top:5px;">문서를 근거대로 만든다</div><div style="font-size:12.5px;color:#566074;line-height:1.45;margin-top:6px;">원문을 확인하고 조건을 반영해<br>대상별로 다시 쓴다</div></div>
+      <div style="background:#f4f6f9;color:#171d2a;padding:15px 17px;border-top:5px solid var(--gold);"><div style="font-size:11px;color:#9a681d;font-weight:900;letter-spacing:1px;">작업형 100점</div><div style="font-size:19px;font-weight:900;margin-top:5px;">데이터로 답을 만든다</div><div style="font-size:12.5px;color:#566074;line-height:1.45;margin-top:6px;">정제·집계·시각화하고<br>결과를 해석한다</div></div>
+      <div style="background:#f4f6f9;color:#171d2a;padding:15px 17px;border-top:5px solid var(--rust);"><div style="font-size:11px;color:var(--rust2);font-weight:900;letter-spacing:1px;">작업형 100점</div><div style="font-size:19px;font-weight:900;margin-top:5px;">서비스를 실제로 돌린다</div><div style="font-size:12.5px;color:#566074;line-height:1.45;margin-top:6px;">화면·코드·로컬 모델이<br>실제로 작동하는지 확인한다</div></div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:102px 1fr;gap:8px 11px;margin-top:12px;">
+      <div style="background:#315c4b;color:#fff;padding:8px 12px;font-size:13px;font-weight:900;">GREEN</div><div style="background:#182336;padding:8px 13px;font-size:12.5px;color:#b7c1d0;"><b style="color:#fff;">한 업무를 끝낸다</b> · 단일 문서·CSV·HTML</div>
+      <div style="background:#294f77;color:#fff;padding:8px 12px;font-size:13px;font-weight:900;">BLUE</div><div style="background:#182336;padding:8px 13px;font-size:12.5px;color:#b7c1d0;"><b style="color:#fff;">여러 업무를 연결한다</b> · 복수 문서·Python·DB·RAG</div>
+      <div style="background:#0c1018;color:#fff;padding:8px 12px;font-size:13px;font-weight:900;border:1px solid #4f5b70;">BLACK*</div><div style="background:#182336;padding:8px 13px;font-size:12.5px;color:#b7c1d0;"><b style="color:#fff;">전체 시스템을 구현한다</b> · 이론 35 + Python·HTML·Ollama</div>
+    </div>
+
+    <div style="display:flex;align-items:center;gap:7px;margin-top:12px;font-size:11.5px;color:#d6dce5;">
+      <div style="background:#202a3d;padding:7px 10px;">C01·C02 선수</div><div style="color:var(--rust);">›</div><div style="background:#202a3d;padding:7px 10px;">이러닝</div><div style="color:var(--rust);">›</div><div style="background:#202a3d;padding:7px 10px;">3일 집중교육</div><div style="color:var(--rust);">›</div><div style="background:#202a3d;padding:7px 10px;">자율학습</div><div style="color:var(--rust);">›</div><div style="background:#202a3d;padding:7px 10px;">과제수행평가</div><div style="color:var(--rust);">›</div><div style="background:#f4f6f9;color:#171d2a;padding:7px 10px;font-weight:900;">인증서</div>
+    </div>
+
+    <div style="margin-top:auto;background:var(--rust);padding:12px 15px;display:flex;align-items:center;justify-content:space-between;color:#fff;">
+      <div><b style="font-size:15px;">건의 · 국가인재원이 검증된 AI챔피언 과정을 전수받아 직접 운영해 주십시오</b><div style="font-size:11px;color:#ffe0df;margin-top:4px;">2026년 5개 기관 · 18회 · 약 560명 자체 양성 / 행안부 월 1회 인증평가 지원 — 발표 브리프 기준</div></div>
+      <div style="font-size:13px;font-weight:900;background:#fff;color:var(--rust2);padding:9px 12px;white-space:nowrap;">8월 전수 컨설팅 모집 예정</div>
+    </div>
+  </div>
+  <div class="pageno">07</div>
+</section>
+
+</template>
+
+<!-- 아래 템플릿 예시는 inert template로 보관하며, 편집·발표 대상에는 포함하지 않습니다. -->
+<template id="unused-layout-samples">
+
+<!-- ===== 표지 (다크) ===== -->
+<section class="slide dark">
+  <div class="hdr"><div class="ht">강의 제목<span>ENGLISH SUBTITLE</span></div><div class="hr">기관 · 날짜</div></div>
+  <div class="dwrap">
+    <div class="eye">대상 · 형식 · 시간</div>
+    <h1>주제 한 줄<br><span class="ac">핵심어</span>, 보조 구절</h1>
+    <div class="ds">이 강의가 무엇을 다루는지 한두 문장으로, 비유 없이 사실대로 설명합니다.</div>
+    <div class="den">English Tagline</div>
+  </div>
+  <div class="dmeta">
+    <div class="who">강사명<span>소속 · 직함</span></div>
+    <div class="topic">부가 정보 한 줄<br><b>형식 · 일정</b></div>
+  </div>
+</section>
+
+<!-- ===== 커리큘럼 표 ===== -->
+<section class="slide">
+  <div class="hdr"><div class="ht">강의 제목<span>ENGLISH SUBTITLE</span></div><div class="hr">CURRICULUM</div></div>
+  <div class="stage">
+    <div class="crumb">과정 안내</div>
+    <h2 class="atitle"><span class="lbl">[과정 안내]</span> 커리큘럼 <span class="sub">— 부제</span></h2>
+    <div class="titlerule"></div>
+    <div class="body colflow" style="padding-top:14px;">
+      <table class="grid tight">
+        <tbody><tr><th style="width:108px;">시간</th><th style="width:200px;">블록</th><th>세부 내용</th><th style="width:150px;">도구</th></tr>
+        <tr class="grp"><td colspan="4">1부 — 묶음 제목 (시간)</td></tr>
+        <tr><td>00:00–00:15</td><td><b>블록명</b></td><td>한 줄 설명을 합니다체로.</td><td>도구</td></tr>
+        <tr><td>00:15–00:35</td><td><b>블록명</b></td><td>한 줄 설명.</td><td>도구</td></tr>
+        <tr class="grp"><td colspan="4">2부 — 묶음 제목 (시간)</td></tr>
+        <tr><td>00:35–01:00</td><td><b>블록명</b></td><td>한 줄 설명.</td><td>도구</td></tr>
+      </tbody></table>
+      <div class="note"><div class="nl">과정 목표</div><p>이 과정이 무엇을 목표로 하는지 사실대로 한두 문장.</p></div>
+    </div>
+  </div>
+  <div class="pageno">02</div>
+</section>
+
+<!-- ===== 본문 A: 설명문 + 번호 개념 + 도식(2단) ===== -->
+<section class="slide">
+  <div class="hdr"><div class="ht">강의 제목<span>ENGLISH SUBTITLE</span></div><div class="hr">1부 · 구분</div></div>
+  <div class="stage">
+    <div class="crumb">1부 · 구분</div>
+    <h2 class="atitle"><span class="lbl">[구분]</span> 주제 <span class="sub">— 부제</span></h2>
+    <div class="titlerule"></div>
+    <div class="body split-l" style="padding-top:18px;">
+      <div class="colflow">
+        <p class="lead" style="margin-bottom:14px;">도입 설명을 합니다체로 2~3문장. 비개발자도 이해하도록 전문어는 풀어서, 구체 예시를 곁들입니다.</p>
+        <div class="concepts fill">
+          <div class="concept"><div class="no">1</div><div class="cbody"><div class="cn">개념 이름<span class="en">EN</span></div>
+            <p>정의를 2~3줄로. <b>핵심어</b>만 굵게. 가능하면 “예 — …” 한 줄을 덧붙여 구체화합니다.</p></div></div>
+          <div class="concept"><div class="no">2</div><div class="cbody"><div class="cn">개념 이름<span class="en">EN</span></div>
+            <p>정의 2~3줄.</p></div></div>
+        </div>
+      </div>
+      <div class="figwrap">
+        <div class="figcap">도식 제목 — 부제</div>
+        <div class="layer2">
+          <div class="lay top"><div class="lt">상위 라벨</div><div class="lh">상위 항목</div><p>설명 한 줄</p></div>
+          <div class="conn">▲ 관계 한 줄</div>
+          <div class="lay bot"><div class="lt">하위 라벨</div><div class="lh">하위 항목</div><p>설명 한 줄</p></div>
+        </div>
+      </div>
+    </div>
+    <div class="note"><div class="nl">정리</div><p>이 슬라이드의 결론을 사실 진술로. 슬로건·아포리즘 금지.</p></div>
+  </div>
+  <div class="pageno">03</div>
+</section>
+
+<!-- ===== 본문 B: 번호 개념 4개(2열) ===== -->
+<section class="slide">
+  <div class="hdr"><div class="ht">강의 제목<span>ENGLISH SUBTITLE</span></div><div class="hr">1부 · 구분</div></div>
+  <div class="stage">
+    <div class="crumb">1부 · 구분</div>
+    <h2 class="atitle"><span class="lbl">[구분]</span> 주제 <span class="sub">— 네 가지 항목</span></h2>
+    <div class="titlerule"></div>
+    <div class="body split" style="padding-top:16px;">
+      <div class="concepts fill big">
+        <div class="concept"><div class="no">1</div><div class="cbody"><div class="cn">항목</div><p>정의와 업무상 쓰임을 2문장으로 설명합니다. 제목과 한 줄 설명만 두지 않습니다.<span class="boxmore">예 — 입력값, 적용 조건, 구체 사례를 원문에서 가져옵니다.</span><span class="boxcheck">확인 — 산출물, 검증 기준, 주의사항을 함께 둡니다.</span></p></div></div>
+        <div class="concept"><div class="no">2</div><div class="cbody"><div class="cn">항목</div><p>원문 교재의 세부 설명을 압축해 넣습니다. 전문어는 풀어 쓰고 필요한 경우 괄호로 원어를 병기합니다.<span class="boxmore">입력 — 사용자가 실제로 넣을 자료·컬럼·파일·조건.</span><span class="boxcheck">출력 — 표, 코드, 보고서, 체크리스트 등 결과물.</span></p></div></div>
+      </div>
+      <div class="concepts fill big">
+        <div class="concept"><div class="no">3</div><div class="cbody"><div class="cn">항목</div><p>현업 적용 장면을 넣어 박스를 채웁니다. 원문에 있는 예시·조건·산출물·주의사항을 우선 사용합니다.<span class="boxmore">예 — 보건복지 문서, 민원 데이터, 회의록, 내부 규정.</span><span class="boxcheck">확인 — 민감정보, 출처, 수치, 권한 범위.</span></p></div></div>
+        <div class="concept"><div class="no">4</div><div class="cbody"><div class="cn">항목</div><p>내용이 여전히 짧으면 2x2를 고집하지 말고 표, 단계 흐름, 3열 영역 카드로 바꿉니다.<span class="boxmore">대안 — 비교표, 작업 단계, 산출물 릴레이.</span><span class="boxcheck">검증 — 렌더 PNG에서 큰 빈 밴드가 없는지 확인합니다.</span></p></div></div>
+      </div>
+    </div>
+    <div class="note"><div class="nl">정리</div><p>결론 한두 문장.</p></div>
+  </div>
+  <div class="pageno">04</div>
+</section>
+
+<!-- ===== 본문 C: 표 ===== -->
+<section class="slide">
+  <div class="hdr"><div class="ht">강의 제목<span>ENGLISH SUBTITLE</span></div><div class="hr">1부 · 구분</div></div>
+  <div class="stage">
+    <div class="crumb">1부 · 구분</div>
+    <h2 class="atitle"><span class="lbl">[구분]</span> 주제 <span class="sub">— 비교 표</span></h2>
+    <div class="titlerule"></div>
+    <div class="body colflow" style="padding-top:16px;">
+      <p class="lead" style="margin-bottom:13px;">표가 무엇을 비교하는지 한두 문장.</p>
+      <div class="tablefill">
+        <table class="grid even roomy" style="--rows:3;">
+          <tbody><tr><th style="width:180px;">항목</th><th style="width:120px;">속성</th><th>설명</th><th style="width:130px;">분류</th></tr>
+          <tr><td><b>항목 A</b></td><td>값</td><td>표가 주 내용이면 셀 안에 원문 세부 설명, 적용 조건, 예시를 함께 넣어 행을 채웁니다.</td><td><span class="pill soft">분류 A</span></td></tr>
+          <tr><td><b>항목 B</b></td><td>값</td><td>행 높이는 균등하게 배분하고 셀은 세로 가운데 정렬합니다. 짧은 값만 두지 않습니다.</td><td><span class="pill force">분류 B</span></td></tr>
+          <tr><td><b>항목 C</b></td><td>값</td><td>원문에 있는 산출물, 주의사항, 판단 기준을 한 줄 더 가져오면 표가 헐거워지지 않습니다.</td><td><span class="pill soft">분류 C</span></td></tr>
+        </tbody></table>
+      </div>
+      <div class="note"><div class="nl">정리</div><p>결론.</p></div>
+    </div>
+  </div>
+  <div class="pageno">05</div>
+</section>
+
+<!-- ===== 본문 D: 가로 단계 + 데이터 릴레이 ===== -->
+<section class="slide">
+  <div class="hdr"><div class="ht">강의 제목<span>ENGLISH SUBTITLE</span></div><div class="hr">2부 · 구분</div></div>
+  <div class="stage">
+    <div class="crumb">2부 · 구분</div>
+    <h2 class="atitle"><span class="lbl">[구분]</span> 주제 <span class="sub">— 단계 흐름</span></h2>
+    <div class="titlerule"></div>
+    <div class="body colflow" style="padding-top:18px;">
+      <p class="lead" style="margin-bottom:8px;">흐름이 무엇인지 한두 문장.</p>
+      <div style="flex:1;display:flex;flex-direction:column;justify-content:space-around;padding:8px 0;">
+        <div class="steps">
+          <div class="st"><div class="sn">① 단계</div><div class="sh">단계명</div><p>설명 한두 줄.</p></div>
+          <div class="st"><div class="sn">② 단계</div><div class="sh">단계명</div><p>설명 한두 줄.</p></div>
+          <div class="st"><div class="sn">③ 단계</div><div class="sh">단계명</div><p>설명 한두 줄.</p></div>
+          <div class="st"><div class="sn">④ 단계</div><div class="sh">단계명</div><p>설명 한두 줄.</p></div>
+        </div>
+        <div>
+          <div class="figcap" style="margin-bottom:12px;">단계 사이로 넘어가는 산출물</div>
+          <div class="relay">
+            <div class="rc"><div class="rk">A 후</div><div class="rv">산출물</div></div><div class="ra">›</div>
+            <div class="rc"><div class="rk">B 후</div><div class="rv">산출물</div></div><div class="ra">›</div>
+            <div class="rc"><div class="rk">C 후</div><div class="rv">산출물</div></div><div class="ra">›</div>
+            <div class="rc"><div class="rk">최종</div><div class="rv">산출물</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="note"><div class="nl">정리</div><p>결론.</p></div>
+    </div>
+  </div>
+  <div class="pageno">06</div>
+</section>
+
+<!-- ===== 본문 E: 영역 카드 3열 ===== -->
+<section class="slide">
+  <div class="hdr"><div class="ht">강의 제목<span>ENGLISH SUBTITLE</span></div><div class="hr">2부 · 구분</div></div>
+  <div class="stage">
+    <div class="crumb">2부 · 구분</div>
+    <h2 class="atitle"><span class="lbl">[적용]</span> 주제 <span class="sub">— 영역별</span></h2>
+    <div class="titlerule"></div>
+    <div class="body colflow" style="padding-top:16px;">
+      <p class="lead" style="margin-bottom:6px;">세 영역에 어떻게 적용되는지 한두 문장.</p>
+      <div style="flex:1;display:flex;gap:18px;align-items:stretch;padding:10px 0;">
+        <div class="domain"><div class="dh">영역 A <span>부제</span></div><ul class="dl"><li><b>구분</b> 항목</li><li><b>구분</b> 항목</li><li><b>구분</b> 항목</li></ul></div>
+        <div class="domain"><div class="dh">영역 B <span>부제</span></div><ul class="dl"><li><b>구분</b> 항목</li><li><b>구분</b> 항목</li><li><b>구분</b> 항목</li></ul></div>
+        <div class="domain"><div class="dh">영역 C <span>부제</span></div><ul class="dl"><li><b>구분</b> 항목</li><li><b>구분</b> 항목</li><li><b>구분</b> 항목</li></ul></div>
+      </div>
+      <div class="note"><div class="nl">공통점</div><p>세 영역의 공통 구조를 한두 문장.</p></div>
+    </div>
+  </div>
+  <div class="pageno">07</div>
+</section>
+
+<!-- ===== 강의 요약 (다크) ===== -->
+<section class="slide dark">
+  <div class="hdr"><div class="ht">강의 제목<span>ENGLISH SUBTITLE</span></div><div class="hr">강의 요약 · Q &amp; A</div></div>
+  <div class="recap">
+    <div class="eye">마무리</div>
+    <h1>강의 요약</h1>
+    <div class="ritems">
+      <div class="ri"><div class="rn">01</div><p>핵심 1을 사실 진술로. <b>핵심어</b>만 굵게.</p></div>
+      <div class="ri"><div class="rn">02</div><p>핵심 2.</p></div>
+      <div class="ri"><div class="rn">03</div><p>핵심 3.</p></div>
+    </div>
+  </div>
+  <div class="dmeta">
+    <div class="who">강사명<span>소속 · 직함</span></div>
+    <div class="topic">질의응답<br><b>형식 · 일정</b></div>
+  </div>
+  <div class="pageno">08</div>
+</section>
+
+</template>
+</div>
+<script>
+(function(){
+  var slides=[].slice.call(document.querySelectorAll('.deck > .slide'));
+  var editing=false, pidx=0;
+  var palettes=[
+    {id:'slate-teal', label:'슬레이트 틸'},
+    {id:'classic-rust', label:'클래식 러스트'},
+    {id:'forest-gold', label:'포레스트 골드'},
+    {id:'navy-coral', label:'네이비 코랄'},
+    {id:'graphite-rose', label:'그래파이트 로즈'}
+  ];
+  var bPalette=document.getElementById('btnPalette'),
+      bEdit=document.getElementById('btnEdit'), bSave=document.getElementById('btnSave'),
+      bPdf=document.getElementById('btnPdf'), bPlay=document.getElementById('btnPlay'),
+      nav=document.querySelector('.pnav');
+  function paletteIndex(id){for(var i=0;i<palettes.length;i++){if(palettes[i].id===id)return i;}return 0;}
+  function setPalette(id){
+    var idx=paletteIndex(id), p=palettes[idx];
+    document.body.dataset.palette=p.id;
+    if(bPalette)bPalette.textContent='색상: '+p.label;
+  }
+  if(bPalette){
+    bPalette.onclick=function(){setPalette(palettes[(paletteIndex(document.body.dataset.palette)+1)%palettes.length].id);};
+    setPalette(document.body.dataset.palette||palettes[0].id);
+  }
+  function setEdit(v){editing=v;document.body.classList.toggle('editing',v);
+    slides.forEach(function(s){s.contentEditable=v;});bEdit.classList.toggle('on',v);bEdit.textContent=v?'편집 끝':'편집';}
+  bEdit.onclick=function(){setEdit(!editing);};
+  bPdf.onclick=function(){window.print();};
+  bSave.onclick=function(){
+    var wasEdit=editing; if(editing)setEdit(false);
+    var clone=document.documentElement.cloneNode(true);
+    clone.querySelectorAll('.slide').forEach(function(s){s.removeAttribute('contenteditable');s.classList.remove('present-current');});
+    clone.querySelector('body').classList.remove('editing','presenting');
+    var html='<!doctype html>\n'+clone.outerHTML;
+    var a=document.createElement('a');
+    a.href=URL.createObjectURL(new Blob([html],{type:'text/html;charset=utf-8'}));
+    a.download=(document.title.replace(/\s+/g,'_')||'lecture')+'_편집본.html';
+    document.body.appendChild(a);a.click();a.remove();
+    if(wasEdit)setEdit(true);
+  };
+  function fit(){var s=Math.min(window.innerWidth/1280,window.innerHeight/720);
+    var cur=document.querySelector('.slide.present-current');if(cur)cur.style.setProperty('--ps',s);}
+  function show(i){pidx=(i+slides.length)%slides.length;
+    slides.forEach(function(s){s.classList.remove('present-current');});
+    slides[pidx].classList.add('present-current');fit();
+    nav.textContent=(pidx+1)+' / '+slides.length+'   ·   ← →  이동,  Esc  종료';}
+  function enter(){if(editing)setEdit(false);document.body.classList.add('presenting');show(pidx);
+    if(document.documentElement.requestFullscreen)document.documentElement.requestFullscreen().catch(function(){});}
+  function exit(){document.body.classList.remove('presenting');
+    slides.forEach(function(s){s.classList.remove('present-current');s.style.removeProperty('--ps');});
+    if(document.fullscreenElement)document.exitFullscreen().catch(function(){});}
+  bPlay.onclick=enter;
+  window.addEventListener('resize',function(){if(document.body.classList.contains('presenting'))fit();});
+  document.addEventListener('keydown',function(e){
+    if(!document.body.classList.contains('presenting'))return;
+    if(e.key==='ArrowRight'||e.key==='PageDown'||e.key===' '){e.preventDefault();show(pidx+1);}
+    else if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();show(pidx-1);}
+    else if(e.key==='Escape'){exit();}
+  });
+  document.addEventListener('click',function(e){
+    if(document.body.classList.contains('presenting')&&!editing){
+      var cur=document.querySelector('.slide.present-current');
+      if(cur&&cur.contains(e.target))show(pidx+1);
+    }
+  });
+})();
+</script>
+
+
+<script>/* kg-preview: #<heading> \uc704\uce58\ub85c \uc774\ub3d9 */
+(function(){function norm(t){return (t||'').replace(/\s+/g,'').toLowerCase()}
+function go(){var h=decodeURIComponent(location.hash.slice(1));if(!h)return;var k=norm(h).slice(0,24);if(!k)return;
+var best=null,bl=1e9,els=document.body.querySelectorAll('h1,h2,h3,h4,h5,p,div,span,li,td,text,tspan,section,article');
+for(var i=0;i<els.length;i++){var e=els[i],t=norm(e.textContent);if(t.length<bl&&t.indexOf(k)>-1){best=e;bl=t.length}}
+if(!best)return;var box=best.closest('section,[class*=slide],[class*=page],article')||best;
+box.scrollIntoView({block:'start'});box.style.outline='3px solid #c0504d';box.style.outlineOffset='4px';
+setTimeout(function(){box.style.outline=''},2600)}
+window.addEventListener('load',function(){setTimeout(go,400)});window.addEventListener('hashchange',go)})();</script></body><div id="codex-browser-sidebar-comments-root" style="position: fixed; inset: 0px; pointer-events: none; z-index: 2147483647;"></div></html>

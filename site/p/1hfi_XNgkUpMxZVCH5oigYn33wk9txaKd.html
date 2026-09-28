@@ -1,0 +1,292 @@
+<!doctype html>
+<html lang="ko">
+<head><meta name="robots" content="noindex, nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI 에이전트 첫걸음 | 편집형 A4 교재</title>
+<style>
+@page{size:A4 portrait;margin:0}
+:root{--red:#e63532;--blue:#125fa4;--ink:#1e1d1f;--muted:#706a6c;--paper:#fffdf8;--warm:#f5eee6;--line:#cfc6bf;--nav:74px}
+*{box-sizing:border-box}html,body{margin:0;background:#242426;color:var(--ink);font-family:Pretendard,"Noto Sans KR","Malgun Gothic",sans-serif;word-break:keep-all}body{padding-top:var(--nav)}
+button{font:inherit}.toolbar{height:var(--nav);position:fixed;z-index:50;inset:0 0 auto;background:#171719;color:#fff;display:flex;align-items:center;gap:10px;padding:12px 22px;box-shadow:0 3px 16px #0008}.brand{font-weight:850;margin-right:auto}.brand b{color:#ff5a54}.toolbtn{border:1px solid #4b4b50;background:#29292d;color:#fff;border-radius:9px;padding:9px 13px;cursor:pointer}.toolbtn:hover{border-color:#fff}.primary{background:var(--red);border-color:var(--red)}.counter{font-variant-numeric:tabular-nums;min-width:72px;text-align:center;color:#ddd}.stage{min-height:calc(100vh - var(--nav));display:grid;place-items:start center;padding:30px 18px 100px}.page{display:none;position:relative;width:210mm;height:297mm;background:var(--paper);padding:17mm 15mm 16mm;overflow:hidden;box-shadow:0 16px 50px #0008}.page.active{display:block}.page::before{content:"";position:absolute;inset:7mm;border:1px solid #e7dfd8;pointer-events:none}.running{height:11mm;border-bottom:1.2px solid var(--ink);display:flex;align-items:flex-start;justify-content:space-between;font-size:10.5pt;letter-spacing:-.02em}.running strong{color:var(--red)}.running .chapter{margin-left:12px}.folio{position:absolute;bottom:9mm;right:15mm;font-size:12pt}.footname{position:absolute;bottom:9.5mm;left:15mm;font-size:8.5pt;color:#444}.content{height:242mm;padding-top:8mm;outline:none}.content:focus{box-shadow:inset 0 0 0 2px #2f82cc33}.kicker{font-size:12pt;color:var(--red);font-weight:850;letter-spacing:.02em}.display{font-size:35pt;line-height:1.13;margin:4mm 0 2mm;font-weight:900;letter-spacing:-.055em}.subtitle{font-size:17pt;color:var(--blue);font-weight:760;line-height:1.35;margin:0 0 8mm}.lead{font-size:15.5pt;line-height:1.72;font-weight:600;margin:0 0 8mm}.body{font-size:11.2pt;line-height:1.72;letter-spacing:-.015em}.body p{margin:0 0 4.2mm}.body h2{font-size:19pt;margin:6mm 0 3mm;color:var(--blue);letter-spacing:-.04em}.body h3{font-size:13.5pt;margin:5mm 0 2mm;color:var(--red)}.body ul,.body ol{padding-left:6mm;margin:2mm 0 5mm}.body li{margin-bottom:2.2mm}.rule-title{display:flex;gap:4mm;align-items:center;border:1.5px solid var(--red);border-radius:4mm;padding:4.5mm 6mm;margin-bottom:6mm;font-size:14pt;line-height:1.5}.bulb{width:12mm;height:12mm;border-radius:50%;background:var(--red);color:#fff;display:grid;place-items:center;font-weight:900;flex:none}.quote{border-left:3px solid var(--red);padding:2mm 0 2mm 5mm;margin:5mm 0;font-size:15pt;line-height:1.55;font-weight:720}.note{border-top:1.5px solid var(--blue);border-bottom:1px solid var(--blue);padding:4mm 1mm;margin:5mm 0;font-size:10.5pt;line-height:1.6}.big-eq{margin:8mm 0;padding:7mm 5mm;text-align:center;border-top:2px solid var(--red);border-bottom:2px solid var(--red);font-size:20pt;font-weight:850;line-height:1.6}.red{color:var(--red)}.blue{color:var(--blue)}.small{font-size:9.5pt;line-height:1.55;color:var(--muted)}.columns{display:grid;grid-template-columns:1fr 1fr;gap:9mm}.editorial-table{width:100%;border-collapse:collapse;font-size:10pt;line-height:1.45;margin:4mm 0}.editorial-table th{color:var(--blue);text-align:left;border-top:2px solid var(--blue);border-bottom:1px solid var(--blue);padding:3mm 2mm}.editorial-table td{vertical-align:top;border-bottom:1px solid #ccc;padding:3mm 2mm}.diagram{border:1.6px solid var(--red);border-radius:4mm;padding:5mm;margin:2mm 0 5mm;background:#fff}.diagram svg{width:100%;height:auto;display:block}.steps{display:grid;grid-template-columns:repeat(5,1fr);gap:2mm;margin-top:5mm}.step{border-top:3px solid var(--blue);padding:3mm 2mm 0;font-size:9.2pt;line-height:1.45}.step b{display:block;color:var(--red);font-size:13pt;margin-bottom:2mm}.case{background:var(--warm);padding:6mm 7mm;border-radius:3mm;margin:5mm 0}.checkline{display:grid;grid-template-columns:9mm 1fr;gap:3mm;align-items:start;margin:3.2mm 0}.check{width:7mm;height:7mm;border:1.5px solid var(--blue);border-radius:50%;color:var(--blue);display:grid;place-items:center;font-weight:800}.cover{background:linear-gradient(145deg,#fffdf8 0 73%,#f2e2dc 73%)}.cover .content{padding:20mm 4mm 0}.cover h1{font-size:49pt;line-height:1.08;letter-spacing:-.07em;margin:0 0 8mm}.cover h1 span{display:block;color:var(--red)}.cover .deck{font-size:19pt;line-height:1.55;color:var(--blue);font-weight:760;width:82%}.coverline{width:28mm;border-top:4px solid var(--red);margin:12mm 0}.cover .statement{font-size:13.5pt;line-height:1.75;width:76%}.cover .edition{position:absolute;bottom:26mm;left:19mm;font-size:10pt}.tocrow{display:grid;grid-template-columns:18mm 1fr 12mm;align-items:baseline;border-bottom:1px solid #d5ccc5;padding:4mm 0}.tocrow b{color:var(--red);font-size:16pt}.tocrow span{font-size:14pt;font-weight:720}.tocrow em{text-align:right;font-style:normal;color:var(--blue)}.comparison{display:grid;grid-template-columns:1fr 1fr;gap:7mm;margin-top:6mm}.comparison section{padding-top:4mm;border-top:3px solid}.comparison section:first-child{border-color:#777}.comparison section:last-child{border-color:var(--red)}.comparison h3{margin:0 0 3mm;font-size:18pt}.comparison p{font-size:11pt;line-height:1.65}.call{font-size:25pt;line-height:1.35;font-weight:880;margin:8mm 0;color:var(--blue)}.margin-word{position:absolute;right:7mm;top:92mm;writing-mode:vertical-rl;color:#d9d0ca;font-size:10pt;letter-spacing:.16em}.practice{border-top:2px solid var(--ink);padding-top:4mm;margin-top:6mm}.practice .blank{border-bottom:1px solid #999;min-height:10mm;margin:3mm 0}.toast{position:fixed;z-index:80;bottom:24px;left:50%;transform:translateX(-50%);background:#111;color:#fff;padding:11px 18px;border-radius:10px;opacity:0;pointer-events:none;transition:.2s}.toast.show{opacity:1}.help{font-size:9pt;color:#aaa;margin-left:6px}
+@media(max-width:850px){body{padding-top:118px}.toolbar{height:118px;flex-wrap:wrap;padding:10px}.brand{width:100%;margin:0}.stage{padding:12px 0 70px;overflow:auto;display:block}.page{transform-origin:top left;margin:0 auto}.help{display:none}}
+@media print{body{padding:0;background:#fff}.toolbar,.toast{display:none!important}.stage{display:block;padding:0}.page,.page.active{display:block!important;box-shadow:none;break-after:page;page-break-after:always;margin:0}.page:last-child{break-after:auto;page-break-after:auto}.content:focus{box-shadow:none}}
+</style>
+</head>
+<body>
+<nav class="toolbar">
+  <div class="brand"><b>AI 에이전트 첫걸음</b> · 편집형 교재 <span class="help">본문을 클릭하면 직접 수정됩니다</span></div>
+  <button class="toolbtn" id="prev">← 이전</button><span class="counter" id="counter">1 / 16</span><button class="toolbtn" id="next">다음 →</button>
+  <button class="toolbtn" id="saveData">내용 저장</button><button class="toolbtn" id="saveHtml">HTML 저장</button><button class="toolbtn primary" id="print">PDF 저장</button>
+</nav>
+<main class="stage" id="stage">
+
+<article class="page cover active" data-title="표지">
+  <div class="content" contenteditable="true">
+    <div class="kicker">생성형 AI를 처음 만나는 사람을 위한 핸드북</div>
+    <h1>LLM에서<span>에이전트까지</span></h1>
+    <div class="deck">잘 묻는 법을 넘어, AI가 컴퓨터 도구를 이용해 실제 일을 끝내는 구조</div>
+    <div class="coverline"></div>
+    <p class="statement">LLM은 글을 읽고 쓰는 언어모델입니다.<br>에이전트는 LLM에 브라우저·문서·코드·엑셀·메일 같은 도구를 연결해 인간의 행동을 대신 수행하는 시스템입니다.</p>
+    <div class="big-eq">LLM + 실행 환경 + 도구 + 권한 + 검토<br><span class="red">= AI 에이전트</span></div>
+    <p class="small">이 교재는 프롬프트 문법을 외우지 않습니다. AI가 어디까지 판단하고, 누가 실제 행동하며, 사람은 어디서 승인해야 하는지를 설명합니다.</p>
+  </div><div class="edition">2026 · 초판 / 편집 가능한 A4 페이지뷰</div>
+</article>
+
+<article class="page" data-title="이 책의 관점"><header class="running"><span><strong>AI 에이전트 첫걸음</strong><span class="chapter">이 책의 관점</span></span><span>프롬프트보다 시스템</span></header>
+  <div class="content body" contenteditable="true">
+    <div class="kicker">BEGIN HERE</div><h1 class="display">이제 처음부터<br><span class="red">에이전트</span>를 이해해야 한다</h1>
+    <p class="lead">AI 활용의 단위가 ‘한 번 묻고 한 번 답받기’에서 ‘목표를 주고 실제 업무를 완료하기’로 바뀌고 있습니다.</p>
+    <p>초기의 생성형 AI 교육은 좋은 질문을 만드는 데 집중했습니다. 역할을 정하고, 배경을 적고, 원하는 결과 형식을 설명했습니다. 이 방법은 여전히 대화를 분명하게 만드는 데 도움이 됩니다. 그러나 지금의 AI가 수행하는 일을 설명하기에는 부족합니다.</p>
+    <p>오늘날 AI 서비스는 웹을 검색하고, 파일을 읽고, 코드를 실행하고, 표를 계산하고, 문서를 저장할 수 있습니다. 사용자가 보는 결과는 LLM의 문장 생성만으로 만들어지지 않습니다. 여러 컴퓨터 도구와 권한 체계가 함께 움직인 결과입니다.</p>
+    <div class="quote">중요한 질문은 “무슨 문장으로 시킬까?”에서<br>“어떤 행동을 어디까지 맡길까?”로 이동합니다.</div>
+    <p>초보자에게도 이 구분이 필요합니다. 그래야 AI의 말과 실제 실행을 혼동하지 않고, 필요한 도구와 사람의 승인 지점을 정할 수 있습니다.</p>
+  </div><span class="margin-word">FROM PROMPT TO ACTION</span><span class="footname">AI 에이전트 첫걸음</span><span class="folio">02</span>
+</article>
+
+<article class="page" data-title="목차"><header class="running"><span><strong>AI 에이전트 첫걸음</strong><span class="chapter">차례</span></span><span>전체 흐름</span></header>
+  <div class="content body" contenteditable="true">
+    <div class="kicker">CONTENTS</div><h1 class="display">읽기에서 행동까지</h1><p class="subtitle">언어모델의 경계를 먼저 보고, 에이전트의 실행 구조로 이동합니다.</p>
+    <div class="tocrow"><b>01</b><span>LLM은 글을 읽고 쓰는 언어모델이다</span><em>04</em></div>
+    <div class="tocrow"><b>02</b><span>LLM이 잘하는 일과 하지 못하는 일</span><em>05</em></div>
+    <div class="tocrow"><b>03</b><span>모델 밖에서 실제 행동이 일어난다</span><em>06</em></div>
+    <div class="tocrow"><b>04</b><span>대화형 AI도 하나의 시스템이다</span><em>07</em></div>
+    <div class="tocrow"><b>05</b><span>언어모델의 한계와 사람의 책임</span><em>08</em></div>
+    <div class="tocrow"><b>06</b><span>도구가 연결되면 에이전트가 된다</span><em>09</em></div>
+    <div class="tocrow"><b>07</b><span>에이전트의 판단–실행–확인 루프</span><em>10</em></div>
+    <div class="tocrow"><b>08</b><span>브라우저·문서·코드·업무 도구</span><em>11</em></div>
+    <div class="tocrow"><b>09</b><span>챗봇·워크플로·에이전트 구분</span><em>12</em></div>
+    <div class="tocrow"><b>10</b><span>회의 자료가 보고서가 되는 실제 흐름</span><em>13</em></div>
+    <div class="tocrow"><b>11</b><span>권한·승인·중단 조건 설계</span><em>14</em></div>
+    <div class="tocrow"><b>12</b><span>처음 맡길 업무와 실행 요청서</span><em>15</em></div>
+    <p class="note"><b>편집 방법</b>　각 페이지의 본문을 클릭해 문구를 수정할 수 있습니다. 상단의 ‘내용 저장’은 편집값을 브라우저에 보관하고, ‘HTML 저장’은 수정된 교재 파일을 내려받습니다. ‘PDF 저장’은 브라우저 인쇄창을 엽니다.</p>
+  </div><span class="footname">AI 에이전트 첫걸음</span><span class="folio">03</span>
+</article>
+
+<article class="page" data-title="LLM 정의"><header class="running"><span><strong>PART 1</strong><span class="chapter">LLM의 역할과 경계</span></span><span>01</span></header>
+  <div class="content body" contenteditable="true">
+    <div class="kicker">LANGUAGE MODEL</div><h1 class="display">LLM은 글을 읽고 쓰는<br><span class="red">언어모델</span>이다</h1>
+    <p class="lead">대규모 언어 모델(LLM)은 입력된 글과 이미지의 패턴을 처리해 다음에 이어질 출력을 생성합니다.</p>
+    <div class="rule-title"><span class="bulb">1</span><span>LLM은 컴퓨터 자체가 아닙니다. <b class="red">컴퓨터 안에서 실행되는 하나의 모델</b>입니다.</span></div>
+    <p>회의 내용을 주면 요약문을 씁니다. 표를 주면 항목의 의미를 분류합니다. 보고서 초안을 요청하면 자연스러운 문장을 만듭니다. 이 능력은 방대한 언어 자료에서 학습한 패턴을 바탕으로 합니다.</p>
+    <p>LLM은 사용자의 문장을 채점해 정답 창고에서 하나를 꺼내지 않습니다. 지금 입력된 내용에 이어질 출력 후보를 계산해 문장, 코드, 표의 형태로 만들어 냅니다.</p>
+    <div class="quote">LLM의 핵심 능력은<br><span class="blue">읽기 · 쓰기 · 변환 · 다음 행동 제안</span>입니다.</div>
+    <p>이 능력만으로 파일을 열거나 메일을 보내지는 못합니다. 실제 행동을 이해하려면 모델과 모델을 둘러싼 실행 환경을 분리해서 봐야 합니다.</p>
+  </div><span class="footname">AI 에이전트 첫걸음</span><span class="folio">04</span>
+</article>
+
+<article class="page" data-title="LLM 능력"><header class="running"><span><strong>PART 1</strong><span class="chapter">LLM의 역할과 경계</span></span><span>02</span></header>
+  <div class="content body" contenteditable="true">
+    <h1 class="display">LLM이 잘하는 일,<br>하지 못하는 일</h1>
+    <div class="comparison">
+      <section><h3>LLM 자체가 잘하는 일</h3><p><b>요약</b><br>긴 글에서 핵심 내용을 짧게 정리합니다.</p><p><b>분류</b><br>문장과 항목을 의미에 따라 묶습니다.</p><p><b>변환</b><br>말투, 양식, 언어, 구조를 바꿉니다.</p><p><b>초안</b><br>보고서, 메일, 코드의 첫 버전을 만듭니다.</p><p><b>계획 제안</b><br>목표에 필요한 다음 행동 후보를 작성합니다.</p></section>
+      <section><h3>외부 도구가 필요한 일</h3><p><b>웹 확인</b><br>최신 페이지를 열고 출처를 가져옵니다.</p><p><b>정확한 계산</b><br>코드나 엑셀로 수치와 통계를 계산합니다.</p><p><b>파일 조작</b><br>실제 문서를 열고 수정하고 저장합니다.</p><p><b>업무 실행</b><br>메일 발송, 일정 등록, 데이터 입력을 수행합니다.</p><p><b>물리적 행동</b><br>로봇과 센서가 환경에 작용합니다.</p></section>
+    </div>
+    <div class="case"><b class="red">구분 연습</b><br>“출장비 합계는 1,230,000원입니다”라는 문장을 쓰는 것은 LLM이 할 수 있습니다. 영수증 127장의 금액을 빠짐없이 읽고 합계를 검증하는 일은 문서 인식과 계산 도구가 필요합니다.</div>
+    <p class="small">LLM이 계산 문제를 문장으로 풀 수 있어도, 중요한 수치는 전용 계산 도구로 다시 확인하는 것이 안전합니다.</p>
+  </div><span class="footname">AI 에이전트 첫걸음</span><span class="folio">05</span>
+</article>
+
+<article class="page" data-title="LLM 경계"><header class="running"><span><strong>PART 1</strong><span class="chapter">LLM의 역할과 경계</span></span><span>03</span></header>
+  <div class="content body" contenteditable="true">
+    <h1 class="display">모델 밖에서<br><span class="red">실제 행동</span>이 일어난다</h1>
+    <div class="diagram">
+      <svg viewBox="0 0 900 560" aria-label="LLM과 외부 도구의 경계"><defs><marker id="ar" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#e63532"/></marker></defs>
+      <style>.bx{fill:#fffdf8;stroke:#222;stroke-width:2}.rx{fill:#f7e5e1;stroke:#e63532;stroke-width:3}.tx{font-family:Pretendard,sans-serif;fill:#222}.h{font-size:28px;font-weight:800}.s{font-size:18px}.a{stroke:#e63532;stroke-width:3;marker-end:url(#ar)}</style>
+      <rect class="bx" x="30" y="50" width="200" height="110" rx="16"/><text class="tx h" x="130" y="96" text-anchor="middle">입력</text><text class="tx s" x="130" y="130" text-anchor="middle">질문 · 문서 · 결과</text><line class="a" x1="230" y1="105" x2="340" y2="105"/>
+      <rect class="rx" x="350" y="35" width="200" height="140" rx="65"/><text class="tx h" x="450" y="94" text-anchor="middle">LLM</text><text class="tx s" x="450" y="130" text-anchor="middle">읽기 · 쓰기 · 제안</text><line class="a" x1="550" y1="105" x2="665" y2="105"/>
+      <rect class="bx" x="675" y="50" width="195" height="110" rx="16"/><text class="tx h" x="772" y="96" text-anchor="middle">출력</text><text class="tx s" x="772" y="130" text-anchor="middle">답변 · 도구 호출</text>
+      <line x1="45" x2="855" y1="230" y2="230" stroke="#888" stroke-dasharray="8 8"/><text class="tx s" x="55" y="216">외부 프로그램이 실행하는 영역</text>
+      <rect class="bx" x="45" y="285" width="175" height="140" rx="14"/><text class="tx h" x="132" y="335" text-anchor="middle">검색</text><text class="tx s" x="132" y="375" text-anchor="middle">웹 · 출처</text>
+      <rect class="bx" x="255" y="285" width="175" height="140" rx="14"/><text class="tx h" x="342" y="335" text-anchor="middle">계산</text><text class="tx s" x="342" y="375" text-anchor="middle">코드 · 엑셀</text>
+      <rect class="bx" x="465" y="285" width="175" height="140" rx="14"/><text class="tx h" x="552" y="335" text-anchor="middle">파일</text><text class="tx s" x="552" y="375" text-anchor="middle">열기 · 저장</text>
+      <rect class="bx" x="675" y="285" width="175" height="140" rx="14"/><text class="tx h" x="762" y="335" text-anchor="middle">업무</text><text class="tx s" x="762" y="375" text-anchor="middle">메일 · 일정</text>
+      <path d="M762 285 C760 230 585 205 490 175" fill="none" class="a"/><text class="tx s" x="540" y="255">결과를 다시 읽고 다음 행동 결정</text>
+      <text class="tx h" x="450" y="510" text-anchor="middle">LLM은 제안하고, 도구는 실행한다.</text></svg>
+    </div>
+    <p>도구의 실행 결과는 다시 LLM의 입력으로 들어갑니다. LLM은 결과를 읽고 다음 행동을 제안합니다. 이 순환이 에이전트의 기본 동작이 됩니다.</p>
+  </div><span class="footname">AI 에이전트 첫걸음</span><span class="folio">06</span>
+</article>
+
+<article class="page" data-title="AI 시스템"><header class="running"><span><strong>PART 1</strong><span class="chapter">LLM의 역할과 경계</span></span><span>04</span></header>
+  <div class="content body" contenteditable="true">
+    <h1 class="display">우리가 쓰는 AI는<br><span class="blue">하나의 시스템</span>이다</h1>
+    <p class="lead">대화창 뒤에서는 모델, 서비스, 실행 환경, 도구, 운영체제가 역할을 나누어 움직입니다.</p>
+    <table class="editorial-table"><thead><tr><th>구성 요소</th><th>실제로 하는 일</th><th>사용자가 보는 예</th></tr></thead><tbody>
+      <tr><td><b>LLM</b></td><td>입력을 처리하고 답변이나 다음 행동 후보를 생성</td><td>요약문, 계획, 코드, 도구 호출 제안</td></tr>
+      <tr><td><b>AI 서비스</b></td><td>대화, 첨부, 사용자 설정을 관리</td><td>채팅 화면, 파일 업로드, 기록</td></tr>
+      <tr><td><b>에이전트 실행 환경</b></td><td>도구 권한 확인, 호출, 결과 전달, 반복 관리</td><td>작업 진행 표시, 승인 요청, 실행 로그</td></tr>
+      <tr><td><b>도구</b></td><td>검색, 계산, 파일 저장, 메일 발송 등 수행</td><td>웹 출처, 엑셀 파일, 보낸 메일</td></tr>
+      <tr><td><b>운영체제·클라우드</b></td><td>프로그램과 파일이 실제로 실행되는 환경 제공</td><td>윈도우 폴더, 브라우저, 온라인 저장소</td></tr>
+    </tbody></table>
+    <h2>‘같은 모델’인데 결과가 다른 이유</h2>
+    <p>한 서비스는 웹 검색만 연결하고, 다른 서비스는 로컬 파일과 코드 실행까지 연결할 수 있습니다. 같은 LLM을 사용하더라도 도구, 권한, 메모리, 안전장치가 다르면 수행 가능한 업무가 달라집니다.</p>
+    <div class="note"><b>용어:</b> 모델과 도구를 연결하고 실행 순서를 관리하는 프로그램 환경을 <b>하네스(harness)</b>라고 부르기도 합니다.</div>
+  </div><span class="footname">AI 에이전트 첫걸음</span><span class="folio">07</span>
+</article>
+
+<article class="page" data-title="LLM 한계"><header class="running"><span><strong>PART 1</strong><span class="chapter">LLM의 역할과 경계</span></span><span>05</span></header>
+  <div class="content body" contenteditable="true">
+    <h1 class="display">말을 잘하는 것과<br><span class="red">사실인 것</span>은 다르다</h1>
+    <p class="lead">LLM의 문장은 자연스러울 수 있지만, 자연스러움이 정확성·최신성·권한을 보장하지는 않습니다.</p>
+    <h2>사실 오류</h2><p>입력에 없는 정보를 그럴듯하게 채울 수 있습니다. 중요한 주장에는 원문, 공식 자료, 계산 근거가 필요합니다.</p>
+    <h2>현재 상태의 부재</h2><p>검색이나 업무 시스템이 연결되지 않으면 오늘의 일정, 재고, 규정 변경을 직접 확인할 수 없습니다.</p>
+    <h2>행동 권한의 부재</h2><p>메일 문장을 만드는 것과 메일을 실제 발송하는 것은 다른 일입니다. 발송에는 계정 연결과 권한이 필요합니다.</p>
+    <h2>목표의 부재</h2><p>모델이 조직의 진짜 목적을 스스로 정하지 않습니다. 사람은 업무 목적, 우선순위, 중단 조건을 제공해야 합니다.</p>
+    <div class="quote">좋은 AI 활용자는 모든 답을 믿는 사람이 아니라,<br><span class="blue">말·근거·행동을 구분하는 사람</span>입니다.</div>
+    <div class="checkline"><span class="check">✓</span><span>이 내용은 LLM의 문장인가, 도구가 확인한 사실인가?</span></div>
+    <div class="checkline"><span class="check">✓</span><span>행동이 실행되었는가, 실행 계획만 제안되었는가?</span></div>
+    <div class="checkline"><span class="check">✓</span><span>되돌리기 어려운 행동을 누가 승인했는가?</span></div>
+  </div><span class="footname">AI 에이전트 첫걸음</span><span class="folio">08</span>
+</article>
+
+<article class="page" data-title="에이전트 정의"><header class="running"><span><strong>PART 2</strong><span class="chapter">도구가 연결되면 에이전트가 된다</span></span><span>06</span></header>
+  <div class="content body" contenteditable="true">
+    <div class="kicker">AGENT SYSTEM</div><h1 class="display">도구가 연결되면<br><span class="red">에이전트</span>가 된다</h1>
+    <p class="lead">에이전트는 LLM에 여러 컴퓨터 도구를 연결하고, 실행 결과를 다시 읽게 하며, 목표가 끝날 때까지 행동을 이어 가는 시스템입니다.</p>
+    <div class="big-eq"><span class="blue">언어모델</span> + 실행 환경 + 컴퓨터 도구<br>+ 자료 + 권한 + 사람의 검토<br><span class="red">= 에이전트</span></div>
+    <p>에이전트의 중심에는 LLM이 있습니다. LLM은 현재 상태를 읽고 다음 행동을 제안합니다. 실행 환경은 제안된 행동이 허용되어 있는지 확인한 뒤 도구를 호출합니다. 도구 결과는 다시 현재 상태에 추가됩니다.</p>
+    <p>이 과정이 반복되면 AI는 단순한 답변을 넘어 파일을 찾고, 데이터를 계산하고, 결과 문서를 만들 수 있습니다. 다만 에이전트가 사람처럼 자유롭게 움직인다는 뜻은 아닙니다. 연결된 도구와 허용된 권한 안에서만 행동합니다.</p>
+    <div class="rule-title"><span class="bulb">!</span><span>에이전트의 능력은 LLM의 크기만이 아니라 <b>연결된 도구와 권한</b>으로 결정됩니다.</span></div>
+  </div><span class="footname">AI 에이전트 첫걸음</span><span class="folio">09</span>
+</article>
+
+<article class="page" data-title="에이전트 루프"><header class="running"><span><strong>PART 2</strong><span class="chapter">도구가 연결되면 에이전트가 된다</span></span><span>07</span></header>
+  <div class="content body" contenteditable="true">
+    <h1 class="display">판단 → 실행 → 확인<br><span class="blue">다시 판단</span></h1>
+    <div class="diagram"><svg viewBox="0 0 900 520" aria-label="에이전트 실행 루프"><defs><marker id="ab" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#e63532"/></marker></defs><style>.b{fill:#fffdf8;stroke:#222;stroke-width:2}.r{fill:#f8e6e2;stroke:#e63532;stroke-width:3}.t{font-family:Pretendard,sans-serif;fill:#222}.h{font-size:25px;font-weight:800}.s{font-size:17px}.a{stroke:#e63532;stroke-width:3;fill:none;marker-end:url(#ab)}</style>
+    <rect class="b" x="35" y="55" width="190" height="110" rx="15"/><text class="t h" x="130" y="100" text-anchor="middle">1. 목표</text><text class="t s" x="130" y="135" text-anchor="middle">자료 · 완료 조건</text><path class="a" d="M225 110 H340"/>
+    <rect class="r" x="350" y="35" width="205" height="150" rx="22"/><text class="t h" x="452" y="88" text-anchor="middle">2. LLM 판단</text><text class="t s" x="452" y="125" text-anchor="middle">다음 행동 선택</text><text class="t s" x="452" y="153" text-anchor="middle">도구 사용 제안</text><path class="a" d="M555 110 H670"/>
+    <rect class="b" x="680" y="55" width="185" height="110" rx="15"/><text class="t h" x="772" y="100" text-anchor="middle">3. 도구 실행</text><text class="t s" x="772" y="135" text-anchor="middle">검색 · 계산 · 저장</text><path class="a" d="M772 165 V270"/>
+    <rect class="b" x="650" y="280" width="225" height="110" rx="15"/><text class="t h" x="762" y="325" text-anchor="middle">4. 결과 확인</text><text class="t s" x="762" y="360" text-anchor="middle">성공 · 오류 · 새 정보</text><path class="a" d="M650 335 H555"/>
+    <rect class="b" x="340" y="280" width="215" height="110" rx="15"/><text class="t h" x="447" y="325" text-anchor="middle">5. 상태 갱신</text><text class="t s" x="447" y="360" text-anchor="middle">결과를 입력에 추가</text><path class="a" d="M447 280 C447 240 452 230 452 185"/>
+    <path class="a" d="M340 335 H225"/><rect class="b" x="35" y="280" width="190" height="110" rx="15"/><text class="t h" x="130" y="325" text-anchor="middle">6. 완료·승인</text><text class="t s" x="130" y="360" text-anchor="middle">조건 확인 · 사람 결정</text>
+    <text class="t h" x="450" y="468" text-anchor="middle">끝나지 않았으면 새 결과를 읽고 다음 행동을 고른다.</text></svg></div>
+    <div class="steps"><div class="step"><b>01</b>목표 받기</div><div class="step"><b>02</b>다음 행동 고르기</div><div class="step"><b>03</b>도구 실행</div><div class="step"><b>04</b>결과 읽기</div><div class="step"><b>05</b>완료 또는 반복</div></div>
+  </div><span class="footname">AI 에이전트 첫걸음</span><span class="folio">10</span>
+</article>
+
+<article class="page" data-title="도구 지도"><header class="running"><span><strong>PART 2</strong><span class="chapter">도구가 연결되면 에이전트가 된다</span></span><span>08</span></header>
+  <div class="content body" contenteditable="true">
+    <h1 class="display">에이전트의 행동은<br><span class="red">도구</span>에서 나온다</h1>
+    <p class="lead">도구는 AI가 외부 세계의 정보를 읽거나 상태를 바꾸기 위해 호출하는 기능입니다.</p>
+    <table class="editorial-table"><thead><tr><th>도구</th><th>읽는 행동</th><th>바꾸는 행동</th><th>주의점</th></tr></thead><tbody>
+      <tr><td><b>브라우저·검색</b></td><td>페이지, 검색 결과, 출처 확인</td><td>웹 폼 입력, 다운로드</td><td>출처·최신성 확인</td></tr>
+      <tr><td><b>문서·파일</b></td><td>PDF, 한글, 워드, 폴더 읽기</td><td>문서 생성·수정·저장</td><td>원본 보존, 저장 위치</td></tr>
+      <tr><td><b>코드·데이터</b></td><td>CSV, 엑셀, 데이터베이스 조회</td><td>계산, 변환, 그래프 생성</td><td>수식·행 수·결측 검증</td></tr>
+      <tr><td><b>업무 서비스</b></td><td>메일, 일정, 고객 정보 조회</td><td>발송, 등록, 상태 변경</td><td>계정 권한, 외부 전달</td></tr>
+      <tr><td><b>운영체제</b></td><td>프로그램과 파일 상태 확인</td><td>앱 실행, 파일 이동</td><td>삭제·덮어쓰기 방지</td></tr>
+    </tbody></table>
+    <h2>스킬은 도구가 아니다</h2>
+    <p>도구가 실제 실행 기능이라면, 스킬은 특정 업무에서 도구를 어떤 순서와 기준으로 써야 하는지 적은 작업 지침입니다. 예를 들어 ‘보고서 작성 스킬’에는 원문 확인, 표 검증, 페이지 구성, PDF 품질 점검 절차가 들어갈 수 있습니다.</p>
+    <div class="case"><b class="red">핵심 구분</b><br><b>LLM</b>은 다음 행동을 제안합니다. <b>도구</b>는 행동을 실행합니다. <b>스킬</b>은 실행 방법을 안내합니다. <b>에이전트 환경</b>은 이들을 연결하고 반복을 관리합니다.</div>
+  </div><span class="footname">AI 에이전트 첫걸음</span><span class="folio">11</span>
+</article>
+
+<article class="page" data-title="세 가지 방식"><header class="running"><span><strong>PART 2</strong><span class="chapter">도구가 연결되면 에이전트가 된다</span></span><span>09</span></header>
+  <div class="content body" contenteditable="true">
+    <h1 class="display">챗봇, 워크플로,<br>에이전트는 다르다</h1>
+    <table class="editorial-table"><thead><tr><th>구분</th><th>동작 방식</th><th>적합한 일</th><th>예외 대응</th></tr></thead><tbody>
+      <tr><td><b>챗봇</b></td><td>질문을 받고 답변을 생성</td><td>설명, 요약, 초안, 상담</td><td>사람이 다음 질문</td></tr>
+      <tr><td><b>워크플로</b></td><td>미리 정한 순서대로 실행</td><td>정형 반복 업무, 승인 절차</td><td>규칙으로 분기</td></tr>
+      <tr><td><b>에이전트</b></td><td>중간 결과를 보고 다음 행동 선택</td><td>자료 상태와 경로가 달라지는 업무</td><td>계획을 수정하고 도구 재사용</td></tr>
+    </tbody></table>
+    <p class="call">모든 일을 에이전트로 만들 필요는 없습니다.</p>
+    <p>절차가 매번 같고 오류 비용이 큰 업무는 고정된 워크플로가 더 안정적입니다. 자료 위치가 달라지고 예상하지 못한 예외가 자주 생기는 업무는 에이전트의 판단이 도움이 됩니다.</p>
+    <h2>둘을 함께 쓰는 방식</h2>
+    <p>실무에서는 워크플로 안에 에이전트를 넣거나, 에이전트가 승인된 워크플로를 호출합니다. 예를 들어 문의 내용을 에이전트가 분류하되, 환불 처리는 정해진 승인 워크플로를 따르게 할 수 있습니다.</p>
+    <div class="note"><b>선택 기준:</b> 정답 경로가 고정되면 워크플로, 경로를 중간에 선택해야 하면 에이전트, 최종 판단이 중요하면 사람의 승인을 둡니다.</div>
+  </div><span class="footname">AI 에이전트 첫걸음</span><span class="folio">12</span>
+</article>
+
+<article class="page" data-title="업무 사례"><header class="running"><span><strong>PART 2</strong><span class="chapter">도구가 연결되면 에이전트가 된다</span></span><span>10</span></header>
+  <div class="content body" contenteditable="true">
+    <h1 class="display">회의 자료가 보고서가 되는<br><span class="blue">실제 흐름</span></h1>
+    <p class="lead">목표: 회의 녹취와 매출 엑셀을 읽고, 경영진용 5쪽 보고서를 PDF로 만든다.</p>
+    <ol>
+      <li><b>자료 확인</b>　파일 도구가 폴더의 녹취 문서와 엑셀 파일을 찾습니다.</li>
+      <li><b>내용 읽기</b>　문서 도구가 결정 사항과 이슈를 추출합니다.</li>
+      <li><b>수치 계산</b>　데이터 도구가 월별 매출과 증감률을 계산합니다.</li>
+      <li><b>이상 확인</b>　에이전트가 빈 셀과 급격한 변화를 발견하면 계산 방법을 바꾸거나 사람에게 묻습니다.</li>
+      <li><b>초안 작성</b>　LLM이 검증된 수치와 회의 내용을 연결해 보고서 문장을 작성합니다.</li>
+      <li><b>파일 생성</b>　문서 도구가 A4 보고서와 그래프를 만들고 PDF로 저장합니다.</li>
+      <li><b>품질 점검</b>　페이지 잘림, 수치 일치, 누락된 출처를 확인합니다.</li>
+      <li><b>사람의 승인</b>　담당자가 해석과 대외비 포함 여부를 확인해 사용을 결정합니다.</li>
+    </ol>
+    <div class="case"><b class="red">이 업무에서 LLM만 한 일</b><br>회의 내용의 의미를 정리하고, 계산 결과를 설명하는 문장을 만들고, 다음 행동을 제안했습니다.<br><br><b class="blue">실제 파일과 수치를 다룬 주체</b><br>파일·문서·데이터·PDF 도구와 이를 호출한 실행 환경입니다.</div>
+    <p class="small">“AI가 보고서를 만들었다”는 표현 안에는 서로 다른 프로그램과 검증 단계가 들어 있습니다.</p>
+  </div><span class="footname">AI 에이전트 첫걸음</span><span class="folio">13</span>
+</article>
+
+<article class="page" data-title="권한과 승인"><header class="running"><span><strong>PART 2</strong><span class="chapter">도구가 연결되면 에이전트가 된다</span></span><span>11</span></header>
+  <div class="content body" contenteditable="true">
+    <h1 class="display">에이전트에게는<br><span class="red">경계선</span>이 필요하다</h1>
+    <p class="lead">행동할 수 있는 AI에는 “무엇을 할 수 있는가”뿐 아니라 “언제 멈춰야 하는가”가 함께 정의되어야 합니다.</p>
+    <table class="editorial-table"><thead><tr><th>행동</th><th>기본 권한</th><th>사람 승인 지점</th></tr></thead><tbody>
+      <tr><td>공개 자료 검색·요약</td><td>읽기 허용</td><td>대외 사용 전 출처 확인</td></tr>
+      <tr><td>내부 문서 초안 만들기</td><td>새 파일 생성</td><td>배포·공유 전 내용 검토</td></tr>
+      <tr><td>기존 파일 수정</td><td>복사본에서 작업</td><td>원본 덮어쓰기 전 비교</td></tr>
+      <tr><td>메일·메신저 발송</td><td>초안까지만 허용</td><td>수신자·첨부·본문 확인 후 발송</td></tr>
+      <tr><td>결제·삭제·계약 확정</td><td>자동 실행 금지</td><td>권한자가 명시적으로 승인</td></tr>
+    </tbody></table>
+    <h2>최소 권한 원칙</h2><p>업무에 필요한 범위만 허용합니다. 읽기만 필요하면 수정 권한을 주지 않습니다. 임시 파일로 충분하면 원본 폴더에 쓰기 권한을 주지 않습니다.</p>
+    <h2>중단 조건</h2><p>파일이 없거나, 자료가 서로 충돌하거나, 개인정보가 발견되거나, 외부 발송이 필요해지면 에이전트가 추정하지 않고 사람에게 질문하도록 합니다.</p>
+    <div class="quote">좋은 에이전트는 계속 움직이는 시스템이 아니라,<br><span class="blue">필요할 때 정확히 멈추는 시스템</span>입니다.</div>
+  </div><span class="footname">AI 에이전트 첫걸음</span><span class="folio">14</span>
+</article>
+
+<article class="page" data-title="첫 업무"><header class="running"><span><strong>PART 2</strong><span class="chapter">도구가 연결되면 에이전트가 된다</span></span><span>12</span></header>
+  <div class="content body" contenteditable="true">
+    <h1 class="display">처음에는<br><span class="blue">검증하기 쉬운 일</span>부터</h1>
+    <p class="lead">결과가 틀렸는지 사람이 빠르게 비교할 수 있고, 되돌릴 수 있는 업무가 첫 에이전트 실습에 적합합니다.</p>
+    <div class="columns"><div><h2>먼저 맡길 일</h2><ul><li>공개 자료 수집과 출처 목록</li><li>회의록 정리와 할 일 추출</li><li>표준 양식의 보고서 초안</li><li>폴더의 파일 목록과 분류안</li><li>엑셀 데이터 품질 점검</li></ul></div><div><h2>나중에 맡길 일</h2><ul><li>검토 없는 대외 메일 발송</li><li>계약 금액과 조건의 확정</li><li>원본 파일 대량 삭제</li><li>개인정보의 외부 서비스 입력</li><li>결제·환불의 자동 승인</li></ul></div></div>
+    <div class="practice"><h2>에이전트 실행 요청서</h2>
+      <div class="checkline"><span class="check">1</span><span><b>완료할 목표</b>　무엇이 만들어지면 끝인가?</span></div>
+      <div class="checkline"><span class="check">2</span><span><b>사용할 자료</b>　어떤 파일과 시스템을 읽는가?</span></div>
+      <div class="checkline"><span class="check">3</span><span><b>허용된 행동</b>　검색·계산·생성·수정 중 어디까지인가?</span></div>
+      <div class="checkline"><span class="check">4</span><span><b>금지 행동</b>　발송·삭제·결제·외부 공유를 막았는가?</span></div>
+      <div class="checkline"><span class="check">5</span><span><b>완료 조건</b>　수치, 파일 형식, 저장 위치를 어떻게 확인하는가?</span></div>
+      <div class="checkline"><span class="check">6</span><span><b>질문 시점</b>　어떤 상황에서 멈추고 사람에게 물을 것인가?</span></div>
+    </div>
+  </div><span class="footname">AI 에이전트 첫걸음</span><span class="folio">15</span>
+</article>
+
+<article class="page" data-title="마무리"><header class="running"><span><strong>AI 에이전트 첫걸음</strong><span class="chapter">마무리</span></span><span>핵심 정리</span></header>
+  <div class="content body" contenteditable="true">
+    <div class="kicker">ONE PAGE SUMMARY</div><h1 class="display">프롬프트를 넘어<br><span class="red">행동의 구조</span>를 보라</h1>
+    <p class="lead">AI를 처음 쓰는 사람도 모델의 문장과 시스템의 행동을 구분할 수 있어야 합니다.</p>
+    <div class="checkline"><span class="check">1</span><span><b>LLM</b>은 글과 이미지를 읽고, 문장·계획·도구 사용 제안을 생성합니다.</span></div>
+    <div class="checkline"><span class="check">2</span><span><b>도구</b>는 검색, 계산, 파일 저장, 메일 발송 같은 실제 행동을 수행합니다.</span></div>
+    <div class="checkline"><span class="check">3</span><span><b>에이전트 실행 환경</b>은 LLM과 도구를 연결하고 결과를 다시 읽게 합니다.</span></div>
+    <div class="checkline"><span class="check">4</span><span><b>에이전트</b>는 목표가 끝날 때까지 판단–실행–확인을 반복하는 전체 시스템입니다.</span></div>
+    <div class="checkline"><span class="check">5</span><span><b>사람</b>은 목표, 자료, 권한, 중단 조건, 승인 지점을 결정합니다.</span></div>
+    <div class="big-eq">프롬프트는 시작점일 뿐입니다.<br><span class="red">성과는 연결된 행동에서 나옵니다.</span></div>
+    <h2>마지막 질문</h2>
+    <p class="call">“이 AI는 무엇을 말할 수 있는가?”<br>그리고 더 중요하게,<br><span class="red">“무엇을 실제로 할 수 있는가?”</span></p>
+    <p class="small">편집한 뒤 상단의 ‘내용 저장’으로 현재 브라우저에 보관하거나, ‘HTML 저장’으로 새 파일을 내려받을 수 있습니다. PDF는 ‘PDF 저장’을 누른 뒤 대상에서 ‘PDF로 저장’을 선택하십시오.</p>
+  </div><span class="footname">AI 에이전트 첫걸음</span><span class="folio">16</span>
+</article>
+</main>
+<div class="toast" id="toast">저장되었습니다.</div>
+<script>
+const pages=[...document.querySelectorAll('.page')], counter=document.getElementById('counter'), toast=document.getElementById('toast');let current=0;
+function show(i){current=Math.max(0,Math.min(pages.length-1,i));pages.forEach((p,n)=>p.classList.toggle('active',n===current));counter.textContent=`${current+1} / ${pages.length}`;document.title=`${pages[current].dataset.title} | AI 에이전트 첫걸음`;scrollTo(0,0)}
+function flash(msg){toast.textContent=msg;toast.classList.add('show');setTimeout(()=>toast.classList.remove('show'),1400)}
+function collect(){return pages.map(p=>p.querySelector('.content').innerHTML)}
+function restore(){try{const d=JSON.parse(localStorage.getItem('ai-agent-textbook-v1'));if(d?.length===pages.length)d.forEach((v,i)=>pages[i].querySelector('.content').innerHTML=v)}catch(e){}}
+function download(name,text,type){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([text],{type}));a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
+document.getElementById('prev').onclick=()=>show(current-1);document.getElementById('next').onclick=()=>show(current+1);
+document.getElementById('saveData').onclick=()=>{localStorage.setItem('ai-agent-textbook-v1',JSON.stringify(collect()));flash('편집 내용을 이 브라우저에 저장했습니다.')};
+document.getElementById('saveHtml').onclick=()=>{const clone=document.documentElement.cloneNode(true),cs=clone.querySelectorAll('.content'),data=collect();cs.forEach((e,i)=>e.innerHTML=data[i]);download('AI_에이전트_첫걸음_편집본.html','<!doctype html>\n'+clone.outerHTML,'text/html;charset=utf-8');flash('편집된 HTML 파일을 저장했습니다.')};
+document.getElementById('print').onclick=()=>window.print();document.addEventListener('keydown',e=>{if(e.target.isContentEditable)return;if(e.key==='ArrowRight'||e.key==='PageDown')show(current+1);if(e.key==='ArrowLeft'||e.key==='PageUp')show(current-1)});
+pages.forEach(p=>p.querySelector('.content').addEventListener('input',()=>{clearTimeout(window.__autosave);window.__autosave=setTimeout(()=>localStorage.setItem('ai-agent-textbook-v1',JSON.stringify(collect())),700)}));restore();show(0);
+</script>
+<script>/* kg-preview: #<heading> \uc704\uce58\ub85c \uc774\ub3d9 */
+(function(){function norm(t){return (t||'').replace(/\s+/g,'').toLowerCase()}
+function go(){var h=decodeURIComponent(location.hash.slice(1));if(!h)return;var k=norm(h).slice(0,24);if(!k)return;
+var best=null,bl=1e9,els=document.body.querySelectorAll('h1,h2,h3,h4,h5,p,div,span,li,td,text,tspan,section,article');
+for(var i=0;i<els.length;i++){var e=els[i],t=norm(e.textContent);if(t.length<bl&&t.indexOf(k)>-1){best=e;bl=t.length}}
+if(!best)return;var box=best.closest('section,[class*=slide],[class*=page],article')||best;
+box.scrollIntoView({block:'start'});box.style.outline='3px solid #c0504d';box.style.outlineOffset='4px';
+setTimeout(function(){box.style.outline=''},2600)}
+window.addEventListener('load',function(){setTimeout(go,400)});window.addEventListener('hashchange',go)})();</script></body></html>

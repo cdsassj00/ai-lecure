@@ -1,0 +1,2558 @@
+<!DOCTYPE html>
+
+<html lang="ko"><head><meta name="robots" content="noindex, nofollow"><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1" name="viewport"/><title>AI챔피언 전문인재과정 모의평가 통합본</title><style>
+:root {
+  --ink: #111827;
+  --muted: #4b5563;
+  --line: #d1d5db;
+  --soft: #f8fafc;
+  --blue: #0b5ed7;
+  --paper: #ffffff;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: #eef2f7;
+  color: var(--ink);
+  font-family: "Malgun Gothic", "Apple SD Gothic Neo", Arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.65;
+}
+.wrap {
+  width: min(1120px, calc(100% - 32px));
+  margin: 0 auto 48px;
+}
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  border-bottom: 1px solid #cbd5e1;
+  background: rgba(255,255,255,.96);
+  backdrop-filter: blur(8px);
+}
+.topbar-inner {
+  width: min(1120px, calc(100% - 32px));
+  margin: 0 auto;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 0;
+}
+.topbar strong { font-size: 14px; }
+.topbar nav { display: flex; gap: 6px; flex-wrap: wrap; }
+.topbar a, .toc a {
+  border: 1px solid #cbd5e1;
+  background: #fff;
+  color: #111827;
+  text-decoration: none;
+  padding: 6px 10px;
+  font-size: 13px;
+}
+.hero {
+  padding: 32px 0 18px;
+}
+.hero h1 {
+  margin: 0 0 8px;
+  font-size: 28px;
+  line-height: 1.25;
+}
+.hero p {
+  margin: 0;
+  color: var(--muted);
+}
+.toc {
+  margin: 18px 0 24px;
+  padding: 18px;
+  border: 1px solid #cbd5e1;
+  background: #fff;
+}
+.toc h2 {
+  margin: 0 0 12px;
+  font-size: 18px;
+}
+.toc-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+.toc-card {
+  display: block;
+  min-height: 92px;
+}
+.toc-card b {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 16px;
+}
+.toc-card span {
+  display: block;
+  color: var(--muted);
+}
+.rough-section {
+  margin: 28px 0;
+  padding: 22px;
+  border: 1px solid #cbd5e1;
+  background: var(--paper);
+}
+.rough-section > header {
+  margin-bottom: 18px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid #111827;
+}
+.rough-section h2 {
+  margin: 0 0 6px;
+  font-size: 24px;
+}
+.rough-section header p {
+  margin: 0;
+  color: var(--muted);
+}
+.question-grid {
+  columns: 2 420px;
+  column-gap: 22px;
+}
+.question, .answer-item {
+  break-inside: avoid;
+  page-break-inside: avoid;
+  margin: 0 0 14px;
+  padding: 12px;
+  border: 1px solid #e5e7eb;
+  background: #fff;
+}
+.question-meta {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 6px;
+  color: #374151;
+  font-size: 12px;
+}
+.question-meta strong {
+  color: #111827;
+  font-size: 18px;
+}
+.question-body {
+  margin: 0 0 8px;
+}
+.options {
+  margin: 0;
+  padding-left: 0;
+  list-style: none;
+}
+.options li {
+  display: grid;
+  grid-template-columns: 22px 1fr;
+  gap: 6px;
+  margin: 4px 0;
+}
+.option-label {
+  display: inline-flex;
+  width: 18px;
+  height: 18px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #111827;
+  border-radius: 50%;
+  font-size: 12px;
+  line-height: 1;
+}
+.correct-answer {
+  color: var(--blue);
+  font-weight: 700;
+}
+.correct-answer .option-label {
+  background: var(--blue);
+  border-color: var(--blue);
+  color: #fff;
+}
+.sample-answer {
+  margin-top: 8px;
+  color: var(--blue);
+  font-weight: 600;
+  line-height: 1.7;
+}
+.practical-question h3, .answer-head strong {
+  margin: 0;
+  font-size: 17px;
+}
+.practical-question h3 {
+  margin-bottom: 8px;
+}
+.practical-question ul, .answer-item ul {
+  margin: 8px 0 0;
+  padding-left: 20px;
+}
+.answer-head {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: baseline;
+  margin-bottom: 6px;
+}
+.answer-head span, .answer-head b {
+  color: #374151;
+  font-size: 13px;
+}
+.answer-item p {
+  margin: 6px 0 0;
+}
+.backtop {
+  display: inline-block;
+  margin-top: 8px;
+  color: #374151;
+  font-size: 12px;
+}
+@media (max-width: 760px) {
+  .topbar-inner { align-items: flex-start; flex-direction: column; }
+  .toc-grid { grid-template-columns: 1fr; }
+  .rough-section { padding: 14px; }
+}
+@media print {
+  body { background: #fff; }
+  .topbar, .backtop { display: none; }
+  .wrap { width: auto; margin: 0; }
+  .rough-section { border: 0; padding: 0; page-break-before: always; }
+}
+
+/* Mobile one-question player */
+body.player-mode{padding-bottom:92px}.player-mode .hero,.player-mode .toc{display:none}.exam-player{position:sticky;top:45px;z-index:15;margin:12px 0;padding:12px;border:1px solid #cbd5e1;background:#fff}.player-status{display:flex;gap:10px;justify-content:space-between;align-items:center;margin-bottom:8px;font-size:13px;color:#374151}.player-status strong{color:#111827;font-size:15px}.timer-track{height:6px;overflow:hidden;background:#e5e7eb}.timer-bar{width:100%;height:100%;background:#0b5ed7;transform-origin:left center}.player-controls{position:fixed;left:0;right:0;bottom:0;z-index:30;display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:10px 14px calc(10px + env(safe-area-inset-bottom));border-top:1px solid #cbd5e1;background:rgba(255,255,255,.97);backdrop-filter:blur(8px)}.player-controls button{min-height:46px;border:1px solid #111827;background:#111827;color:#fff;font:inherit;font-size:15px;font-weight:700}.player-controls button:disabled{border-color:#cbd5e1;background:#e5e7eb;color:#94a3b8}.player-mode .rough-section{display:none;margin-top:12px;padding:14px}.player-mode .rough-section.active-section{display:block}.player-mode .question-grid{columns:auto}.exam-item{display:none}.exam-item.active-item{display:block}.player-mode .exam-item{min-height:calc(100vh - 250px);margin-bottom:0;padding:16px}.options li{cursor:pointer;border-radius:8px;padding:6px}.options li.user-selected{outline:2px solid #111827;outline-offset:2px;background:#f8fafc}.options li.user-selected::after{content:"선택";grid-column:2;color:#111827;font-size:12px;font-weight:700}@media(max-width:760px){body{font-size:15px}.wrap{width:min(100% - 20px,1120px);margin-bottom:24px}.topbar-inner{gap:8px;padding:8px 0}.topbar nav a{padding:5px 8px}.player-mode .rough-section h2{font-size:20px}.question-meta strong{font-size:21px}.options li{grid-template-columns:26px 1fr;gap:8px;padding:8px 4px}.option-label{width:22px;height:22px}}@media print{.exam-player,.player-controls{display:none!important}body.player-mode{padding-bottom:0}.player-mode .hero,.player-mode .toc,.player-mode .rough-section,.exam-item{display:block!important}}
+
+
+/* Default screen ratio: 90% */
+html {
+  zoom: 90%;
+}
+@supports not (zoom: 1) {
+  body {
+    transform: scale(.9);
+    transform-origin: top left;
+    width: 111.111%;
+  }
+}
+
+/* Compact top-right countdown timer */
+.exam-player {
+  position: sticky;
+  top: 45px;
+  z-index: 15;
+  margin: 8px 0 6px;
+  padding: 8px 10px;
+  border: 1px solid #cbd5e1;
+  background: rgba(255, 255, 255, .97);
+  backdrop-filter: blur(8px);
+}
+.player-status {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 8px;
+  align-items: center;
+  font-size: 13px;
+  color: #374151;
+}
+.player-status strong {
+  color: #111827;
+  font-size: 14px;
+}
+.compact-timer {
+  justify-self: end;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 68px;
+  padding: 4px 8px;
+  border: 1px solid #0b5ed7;
+  background: #eff6ff;
+  color: #0b5ed7;
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1;
+}
+.compact-timer::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #0b5ed7;
+}
+.timer-track {
+  height: 4px;
+  margin-top: 7px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #e5e7eb;
+}
+.timer-bar {
+  width: 100%;
+  height: 100%;
+  border-radius: 999px;
+  background: #0b5ed7;
+  transform-origin: left center;
+  transition: transform .25s linear, background-color .2s ease;
+}
+.exam-player.timer-warning .compact-timer {
+  border-color: #dc2626;
+  background: #fef2f2;
+  color: #dc2626;
+}
+.exam-player.timer-warning .compact-timer::before,
+.exam-player.timer-warning .timer-bar {
+  background: #dc2626;
+}
+.player-mode .exam-item {
+  min-height: calc(100vh - 185px);
+  margin-bottom: 0;
+  padding: 16px;
+}
+@media (max-width: 520px) {
+  .exam-player {
+    top: 0;
+    margin: 6px 0;
+    padding: 7px 8px;
+  }
+  .player-status {
+    grid-template-columns: auto 1fr auto;
+    gap: 6px;
+  }
+  .compact-timer {
+    min-width: 58px;
+    padding: 4px 7px;
+    font-size: 12px;
+  }
+}
+
+
+/* Fixed header timer */
+.topbar-inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  gap: 10px;
+  align-items: center;
+}
+.topbar-inner > strong {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.header-timer {
+  justify-self: end;
+  display: grid;
+  gap: 4px;
+  min-width: 76px;
+}
+.header-timer .compact-timer {
+  justify-self: end;
+}
+.header-timer .timer-track {
+  width: 76px;
+  margin-top: 0;
+}
+.topbar.timer-warning .compact-timer {
+  border-color: #dc2626;
+  background: #fef2f2;
+  color: #dc2626;
+}
+.topbar.timer-warning .compact-timer::before,
+.topbar.timer-warning .timer-bar {
+  background: #dc2626;
+}
+.exam-player {
+  position: static;
+  margin: 8px 0 6px;
+  padding: 8px 10px;
+}
+.exam-player .player-status {
+  grid-template-columns: auto 1fr;
+}
+@media (max-width: 760px) {
+  .topbar-inner {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+  .topbar-inner nav {
+    grid-column: 1 / -1;
+    order: 3;
+  }
+  .header-timer {
+    grid-column: 2;
+    grid-row: 1;
+  }
+  .topbar-inner > strong {
+    grid-column: 1;
+    grid-row: 1;
+    font-size: 13px;
+  }
+}
+
+
+/* Distinct area buttons */
+.topbar nav a {
+  border: 0;
+  color: #ffffff;
+  font-weight: 800;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(15, 23, 42, .18);
+  transition: transform .15s ease, filter .15s ease, box-shadow .15s ease;
+}
+.topbar nav a.area-button-1 { background: #2563eb; }
+.topbar nav a.area-button-2 { background: #059669; }
+.topbar nav a.area-button-3 { background: #ea580c; }
+.topbar nav a:hover,
+.topbar nav a:focus {
+  filter: brightness(1.05);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(15, 23, 42, .22);
+}
+.topbar nav a:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 3px rgba(15, 23, 42, .18);
+}
+</style></head><body>
+<div class="topbar" id="top">
+<div class="topbar-inner">
+<strong>AI챔피언 전문인재과정 모의평가 통합본</strong>
+<div aria-label="남은 시간" class="header-timer"><span class="compact-timer"><span id="timer-label">10</span>초</span><div aria-hidden="true" class="timer-track"><div class="timer-bar" id="timer-bar"></div></div></div><nav>
+<a class="area-button-1" data-start-index="0" href="#area-1" role="button">1영역</a>
+<a class="area-button-2" data-start-index="80" href="#area-2" role="button">2영역</a>
+<a class="area-button-3" data-start-index="120" href="#area-3" role="button">3영역</a>
+</nav>
+</div>
+</div>
+<main class="wrap">
+<section class="hero">
+<h1>AI챔피언 전문인재과정 모의평가</h1>
+<p>1영역 객관식, 2영역 단답형·서술형, 3영역 작업형을 하나의 HTML로 묶은 통합본입니다.</p>
+</section>
+<section aria-labelledby="toc-title" class="toc">
+<h2 id="toc-title">목차</h2>
+<div class="toc-grid">
+<a class="toc-card" data-start-index="0" href="#area-1"><b>1영역</b><span>객관식 1~80번 · 정답 파란색 표시</span></a>
+<a class="toc-card" data-start-index="80" href="#area-2"><b>2영역</b><span>단답형/서술형 81~120번 · 예시 답안 표시</span></a>
+<a class="toc-card" data-start-index="120" href="#area-3"><b>3영역</b><span>작업형 문항과 채점 기준</span></a>
+</div>
+</section><section class="exam-player" id="exam-player"><div class="player-status"><strong id="current-label">1 / 1</strong><span id="current-area">1영역</span></div></section><div class="player-controls"><button id="prev-question" type="button">이전</button><button id="next-question" type="button">다음</button></div>
+<section class="rough-section" id="area-1"><header><h2>1영역</h2><p>객관식 1~80번입니다. 정답 보기는 파란색으로만 표시했습니다.</p></header><div class="question-grid"><article class="question theory-question 객관식 exam-item" data-area-id="area-1" data-area-title="1영역" data-item-index="0">
+<div class="question-meta">
+<strong>1.</strong>
+<span>T-P-001</span>
+<span>데이터분석</span>
+<span>중</span>
+<span>객관식</span>
+<span>5점</span>
+</div>
+<p class="question-body">분류 모델을 빠르게 시험할 때는 학습 도구 자체보다 입력 데이터 구성, 검증 방식, 실행 환경이 결과 품질을 좌우한다. 다음 중 '클래스 불균형'에 대한 설명으로 가장 적절한 것은?</p>
+<ol class="options"><li><span class="option-label">A</span><span>업무 목적과 무관하게 최신 기술을 우선 적용하는 방식</span></li><li><span class="option-label">B</span><span>도구 이름이나 브랜드만 바꾸면 검증 없이 같은 효과를 얻는다는 관점</span></li><li class="correct-answer"><span class="option-label">C</span><span>특정 클래스의 표본이 지나치게 많거나 적어 모델 판단이 왜곡되는 문제</span></li><li><span class="option-label">D</span><span>보안, 성능, 품질 기준을 별도로 두지 않고 결과만 확인하는 방식</span></li></ol>
+</article><article class="question theory-question 객관식 exam-item" data-area-id="area-1" data-area-title="1영역" data-item-index="1">
+<div class="question-meta">
+<strong>2.</strong>
+<span>T-P-002</span>
+<span>생성형AI활용</span>
+<span>중</span>
+<span>객관식</span>
+<span>5점</span>
+</div>
+<p class="question-body">생성형 AI를 업무에 적용할 때는 도구 이름을 아는 것보다 어떤 문제를 해결하고 어떤 한계를 통제할지 판단하는 역량이 중요하다. 다음 중 '민첩한 AI'에 대한 설명으로 가장 적절한 것은?</p>
+<ol class="options"><li class="correct-answer"><span class="option-label">A</span><span>짧은 실험, 검증, 개선을 반복해 AI 서비스를 업무 맥락에 맞게 빠르게 다듬는 접근</span></li><li><span class="option-label">B</span><span>도구 이름이나 브랜드만 바꾸면 검증 없이 같은 효과를 얻는다는 관점</span></li><li><span class="option-label">C</span><span>업무 목적과 무관하게 최신 기술을 우선 적용하는 방식</span></li><li><span class="option-label">D</span><span>보안, 성능, 품질 기준을 별도로 두지 않고 결과만 확인하는 방식</span></li></ol>
+</article><article class="question theory-question 객관식 exam-item" data-area-id="area-1" data-area-title="1영역" data-item-index="2">
+<div class="question-meta">
+<strong>3.</strong>
+<span>T-P-003</span>
+<span>서비스구현</span>
+<span>상</span>
+<span>객관식</span>
+<span>5점</span>
+</div>
+<p class="question-body">공공기관 AI 활용에서는 편의성뿐 아니라 망 분리, 실행 권한, 검증 절차, 변경 이력 관리가 함께 요구된다. 다음 중 'AI 보안 거버넌스'에 대한 설명으로 가장 적절한 것은?</p>
+<ol class="options"><li><span class="option-label">A</span><span>업무 목적과 무관하게 최신 기술을 우선 적용하는 방식</span></li><li><span class="option-label">B</span><span>도구 이름이나 브랜드만 바꾸면 검증 없이 같은 효과를 얻는다는 관점</span></li><li class="correct-answer"><span class="option-label">C</span><span>생성형 AI와 자동 생성 코드의 사용 기준, 승인 절차, 책임 체계를 정하는 관리 원칙</span></li><li><span class="option-label">D</span><span>보안, 성능, 품질 기준을 별도로 두지 않고 결과만 확인하는 방식</span></li></ol>
+</article><article class="question theory-question 객관식 exam-item" data-area-id="area-1" data-area-title="1영역" data-item-index="3">
+<div class="question-meta">
+<strong>4.</strong>
+<span>T-P-004</span>
+<span>데이터분석</span>
+<span>중</span>
+<span>객관식</span>
+<span>5점</span>
+</div>
+<p class="question-body">데이터 분석 업무에서는 파일을 바로 읽을지, DB에 적재해 조회할지, 어떤 기준으로 검증할지에 따라 성능과 재현성이 달라진다. 다음 중 'Text-to-SQL'에 대한 설명으로 가장 적절한 것은?</p>
+<ol class="options"><li><span class="option-label">A</span><span>보안, 성능, 품질 기준을 별도로 두지 않고 결과만 확인하는 방식</span></li><li><span class="option-label">B</span><span>도구 이름이나 브랜드만 바꾸면 검증 없이 같은 효과를 얻는다는 관점</span></li><li><span class="option-label">C</span><span>업무 목적과 무관하게 최신 기술을 우선 적용하는 방식</span></li><li class="correct-answer"><span class="option-label">D</span><span>자연어 질문을 SQL 쿼리로 변환해 데이터베이스 조회를 돕는 방식</span></li></ol>
+</article><article class="question theory-question 객관식 exam-item" data-area-id="area-1" data-area-title="1영역" data-item-index="4">
+<div class="question-meta">
+<strong>5.</strong>
+<span>T-P-005</span>
+<span>생성형AI활용</span>
+<span>중</span>
+<span>객관식</span>
+<span>5점</span>
+</div>
+<p class="question-body">생성형 AI를 업무에 적용할 때는 도구 이름을 아는 것보다 어떤 문제를 해결하고 어떤 한계를 통제할지 판단하는 역량이 중요하다. 다음 중 '브리콜라주 사고'에 대한 설명으로 가장 적절한 것은?</p>
+<ol class="options"><li><span class="option-label">A</span><span>도구 이름이나 브랜드만 바꾸면 검증 없이 같은 효과를 얻는다는 관점</span></li><li class="correct-answer"><span class="option-label">B</span><span>가용한 도구와 지식을 조합해 현실 문제를 해결하는 실천적 문제해결 방식</span></li><li><span class="option-label">C</span><span>업무 목적과 무관하게 최신 기술을 우선 적용하는 방식</span></li><li><span class="option-label">D</span><span>보안, 성능, 품질 기준을 별도로 두지 않고 결과만 확인하는 방식</span></li></ol>
+</article><article class="question theory-question 객관식 exam-item" data-area-id="area-1" data-area-title="1영역" data-item-index="5">
+<div class="question-meta">
+<strong>6.</strong>
+<span>T-P-006</span>
+<span>서비스구현</span>
+<span>상</span>
+<span>객관식</span>
+<span>5점</span>
+</div>
+<p class="question-body">공공기관 AI 활용에서는 편의성뿐 아니라 망 분리, 실행 권한, 검증 절차, 변경 이력 관리가 함께 요구된다. 다음 중 '외부 생성·내부 실행 분리'에 대한 설명으로 가장 적절한 것은?</p>
+<ol class="options"><li><span class="option-label">A</span><span>보안, 성능, 품질 기준을 별도로 두지 않고 결과만 확인하는 방식</span></li><li><span class="option-label">B</span><span>도구 이름이나 브랜드만 바꾸면 검증 없이 같은 효과를 얻는다는 관점</span></li><li><span class="option-label">C</span><span>업무 목적과 무관하게 최신 기술을 우선 적용하는 방식</span></li><li class="correct-answer"><span class="option-label">D</span><span>외부망에서 코드를 생성하고 내부망에서는 검증된 산출물만 실행하는 폐쇄망 대응 전략</span></li></ol>
+</article><article class="question theory-question 객관식 exam-item" data-area-id="area-1" data-area-title="1영역" data-item-index="6">
+<div class="question-meta">
+<strong>7.</strong>
+<span>T-P-007</span>
+<span>데이터분석</span>
+<span>중</span>
+<span>객관식</span>
+<span>5점</span>
+</div>
+<p class="question-body">음성·비정형 데이터 분석은 원본 수집, 전사, 요약, 저장, 검증 단계가 이어지므로 각 단계의 오류와 책임 범위를 분리해야 한다. 다음 중 '통화 녹취 전사 워크플로우'에 대한 설명으로 가장 적절한 것은?</p>
+<ol class="options"><li class="correct-answer"><span class="option-label">A</span><span>음성 파일을 텍스트로 변환한 뒤 요약, 감성 분석, 저장으로 이어지는 처리 흐름</span></li><li><span class="option-label">B</span><span>도구 이름이나 브랜드만 바꾸면 검증 없이 같은 효과를 얻는다는 관점</span></li><li><span class="option-label">C</span><span>업무 목적과 무관하게 최신 기술을 우선 적용하는 방식</span></li><li><span class="option-label">D</span><span>보안, 성능, 품질 기준을 별도로 두지 않고 결과만 확인하는 방식</span></li></ol>
+</article><article class="question theory-question 객관식 exam-item" data-area-id="area-1" data-area-title="1영역" data-item-index="7">
+<div class="question-meta">
+<strong>8.</strong>
+<span>T-P-008</span>
+<span>생성형AI활용</span>
+<span>중</span>
+<span>객관식</span>
+<span>5점</span>
+</div>
+<p class="question-body">문서 검색형 AI를 설계할 때는 원문을 어떻게 나누고 찾고 모델에 전달하는지에 따라 정확도, 비용, 운영 난도가 달라진다. 다음 중 'RAG'에 대한 설명으로 가장 적절한 것은?</p>
+<ol class="options"><li><span class="option-label">A</span><span>도구 이름이나 브랜드만 바꾸면 검증 없이 같은 효과를 얻는다는 관점</span></li><li class="correct-answer"><span class="option-label">B</span><span>검색된 근거 문서를 LLM 입력에 결합해 답변의 정확성과 근거성을 높이는 방식</span></li><li><span class="option-label">C</span><span>업무 목적과 무관하게 최신 기술을 우선 적용하는 방식</span></li><li><span class="option-label">D</span><span>보안, 성능, 품질 기준을 별도로 두지 않고 결과만 확인하는 방식</span></li></ol>
+</article><article class="question theory-question 객관식 exam-item" data-area-id="area-1" data-area-title="1영역" data-item-index="8">
+<div class="question-meta">
+<strong>9.</strong>
+<span>T-P-009</span>
+<span>서비스구현</span>
+<span>하</span>
+<span>객관식</span>
+<span>5점</span>
+</div>
+<p class="question-body">웹 기반 업무 도구를 만들 때는 화면에서 처리할 일, 서버가 맡을 일, 내부망 제약과 배포 방식을 함께 구분해야 한다. 다음 중 'HTML·CSS·JavaScript 단일 파일'에 대한 설명으로 가장 적절한 것은?</p>
+<ol class="options"><li class="correct-answer"><span class="option-label">A</span><span>브라우저만으로 실행되도록 구조, 디자인, 기능을 하나의 정적 웹 파일에 담는 방식</span></li><li><span class="option-label">B</span><span>도구 이름이나 브랜드만 바꾸면 검증 없이 같은 효과를 얻는다는 관점</span></li><li><span class="option-label">C</span><span>업무 목적과 무관하게 최신 기술을 우선 적용하는 방식</span></li><li><span class="option-label">D</span><span>보안, 성능, 품질 기준을 별도로 두지 않고 결과만 확인하는 방식</span></li></ol>
+</article><article class="question theory-question 객관식 exam-item" data-area-id="area-1" data-area-title="1영역" data-item-index="9">
+<div class="question-meta">
+<strong>10.</strong>
+<span>T-P-010</span>
+<span>데이터분석</span>
+<span>하</span>
+<span>객관식</span>
+<span>5점</span>
+</div>
+<p class="question-body">데이터 분석 업무에서는 파일을 바로 읽을지, DB에 적재해 조회할지, 어떤 기준으로 검증할지에 따라 성능과 재현성이 달라진다. 다음 중 '데이터베이스 저장과 조회'에 대한 설명으로 가장 적절한 것은?</p>
+<ol class="options"><li><span class="option-label">A</span><span>도구 이름이나 브랜드만 바꾸면 검증 없이 같은 효과를 얻는다는 관점</span></li><li class="correct-answer"><span class="option-label">B</span><span>데이터베이스의 핵심 기능을 데이터를 안전하게 저장하고 필요한 조건으로 조회하는 일로 보는 관점</span></li><li><span class="option-label">C</span><span>업무 목적과 무관하게 최신 기술을 우선 적용하는 방식</span></li><li><span class="option-label">D</span><span>보안, 성능, 품질 기준을 별도로 두지 않고 결과만 확인하는 방식</span></li></ol>
+</article><article class="question theory-question 객관식 exam-item" data-area-id="area-1" data-area-title="1영역" data-item-index="10">
+<div class="question-meta">
+<strong>11.</strong>
+<span>T-P-011</span>
+<span>생성형AI활용</span>
+<span>중</span>
+<span>객관식</span>
+<span>5점</span>
+</div>
+<p class="question-body">문서 검색형 AI를 설계할 때는 원문을 어떻게 나누고 찾고 모델에 전달하는지에 따라 정확도, 비용, 운영 난도가 달라진다. 다음 중 '청크 분할'에 대한 설명으로 가장 적절한 것은?</p>
+<ol class="options"><li><span class="option-label">A</span><span>업무 목적과 무관하게 최신 기술을 우선 적용하는 방식</span></li><li><span class="option-label">B</span><span>도구 이름이나 브랜드만 바꾸면 검증 없이 같은 효과를 얻는다는 관점</span></li><li class="correct-answer"><span class="option-label">C</span><span>긴 문서를 검색과 임베딩에 적합한 작은 의미 단위로 나누는 전처리</span></li><li><span class="option-label">D</span><span>보안, 성능, 품질 기준을 별도로 두지 않고 결과만 확인하는 방식</span></li></ol>
+</article><article class="question theory-question 객관식 exam-item" data-area-id="area-1" data-area-title="1영역" data-item-index="11">
+<div class="question-meta">
+<strong>12.</strong>
+<span>T-P-012</span>
+<span>서비스구현</span>
+<span>하</span>
+<span>객관식</span>
+<span>5점</span>
+</div>
+<p class="question-body">웹 기반 업무 도구를 만들 때는 화면에서 처리할 일, 서버가 맡을 일, 내부망 제약과 배포 방식을 함께 구분해야 한다. 다음 중 'HTML·CSS·JavaScript 역할 분리'에 대한 설명으로 가장 적절한 것은?</p>
+<ol class="options"><li><span class="option-label">A</span><span>도구 이름이나 브랜드만 바꾸면 검증 없이 같은 효과를 얻는다는 관점</span></li><li class="correct-answer"><span class="option-label">B</span><span>HTML은 구조, CSS는 표현, JavaScript는 기능을 담당하게 나누는 프론트엔드 기본 원칙</span></li><li><span class="option-label">C</span><span>업무 목적과 무관하게 최신 기술을 우선 적용하는 방식</span></li><li><span class="option-label">D</span><span>보안, 성능, 품질 기준을 별도로 두지 않고 결과만 확인하는 방식</span></li></ol>
+</article><article class="question theory-question 객관식 exam-item" data-area-id="area-1" data-area-title="1영역" data-item-index="12">
+<div class="question-meta">
+<strong>13.</strong>
+<span>T-P-013</span>
+<span>데이터분석</span>
+<span>중</span>
+<span>객관식</span>
+<span>5점</span>
+</div>
+<p class="question-body">데이터 기반 업무 판단에서는 처리 방식과 검증 기준이 결과의 정확도와 신뢰성에 직접 영향을 준다. 다음 중 '벌크 인서트'에 대한 설명으로 가장 적절한 것은?</p>
+<ol class="options"><li><span class="option-label">A</span><span>업무 목적과 무관하게 최신 기술을 우선 적용하는 방식</span></li><li><span class="option-label">B</span><span>도구 이름이나 브랜드만 바꾸면 검증 없이 같은 효과를 얻는다는 관점</span></li><li class="correct-answer"><span class="option-label">C</span><span>대량 데이터를 한 행씩 입력하지 않고 묶어서 빠르게 적재하는 방식</span></li><li><span class="option-label">D</span><span>보안, 성능, 품질 기준을 별도로 두지 않고 결과만 확인하는 방식</span></li></ol>
+</article><article class="question theory-question 객관식 exam-item" data-area-id="area-1" data-area-title="1영역" data-item-index="13">
+<div class="question-meta">
+<strong>14.</strong>
+<span>T-P-014</span>
+<span>생성형AI활용</span>
+<span>중</span>
+<span>객관식</span>
+<span>5점</span>
+</div>
+<p class="question-body">문서 검색형 AI를 설계할 때는 원문을 어떻게 나누고 찾고 모델에 전달하는지에 따라 정확도, 비용, 운영 난도가 달라진다. 다음 중 '오버랩'에 대한 설명으로 가장 적절한 것은?</p>
+<ol class="options"><li><span class="option-label">A</span><span>보안, 성능, 품질 기준을 별도로 두지 않고 결과만 확인하는 방식</span></li><li><span class="option-label">B</span><span>도구 이름이나 브랜드만 바꾸면 검증 없이 같은 효과를 얻는다는 관점</span></li><li><span class="option-label">C</span><span>업무 목적과 무관하게 최신 기술을 우선 적용하는 방식</span></li><li class="correct-answer"><span class="option-label">D</span><span>청크 경계에서 문맥 손실을 줄이기 위해 앞뒤 내용을 일부 중첩하는 기법</span></li></ol>
+</article><article class="question theory-question 객관식 exam-item" data-area-id="area-1" data-area-title="1영역" data-item-index="14">
+<div class="question-meta">
+<strong>15.</strong>
+<span>T-P-015</span>
+<span>서비스구현</span>
+<span>중</span>
+<span>객관식</span>
+<span>5점</span>
+</div>
+<p class="question-body">웹 기반 업무 도구를 만들 때는 화면에서 처리할 일, 서버가 맡을 일, 내부망 제약과 배포 방식을 함께 구분해야 한다. 다음 중 'CDN 방식'에 대한 설명으로 가장 적절한 것은?</p>
+<ol class="options"><li><span class="option-label">A</span><span>업무 목적과 무관하게 최신 기술을 우선 적용하는 방식</span></li><li><span class="option-label">B</span><span>도구 이름이나 브랜드만 바꾸면 검증 없이 같은 효과를 얻는다는 관점</span></li><li class="correct-answer"><span class="option-label">C</span><span>외부 서버에서 라이브러리를 실시간으로 불러와 사용하는 방식</span></li><li><span class="option-label">D</span><span>보안, 성능, 품질 기준을 별도로 두지 않고 결과만 확인하는 방식</span></li></ol>
+</article><article class="question theory-question 객관식 exam-item" data-area-id="area-1" data-area-title="1영역" data-item-index="15">
+<div class="question-meta">
+<strong>16.</strong>
+<span>T-P-016</span>
+<span>데이터분석</span>
+<span>상</span>
+<span>객관식</span>
+<span>5점</span>
+</div>
+<p class="question-body">데이터 분석 업무에서는 파일을 바로 읽을지, DB에 적재해 조회할지, 어떤 기준으로 검증할지에 따라 성능과 재현성이 달라진다. 다음 중 '인덱스 전략'에 대한 설명으로 가장 적절한 것은?</p>
+<ol class="options"><li><span class="option-label">A</span><span>보안, 성능, 품질 기준을 별도로 두지 않고 결과만 확인하는 방식</span></li><li><span class="option-label">B</span><span>도구 이름이나 브랜드만 바꾸면 검증 없이 같은 효과를 얻는다는 관점</span></li><li><span class="option-label">C</span><span>업무 목적과 무관하게 최신 기술을 우선 적용하는 방식</span></li><li class="correct-answer"><span class="option-label">D</span><span>조회 조건에 자주 쓰이는 컬럼을 빠르게 찾도록 별도 탐색 구조를 만드는 전략</span></li></ol>
+</article><article class="question theory-question 객관식 exam-item" data-area-id="area-1" data-area-title="1영역" data-item-index="16">
+<div class="question-meta">
+<strong>17.</strong>
+<span>T-P-017</span>
+<span>생성형AI활용</span>
+<span>중</span>
+<span>객관식</span>
+<span>5점</span>
+</div>
+<p class="question-body">문서 검색형 AI를 설계할 때는 원문을 어떻게 나누고 찾고 모델에 전달하는지에 따라 정확도, 비용, 운영 난도가 달라진다. 다음 중 '임베딩 모델'에 대한 설명으로 가장 적절한 것은?</p>
+<ol class="options"><li class="correct-answer"><span class="option-label">A</span><span>텍스트 의미를 벡터 좌표로 변환해 유사도 검색을 가능하게 하는 모델</span></li><li><span class="option-label">B</span><span>도구 이름이나 브랜드만 바꾸면 검증 없이 같은 효과를 얻는다는 관점</span></li><li><span class="option-label">C</span><span>업무 목적과 무관하게 최신 기술을 우선 적용하는 방식</span></li><li><span class="option-label">D</span><span>보안, 성능, 품질 기준을 별도로 두지 않고 결과만 확인하는 방식</span></li></ol>
+</article><article class="question theory-question 객관식 exam-item" data-area-id="area-1" data-area-title="1영역" data-item-index="17">
+<div class="question-meta">
+<strong>18.</strong>
+<span>T-P-018</span>
+<span>서비스구현</span>
+<span>중</span>
+<span>객관식</span>
+<span>5점</span>
+</div>
+<p class="question-body">웹 기반 업무 도구를 만들 때는 화면에서 처리할 일, 서버가 맡을 일, 내부망 제약과 배포 방식을 함께 구분해야 한다. 다음 중 '인라인 방식'에 대한 설명으로 가장 적절한 것은?</p>
+<ol class="options"><li><span class="option-label">A</span><span>보안, 성능, 품질 기준을 별도로 두지 않고 결과만 확인하는 방식</span></li><li><span class="option-label">B</span><span>도구 이름이나 브랜드만 바꾸면 검증 없이 같은 효과를 얻는다는 관점</span></li><li><span class="option-label">C</span><span>업무 목적과 무관하게 최신 기술을 우선 적용하는 방식</span></li><li class="correct-answer"><span class="option-label">D</span><span>필요한 라이브러리 코드를 파일 내부에 포함해 외부 연결 없이 실행하는 방식</span></li></ol>
+</article><article class="question theory-question 객관식 exam-item" data-area-id="area-1" data-area-title="1영역" data-item-index="18">
+<div class="question-meta">
+<strong>19.</strong>
+<span>T-P-019</span>
+<span>데이터분석</span>
+<span>중</span>
+<span>객관식</span>
+<span>5점</span>
+</div>
+<p class="question-body">데이터 분석 업무에서는 파일을 바로 읽을지, DB에 적재해 조회할지, 어떤 기준으로 검증할지에 따라 성능과 재현성이 달라진다. 다음 중 'Pandas read_csv와 DB 적재 비교'에 대한 설명으로 가장 적절한 것은?</p>
+<ol class="options"><li class="correct-answer"><span class="option-label">A</span><span>파일을 메모리에 올려 처리하는 방식과 DB에 영구 저장해 조회하는 방식의 차이</span></li><li><span class="option-label">B</span><span>도구 이름이나 브랜드만 바꾸면 검증 없이 같은 효과를 얻는다는 관점</span></li><li><span class="option-label">C</span><span>업무 목적과 무관하게 최신 기술을 우선 적용하는 방식</span></li><li><span class="option-label">D</span><span>보안, 성능, 품질 기준을 별도로 두지 않고 결과만 확인하는 방식</span></li></ol>
+</article><article class="question theory-question 객관식 exam-item" data-area-id="area-1" data-area-title="1영역" data-item-index="19">
+<div class="question-meta">
+<strong>20.</strong>
+<span>T-P-020</span>
+<span>생성형AI활용</span>
+<span>중</span>
+<span>객관식</span>
+<span>5점</span>
+</div>
+<p class="question-body">문서 검색형 AI를 설계할 때는 원문을 어떻게 나누고 찾고 모델에 전달하는지에 따라 정확도, 비용, 운영 난도가 달라진다. 다음 중 '벡터DB'에 대한 설명으로 가장 적절한 것은?</p>
+<ol class="options"><li><span class="option-label">A</span><span>도구 이름이나 브랜드만 바꾸면 검증 없이 같은 효과를 얻는다는 관점</span></li><li class="correct-answer"><span class="option-label">B</span><span>임베딩 벡터를 저장하고 유사도 기반으로 빠르게 검색하는 저장소</span></li><li><span class="option-label">C</span><span>업무 목적과 무관하게 최신 기술을 우선 적용하는 방식</span></li><li><span class="option-label">D</span><span>보안, 성능, 품질 기준을 별도로 두지 않고 결과만 확인하는 방식</span></li></ol>
+</article><article class="question theory-question 객관식 exam-item" data-area-id="area-1" data-area-title="1영역" data-item-index="20">
+<div class="question-meta">
+<strong>21.</strong>
+<span>T-P-021</span>
+<span>서비스구현</span>
+<span>하</span>
+<span>객관식</span>
+<span>5점</span>
+</div>
+<p class="question-body">웹 기반 업무 도구를 만들 때는 화면에서 처리할 일, 서버가 맡을 일, 내부망 제약과 배포 방식을 함께 구분해야 한다. 다음 중 'CodePen 기반 프로토타이핑'에 대한 설명으로 가장 적절한 것은?</p>
+<ol class="options"><li class="correct-answer"><span class="option-label">A</span><span>브라우저에서 HTML, CSS, JavaScript를 빠르게 실험하고 결과를 확인하는 개발 방식</span></li><li><span class="option-label">B</span><span>도구 이름이나 브랜드만 바꾸면 검증 없이 같은 효과를 얻는다는 관점</span></li><li><span class="option-label">C</span><span>업무 목적과 무관하게 최신 기술을 우선 적용하는 방식</span></li><li><span class="option-label">D</span><span>보안, 성능, 품질 기준을 별도로 두지 않고 결과만 확인하는 방식</span></li></ol>
+</article><article class="question theory-question 객관식 exam-item" data-area-id="area-1" data-area-title="1영역" data-item-index="21">
+<div class="question-meta">
+<strong>22.</strong>
+<span>T-P-022</span>
+<span>데이터분석</span>
+<span>중</span>
+<span>객관식</span>
+<span>5점</span>
+</div>
+<p class="question-body">데이터 분석 업무에서는 파일을 바로 읽을지, DB에 적재해 조회할지, 어떤 기준으로 검증할지에 따라 성능과 재현성이 달라진다. 다음 중 '메타데이터 프로파일링'에 대한 설명으로 가장 적절한 것은?</p>
+<ol class="options"><li><span class="option-label">A</span><span>도구 이름이나 브랜드만 바꾸면 검증 없이 같은 효과를 얻는다는 관점</span></li><li class="correct-answer"><span class="option-label">B</span><span>분석 전 컬럼명, 샘플 값, 단위, 결측 등 구조 정보를 먼저 점검하는 절차</span></li><li><span class="option-label">C</span><span>업무 목적과 무관하게 최신 기술을 우선 적용하는 방식</span></li><li><span class="option-label">D</span><span>보안, 성능, 품질 기준을 별도로 두지 않고 결과만 확인하는 방식</span></li></ol>
+</article><article class="question theory-question 객관식 exam-item" data-area-id="area-1" data-area-title="1영역" data-item-index="22">
+<div class="question-meta">
+<strong>23.</strong>
+<span>T-P-023</span>
+<span>생성형AI활용</span>
+<span>중</span>
+<span>객관식</span>
+<span>5점</span>
+</div>
+<p class="question-body">문서 검색형 AI를 설계할 때는 원문을 어떻게 나누고 찾고 모델에 전달하는지에 따라 정확도, 비용, 운영 난도가 달라진다. 다음 중 '컨텍스트 윈도우'에 대한 설명으로 가장 적절한 것은?</p>
+<ol class="options"><li><span class="option-label">A</span><span>업무 목적과 무관하게 최신 기술을 우선 적용하는 방식</span></li><li><span class="option-label">B</span><span>도구 이름이나 브랜드만 바꾸면 검증 없이 같은 효과를 얻는다는 관점</span></li><li class="correct-answer"><span class="option-label">C</span><span>LLM이 한 번에 참고할 수 있는 입력 길이의 한계</span></li><li><span class="option-label">D</span><span>보안, 성능, 품질 기준을 별도로 두지 않고 결과만 확인하는 방식</span></li></ol>
+</article><article class="question theory-question 객관식 exam-item" data-area-id="area-1" data-area-title="1영역" data-item-index="23">
+<div class="question-meta">
+<strong>24.</strong>
+<span>T-P-024</span>
+<span>서비스구현</span>
+<span>하</span>
+<span>객관식</span>
+<span>5점</span>
+</div>
+<p class="question-body">웹 기반 업무 도구를 만들 때는 화면에서 처리할 일, 서버가 맡을 일, 내부망 제약과 배포 방식을 함께 구분해야 한다. 다음 중 '정적 웹 배포'에 대한 설명으로 가장 적절한 것은?</p>
+<ol class="options"><li><span class="option-label">A</span><span>도구 이름이나 브랜드만 바꾸면 검증 없이 같은 효과를 얻는다는 관점</span></li><li class="correct-answer"><span class="option-label">B</span><span>서버 로직 없이 정적 파일을 웹 주소로 공개하는 배포 방식</span></li><li><span class="option-label">C</span><span>업무 목적과 무관하게 최신 기술을 우선 적용하는 방식</span></li><li><span class="option-label">D</span><span>보안, 성능, 품질 기준을 별도로 두지 않고 결과만 확인하는 방식</span></li></ol>
+</article><article class="question theory-question 객관식 exam-item" data-area-id="area-1" data-area-title="1영역" data-item-index="24">
+<div class="question-meta">
+<strong>25.</strong>
+<span>T-P-025</span>
+<span>데이터분석</span>
+<span>중</span>
+<span>객관식</span>
+<span>5점</span>
+</div>
+<p class="question-body">데이터 분석 업무에서는 파일을 바로 읽을지, DB에 적재해 조회할지, 어떤 기준으로 검증할지에 따라 성능과 재현성이 달라진다. 다음 중 '단위 정규화'에 대한 설명으로 가장 적절한 것은?</p>
+<ol class="options"><li><span class="option-label">A</span><span>업무 목적과 무관하게 최신 기술을 우선 적용하는 방식</span></li><li><span class="option-label">B</span><span>도구 이름이나 브랜드만 바꾸면 검증 없이 같은 효과를 얻는다는 관점</span></li><li class="correct-answer"><span class="option-label">C</span><span>서로 다른 단위 체계를 공통 기준으로 변환해 비교 가능하게 만드는 전처리</span></li><li><span class="option-label">D</span><span>보안, 성능, 품질 기준을 별도로 두지 않고 결과만 확인하는 방식</span></li></ol>
+</article><article class="question theory-question 객관식 exam-item" data-area-id="area-1" data-area-title="1영역" data-item-index="25">
+<div class="question-meta">
+<strong>26.</strong>
+<span>T-P-026</span>
+<span>생성형AI활용</span>
+<span>상</span>
+<span>객관식</span>
+<span>5점</span>
+</div>
+<p class="question-body">문서 검색형 AI를 설계할 때는 원문을 어떻게 나누고 찾고 모델에 전달하는지에 따라 정확도, 비용, 운영 난도가 달라진다. 다음 중 'RAG 오버 엔지니어링 경계'에 대한 설명으로 가장 적절한 것은?</p>
+<ol class="options"><li><span class="option-label">A</span><span>보안, 성능, 품질 기준을 별도로 두지 않고 결과만 확인하는 방식</span></li><li><span class="option-label">B</span><span>도구 이름이나 브랜드만 바꾸면 검증 없이 같은 효과를 얻는다는 관점</span></li><li><span class="option-label">C</span><span>업무 목적과 무관하게 최신 기술을 우선 적용하는 방식</span></li><li class="correct-answer"><span class="option-label">D</span><span>문제 규모보다 과도한 검색·인프라 구조를 만드는 일을 피하는 판단 기준</span></li></ol>
+</article><article class="question theory-question 객관식 exam-item" data-area-id="area-1" data-area-title="1영역" data-item-index="26">
+<div class="question-meta">
+<strong>27.</strong>
+<span>T-P-027</span>
+<span>서비스구현</span>
+<span>상</span>
+<span>객관식</span>
+<span>5점</span>
+</div>
+<p class="question-body">문서 자동화에서는 파일 확장자보다 내부 구조와 수정 방식이 중요하며, 잘못 변경하면 결과 문서가 열리지 않을 수 있다. 다음 중 'HWPX XML 구조'에 대한 설명으로 가장 적절한 것은?</p>
+<ol class="options"><li><span class="option-label">A</span><span>업무 목적과 무관하게 최신 기술을 우선 적용하는 방식</span></li><li><span class="option-label">B</span><span>도구 이름이나 브랜드만 바꾸면 검증 없이 같은 효과를 얻는다는 관점</span></li><li class="correct-answer"><span class="option-label">C</span><span>HWPX 문서가 압축 컨테이너 내부의 XML 파트 조합으로 구성되는 구조</span></li><li><span class="option-label">D</span><span>보안, 성능, 품질 기준을 별도로 두지 않고 결과만 확인하는 방식</span></li></ol>
+</article><article class="question theory-question 객관식 exam-item" data-area-id="area-1" data-area-title="1영역" data-item-index="27">
+<div class="question-meta">
+<strong>28.</strong>
+<span>T-P-028</span>
+<span>데이터분석</span>
+<span>중</span>
+<span>객관식</span>
+<span>5점</span>
+</div>
+<p class="question-body">데이터 분석 업무에서는 파일을 바로 읽을지, DB에 적재해 조회할지, 어떤 기준으로 검증할지에 따라 성능과 재현성이 달라진다. 다음 중 '컬럼 불일치 탐지'에 대한 설명으로 가장 적절한 것은?</p>
+<ol class="options"><li><span class="option-label">A</span><span>보안, 성능, 품질 기준을 별도로 두지 않고 결과만 확인하는 방식</span></li><li><span class="option-label">B</span><span>도구 이름이나 브랜드만 바꾸면 검증 없이 같은 효과를 얻는다는 관점</span></li><li><span class="option-label">C</span><span>업무 목적과 무관하게 최신 기술을 우선 적용하는 방식</span></li><li class="correct-answer"><span class="option-label">D</span><span>파일별 컬럼명이나 구조 차이를 찾아 통합 오류를 예방하는 점검</span></li></ol>
+</article><article class="question theory-question 객관식 exam-item" data-area-id="area-1" data-area-title="1영역" data-item-index="28">
+<div class="question-meta">
+<strong>29.</strong>
+<span>T-P-029</span>
+<span>생성형AI활용</span>
+<span>하</span>
+<span>객관식</span>
+<span>5점</span>
+</div>
+<p class="question-body">문서 검색형 AI를 설계할 때는 원문을 어떻게 나누고 찾고 모델에 전달하는지에 따라 정확도, 비용, 운영 난도가 달라진다. 다음 중 'LLM-Free 퍼지 검색'에 대한 설명으로 가장 적절한 것은?</p>
+<ol class="options"><li class="correct-answer"><span class="option-label">A</span><span>LLM 호출 없이 문자열 유사도 기반으로 필요한 내용을 찾는 경량 검색 방식</span></li><li><span class="option-label">B</span><span>도구 이름이나 브랜드만 바꾸면 검증 없이 같은 효과를 얻는다는 관점</span></li><li><span class="option-label">C</span><span>업무 목적과 무관하게 최신 기술을 우선 적용하는 방식</span></li><li><span class="option-label">D</span><span>보안, 성능, 품질 기준을 별도로 두지 않고 결과만 확인하는 방식</span></li></ol>
+</article><article class="question theory-question 객관식 exam-item" data-area-id="area-1" data-area-title="1영역" data-item-index="29">
+<div class="question-meta">
+<strong>30.</strong>
+<span>T-P-030</span>
+<span>서비스구현</span>
+<span>상</span>
+<span>객관식</span>
+<span>5점</span>
+</div>
+<p class="question-body">문서 자동화에서는 파일 확장자보다 내부 구조와 수정 방식이 중요하며, 잘못 변경하면 결과 문서가 열리지 않을 수 있다. 다음 중 '압축 컨테이너 직접 수정 원칙'에 대한 설명으로 가장 적절한 것은?</p>
+<ol class="options"><li><span class="option-label">A</span><span>보안, 성능, 품질 기준을 별도로 두지 않고 결과만 확인하는 방식</span></li><li><span class="option-label">B</span><span>도구 이름이나 브랜드만 바꾸면 검증 없이 같은 효과를 얻는다는 관점</span></li><li><span class="option-label">C</span><span>업무 목적과 무관하게 최신 기술을 우선 적용하는 방식</span></li><li class="correct-answer"><span class="option-label">D</span><span>압축 패키지의 내부 순서와 구조를 유지한 채 필요한 파일만 교체하는 문서 처리 원칙</span></li></ol>
+</article><article class="question theory-question 객관식 exam-item" data-area-id="area-1" data-area-title="1영역" data-item-index="30">
+<div class="question-meta">
+<strong>31.</strong>
+<span>T-P-031</span>
+<span>데이터분석</span>
+<span>하</span>
+<span>객관식</span>
+<span>5점</span>
+</div>
+<p class="question-body">데이터 분석 업무에서는 파일을 바로 읽을지, DB에 적재해 조회할지, 어떤 기준으로 검증할지에 따라 성능과 재현성이 달라진다. 다음 중 'SQLite'에 대한 설명으로 가장 적절한 것은?</p>
+<ol class="options"><li class="correct-answer"><span class="option-label">A</span><span>로컬 파일 기반으로 가볍게 사용할 수 있는 관계형 데이터베이스 엔진</span></li><li><span class="option-label">B</span><span>도구 이름이나 브랜드만 바꾸면 검증 없이 같은 효과를 얻는다는 관점</span></li><li><span class="option-label">C</span><span>업무 목적과 무관하게 최신 기술을 우선 적용하는 방식</span></li><li><span class="option-label">D</span><span>보안, 성능, 품질 기준을 별도로 두지 않고 결과만 확인하는 방식</span></li></ol>
+</article><article class="question theory-question 객관식 exam-item" data-area-id="area-1" data-area-title="1영역" data-item-index="31">
+<div class="question-meta">
+<strong>32.</strong>
+<span>T-P-032</span>
+<span>생성형AI활용</span>
+<span>하</span>
+<span>객관식</span>
+<span>5점</span>
+</div>
+<p class="question-body">분류 모델을 빠르게 시험할 때는 학습 도구 자체보다 입력 데이터 구성, 검증 방식, 실행 환경이 결과 품질을 좌우한다. 다음 중 'Teachable Machine'에 대한 설명으로 가장 적절한 것은?</p>
+<ol class="options"><li><span class="option-label">A</span><span>도구 이름이나 브랜드만 바꾸면 검증 없이 같은 효과를 얻는다는 관점</span></li><li class="correct-answer"><span class="option-label">B</span><span>코딩 없이 이미지, 오디오, 포즈 분류 모델을 만들 수 있는 웹 기반 학습 도구</span></li><li><span class="option-label">C</span><span>업무 목적과 무관하게 최신 기술을 우선 적용하는 방식</span></li><li><span class="option-label">D</span><span>보안, 성능, 품질 기준을 별도로 두지 않고 결과만 확인하는 방식</span></li></ol>
+</article><article class="question theory-question 객관식 exam-item" data-area-id="area-1" data-area-title="1영역" data-item-index="32">
+<div class="question-meta">
+<strong>33.</strong>
+<span>T-P-033</span>
+<span>서비스구현</span>
+<span>중</span>
+<span>객관식</span>
+<span>5점</span>
+</div>
+<p class="question-body">문서 자동화에서는 파일 확장자보다 내부 구조와 수정 방식이 중요하며, 잘못 변경하면 결과 문서가 열리지 않을 수 있다. 다음 중 'JSZip 활용'에 대한 설명으로 가장 적절한 것은?</p>
+<ol class="options"><li class="correct-answer"><span class="option-label">A</span><span>브라우저에서 ZIP 계열 파일을 읽고 내부 파일을 수정할 수 있게 하는 JavaScript 라이브러리 활용</span></li><li><span class="option-label">B</span><span>도구 이름이나 브랜드만 바꾸면 검증 없이 같은 효과를 얻는다는 관점</span></li><li><span class="option-label">C</span><span>업무 목적과 무관하게 최신 기술을 우선 적용하는 방식</span></li><li><span class="option-label">D</span><span>보안, 성능, 품질 기준을 별도로 두지 않고 결과만 확인하는 방식</span></li></ol>
+</article><article class="question theory-question 객관식 exam-item" data-area-id="area-1" data-area-title="1영역" data-item-index="33">
+<div class="question-meta">
+<strong>34.</strong>
+<span>T-P-034</span>
+<span>데이터분석</span>
+<span>중</span>
+<span>객관식</span>
+<span>5점</span>
+</div>
+<p class="question-body">데이터 분석 업무에서는 파일을 바로 읽을지, DB에 적재해 조회할지, 어떤 기준으로 검증할지에 따라 성능과 재현성이 달라진다. 다음 중 'SQL의 집합적 처리'에 대한 설명으로 가장 적절한 것은?</p>
+<ol class="options"><li><span class="option-label">A</span><span>도구 이름이나 브랜드만 바꾸면 검증 없이 같은 효과를 얻는다는 관점</span></li><li class="correct-answer"><span class="option-label">B</span><span>행을 하나씩 처리하기보다 조건에 맞는 데이터 집합을 한 번에 다루는 SQL의 특성</span></li><li><span class="option-label">C</span><span>업무 목적과 무관하게 최신 기술을 우선 적용하는 방식</span></li><li><span class="option-label">D</span><span>보안, 성능, 품질 기준을 별도로 두지 않고 결과만 확인하는 방식</span></li></ol>
+</article><article class="question theory-question 객관식 exam-item" data-area-id="area-1" data-area-title="1영역" data-item-index="34">
+<div class="question-meta">
+<strong>35.</strong>
+<span>T-P-035</span>
+<span>생성형AI활용</span>
+<span>중</span>
+<span>객관식</span>
+<span>5점</span>
+</div>
+<p class="question-body">생성형 AI를 업무에 적용할 때는 도구 이름을 아는 것보다 어떤 문제를 해결하고 어떤 한계를 통제할지 판단하는 역량이 중요하다. 다음 중 '리버스 엔지니어링 워크플로우'에 대한 설명으로 가장 적절한 것은?</p>
+<ol class="options"><li><span class="option-label">A</span><span>보안, 성능, 품질 기준을 별도로 두지 않고 결과만 확인하는 방식</span></li><li><span class="option-label">B</span><span>도구 이름이나 브랜드만 바꾸면 검증 없이 같은 효과를 얻는다는 관점</span></li><li><span class="option-label">C</span><span>업무 목적과 무관하게 최신 기술을 우선 적용하는 방식</span></li><li class="correct-answer"><span class="option-label">D</span><span>완성된 결과물이나 화면 동작을 분석해 구현 기술과 라이브러리를 추론하는 절차</span></li></ol>
+</article><article class="question theory-question 객관식 exam-item" data-area-id="area-1" data-area-title="1영역" data-item-index="35">
+<div class="question-meta">
+<strong>36.</strong>
+<span>T-P-036</span>
+<span>서비스구현</span>
+<span>중</span>
+<span>객관식</span>
+<span>5점</span>
+</div>
+<p class="question-body">분류 모델을 빠르게 시험할 때는 학습 도구 자체보다 입력 데이터 구성, 검증 방식, 실행 환경이 결과 품질을 좌우한다. 다음 중 'TensorFlow.js 모델 내보내기'에 대한 설명으로 가장 적절한 것은?</p>
+<ol class="options"><li><span class="option-label">A</span><span>보안, 성능, 품질 기준을 별도로 두지 않고 결과만 확인하는 방식</span></li><li><span class="option-label">B</span><span>도구 이름이나 브랜드만 바꾸면 검증 없이 같은 효과를 얻는다는 관점</span></li><li><span class="option-label">C</span><span>업무 목적과 무관하게 최신 기술을 우선 적용하는 방식</span></li><li class="correct-answer"><span class="option-label">D</span><span>학습된 모델을 브라우저 JavaScript 환경에서 실행할 수 있는 형식으로 내보내는 방식</span></li></ol>
+</article><article class="question theory-question 객관식 exam-item" data-area-id="area-1" data-area-title="1영역" data-item-index="36">
+<div class="question-meta">
+<strong>37.</strong>
+<span>T-P-037</span>
+<span>데이터분석</span>
+<span>중</span>
+<span>객관식</span>
+<span>5점</span>
+</div>
+<p class="question-body">데이터 분석 업무에서는 파일을 바로 읽을지, DB에 적재해 조회할지, 어떤 기준으로 검증할지에 따라 성능과 재현성이 달라진다. 다음 중 'GROUP BY'에 대한 설명으로 가장 적절한 것은?</p>
+<ol class="options"><li><span class="option-label">A</span><span>업무 목적과 무관하게 최신 기술을 우선 적용하는 방식</span></li><li><span class="option-label">B</span><span>도구 이름이나 브랜드만 바꾸면 검증 없이 같은 효과를 얻는다는 관점</span></li><li class="correct-answer"><span class="option-label">C</span><span>지정한 기준별로 데이터를 묶어 합계, 평균, 건수 같은 집계값을 계산하는 SQL 구문</span></li><li><span class="option-label">D</span><span>보안, 성능, 품질 기준을 별도로 두지 않고 결과만 확인하는 방식</span></li></ol>
+</article><article class="question theory-question 객관식 exam-item" data-area-id="area-1" data-area-title="1영역" data-item-index="37">
+<div class="question-meta">
+<strong>38.</strong>
+<span>T-P-038</span>
+<span>생성형AI활용</span>
+<span>중</span>
+<span>객관식</span>
+<span>5점</span>
+</div>
+<p class="question-body">생성형 AI를 업무에 적용할 때는 도구 이름을 아는 것보다 어떤 문제를 해결하고 어떤 한계를 통제할지 판단하는 역량이 중요하다. 다음 중 '멀티모달 분석'에 대한 설명으로 가장 적절한 것은?</p>
+<ol class="options"><li class="correct-answer"><span class="option-label">A</span><span>텍스트뿐 아니라 이미지, 영상, 음성 등 여러 입력을 함께 해석하는 AI 활용 방식</span></li><li><span class="option-label">B</span><span>도구 이름이나 브랜드만 바꾸면 검증 없이 같은 효과를 얻는다는 관점</span></li><li><span class="option-label">C</span><span>업무 목적과 무관하게 최신 기술을 우선 적용하는 방식</span></li><li><span class="option-label">D</span><span>보안, 성능, 품질 기준을 별도로 두지 않고 결과만 확인하는 방식</span></li></ol>
+</article><article class="question theory-question 객관식 exam-item" data-area-id="area-1" data-area-title="1영역" data-item-index="38">
+<div class="question-meta">
+<strong>39.</strong>
+<span>T-P-039</span>
+<span>서비스구현</span>
+<span>하</span>
+<span>객관식</span>
+<span>5점</span>
+</div>
+<p class="question-body">AI 기능을 실제 업무 도구로 만들 때는 실행 환경, 의존성, 보안 기준, 운영 책임을 함께 판단해야 한다. 다음 중 'Node.js 런타임'에 대한 설명으로 가장 적절한 것은?</p>
+<ol class="options"><li class="correct-answer"><span class="option-label">A</span><span>브라우저 밖 터미널이나 서버 환경에서 JavaScript를 실행하게 하는 런타임</span></li><li><span class="option-label">B</span><span>도구 이름이나 브랜드만 바꾸면 검증 없이 같은 효과를 얻는다는 관점</span></li><li><span class="option-label">C</span><span>업무 목적과 무관하게 최신 기술을 우선 적용하는 방식</span></li><li><span class="option-label">D</span><span>보안, 성능, 품질 기준을 별도로 두지 않고 결과만 확인하는 방식</span></li></ol>
+</article><article class="question theory-question 객관식 exam-item" data-area-id="area-1" data-area-title="1영역" data-item-index="39">
+<div class="question-meta">
+<strong>40.</strong>
+<span>T-P-040</span>
+<span>데이터분석</span>
+<span>중</span>
+<span>객관식</span>
+<span>5점</span>
+</div>
+<p class="question-body">데이터 분석 업무에서는 파일을 바로 읽을지, DB에 적재해 조회할지, 어떤 기준으로 검증할지에 따라 성능과 재현성이 달라진다. 다음 중 'JOIN'에 대한 설명으로 가장 적절한 것은?</p>
+<ol class="options"><li><span class="option-label">A</span><span>보안, 성능, 품질 기준을 별도로 두지 않고 결과만 확인하는 방식</span></li><li><span class="option-label">B</span><span>도구 이름이나 브랜드만 바꾸면 검증 없이 같은 효과를 얻는다는 관점</span></li><li><span class="option-label">C</span><span>업무 목적과 무관하게 최신 기술을 우선 적용하는 방식</span></li><li class="correct-answer"><span class="option-label">D</span><span>공통 키를 기준으로 여러 테이블의 정보를 결합하는 SQL 연산</span></li></ol>
+</article><article class="question theory-question 객관식 exam-item" data-area-id="area-1" data-area-title="1영역" data-item-index="40">
+<div class="question-meta">
+<strong>41.</strong>
+<span>T-P-041</span>
+<span>생성형AI활용</span>
+<span>중</span>
+<span>객관식</span>
+<span>5점</span>
+</div>
+<p class="question-body">생성형 AI를 업무에 적용할 때는 도구 이름을 아는 것보다 어떤 문제를 해결하고 어떤 한계를 통제할지 판단하는 역량이 중요하다. 다음 중 'AI 에이전트 실행 원리'에 대한 설명으로 가장 적절한 것은?</p>
+<ol class="options"><li><span class="option-label">A</span><span>보안, 성능, 품질 기준을 별도로 두지 않고 결과만 확인하는 방식</span></li><li><span class="option-label">B</span><span>도구 이름이나 브랜드만 바꾸면 검증 없이 같은 효과를 얻는다는 관점</span></li><li><span class="option-label">C</span><span>업무 목적과 무관하게 최신 기술을 우선 적용하는 방식</span></li><li class="correct-answer"><span class="option-label">D</span><span>LLM이 계획과 코드를 생성하고 실제 파일 처리와 자동화는 Python 또는 JavaScript가 수행하는 구조</span></li></ol>
+</article><article class="question theory-question 객관식 exam-item" data-area-id="area-1" data-area-title="1영역" data-item-index="41">
+<div class="question-meta">
+<strong>42.</strong>
+<span>T-P-042</span>
+<span>서비스구현</span>
+<span>하</span>
+<span>객관식</span>
+<span>5점</span>
+</div>
+<p class="question-body">AI 기능을 실제 업무 도구로 만들 때는 실행 환경, 의존성, 보안 기준, 운영 책임을 함께 판단해야 한다. 다음 중 'NPM 패키지 관리'에 대한 설명으로 가장 적절한 것은?</p>
+<ol class="options"><li><span class="option-label">A</span><span>도구 이름이나 브랜드만 바꾸면 검증 없이 같은 효과를 얻는다는 관점</span></li><li class="correct-answer"><span class="option-label">B</span><span>JavaScript 의존성을 설치하고 버전을 관리하는 패키지 관리자</span></li><li><span class="option-label">C</span><span>업무 목적과 무관하게 최신 기술을 우선 적용하는 방식</span></li><li><span class="option-label">D</span><span>보안, 성능, 품질 기준을 별도로 두지 않고 결과만 확인하는 방식</span></li></ol>
+</article><article class="question theory-question 객관식 exam-item" data-area-id="area-1" data-area-title="1영역" data-item-index="42">
+<div class="question-meta">
+<strong>43.</strong>
+<span>T-P-043</span>
+<span>데이터분석</span>
+<span>상</span>
+<span>객관식</span>
+<span>5점</span>
+</div>
+<p class="question-body">데이터 분석 업무에서는 파일을 바로 읽을지, DB에 적재해 조회할지, 어떤 기준으로 검증할지에 따라 성능과 재현성이 달라진다. 다음 중 'CTE(WITH)'에 대한 설명으로 가장 적절한 것은?</p>
+<ol class="options"><li class="correct-answer"><span class="option-label">A</span><span>복잡한 SQL을 단계별 가상 테이블로 나누어 읽기 쉽게 만드는 구문</span></li><li><span class="option-label">B</span><span>도구 이름이나 브랜드만 바꾸면 검증 없이 같은 효과를 얻는다는 관점</span></li><li><span class="option-label">C</span><span>업무 목적과 무관하게 최신 기술을 우선 적용하는 방식</span></li><li><span class="option-label">D</span><span>보안, 성능, 품질 기준을 별도로 두지 않고 결과만 확인하는 방식</span></li></ol>
+</article><article class="question theory-question 객관식 exam-item" data-area-id="area-1" data-area-title="1영역" data-item-index="43">
+<div class="question-meta">
+<strong>44.</strong>
+<span>T-P-044</span>
+<span>생성형AI활용</span>
+<span>상</span>
+<span>객관식</span>
+<span>5점</span>
+</div>
+<p class="question-body">로컬 AI를 내부 PC나 기관 서버에서 운영할 때는 모델 파일, 실행 프로그램, 호출 경로, 보안 정책이 서로 맞아야 한다. 다음 중 'MSTY 로컬 AI 통합'에 대한 설명으로 가장 적절한 것은?</p>
+<ol class="options"><li><span class="option-label">A</span><span>업무 목적과 무관하게 최신 기술을 우선 적용하는 방식</span></li><li><span class="option-label">B</span><span>도구 이름이나 브랜드만 바꾸면 검증 없이 같은 효과를 얻는다는 관점</span></li><li class="correct-answer"><span class="option-label">C</span><span>로컬 모델, RAG, 웹 검색, 도구 연동을 하나의 UI에서 다루는 통합 활용 방식</span></li><li><span class="option-label">D</span><span>보안, 성능, 품질 기준을 별도로 두지 않고 결과만 확인하는 방식</span></li></ol>
+</article><article class="question theory-question 객관식 exam-item" data-area-id="area-1" data-area-title="1영역" data-item-index="44">
+<div class="question-meta">
+<strong>45.</strong>
+<span>T-P-045</span>
+<span>서비스구현</span>
+<span>상</span>
+<span>객관식</span>
+<span>5점</span>
+</div>
+<p class="question-body">공공기관 AI 활용에서는 편의성뿐 아니라 망 분리, 실행 권한, 검증 절차, 변경 이력 관리가 함께 요구된다. 다음 중 '패키지 공급망 보안'에 대한 설명으로 가장 적절한 것은?</p>
+<ol class="options"><li><span class="option-label">A</span><span>업무 목적과 무관하게 최신 기술을 우선 적용하는 방식</span></li><li><span class="option-label">B</span><span>도구 이름이나 브랜드만 바꾸면 검증 없이 같은 효과를 얻는다는 관점</span></li><li class="correct-answer"><span class="option-label">C</span><span>외부 패키지와 의존성 도입 과정의 위변조, 취약점, 악성코드 위험을 관리하는 원칙</span></li><li><span class="option-label">D</span><span>보안, 성능, 품질 기준을 별도로 두지 않고 결과만 확인하는 방식</span></li></ol>
+</article><article class="question theory-question 객관식 exam-item" data-area-id="area-1" data-area-title="1영역" data-item-index="45">
+<div class="question-meta">
+<strong>46.</strong>
+<span>T-P-046</span>
+<span>데이터분석</span>
+<span>상</span>
+<span>객관식</span>
+<span>5점</span>
+</div>
+<p class="question-body">데이터 분석 업무에서는 파일을 바로 읽을지, DB에 적재해 조회할지, 어떤 기준으로 검증할지에 따라 성능과 재현성이 달라진다. 다음 중 'LAG 윈도우 함수'에 대한 설명으로 가장 적절한 것은?</p>
+<ol class="options"><li><span class="option-label">A</span><span>도구 이름이나 브랜드만 바꾸면 검증 없이 같은 효과를 얻는다는 관점</span></li><li class="correct-answer"><span class="option-label">B</span><span>현재 행 기준 이전 행 값을 참조해 전년 대비 변화량 같은 지표를 계산하는 함수</span></li><li><span class="option-label">C</span><span>업무 목적과 무관하게 최신 기술을 우선 적용하는 방식</span></li><li><span class="option-label">D</span><span>보안, 성능, 품질 기준을 별도로 두지 않고 결과만 확인하는 방식</span></li></ol>
+</article><article class="question theory-question 객관식 exam-item" data-area-id="area-1" data-area-title="1영역" data-item-index="46">
+<div class="question-meta">
+<strong>47.</strong>
+<span>T-P-047</span>
+<span>생성형AI활용</span>
+<span>상</span>
+<span>객관식</span>
+<span>5점</span>
+</div>
+<p class="question-body">생성형 AI를 업무에 적용할 때는 도구 이름을 아는 것보다 어떤 문제를 해결하고 어떤 한계를 통제할지 판단하는 역량이 중요하다. 다음 중 '플랫폼 기반 AI 에이전트 구성'에 대한 설명으로 가장 적절한 것은?</p>
+<ol class="options"><li class="correct-answer"><span class="option-label">A</span><span>모델 호출뿐 아니라 RAG, 벡터 저장소, 시스템 프롬프트를 묶어 에이전트처럼 구성하는 방식</span></li><li><span class="option-label">B</span><span>도구 이름이나 브랜드만 바꾸면 검증 없이 같은 효과를 얻는다는 관점</span></li><li><span class="option-label">C</span><span>업무 목적과 무관하게 최신 기술을 우선 적용하는 방식</span></li><li><span class="option-label">D</span><span>보안, 성능, 품질 기준을 별도로 두지 않고 결과만 확인하는 방식</span></li></ol>
+</article><article class="question theory-question 객관식 exam-item" data-area-id="area-1" data-area-title="1영역" data-item-index="47">
+<div class="question-meta">
+<strong>48.</strong>
+<span>T-P-048</span>
+<span>서비스구현</span>
+<span>중</span>
+<span>객관식</span>
+<span>5점</span>
+</div>
+<p class="question-body">AI 기능을 실제 업무 도구로 만들 때는 실행 환경, 의존성, 보안 기준, 운영 책임을 함께 판단해야 한다. 다음 중 'SDK'에 대한 설명으로 가장 적절한 것은?</p>
+<ol class="options"><li><span class="option-label">A</span><span>도구 이름이나 브랜드만 바꾸면 검증 없이 같은 효과를 얻는다는 관점</span></li><li class="correct-answer"><span class="option-label">B</span><span>외부 서비스 기능을 애플리케이션에 통합하기 위해 제공되는 개발 도구와 예제 코드 묶음</span></li><li><span class="option-label">C</span><span>업무 목적과 무관하게 최신 기술을 우선 적용하는 방식</span></li><li><span class="option-label">D</span><span>보안, 성능, 품질 기준을 별도로 두지 않고 결과만 확인하는 방식</span></li></ol>
+</article><article class="question theory-question 객관식 exam-item" data-area-id="area-1" data-area-title="1영역" data-item-index="48">
+<div class="question-meta">
+<strong>49.</strong>
+<span>T-P-049</span>
+<span>데이터분석</span>
+<span>상</span>
+<span>객관식</span>
+<span>5점</span>
+</div>
+<p class="question-body">SQL에서 SELECT *는 테이블의 모든 컬럼을 가져오는 문법이다. 대용량·공유 DB 환경에서는 조회 범위를 어떻게 제한할지가 성능과 비용에 영향을 준다. 다음 중 '전체 컬럼 조회 통제'에 대한 설명으로 가장 적절한 것은?</p>
+<ol class="options"><li><span class="option-label">A</span><span>보안, 성능, 품질 기준을 별도로 두지 않고 결과만 확인하는 방식</span></li><li><span class="option-label">B</span><span>도구 이름이나 브랜드만 바꾸면 검증 없이 같은 효과를 얻는다는 관점</span></li><li><span class="option-label">C</span><span>업무 목적과 무관하게 최신 기술을 우선 적용하는 방식</span></li><li class="correct-answer"><span class="option-label">D</span><span>필요한 컬럼과 조건만 조회해 메모리, 네트워크, 디스크 부하를 줄이는 SQL 사용 원칙</span></li></ol>
+</article><article class="question theory-question 객관식 exam-item" data-area-id="area-1" data-area-title="1영역" data-item-index="49">
+<div class="question-meta">
+<strong>50.</strong>
+<span>T-P-050</span>
+<span>생성형AI활용</span>
+<span>중</span>
+<span>객관식</span>
+<span>5점</span>
+</div>
+<p class="question-body">생성형 AI를 업무에 적용할 때는 도구 이름을 아는 것보다 어떤 문제를 해결하고 어떤 한계를 통제할지 판단하는 역량이 중요하다. 다음 중 '비정형 데이터 추출·분류·종합'에 대한 설명으로 가장 적절한 것은?</p>
+<ol class="options"><li><span class="option-label">A</span><span>도구 이름이나 브랜드만 바꾸면 검증 없이 같은 효과를 얻는다는 관점</span></li><li class="correct-answer"><span class="option-label">B</span><span>문서, 민원, 녹취처럼 고정된 표 구조가 없는 데이터에서 의미 있는 항목을 뽑고 묶는 LLM의 강점</span></li><li><span class="option-label">C</span><span>업무 목적과 무관하게 최신 기술을 우선 적용하는 방식</span></li><li><span class="option-label">D</span><span>보안, 성능, 품질 기준을 별도로 두지 않고 결과만 확인하는 방식</span></li></ol>
+</article><article class="question theory-question 객관식 exam-item" data-area-id="area-1" data-area-title="1영역" data-item-index="50">
+<div class="question-meta">
+<strong>51.</strong>
+<span>T-P-051</span>
+<span>서비스구현</span>
+<span>하</span>
+<span>객관식</span>
+<span>5점</span>
+</div>
+<p class="question-body">AI 기능을 실제 업무 도구로 만들 때는 실행 환경, 의존성, 보안 기준, 운영 책임을 함께 판단해야 한다. 다음 중 'Python PATH 설정'에 대한 설명으로 가장 적절한 것은?</p>
+<ol class="options"><li><span class="option-label">A</span><span>업무 목적과 무관하게 최신 기술을 우선 적용하는 방식</span></li><li><span class="option-label">B</span><span>도구 이름이나 브랜드만 바꾸면 검증 없이 같은 효과를 얻는다는 관점</span></li><li class="correct-answer"><span class="option-label">C</span><span>명령줄 어느 위치에서든 Python 실행 파일을 찾을 수 있게 하는 환경 설정</span></li><li><span class="option-label">D</span><span>보안, 성능, 품질 기준을 별도로 두지 않고 결과만 확인하는 방식</span></li></ol>
+</article><article class="question theory-question 객관식 exam-item" data-area-id="area-1" data-area-title="1영역" data-item-index="51">
+<div class="question-meta">
+<strong>52.</strong>
+<span>T-P-052</span>
+<span>데이터분석</span>
+<span>상</span>
+<span>객관식</span>
+<span>5점</span>
+</div>
+<p class="question-body">데이터 분석 업무에서는 파일을 바로 읽을지, DB에 적재해 조회할지, 어떤 기준으로 검증할지에 따라 성능과 재현성이 달라진다. 다음 중 '페이지 폴트와 스와핑'에 대한 설명으로 가장 적절한 것은?</p>
+<ol class="options"><li class="correct-answer"><span class="option-label">A</span><span>메모리 부족 시 디스크를 보조 메모리처럼 사용하며 처리 속도가 크게 저하되는 현상</span></li><li><span class="option-label">B</span><span>도구 이름이나 브랜드만 바꾸면 검증 없이 같은 효과를 얻는다는 관점</span></li><li><span class="option-label">C</span><span>업무 목적과 무관하게 최신 기술을 우선 적용하는 방식</span></li><li><span class="option-label">D</span><span>보안, 성능, 품질 기준을 별도로 두지 않고 결과만 확인하는 방식</span></li></ol>
+</article><article class="question theory-question 객관식 exam-item" data-area-id="area-1" data-area-title="1영역" data-item-index="52">
+<div class="question-meta">
+<strong>53.</strong>
+<span>T-P-053</span>
+<span>생성형AI활용</span>
+<span>상</span>
+<span>객관식</span>
+<span>5점</span>
+</div>
+<p class="question-body">생성형 AI의 답변 품질은 모델명만으로 결정되지 않고 역할, 맥락, 제약, 출력 기준을 얼마나 명확히 설계하는지에 크게 좌우된다. 다음 중 '시스템 프롬프트 설계'에 대한 설명으로 가장 적절한 것은?</p>
+<ol class="options"><li><span class="option-label">A</span><span>업무 목적과 무관하게 최신 기술을 우선 적용하는 방식</span></li><li><span class="option-label">B</span><span>도구 이름이나 브랜드만 바꾸면 검증 없이 같은 효과를 얻는다는 관점</span></li><li class="correct-answer"><span class="option-label">C</span><span>AI 서비스의 역할, 규칙, 금지사항, 출력 기준을 상위 지침으로 고정하는 설계</span></li><li><span class="option-label">D</span><span>보안, 성능, 품질 기준을 별도로 두지 않고 결과만 확인하는 방식</span></li></ol>
+</article><article class="question theory-question 객관식 exam-item" data-area-id="area-1" data-area-title="1영역" data-item-index="53">
+<div class="question-meta">
+<strong>54.</strong>
+<span>T-P-054</span>
+<span>서비스구현</span>
+<span>중</span>
+<span>객관식</span>
+<span>5점</span>
+</div>
+<p class="question-body">공공기관 AI 활용에서는 편의성뿐 아니라 망 분리, 실행 권한, 검증 절차, 변경 이력 관리가 함께 요구된다. 다음 중 '샌드박스 실행'에 대한 설명으로 가장 적절한 것은?</p>
+<ol class="options"><li class="correct-answer"><span class="option-label">A</span><span>격리된 환경에서 코드를 실행해 원본 시스템과 데이터를 보호하는 방식</span></li><li><span class="option-label">B</span><span>도구 이름이나 브랜드만 바꾸면 검증 없이 같은 효과를 얻는다는 관점</span></li><li><span class="option-label">C</span><span>업무 목적과 무관하게 최신 기술을 우선 적용하는 방식</span></li><li><span class="option-label">D</span><span>보안, 성능, 품질 기준을 별도로 두지 않고 결과만 확인하는 방식</span></li></ol>
+</article><article class="question theory-question 객관식 exam-item" data-area-id="area-1" data-area-title="1영역" data-item-index="54">
+<div class="question-meta">
+<strong>55.</strong>
+<span>T-P-055</span>
+<span>데이터분석</span>
+<span>중</span>
+<span>객관식</span>
+<span>5점</span>
+</div>
+<p class="question-body">데이터 분석 업무에서는 파일을 바로 읽을지, DB에 적재해 조회할지, 어떤 기준으로 검증할지에 따라 성능과 재현성이 달라진다. 다음 중 '캐시 히트'에 대한 설명으로 가장 적절한 것은?</p>
+<ol class="options"><li><span class="option-label">A</span><span>도구 이름이나 브랜드만 바꾸면 검증 없이 같은 효과를 얻는다는 관점</span></li><li class="correct-answer"><span class="option-label">B</span><span>이미 메모리에 올라온 데이터를 재사용해 디스크 접근 없이 빠르게 응답하는 현상</span></li><li><span class="option-label">C</span><span>업무 목적과 무관하게 최신 기술을 우선 적용하는 방식</span></li><li><span class="option-label">D</span><span>보안, 성능, 품질 기준을 별도로 두지 않고 결과만 확인하는 방식</span></li></ol>
+</article><article class="question theory-question 객관식 exam-item" data-area-id="area-1" data-area-title="1영역" data-item-index="55">
+<div class="question-meta">
+<strong>56.</strong>
+<span>T-P-056</span>
+<span>생성형AI활용</span>
+<span>중</span>
+<span>객관식</span>
+<span>5점</span>
+</div>
+<p class="question-body">생성형 AI의 답변 품질은 모델명만으로 결정되지 않고 역할, 맥락, 제약, 출력 기준을 얼마나 명확히 설계하는지에 크게 좌우된다. 다음 중 '메타 프롬프트'에 대한 설명으로 가장 적절한 것은?</p>
+<ol class="options"><li><span class="option-label">A</span><span>보안, 성능, 품질 기준을 별도로 두지 않고 결과만 확인하는 방식</span></li><li><span class="option-label">B</span><span>도구 이름이나 브랜드만 바꾸면 검증 없이 같은 효과를 얻는다는 관점</span></li><li><span class="option-label">C</span><span>업무 목적과 무관하게 최신 기술을 우선 적용하는 방식</span></li><li class="correct-answer"><span class="option-label">D</span><span>좋은 프롬프트를 만들기 위해 프롬프트의 조건과 구조를 먼저 설계하는 상위 프롬프트</span></li></ol>
+</article><article class="question theory-question 객관식 exam-item" data-area-id="area-1" data-area-title="1영역" data-item-index="56">
+<div class="question-meta">
+<strong>57.</strong>
+<span>T-P-057</span>
+<span>서비스구현</span>
+<span>중</span>
+<span>객관식</span>
+<span>5점</span>
+</div>
+<p class="question-body">로컬 AI를 내부 PC나 기관 서버에서 운영할 때는 모델 파일, 실행 프로그램, 호출 경로, 보안 정책이 서로 맞아야 한다. 다음 중 'Ollama 로컬 추론'에 대한 설명으로 가장 적절한 것은?</p>
+<ol class="options"><li><span class="option-label">A</span><span>도구 이름이나 브랜드만 바꾸면 검증 없이 같은 효과를 얻는다는 관점</span></li><li class="correct-answer"><span class="option-label">B</span><span>로컬 PC에서 LLM 모델을 서버처럼 실행해 다른 도구가 호출하게 하는 방식</span></li><li><span class="option-label">C</span><span>업무 목적과 무관하게 최신 기술을 우선 적용하는 방식</span></li><li><span class="option-label">D</span><span>보안, 성능, 품질 기준을 별도로 두지 않고 결과만 확인하는 방식</span></li></ol>
+</article><article class="question theory-question 객관식 exam-item" data-area-id="area-1" data-area-title="1영역" data-item-index="57">
+<div class="question-meta">
+<strong>58.</strong>
+<span>T-P-058</span>
+<span>데이터분석</span>
+<span>상</span>
+<span>객관식</span>
+<span>5점</span>
+</div>
+<p class="question-body">음성·비정형 데이터 분석은 원본 수집, 전사, 요약, 저장, 검증 단계가 이어지므로 각 단계의 오류와 책임 범위를 분리해야 한다. 다음 중 'Faster Whisper 모델 선택'에 대한 설명으로 가장 적절한 것은?</p>
+<ol class="options"><li><span class="option-label">A</span><span>업무 목적과 무관하게 최신 기술을 우선 적용하는 방식</span></li><li><span class="option-label">B</span><span>도구 이름이나 브랜드만 바꾸면 검증 없이 같은 효과를 얻는다는 관점</span></li><li class="correct-answer"><span class="option-label">C</span><span>음성 전사에서 정확도, 속도, 자원 제약에 따라 모델 크기와 실행 방식을 고르는 판단</span></li><li><span class="option-label">D</span><span>보안, 성능, 품질 기준을 별도로 두지 않고 결과만 확인하는 방식</span></li></ol>
+</article><article class="question theory-question 객관식 exam-item" data-area-id="area-1" data-area-title="1영역" data-item-index="58">
+<div class="question-meta">
+<strong>59.</strong>
+<span>T-P-059</span>
+<span>생성형AI활용</span>
+<span>중</span>
+<span>객관식</span>
+<span>5점</span>
+</div>
+<p class="question-body">생성형 AI의 답변 품질은 모델명만으로 결정되지 않고 역할, 맥락, 제약, 출력 기준을 얼마나 명확히 설계하는지에 크게 좌우된다. 다음 중 '역할(Role)'에 대한 설명으로 가장 적절한 것은?</p>
+<ol class="options"><li class="correct-answer"><span class="option-label">A</span><span>AI에게 부여하는 전문가 정체성과 관점</span></li><li><span class="option-label">B</span><span>도구 이름이나 브랜드만 바꾸면 검증 없이 같은 효과를 얻는다는 관점</span></li><li><span class="option-label">C</span><span>업무 목적과 무관하게 최신 기술을 우선 적용하는 방식</span></li><li><span class="option-label">D</span><span>보안, 성능, 품질 기준을 별도로 두지 않고 결과만 확인하는 방식</span></li></ol>
+</article><article class="question theory-question 객관식 exam-item" data-area-id="area-1" data-area-title="1영역" data-item-index="59">
+<div class="question-meta">
+<strong>60.</strong>
+<span>T-P-060</span>
+<span>서비스구현</span>
+<span>중</span>
+<span>객관식</span>
+<span>5점</span>
+</div>
+<p class="question-body">로컬 AI를 내부 PC나 기관 서버에서 운영할 때는 모델 파일, 실행 프로그램, 호출 경로, 보안 정책이 서로 맞아야 한다. 다음 중 'GGUF 모델 포맷'에 대한 설명으로 가장 적절한 것은?</p>
+<ol class="options"><li><span class="option-label">A</span><span>업무 목적과 무관하게 최신 기술을 우선 적용하는 방식</span></li><li><span class="option-label">B</span><span>도구 이름이나 브랜드만 바꾸면 검증 없이 같은 효과를 얻는다는 관점</span></li><li class="correct-answer"><span class="option-label">C</span><span>로컬 추론 엔진에서 자주 쓰이는 경량화·양자화 모델 파일 포맷</span></li><li><span class="option-label">D</span><span>보안, 성능, 품질 기준을 별도로 두지 않고 결과만 확인하는 방식</span></li></ol>
+</article><article class="question theory-question 객관식 exam-item" data-area-id="area-1" data-area-title="1영역" data-item-index="60">
+<div class="question-meta">
+<strong>61.</strong>
+<span>T-P-061</span>
+<span>데이터분석</span>
+<span>중</span>
+<span>객관식</span>
+<span>5점</span>
+</div>
+<p class="question-body">데이터 분석 업무에서는 파일을 바로 읽을지, DB에 적재해 조회할지, 어떤 기준으로 검증할지에 따라 성능과 재현성이 달라진다. 다음 중 '파일 경로 기반 원본 관리'에 대한 설명으로 가장 적절한 것은?</p>
+<ol class="options"><li><span class="option-label">A</span><span>도구 이름이나 브랜드만 바꾸면 검증 없이 같은 효과를 얻는다는 관점</span></li><li class="correct-answer"><span class="option-label">B</span><span>대용량 음성·영상 파일 자체는 DB에 넣지 않고 저장 위치와 메타데이터를 관리하는 방식</span></li><li><span class="option-label">C</span><span>업무 목적과 무관하게 최신 기술을 우선 적용하는 방식</span></li><li><span class="option-label">D</span><span>보안, 성능, 품질 기준을 별도로 두지 않고 결과만 확인하는 방식</span></li></ol>
+</article><article class="question theory-question 객관식 exam-item" data-area-id="area-1" data-area-title="1영역" data-item-index="61">
+<div class="question-meta">
+<strong>62.</strong>
+<span>T-P-062</span>
+<span>생성형AI활용</span>
+<span>중</span>
+<span>객관식</span>
+<span>5점</span>
+</div>
+<p class="question-body">생성형 AI의 답변 품질은 모델명만으로 결정되지 않고 역할, 맥락, 제약, 출력 기준을 얼마나 명확히 설계하는지에 크게 좌우된다. 다음 중 '맥락(Context)'에 대한 설명으로 가장 적절한 것은?</p>
+<ol class="options"><li><span class="option-label">A</span><span>도구 이름이나 브랜드만 바꾸면 검증 없이 같은 효과를 얻는다는 관점</span></li><li class="correct-answer"><span class="option-label">B</span><span>업무 배경, 대상, 데이터 상황, 의사결정 조건을 설명하는 정보</span></li><li><span class="option-label">C</span><span>업무 목적과 무관하게 최신 기술을 우선 적용하는 방식</span></li><li><span class="option-label">D</span><span>보안, 성능, 품질 기준을 별도로 두지 않고 결과만 확인하는 방식</span></li></ol>
+</article><article class="question theory-question 객관식 exam-item" data-area-id="area-1" data-area-title="1영역" data-item-index="62">
+<div class="question-meta">
+<strong>63.</strong>
+<span>T-P-063</span>
+<span>서비스구현</span>
+<span>중</span>
+<span>객관식</span>
+<span>5점</span>
+</div>
+<p class="question-body">로컬 AI를 내부 PC나 기관 서버에서 운영할 때는 모델 파일, 실행 프로그램, 호출 경로, 보안 정책이 서로 맞아야 한다. 다음 중 '로컬 API 포트'에 대한 설명으로 가장 적절한 것은?</p>
+<ol class="options"><li><span class="option-label">A</span><span>보안, 성능, 품질 기준을 별도로 두지 않고 결과만 확인하는 방식</span></li><li><span class="option-label">B</span><span>도구 이름이나 브랜드만 바꾸면 검증 없이 같은 효과를 얻는다는 관점</span></li><li><span class="option-label">C</span><span>업무 목적과 무관하게 최신 기술을 우선 적용하는 방식</span></li><li class="correct-answer"><span class="option-label">D</span><span>로컬 서버가 특정 포트를 통해 다른 프로그램의 요청을 받는 연결 방식</span></li></ol>
+</article><article class="question theory-question 객관식 exam-item" data-area-id="area-1" data-area-title="1영역" data-item-index="63">
+<div class="question-meta">
+<strong>64.</strong>
+<span>T-P-064</span>
+<span>생성형AI활용</span>
+<span>중</span>
+<span>객관식</span>
+<span>5점</span>
+</div>
+<p class="question-body">생성형 AI의 답변 품질은 모델명만으로 결정되지 않고 역할, 맥락, 제약, 출력 기준을 얼마나 명확히 설계하는지에 크게 좌우된다. 다음 중 '제약(Constraint)'에 대한 설명으로 가장 적절한 것은?</p>
+<ol class="options"><li><span class="option-label">A</span><span>업무 목적과 무관하게 최신 기술을 우선 적용하는 방식</span></li><li><span class="option-label">B</span><span>도구 이름이나 브랜드만 바꾸면 검증 없이 같은 효과를 얻는다는 관점</span></li><li class="correct-answer"><span class="option-label">C</span><span>출력 형식, 금지 표현, 조건, 범위 등 AI 응답을 통제하는 규칙</span></li><li><span class="option-label">D</span><span>보안, 성능, 품질 기준을 별도로 두지 않고 결과만 확인하는 방식</span></li></ol>
+</article><article class="question theory-question 객관식 exam-item" data-area-id="area-1" data-area-title="1영역" data-item-index="64">
+<div class="question-meta">
+<strong>65.</strong>
+<span>T-P-065</span>
+<span>서비스구현</span>
+<span>중</span>
+<span>객관식</span>
+<span>5점</span>
+</div>
+<p class="question-body">AI 기능을 실제 업무 도구로 만들 때는 실행 환경, 의존성, 보안 기준, 운영 책임을 함께 판단해야 한다. 다음 중 '엑셀 VBA와 LLM 연동'에 대한 설명으로 가장 적절한 것은?</p>
+<ol class="options"><li class="correct-answer"><span class="option-label">A</span><span>엑셀 자동화 코드가 LLM API나 로컬 모델을 호출해 분류, 번역, 요약을 수행하는 방식</span></li><li><span class="option-label">B</span><span>도구 이름이나 브랜드만 바꾸면 검증 없이 같은 효과를 얻는다는 관점</span></li><li><span class="option-label">C</span><span>업무 목적과 무관하게 최신 기술을 우선 적용하는 방식</span></li><li><span class="option-label">D</span><span>보안, 성능, 품질 기준을 별도로 두지 않고 결과만 확인하는 방식</span></li></ol>
+</article><article class="question theory-question 객관식 exam-item" data-area-id="area-1" data-area-title="1영역" data-item-index="65">
+<div class="question-meta">
+<strong>66.</strong>
+<span>T-P-066</span>
+<span>생성형AI활용</span>
+<span>중</span>
+<span>객관식</span>
+<span>5점</span>
+</div>
+<p class="question-body">생성형 AI의 답변 품질은 모델명만으로 결정되지 않고 역할, 맥락, 제약, 출력 기준을 얼마나 명확히 설계하는지에 크게 좌우된다. 다음 중 '출력(Output)'에 대한 설명으로 가장 적절한 것은?</p>
+<ol class="options"><li><span class="option-label">A</span><span>보안, 성능, 품질 기준을 별도로 두지 않고 결과만 확인하는 방식</span></li><li><span class="option-label">B</span><span>도구 이름이나 브랜드만 바꾸면 검증 없이 같은 효과를 얻는다는 관점</span></li><li><span class="option-label">C</span><span>업무 목적과 무관하게 최신 기술을 우선 적용하는 방식</span></li><li class="correct-answer"><span class="option-label">D</span><span>AI가 최종적으로 만들어야 하는 결과물의 형태와 품질 기준</span></li></ol>
+</article><article class="question theory-question 객관식 exam-item" data-area-id="area-1" data-area-title="1영역" data-item-index="66">
+<div class="question-meta">
+<strong>67.</strong>
+<span>T-P-067</span>
+<span>서비스구현</span>
+<span>하</span>
+<span>객관식</span>
+<span>5점</span>
+</div>
+<p class="question-body">AI 기능을 실제 업무 도구로 만들 때는 실행 환경, 의존성, 보안 기준, 운영 책임을 함께 판단해야 한다. 다음 중 '스프레드시트 AI 함수'에 대한 설명으로 가장 적절한 것은?</p>
+<ol class="options"><li><span class="option-label">A</span><span>도구 이름이나 브랜드만 바꾸면 검증 없이 같은 효과를 얻는다는 관점</span></li><li class="correct-answer"><span class="option-label">B</span><span>셀 함수 형태로 생성형 AI 기능을 호출해 분류, 번역, 요약을 수행하는 방식</span></li><li><span class="option-label">C</span><span>업무 목적과 무관하게 최신 기술을 우선 적용하는 방식</span></li><li><span class="option-label">D</span><span>보안, 성능, 품질 기준을 별도로 두지 않고 결과만 확인하는 방식</span></li></ol>
+</article><article class="question theory-question 객관식 exam-item" data-area-id="area-1" data-area-title="1영역" data-item-index="67">
+<div class="question-meta">
+<strong>68.</strong>
+<span>T-P-068</span>
+<span>생성형AI활용</span>
+<span>중</span>
+<span>객관식</span>
+<span>5점</span>
+</div>
+<p class="question-body">생성형 AI의 답변 품질은 모델명만으로 결정되지 않고 역할, 맥락, 제약, 출력 기준을 얼마나 명확히 설계하는지에 크게 좌우된다. 다음 중 '교차 검증'에 대한 설명으로 가장 적절한 것은?</p>
+<ol class="options"><li class="correct-answer"><span class="option-label">A</span><span>서로 다른 모델이나 관점으로 결과를 비교해 누락과 오류를 줄이는 검토 방법</span></li><li><span class="option-label">B</span><span>도구 이름이나 브랜드만 바꾸면 검증 없이 같은 효과를 얻는다는 관점</span></li><li><span class="option-label">C</span><span>업무 목적과 무관하게 최신 기술을 우선 적용하는 방식</span></li><li><span class="option-label">D</span><span>보안, 성능, 품질 기준을 별도로 두지 않고 결과만 확인하는 방식</span></li></ol>
+</article><article class="question theory-question 객관식 exam-item" data-area-id="area-1" data-area-title="1영역" data-item-index="68">
+<div class="question-meta">
+<strong>69.</strong>
+<span>T-P-069</span>
+<span>서비스구현</span>
+<span>중</span>
+<span>객관식</span>
+<span>5점</span>
+</div>
+<p class="question-body">로컬 AI를 내부 PC나 기관 서버에서 운영할 때는 모델 파일, 실행 프로그램, 호출 경로, 보안 정책이 서로 맞아야 한다. 다음 중 'Hugging Face 모델 활용'에 대한 설명으로 가장 적절한 것은?</p>
+<ol class="options"><li><span class="option-label">A</span><span>보안, 성능, 품질 기준을 별도로 두지 않고 결과만 확인하는 방식</span></li><li><span class="option-label">B</span><span>도구 이름이나 브랜드만 바꾸면 검증 없이 같은 효과를 얻는다는 관점</span></li><li><span class="option-label">C</span><span>업무 목적과 무관하게 최신 기술을 우선 적용하는 방식</span></li><li class="correct-answer"><span class="option-label">D</span><span>공개 모델 저장소에서 필요한 모델을 찾아 로컬 또는 서비스 환경에 적용하는 방식</span></li></ol>
+</article><article class="question theory-question 객관식 exam-item" data-area-id="area-1" data-area-title="1영역" data-item-index="69">
+<div class="question-meta">
+<strong>70.</strong>
+<span>T-P-070</span>
+<span>생성형AI활용</span>
+<span>중</span>
+<span>객관식</span>
+<span>5점</span>
+</div>
+<p class="question-body">생성형 AI의 답변 품질은 모델명만으로 결정되지 않고 역할, 맥락, 제약, 출력 기준을 얼마나 명확히 설계하는지에 크게 좌우된다. 다음 중 '전문가 역할 프롬프팅'에 대한 설명으로 가장 적절한 것은?</p>
+<ol class="options"><li><span class="option-label">A</span><span>도구 이름이나 브랜드만 바꾸면 검증 없이 같은 효과를 얻는다는 관점</span></li><li class="correct-answer"><span class="option-label">B</span><span>특정 분야의 전문가 관점이나 이론적 틀을 역할에 반영해 답변 품질을 높이는 기법</span></li><li><span class="option-label">C</span><span>업무 목적과 무관하게 최신 기술을 우선 적용하는 방식</span></li><li><span class="option-label">D</span><span>보안, 성능, 품질 기준을 별도로 두지 않고 결과만 확인하는 방식</span></li></ol>
+</article><article class="question theory-question 객관식 exam-item" data-area-id="area-1" data-area-title="1영역" data-item-index="70">
+<div class="question-meta">
+<strong>71.</strong>
+<span>T-P-071</span>
+<span>서비스구현</span>
+<span>상</span>
+<span>객관식</span>
+<span>5점</span>
+</div>
+<p class="question-body">AI가 외부 도구나 저장소를 대신 다루게 만들면 업무 속도는 빨라지지만, 권한 범위와 실행 기록을 함께 통제해야 한다. 다음 중 '툴셋 기반 에이전트 연동'에 대한 설명으로 가장 적절한 것은?</p>
+<ol class="options"><li class="correct-answer"><span class="option-label">A</span><span>AI가 메모리, 검색, 데이터베이스 등 외부 기능을 호출하도록 도구 묶음을 연결하는 방식</span></li><li><span class="option-label">B</span><span>도구 이름이나 브랜드만 바꾸면 검증 없이 같은 효과를 얻는다는 관점</span></li><li><span class="option-label">C</span><span>업무 목적과 무관하게 최신 기술을 우선 적용하는 방식</span></li><li><span class="option-label">D</span><span>보안, 성능, 품질 기준을 별도로 두지 않고 결과만 확인하는 방식</span></li></ol>
+</article><article class="question theory-question 객관식 exam-item" data-area-id="area-1" data-area-title="1영역" data-item-index="71">
+<div class="question-meta">
+<strong>72.</strong>
+<span>T-P-072</span>
+<span>생성형AI활용</span>
+<span>상</span>
+<span>객관식</span>
+<span>5점</span>
+</div>
+<p class="question-body">생성형 AI의 답변 품질은 모델명만으로 결정되지 않고 역할, 맥락, 제약, 출력 기준을 얼마나 명확히 설계하는지에 크게 좌우된다. 다음 중 'Pre-mortem Thinking'에 대한 설명으로 가장 적절한 것은?</p>
+<ol class="options"><li><span class="option-label">A</span><span>업무 목적과 무관하게 최신 기술을 우선 적용하는 방식</span></li><li><span class="option-label">B</span><span>도구 이름이나 브랜드만 바꾸면 검증 없이 같은 효과를 얻는다는 관점</span></li><li class="correct-answer"><span class="option-label">C</span><span>정책이나 사업이 이미 실패했다고 가정하고 원인을 역추적해 약점을 찾는 기획 기법</span></li><li><span class="option-label">D</span><span>보안, 성능, 품질 기준을 별도로 두지 않고 결과만 확인하는 방식</span></li></ol>
+</article><article class="question theory-question 객관식 exam-item" data-area-id="area-1" data-area-title="1영역" data-item-index="72">
+<div class="question-meta">
+<strong>73.</strong>
+<span>T-P-073</span>
+<span>서비스구현</span>
+<span>상</span>
+<span>객관식</span>
+<span>5점</span>
+</div>
+<p class="question-body">AI가 외부 도구나 저장소를 대신 다루게 만들면 업무 속도는 빨라지지만, 권한 범위와 실행 기록을 함께 통제해야 한다. 다음 중 'MCP'에 대한 설명으로 가장 적절한 것은?</p>
+<ol class="options"><li><span class="option-label">A</span><span>도구 이름이나 브랜드만 바꾸면 검증 없이 같은 효과를 얻는다는 관점</span></li><li class="correct-answer"><span class="option-label">B</span><span>AI 모델이 외부 API나 데이터베이스 도구를 자연어 의도에 따라 호출하도록 중개하는 표준 인터페이스</span></li><li><span class="option-label">C</span><span>업무 목적과 무관하게 최신 기술을 우선 적용하는 방식</span></li><li><span class="option-label">D</span><span>보안, 성능, 품질 기준을 별도로 두지 않고 결과만 확인하는 방식</span></li></ol>
+</article><article class="question theory-question 객관식 exam-item" data-area-id="area-1" data-area-title="1영역" data-item-index="73">
+<div class="question-meta">
+<strong>74.</strong>
+<span>T-P-074</span>
+<span>생성형AI활용</span>
+<span>중</span>
+<span>객관식</span>
+<span>5점</span>
+</div>
+<p class="question-body">생성형 AI의 답변 품질은 모델명만으로 결정되지 않고 역할, 맥락, 제약, 출력 기준을 얼마나 명확히 설계하는지에 크게 좌우된다. 다음 중 '단계별 프롬프트 전략'에 대한 설명으로 가장 적절한 것은?</p>
+<ol class="options"><li><span class="option-label">A</span><span>업무 목적과 무관하게 최신 기술을 우선 적용하는 방식</span></li><li><span class="option-label">B</span><span>도구 이름이나 브랜드만 바꾸면 검증 없이 같은 효과를 얻는다는 관점</span></li><li class="correct-answer"><span class="option-label">C</span><span>전체 코드를 한 번에 만들기보다 단계별 성공 확인 후 다음 단계로 진행시키는 프롬프트 방식</span></li><li><span class="option-label">D</span><span>보안, 성능, 품질 기준을 별도로 두지 않고 결과만 확인하는 방식</span></li></ol>
+</article><article class="question theory-question 객관식 exam-item" data-area-id="area-1" data-area-title="1영역" data-item-index="74">
+<div class="question-meta">
+<strong>75.</strong>
+<span>T-P-075</span>
+<span>서비스구현</span>
+<span>상</span>
+<span>객관식</span>
+<span>5점</span>
+</div>
+<p class="question-body">AI가 외부 도구나 저장소를 대신 다루게 만들면 업무 속도는 빨라지지만, 권한 범위와 실행 기록을 함께 통제해야 한다. 다음 중 '자연어 기반 도구 호출'에 대한 설명으로 가장 적절한 것은?</p>
+<ol class="options"><li><span class="option-label">A</span><span>업무 목적과 무관하게 최신 기술을 우선 적용하는 방식</span></li><li><span class="option-label">B</span><span>도구 이름이나 브랜드만 바꾸면 검증 없이 같은 효과를 얻는다는 관점</span></li><li class="correct-answer"><span class="option-label">C</span><span>사용자가 파라미터를 직접 입력하지 않아도 AI가 의도를 해석해 적절한 API나 DB 조회를 수행하는 방식</span></li><li><span class="option-label">D</span><span>보안, 성능, 품질 기준을 별도로 두지 않고 결과만 확인하는 방식</span></li></ol>
+</article><article class="question theory-question 객관식 exam-item" data-area-id="area-1" data-area-title="1영역" data-item-index="75">
+<div class="question-meta">
+<strong>76.</strong>
+<span>T-P-076</span>
+<span>생성형AI활용</span>
+<span>중</span>
+<span>객관식</span>
+<span>5점</span>
+</div>
+<p class="question-body">음성·비정형 데이터 분석은 원본 수집, 전사, 요약, 저장, 검증 단계가 이어지므로 각 단계의 오류와 책임 범위를 분리해야 한다. 다음 중 'Temperature 제어'에 대한 설명으로 가장 적절한 것은?</p>
+<ol class="options"><li><span class="option-label">A</span><span>보안, 성능, 품질 기준을 별도로 두지 않고 결과만 확인하는 방식</span></li><li><span class="option-label">B</span><span>도구 이름이나 브랜드만 바꾸면 검증 없이 같은 효과를 얻는다는 관점</span></li><li><span class="option-label">C</span><span>업무 목적과 무관하게 최신 기술을 우선 적용하는 방식</span></li><li class="correct-answer"><span class="option-label">D</span><span>생성 결과의 다양성 또는 보수성을 조절하는 파라미터</span></li></ol>
+</article><article class="question theory-question 객관식 exam-item" data-area-id="area-1" data-area-title="1영역" data-item-index="76">
+<div class="question-meta">
+<strong>77.</strong>
+<span>T-P-077</span>
+<span>서비스구현</span>
+<span>중</span>
+<span>객관식</span>
+<span>5점</span>
+</div>
+<p class="question-body">AI가 외부 도구나 저장소를 대신 다루게 만들면 업무 속도는 빨라지지만, 권한 범위와 실행 기록을 함께 통제해야 한다. 다음 중 'Codex 저장소 연동'에 대한 설명으로 가장 적절한 것은?</p>
+<ol class="options"><li><span class="option-label">A</span><span>보안, 성능, 품질 기준을 별도로 두지 않고 결과만 확인하는 방식</span></li><li><span class="option-label">B</span><span>도구 이름이나 브랜드만 바꾸면 검증 없이 같은 효과를 얻는다는 관점</span></li><li><span class="option-label">C</span><span>업무 목적과 무관하게 최신 기술을 우선 적용하는 방식</span></li><li class="correct-answer"><span class="option-label">D</span><span>코딩 에이전트가 코드 저장소와 연결되어 파일 수정, 검토, 실행을 돕는 개발 흐름</span></li></ol>
+</article><article class="question theory-question 객관식 exam-item" data-area-id="area-1" data-area-title="1영역" data-item-index="77">
+<div class="question-meta">
+<strong>78.</strong>
+<span>T-P-078</span>
+<span>생성형AI활용</span>
+<span>상</span>
+<span>객관식</span>
+<span>5점</span>
+</div>
+<p class="question-body">음성·비정형 데이터 분석은 원본 수집, 전사, 요약, 저장, 검증 단계가 이어지므로 각 단계의 오류와 책임 범위를 분리해야 한다. 다음 중 '할루시네이션 완화'에 대한 설명으로 가장 적절한 것은?</p>
+<ol class="options"><li class="correct-answer"><span class="option-label">A</span><span>AI가 근거 없는 내용을 사실처럼 생성하는 문제를 줄이는 설계와 검증 방식</span></li><li><span class="option-label">B</span><span>도구 이름이나 브랜드만 바꾸면 검증 없이 같은 효과를 얻는다는 관점</span></li><li><span class="option-label">C</span><span>업무 목적과 무관하게 최신 기술을 우선 적용하는 방식</span></li><li><span class="option-label">D</span><span>보안, 성능, 품질 기준을 별도로 두지 않고 결과만 확인하는 방식</span></li></ol>
+</article><article class="question theory-question 객관식 exam-item" data-area-id="area-1" data-area-title="1영역" data-item-index="78">
+<div class="question-meta">
+<strong>79.</strong>
+<span>T-P-079</span>
+<span>서비스구현</span>
+<span>중</span>
+<span>객관식</span>
+<span>5점</span>
+</div>
+<p class="question-body">AI가 외부 도구나 저장소를 대신 다루게 만들면 업무 속도는 빨라지지만, 권한 범위와 실행 기록을 함께 통제해야 한다. 다음 중 'OpenCode 로컬 에이전트'에 대한 설명으로 가장 적절한 것은?</p>
+<ol class="options"><li><span class="option-label">A</span><span>보안, 성능, 품질 기준을 별도로 두지 않고 결과만 확인하는 방식</span></li><li><span class="option-label">B</span><span>도구 이름이나 브랜드만 바꾸면 검증 없이 같은 효과를 얻는다는 관점</span></li><li><span class="option-label">C</span><span>업무 목적과 무관하게 최신 기술을 우선 적용하는 방식</span></li><li class="correct-answer"><span class="option-label">D</span><span>로컬 컴퓨터의 지정 폴더에서 AI 코딩 에이전트를 실행하는 오픈소스 개발 도구 활용 방식</span></li></ol>
+</article><article class="question theory-question 객관식 exam-item" data-area-id="area-1" data-area-title="1영역" data-item-index="79">
+<div class="question-meta">
+<strong>80.</strong>
+<span>T-P-080</span>
+<span>서비스구현</span>
+<span>중</span>
+<span>객관식</span>
+<span>5점</span>
+</div>
+<p class="question-body">AI가 외부 도구나 저장소를 대신 다루게 만들면 업무 속도는 빨라지지만, 권한 범위와 실행 기록을 함께 통제해야 한다. 다음 중 'OpenRouter 모델 라우팅'에 대한 설명으로 가장 적절한 것은?</p>
+<ol class="options"><li class="correct-answer"><span class="option-label">A</span><span>하나의 API 연결로 여러 LLM 모델을 선택하거나 전환해 사용하는 방식</span></li><li><span class="option-label">B</span><span>도구 이름이나 브랜드만 바꾸면 검증 없이 같은 효과를 얻는다는 관점</span></li><li><span class="option-label">C</span><span>업무 목적과 무관하게 최신 기술을 우선 적용하는 방식</span></li><li><span class="option-label">D</span><span>보안, 성능, 품질 기준을 별도로 두지 않고 결과만 확인하는 방식</span></li></ol>
+</article></div><a class="backtop" href="#top">맨 위로</a></section><section class="rough-section" id="area-2"><header><h2>2영역</h2><p>단답형/서술형 81~120번입니다. 문제 아래에 예시 답안만 표시했습니다.</p></header><div class="question-grid"><article class="question theory-question 단답형 exam-item" data-area-id="area-2" data-area-title="2영역" data-item-index="80">
+<div class="question-meta">
+<strong>81.</strong>
+<span>T-P-081</span>
+<span>데이터분석</span>
+<span>중</span>
+<span>단답형</span>
+<span>10점</span>
+</div>
+<p class="question-body">분류 모델을 빠르게 시험할 때는 학습 도구 자체보다 입력 데이터 구성, 검증 방식, 실행 환경이 결과 품질을 좌우한다. '클래스 불균형'의 핵심 개념과 업무상 필요한 이유를 1~2문장으로 설명하시오.</p>
+<div class="sample-answer">특정 클래스의 표본이 지나치게 많거나 적어 모델 판단이 왜곡되는 문제</div>
+</article><article class="question theory-question 단답형 exam-item" data-area-id="area-2" data-area-title="2영역" data-item-index="81">
+<div class="question-meta">
+<strong>82.</strong>
+<span>T-P-082</span>
+<span>생성형AI활용</span>
+<span>중</span>
+<span>단답형</span>
+<span>10점</span>
+</div>
+<p class="question-body">생성형 AI를 업무에 적용할 때는 도구 이름을 아는 것보다 어떤 문제를 해결하고 어떤 한계를 통제할지 판단하는 역량이 중요하다. '민첩한 AI'의 핵심 개념과 업무상 필요한 이유를 1~2문장으로 설명하시오.</p>
+<div class="sample-answer">짧은 실험, 검증, 개선을 반복해 AI 서비스를 업무 맥락에 맞게 빠르게 다듬는 접근</div>
+</article><article class="question theory-question 단답형 exam-item" data-area-id="area-2" data-area-title="2영역" data-item-index="82">
+<div class="question-meta">
+<strong>83.</strong>
+<span>T-P-083</span>
+<span>서비스구현</span>
+<span>상</span>
+<span>단답형</span>
+<span>10점</span>
+</div>
+<p class="question-body">공공기관 AI 활용에서는 편의성뿐 아니라 망 분리, 실행 권한, 검증 절차, 변경 이력 관리가 함께 요구된다. 'AI 보안 거버넌스'의 핵심 개념과 업무상 필요한 이유를 1~2문장으로 설명하시오.</p>
+<div class="sample-answer">생성형 AI와 자동 생성 코드의 사용 기준, 승인 절차, 책임 체계를 정하는 관리 원칙</div>
+</article><article class="question theory-question 단답형 exam-item" data-area-id="area-2" data-area-title="2영역" data-item-index="83">
+<div class="question-meta">
+<strong>84.</strong>
+<span>T-P-084</span>
+<span>데이터분석</span>
+<span>중</span>
+<span>단답형</span>
+<span>10점</span>
+</div>
+<p class="question-body">데이터 분석 업무에서는 파일을 바로 읽을지, DB에 적재해 조회할지, 어떤 기준으로 검증할지에 따라 성능과 재현성이 달라진다. 'Text-to-SQL'의 핵심 개념과 업무상 필요한 이유를 1~2문장으로 설명하시오.</p>
+<div class="sample-answer">자연어 질문을 SQL 쿼리로 변환해 데이터베이스 조회를 돕는 방식</div>
+</article><article class="question theory-question 단답형 exam-item" data-area-id="area-2" data-area-title="2영역" data-item-index="84">
+<div class="question-meta">
+<strong>85.</strong>
+<span>T-P-085</span>
+<span>생성형AI활용</span>
+<span>중</span>
+<span>단답형</span>
+<span>10점</span>
+</div>
+<p class="question-body">생성형 AI를 업무에 적용할 때는 도구 이름을 아는 것보다 어떤 문제를 해결하고 어떤 한계를 통제할지 판단하는 역량이 중요하다. '브리콜라주 사고'의 핵심 개념과 업무상 필요한 이유를 1~2문장으로 설명하시오.</p>
+<div class="sample-answer">가용한 도구와 지식을 조합해 현실 문제를 해결하는 실천적 문제해결 방식</div>
+</article><article class="question theory-question 단답형 exam-item" data-area-id="area-2" data-area-title="2영역" data-item-index="85">
+<div class="question-meta">
+<strong>86.</strong>
+<span>T-P-086</span>
+<span>서비스구현</span>
+<span>상</span>
+<span>단답형</span>
+<span>10점</span>
+</div>
+<p class="question-body">공공기관 AI 활용에서는 편의성뿐 아니라 망 분리, 실행 권한, 검증 절차, 변경 이력 관리가 함께 요구된다. '외부 생성·내부 실행 분리'의 핵심 개념과 업무상 필요한 이유를 1~2문장으로 설명하시오.</p>
+<div class="sample-answer">외부망에서 코드를 생성하고 내부망에서는 검증된 산출물만 실행하는 폐쇄망 대응 전략</div>
+</article><article class="question theory-question 단답형 exam-item" data-area-id="area-2" data-area-title="2영역" data-item-index="86">
+<div class="question-meta">
+<strong>87.</strong>
+<span>T-P-087</span>
+<span>데이터분석</span>
+<span>중</span>
+<span>단답형</span>
+<span>10점</span>
+</div>
+<p class="question-body">음성·비정형 데이터 분석은 원본 수집, 전사, 요약, 저장, 검증 단계가 이어지므로 각 단계의 오류와 책임 범위를 분리해야 한다. '통화 녹취 전사 워크플로우'의 핵심 개념과 업무상 필요한 이유를 1~2문장으로 설명하시오.</p>
+<div class="sample-answer">음성 파일을 텍스트로 변환한 뒤 요약, 감성 분석, 저장으로 이어지는 처리 흐름</div>
+</article><article class="question theory-question 단답형 exam-item" data-area-id="area-2" data-area-title="2영역" data-item-index="87">
+<div class="question-meta">
+<strong>88.</strong>
+<span>T-P-088</span>
+<span>생성형AI활용</span>
+<span>중</span>
+<span>단답형</span>
+<span>10점</span>
+</div>
+<p class="question-body">문서 검색형 AI를 설계할 때는 원문을 어떻게 나누고 찾고 모델에 전달하는지에 따라 정확도, 비용, 운영 난도가 달라진다. 'RAG'의 핵심 개념과 업무상 필요한 이유를 1~2문장으로 설명하시오.</p>
+<div class="sample-answer">검색된 근거 문서를 LLM 입력에 결합해 답변의 정확성과 근거성을 높이는 방식</div>
+</article><article class="question theory-question 단답형 exam-item" data-area-id="area-2" data-area-title="2영역" data-item-index="88">
+<div class="question-meta">
+<strong>89.</strong>
+<span>T-P-089</span>
+<span>서비스구현</span>
+<span>하</span>
+<span>단답형</span>
+<span>10점</span>
+</div>
+<p class="question-body">웹 기반 업무 도구를 만들 때는 화면에서 처리할 일, 서버가 맡을 일, 내부망 제약과 배포 방식을 함께 구분해야 한다. 'HTML·CSS·JavaScript 단일 파일'의 핵심 개념과 업무상 필요한 이유를 1~2문장으로 설명하시오.</p>
+<div class="sample-answer">브라우저만으로 실행되도록 구조, 디자인, 기능을 하나의 정적 웹 파일에 담는 방식</div>
+</article><article class="question theory-question 단답형 exam-item" data-area-id="area-2" data-area-title="2영역" data-item-index="89">
+<div class="question-meta">
+<strong>90.</strong>
+<span>T-P-090</span>
+<span>데이터분석</span>
+<span>하</span>
+<span>단답형</span>
+<span>10점</span>
+</div>
+<p class="question-body">데이터 분석 업무에서는 파일을 바로 읽을지, DB에 적재해 조회할지, 어떤 기준으로 검증할지에 따라 성능과 재현성이 달라진다. '데이터베이스 저장과 조회'의 핵심 개념과 업무상 필요한 이유를 1~2문장으로 설명하시오.</p>
+<div class="sample-answer">데이터베이스의 핵심 기능을 데이터를 안전하게 저장하고 필요한 조건으로 조회하는 일로 보는 관점</div>
+</article><article class="question theory-question 단답형 exam-item" data-area-id="area-2" data-area-title="2영역" data-item-index="90">
+<div class="question-meta">
+<strong>91.</strong>
+<span>T-P-091</span>
+<span>생성형AI활용</span>
+<span>중</span>
+<span>단답형</span>
+<span>10점</span>
+</div>
+<p class="question-body">문서 검색형 AI를 설계할 때는 원문을 어떻게 나누고 찾고 모델에 전달하는지에 따라 정확도, 비용, 운영 난도가 달라진다. '청크 분할'의 핵심 개념과 업무상 필요한 이유를 1~2문장으로 설명하시오.</p>
+<div class="sample-answer">긴 문서를 검색과 임베딩에 적합한 작은 의미 단위로 나누는 전처리</div>
+</article><article class="question theory-question 단답형 exam-item" data-area-id="area-2" data-area-title="2영역" data-item-index="91">
+<div class="question-meta">
+<strong>92.</strong>
+<span>T-P-092</span>
+<span>서비스구현</span>
+<span>하</span>
+<span>단답형</span>
+<span>10점</span>
+</div>
+<p class="question-body">웹 기반 업무 도구를 만들 때는 화면에서 처리할 일, 서버가 맡을 일, 내부망 제약과 배포 방식을 함께 구분해야 한다. 'HTML·CSS·JavaScript 역할 분리'의 핵심 개념과 업무상 필요한 이유를 1~2문장으로 설명하시오.</p>
+<div class="sample-answer">HTML은 구조, CSS는 표현, JavaScript는 기능을 담당하게 나누는 프론트엔드 기본 원칙</div>
+</article><article class="question theory-question 단답형 exam-item" data-area-id="area-2" data-area-title="2영역" data-item-index="92">
+<div class="question-meta">
+<strong>93.</strong>
+<span>T-P-093</span>
+<span>데이터분석</span>
+<span>중</span>
+<span>단답형</span>
+<span>10점</span>
+</div>
+<p class="question-body">데이터 기반 업무 판단에서는 처리 방식과 검증 기준이 결과의 정확도와 신뢰성에 직접 영향을 준다. '벌크 인서트'의 핵심 개념과 업무상 필요한 이유를 1~2문장으로 설명하시오.</p>
+<div class="sample-answer">대량 데이터를 한 행씩 입력하지 않고 묶어서 빠르게 적재하는 방식</div>
+</article><article class="question theory-question 단답형 exam-item" data-area-id="area-2" data-area-title="2영역" data-item-index="93">
+<div class="question-meta">
+<strong>94.</strong>
+<span>T-P-094</span>
+<span>생성형AI활용</span>
+<span>중</span>
+<span>단답형</span>
+<span>10점</span>
+</div>
+<p class="question-body">문서 검색형 AI를 설계할 때는 원문을 어떻게 나누고 찾고 모델에 전달하는지에 따라 정확도, 비용, 운영 난도가 달라진다. '오버랩'의 핵심 개념과 업무상 필요한 이유를 1~2문장으로 설명하시오.</p>
+<div class="sample-answer">청크 경계에서 문맥 손실을 줄이기 위해 앞뒤 내용을 일부 중첩하는 기법</div>
+</article><article class="question theory-question 단답형 exam-item" data-area-id="area-2" data-area-title="2영역" data-item-index="94">
+<div class="question-meta">
+<strong>95.</strong>
+<span>T-P-095</span>
+<span>서비스구현</span>
+<span>중</span>
+<span>단답형</span>
+<span>10점</span>
+</div>
+<p class="question-body">웹 기반 업무 도구를 만들 때는 화면에서 처리할 일, 서버가 맡을 일, 내부망 제약과 배포 방식을 함께 구분해야 한다. 'CDN 방식'의 핵심 개념과 업무상 필요한 이유를 1~2문장으로 설명하시오.</p>
+<div class="sample-answer">외부 서버에서 라이브러리를 실시간으로 불러와 사용하는 방식</div>
+</article><article class="question theory-question 단답형 exam-item" data-area-id="area-2" data-area-title="2영역" data-item-index="95">
+<div class="question-meta">
+<strong>96.</strong>
+<span>T-P-096</span>
+<span>데이터분석</span>
+<span>상</span>
+<span>단답형</span>
+<span>10점</span>
+</div>
+<p class="question-body">데이터 분석 업무에서는 파일을 바로 읽을지, DB에 적재해 조회할지, 어떤 기준으로 검증할지에 따라 성능과 재현성이 달라진다. '인덱스 전략'의 핵심 개념과 업무상 필요한 이유를 1~2문장으로 설명하시오.</p>
+<div class="sample-answer">조회 조건에 자주 쓰이는 컬럼을 빠르게 찾도록 별도 탐색 구조를 만드는 전략</div>
+</article><article class="question theory-question 단답형 exam-item" data-area-id="area-2" data-area-title="2영역" data-item-index="96">
+<div class="question-meta">
+<strong>97.</strong>
+<span>T-P-097</span>
+<span>생성형AI활용</span>
+<span>중</span>
+<span>단답형</span>
+<span>10점</span>
+</div>
+<p class="question-body">문서 검색형 AI를 설계할 때는 원문을 어떻게 나누고 찾고 모델에 전달하는지에 따라 정확도, 비용, 운영 난도가 달라진다. '임베딩 모델'의 핵심 개념과 업무상 필요한 이유를 1~2문장으로 설명하시오.</p>
+<div class="sample-answer">텍스트 의미를 벡터 좌표로 변환해 유사도 검색을 가능하게 하는 모델</div>
+</article><article class="question theory-question 단답형 exam-item" data-area-id="area-2" data-area-title="2영역" data-item-index="97">
+<div class="question-meta">
+<strong>98.</strong>
+<span>T-P-098</span>
+<span>서비스구현</span>
+<span>중</span>
+<span>단답형</span>
+<span>10점</span>
+</div>
+<p class="question-body">웹 기반 업무 도구를 만들 때는 화면에서 처리할 일, 서버가 맡을 일, 내부망 제약과 배포 방식을 함께 구분해야 한다. '인라인 방식'의 핵심 개념과 업무상 필요한 이유를 1~2문장으로 설명하시오.</p>
+<div class="sample-answer">필요한 라이브러리 코드를 파일 내부에 포함해 외부 연결 없이 실행하는 방식</div>
+</article><article class="question theory-question 단답형 exam-item" data-area-id="area-2" data-area-title="2영역" data-item-index="98">
+<div class="question-meta">
+<strong>99.</strong>
+<span>T-P-099</span>
+<span>데이터분석</span>
+<span>중</span>
+<span>단답형</span>
+<span>10점</span>
+</div>
+<p class="question-body">데이터 분석 업무에서는 파일을 바로 읽을지, DB에 적재해 조회할지, 어떤 기준으로 검증할지에 따라 성능과 재현성이 달라진다. 'Pandas read_csv와 DB 적재 비교'의 핵심 개념과 업무상 필요한 이유를 1~2문장으로 설명하시오.</p>
+<div class="sample-answer">파일을 메모리에 올려 처리하는 방식과 DB에 영구 저장해 조회하는 방식의 차이</div>
+</article><article class="question theory-question 단답형 exam-item" data-area-id="area-2" data-area-title="2영역" data-item-index="99">
+<div class="question-meta">
+<strong>100.</strong>
+<span>T-P-100</span>
+<span>생성형AI활용</span>
+<span>중</span>
+<span>단답형</span>
+<span>10점</span>
+</div>
+<p class="question-body">문서 검색형 AI를 설계할 때는 원문을 어떻게 나누고 찾고 모델에 전달하는지에 따라 정확도, 비용, 운영 난도가 달라진다. '벡터DB'의 핵심 개념과 업무상 필요한 이유를 1~2문장으로 설명하시오.</p>
+<div class="sample-answer">임베딩 벡터를 저장하고 유사도 기반으로 빠르게 검색하는 저장소</div>
+</article><article class="question theory-question 단답형 exam-item" data-area-id="area-2" data-area-title="2영역" data-item-index="100">
+<div class="question-meta">
+<strong>101.</strong>
+<span>T-P-101</span>
+<span>서비스구현</span>
+<span>하</span>
+<span>단답형</span>
+<span>10점</span>
+</div>
+<p class="question-body">웹 기반 업무 도구를 만들 때는 화면에서 처리할 일, 서버가 맡을 일, 내부망 제약과 배포 방식을 함께 구분해야 한다. 'CodePen 기반 프로토타이핑'의 핵심 개념과 업무상 필요한 이유를 1~2문장으로 설명하시오.</p>
+<div class="sample-answer">브라우저에서 HTML, CSS, JavaScript를 빠르게 실험하고 결과를 확인하는 개발 방식</div>
+</article><article class="question theory-question 단답형 exam-item" data-area-id="area-2" data-area-title="2영역" data-item-index="101">
+<div class="question-meta">
+<strong>102.</strong>
+<span>T-P-102</span>
+<span>데이터분석</span>
+<span>중</span>
+<span>단답형</span>
+<span>10점</span>
+</div>
+<p class="question-body">데이터 분석 업무에서는 파일을 바로 읽을지, DB에 적재해 조회할지, 어떤 기준으로 검증할지에 따라 성능과 재현성이 달라진다. '메타데이터 프로파일링'의 핵심 개념과 업무상 필요한 이유를 1~2문장으로 설명하시오.</p>
+<div class="sample-answer">분석 전 컬럼명, 샘플 값, 단위, 결측 등 구조 정보를 먼저 점검하는 절차</div>
+</article><article class="question theory-question 단답형 exam-item" data-area-id="area-2" data-area-title="2영역" data-item-index="102">
+<div class="question-meta">
+<strong>103.</strong>
+<span>T-P-103</span>
+<span>생성형AI활용</span>
+<span>중</span>
+<span>단답형</span>
+<span>10점</span>
+</div>
+<p class="question-body">문서 검색형 AI를 설계할 때는 원문을 어떻게 나누고 찾고 모델에 전달하는지에 따라 정확도, 비용, 운영 난도가 달라진다. '컨텍스트 윈도우'의 핵심 개념과 업무상 필요한 이유를 1~2문장으로 설명하시오.</p>
+<div class="sample-answer">LLM이 한 번에 참고할 수 있는 입력 길이의 한계</div>
+</article><article class="question theory-question 단답형 exam-item" data-area-id="area-2" data-area-title="2영역" data-item-index="103">
+<div class="question-meta">
+<strong>104.</strong>
+<span>T-P-104</span>
+<span>서비스구현</span>
+<span>하</span>
+<span>단답형</span>
+<span>10점</span>
+</div>
+<p class="question-body">웹 기반 업무 도구를 만들 때는 화면에서 처리할 일, 서버가 맡을 일, 내부망 제약과 배포 방식을 함께 구분해야 한다. '정적 웹 배포'의 핵심 개념과 업무상 필요한 이유를 1~2문장으로 설명하시오.</p>
+<div class="sample-answer">서버 로직 없이 정적 파일을 웹 주소로 공개하는 배포 방식</div>
+</article><article class="question theory-question 단답형 exam-item" data-area-id="area-2" data-area-title="2영역" data-item-index="104">
+<div class="question-meta">
+<strong>105.</strong>
+<span>T-P-105</span>
+<span>데이터분석</span>
+<span>중</span>
+<span>단답형</span>
+<span>10점</span>
+</div>
+<p class="question-body">데이터 분석 업무에서는 파일을 바로 읽을지, DB에 적재해 조회할지, 어떤 기준으로 검증할지에 따라 성능과 재현성이 달라진다. '단위 정규화'의 핵심 개념과 업무상 필요한 이유를 1~2문장으로 설명하시오.</p>
+<div class="sample-answer">서로 다른 단위 체계를 공통 기준으로 변환해 비교 가능하게 만드는 전처리</div>
+</article><article class="question theory-question 서술형 exam-item" data-area-id="area-2" data-area-title="2영역" data-item-index="105">
+<div class="question-meta">
+<strong>106.</strong>
+<span>T-P-106</span>
+<span>데이터분석</span>
+<span>상</span>
+<span>서술형</span>
+<span>15점</span>
+</div>
+<p class="question-body">분류 모델을 빠르게 시험할 때는 학습 도구 자체보다 입력 데이터 구성, 검증 방식, 실행 환경이 결과 품질을 좌우한다. 공공기관 업무에 '클래스 불균형' 개념을 적용한다고 가정하고, 기대효과·적용 절차·통제방안을 함께 서술하시오.</p>
+<div class="sample-answer">개념 - 특정 클래스의 표본이 지나치게 많거나 적어 모델 판단이 왜곡되는 문제. 적용 예 - 가위, 바위, 보 이미지 수를 비슷하게 맞춰 분류 모델을 학습한다. 통제 원칙 - 클래스별 표본 수와 오류 패턴을 함께 점검한다. 주요 위험 - 다수 클래스만 잘 맞추고 소수 클래스는 거의 맞추지 못할 수 있다.</div>
+</article><article class="question theory-question 서술형 exam-item" data-area-id="area-2" data-area-title="2영역" data-item-index="106">
+<div class="question-meta">
+<strong>107.</strong>
+<span>T-P-107</span>
+<span>생성형AI활용</span>
+<span>상</span>
+<span>서술형</span>
+<span>15점</span>
+</div>
+<p class="question-body">생성형 AI를 업무에 적용할 때는 도구 이름을 아는 것보다 어떤 문제를 해결하고 어떤 한계를 통제할지 판단하는 역량이 중요하다. 공공기관 업무에 '민첩한 AI' 개념을 적용한다고 가정하고, 기대효과·적용 절차·통제방안을 함께 서술하시오.</p>
+<div class="sample-answer">개념 - 짧은 실험, 검증, 개선을 반복해 AI 서비스를 업무 맥락에 맞게 빠르게 다듬는 접근. 적용 예 - 민원 분류 자동화 기능을 소규모로 시험한 뒤 오류율을 측정해 개선한다. 통제 원칙 - 작은 파일럿으로 성과와 위험을 확인한 뒤 표준화한다. 주요 위험 - 검증 없는 전면 적용으로 품질과 책임 소재가 불분명해질 수 있다.</div>
+</article><article class="question theory-question 서술형 exam-item" data-area-id="area-2" data-area-title="2영역" data-item-index="107">
+<div class="question-meta">
+<strong>108.</strong>
+<span>T-P-108</span>
+<span>서비스구현</span>
+<span>상</span>
+<span>서술형</span>
+<span>15점</span>
+</div>
+<p class="question-body">공공기관 AI 활용에서는 편의성뿐 아니라 망 분리, 실행 권한, 검증 절차, 변경 이력 관리가 함께 요구된다. 공공기관 업무에 'AI 보안 거버넌스' 개념을 적용한다고 가정하고, 기대효과·적용 절차·통제방안을 함께 서술하시오.</p>
+<div class="sample-answer">개념 - 생성형 AI와 자동 생성 코드의 사용 기준, 승인 절차, 책임 체계를 정하는 관리 원칙. 적용 예 - 기관 내부 AI 도구 배포 전에 사용 범위와 점검 항목을 문서화한다. 통제 원칙 - 권한, 로그, 검증 기준, 배포 책임을 사전에 정의한다. 주요 위험 - 정책 없이 도구만 확산되면 데이터 유출과 무단 실행 위험이 커진다.</div>
+</article><article class="question theory-question 서술형 exam-item" data-area-id="area-2" data-area-title="2영역" data-item-index="108">
+<div class="question-meta">
+<strong>109.</strong>
+<span>T-P-109</span>
+<span>데이터분석</span>
+<span>상</span>
+<span>서술형</span>
+<span>15점</span>
+</div>
+<p class="question-body">데이터 분석 업무에서는 파일을 바로 읽을지, DB에 적재해 조회할지, 어떤 기준으로 검증할지에 따라 성능과 재현성이 달라진다. 공공기관 업무에 'Text-to-SQL' 개념을 적용한다고 가정하고, 기대효과·적용 절차·통제방안을 함께 서술하시오.</p>
+<div class="sample-answer">개념 - 자연어 질문을 SQL 쿼리로 변환해 데이터베이스 조회를 돕는 방식. 적용 예 - 지역별 평균 생산액을 자연어로 요청해 SQL 초안을 만든다. 통제 원칙 - 테이블 정의와 컬럼 의미를 함께 제공해 생성 쿼리를 검증한다. 주요 위험 - 스키마 정보가 부족하면 존재하지 않는 컬럼이나 잘못된 조건을 만들 수 있다.</div>
+</article><article class="question theory-question 서술형 exam-item" data-area-id="area-2" data-area-title="2영역" data-item-index="109">
+<div class="question-meta">
+<strong>110.</strong>
+<span>T-P-110</span>
+<span>생성형AI활용</span>
+<span>상</span>
+<span>서술형</span>
+<span>15점</span>
+</div>
+<p class="question-body">생성형 AI를 업무에 적용할 때는 도구 이름을 아는 것보다 어떤 문제를 해결하고 어떤 한계를 통제할지 판단하는 역량이 중요하다. 공공기관 업무에 '브리콜라주 사고' 개념을 적용한다고 가정하고, 기대효과·적용 절차·통제방안을 함께 서술하시오.</p>
+<div class="sample-answer">개념 - 가용한 도구와 지식을 조합해 현실 문제를 해결하는 실천적 문제해결 방식. 적용 예 - HTML, 스프레드시트, LLM을 조합해 간단한 업무 도구를 만든다. 통제 원칙 - 새 도구 도입보다 현재 쓸 수 있는 자원을 먼저 조합한다. 주요 위험 - 도구 조합의 목적과 한계를 확인하지 않으면 산출물이 산만해질 수 있다.</div>
+</article><article class="question theory-question 서술형 exam-item" data-area-id="area-2" data-area-title="2영역" data-item-index="110">
+<div class="question-meta">
+<strong>111.</strong>
+<span>T-P-111</span>
+<span>서비스구현</span>
+<span>상</span>
+<span>서술형</span>
+<span>15점</span>
+</div>
+<p class="question-body">공공기관 AI 활용에서는 편의성뿐 아니라 망 분리, 실행 권한, 검증 절차, 변경 이력 관리가 함께 요구된다. 공공기관 업무에 '외부 생성·내부 실행 분리' 개념을 적용한다고 가정하고, 기대효과·적용 절차·통제방안을 함께 서술하시오.</p>
+<div class="sample-answer">개념 - 외부망에서 코드를 생성하고 내부망에서는 검증된 산출물만 실행하는 폐쇄망 대응 전략. 적용 예 - 외부망에서 만든 HTML 파일을 내부망 반입 전 의존성과 외부 호출 여부로 점검한다. 통제 원칙 - 망 분리 원칙에 맞게 코드 반입, 검수, 실행 절차를 나눈다. 주요 위험 - 외부 API 호출이나 미검증 코드가 내부망으로 들어오면 보안 사고로 이어질 수 있다.</div>
+</article><article class="question theory-question 서술형 exam-item" data-area-id="area-2" data-area-title="2영역" data-item-index="111">
+<div class="question-meta">
+<strong>112.</strong>
+<span>T-P-112</span>
+<span>데이터분석</span>
+<span>상</span>
+<span>서술형</span>
+<span>15점</span>
+</div>
+<p class="question-body">음성·비정형 데이터 분석은 원본 수집, 전사, 요약, 저장, 검증 단계가 이어지므로 각 단계의 오류와 책임 범위를 분리해야 한다. 공공기관 업무에 '통화 녹취 전사 워크플로우' 개념을 적용한다고 가정하고, 기대효과·적용 절차·통제방안을 함께 서술하시오.</p>
+<div class="sample-answer">개념 - 음성 파일을 텍스트로 변환한 뒤 요약, 감성 분석, 저장으로 이어지는 처리 흐름. 적용 예 - 상담 녹취를 텍스트로 바꾸고 부정 감정 여부를 분석한다. 통제 원칙 - 수집, 전처리, 전사, 분석, 저장 단계를 분리한다. 주요 위험 - 개인정보와 통화 원본 보관 권한을 통제하지 않으면 위험하다.</div>
+</article><article class="question theory-question 서술형 exam-item" data-area-id="area-2" data-area-title="2영역" data-item-index="112">
+<div class="question-meta">
+<strong>113.</strong>
+<span>T-P-113</span>
+<span>생성형AI활용</span>
+<span>상</span>
+<span>서술형</span>
+<span>15점</span>
+</div>
+<p class="question-body">문서 검색형 AI를 설계할 때는 원문을 어떻게 나누고 찾고 모델에 전달하는지에 따라 정확도, 비용, 운영 난도가 달라진다. 공공기관 업무에 'RAG' 개념을 적용한다고 가정하고, 기대효과·적용 절차·통제방안을 함께 서술하시오.</p>
+<div class="sample-answer">개념 - 검색된 근거 문서를 LLM 입력에 결합해 답변의 정확성과 근거성을 높이는 방식. 적용 예 - 업무 지침 문서를 검색해 관련 조항을 근거로 답변하게 한다. 통제 원칙 - 검색 품질과 생성 품질을 분리해 각각 검증한다. 주요 위험 - 검색된 근거가 부정확하면 생성 답변도 그럴듯하게 틀릴 수 있다.</div>
+</article><article class="question theory-question 서술형 exam-item" data-area-id="area-2" data-area-title="2영역" data-item-index="113">
+<div class="question-meta">
+<strong>114.</strong>
+<span>T-P-114</span>
+<span>서비스구현</span>
+<span>중</span>
+<span>서술형</span>
+<span>15점</span>
+</div>
+<p class="question-body">웹 기반 업무 도구를 만들 때는 화면에서 처리할 일, 서버가 맡을 일, 내부망 제약과 배포 방식을 함께 구분해야 한다. 공공기관 업무에 'HTML·CSS·JavaScript 단일 파일' 개념을 적용한다고 가정하고, 기대효과·적용 절차·통제방안을 함께 서술하시오.</p>
+<div class="sample-answer">개념 - 브라우저만으로 실행되도록 구조, 디자인, 기능을 하나의 정적 웹 파일에 담는 방식. 적용 예 - 출석률 계산기나 CSV 요약 도구를 단일 HTML 파일로 배포한다. 통제 원칙 - 외부 의존성을 줄이고 오프라인 실행 가능성을 우선한다. 주요 위험 - 외부 라이브러리 호출이 남아 있으면 폐쇄망에서 작동하지 않을 수 있다.</div>
+</article><article class="question theory-question 서술형 exam-item" data-area-id="area-2" data-area-title="2영역" data-item-index="114">
+<div class="question-meta">
+<strong>115.</strong>
+<span>T-P-115</span>
+<span>데이터분석</span>
+<span>중</span>
+<span>서술형</span>
+<span>15점</span>
+</div>
+<p class="question-body">데이터 분석 업무에서는 파일을 바로 읽을지, DB에 적재해 조회할지, 어떤 기준으로 검증할지에 따라 성능과 재현성이 달라진다. 공공기관 업무에 '데이터베이스 저장과 조회' 개념을 적용한다고 가정하고, 기대효과·적용 절차·통제방안을 함께 서술하시오.</p>
+<div class="sample-answer">개념 - 데이터베이스의 핵심 기능을 데이터를 안전하게 저장하고 필요한 조건으로 조회하는 일로 보는 관점. 적용 예 - 민원 처리 이력을 저장하고 기간·부서별로 조회한다. 통제 원칙 - 저장 구조와 조회 패턴을 함께 고려한다. 주요 위험 - 저장만 잘하고 조회 설계를 놓치면 분석 속도와 품질이 떨어진다.</div>
+</article><article class="question theory-question 서술형 exam-item" data-area-id="area-2" data-area-title="2영역" data-item-index="115">
+<div class="question-meta">
+<strong>116.</strong>
+<span>T-P-116</span>
+<span>생성형AI활용</span>
+<span>상</span>
+<span>서술형</span>
+<span>15점</span>
+</div>
+<p class="question-body">문서 검색형 AI를 설계할 때는 원문을 어떻게 나누고 찾고 모델에 전달하는지에 따라 정확도, 비용, 운영 난도가 달라진다. 공공기관 업무에 '청크 분할' 개념을 적용한다고 가정하고, 기대효과·적용 절차·통제방안을 함께 서술하시오.</p>
+<div class="sample-answer">개념 - 긴 문서를 검색과 임베딩에 적합한 작은 의미 단위로 나누는 전처리. 적용 예 - 규정 문서를 조항 단위로 나누어 검색 인덱스를 만든다. 통제 원칙 - 의미가 끊기지 않는 크기와 기준으로 분할한다. 주요 위험 - 청크가 너무 작으면 문맥이 사라지고 너무 크면 검색 정밀도가 떨어질 수 있다.</div>
+</article><article class="question theory-question 서술형 exam-item" data-area-id="area-2" data-area-title="2영역" data-item-index="116">
+<div class="question-meta">
+<strong>117.</strong>
+<span>T-P-117</span>
+<span>서비스구현</span>
+<span>중</span>
+<span>서술형</span>
+<span>15점</span>
+</div>
+<p class="question-body">웹 기반 업무 도구를 만들 때는 화면에서 처리할 일, 서버가 맡을 일, 내부망 제약과 배포 방식을 함께 구분해야 한다. 공공기관 업무에 'HTML·CSS·JavaScript 역할 분리' 개념을 적용한다고 가정하고, 기대효과·적용 절차·통제방안을 함께 서술하시오.</p>
+<div class="sample-answer">개념 - HTML은 구조, CSS는 표현, JavaScript는 기능을 담당하게 나누는 프론트엔드 기본 원칙. 적용 예 - 버튼 배치는 HTML, 색상은 CSS, 계산 로직은 JavaScript로 분리한다. 통제 원칙 - 구조, 스타일, 동작 책임을 구분해 유지보수성을 높인다. 주요 위험 - 역할이 뒤섞이면 수정 범위가 커지고 오류 원인 파악이 어려워진다.</div>
+</article><article class="question theory-question 서술형 exam-item" data-area-id="area-2" data-area-title="2영역" data-item-index="117">
+<div class="question-meta">
+<strong>118.</strong>
+<span>T-P-118</span>
+<span>데이터분석</span>
+<span>상</span>
+<span>서술형</span>
+<span>15점</span>
+</div>
+<p class="question-body">데이터 기반 업무 판단에서는 처리 방식과 검증 기준이 결과의 정확도와 신뢰성에 직접 영향을 준다. 공공기관 업무에 '벌크 인서트' 개념을 적용한다고 가정하고, 기대효과·적용 절차·통제방안을 함께 서술하시오.</p>
+<div class="sample-answer">개념 - 대량 데이터를 한 행씩 입력하지 않고 묶어서 빠르게 적재하는 방식. 적용 예 - 대용량 CSV를 DB에 한 번에 적재한다. 통제 원칙 - 적재 전 인덱스와 제약조건 영향을 고려한다. 주요 위험 - 운영 테이블에 무계획으로 적재하면 잠금과 성능 저하가 발생할 수 있다.</div>
+</article><article class="question theory-question 서술형 exam-item" data-area-id="area-2" data-area-title="2영역" data-item-index="118">
+<div class="question-meta">
+<strong>119.</strong>
+<span>T-P-119</span>
+<span>생성형AI활용</span>
+<span>상</span>
+<span>서술형</span>
+<span>15점</span>
+</div>
+<p class="question-body">문서 검색형 AI를 설계할 때는 원문을 어떻게 나누고 찾고 모델에 전달하는지에 따라 정확도, 비용, 운영 난도가 달라진다. 공공기관 업무에 '오버랩' 개념을 적용한다고 가정하고, 기대효과·적용 절차·통제방안을 함께 서술하시오.</p>
+<div class="sample-answer">개념 - 청크 경계에서 문맥 손실을 줄이기 위해 앞뒤 내용을 일부 중첩하는 기법. 적용 예 - 문단 끝과 다음 문단 시작 일부를 겹쳐 검색 누락을 줄인다. 통제 원칙 - 중복량과 검색 비용의 균형을 맞춘다. 주요 위험 - 중첩이 과하면 저장량과 검색 노이즈가 증가할 수 있다.</div>
+</article><article class="question theory-question 서술형 exam-item" data-area-id="area-2" data-area-title="2영역" data-item-index="119">
+<div class="question-meta">
+<strong>120.</strong>
+<span>T-P-120</span>
+<span>서비스구현</span>
+<span>상</span>
+<span>서술형</span>
+<span>15점</span>
+</div>
+<p class="question-body">웹 기반 업무 도구를 만들 때는 화면에서 처리할 일, 서버가 맡을 일, 내부망 제약과 배포 방식을 함께 구분해야 한다. 공공기관 업무에 'CDN 방식' 개념을 적용한다고 가정하고, 기대효과·적용 절차·통제방안을 함께 서술하시오.</p>
+<div class="sample-answer">개념 - 외부 서버에서 라이브러리를 실시간으로 불러와 사용하는 방식. 적용 예 - 공개 웹 서비스에서 차트 라이브러리를 외부 CDN으로 불러온다. 통제 원칙 - 인터넷 연결과 출처 신뢰성을 확인한 뒤 사용한다. 주요 위험 - 폐쇄망이나 차단 환경에서는 라이브러리가 로드되지 않아 기능이 멈출 수 있다.</div>
+</article></div><a class="backtop" href="#top">맨 위로</a></section><section class="rough-section" id="area-3"><header><h2>3영역</h2><p>작업형 영역입니다. 작업형 문항과 채점 기준을 함께 배치했습니다.</p></header><div class="question-grid"><article class="question practical-question exam-item" data-area-id="area-3" data-area-title="3영역" data-item-index="120">
+<div class="practical-title">
+<strong>작업형 1</strong>
+<span>원본 9번</span>
+</div>
+<h3>업무량 통계 대시보드 HTML 프로그램 제작</h3>
+<div class="practical-body"><h4>시나리오</h4>
+<p>관리자는 부서별 업무 접수량, 처리 건수, 지연 건수를 매주 확인해야 한다. 엑셀 피벗 없이 CSV를 업로드하면 부서별 업무량과 지연 현황을 자동 시각화하는 오프라인 HTML 대시보드를 만드시오.</p>
+<h4>제공데이터 및 메타데이터 정보</h4>
+<p><code>workload.csv</code></p>
+<table class="data-table"><thead><tr>
+<th>컬럼</th>
+<th>설명</th>
+</tr></thead><tbody>
+<tr>
+<td>task_id</td>
+<td>업무 ID</td>
+</tr>
+<tr>
+<td>department</td>
+<td>담당부서</td>
+</tr>
+<tr>
+<td>staff_name</td>
+<td>담당자</td>
+</tr>
+<tr>
+<td>received_date</td>
+<td>접수일</td>
+</tr>
+<tr>
+<td>due_date</td>
+<td>처리기한</td>
+</tr>
+<tr>
+<td>completed_date</td>
+<td>완료일</td>
+</tr>
+<tr>
+<td>task_type</td>
+<td>업무유형</td>
+</tr>
+<tr>
+<td>status</td>
+<td>상태</td>
+</tr>
+</tbody></table>
+<h4>수행 과제</h4>
+<ol>
+<li>CSV 업로드 후 부서별 접수·완료·지연 건수를 계산한다.</li>
+<li>담당자별 처리량을 표와 그래프로 표시한다.</li>
+<li>처리기한 초과 건을 자동 분류한다.</li>
+<li>업무유형별 비중을 시각화한다.</li>
+<li>필터링 결과를 내려받을 수 있게 한다.</li>
+</ol>
+<h4>제출물</h4>
+<ol>
+<li>HTML/CSS/JS 대시보드</li>
+<li>샘플 CSV</li>
+<li>계산 기준 설명</li>
+<li>화면 캡처 또는 사용 가이드</li>
+</ol>
+<hr/></div>
+<div class="submission-box">
+<b>수험자 작성란</b>
+<span>제출 파일명</span>
+<span>핵심 구현·검증 요약</span>
+</div>
+</article><article class="question practical-question exam-item" data-area-id="area-3" data-area-title="3영역" data-item-index="121">
+<div class="practical-title">
+<strong>작업형 2</strong>
+<span>원본 7번</span>
+</div>
+<h3>교육 커리큘럼 자동 편성 HTML 도구 제작</h3>
+<div class="practical-body"><h4>시나리오</h4>
+<p>교육 운영자는 강의 주제, 강사 가능 시간, 교육장 사용 가능 시간을 조합해 매번 시간표를 만든다. AI 없이 규칙 기반으로 충돌을 줄이고 시간표 초안을 자동 생성하는 HTML/CSS/JS 도구를 만드시오.</p>
+<h4>제공데이터 및 메타데이터 정보</h4>
+<p><code>topics.csv</code>, <code>instructors.csv</code>, <code>rooms.csv</code></p>
+<table class="data-table"><thead><tr>
+<th>컬럼</th>
+<th>설명</th>
+</tr></thead><tbody>
+<tr>
+<td>topic_id</td>
+<td>강의 주제 ID</td>
+</tr>
+<tr>
+<td>topic_name</td>
+<td>강의명</td>
+</tr>
+<tr>
+<td>duration_minutes</td>
+<td>교육시간</td>
+</tr>
+<tr>
+<td>instructor_id</td>
+<td>강사 ID</td>
+</tr>
+<tr>
+<td>available_slot</td>
+<td>가능 시간</td>
+</tr>
+<tr>
+<td>room_id</td>
+<td>교육장 ID</td>
+</tr>
+<tr>
+<td>capacity</td>
+<td>수용 인원</td>
+</tr>
+</tbody></table>
+<h4>수행 과제</h4>
+<ol>
+<li>주제, 강사, 교육장 CSV를 업로드한다.</li>
+<li>강사 가능 시간과 교육장 가능 시간을 기준으로 시간표를 배치한다.</li>
+<li>시간 충돌과 정원 초과를 표시한다.</li>
+<li>수동 수정 기능을 제공한다.</li>
+<li>최종 시간표를 CSV 또는 인쇄용 화면으로 출력한다.</li>
+</ol>
+<h4>제출물</h4>
+<ol>
+<li>폐쇄망 실행 가능한 HTML 도구</li>
+<li>샘플 입력자료 3종</li>
+<li>자동 편성 결과</li>
+<li>충돌 처리 규칙 설명</li>
+</ol>
+<hr/></div>
+<div class="submission-box">
+<b>수험자 작성란</b>
+<span>제출 파일명</span>
+<span>핵심 구현·검증 요약</span>
+</div>
+</article><article class="question practical-question exam-item" data-area-id="area-3" data-area-title="3영역" data-item-index="122">
+<div class="practical-title">
+<strong>작업형 3</strong>
+<span>원본 13번</span>
+</div>
+<h3>생활불편 신고 접수·처리현황 공개 서비스 구축</h3>
+<div class="practical-body"><h4>시나리오</h4>
+<p>시민은 도로 파손, 불법 투기, 가로등 고장 등 생활불편 사항을 신고하고 처리 현황을 확인하고 싶어 한다. 위치, 사진, 신고 유형을 입력받고 담당부서가 처리 상태를 갱신하는 대국민 서비스를 구축하시오.</p>
+<h4>제공데이터 및 메타데이터 정보</h4>
+<p><code>report_type_master.csv</code>, <code>public_reports_sample.csv</code></p>
+<table class="data-table"><thead><tr>
+<th>컬럼</th>
+<th>설명</th>
+</tr></thead><tbody>
+<tr>
+<td>report_id</td>
+<td>신고 ID</td>
+</tr>
+<tr>
+<td>reporter_id</td>
+<td>신고자 ID</td>
+</tr>
+<tr>
+<td>report_type</td>
+<td>신고 유형</td>
+</tr>
+<tr>
+<td>address</td>
+<td>위치 주소</td>
+</tr>
+<tr>
+<td>latitude</td>
+<td>위도</td>
+</tr>
+<tr>
+<td>longitude</td>
+<td>경도</td>
+</tr>
+<tr>
+<td>description</td>
+<td>신고 내용</td>
+</tr>
+<tr>
+<td>photo_url</td>
+<td>사진 URL</td>
+</tr>
+<tr>
+<td>status</td>
+<td>처리 상태</td>
+</tr>
+<tr>
+<td>assigned_department</td>
+<td>담당부서</td>
+</tr>
+</tbody></table>
+<h4>수행 과제</h4>
+<ol>
+<li>시민 신고 작성 화면을 구현한다.</li>
+<li>사진 첨부 파일을 Supabase Storage에 저장한다.</li>
+<li>API 백엔드에서 파일 크기, 확장자, 필수 입력값을 검증한다.</li>
+<li>지도 또는 목록 기반 처리 현황 조회 화면을 구현한다.</li>
+<li>관리자 화면에서 담당부서 지정, 상태 변경, 처리 메모 등록 기능을 제공한다.</li>
+</ol>
+<h4>제출물</h4>
+<ol>
+<li>신고 접수 서비스 URL</li>
+<li>사진 업로드 및 조회 테스트 결과</li>
+<li>Supabase Storage 정책 설명</li>
+<li>신고 상태 관리 API 명세</li>
+<li>개인정보 및 공개 범위 설계서</li>
+</ol>
+<hr/></div>
+<div class="submission-box">
+<b>수험자 작성란</b>
+<span>제출 파일명</span>
+<span>핵심 구현·검증 요약</span>
+</div>
+</article><article class="question practical-question exam-item" data-area-id="area-3" data-area-title="3영역" data-item-index="123">
+<div class="practical-title">
+<strong>작업형 4</strong>
+<span>원본 8번</span>
+</div>
+<h3>CSV 통합·품질검사 Python 자동화 도구 제작</h3>
+<div class="practical-body"><h4>시나리오</h4>
+<p>여러 연도의 CSV를 합칠 때 컬럼명이 조금씩 다르거나 단위가 달라 오류가 발생한다. 폴더 안 CSV를 자동으로 읽고 컬럼 표준화, 단위 변환, 결측 점검을 수행하는 Python 프로그램을 만드시오.</p>
+<h4>제공데이터 및 메타데이터 정보</h4>
+<p><code>yearly_data</code> 폴더, <code>schema_map.csv</code></p>
+<table class="data-table"><thead><tr>
+<th>컬럼</th>
+<th>설명</th>
+</tr></thead><tbody>
+<tr>
+<td>source_column</td>
+<td>원본 컬럼명</td>
+</tr>
+<tr>
+<td>standard_column</td>
+<td>표준 컬럼명</td>
+</tr>
+<tr>
+<td>unit</td>
+<td>원본 단위</td>
+</tr>
+<tr>
+<td>convert_rule</td>
+<td>변환 규칙</td>
+</tr>
+<tr>
+<td>required_yn</td>
+<td>필수 여부</td>
+</tr>
+</tbody></table>
+<h4>수행 과제</h4>
+<ol>
+<li>폴더 내 CSV를 일괄 읽는다.</li>
+<li>컬럼명을 표준명으로 변환한다.</li>
+<li>단위 변환 규칙을 적용한다.</li>
+<li>결측, 중복, 비정상 값을 점검한다.</li>
+<li>통합 CSV와 품질검사 리포트를 생성한다.</li>
+</ol>
+<h4>제출물</h4>
+<ol>
+<li>Python 소스코드 또는 <code>.exe</code></li>
+<li>통합 결과 CSV</li>
+<li>품질검사 리포트</li>
+<li>컬럼 매핑표</li>
+</ol>
+<hr/></div>
+<div class="submission-box">
+<b>수험자 작성란</b>
+<span>제출 파일명</span>
+<span>핵심 구현·검증 요약</span>
+</div>
+</article><article class="question practical-question exam-item" data-area-id="area-3" data-area-title="3영역" data-item-index="124">
+<div class="practical-title">
+<strong>작업형 5</strong>
+<span>원본 15번</span>
+</div>
+<h3>공공데이터 API 기반 생활정보 챗봇 서비스 구축</h3>
+<div class="practical-body"><h4>시나리오</h4>
+<p>시민은 지역별 날씨, 미세먼지, 공공시설, 재난안전 안내를 한 화면에서 쉽게 묻고 싶어 한다. 프론트엔드, Supabase DB, Edge Function, 공공데이터 API, 생성형 AI API를 결합하여 생활정보 챗봇 서비스를 구축하시오.</p>
+<h4>제공데이터 및 메타데이터 정보</h4>
+<p><code>public_api_catalog.csv</code>, <code>chat_sample.csv</code></p>
+<table class="data-table"><thead><tr>
+<th>컬럼</th>
+<th>설명</th>
+</tr></thead><tbody>
+<tr>
+<td>api_id</td>
+<td>공공데이터 API ID</td>
+</tr>
+<tr>
+<td>api_name</td>
+<td>API 이름</td>
+</tr>
+<tr>
+<td>endpoint</td>
+<td>API 주소</td>
+</tr>
+<tr>
+<td>required_params</td>
+<td>필수 파라미터</td>
+</tr>
+<tr>
+<td>user_id</td>
+<td>사용자 ID</td>
+</tr>
+<tr>
+<td>question_text</td>
+<td>사용자 질문</td>
+</tr>
+<tr>
+<td>region</td>
+<td>지역</td>
+</tr>
+<tr>
+<td>api_response_summary</td>
+<td>API 응답 요약</td>
+</tr>
+<tr>
+<td>ai_answer</td>
+<td>생성형 AI 응답</td>
+</tr>
+<tr>
+<td>created_at</td>
+<td>질의 시각</td>
+</tr>
+</tbody></table>
+<h4>수행 과제</h4>
+<ol>
+<li>시민이 지역과 질문을 입력하는 챗봇 화면을 구현한다.</li>
+<li>Supabase Edge Function에서 공공데이터 API를 호출한다.</li>
+<li>API 응답을 생성형 AI API에 전달해 시민 친화적 문장으로 재구성한다.</li>
+<li>질문, API 호출 결과, AI 응답, 오류 로그를 Supabase DB에 저장한다.</li>
+<li>관리자 화면에서 API 호출량, 실패 건수, 자주 묻는 질문을 확인할 수 있게 한다.</li>
+</ol>
+<h4>제출물</h4>
+<ol>
+<li>챗봇 서비스 URL</li>
+<li>Supabase DB 스키마 및 RLS 정책</li>
+<li>Edge Function 코드 및 API 키 보호 방식</li>
+<li>공공데이터 API 호출 예시</li>
+<li>AI 응답 한계 및 고지 문구 설계서</li>
+</ol>
+<hr/></div>
+<div class="submission-box">
+<b>수험자 작성란</b>
+<span>제출 파일명</span>
+<span>핵심 구현·검증 요약</span>
+</div>
+</article><article class="question practical-question exam-item" data-area-id="area-3" data-area-title="3영역" data-item-index="125">
+<div class="practical-title">
+<strong>작업형 6</strong>
+<span>원본 14번</span>
+</div>
+<h3>대국민 교육·행사 신청 및 만족도 조사 서비스 구축</h3>
+<div class="practical-body"><h4>시나리오</h4>
+<p>기관은 시민 대상 교육과 행사를 운영하지만 신청, 출석, 만족도 조사를 각각 다른 도구로 관리하고 있다. 시민 신청부터 출석 확인, 만족도 조사, 관리자 통계까지 하나로 연결되는 웹 서비스를 구축하시오.</p>
+<h4>제공데이터 및 메타데이터 정보</h4>
+<p><code>event_master.csv</code>, <code>event_registration_sample.csv</code>, <code>survey_questions.csv</code></p>
+<table class="data-table"><thead><tr>
+<th>컬럼</th>
+<th>설명</th>
+</tr></thead><tbody>
+<tr>
+<td>event_id</td>
+<td>행사 ID</td>
+</tr>
+<tr>
+<td>event_name</td>
+<td>행사명</td>
+</tr>
+<tr>
+<td>event_date</td>
+<td>행사일</td>
+</tr>
+<tr>
+<td>capacity</td>
+<td>정원</td>
+</tr>
+<tr>
+<td>user_id</td>
+<td>신청자 ID</td>
+</tr>
+<tr>
+<td>registration_status</td>
+<td>신청 상태</td>
+</tr>
+<tr>
+<td>attendance_yn</td>
+<td>출석 여부</td>
+</tr>
+<tr>
+<td>survey_score</td>
+<td>만족도 점수</td>
+</tr>
+<tr>
+<td>survey_comment</td>
+<td>주관식 의견</td>
+</tr>
+</tbody></table>
+<h4>수행 과제</h4>
+<ol>
+<li>행사 목록, 상세 페이지, 신청 화면을 구현한다.</li>
+<li>정원 초과 신청을 API 백엔드에서 차단한다.</li>
+<li>Supabase Auth로 시민 로그인과 본인 신청 내역 조회를 구현한다.</li>
+<li>관리자 화면에서 신청자 명단, 출석 체크, 만족도 결과를 관리한다.</li>
+<li>행사별 신청률, 출석률, 평균 만족도를 대시보드로 제공한다.</li>
+</ol>
+<h4>제출물</h4>
+<ol>
+<li>대국민 신청 서비스 URL</li>
+<li>시민·관리자 테스트 계정</li>
+<li>Supabase 테이블 및 권한 정책</li>
+<li>정원 관리 API 명세</li>
+<li>신청률·출석률·만족도 대시보드</li>
+</ol>
+<hr/></div>
+<div class="submission-box">
+<b>수험자 작성란</b>
+<span>제출 파일명</span>
+<span>핵심 구현·검증 요약</span>
+</div>
+</article><article class="question practical-question exam-item" data-area-id="area-3" data-area-title="3영역" data-item-index="126">
+<div class="practical-title">
+<strong>작업형 7</strong>
+<span>원본 4번</span>
+</div>
+<h3>문서 제출현황 자동 점검 및 파일명 표준화 프로그램 제작</h3>
+<div class="practical-body"><h4>시나리오</h4>
+<p>사업 신청서, 개인정보 동의서, 증빙자료가 폴더에 뒤섞여 제출된다. 담당자는 누락 자료를 확인하고 파일명을 표준 형식으로 바꾸는 데 많은 시간을 쓰고 있다. 폴더를 선택하면 제출현황을 점검하고 파일명을 일괄 정리하는 Python 독립 프로그램을 만드시오.</p>
+<h4>제공데이터 및 메타데이터 정보</h4>
+<p><code>submissions</code> 폴더, <code>applicant_master.csv</code></p>
+<table class="data-table"><thead><tr>
+<th>컬럼</th>
+<th>설명</th>
+</tr></thead><tbody>
+<tr>
+<td>applicant_id</td>
+<td>신청자 ID</td>
+</tr>
+<tr>
+<td>applicant_name</td>
+<td>신청자명</td>
+</tr>
+<tr>
+<td>required_form</td>
+<td>필수 제출서류명</td>
+</tr>
+<tr>
+<td>file_pattern</td>
+<td>허용 파일명 패턴</td>
+</tr>
+</tbody></table>
+<h4>수행 과제</h4>
+<ol>
+<li>폴더 내 파일 목록을 자동 수집한다.</li>
+<li>신청자별 필수서류 제출 여부를 점검한다.</li>
+<li>파일명을 <code>신청자ID_신청자명_서류명</code> 형식으로 변경한다.</li>
+<li>중복 파일과 확장자 오류를 탐지한다.</li>
+<li>누락·중복·정상 목록을 엑셀 리포트로 출력한다.</li>
+</ol>
+<h4>제출물</h4>
+<ol>
+<li>Python GUI 또는 CLI 프로그램</li>
+<li>실행 안내서</li>
+<li>변경 전후 파일명 매핑표</li>
+<li>제출현황 점검 리포트</li>
+</ol>
+<hr/></div>
+<div class="submission-box">
+<b>수험자 작성란</b>
+<span>제출 파일명</span>
+<span>핵심 구현·검증 요약</span>
+</div>
+</article><article class="question practical-question exam-item" data-area-id="area-3" data-area-title="3영역" data-item-index="127">
+<div class="practical-title">
+<strong>작업형 8</strong>
+<span>원본 2번</span>
+</div>
+<h3>민원 키워드 기반 담당부서 추천 HTML 도구 제작</h3>
+<div class="practical-body"><h4>시나리오</h4>
+<p>민원 배정 담당자는 민원 내용을 읽고 담당부서를 수작업으로 판단한다. AI 모델 없이도 사전에 정한 키워드 사전과 규칙을 활용해 담당부서 후보를 추천하는 오프라인 HTML 도구를 만드시오.</p>
+<h4>제공데이터 및 메타데이터 정보</h4>
+<p><code>complaints_sample.csv</code>, <code>routing_rules.csv</code></p>
+<table class="data-table"><thead><tr>
+<th>컬럼</th>
+<th>설명</th>
+</tr></thead><tbody>
+<tr>
+<td>complaint_id</td>
+<td>민원 ID</td>
+</tr>
+<tr>
+<td>received_date</td>
+<td>접수일</td>
+</tr>
+<tr>
+<td>complaint_text</td>
+<td>민원 내용</td>
+</tr>
+<tr>
+<td>rule_keyword</td>
+<td>부서 매칭 키워드</td>
+</tr>
+<tr>
+<td>department</td>
+<td>담당부서</td>
+</tr>
+<tr>
+<td>priority</td>
+<td>키워드 우선순위</td>
+</tr>
+</tbody></table>
+<h4>수행 과제</h4>
+<ol>
+<li>민원 CSV와 키워드 규칙 CSV를 업로드한다.</li>
+<li>키워드 일치 기반으로 담당부서 후보를 추천한다.</li>
+<li>복수 후보가 있을 경우 우선순위와 매칭 근거를 표시한다.</li>
+<li>미분류 민원만 별도 목록으로 보여준다.</li>
+<li>담당자가 추천 결과를 수정해 최종 배정 CSV로 저장할 수 있게 한다.</li>
+</ol>
+<h4>제출물</h4>
+<ol>
+<li>HTML/CSS/JS 기반 단일 페이지 도구</li>
+<li>규칙 사전 작성 예시</li>
+<li>추천 결과 CSV</li>
+<li>미분류 민원 처리 가이드</li>
+</ol>
+<hr/></div>
+<div class="submission-box">
+<b>수험자 작성란</b>
+<span>제출 파일명</span>
+<span>핵심 구현·검증 요약</span>
+</div>
+</article><article class="question practical-question exam-item" data-area-id="area-3" data-area-title="3영역" data-item-index="128">
+<div class="practical-title">
+<strong>작업형 9</strong>
+<span>원본 3번</span>
+</div>
+<h3>예산 집행내역 이상징후 점검 Python 프로그램 제작</h3>
+<div class="practical-body"><h4>시나리오</h4>
+<p>예산 담당자는 지출 내역에서 중복 결제, 한도 초과, 주말 집행, 부적절한 품목을 매월 수작업으로 점검한다. CSV 또는 엑셀 파일을 넣으면 규칙 기반으로 이상징후를 탐지하고 점검 보고서를 생성하는 Python 프로그램을 만드시오.</p>
+<h4>제공데이터 및 메타데이터 정보</h4>
+<p><code>budget_spending.xlsx</code></p>
+<table class="data-table"><thead><tr>
+<th>컬럼</th>
+<th>설명</th>
+</tr></thead><tbody>
+<tr>
+<td>spend_id</td>
+<td>지출 ID</td>
+</tr>
+<tr>
+<td>spend_date</td>
+<td>집행일</td>
+</tr>
+<tr>
+<td>department</td>
+<td>부서</td>
+</tr>
+<tr>
+<td>vendor</td>
+<td>거래처</td>
+</tr>
+<tr>
+<td>item</td>
+<td>품목</td>
+</tr>
+<tr>
+<td>amount</td>
+<td>금액</td>
+</tr>
+<tr>
+<td>budget_category</td>
+<td>예산 항목</td>
+</tr>
+<tr>
+<td>approver</td>
+<td>승인자</td>
+</tr>
+</tbody></table>
+<h4>수행 과제</h4>
+<ol>
+<li>엑셀 또는 CSV 파일을 불러온다.</li>
+<li>중복 거래처·동일 금액·동일 일자 의심 건을 탐지한다.</li>
+<li>예산 항목별 한도 초과 건을 표시한다.</li>
+<li>주말 또는 공휴일 집행 건을 별도 표시한다.</li>
+<li>점검 결과를 엑셀 보고서와 요약 텍스트로 출력한다.</li>
+</ol>
+<h4>제출물</h4>
+<ol>
+<li>Python 소스코드 또는 <code>.exe</code></li>
+<li>샘플 입력파일</li>
+<li>이상징후 탐지 결과 보고서</li>
+<li>탐지 규칙 설명서</li>
+</ol>
+<hr/></div>
+<div class="submission-box">
+<b>수험자 작성란</b>
+<span>제출 파일명</span>
+<span>핵심 구현·검증 요약</span>
+</div>
+</article><article class="question practical-question exam-item" data-area-id="area-3" data-area-title="3영역" data-item-index="129">
+<div class="practical-title">
+<strong>작업형 10</strong>
+<span>원본 1번</span>
+</div>
+<h3>폐쇄망 교육 출석·이수율 자동 대시보드 구축</h3>
+<div class="practical-body"><h4>시나리오</h4>
+<p>교육 담당자는 여러 차시의 출석 CSV를 매번 엑셀로 열어 결석자, 이수율, 보강 대상자를 수작업으로 확인하고 있다. 동료들이 브라우저에서 CSV를 올리기만 하면 교육 운영 현황을 바로 볼 수 있는 폐쇄망용 HTML 도구를 만드시오.</p>
+<h4>제공데이터 및 메타데이터 정보</h4>
+<p><code>attendance.csv</code></p>
+<table class="data-table"><thead><tr>
+<th>컬럼</th>
+<th>설명</th>
+</tr></thead><tbody>
+<tr>
+<td>course_id</td>
+<td>과정 ID</td>
+</tr>
+<tr>
+<td>session_no</td>
+<td>차시</td>
+</tr>
+<tr>
+<td>participant_id</td>
+<td>참가자 ID</td>
+</tr>
+<tr>
+<td>participant_name</td>
+<td>참가자명</td>
+</tr>
+<tr>
+<td>department</td>
+<td>소속</td>
+</tr>
+<tr>
+<td>check_in</td>
+<td>입실시각</td>
+</tr>
+<tr>
+<td>check_out</td>
+<td>퇴실시각</td>
+</tr>
+<tr>
+<td>required_minutes</td>
+<td>기준 교육시간</td>
+</tr>
+</tbody></table>
+<h4>수행 과제</h4>
+<ol>
+<li>CSV 업로드 기능을 구현한다.</li>
+<li>개인별 출석시간과 이수 여부를 자동 계산한다.</li>
+<li>부서별 이수율과 결석자 목록을 표시한다.</li>
+<li>보강 대상자를 자동 분류한다.</li>
+<li>결과를 CSV로 다시 내려받을 수 있게 한다.</li>
+</ol>
+<h4>제출물</h4>
+<ol>
+<li>폐쇄망 실행 가능한 HTML 파일</li>
+<li>샘플 CSV 및 결과 CSV</li>
+<li>주요 계산식 설명</li>
+<li>사용자 매뉴얼 1쪽</li>
+</ol>
+<hr/></div>
+<div class="submission-box">
+<b>수험자 작성란</b>
+<span>제출 파일명</span>
+<span>핵심 구현·검증 요약</span>
+</div>
+</article><article class="answer-item practical-answer exam-item" data-area-id="area-3" data-area-title="3영역" data-item-index="130">
+<div class="answer-head">
+<strong>작업형 1</strong>
+<span>원본 9번</span>
+<b>업무량 통계 대시보드 HTML 프로그램 제작</b>
+</div>
+<ul>
+<li>제공 데이터 구조를 정확히 해석하고 입력·전처리 오류를 통제했는지 확인한다.</li>
+<li>요구된 기능을 실제 실행 가능한 HTML, Python, 서비스 또는 백엔드 흐름으로 구현했는지 확인한다.</li>
+<li>결과 파일, 화면, 로그, 보고서 등 검증 가능한 산출물을 제출했는지 확인한다.</li>
+<li>폐쇄망 실행, API 키 보호, 권한 관리, 개인정보 보호 등 문제의 제약 조건을 지켰는지 확인한다.</li>
+<li>사용자 매뉴얼과 재현 절차가 있어 평가자가 같은 결과를 확인할 수 있는지 확인한다.</li>
+</ul>
+</article><article class="answer-item practical-answer exam-item" data-area-id="area-3" data-area-title="3영역" data-item-index="131">
+<div class="answer-head">
+<strong>작업형 2</strong>
+<span>원본 7번</span>
+<b>교육 커리큘럼 자동 편성 HTML 도구 제작</b>
+</div>
+<ul>
+<li>제공 데이터 구조를 정확히 해석하고 입력·전처리 오류를 통제했는지 확인한다.</li>
+<li>요구된 기능을 실제 실행 가능한 HTML, Python, 서비스 또는 백엔드 흐름으로 구현했는지 확인한다.</li>
+<li>결과 파일, 화면, 로그, 보고서 등 검증 가능한 산출물을 제출했는지 확인한다.</li>
+<li>폐쇄망 실행, API 키 보호, 권한 관리, 개인정보 보호 등 문제의 제약 조건을 지켰는지 확인한다.</li>
+<li>사용자 매뉴얼과 재현 절차가 있어 평가자가 같은 결과를 확인할 수 있는지 확인한다.</li>
+</ul>
+</article><article class="answer-item practical-answer exam-item" data-area-id="area-3" data-area-title="3영역" data-item-index="132">
+<div class="answer-head">
+<strong>작업형 3</strong>
+<span>원본 13번</span>
+<b>생활불편 신고 접수·처리현황 공개 서비스 구축</b>
+</div>
+<ul>
+<li>제공 데이터 구조를 정확히 해석하고 입력·전처리 오류를 통제했는지 확인한다.</li>
+<li>요구된 기능을 실제 실행 가능한 HTML, Python, 서비스 또는 백엔드 흐름으로 구현했는지 확인한다.</li>
+<li>결과 파일, 화면, 로그, 보고서 등 검증 가능한 산출물을 제출했는지 확인한다.</li>
+<li>폐쇄망 실행, API 키 보호, 권한 관리, 개인정보 보호 등 문제의 제약 조건을 지켰는지 확인한다.</li>
+<li>사용자 매뉴얼과 재현 절차가 있어 평가자가 같은 결과를 확인할 수 있는지 확인한다.</li>
+</ul>
+</article><article class="answer-item practical-answer exam-item" data-area-id="area-3" data-area-title="3영역" data-item-index="133">
+<div class="answer-head">
+<strong>작업형 4</strong>
+<span>원본 8번</span>
+<b>CSV 통합·품질검사 Python 자동화 도구 제작</b>
+</div>
+<ul>
+<li>제공 데이터 구조를 정확히 해석하고 입력·전처리 오류를 통제했는지 확인한다.</li>
+<li>요구된 기능을 실제 실행 가능한 HTML, Python, 서비스 또는 백엔드 흐름으로 구현했는지 확인한다.</li>
+<li>결과 파일, 화면, 로그, 보고서 등 검증 가능한 산출물을 제출했는지 확인한다.</li>
+<li>폐쇄망 실행, API 키 보호, 권한 관리, 개인정보 보호 등 문제의 제약 조건을 지켰는지 확인한다.</li>
+<li>사용자 매뉴얼과 재현 절차가 있어 평가자가 같은 결과를 확인할 수 있는지 확인한다.</li>
+</ul>
+</article><article class="answer-item practical-answer exam-item" data-area-id="area-3" data-area-title="3영역" data-item-index="134">
+<div class="answer-head">
+<strong>작업형 5</strong>
+<span>원본 15번</span>
+<b>공공데이터 API 기반 생활정보 챗봇 서비스 구축</b>
+</div>
+<ul>
+<li>제공 데이터 구조를 정확히 해석하고 입력·전처리 오류를 통제했는지 확인한다.</li>
+<li>요구된 기능을 실제 실행 가능한 HTML, Python, 서비스 또는 백엔드 흐름으로 구현했는지 확인한다.</li>
+<li>결과 파일, 화면, 로그, 보고서 등 검증 가능한 산출물을 제출했는지 확인한다.</li>
+<li>폐쇄망 실행, API 키 보호, 권한 관리, 개인정보 보호 등 문제의 제약 조건을 지켰는지 확인한다.</li>
+<li>사용자 매뉴얼과 재현 절차가 있어 평가자가 같은 결과를 확인할 수 있는지 확인한다.</li>
+</ul>
+</article><article class="answer-item practical-answer exam-item" data-area-id="area-3" data-area-title="3영역" data-item-index="135">
+<div class="answer-head">
+<strong>작업형 6</strong>
+<span>원본 14번</span>
+<b>대국민 교육·행사 신청 및 만족도 조사 서비스 구축</b>
+</div>
+<ul>
+<li>제공 데이터 구조를 정확히 해석하고 입력·전처리 오류를 통제했는지 확인한다.</li>
+<li>요구된 기능을 실제 실행 가능한 HTML, Python, 서비스 또는 백엔드 흐름으로 구현했는지 확인한다.</li>
+<li>결과 파일, 화면, 로그, 보고서 등 검증 가능한 산출물을 제출했는지 확인한다.</li>
+<li>폐쇄망 실행, API 키 보호, 권한 관리, 개인정보 보호 등 문제의 제약 조건을 지켰는지 확인한다.</li>
+<li>사용자 매뉴얼과 재현 절차가 있어 평가자가 같은 결과를 확인할 수 있는지 확인한다.</li>
+</ul>
+</article><article class="answer-item practical-answer exam-item" data-area-id="area-3" data-area-title="3영역" data-item-index="136">
+<div class="answer-head">
+<strong>작업형 7</strong>
+<span>원본 4번</span>
+<b>문서 제출현황 자동 점검 및 파일명 표준화 프로그램 제작</b>
+</div>
+<ul>
+<li>제공 데이터 구조를 정확히 해석하고 입력·전처리 오류를 통제했는지 확인한다.</li>
+<li>요구된 기능을 실제 실행 가능한 HTML, Python, 서비스 또는 백엔드 흐름으로 구현했는지 확인한다.</li>
+<li>결과 파일, 화면, 로그, 보고서 등 검증 가능한 산출물을 제출했는지 확인한다.</li>
+<li>폐쇄망 실행, API 키 보호, 권한 관리, 개인정보 보호 등 문제의 제약 조건을 지켰는지 확인한다.</li>
+<li>사용자 매뉴얼과 재현 절차가 있어 평가자가 같은 결과를 확인할 수 있는지 확인한다.</li>
+</ul>
+</article><article class="answer-item practical-answer exam-item" data-area-id="area-3" data-area-title="3영역" data-item-index="137">
+<div class="answer-head">
+<strong>작업형 8</strong>
+<span>원본 2번</span>
+<b>민원 키워드 기반 담당부서 추천 HTML 도구 제작</b>
+</div>
+<ul>
+<li>제공 데이터 구조를 정확히 해석하고 입력·전처리 오류를 통제했는지 확인한다.</li>
+<li>요구된 기능을 실제 실행 가능한 HTML, Python, 서비스 또는 백엔드 흐름으로 구현했는지 확인한다.</li>
+<li>결과 파일, 화면, 로그, 보고서 등 검증 가능한 산출물을 제출했는지 확인한다.</li>
+<li>폐쇄망 실행, API 키 보호, 권한 관리, 개인정보 보호 등 문제의 제약 조건을 지켰는지 확인한다.</li>
+<li>사용자 매뉴얼과 재현 절차가 있어 평가자가 같은 결과를 확인할 수 있는지 확인한다.</li>
+</ul>
+</article><article class="answer-item practical-answer exam-item" data-area-id="area-3" data-area-title="3영역" data-item-index="138">
+<div class="answer-head">
+<strong>작업형 9</strong>
+<span>원본 3번</span>
+<b>예산 집행내역 이상징후 점검 Python 프로그램 제작</b>
+</div>
+<ul>
+<li>제공 데이터 구조를 정확히 해석하고 입력·전처리 오류를 통제했는지 확인한다.</li>
+<li>요구된 기능을 실제 실행 가능한 HTML, Python, 서비스 또는 백엔드 흐름으로 구현했는지 확인한다.</li>
+<li>결과 파일, 화면, 로그, 보고서 등 검증 가능한 산출물을 제출했는지 확인한다.</li>
+<li>폐쇄망 실행, API 키 보호, 권한 관리, 개인정보 보호 등 문제의 제약 조건을 지켰는지 확인한다.</li>
+<li>사용자 매뉴얼과 재현 절차가 있어 평가자가 같은 결과를 확인할 수 있는지 확인한다.</li>
+</ul>
+</article><article class="answer-item practical-answer exam-item" data-area-id="area-3" data-area-title="3영역" data-item-index="139">
+<div class="answer-head">
+<strong>작업형 10</strong>
+<span>원본 1번</span>
+<b>폐쇄망 교육 출석·이수율 자동 대시보드 구축</b>
+</div>
+<ul>
+<li>제공 데이터 구조를 정확히 해석하고 입력·전처리 오류를 통제했는지 확인한다.</li>
+<li>요구된 기능을 실제 실행 가능한 HTML, Python, 서비스 또는 백엔드 흐름으로 구현했는지 확인한다.</li>
+<li>결과 파일, 화면, 로그, 보고서 등 검증 가능한 산출물을 제출했는지 확인한다.</li>
+<li>폐쇄망 실행, API 키 보호, 권한 관리, 개인정보 보호 등 문제의 제약 조건을 지켰는지 확인한다.</li>
+<li>사용자 매뉴얼과 재현 절차가 있어 평가자가 같은 결과를 확인할 수 있는지 확인한다.</li>
+</ul>
+</article></div><a class="backtop" href="#top">맨 위로</a></section></main><script>
+(function(){const S=10,I=[...document.querySelectorAll('.exam-item')],SEC=[...document.querySelectorAll('.rough-section')],L=document.getElementById('current-label'),A=document.getElementById('current-area'),TL=document.getElementById('timer-label'),B=document.getElementById('timer-bar'),P=document.getElementById('prev-question'),N=document.getElementById('next-question');let cur=0,rem=S,t=null;document.body.classList.add('player-mode');function sel(){return !!(I[cur]&&I[cur].querySelector('.options li.user-selected'))}function ut(){if(TL)TL.textContent=rem;let ep=document.querySelector('.topbar');if(ep)ep.classList.toggle('timer-warning',rem<=3);if(B)B.style.transform='scaleX('+Math.max(0,rem/S)+')'}function rt(){rem=S;ut();clearInterval(t);t=setInterval(()=>{if(sel())return;rem--;ut();if(rem<=0)go(cur+1,true)},1000)}function go(i,auto){if(!I.length)return;cur=Math.max(0,Math.min(i,I.length-1));I.forEach((x,j)=>x.classList.toggle('active-item',j===cur));SEC.forEach(s=>s.classList.toggle('active-section',s.contains(I[cur])));if(L)L.textContent=(cur+1)+' / '+I.length;if(A)A.textContent=I[cur].dataset.areaTitle||'';if(P)P.disabled=cur===0;if(N)N.disabled=cur===I.length-1;rt();if(!auto){let e=document.getElementById('exam-player');if(e)e.scrollIntoView({behavior:'smooth',block:'start'})}}document.addEventListener('click',e=>{let o=e.target.closest('.options li');if(o&&o.closest('.exam-item')===I[cur]){o.parentElement.querySelectorAll('li').forEach(x=>x.classList.remove('user-selected'));o.classList.add('user-selected');ut();return}let a=e.target.closest('a[data-start-index]');if(a){e.preventDefault();go(Number(a.dataset.startIndex||0))}});if(P)P.onclick=()=>go(cur-1);if(N)N.onclick=()=>go(cur+1);document.addEventListener('keydown',e=>{if(e.key==='ArrowLeft')go(cur-1);if(e.key==='ArrowRight')go(cur+1)});go(0)})();
+</script><script>/* kg-preview: #<heading> \uc704\uce58\ub85c \uc774\ub3d9 */
+(function(){function norm(t){return (t||'').replace(/\s+/g,'').toLowerCase()}
+function go(){var h=decodeURIComponent(location.hash.slice(1));if(!h)return;var k=norm(h).slice(0,24);if(!k)return;
+var best=null,bl=1e9,els=document.body.querySelectorAll('h1,h2,h3,h4,h5,p,div,span,li,td,text,tspan,section,article');
+for(var i=0;i<els.length;i++){var e=els[i],t=norm(e.textContent);if(t.length<bl&&t.indexOf(k)>-1){best=e;bl=t.length}}
+if(!best)return;var box=best.closest('section,[class*=slide],[class*=page],article')||best;
+box.scrollIntoView({block:'start'});box.style.outline='3px solid #c0504d';box.style.outlineOffset='4px';
+setTimeout(function(){box.style.outline=''},2600)}
+window.addEventListener('load',function(){setTimeout(go,400)});window.addEventListener('hashchange',go)})();</script></body></html>

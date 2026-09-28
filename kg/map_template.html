@@ -1,0 +1,512 @@
+<title>강의 콘텐츠 지도</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --paper:#eef0f3; --panel:#ffffff; --panel2:#f6f7f9; --line:#dde2e9; --line2:#c7cfda;
+  --ink:#0f1b2d; --body:#3a4658; --mut:#6b7789; --faint:#98a3b3;
+  --navy:#16294a; --coral:#c0504d; --coral-bg:#f7e6e5; --coral-ink:#9e3431;
+  --g-fill:#e3e7ed; --g-line:#cbd3de;
+  --r1:#d7dfea; --r2:#a9bad0; --r3:#6f8aae; --r4:#3b5a85; --r5:#18305a;
+  --lab-dark:#0f1b2d; --lab-light:#ffffff;
+  --shadow:0 1px 2px rgba(15,27,45,.06),0 4px 16px rgba(15,27,45,.06);
+  --sans:'IBM Plex Sans KR','Pretendard','Apple SD Gothic Neo','Malgun Gothic',system-ui,sans-serif;
+  --mono:'IBM Plex Mono',ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --paper:#0c1219; --panel:#121a25; --panel2:#17212e; --line:#233043; --line2:#2f3f56;
+    --ink:#e9eef5; --body:#b9c4d2; --mut:#8a97a9; --faint:#5f6c80;
+    --navy:#dbe4f1; --coral:#e37c72; --coral-bg:#3a2224; --coral-ink:#f0a39b;
+    --g-fill:#141d29; --g-line:#26344a;
+    --r1:#26364d; --r2:#35507a; --r3:#4f73a6; --r4:#7c9dcc; --r5:#b9cdea;
+    --lab-dark:#0c1219; --lab-light:#e9eef5;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 4px 16px rgba(0,0,0,.25);
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --paper:#0c1219; --panel:#121a25; --panel2:#17212e; --line:#233043; --line2:#2f3f56;
+  --ink:#e9eef5; --body:#b9c4d2; --mut:#8a97a9; --faint:#5f6c80;
+  --navy:#dbe4f1; --coral:#e37c72; --coral-bg:#3a2224; --coral-ink:#f0a39b;
+  --g-fill:#141d29; --g-line:#26344a;
+  --r1:#26364d; --r2:#35507a; --r3:#4f73a6; --r4:#7c9dcc; --r5:#b9cdea;
+  --lab-dark:#0c1219; --lab-light:#e9eef5;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 4px 16px rgba(0,0,0,.25);
+}
+[hidden]{display:none!important}
+*{box-sizing:border-box}
+html,body{height:100%}
+@media (min-width:901px){body{overflow:hidden}}
+body{margin:0;background:var(--paper);color:var(--ink);font:14px/1.55 var(--sans);-webkit-font-smoothing:antialiased;word-break:keep-all}
+button,input,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--coral);outline-offset:2px}
+
+.app{display:grid;grid-template-rows:max-content minmax(0,1fr);height:100%}
+header.bar{display:flex;align-items:center;gap:20px;padding:14px 22px;min-height:70px;border-bottom:1px solid var(--line);background:var(--panel)}
+.brand h1{margin:0;font-size:18px;font-weight:700;letter-spacing:-.4px;line-height:1.2}
+.brand p{margin:2px 0 0;font-size:12px;color:var(--mut)}
+.brand p b{color:var(--ink);font-weight:600;font-variant-numeric:tabular-nums}
+.search{margin-left:auto;position:relative;flex:0 1 380px}
+.search input{width:100%;padding:9px 12px 9px 34px;border:1px solid var(--line2);border-radius:8px;background:var(--panel2)}
+.search svg{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--mut)}
+
+.main{display:grid;grid-template-columns:minmax(0,1fr) minmax(360px,480px);min-height:0}
+.mapwrap{position:relative;min-height:0;overflow:hidden}
+#map{width:100%;height:100%;display:block}
+.legend{position:absolute;left:18px;bottom:16px;display:flex;align-items:center;gap:10px;font-size:11.5px;color:var(--mut);
+  background:color-mix(in srgb,var(--paper) 85%,transparent);padding:6px 10px;border-radius:6px}
+.legend .ramp{display:flex}
+.legend .ramp i{width:18px;height:8px;display:block}
+.hintbar{position:absolute;left:18px;top:14px;font-size:12px;color:var(--mut)}
+
+g.group circle{fill:var(--g-fill);stroke:var(--g-line);stroke-width:1}
+text.glabel{font-size:12.5px;font-weight:700;fill:var(--body);letter-spacing:.04em;text-anchor:middle;pointer-events:none;
+  paint-order:stroke;stroke:var(--paper);stroke-width:5px;stroke-linejoin:round}
+g.sub{cursor:pointer}
+g.sub circle{stroke:var(--panel);stroke-width:1.5;transition:stroke .15s}
+g.sub:hover circle,g.sub:focus-visible circle{stroke:var(--coral);stroke-width:2.5}
+g.sub.sel circle{stroke:var(--coral);stroke-width:3.5}
+g.sub.dim{opacity:.28}
+g.sub text{text-anchor:middle;pointer-events:none;font-weight:600}
+g.sub text.n{font-family:var(--mono);font-weight:500;font-size:10.5px}
+g.sub .hit{fill:var(--coral);font-family:var(--mono);font-size:10px;font-weight:600}
+.tip{position:absolute;pointer-events:none;background:var(--ink);color:var(--paper);font-size:12px;padding:7px 10px;border-radius:6px;
+  box-shadow:var(--shadow);max-width:260px;line-height:1.45}
+.tip b{display:block;font-size:12.5px}
+
+aside{background:var(--panel);border-left:1px solid var(--line);display:grid;grid-template-rows:auto 1fr auto;min-height:0}
+.phead{padding:18px 22px 12px;border-bottom:1px solid var(--line)}
+.kicker{font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--coral)}
+.phead h2{margin:3px 0 4px;font-size:21px;line-height:1.3;letter-spacing:-.5px;text-wrap:balance}
+.meta{font-size:12.5px;color:var(--mut);font-variant-numeric:tabular-nums}
+.meta b{color:var(--ink);font-weight:600}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.chip{border:1px solid var(--line2);background:transparent;border-radius:999px;padding:3px 10px;font-size:12px;color:var(--body);cursor:pointer}
+.chip:hover{border-color:var(--coral);color:var(--coral-ink)}
+.chip.on{background:var(--navy);border-color:var(--navy);color:var(--panel)}
+.chip .c{font-family:var(--mono);font-size:10.5px;color:var(--mut);margin-left:3px}
+.chip.on .c{color:inherit;opacity:.8}
+.rowlabel{font-size:11px;color:var(--mut);font-weight:600;letter-spacing:.06em;margin:12px 0 0}
+
+.pbody{overflow:auto;padding:6px 14px 18px;min-height:0}
+.card{display:grid;grid-template-columns:auto 1fr;gap:4px 10px;padding:12px 10px;border-bottom:1px solid var(--line)}
+.card:last-child{border-bottom:0}
+.card input{margin:3px 0 0;width:16px;height:16px;accent-color:var(--coral)}
+.card h3{margin:0;font-size:14px;line-height:1.45;font-weight:600;letter-spacing:-.2px}
+.card .x{grid-column:2;margin:2px 0 0;font-size:12.8px;color:var(--body);white-space:pre-line;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.card.open .x{-webkit-line-clamp:unset;display:block}
+.card .src{grid-column:2;display:flex;flex-wrap:wrap;gap:4px 8px;align-items:center;font-size:11.5px;color:var(--mut);margin-top:4px}
+.card .src a{color:inherit}
+.badge{font-size:10.5px;font-weight:600;color:var(--coral-ink);background:var(--coral-bg);border-radius:4px;padding:1px 6px}
+.more{border:0;background:none;padding:0;font-size:11.5px;color:var(--coral-ink);cursor:pointer;text-decoration:underline;text-underline-offset:2px}
+.card.picked{background:color-mix(in srgb,var(--coral-bg) 55%,transparent);border-radius:6px}
+
+.intro{padding:10px 8px}
+.intro ol{margin:10px 0 0;padding-left:20px;color:var(--body);font-size:13.5px;display:grid;gap:4px}
+.rank{width:100%;border-collapse:collapse;margin-top:14px;font-size:13px;font-variant-numeric:tabular-nums}
+.rank td{padding:6px 4px;border-bottom:1px solid var(--line)}
+.rank td.n{text-align:right;color:var(--mut);font-family:var(--mono);font-size:11.5px;white-space:nowrap}
+.rank button{all:unset;cursor:pointer;color:var(--ink)}
+.rank button:hover{color:var(--coral-ink);text-decoration:underline}
+.rank .g{color:var(--mut);font-size:11.5px}
+.bar{height:6px;background:var(--line);border-radius:3px;overflow:hidden;min-width:60px}
+.bar i{display:block;height:100%;background:var(--r4)}
+
+.pfoot{border-top:1px solid var(--line);padding:12px 18px;display:flex;align-items:center;gap:8px;background:var(--panel2)}
+.pfoot .count{font-size:12.5px;color:var(--body);margin-right:auto}
+.pfoot .count b{font-family:var(--mono);color:var(--ink)}
+.btn{border:1px solid var(--line2);background:var(--panel);border-radius:7px;padding:7px 12px;font-size:12.5px;cursor:pointer;font-weight:500}
+.btn:hover{border-color:var(--ink)}
+.btn.primary{background:var(--coral);border-color:var(--coral);color:#fff;font-weight:600}
+.btn.primary:disabled{opacity:.45;cursor:default}
+
+dialog{border:0;border-radius:12px;padding:0;width:min(760px,calc(100vw - 32px));max-height:calc(100vh - 48px);background:var(--panel);color:var(--ink);box-shadow:var(--shadow)}
+dialog::backdrop{background:rgba(8,14,24,.45)}
+.dlg{display:grid;grid-template-rows:auto 1fr auto;max-height:calc(100vh - 48px)}
+.dlg header{padding:18px 20px 10px}
+.dlg h2{margin:0;font-size:18px}
+.dlg p{margin:4px 0 0;font-size:12.5px;color:var(--mut)}
+.dlg textarea{margin:0 20px;min-height:320px;resize:vertical;border:1px solid var(--line2);border-radius:8px;padding:12px;background:var(--panel2);
+  font:12.5px/1.6 var(--mono);color:var(--body)}
+.dlg footer{display:flex;gap:8px;justify-content:flex-end;padding:14px 20px;align-items:center}
+.dlg footer .ok{margin-right:auto;font-size:12.5px;color:var(--mut)}
+
+.card h3 button{all:unset;cursor:pointer}
+.card h3 button:hover,.card h3 button:focus-visible{color:var(--coral-ink);text-decoration:underline;text-underline-offset:3px}
+.pvbtn{border:1px solid var(--line2);background:var(--panel);border-radius:5px;padding:1px 7px;font-size:11px;cursor:pointer;color:var(--body)}
+.pvbtn:hover{border-color:var(--coral);color:var(--coral-ink)}
+dialog.pv{width:min(1240px,calc(100vw - 32px));height:calc(100vh - 48px);max-height:none}
+.pvwrap{display:grid;grid-template-rows:auto auto 1fr;height:100%}
+.pvhead{display:flex;gap:16px;align-items:flex-start;padding:16px 20px 10px;border-bottom:1px solid var(--line)}
+.pvhead h2{margin:2px 0 2px;font-size:17px;line-height:1.35}
+.pvhead .links{margin-left:auto;display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.pvhead a{font-size:12px;color:var(--body);border:1px solid var(--line2);border-radius:6px;padding:5px 9px;text-decoration:none;white-space:nowrap}
+.pvhead a:hover{border-color:var(--ink)}
+.tabs{display:flex;gap:2px;padding:0 20px;border-bottom:1px solid var(--line);background:var(--panel)}
+.tabs button{border:0;background:none;padding:10px 12px;font-size:13px;color:var(--mut);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px}
+.tabs button[aria-selected="true"]{color:var(--ink);font-weight:600;border-bottom-color:var(--coral)}
+.pvbody{min-height:0;position:relative;background:var(--panel2)}
+.pvbody iframe{width:100%;height:100%;border:0;background:#fff;display:block}
+.digest{display:grid;grid-template-columns:minmax(220px,300px) 1fr;height:100%;min-height:0}
+.digest ol{margin:0;padding:14px 14px 14px 36px;overflow:auto;border-right:1px solid var(--line);font-size:12.5px;display:grid;gap:3px;align-content:start;background:var(--panel)}
+.digest ol li{color:var(--body);cursor:pointer;line-height:1.45}
+.digest ol li::marker{font-family:var(--mono);font-size:10.5px;color:var(--faint)}
+.digest ol li.has{color:var(--ink)}
+.digest ol li.cur{color:var(--coral-ink);font-weight:600}
+.digest ol li:hover{text-decoration:underline}
+.digest .txt{overflow:auto;padding:22px 28px;min-height:0}
+.digest .txt h3{margin:0 0 10px;font-size:18px;letter-spacing:-.3px;line-height:1.4}
+.digest .txt pre{white-space:pre-wrap;font:13.5px/1.75 var(--sans);color:var(--body);margin:0;max-width:72ch}
+.digest .txt .note{font-size:12.5px;color:var(--mut)}
+.nopv{padding:40px;color:var(--mut);font-size:13.5px}
+@media (max-width:900px){.digest{grid-template-columns:1fr;grid-template-rows:40% 1fr}.digest ol{border-right:0;border-bottom:1px solid var(--line)}}
+
+@media (max-width:900px){
+  .app{height:auto}
+  header.bar{flex-wrap:wrap;padding-inline:16px}
+  .search{flex:1 1 100%;margin-left:0}
+  .main{grid-template-columns:1fr}
+  .mapwrap{height:min(92vw,560px)}
+  aside{border-left:0;border-top:1px solid var(--line)}
+  .pbody{max-height:none}
+  .pfoot{position:sticky;bottom:0}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<div class="app">
+  <header class="bar">
+    <div class="brand">
+      <h1>강의 콘텐츠 지도</h1>
+      <p id="stats"></p>
+    </div>
+    <label class="search" for="q">
+      <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="7" cy="7" r="5.2" stroke="currentColor" stroke-width="1.6"/><path d="M11 11l3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input id="q" type="search" placeholder="슬라이드 내용 검색 (예: MCP, 피벗, 할루시네이션)" autocomplete="off" aria-label="슬라이드 내용 검색">
+    </label>
+  </header>
+  <div class="main">
+    <div class="mapwrap">
+      <svg id="map" role="img" aria-label="대주제별로 묶은 소주제 버블 지도"></svg>
+      <div class="hintbar" id="hintbar">버블 크기 = 슬라이드 수 · 버블을 누르면 오른쪽에 슬라이드가 모입니다</div>
+      <div class="legend" aria-hidden="true"><span>다룬 강의안 적음</span><span class="ramp"><i style="background:var(--r1)"></i><i style="background:var(--r2)"></i><i style="background:var(--r3)"></i><i style="background:var(--r4)"></i><i style="background:var(--r5)"></i></span><span>많음</span></div>
+      <div class="tip" id="tip" hidden></div>
+    </div>
+    <aside>
+      <div class="phead" id="phead"></div>
+      <div class="pbody" id="pbody"></div>
+      <div class="pfoot">
+        <span class="count">선택 <b id="selN">0</b>장</span>
+        <button class="btn" type="button" id="autoPick">추천 12장 선택</button>
+        <button class="btn" type="button" id="clearSel">비우기</button>
+        <button class="btn primary" type="button" id="makeCtx" disabled>컨텍스트 만들기</button>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<dialog id="dlg">
+  <div class="dlg">
+    <header>
+      <h2>강의안 작성용 컨텍스트</h2>
+      <p>복사해서 Claude에게 붙여 넣고 "이 자료를 바탕으로 ○○ 대상 ○시간 강의안을 써줘"라고 요청하세요.</p>
+    </header>
+    <textarea id="ctx" readonly aria-label="생성된 컨텍스트"></textarea>
+    <footer>
+      <span class="ok" id="copied"></span>
+      <button class="btn" type="button" id="closeDlg">닫기</button>
+      <button class="btn primary" type="button" id="copyCtx">복사</button>
+    </footer>
+  </div>
+</dialog>
+
+<dialog id="pv" class="pv" aria-labelledby="pvTitle">
+  <div class="pvwrap">
+    <div class="pvhead">
+      <div><div class="kicker" id="pvKick"></div><h2 id="pvTitle"></h2><div class="meta" id="pvMeta"></div></div>
+      <div class="links"><a id="pvNew" target="_blank" rel="noopener">새 창으로 열기</a><a id="pvDrive" target="_blank" rel="noopener">Drive 원본</a>
+        <button class="btn" type="button" id="pvClose">닫기</button></div>
+    </div>
+    <div class="tabs" role="tablist">
+      <button type="button" role="tab" data-tab="render" id="tabRender" aria-selected="true">원본 화면</button>
+      <button type="button" role="tab" data-tab="digest" id="tabDigest" aria-selected="false">핵심 내용</button>
+    </div>
+    <div class="pvbody" id="pvBody"></div>
+  </div>
+</dialog>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<script>
+const D = /*__DATA__*/null;
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const subs = D.groups.flatMap(g => g.subs.map(s => ({...s, group: g.name})));
+const subById = new Map(subs.map(s => [s.id, s]));
+const L = D.lectures;
+const selected = new Set();
+let current = null, lectureFilter = null, query = '';
+
+const nLect = new Set(D.slides.flatMap(s => s.docs)).size;
+$('#stats').innerHTML = `강의안 <b>${nLect}</b>개 · 슬라이드 <b>${D.slides.length.toLocaleString()}</b>장 · 주제 <b>${subs.length}</b>개 · ${esc(D.built)} 기준`;
+
+// ───────── 지도 (circle packing)
+const tip = $('#tip');
+const maxLect = Math.max(...subs.map(s => s.lectures));
+const shade = n => { const r = n / maxLect; return r > .72 ? 5 : r > .48 ? 4 : r > .28 ? 3 : r > .12 ? 2 : 1; };
+let nodeSel, hitSel;
+function drawMap() {
+  const wrap = $('.mapwrap'), W = wrap.clientWidth, H = wrap.clientHeight;
+  const svg = d3.select('#map').attr('viewBox', `0 0 ${W} ${H}`);
+  svg.selectAll('*').remove();
+  const root = d3.hierarchy({children: D.groups.map(g => ({name: g.name, children: g.subs.filter(s => s.slides)}))})
+    .sum(d => d.slides || 0).sort((a, b) => b.value - a.value);
+  d3.pack().size([W, H]).padding(d => d.depth === 0 ? 16 : 6)(root);
+  const top = 30;  // 힌트 문구 자리
+  const k = Math.min(1, (H - top) / H);
+  const tx = x => x, ty = y => top + y * k;
+  const grp = svg.append('g').selectAll('g').data(root.children).join('g').attr('class', 'group');
+  grp.append('circle').attr('cx', d => tx(d.x)).attr('cy', d => ty(d.y)).attr('r', d => d.r * k);
+  const leaves = root.leaves();
+  nodeSel = svg.append('g').selectAll('g').data(leaves).join('g').attr('class', 'sub')
+    .attr('tabindex', 0).attr('role', 'button').attr('aria-label', d => `${d.data.name}, 슬라이드 ${d.data.slides}장`)
+    .attr('transform', d => `translate(${tx(d.x)},${ty(d.y)})`)
+    .on('click', (e, d) => select(d.data.id))
+    .on('keydown', (e, d) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); select(d.data.id); } })
+    .on('mousemove', (e, d) => {
+      const s = d.data, b = wrap.getBoundingClientRect();
+      tip.hidden = false;
+      tip.innerHTML = `<b>${esc(s.name)}</b>슬라이드 ${s.slides}장 · 강의안 ${s.lectures}개<br>${esc(s.from || '')} ~ ${esc(s.to || '')}`;
+      tip.style.left = Math.min(e.clientX - b.left + 14, b.width - 270) + 'px';
+      tip.style.top = (e.clientY - b.top + 14) + 'px';
+    })
+    .on('mouseleave', () => { tip.hidden = true; });
+  nodeSel.append('circle').attr('r', d => d.r * k).attr('fill', d => `var(--r${shade(d.data.lectures)})`);
+  nodeSel.each(function (d) {
+    const r = d.r * k, g = d3.select(this), s = d.data, dark = shade(s.lectures) >= 3;
+    const fill = dark ? 'var(--lab-light)' : 'var(--lab-dark)';
+    if (r < 17) return;
+    const fs = Math.max(9.5, Math.min(15, r / 4));
+    const width = r * 1.7, perLine = Math.max(3, Math.floor(width / (fs * 1.02)));
+    // '·'와 공백에서 끊어 최대 3줄로 접는다
+    const parts = s.name.split(/(?<=·)|\s+/).filter(Boolean);
+    const lines = []; let cur = '';
+    for (const w of parts) { const t = cur ? (cur.endsWith('·') ? cur + w : cur + ' ' + w) : w; if (t.length > perLine && cur) { lines.push(cur); cur = w; } else cur = t; }
+    if (cur) lines.push(cur);
+    const maxLines = r > 34 ? 3 : 2;
+    let lab = lines.slice(0, maxLines);
+    if (lines.length > maxLines) lab[maxLines - 1] = lab[maxLines - 1].slice(0, perLine - 1) + '…';
+    lab = lab.map(t => t.length > perLine + 1 ? t.slice(0, perLine) + '…' : t);
+    const showN = r > 28;
+    const total = lab.length + (showN ? .9 : 0);
+    const y0 = -(total - 1) * fs * .6;
+    lab.forEach((t, i) => g.append('text').attr('y', y0 + i * fs * 1.18).attr('dy', '.35em').attr('font-size', fs).attr('fill', fill).text(t));
+    if (showN) g.append('text').attr('class', 'n').attr('y', y0 + lab.length * fs * 1.18 - 1).attr('dy', '.35em').attr('fill', fill).attr('opacity', .8).text(s.slides + '장');
+  });
+  // 대주제 이름은 맨 위에 테두리 글자로 얹는다 (버블에 가리지 않게)
+  svg.append('g').selectAll('text').data(root.children).join('text').attr('class', 'glabel')
+    .attr('x', d => tx(d.x)).attr('y', d => ty(d.y - d.r) + 4).attr('dy', '.35em').text(d => d.data.name);
+  hitSel = nodeSel.append('text').attr('class', 'hit').attr('y', d => -d.r * k + 12);
+  paintMap();
+}
+function paintMap() {
+  if (!nodeSel) return;
+  nodeSel.classed('sel', d => d.data.id === current);
+  if (query) {
+    const hits = searchCounts();
+    nodeSel.classed('dim', d => !hits.get(d.data.id));
+    hitSel.text(d => hits.get(d.data.id) ? hits.get(d.data.id) + '건' : '');
+  } else {
+    nodeSel.classed('dim', false);
+    hitSel.text('');
+  }
+}
+let rt; window.addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(drawMap, 150); });
+
+// ───────── 패널
+function lectLine(did) {
+  const l = L[did]; if (!l) return '';
+  return [l.t, l.date, (l.c || []).join(', ')].filter(Boolean).map(esc).join(' · ');
+}
+function card(s) {
+  const l = L[s.d] || {};
+  const link = `<button class="pvbtn" type="button" data-pv="${s.n}">${l.p ? '원본 보기' : '핵심 내용'}</button>`;
+  const reuse = s.reuse > 1 ? `<span class="badge">강의안 ${s.reuse}개에서 사용</span>` : '';
+  return `<div class="card${selected.has(s.n) ? ' picked' : ''}" data-n="${s.n}">
+    <input type="checkbox" id="c${s.n}" ${selected.has(s.n) ? 'checked' : ''} aria-label="이 슬라이드 선택">
+    <h3><button type="button" data-pv="${s.n}" title="강의안에서 이 슬라이드 보기">${esc(s.h)}</button></h3>
+    <p class="x">${esc(s.x)}</p>
+    <div class="src"><span>${lectLine(s.d)}</span>${link}${reuse}${s.x.length > 150 ? '<button class="more" type="button">전문 보기</button>' : ''}</div>
+  </div>`;
+}
+function topicSlides(id) {
+  const t = subById.get(id);
+  let list = t.order.map(n => D.slides[n]);
+  if (lectureFilter) list = list.filter(s => s.docs.includes(lectureFilter));
+  return list;
+}
+function renderTopic() {
+  const t = subById.get(current);
+  const rel = t.related.filter(([id]) => subById.has(id));
+  $('#phead').innerHTML = `<div class="kicker">${esc(t.group)}</div><h2>${esc(t.name)}</h2>
+    <div class="meta">슬라이드 <b>${t.slides}</b>장 · 강의안 <b>${t.lectures}</b>개 · ${esc(t.from || '')} ~ ${esc(t.to || '')}</div>
+    ${rel.length ? `<div class="rowlabel">함께 가르친 주제</div><div class="chips">${rel.map(([id, n]) => `<button class="chip" type="button" data-topic="${id}">${esc(subById.get(id).name)}<span class="c">${n}</span></button>`).join('')}</div>` : ''}
+    <div class="rowlabel">강의안으로 좁히기</div>
+    <div class="chips"><button class="chip ${lectureFilter ? '' : 'on'}" type="button" data-lect="">전체<span class="c">${t.slides}</span></button>${t.top_lectures.slice(0, 8).map(([did, n]) => `<button class="chip ${lectureFilter === did ? 'on' : ''}" type="button" data-lect="${esc(did)}" title="${esc(L[did]?.t || '')}">${esc(short(L[did]?.t || did))}<span class="c">${n}</span></button>`).join('')}</div>`;
+  const list = topicSlides(current);
+  $('#pbody').innerHTML = list.slice(0, 150).map(card).join('') +
+    (list.length > 150 ? `<p class="meta" style="padding:10px">상위 150장만 표시합니다. 강의안으로 좁혀 보세요.</p>` : '');
+  $('#pbody').scrollTop = 0;
+}
+const short = t => t.length > 18 ? t.slice(0, 17) + '…' : t;
+function renderIntro() {
+  const ranked = [...subs].sort((a, b) => b.slides - a.slides);
+  const max = ranked[0].slides;
+  $('#phead').innerHTML = `<div class="kicker">사용법</div><h2>주제를 고르면, 그 주제로 가르쳤던 슬라이드가 모입니다</h2>
+    <div class="meta">여러 강의안에 똑같이 들어간 슬라이드는 한 장으로 합쳤습니다.</div>`;
+  $('#pbody').innerHTML = `<div class="intro">
+    <ol><li>왼쪽 지도에서 쓰려는 강의의 주제 버블을 누릅니다.</li>
+    <li>쓸 만한 슬라이드를 체크합니다. 다른 주제로 옮겨 가도 선택은 유지됩니다.</li>
+    <li><b>컨텍스트 만들기</b>를 눌러 복사한 뒤 Claude에게 붙여 넣습니다.</li></ol>
+    <table class="rank" aria-label="주제별 슬라이드 수"><tbody>${ranked.map(s => `<tr>
+      <td><button type="button" data-topic="${s.id}">${esc(s.name)}</button><div class="g">${esc(s.group)}</div></td>
+      <td style="width:30%"><div class="bar"><i style="width:${(100 * s.slides / max).toFixed(0)}%"></i></div></td>
+      <td class="n">${s.slides}장 · ${s.lectures}개</td></tr>`).join('')}</tbody></table></div>`;
+}
+function searchHits() {
+  const q = query.toLowerCase();
+  return D.slides.filter(s => s.h.toLowerCase().includes(q) || s.x.toLowerCase().includes(q));
+}
+function searchCounts() {
+  const m = new Map();
+  for (const s of searchHits()) for (const t of s.t) m.set(t, (m.get(t) || 0) + 1);
+  return m;
+}
+function renderSearch() {
+  const hits = searchHits();
+  $('#phead').innerHTML = `<div class="kicker">검색</div><h2>“${esc(query)}”</h2>
+    <div class="meta">슬라이드 <b>${hits.length}</b>장 · 지도에서 빨간 숫자는 주제별 건수입니다</div>`;
+  $('#pbody').innerHTML = hits.length ? hits.slice(0, 120).map(card).join('') : '<p class="meta" style="padding:12px">일치하는 슬라이드가 없습니다. 영문·한글 표기를 바꿔 찾아보세요.</p>';
+}
+function render() {
+  if (query) renderSearch(); else if (current) renderTopic(); else renderIntro();
+  paintMap();
+}
+function select(id) {
+  current = id; lectureFilter = null; query = ''; $('#q').value = '';
+  try { history.replaceState(null, '', '#' + id); } catch (e) {}
+  render();
+}
+
+$('#pbody').addEventListener('change', e => {
+  const c = e.target.closest('.card'); if (!c || e.target.type !== 'checkbox') return;
+  const n = +c.dataset.n;
+  e.target.checked ? selected.add(n) : selected.delete(n);
+  c.classList.toggle('picked', e.target.checked); updateFoot();
+});
+document.addEventListener('click', e => {
+  const pvb = e.target.closest('[data-pv]'); if (pvb) { openPreview(D.slides[+pvb.dataset.pv]); return; }
+  const oi = e.target.closest('[data-oi]'); if (oi) { showDigest(+oi.dataset.oi); return; }
+  const tb = e.target.closest('[data-tab]'); if (tb) { setTab(tb.dataset.tab); return; }
+  const m = e.target.closest('.more');
+  if (m) { const c = m.closest('.card'); c.classList.toggle('open'); m.textContent = c.classList.contains('open') ? '접기' : '전문 보기'; return; }
+  const t = e.target.closest('[data-topic]'); if (t) { select(t.dataset.topic); return; }
+  const l = e.target.closest('[data-lect]'); if (l) { lectureFilter = l.dataset.lect || null; renderTopic(); }
+});
+let qt; $('#q').addEventListener('input', e => { clearTimeout(qt); qt = setTimeout(() => { query = e.target.value.trim(); render(); }, 160); });
+
+function updateFoot() {
+  $('#selN').textContent = selected.size;
+  $('#makeCtx').disabled = !selected.size;
+}
+$('#clearSel').onclick = () => { selected.clear(); updateFoot(); render(); };
+$('#autoPick').onclick = () => {
+  let pool = query ? searchHits() : current ? topicSlides(current) : [];
+  if (!pool.length) { const big = [...subs].sort((a, b) => b.slides - a.slides)[0]; select(big.id); pool = topicSlides(big.id); }
+  const per = new Map(); let k = 0;
+  for (const s of pool) {            // 강의안이 한쪽으로 쏠리지 않게 강의안당 3장까지
+    if (k >= 12) break;
+    if ((per.get(s.d) || 0) >= 3) continue;
+    per.set(s.d, (per.get(s.d) || 0) + 1); selected.add(s.n); k++;
+  }
+  updateFoot(); render();
+};
+$('#makeCtx').onclick = () => {
+  const list = [...selected].map(n => D.slides[n]);
+  const topics = [...new Set(list.flatMap(s => s.t))].map(t => subById.get(t)?.name).filter(Boolean);
+  const lects = [...new Set(list.map(s => s.d))];
+  const out = [`# 강의 컨텍스트 — ${topics.slice(0, 4).join(', ')}`, '',
+    `> 기존 강의안 ${lects.length}개에서 고른 슬라이드 ${list.length}장 · 강의 콘텐츠 지도 (${D.built} 기준)`,
+    '> 아래는 원문 발췌입니다. 새 강의의 대상·시간에 맞게 다시 쓰고, 문체는 기존 강의안 문체를 따릅니다.', ''];
+  list.forEach((s, i) => {
+    const l = L[s.d] || {};
+    out.push(`## ${i + 1}. ${s.h}`);
+    out.push(`- 출처: ${[l.t, l.date, (l.c || []).join(', ')].filter(Boolean).join(' · ')} · fileId \`${s.d}\``);
+    out.push(`- 주제: ${s.t.map(t => subById.get(t)?.name).filter(Boolean).join(', ')}`, '', s.x.trim(), '');
+  });
+  $('#ctx').value = out.join('\n');
+  $('#copied').textContent = `${list.length}장 · ${out.join('\n').length.toLocaleString()}자`;
+  $('#dlg').showModal();
+};
+$('#closeDlg').onclick = () => $('#dlg').close();
+$('#copyCtx').onclick = async () => {
+  const ta = $('#ctx');
+  try { await navigator.clipboard.writeText(ta.value); $('#copied').textContent = '복사했습니다.'; }
+  catch (e) { ta.focus(); ta.select(); $('#copied').textContent = '자동 복사가 막혀 있어 전체 선택해 두었습니다. Ctrl+C로 복사하세요.'; }
+};
+
+// ───────── 강의안 미리보기 (원본 화면 / 핵심 내용)
+let pvSlide = null, pvTab = 'render';
+const byLecture = new Map();
+for (const s of D.slides) for (const d of s.docs) (byLecture.get(d) || byLecture.set(d, []).get(d)).push(s);
+const nrm = t => (t || '').replace(/\s+/g, '').toLowerCase();
+function openPreview(s) {
+  pvSlide = s;
+  const l = L[s.d] || {};
+  $('#pvKick').textContent = l.ty || '강의안';
+  $('#pvTitle').textContent = l.t || s.d;
+  $('#pvMeta').textContent = [l.date, (l.c || []).join(', '), l.n ? `섹션 ${l.n}개` : ''].filter(Boolean).join(' · ');
+  const src = l.p ? D.previewBase + s.d + '.html#' + encodeURIComponent(s.h.slice(0, 40)) : '';
+  $('#pvNew').hidden = !src; if (src) $('#pvNew').href = src;
+  $('#pvDrive').hidden = !l.url; if (l.url) $('#pvDrive').href = l.url;
+  $('#tabRender').hidden = !l.p;
+  setTab(l.p ? 'render' : 'digest');
+  $('#pv').showModal();
+}
+function setTab(t) {
+  pvTab = t;
+  $('#tabRender').setAttribute('aria-selected', t === 'render');
+  $('#tabDigest').setAttribute('aria-selected', t === 'digest');
+  const s = pvSlide, l = L[s.d] || {};
+  if (t === 'render') {
+    $('#pvBody').innerHTML = `<iframe title="강의안 원본 화면" sandbox="allow-scripts allow-popups" loading="eager"
+      src="${esc(D.previewBase + s.d + '.html#' + encodeURIComponent(s.h.slice(0, 40)))}"></iframe>`;
+  } else {
+    const o = l.o || [];
+    const known = new Map((byLecture.get(s.d) || []).map(x => [nrm(x.h), x]));
+    const cur = o.findIndex(h => nrm(h) === nrm(s.h));
+    $('#pvBody').innerHTML = `<div class="digest"><ol aria-label="강의안 목차">${o.map((h, i) =>
+      `<li data-oi="${i}" class="${known.has(nrm(h)) ? 'has' : ''}${i === cur ? ' cur' : ''}">${esc(h)}</li>`).join('')}</ol>
+      <div class="txt" id="digestTxt"></div></div>`;
+    showDigest(cur, s);
+  }
+}
+function showDigest(i, slide) {
+  const l = L[pvSlide.d] || {}, o = l.o || [];
+  const known = new Map((byLecture.get(pvSlide.d) || []).map(x => [nrm(x.h), x]));
+  const s = slide || known.get(nrm(o[i]));
+  document.querySelectorAll('.digest li').forEach((li, k) => li.classList.toggle('cur', k === i));
+  const box = $('#digestTxt'); if (!box) return;
+  if (s) box.innerHTML = `<h3>${esc(s.h)}</h3><pre>${esc(s.x)}</pre>
+      <p class="note">${s.t.map(t => subById.get(t)?.name).filter(Boolean).map(esc).join(' · ')}${l.p ? ' · <button class="more" type="button" data-tab="render">원본 화면에서 보기</button>' : ''}</p>`;
+  else box.innerHTML = `<h3>${esc(o[i] || '')}</h3><p class="note">이 슬라이드는 내용 주제에 배정되지 않아(표지·안내 등) 본문을 지도에 싣지 않았습니다.${l.p ? ' 원본 화면 탭에서 볼 수 있습니다.' : ''}</p>`;
+}
+$('#pvClose').onclick = () => { $('#pv').close(); $('#pvBody').innerHTML = ''; };
+$('#pv').addEventListener('close', () => { $('#pvBody').innerHTML = ''; });
+
+const start = (location.hash || '').slice(1);
+if (subById.has(start)) current = start;
+drawMap(); render(); updateFoot();
+</script>

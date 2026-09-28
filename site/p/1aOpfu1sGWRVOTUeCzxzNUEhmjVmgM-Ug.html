@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head><meta name="robots" content="noindex, nofollow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Design System Guide — 전문인재 양성과정 강의안</title>
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Noto+Serif+KR:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════════
+   DESIGN SYSTEM GUIDE — 문서 전용 스타일
+   아래는 가이드 문서 자체의 레이아웃이며,
+   슬라이드용 CSS는 SECTION 2에 코드 블록으로 제공됨
+   ═══════════════════════════════════════════════ */
+:root{
+  --bg:#f5efe4;--bg2:#ede4d3;--bg3:#e3d6bb;
+  --ink:#2b2015;--ink2:#5a4a38;--ink3:#8a7659;
+  --acc:#b8532a;--acc2:#8b3e1f;
+  --ln:#d8c8ae;
+  --dk:#1a1612;--on:#ede4d3;--on2:#a89172;
+  --serif:'Fraunces','Noto Serif KR',Georgia,serif;
+  --sans:'Pretendard Variable',Pretendard,-apple-system,sans-serif;
+  --mono:'JetBrains Mono',ui-monospace,Consolas,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.75;-webkit-font-smoothing:antialiased;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' seed='3'/%3E%3CfeColorMatrix values='0 0 0 0 0.16  0 0 0 0 0.12  0 0 0 0 0.08  0 0 0 0.025 0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E")}
+.wrap{max-width:1000px;margin:0 auto;padding:60px 40px 120px}
+h1.doc{font-family:var(--serif);font-size:42px;font-weight:700;letter-spacing:-1px;line-height:1.1;margin-bottom:8px}
+h2.doc{font-family:var(--serif);font-size:28px;font-weight:700;letter-spacing:-0.5px;margin:56px 0 12px;scroll-margin-top:40px;border-bottom:2px solid var(--ink);padding-bottom:8px}
+h3.doc{font-size:18px;font-weight:700;margin:32px 0 10px;color:var(--ink);border-left:3px solid var(--acc);padding-left:12px}
+h4.doc{font-family:var(--mono);font-size:12px;letter-spacing:2px;color:var(--acc);text-transform:uppercase;font-weight:700;margin:24px 0 8px}
+p.doc{color:var(--ink2);margin:8px 0}
+p.doc strong{color:var(--ink)}
+.kicker{font-family:var(--mono);font-size:11px;letter-spacing:3px;color:var(--ink3);text-transform:uppercase;font-weight:700;margin-bottom:8px}
+.lede{font-family:var(--serif);font-style:italic;font-size:18px;color:var(--ink2);margin-bottom:32px;line-height:1.55}
+hr.doc{border:none;border-top:1px solid var(--ln);margin:40px 0}
+code{font-family:var(--mono);font-size:0.88em;background:var(--bg3);padding:2px 7px;border-radius:3px;color:var(--ink)}
+pre.code{background:var(--dk);color:var(--on);padding:20px 24px;font-family:var(--mono);font-size:12.5px;line-height:1.7;overflow-x:auto;border-left:3px solid var(--acc);margin:12px 0 20px}
+pre.code .cm{color:#a89172;opacity:0.8}
+pre.code .kw{color:#d49575;font-weight:600}
+.swatch-row{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+.swatch{width:80px;height:48px;border-radius:4px;display:flex;align-items:end;padding:4px 6px;font-family:var(--mono);font-size:9px;letter-spacing:0.5px;font-weight:600;border:1px solid rgba(0,0,0,0.08)}
+.note{background:var(--bg2);border-left:3px solid var(--acc);padding:14px 18px;margin:16px 0;font-size:14px;color:var(--ink)}
+.note strong{color:var(--acc)}
+table.ref{width:100%;border-collapse:collapse;margin:12px 0;font-size:13px}
+table.ref th{font-family:var(--mono);font-size:10px;letter-spacing:1.5px;color:var(--ink3);text-transform:uppercase;font-weight:700;text-align:left;padding:8px 10px;border-bottom:1.5px solid var(--ink);background:var(--bg2)}
+table.ref td{padding:8px 10px;border-bottom:1px solid var(--ln);color:var(--ink2);vertical-align:top;line-height:1.5}
+table.ref td:first-child{font-weight:600;color:var(--ink);font-family:var(--mono);font-size:12px}
+.grid-demo{background:var(--bg2);border:1px solid var(--ln);padding:16px;margin:12px 0}
+.grid-demo .col-box{background:var(--bg);border:1px solid var(--ln);padding:10px 14px;font-family:var(--mono);font-size:11px;color:var(--ink2)}
+nav.toc{position:fixed;right:20px;top:60px;width:200px;font-size:12px}
+nav.toc .label{font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--ink3);text-transform:uppercase;font-weight:700;margin-bottom:8px}
+nav.toc a{display:block;padding:4px 0;color:var(--ink2);text-decoration:none;border-left:2px solid transparent;padding-left:8px}
+nav.toc a:hover{color:var(--acc);border-left-color:var(--acc)}
+@media(max-width:1300px){nav.toc{display:none}.wrap{max-width:100%}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="kicker">DESIGN SYSTEM GUIDE · V1.0 · 2026.04</div>
+<h1 class="doc">전문인재 양성과정<br>슬라이드 디자인 시스템</h1>
+<p class="lede">본 가이드는 1~8차시 모든 슬라이드를 동일한 디자인 언어로 제작하기 위한 토큰·레이아웃·컴포넌트 규범이다. 신규 차시 제작 시 본 가이드의 CSS를 그대로 복사하고, 컴포넌트 코드를 조립한다.</p>
+
+<hr class="doc">
+
+<!-- ══════════════════════════════════════ -->
+<h2 class="doc" id="s1">1. 디자인 철학</h2>
+<!-- ══════════════════════════════════════ -->
+
+<p class="doc"><strong>Editorial Warm.</strong> 기술 스타트업 랜딩 페이지가 아니라, 학술 저널·고전 출판물의 느낌. 차가운 색(파랑·보라·사이안)은 일절 사용하지 않는다. 모든 색은 따뜻한 크림·잉크·클레이 계열이다.</p>
+
+<p class="doc"><strong>고밀도 학습 자료.</strong> 한 장의 슬라이드가 강의 한 세션의 핵심을 지탱한다. 빈 공간은 부연 해설·사례·통계·체크리스트로 채운다. 3칼럼 레이아웃이 기본이며, 각 칼럼은 바닥(푸터 직전)까지 컴포넌트로 가득 찬다.</p>
+
+<p class="doc"><strong>세리프 헤드라인 + 산세리프 본문 + 모노스페이스 라벨.</strong> 헤드라인은 Fraunces/Noto Serif KR, 본문은 Pretendard, 메타 라벨·코드·숫자는 JetBrains Mono. 이 세 층위가 정보 위계를 만든다.</p>
+
+<p class="doc"><strong>장식 금지.</strong> 이모지·아이콘 폰트·그라디언트 블롭·글래스모피즘·네온 글로우 사용하지 않는다. 정보는 텍스트·표·도형·코드 블록으로만 전달한다.</p>
+
+<!-- ══════════════════════════════════════ -->
+<h2 class="doc" id="s2">2. 컬러 팔레트</h2>
+<!-- ══════════════════════════════════════ -->
+
+<h4 class="doc">Light (슬라이드 배경·카드)</h4>
+<div class="swatch-row">
+  <div class="swatch" style="background:#f5efe4;color:#5a4a38">--bg #f5efe4</div>
+  <div class="swatch" style="background:#ede4d3;color:#5a4a38">--bg2 #ede4d3</div>
+  <div class="swatch" style="background:#e3d6bb;color:#5a4a38">--bg3 #e3d6bb</div>
+</div>
+
+<h4 class="doc">Ink (텍스트)</h4>
+<div class="swatch-row">
+  <div class="swatch" style="background:#2b2015;color:#ede4d3">--ink #2b2015</div>
+  <div class="swatch" style="background:#5a4a38;color:#ede4d3">--ink2 #5a4a38</div>
+  <div class="swatch" style="background:#8a7659;color:#ede4d3">--ink3 #8a7659</div>
+  <div class="swatch" style="background:#b3a17f;color:#2b2015">--ink4 #b3a17f</div>
+</div>
+
+<h4 class="doc">Accent (강조)</h4>
+<div class="swatch-row">
+  <div class="swatch" style="background:#b8532a;color:#ede4d3">--acc #b8532a</div>
+  <div class="swatch" style="background:#8b3e1f;color:#ede4d3">--acc2 #8b3e1f</div>
+  <div class="swatch" style="background:#d49575;color:#2b2015">--acc3 #d49575</div>
+</div>
+
+<h4 class="doc">Dark (다크 블록·헤더바)</h4>
+<div class="swatch-row">
+  <div class="swatch" style="background:#1a1612;color:#ede4d3">--dk #1a1612</div>
+  <div class="swatch" style="background:#241e17;color:#ede4d3">--dk2 #241e17</div>
+  <div class="swatch" style="background:#ede4d3;color:#2b2015">--on #ede4d3</div>
+  <div class="swatch" style="background:#a89172;color:#2b2015">--on2 #a89172</div>
+</div>
+
+<h4 class="doc">Line (구분선)</h4>
+<div class="swatch-row">
+  <div class="swatch" style="background:#d8c8ae;color:#5a4a38">--ln #d8c8ae</div>
+  <div class="swatch" style="background:#e6d9bf;color:#5a4a38">--ln2 #e6d9bf</div>
+</div>
+
+<div class="note"><strong>절대 금지:</strong> #000000 (순수 검정), #ffffff (순수 흰색), 차가운 회색(#808080 등), 파랑·보라·사이안·녹색 계열 일체.</div>
+
+<!-- ══════════════════════════════════════ -->
+<h2 class="doc" id="s3">3. 타이포그래피</h2>
+<!-- ══════════════════════════════════════ -->
+
+<pre class="code"><span class="cm">/* 폰트 로드 */</span>
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.css');
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;500;600;700');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600');
+
+<span class="cm">/* 변수 */</span>
+--serif: 'Fraunces', 'Noto Serif KR', Georgia, serif;
+--sans:  'Pretendard Variable', Pretendard, -apple-system, sans-serif;
+--mono:  'JetBrains Mono', ui-monospace, Consolas, monospace;</pre>
+
+<table class="ref">
+  <thead><tr><th>역할</th><th>폰트</th><th>사이즈</th><th>Weight</th><th>색상</th><th>비고</th></tr></thead>
+  <tbody>
+    <tr><td>KICKER</td><td>mono</td><td>10.5px</td><td>700</td><td>--ink3</td><td>letter-spacing: 2.5px, uppercase</td></tr>
+    <tr><td>HEADLINE</td><td>serif</td><td>30px</td><td>700</td><td>--ink</td><td>letter-spacing: -0.3px, max 2줄</td></tr>
+    <tr><td>LEDE</td><td>sans</td><td>13px</td><td>400</td><td>--ink2</td><td>italic, max 1~2줄</td></tr>
+    <tr><td>SECTION HEAD</td><td>mono</td><td>10.5px</td><td>700</td><td>--ink3</td><td>letter-spacing: 2.5px, uppercase, + 설명 11px sans</td></tr>
+    <tr><td>BODY HEAD</td><td>sans</td><td>14px</td><td>600</td><td>--ink</td><td>칼럼 내 소제목</td></tr>
+    <tr><td>BODY TEXT</td><td>sans</td><td>13px</td><td>400</td><td>--ink2</td><td>line-height: 1.7, strong은 --ink</td></tr>
+    <tr><td>TABLE TEXT</td><td>sans</td><td>12~12.5px</td><td>400</td><td>--ink2</td><td>첫 열은 600 --ink</td></tr>
+    <tr><td>TABLE HEAD</td><td>mono</td><td>10px</td><td>700</td><td>--ink3</td><td>letter-spacing: 1.5px, uppercase</td></tr>
+    <tr><td>META LABEL</td><td>mono</td><td>9~10px</td><td>700</td><td>--ink3 또는 --acc</td><td>letter-spacing: 2px, uppercase</td></tr>
+    <tr><td>CODE</td><td>mono</td><td>11px</td><td>400</td><td>--on (다크 배경)</td><td>키워드: --acc3, 주석: --on2</td></tr>
+    <tr><td>DATA NUMBER</td><td>sans</td><td>20~22px</td><td>800</td><td>--on (다크 배경)</td><td>데이터 스트립 내 큰 숫자</td></tr>
+    <tr><td>FIGURE CAPTION</td><td>mono</td><td>10px</td><td>700</td><td>--ink3</td><td>letter-spacing: 1.5px</td></tr>
+    <tr><td>PILL TAG</td><td>mono</td><td>9px</td><td>600</td><td>--acc</td><td>bg: rgba(184,83,42,0.1), uppercase</td></tr>
+  </tbody>
+</table>
+
+<!-- ══════════════════════════════════════ -->
+<h2 class="doc" id="s4">4. 슬라이드 캔버스 사양</h2>
+<!-- ══════════════════════════════════════ -->
+
+<table class="ref">
+  <thead><tr><th>영역</th><th>Y 범위</th><th>높이</th><th>설명</th></tr></thead>
+  <tbody>
+    <tr><td>HEADER BAR</td><td>0 – 52</td><td>52px</td><td>다크 배경(--dk), 좌: 마크+모듈명, 우: 과정명</td></tr>
+    <tr><td>HEADLINE BLOCK</td><td>52 – 195</td><td>143px</td><td>Kicker(y≈98) + H1(y≈130) + Lede(y≈165) + Bar(y≈182) + Rule(y≈195)</td></tr>
+    <tr><td>BODY AREA</td><td>210 – 848</td><td>638px</td><td>모든 콘텐츠. 3칼럼 기본. 바닥까지 채운다</td></tr>
+    <tr><td>FOOTER BAR</td><td>848 – 900</td><td>52px</td><td>크림 배경, 좌: MODULE 라벨+제목, 우: PAGE 번호</td></tr>
+  </tbody>
+</table>
+
+<table class="ref">
+  <thead><tr><th>항목</th><th>값</th></tr></thead>
+  <tbody>
+    <tr><td>viewBox / 슬라이드 사이즈</td><td>1600 × 900</td></tr>
+    <tr><td>슬라이드 배경</td><td>--bg (#f5efe4) + 페이퍼 노이즈 SVG overlay</td></tr>
+    <tr><td>좌우 마진</td><td>80px (본문 영역: x=80 ~ 1520, 너비 1440px)</td></tr>
+    <tr><td>비율</td><td>16:9</td></tr>
+  </tbody>
+</table>
+
+<!-- ══════════════════════════════════════ -->
+<h2 class="doc" id="s5">5. 레이아웃 — 칼럼 계산</h2>
+<!-- ══════════════════════════════════════ -->
+
+<p class="doc">본문 영역 너비 = 1440px. 칼럼은 CSS grid를 사용하며 absolute 배치를 <strong>금지</strong>한다 (이전 깨짐의 원인). 칼럼 간 디바이더는 gap + border로 처리한다.</p>
+
+<h3 class="doc">5.1 3-Column (기본 레이아웃)</h3>
+<pre class="code"><span class="cm">/* 본문 영역 전체를 3칼럼 그리드로 */</span>
+.bd {
+  position: absolute;
+  left: 80px; right: 80px;
+  top: 210px; bottom: 56px;     <span class="cm">/* 638px 높이 */</span>
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 0;
+  background: var(--ln2);       <span class="cm">/* gap 디바이더 색 */</span>
+}
+.bd > .col {
+  background: var(--bg);
+  padding: 14px 18px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+<span class="cm">/* gap: 0 + background 조합으로 1px 디바이더 효과 */</span>
+<span class="cm">/* 실제 gap이 필요하면 gap: 1px (= 1px 디바이더) */</span></pre>
+
+<div class="note"><strong>핵심 변경:</strong> 이전 버전에서 칼럼을 <code>position:absolute</code>로 배치해서 너비 계산이 틀어졌다. 이제 <code>display:grid</code> 기반으로 전환한다. 칼럼 비율이 다를 경우 <code>grid-template-columns: 460px 500px 460px</code> 같이 px로 명시하되, 합이 반드시 <strong>1440 - (gap × 2)</strong>와 일치해야 한다.</div>
+
+<h3 class="doc">5.2 비균등 3-Column</h3>
+<pre class="code"><span class="cm">/* 예: 좁은-넓은-좁은 */</span>
+grid-template-columns: 420px 1fr 420px;  <span class="cm">/* 가운데가 나머지 차지 */</span>
+
+<span class="cm">/* 예: 넓은-좁은-좁은 */</span>
+grid-template-columns: 560px 440px 438px; <span class="cm">/* gap:1px이면 합=1438 */</span></pre>
+
+<h3 class="doc">5.3 2-Column</h3>
+<pre class="code">grid-template-columns: 1fr 1fr;      <span class="cm">/* 균등 */</span>
+grid-template-columns: 1.3fr 1fr;    <span class="cm">/* 좌 넓게 */</span>
+grid-template-columns: 1fr 80px 1fr; <span class="cm">/* 가운데 브릿지 (외부/내부망) */</span></pre>
+
+<h3 class="doc">5.4 1-Column (표 전용, Cover 등)</h3>
+<pre class="code"><span class="cm">/* 그리드 없이 단일 flex column */</span>
+.bd { display: flex; flex-direction: column; }</pre>
+
+<!-- ══════════════════════════════════════ -->
+<h2 class="doc" id="s6">6. 슬라이드 4영역 코드</h2>
+<!-- ══════════════════════════════════════ -->
+
+<h3 class="doc">6.1 Header Bar (다크, 52px)</h3>
+<pre class="code"><span class="cm">&lt;!-- HTML --&gt;</span>
+&lt;div class="hbar"&gt;
+  &lt;div class="hbar-l"&gt;MODULE 01 · UNIT 02 · WORKFLOW ORCHESTRATION&lt;/div&gt;
+  &lt;div class="hbar-r"&gt;공공 AI 전문인재 양성과정 · 8주 실전 여정&lt;/div&gt;
+&lt;/div&gt;
+
+<span class="cm">/* CSS */</span>
+.hbar {
+  position: absolute; top: 0; left: 0; right: 0; height: 52px;
+  background: var(--dk);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 80px;
+}
+.hbar-l {
+  display: flex; align-items: center; gap: 12px;
+  font-family: var(--mono); font-size: 10.5px; color: #fff;
+  letter-spacing: 2.5px; font-weight: 600;
+}
+<span class="cm">/* 좌측 마크 사각형 */</span>
+.hbar-l::before {
+  content: ""; width: 22px; height: 8px; background: var(--acc);
+}
+.hbar-r {
+  font-family: var(--mono); font-size: 10.5px; color: #bbb;
+  letter-spacing: 1.5px;
+}</pre>
+
+<h3 class="doc">6.2 Headline Block (52→195)</h3>
+<pre class="code"><span class="cm">&lt;!-- HTML --&gt;</span>
+&lt;div class="hl"&gt;
+  &lt;div class="hl-kicker"&gt;UNIT 02 · WORKFLOW DESIGN · LECTURE 04&lt;/div&gt;
+  &lt;h1 class="hl-title"&gt;프롬프트를 외우지 않는다, 워크플로우를 짠다&lt;/h1&gt;
+  &lt;p class="hl-lede"&gt;메타 프롬프트는 재료–처리–검증–출력의 흐름을 설계하는 도구다.&lt;/p&gt;
+  &lt;div class="hl-bar"&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="hl-rule"&gt;&lt;/div&gt;
+
+<span class="cm">/* CSS */</span>
+.hl { position: absolute; left: 80px; right: 80px; top: 72px; }
+.hl-kicker {
+  font-family: var(--mono); font-size: 10.5px; color: var(--ink3);
+  letter-spacing: 2.5px; font-weight: 700; margin-bottom: 10px;
+}
+.hl-title {
+  font-family: var(--serif); font-weight: 700; font-size: 30px;
+  line-height: 1.2; letter-spacing: -0.3px; color: var(--ink);
+}
+.hl-lede {
+  font-size: 13px; color: var(--ink2); font-style: italic;
+  margin-top: 8px; line-height: 1.6; max-width: 1200px;
+}
+.hl-bar { width: 48px; height: 3px; background: var(--ink); margin-top: 8px; }
+.hl-rule {
+  position: absolute; left: 80px; right: 80px; top: 195px;
+  height: 1px; background: var(--ln2);
+}</pre>
+
+<h3 class="doc">6.3 Body Area (210→848)</h3>
+<pre class="code"><span class="cm">/* 3칼럼 기본 */</span>
+.bd {
+  position: absolute; left: 80px; right: 80px;
+  top: 210px; bottom: 56px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1px;
+  background: var(--ln2);        <span class="cm">/* 1px 디바이더 */</span>
+}
+.bd > .col {
+  background: var(--bg);
+  padding: 14px 18px;
+  display: flex; flex-direction: column;
+  overflow: hidden;
+}</pre>
+
+<h3 class="doc">6.4 Footer Bar (크림, 52px)</h3>
+<pre class="code"><span class="cm">&lt;!-- HTML --&gt;</span>
+&lt;div class="fbar"&gt;
+  &lt;div class="fbar-l"&gt;
+    &lt;span class="fbar-label"&gt;MODULE&lt;/span&gt;
+    &lt;span class="fbar-title"&gt;01 · AI 에이전트 시대의 개막과 공공 구현 지형도&lt;/span&gt;
+  &lt;/div&gt;
+  &lt;div class="fbar-r"&gt;
+    &lt;span class="fbar-label"&gt;PAGE&lt;/span&gt;
+    &lt;span class="fbar-title"&gt;003 / 013&lt;/span&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+
+<span class="cm">/* CSS */</span>
+.fbar {
+  position: absolute; bottom: 0; left: 0; right: 0; height: 52px;
+  background: #f0e8d8; border-top: 3px solid var(--ln);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 80px;
+}
+.fbar-label {
+  font-family: var(--mono); font-size: 10px; color: var(--ink3);
+  letter-spacing: 2.5px; font-weight: 700; display: block;
+}
+.fbar-title { font-size: 13px; color: var(--ink); }</pre>
+
+<!-- ══════════════════════════════════════ -->
+<h2 class="doc" id="s7">7. 컴포넌트 라이브러리</h2>
+<!-- ══════════════════════════════════════ -->
+
+<p class="doc">각 칼럼 안에서 아래 컴포넌트를 조립한다. 한 칼럼에 최소 3~4개 컴포넌트가 들어가야 밀도 기준을 충족한다.</p>
+
+<h3 class="doc">7.1 Section Header (칼럼 상단)</h3>
+<pre class="code"><span class="cm">&lt;!-- 모든 칼럼의 첫 요소 --&gt;</span>
+&lt;div class="sh"&gt;
+  &lt;span class="sh-n"&gt;01 · DEFINITION&lt;/span&gt;
+  &lt;span class="sh-t"&gt;메타 프롬프트의 구조와 위계&lt;/span&gt;
+&lt;/div&gt;
+&lt;div class="sh-line"&gt;&lt;/div&gt;
+
+<span class="cm">/* CSS */</span>
+.sh { display: flex; align-items: baseline; gap: 10px; margin-bottom: 8px; }
+.sh-n { font-family: var(--mono); font-size: 10.5px; color: var(--ink3);
+  letter-spacing: 2.5px; font-weight: 700; text-transform: uppercase; }
+.sh-t { font-size: 11px; color: var(--ink2); }
+.sh-line { height: 1px; background: var(--ln2); margin-bottom: 10px; }</pre>
+
+<h3 class="doc">7.2 Body Head + Body Text</h3>
+<pre class="code">&lt;div class="bth"&gt;한 줄 프롬프트는 도구가 아니라 명령어다.&lt;/div&gt;
+&lt;p class="bt"&gt;메타 프롬프트는 &lt;strong&gt;프로세스 명세서&lt;/strong&gt;에 가깝다.&lt;/p&gt;
+
+.bth { font-size: 14px; color: var(--ink); font-weight: 600;
+  margin-bottom: 6px; line-height: 1.35; }
+.bt { font-size: 13px; line-height: 1.7; color: var(--ink2); margin-bottom: 8px; }
+.bt strong { color: var(--ink); font-weight: 600; }</pre>
+
+<h3 class="doc">7.3 Micro Table</h3>
+<pre class="code">&lt;table class="mtbl"&gt;
+  &lt;thead&gt;&lt;tr&gt;&lt;th&gt;CRITERION&lt;/th&gt;&lt;th&gt;PROMPT&lt;/th&gt;&lt;th&gt;META&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;&lt;td&gt;단위&lt;/td&gt;&lt;td&gt;한 문장&lt;/td&gt;&lt;td&gt;5~9개 블록&lt;/td&gt;&lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+.mtbl { width: 100%; border-collapse: collapse; font-size: 12px; margin: 8px 0; }
+.mtbl thead th { font-family: var(--mono); font-size: 10px; color: var(--ink3);
+  letter-spacing: 1.5px; font-weight: 700; text-align: left;
+  padding: 6px 8px; border-bottom: 1.2px solid var(--ink); }
+.mtbl tbody td { padding: 5px 8px; border-bottom: 1px solid var(--ln2);
+  color: var(--ink2); line-height: 1.5; }
+.mtbl tbody td:first-child { color: var(--ink); font-weight: 600; }</pre>
+
+<h3 class="doc">7.4 Callout — Cream (KEY TAKEAWAY 등)</h3>
+<pre class="code">&lt;div class="co"&gt;
+  &lt;div class="co-lb"&gt;KEY TAKEAWAY&lt;/div&gt;
+  &lt;div class="co-main"&gt;핵심 문장 한 줄&lt;/div&gt;
+  &lt;p&gt;부연 설명 1~2줄&lt;/p&gt;
+&lt;/div&gt;
+
+.co { background: var(--bg2); border-left: 3px solid var(--acc);
+  padding: 10px 14px; margin: 8px 0; }
+.co-lb { font-family: var(--mono); font-size: 10px; color: var(--acc);
+  letter-spacing: 2px; font-weight: 700; margin-bottom: 4px; }
+.co-main { font-size: 14px; color: var(--ink); font-weight: 600;
+  line-height: 1.35; margin-bottom: 4px; }
+.co p { font-size: 12px; color: var(--ink2); line-height: 1.6; }</pre>
+
+<h3 class="doc">7.5 Callout — Dark (FIELD CASE 등)</h3>
+<pre class="code">&lt;div class="cod"&gt;
+  &lt;div class="cod-lb"&gt;FIELD CASE · 의성군 2025&lt;/div&gt;
+  &lt;div class="cod-main"&gt;사례 제목 한 줄&lt;/div&gt;
+  &lt;p&gt;사례 설명 2~3줄&lt;/p&gt;
+&lt;/div&gt;
+
+.cod { background: var(--dk); padding: 12px 16px; margin: 8px 0;
+  position: relative; overflow: hidden; }
+<span class="cm">/* 페이퍼 노이즈 ::before 생략 (슬라이드 CSS 전문에 포함) */</span>
+.cod-lb { font-family: var(--mono); font-size: 10px; color: var(--on2);
+  letter-spacing: 2px; font-weight: 700; margin-bottom: 5px; }
+.cod-main { font-size: 15px; color: var(--on); font-weight: 700;
+  line-height: 1.3; margin-bottom: 5px; }
+.cod p { font-size: 12px; color: var(--on2); line-height: 1.65; }</pre>
+
+<h3 class="doc">7.6 Data Strip (다크, 통계 3칸)</h3>
+<pre class="code">&lt;div class="dstrip"&gt;
+  &lt;div class="ds-c"&gt;
+    &lt;div class="ds-a"&gt;REUSE&lt;/div&gt;
+    &lt;div class="ds-n"&gt;12.4×&lt;/div&gt;
+    &lt;div class="ds-d"&gt;평균 재사용 횟수&lt;/div&gt;
+  &lt;/div&gt;
+  &lt;div class="ds-c"&gt;...&lt;/div&gt;
+  &lt;div class="ds-c"&gt;...&lt;/div&gt;
+&lt;/div&gt;
+
+.dstrip { background: var(--dk); padding: 8px 16px; margin: 8px 0;
+  display: grid; grid-template-columns: repeat(3, 1fr); }
+.ds-c:not(:first-child) { border-left: 1px solid rgba(255,255,255,0.12);
+  padding-left: 14px; }
+.ds-a { font-family: var(--mono); font-size: 9px; color: var(--on2);
+  letter-spacing: 1.5px; font-weight: 700; }
+.ds-n { font-size: 20px; color: var(--on); font-weight: 800; margin-top: 2px; }
+.ds-d { font-size: 9px; color: var(--on2); margin-top: 1px; }</pre>
+
+<h3 class="doc">7.7 Step (HANDS-ON 번호형)</h3>
+<pre class="code">&lt;div class="step"&gt;
+  &lt;div class="step-n"&gt;01&lt;/div&gt;
+  &lt;div&gt;
+    &lt;div class="step-t"&gt;반복 업무 1개 선정&lt;/div&gt;
+    &lt;div class="step-d"&gt;주 3회 이상 반복하는 문서 작업·분류·요약 중 택1&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+
+.step { display: grid; grid-template-columns: 14px 1fr; gap: 8px;
+  margin-bottom: 6px; }
+.step-n { width: 14px; height: 14px; background: var(--ink); color: var(--bg);
+  font-family: var(--mono); font-size: 9px; font-weight: 800;
+  display: flex; align-items: center; justify-content: center; }
+.step-t { font-size: 13px; color: var(--ink); font-weight: 700; line-height: 1.3; }
+.step-d { font-size: 11.5px; color: var(--ink2); margin-top: 1px;
+  line-height: 1.5; }</pre>
+
+<h3 class="doc">7.8 Checklist</h3>
+<pre class="code">&lt;div class="chk"&gt;
+  &lt;div class="chk-b"&gt;&lt;/div&gt;
+  &lt;div class="chk-t"&gt;5블록이 모두 채워졌는가&lt;/div&gt;
+&lt;/div&gt;
+
+.chk { display: grid; grid-template-columns: 12px 1fr; gap: 8px;
+  margin-bottom: 4px; }
+.chk-b { width: 12px; height: 12px; border: 1.2px solid var(--ink);
+  margin-top: 2px; }
+.chk-t { font-size: 12px; color: var(--ink2); line-height: 1.5; }</pre>
+
+<h3 class="doc">7.9 Pitfall (좌측 블랙 바)</h3>
+<pre class="code">&lt;div class="pit"&gt;
+  &lt;div class="pit-lb"&gt;PITFALL · 빈출 오류&lt;/div&gt;
+  &lt;div class="pit-item"&gt;
+    &lt;div class="pit-h"&gt;▸ 검증 조건을 숫자로 안 적는다&lt;/div&gt;
+    &lt;div class="pit-d"&gt;모호한 표현은 메타 프롬프트를 무력화한다.&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+
+.pit { border-left: 3px solid var(--ink); padding: 8px 14px; margin: 8px 0; }
+.pit-lb { font-family: var(--mono); font-size: 10px; color: var(--ink3);
+  letter-spacing: 2px; font-weight: 700; margin-bottom: 4px; }
+.pit-h { font-size: 12.5px; color: var(--ink); font-weight: 700; line-height: 1.3; }
+.pit-d { font-size: 11px; color: var(--ink2); line-height: 1.5; }</pre>
+
+<h3 class="doc">7.10 Quote / Reference</h3>
+<pre class="code">&lt;div class="quote"&gt;
+  &lt;div class="quote-src"&gt;SOURCE · ANTHROPIC 2025&lt;/div&gt;
+  &lt;div class="quote-q"&gt;"좋은 프롬프트는 작성이 아니라 구조화다."&lt;/div&gt;
+  &lt;div class="quote-a"&gt;— Constructing Effective Prompts&lt;/div&gt;
+&lt;/div&gt;
+
+.quote { border-left: 3px solid var(--ink); padding: 8px 14px; margin: 8px 0; }
+.quote-src { font-family: var(--mono); font-size: 10px; color: var(--ink3);
+  letter-spacing: 2px; font-weight: 700; margin-bottom: 4px; }
+.quote-q { font-family: var(--serif); font-size: 13px; color: var(--ink);
+  font-weight: 700; font-style: italic; line-height: 1.4; }
+.quote-a { font-size: 11px; color: var(--ink2); margin-top: 2px; }</pre>
+
+<h3 class="doc">7.11 Code Block (다크)</h3>
+<pre class="code">&lt;div class="cblk"&gt;
+  &lt;span class="cblk-cm"&gt;# 주석&lt;/span&gt;
+  &lt;span class="cblk-kw"&gt;class&lt;/span&gt; Head(nn.Module):
+    ...
+&lt;/div&gt;
+
+.cblk { background: var(--dk); color: var(--on); padding: 10px 14px;
+  font-family: var(--mono); font-size: 11px; line-height: 1.65;
+  border-left: 2px solid var(--acc); margin: 8px 0; white-space: pre-wrap; }
+.cblk-cm { color: var(--acc3); opacity: 0.8; }
+.cblk-kw { color: var(--acc3); font-weight: 600; }</pre>
+
+<h3 class="doc">7.12 Pill Tag</h3>
+<pre class="code">&lt;span class="pill"&gt;CUSTOM GPT&lt;/span&gt;
+&lt;span class="pill dark"&gt;S2 · S3&lt;/span&gt;
+
+.pill { display: inline-block; font-family: var(--mono); font-size: 9px;
+  color: var(--acc); background: rgba(184,83,42,0.1);
+  padding: 1px 5px; letter-spacing: 0.08em; text-transform: uppercase;
+  font-weight: 600; border-radius: 2px; margin: 1px 2px 0 0; }
+.pill.dark { color: var(--ink); background: var(--bg3); }</pre>
+
+<h3 class="doc">7.13 Chip (외부/내부망 태그 등)</h3>
+<pre class="code">&lt;span class="chip"&gt;Claude&lt;/span&gt;
+
+.chip { display: inline-block; font-family: var(--mono); font-size: 10px;
+  padding: 3px 8px; border: 1px solid var(--ln);
+  color: var(--ink2); letter-spacing: 0.1em; text-transform: uppercase;
+  border-radius: 2px; font-weight: 500; }</pre>
+
+<h3 class="doc">7.14 Info Card (크림 박스 — 유형 카드 등)</h3>
+<pre class="code">&lt;div class="icard"&gt;
+  &lt;div class="icard-lb"&gt;TYPE 01&lt;/div&gt;
+  &lt;div class="icard-sess"&gt;SESSION 04&lt;/div&gt;
+  &lt;div class="bth"&gt;AI 작성 파이썬 코드를 내부망에서 실행&lt;/div&gt;
+  &lt;p class="bt"&gt;설명 텍스트...&lt;/p&gt;
+&lt;/div&gt;
+
+.icard { background: var(--bg2); border: 1px solid var(--ln);
+  padding: 10px 14px; margin-bottom: 6px; }
+.icard-lb { font-family: var(--mono); font-size: 9px; color: var(--acc);
+  letter-spacing: 2px; font-weight: 700; }
+.icard-sess { font-family: var(--mono); font-size: 9px; color: var(--ink3);
+  letter-spacing: 1.5px; font-weight: 600; float: right; }
+
+<span class="cm">/* 다크 버전 */</span>
+.icard.dark { background: var(--dk); border-color: var(--dk); }
+.icard.dark .icard-lb { color: var(--acc3); }
+.icard.dark .bth { color: var(--on); }
+.icard.dark .bt { color: var(--on2); }</pre>
+
+<!-- ══════════════════════════════════════ -->
+<h2 class="doc" id="s8">8. 밀도 규칙 — Do / Don't</h2>
+<!-- ══════════════════════════════════════ -->
+
+<table class="ref">
+  <thead><tr><th>DO</th><th>DON'T</th></tr></thead>
+  <tbody>
+    <tr><td>3칼럼 기본. 각 칼럼에 4~6개 컴포넌트</td><td>1칼럼에 1개 컴포넌트만 놓기</td></tr>
+    <tr><td>칼럼 바닥(푸터 직전)까지 컴포넌트로 채우기</td><td>칼럼 하단 빈 공간 방치</td></tr>
+    <tr><td>최소 1개 다크 블록(cod 또는 dstrip) 포함</td><td>크림·크림·크림 — 단조로운 밝은 톤 반복</td></tr>
+    <tr><td>표·다이어그램·코드 등 비텍스트 컴포넌트 최소 1개</td><td>본문 텍스트만으로 칼럼 채우기</td></tr>
+    <tr><td>Section Header → Body → Callout/Table → Pitfall/Checklist 순서 유지</td><td>순서 없이 컴포넌트 배치</td></tr>
+    <tr><td>FIGURE, TABLE, SOURCE 캡션 반드시 포함</td><td>출처 없는 통계·인용 사용</td></tr>
+    <tr><td>Kicker에 UNIT/LECTURE 번호 명시</td><td>슬라이드 위치를 알 수 없는 무라벨 상태</td></tr>
+    <tr><td>본문 13px, 표 12px, 라벨 10px</td><td>본문 15px 이상 (밀도 저하)</td></tr>
+  </tbody>
+</table>
+
+<!-- ══════════════════════════════════════ -->
+<h2 class="doc" id="s9">9. 신규 슬라이드 조립 순서</h2>
+<!-- ══════════════════════════════════════ -->
+
+<p class="doc">새로운 차시의 슬라이드를 만들 때 아래 순서를 따른다.</p>
+
+<table class="ref">
+  <thead><tr><th>순서</th><th>작업</th><th>확인 사항</th></tr></thead>
+  <tbody>
+    <tr><td>1</td><td>슬라이드 셸 복사</td><td>slide + hbar + hl + hl-rule + bd + fbar 구조 그대로 복사</td></tr>
+    <tr><td>2</td><td>hbar 좌측 라벨 변경</td><td>MODULE · UNIT · 주제명 갱신</td></tr>
+    <tr><td>3</td><td>hl 영역 작성</td><td>Kicker + H1(30px, max 2줄) + Lede(13px, max 2줄) + Bar</td></tr>
+    <tr><td>4</td><td>bd 칼럼 구조 결정</td><td>3col(기본) / 2col / 1col 중 선택, grid-template-columns 설정</td></tr>
+    <tr><td>5</td><td>각 칼럼 상단에 sh 배치</td><td>01 · SECTION NAME + 설명</td></tr>
+    <tr><td>6</td><td>컴포넌트 조립</td><td>bth+bt → mtbl → co/cod → dstrip → step/chk/pit 순서로 채움</td></tr>
+    <tr><td>7</td><td>바닥 채움 검사</td><td>칼럼 하단이 비어 있으면 dstrip·chk·quote로 채움</td></tr>
+    <tr><td>8</td><td>fbar 갱신</td><td>MODULE 번호·제목 + PAGE 번호 갱신</td></tr>
+    <tr><td>9</td><td>밀도 자가 점검</td><td>섹션 8의 Do/Don't 체크리스트 확인</td></tr>
+  </tbody>
+</table>
+
+<!-- ══════════════════════════════════════ -->
+<h2 class="doc" id="s10">10. 슬라이드 셸 HTML (복사용)</h2>
+<!-- ══════════════════════════════════════ -->
+
+<p class="doc">아래 코드를 복사해서 <code>&lt;div class="deck"&gt;</code> 안에 붙여넣으면 빈 슬라이드 1장이 생성된다. 칼럼 내부를 컴포넌트로 채우기만 하면 된다.</p>
+
+<pre class="code">&lt;div class="stage"&gt;&lt;div class="slide" data-title="제목"&gt;
+
+  <span class="cm">&lt;!-- HEADER --&gt;</span>
+  &lt;div class="hbar"&gt;
+    &lt;div class="hbar-l"&gt;MODULE XX · UNIT XX · TOPIC&lt;/div&gt;
+    &lt;div class="hbar-r"&gt;공공 AI 전문인재 양성과정 · 8주 실전 여정&lt;/div&gt;
+  &lt;/div&gt;
+
+  <span class="cm">&lt;!-- HEADLINE --&gt;</span>
+  &lt;div class="hl"&gt;
+    &lt;div class="hl-kicker"&gt;UNIT XX · 주제 · LECTURE XX&lt;/div&gt;
+    &lt;h1 class="hl-title"&gt;헤드라인 30px max 2줄&lt;/h1&gt;
+    &lt;p class="hl-lede"&gt;리드문 13px italic max 2줄&lt;/p&gt;
+    &lt;div class="hl-bar"&gt;&lt;/div&gt;
+  &lt;/div&gt;
+  &lt;div class="hl-rule"&gt;&lt;/div&gt;
+
+  <span class="cm">&lt;!-- BODY (3-col grid) --&gt;</span>
+  &lt;div class="bd"&gt;
+    &lt;div class="col"&gt;
+      <span class="cm">&lt;!-- Section Header --&gt;</span>
+      &lt;div class="sh"&gt;&lt;span class="sh-n"&gt;01 · SECTION&lt;/span&gt;&lt;span class="sh-t"&gt;설명&lt;/span&gt;&lt;/div&gt;
+      &lt;div class="sh-line"&gt;&lt;/div&gt;
+      <span class="cm">&lt;!-- 컴포넌트 조립 --&gt;</span>
+    &lt;/div&gt;
+    &lt;div class="col"&gt;
+      &lt;div class="sh"&gt;&lt;span class="sh-n"&gt;02 · SECTION&lt;/span&gt;&lt;span class="sh-t"&gt;설명&lt;/span&gt;&lt;/div&gt;
+      &lt;div class="sh-line"&gt;&lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class="col"&gt;
+      &lt;div class="sh"&gt;&lt;span class="sh-n"&gt;03 · SECTION&lt;/span&gt;&lt;span class="sh-t"&gt;설명&lt;/span&gt;&lt;/div&gt;
+      &lt;div class="sh-line"&gt;&lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+
+  <span class="cm">&lt;!-- FOOTER --&gt;</span>
+  &lt;div class="fbar"&gt;
+    &lt;div class="fbar-l"&gt;&lt;span class="fbar-label"&gt;MODULE&lt;/span&gt;&lt;span class="fbar-title"&gt;XX · 제목&lt;/span&gt;&lt;/div&gt;
+    &lt;div class="fbar-r"&gt;&lt;span class="fbar-label"&gt;PAGE&lt;/span&gt;&lt;span class="fbar-title"&gt;XXX / XXX&lt;/span&gt;&lt;/div&gt;
+  &lt;/div&gt;
+
+&lt;/div&gt;&lt;/div&gt;</pre>
+
+<!-- ══════════════════════════════════════ -->
+<h2 class="doc" id="s11">11. 메타데이터 규칙</h2>
+<!-- ══════════════════════════════════════ -->
+
+<table class="ref">
+  <thead><tr><th>위치</th><th>내용</th><th>예시</th></tr></thead>
+  <tbody>
+    <tr><td>hbar-l</td><td>MODULE XX · UNIT XX · 영문 대문자 주제</td><td>MODULE 03 · UNIT 02 · WORKFLOW ORCHESTRATION</td></tr>
+    <tr><td>hbar-r</td><td>과정명 (고정)</td><td>공공 AI 전문인재 양성과정 · 8주 실전 여정</td></tr>
+    <tr><td>hl-kicker</td><td>UNIT XX · 한국어 주제 · LECTURE XX</td><td>UNIT 02 · 워크플로우 설계 · LECTURE 04</td></tr>
+    <tr><td>fbar-l</td><td>MODULE + 번호·한국어 제목</td><td>03 · 메타 프롬프트 설계 — 워크플로우 오케스트레이션</td></tr>
+    <tr><td>fbar-r</td><td>PAGE + 현재/총</td><td>047 / 312</td></tr>
+  </tbody>
+</table>
+
+<div class="note"><strong>UNIT 번호 갱신:</strong> 차시(Session)가 바뀔 때 MODULE 번호 갱신, Unit이 바뀔 때 UNIT 번호 갱신. LECTURE는 해당 차시 내 슬라이드 순서.</div>
+
+<!-- ══════════════════════════════════════ -->
+<h2 class="doc" id="s12">12. 자가 점검 체크리스트</h2>
+<!-- ══════════════════════════════════════ -->
+
+<p class="doc">슬라이드 1장 완성 후 아래 항목을 확인한다.</p>
+
+<table class="ref">
+  <thead><tr><th>#</th><th>점검 항목</th></tr></thead>
+  <tbody>
+    <tr><td>1</td><td>슬라이드 사이즈가 1600×900 인가</td></tr>
+    <tr><td>2</td><td>다크 헤더바(52px)가 있는가</td></tr>
+    <tr><td>3</td><td>크림 푸터바(52px)가 있는가</td></tr>
+    <tr><td>4</td><td>헤드라인 블록 4요소(kicker·h1·lede·bar)가 모두 있는가</td></tr>
+    <tr><td>5</td><td>본문이 grid 기반 칼럼으로 구성됐는가 (absolute 금지)</td></tr>
+    <tr><td>6</td><td>각 칼럼에 4개 이상 컴포넌트가 있는가</td></tr>
+    <tr><td>7</td><td>칼럼 하단이 비어 있지 않은가</td></tr>
+    <tr><td>8</td><td>본문 텍스트가 13px인가 (15px 이상 금지)</td></tr>
+    <tr><td>9</td><td>최소 1개 다크 블록(cod/dstrip)이 있는가</td></tr>
+    <tr><td>10</td><td>Editorial Warm 팔레트만 사용했는가 (차가운 색 금지)</td></tr>
+    <tr><td>11</td><td>출처·캡션이 필요한 곳에 모두 있는가</td></tr>
+    <tr><td>12</td><td>hbar·fbar 메타데이터가 정확한가</td></tr>
+  </tbody>
+</table>
+
+<hr class="doc">
+<p class="doc" style="color:var(--ink3);font-size:13px;font-style:italic">본 가이드는 전문인재 양성과정 1~8차시 모든 슬라이드의 최종 디자인 기준이다. 내용·레이아웃이 본 가이드와 충돌할 경우 가이드를 우선한다. — v1.0 · 2026.04</p>
+
+</div>
+
+<nav class="toc">
+  <div class="label">On this page</div>
+  <a href="#s1">1. 디자인 철학</a>
+  <a href="#s2">2. 컬러 팔레트</a>
+  <a href="#s3">3. 타이포그래피</a>
+  <a href="#s4">4. 캔버스 사양</a>
+  <a href="#s5">5. 레이아웃 · 칼럼 계산</a>
+  <a href="#s6">6. 4영역 코드</a>
+  <a href="#s7">7. 컴포넌트 라이브러리</a>
+  <a href="#s8">8. 밀도 규칙</a>
+  <a href="#s9">9. 조립 순서</a>
+  <a href="#s10">10. 셸 HTML</a>
+  <a href="#s11">11. 메타데이터</a>
+  <a href="#s12">12. 자가 점검</a>
+</nav>
+
+<script>/* kg-preview: #<heading> \uc704\uce58\ub85c \uc774\ub3d9 */
+(function(){function norm(t){return (t||'').replace(/\s+/g,'').toLowerCase()}
+function go(){var h=decodeURIComponent(location.hash.slice(1));if(!h)return;var k=norm(h).slice(0,24);if(!k)return;
+var best=null,bl=1e9,els=document.body.querySelectorAll('h1,h2,h3,h4,h5,p,div,span,li,td,text,tspan,section,article');
+for(var i=0;i<els.length;i++){var e=els[i],t=norm(e.textContent);if(t.length<bl&&t.indexOf(k)>-1){best=e;bl=t.length}}
+if(!best)return;var box=best.closest('section,[class*=slide],[class*=page],article')||best;
+box.scrollIntoView({block:'start'});box.style.outline='3px solid #c0504d';box.style.outlineOffset='4px';
+setTimeout(function(){box.style.outline=''},2600)}
+window.addEventListener('load',function(){setTimeout(go,400)});window.addEventListener('hashchange',go)})();</script></body>
+</html>

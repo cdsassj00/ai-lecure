@@ -1,0 +1,1072 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head><meta name="robots" content="noindex, nofollow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>인삼·약초 병해충 진단 가이드</title>
+<style>
+  :root {
+    --green-50:#EAF3DE; --green-100:#C0DD97; --green-200:#97C459;
+    --green-600:#3B6D11; --green-800:#27500A;
+    --amber-50:#FAEEDA; --amber-100:#FAC775; --amber-600:#854F0B; --amber-800:#633806;
+    --red-50:#FCEBEB; --red-100:#F7C1C1; --red-600:#A32D2D; --red-800:#791F1F;
+    --coral-50:#FAECE7; --coral-600:#993C1D; --coral-800:#712B13;
+    --blue-50:#E6F1FB; --blue-100:#B5D4F4; --blue-600:#185FA5; --blue-800:#0C447C;
+    --gray-50:#F1EFE8; --gray-100:#D3D1C7; --gray-600:#5F5E5A; --gray-800:#444441;
+    --text-p: #1a1a18; --text-s: #5f5e5a; --text-t: #88878080;
+    --bg-p: #ffffff; --bg-s: #f7f6f2; --bg-t: #f1efe8;
+    --border-t: rgba(0,0,0,0.12); --border-s: rgba(0,0,0,0.22);
+    --radius-md: 8px; --radius-lg: 12px; --radius-xl: 16px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --green-50:#1a2e0e; --green-100:#2a4a18; --green-200:#3b6811;
+      --green-600:#7ab84a; --green-800:#a5d474;
+      --amber-50:#2a1e08; --amber-100:#3d2d0d; --amber-600:#d4a030; --amber-800:#f0c060;
+      --red-50:#2a0f0f; --red-100:#3d1a1a; --red-600:#d96060; --red-800:#f09090;
+      --coral-50:#2a1208; --coral-600:#e07050; --coral-800:#f0a080;
+      --blue-50:#0a1e30; --blue-100:#102d45; --blue-600:#5fa8e0; --blue-800:#90c8f5;
+      --gray-50:#1e1e1c; --gray-100:#2c2c29; --gray-600:#a0a09a; --gray-800:#c8c8c0;
+      --text-p: #e8e6de; --text-s: #a8a69e; --text-t: #686660;
+      --bg-p: #1a1a18; --bg-s: #222220; --bg-t: #2a2a28;
+      --border-t: rgba(255,255,255,0.1); --border-s: rgba(255,255,255,0.18);
+    }
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Malgun Gothic', '맑은 고딕', sans-serif;
+    background: var(--bg-s);
+    color: var(--text-p);
+    min-height: 100vh;
+    padding: 0 0 3rem;
+  }
+  .header {
+    background: var(--bg-p);
+    border-bottom: 0.5px solid var(--border-t);
+    padding: 1rem 1.25rem 0.875rem;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  .header-top {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 0.75rem;
+  }
+  .logo-dot {
+    width: 10px; height: 10px; border-radius: 50%;
+    background: var(--green-200);
+    flex-shrink: 0;
+  }
+  .header h1 {
+    font-size: 15px; font-weight: 500; color: var(--text-p);
+  }
+  .header p {
+    font-size: 12px; color: var(--text-s); line-height: 1.5;
+  }
+  .progress-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 0.625rem;
+  }
+  .progress-bar-wrap {
+    flex: 1; height: 4px; background: var(--bg-t); border-radius: 2px; overflow: hidden;
+  }
+  .progress-bar-fill {
+    height: 100%; background: var(--green-200); border-radius: 2px;
+    transition: width 0.35s ease;
+  }
+  .progress-label { font-size: 11px; color: var(--text-t); min-width: 40px; text-align: right; }
+  .crumb-row {
+    display: flex; flex-wrap: wrap; gap: 4px;
+    padding: 0.75rem 1.25rem 0;
+    min-height: 36px;
+  }
+  .crumb {
+    font-size: 11px; color: var(--text-t);
+    background: var(--bg-t);
+    border: 0.5px solid var(--border-t);
+    border-radius: 99px;
+    padding: 3px 10px;
+    display: flex; align-items: center; gap: 4px;
+  }
+  .crumb-arrow { color: var(--text-t); font-size: 10px; }
+  .main { padding: 1rem 1.25rem 0; }
+  .question-card {
+    background: var(--bg-p);
+    border: 0.5px solid var(--border-t);
+    border-radius: var(--radius-lg);
+    padding: 1.25rem;
+    margin-bottom: 1rem;
+  }
+  .q-step {
+    font-size: 11px; font-weight: 500; color: var(--green-600);
+    background: var(--green-50);
+    border-radius: 99px;
+    padding: 2px 10px;
+    display: inline-block;
+    margin-bottom: 0.75rem;
+  }
+  .q-text {
+    font-size: 15px; font-weight: 500; color: var(--text-p);
+    line-height: 1.55;
+    margin-bottom: 0.375rem;
+  }
+  .q-hint {
+    font-size: 12px; color: var(--text-s); line-height: 1.5;
+    margin-bottom: 1rem;
+  }
+  .choices { display: flex; flex-direction: column; gap: 8px; }
+  .choice-btn {
+    display: flex; align-items: center; gap: 12px;
+    background: var(--bg-s);
+    border: 0.5px solid var(--border-t);
+    border-radius: var(--radius-md);
+    padding: 0.75rem 1rem;
+    cursor: pointer;
+    text-align: left;
+    font-size: 14px; color: var(--text-p);
+    transition: border-color 0.15s, background 0.15s;
+    width: 100%;
+  }
+  .choice-btn:hover { border-color: var(--border-s); background: var(--bg-p); }
+  .choice-btn:active { transform: scale(0.99); }
+  .choice-icon {
+    width: 28px; height: 28px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 500;
+    flex-shrink: 0;
+  }
+  .choice-icon.yes { background: var(--green-50); color: var(--green-800); }
+  .choice-icon.no  { background: var(--red-50);   color: var(--red-800); }
+  .choice-icon.opt { background: var(--blue-50);  color: var(--blue-800); }
+  .choice-label { flex: 1; }
+  .choice-sub { font-size: 11px; color: var(--text-s); margin-top: 2px; }
+  .result-card {
+    background: var(--bg-p);
+    border: 1.5px solid var(--green-600);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    margin-bottom: 1rem;
+  }
+  .result-header {
+    background: var(--green-50);
+    padding: 1rem 1.25rem 0.875rem;
+    border-bottom: 0.5px solid var(--border-t);
+  }
+  .result-badge {
+    font-size: 11px; font-weight: 500;
+    padding: 2px 10px; border-radius: 99px;
+    display: inline-block; margin-bottom: 0.5rem;
+  }
+  .result-badge.danger { background: var(--red-100); color: var(--red-800); }
+  .result-badge.warning { background: var(--amber-100); color: var(--amber-800); }
+  .result-badge.notice { background: var(--blue-100); color: var(--blue-800); }
+  .result-name {
+    font-size: 18px; font-weight: 500; color: var(--green-800);
+    margin-bottom: 0.25rem;
+  }
+  .result-name-ko { font-size: 13px; color: var(--green-600); margin-bottom: 0; }
+  .result-body { padding: 1rem 1.25rem; }
+  .section-label {
+    font-size: 11px; font-weight: 500; text-transform: uppercase;
+    letter-spacing: 0.05em; color: var(--text-t);
+    margin-bottom: 0.5rem; margin-top: 1rem;
+  }
+  .section-label:first-child { margin-top: 0; }
+  .symptom-list { list-style: none; padding: 0; }
+  .symptom-list li {
+    font-size: 13px; color: var(--text-s); line-height: 1.6;
+    padding: 4px 0 4px 14px; position: relative;
+  }
+  .symptom-list li::before {
+    content: '·'; position: absolute; left: 2px; color: var(--text-t);
+  }
+  .control-row {
+    background: var(--amber-50);
+    border: 0.5px solid var(--amber-100);
+    border-radius: var(--radius-md);
+    padding: 0.875rem 1rem;
+    margin-bottom: 0.75rem;
+  }
+  .control-title {
+    font-size: 13px; font-weight: 500; color: var(--amber-800);
+    margin-bottom: 0.375rem;
+  }
+  .control-body { font-size: 13px; color: var(--amber-600); line-height: 1.65; }
+  .chemical-row {
+    background: var(--red-50);
+    border: 0.5px solid var(--red-100);
+    border-radius: var(--radius-md);
+    padding: 0.875rem 1rem;
+    margin-bottom: 0.75rem;
+  }
+  .chemical-title { font-size: 13px; font-weight: 500; color: var(--red-800); margin-bottom: 0.375rem; }
+  .chemical-body { font-size: 13px; color: var(--red-600); line-height: 1.65; }
+  .timing-row {
+    background: var(--blue-50);
+    border: 0.5px solid var(--blue-100);
+    border-radius: var(--radius-md);
+    padding: 0.875rem 1rem;
+    margin-bottom: 0.75rem;
+  }
+  .timing-title { font-size: 13px; font-weight: 500; color: var(--blue-800); margin-bottom: 0.375rem; }
+  .timing-body { font-size: 13px; color: var(--blue-600); line-height: 1.65; }
+  .caution-box {
+    background: var(--coral-50);
+    border-left: 3px solid var(--coral-600);
+    border-radius: 0;
+    padding: 0.75rem 1rem;
+    font-size: 12px; color: var(--coral-800); line-height: 1.6;
+    margin-bottom: 0;
+    border-radius: var(--radius-md);
+  }
+  .btn-row { display: flex; gap: 8px; margin-top: 1rem; }
+  .btn-restart {
+    flex: 1;
+    background: var(--bg-p);
+    border: 0.5px solid var(--border-s);
+    border-radius: var(--radius-md);
+    padding: 0.75rem;
+    font-size: 14px; color: var(--text-p);
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.15s;
+  }
+  .btn-restart:hover { background: var(--bg-s); }
+  .btn-back {
+    background: var(--bg-p);
+    border: 0.5px solid var(--border-s);
+    border-radius: var(--radius-md);
+    padding: 0.75rem 1rem;
+    font-size: 14px; color: var(--text-s);
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.15s;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .btn-back:hover { background: var(--bg-s); }
+  .tip-card {
+    background: var(--gray-50);
+    border: 0.5px solid var(--border-t);
+    border-radius: var(--radius-lg);
+    padding: 1rem 1.25rem;
+    margin-bottom: 1rem;
+  }
+  .tip-label { font-size: 11px; font-weight: 500; color: var(--gray-600); margin-bottom: 0.5rem; }
+  .tip-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+  .tip-item {
+    font-size: 12px; color: var(--text-s); line-height: 1.5;
+    padding: 6px 8px;
+    background: var(--bg-p);
+    border: 0.5px solid var(--border-t);
+    border-radius: var(--radius-md);
+  }
+  .tip-dot {
+    display: inline-block; width: 6px; height: 6px; border-radius: 50%;
+    margin-right: 5px; vertical-align: middle;
+  }
+  .version-tag {
+    font-size: 11px; color: var(--text-t);
+    text-align: center;
+    padding: 0.5rem;
+    margin-top: 1rem;
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-top">
+    <div class="logo-dot"></div>
+    <h1>인삼·약초 병해충 진단 가이드</h1>
+  </div>
+  <p>증상에 따라 단계별로 선택하면 병해충명과 방제 방법을 안내합니다</p>
+  <div class="progress-row">
+    <div class="progress-bar-wrap">
+      <div class="progress-bar-fill" id="progress-fill" style="width:0%"></div>
+    </div>
+    <span class="progress-label" id="progress-label">시작 전</span>
+  </div>
+</div>
+
+<div class="crumb-row" id="crumb-row"></div>
+<div class="main" id="main"></div>
+
+<script>
+const tree = {
+  id: "start",
+  q: "어느 부위에 증상이 나타납니까?",
+  hint: "가장 눈에 띄는 증상 부위를 선택하세요",
+  choices: [
+    { label: "잎·줄기 (지상부)", sub: "잎 변색, 반점, 시들음, 줄기 썩음", icon:"opt", next: "leaf" },
+    { label: "뿌리·지제부 (지하부)", sub: "뿌리 썩음, 표면 이상, 생육 불량", icon:"opt", next: "root" },
+    { label: "포장 전체 (피해 범위 넓음)", sub: "여러 포기가 동시에 피해", icon:"opt", next: "field" }
+  ]
+};
+
+const nodes = {
+  start: tree,
+
+  leaf: {
+    id:"leaf", q:"잎에 어떤 색깔의 반점·병반이 있습니까?",
+    hint: "잎을 뒤집어 뒷면도 확인하세요",
+    crumb: "잎·줄기",
+    choices: [
+      { label: "갈색~암갈색 반점", sub: "물에 젖은 듯한 테두리 있음", icon:"opt", next: "leaf_brown" },
+      { label: "흰색~회색 가루 또는 반점", sub: "잎 표면에 밀가루 같은 것이 묻은 듯", icon:"opt", next: "leaf_white" },
+      { label: "황색·노란색으로 변색", sub: "잎 전체 또는 잎맥 사이 황변", icon:"opt", next: "leaf_yellow" },
+      { label: "검은 반점·그을음 같은 것", sub: "잎 뒷면 또는 표면에 검은 부분", icon:"opt", next: "leaf_black" }
+    ]
+  },
+
+  leaf_brown: {
+    id:"leaf_brown", q:"반점 테두리가 뚜렷한 황색 테두리(halo)가 있습니까?",
+    hint: "밝은 빛에 잎을 비춰 테두리 색을 확인하세요",
+    crumb: "갈색 반점",
+    choices: [
+      { label: "예 — 황색 테두리가 뚜렷하다", icon:"yes", next: "r_alternaria" },
+      { label: "아니요 — 테두리 없이 번지는 느낌", icon:"no", next: "leaf_brown2" }
+    ]
+  },
+
+  leaf_brown2: {
+    id:"leaf_brown2", q:"줄기 또는 잎자루도 함께 갈변·위축되었습니까?",
+    hint: "잎자루 기부(잎이 붙는 부분)를 손으로 눌러 보세요",
+    crumb: "테두리 없음",
+    choices: [
+      { label: "예 — 줄기까지 갈변·물러짐", icon:"yes", next: "r_phytophthora_leaf" },
+      { label: "아니요 — 잎에만 국한된 병반", icon:"no", next: "r_cercospora" }
+    ]
+  },
+
+  leaf_white: {
+    id:"leaf_white", q:"흰 가루가 잎 표면에 분포합니까, 아니면 흰 털 같은 곰팡이(균총)입니까?",
+    hint: "손가락으로 살짝 문질러보면 분말인지 확인 가능합니다",
+    crumb: "흰색·회색",
+    choices: [
+      { label: "가루 같고 문지르면 묻어남 (흰가루병 의심)", icon:"opt", next: "r_powdery" },
+      { label: "솜털 같은 회색 균총, 습한 환경", icon:"opt", next: "r_botrytis" },
+      { label: "잎 뒷면에 흰 가루·흰 반점", icon:"opt", next: "r_downy" }
+    ]
+  },
+
+  leaf_yellow: {
+    id:"leaf_yellow", q:"황변이 아래 잎부터 위로 진행됩니까, 아니면 새 잎부터 나타납니까?",
+    hint: "황변이 시작된 위치를 확인하세요",
+    crumb: "황색 변색",
+    choices: [
+      { label: "아래 오래된 잎부터 황변 진행", icon:"opt", next: "leaf_yellow_old" },
+      { label: "새 잎(상부)부터 황변·왜소화", icon:"opt", next: "r_virus" }
+    ]
+  },
+
+  leaf_yellow_old: {
+    id:"leaf_yellow_old", q:"뿌리를 당겼을 때 쉽게 뽑히거나 뿌리 표면에 이상이 있습니까?",
+    hint: "포기를 살짝 당겨 뿌리 상태를 확인하세요",
+    crumb: "아래잎 황변",
+    choices: [
+      { label: "예 — 뿌리가 쉽게 뽑히고 썩은 냄새", icon:"yes", next: "r_cylindrocarpon" },
+      { label: "아니요 — 뿌리는 정상, 잎만 황변", icon:"no", next: "r_nutrient" }
+    ]
+  },
+
+  leaf_black: {
+    id:"leaf_black", q:"잎 뒷면에 진딧물·응애류 등 소형 해충이 보입니까?",
+    hint: "루페(확대경)로 잎 뒷면을 확인하면 좋습니다",
+    crumb: "검은 반점",
+    choices: [
+      { label: "예 — 작은 벌레·진딧물 확인됨", icon:"yes", next: "r_aphid" },
+      { label: "아니요 — 해충 없음, 검은 반점·그을음만", icon:"no", next: "r_sooty" }
+    ]
+  },
+
+  root: {
+    id:"root", q:"뿌리의 어느 부위에 주로 이상이 있습니까?",
+    hint: "뿌리 전체를 흙에서 꺼내 관찰하세요",
+    crumb: "뿌리·지제부",
+    choices: [
+      { label: "뿌리 전체가 갈변·부패", sub: "악취, 물러짐", icon:"opt", next: "root_rot" },
+      { label: "뿌리 표면에 혹·혹 같은 돌기", sub: "혹의 크기와 위치가 다양", icon:"opt", next: "root_gall" },
+      { label: "지제부(뿌리 목 부분)만 썩음", sub: "지표면 경계 부근 갈변", icon:"opt", next: "r_stem_rot" },
+      { label: "뿌리 안쪽이 텅 빔·공동 형성", sub: "겉은 멀쩡하나 속이 비어 있음", icon:"opt", next: "r_inner_rot" }
+    ]
+  },
+
+  root_rot: {
+    id:"root_rot", q:"뿌리 부패가 뿌리 끝부터 시작되었습니까, 아니면 전체가 동시에 물러졌습니까?",
+    hint: "부패 진행 방향을 관찰하세요",
+    crumb: "뿌리 부패",
+    choices: [
+      { label: "뿌리 끝(세근)부터 갈변 진행", icon:"opt", next: "r_fusarium" },
+      { label: "뿌리 전체가 동시에 물러지고 악취", icon:"opt", next: "r_pythium" },
+      { label: "부패부에 하얀 균사가 실처럼 보임", icon:"opt", next: "r_white_rot" }
+    ]
+  },
+
+  root_gall: {
+    id:"root_gall", q:"혹이 뿌리 전체에 고르게 분포합니까, 아니면 뿌리 주변 토양에 작은 알 같은 것(선충 알)이 보입니까?",
+    hint: "돋보기로 혹 표면과 토양을 관찰하세요",
+    crumb: "뿌리 혹",
+    choices: [
+      { label: "예 — 혹이 많고 크기 다양, 선충 의심", icon:"yes", next: "r_nematode" },
+      { label: "아니요 — 혹 하나가 크게 형성됨", icon:"no", next: "r_gall_bacteria" }
+    ]
+  },
+
+  field: {
+    id:"field", q:"피해 포기가 어떤 패턴으로 분포합니까?",
+    hint: "포장 전체를 둘러보며 피해 분포를 파악하세요",
+    crumb: "포장 전체",
+    choices: [
+      { label: "두둑 전체 또는 특정 구획 집중", sub: "연속적으로 쓰러지거나 말라죽음", icon:"opt", next: "field_patch" },
+      { label: "포장 군데군데 산발적 발생", sub: "건강한 포기 사이에 간헐적으로 피해", icon:"opt", next: "r_random_disease" },
+      { label: "포장 가장자리부터 안쪽으로 진행", sub: "바람받이 쪽 또는 두둑 끝부터 피해", icon:"opt", next: "r_edge_pest" }
+    ]
+  },
+
+  field_patch: {
+    id:"field_patch", q:"피해 구획의 토양이 과습(질퍽함)합니까?",
+    hint: "피해 구획의 토양 수분 상태를 확인하세요",
+    crumb: "두둑 집중 피해",
+    choices: [
+      { label: "예 — 토양이 질퍽하고 배수 불량", icon:"yes", next: "r_phytophthora_root" },
+      { label: "아니요 — 토양은 정상이나 포기 집단 고사", icon:"no", next: "r_fusarium_patch" }
+    ]
+  },
+
+  r_alternaria: {
+    id:"r_alternaria", type:"result",
+    name: "인삼 점무늬병 (Alternaria 잎마름병)",
+    nameEn: "Alternaria blight",
+    level: "warning",
+    symptoms: [
+      "초기에 물에 젖은 듯한 소형 병반 형성",
+      "확대되면 갈색~암갈색, 뚜렷한 황색 테두리(halo)",
+      "병반 위에 흑색 포자 덩어리 형성",
+      "심하면 잎 전체 고사, 조기 낙엽"
+    ],
+    control_phys: "발병 초기 병든 잎 즉시 제거 후 밭 밖 소각. 해가림 시설 통풍 개선. 질소 과비 삼가.",
+    control_chem: "아족시스트로빈·디페노코나졸 수화제, 이프로디온 수화제 발병 초기 7~10일 간격 2~3회 살포",
+    timing: "4~6월 잎 전개기, 비가 잦은 시기 집중 발생. 이슬이 맺히는 아침 시간대 감염 多",
+    caution: "약제 저항성 예방을 위해 계통이 다른 약제 교호 살포. 수확 30일 전 약제 살포 금지."
+  },
+
+  r_phytophthora_leaf: {
+    id:"r_phytophthora_leaf", type:"result",
+    name: "인삼 역병 (Phytophthora 잎·줄기 침해형)",
+    nameEn: "Phytophthora blight – foliar",
+    level: "danger",
+    symptoms: [
+      "잎과 잎자루에 수침상(물에 젖은 듯) 갈색 병반",
+      "습한 조건에서 흰색 균사가 병반 주변에 출현",
+      "줄기 기부까지 갈변·함몰 → 포기 전체 급격히 쓰러짐",
+      "일교차가 큰 장마철 급성 발생"
+    ],
+    control_phys: "과습 구간 즉시 배수로 정비. 피해 포기 신속 제거 후 석회 처리. 연작 회피.",
+    control_chem: "메탈락실·만코제브 수화제, 사이목사닐·파목사돈 수화제 예방적 살포 (감염 전후 3일 이내 효과)",
+    timing: "장마 전후(6~8월) 토양 수분 높을 때 집중 발생. 토양→잎 비산 전염",
+    caution: "역병은 진전 속도가 빠르므로 발견 즉시 처리. 인접 포기도 예방 살포."
+  },
+
+  r_cercospora: {
+    id:"r_cercospora", type:"result",
+    name: "인삼 잿빛점무늬병 (Cercospora)",
+    nameEn: "Cercospora leaf spot",
+    level: "warning",
+    symptoms: [
+      "불규칙한 갈색 소형 병반, 테두리 없이 서서히 확대",
+      "병반 중앙부 회색으로 변해 잿빛 병반 형성",
+      "잎 뒷면에 회녹색 분생포자 층 관찰",
+      "피해 잎 조기 낙엽"
+    ],
+    control_phys: "밀식 회피로 통풍 확보. 병든 잎 조기 제거 소각.",
+    control_chem: "테부코나졸 유제, 클로로탈로닐 수화제 7~10일 간격 2회 살포",
+    timing: "7~9월 온도 높고 습한 시기 발생. 고온 다습 조건에서 빠르게 확산",
+    caution: "연속 동일 약제 사용 시 내성 유발. 계통 달리하여 교대 살포."
+  },
+
+  r_powdery: {
+    id:"r_powdery", type:"result",
+    name: "흰가루병 (Powdery mildew)",
+    nameEn: "Powdery mildew",
+    level: "warning",
+    symptoms: [
+      "잎 표면에 하얀 밀가루 같은 균총 형성",
+      "문지르면 흰 가루가 묻어남",
+      "심하면 잎 황변·갈변 후 고사",
+      "건조하고 일교차 큰 시기 발생"
+    ],
+    control_phys: "통풍 개선, 밀식 회피. 발병 초기 병든 부위 제거.",
+    control_chem: "황 수화제, 트리플루미졸 수화제, 헥사코나졸 유제 발병 초 7일 간격 살포",
+    timing: "봄·가을 건조하고 일교차 큰 시기 多. 과도한 질소 시비 후 발생 증가",
+    caution: "고온기(30℃ 이상) 황 제제 사용 시 약해 주의."
+  },
+
+  r_botrytis: {
+    id:"r_botrytis", type:"result",
+    name: "잿빛곰팡이병 (Botrytis blight)",
+    nameEn: "Gray mold",
+    level: "warning",
+    symptoms: [
+      "상처·노화 부위부터 연한 갈색 수침상 병반",
+      "병반 위에 회갈색 솜털 같은 분생포자 형성",
+      "습한 조건에서 급격히 확산",
+      "꽃·씨앗에도 발생"
+    ],
+    control_phys: "해가림 내 통풍 적극 개선. 상처 최소화. 노화 잎·줄기 수시 제거.",
+    control_chem: "이프로디온 수화제, 플루아지남 수화제, 보스칼리드 입상수화제 발병 초 살포",
+    timing: "봄·가을 저온 다습 조건, 해가림 내 통풍 불량 시 급발생",
+    caution: "동일 약제 반복 시 저항성 발달 빠름. 3~4종 이상 교호 사용 권장."
+  },
+
+  r_downy: {
+    id:"r_downy", type:"result",
+    name: "노균병 (Downy mildew)",
+    nameEn: "Downy mildew",
+    level: "warning",
+    symptoms: [
+      "잎 앞면 황색~연녹색 불규칙 반점",
+      "잎 뒷면에 회백색~회자주색 솜털 균총",
+      "피해 잎 갈변 후 낙엽",
+      "서늘하고 다습한 조건 선호"
+    ],
+    control_phys: "통풍 개선, 밀식 회피. 병든 잎 제거 소각.",
+    control_chem: "사이목사닐·파목사돈 수화제, 만코제브 수화제 예방 위주 살포",
+    timing: "봄·초여름 기온 낮고 이슬 많은 시기 집중 발생",
+    caution: "내성균 발달이 빠른 그룹. 계통 다른 약제 교호 필수."
+  },
+
+  r_virus: {
+    id:"r_virus", type:"result",
+    name: "인삼 바이러스병 (Virus disease)",
+    nameEn: "Ginseng virus (CMV, TuMV 등)",
+    level: "danger",
+    symptoms: [
+      "새 잎 황화·모자이크 무늬 형성",
+      "잎 기형·위축, 전체 생육 불량",
+      "진딧물·응애류가 매개체로 작용",
+      "치료 불가, 전파 차단이 핵심"
+    ],
+    control_phys: "발병 포기 즉시 제거 소각(바이러스 근절). 진딧물 방제 철저. 작업 도구 소독(70% 알코올).",
+    control_chem: "바이러스 직접 약제 없음. 매개 해충(진딧물) 방제: 이미다클로프리드 액상수화제, 플로니카미드 수화제",
+    timing: "진딧물 발생 성기(4~6월, 9~10월)에 감염 多. 육묘기 감염 주의",
+    caution: "바이러스병은 치료 불가. 예방과 매개충 방제가 유일한 대책."
+  },
+
+  r_cylindrocarpon: {
+    id:"r_cylindrocarpon", type:"result",
+    name: "인삼 녹병·뿌리썩음병 (Cylindrocarpon)",
+    nameEn: "Cylindrocarpon destructans root rot",
+    level: "danger",
+    symptoms: [
+      "아래 잎부터 황변 시작 → 위로 진행",
+      "세근부터 갈변 시작, 쉽게 뽑힘",
+      "뿌리 표면 암갈색 함몰 반점 또는 전체 부패",
+      "연작지·배수 불량지 다발"
+    ],
+    control_phys: "배수 철저, 연작 회피(최소 5~7년 윤작). 발병 포기 제거 후 토양 훈증 소독.",
+    control_chem: "티람·베노밀 수화제 토양 관주 또는 정식 전 뿌리 침지 처리. 트리코더마 제제 생물 방제 병행",
+    timing: "봄·가을 지온이 낮고 습할 때 다발. 연작 3년 이상 포장 고위험",
+    caution: "토양 전염성 병원균으로 완전 방제 어려움. 윤작이 근본적 대책."
+  },
+
+  r_nutrient: {
+    id:"r_nutrient", type:"result",
+    name: "생리 장해 (영양 결핍 또는 과습)",
+    nameEn: "Physiological disorder",
+    level: "notice",
+    symptoms: [
+      "잎맥 사이 황화 (망상 황화) → 마그네슘·망간 결핍 의심",
+      "잎 가장자리 황화 → 칼륨 결핍 의심",
+      "전체적 연녹색→황화 → 질소 결핍",
+      "뿌리 이상 없음, 비전염성"
+    ],
+    control_phys: "토양 pH 교정(인삼 최적 5.5~6.0). 유기물 시용. 배수로 정비.",
+    control_chem: "엽면 시비: 황산마그네슘 0.2~0.5% 용액, 요소 0.3% 용액 엽면 살포. 토양 분석 후 맞춤 시비",
+    timing: "생육 초기(4~6월) 증상 확인 후 즉시 교정",
+    caution: "엽면 살포는 기온이 낮은 이른 아침 또는 저녁에 실시."
+  },
+
+  r_aphid: {
+    id:"r_aphid", type:"result",
+    name: "진딧물·응애류 (Aphid & Mite)",
+    nameEn: "Aphid / Spider mite",
+    level: "warning",
+    symptoms: [
+      "잎 뒷면에 녹색·흑색 소형 군집 충체 (진딧물)",
+      "또는 잎 뒷면 미세한 거미줄·붉은 소형 충 (점박이응애)",
+      "피해 잎 황화·기형·그을음 유발",
+      "바이러스병 매개체 역할"
+    ],
+    control_phys: "황색·청색 끈끈이 트랩 설치. 천적 도입(칠레이리응애 등). 물 분무로 초기 밀도 억제.",
+    control_chem: "진딧물: 이미다클로프리드·클로티아니딘 액상수화제 / 응애: 헥시티아족스·에토펜프록스 수화제 7일 간격 살포",
+    timing: "진딧물은 4~6월·9~10월 집중 발생. 응애는 고온 건조기(7~8월) 다발",
+    caution: "같은 약제 연용 시 내성 발달. 작용점 다른 약제 교호 사용 필수."
+  },
+
+  r_sooty: {
+    id:"r_sooty", type:"result",
+    name: "그을음병 (Sooty mold)",
+    nameEn: "Sooty mold",
+    level: "notice",
+    symptoms: [
+      "잎 표면 검은 그을음 같은 균층 형성",
+      "진딧물·깍지벌레 분비물(감로) 위에 기생",
+      "광합성 저해, 생육 불량",
+      "해충 방제 후 자연 소실"
+    ],
+    control_phys: "원인이 되는 진딧물·깍지벌레 방제가 근본 대책. 통풍 개선.",
+    control_chem: "해충 동반 방제 후 0.1% 베노밀 수화제 또는 유기농 보르도액 살포",
+    timing: "해충 발생과 연동. 장마 전후 습한 조건에서 빠르게 증가",
+    caution: "그을음병 자체보다 원인 해충 방제가 우선."
+  },
+
+  r_fusarium: {
+    id:"r_fusarium", type:"result",
+    name: "인삼 부패병 (Fusarium root rot)",
+    nameEn: "Fusarium root rot",
+    level: "danger",
+    symptoms: [
+      "세근부터 갈색 부패 시작, 점차 주근으로 확산",
+      "뿌리 표면 갈변 함몰 반점",
+      "지상부 황변·시들음 증상 동반",
+      "토양 전염, 연작지 다발"
+    ],
+    control_phys: "윤작 3~5년 이상 실시. 피해 식물 즉시 제거 소각. 토양 훈증 소독 고려.",
+    control_chem: "티람·이프로디온 수화제 토양 관주. 정식 전 뿌리 트리코더마 제제 침지 처리",
+    timing: "봄·초여름 지온 낮고 과습한 조건에서 다발",
+    caution: "연작지에서 빠르게 증가. 포장 선정 시 전작 이력 반드시 확인."
+  },
+
+  r_pythium: {
+    id:"r_pythium", type:"result",
+    name: "인삼 입고병·모잘록병 (Pythium)",
+    nameEn: "Pythium damping-off",
+    level: "danger",
+    symptoms: [
+      "뿌리 전체가 물러지고 악취 발생",
+      "지제부 갈변 함몰, 포기 급격히 쓰러짐",
+      "토양 과습 시 급성 발생",
+      "묘삼·어린 포기에 특히 치명적"
+    ],
+    control_phys: "배수 즉시 개선, 두둑 높이기. 피해 포기 주변 생석회 처리. 과습 방지.",
+    control_chem: "메탈락실 수화제 토양 관주. 발병 위험 시기 예방적 살포",
+    timing: "봄·초여름 강우 후 토양 포화 상태 지속 시 집중 발생",
+    caution: "일단 발생하면 빠르게 확산. 조기 배수 정비가 핵심."
+  },
+
+  r_white_rot: {
+    id:"r_white_rot", type:"result",
+    name: "인삼 흰비단병 (Sclerotium blight)",
+    nameEn: "Sclerotium rolfsii white rot",
+    level: "danger",
+    symptoms: [
+      "지제부 및 뿌리 기부에 흰 균사 실처럼 발생",
+      "후에 갈색 좁쌀 크기 균핵(균의 생존체) 형성",
+      "지제부 썩음 → 지상부 급격 고사",
+      "고온기에 빠른 확산"
+    ],
+    control_phys: "피해 포기·주변 토양 제거 후 생석회 처리. 두둑 표면 플라스틱 멀칭으로 토양 비산 차단.",
+    control_chem: "플루아지남 수화제, 이프로디온 수화제 지제부 중심 토양 관주",
+    timing: "고온 다습한 7~9월 집중 발생. 토양 유기물 많은 곳에서 균핵 오래 생존",
+    caution: "균핵이 토양에 수년간 생존. 피해 토양 외부 반출 금지."
+  },
+
+  r_nematode: {
+    id:"r_nematode", type:"result",
+    name: "뿌리혹선충 (Root-knot nematode)",
+    nameEn: "Meloidogyne spp.",
+    level: "danger",
+    symptoms: [
+      "뿌리에 크기 다양한 혹(근류) 다수 형성",
+      "토양 속 작은 알 주머니(난낭) 관찰",
+      "지상부 생육 불량, 황화·위축",
+      "사질토·연작지 특히 다발"
+    ],
+    control_phys: "태양열 소독(7~8월 비닐 피복 4주 이상). 저항성 품종 사용. 대마·메리골드 등 선충 억제 식물 전작.",
+    control_chem: "포스티아제이트 입제 정식 전 토양 혼화. 플루오피람 액상수화제 관주 처리",
+    timing: "지온 20℃ 이상 시기 활동 활발. 건조한 사질토에서 피해 심화",
+    caution: "선충은 약제 저항성 빠름. 종합적 방제(토양 소독+저항성 품종+윤작) 권장."
+  },
+
+  r_gall_bacteria: {
+    id:"r_gall_bacteria", type:"result",
+    name: "근두암종병 (Crown gall)",
+    nameEn: "Agrobacterium tumefaciens",
+    level: "warning",
+    symptoms: [
+      "뿌리 목 부위 또는 뿌리에 단일 또는 소수의 큰 혹 형성",
+      "혹 표면 거칠고 코르크화",
+      "지상부 생육 지연, 황화"
+    ],
+    control_phys: "상처를 통해 감염되므로 정식·관리 작업 시 상처 최소화. 발병 포기 즉시 제거.",
+    control_chem: "효과적인 약제 없음. 생물 방제균(Agrobacterium radiobacter K84) 종근 처리 예방",
+    timing: "정식기 상처 통한 감염 多",
+    caution: "세균성 병으로 항생제 사용은 내성 유발. 예방 중심 대응."
+  },
+
+  r_stem_rot: {
+    id:"r_stem_rot", type:"result",
+    name: "인삼 줄기마름병·지제부 부패",
+    nameEn: "Stem/crown rot",
+    level: "danger",
+    symptoms: [
+      "지표면 경계 줄기 기부 갈변·함몰",
+      "병부 위 포기 시들음, 쓰러짐",
+      "Rhizoctonia·Fusarium 복합 감염 多",
+      "과습 후 급성 발생"
+    ],
+    control_phys: "두둑 높이 확보, 배수로 정비. 멀칭으로 토양 비산·접촉 차단.",
+    control_chem: "플루토라닐 수화제, 티아디닐 수화제 지제부 집중 살포 또는 관주",
+    timing: "장마기(6~8월) 배수 불량 포장에서 집중 발생",
+    caution: "복합 감염이 많으므로 광범위 약제 또는 혼합 처리 권장."
+  },
+
+  r_inner_rot: {
+    id:"r_inner_rot", type:"result",
+    name: "인삼 내부 갈변·공동 (Internal browning)",
+    nameEn: "Internal browning / hollow heart",
+    level: "warning",
+    symptoms: [
+      "뿌리 겉은 정상이나 절단 시 내부 공동 또는 갈변",
+      "붕소 결핍 또는 생리 장해 주원인",
+      "칼슘 결핍·과습 동반 多",
+      "수삼 품질 저하, 비전염성"
+    ],
+    control_phys: "토양 pH 교정. 유기물 충분 시용. 균일한 관수 관리.",
+    control_chem: "붕소(붕산) 0.1~0.2% 엽면 살포. 토양 붕소·칼슘 시비 교정",
+    timing: "생육 중기(6~8월) 발생. 토양 분석 후 선제 교정 권장",
+    caution: "비전염성이나 수삼 등급 저하 직결. 수확 전 토양 관리 중요."
+  },
+
+  r_phytophthora_root: {
+    id:"r_phytophthora_root", type:"result",
+    name: "인삼 역병 (토양 침수형, Phytophthora)",
+    nameEn: "Phytophthora root rot – soil type",
+    level: "danger",
+    symptoms: [
+      "과습 구간에서 집단 고사",
+      "뿌리 전체 갈변 부패, 악취",
+      "지상부 급격 시들음·쓰러짐",
+      "역병균(유주자) 유수를 타고 이동·확산"
+    ],
+    control_phys: "배수로 즉시 정비, 두둑 높이기. 피해 구획 생석회 토양 처리. 피해 잔재 제거.",
+    control_chem: "메탈락실·만코제브 수화제 발생 전후 예방 관주. 인산 칼륨 시용으로 저항성 유도",
+    timing: "집중 강우 후 2~3일 이내 발생. 6~8월 장마철 최대 피해",
+    caution: "역병은 빠른 확산이 특징. 발견 즉시 격리·방제."
+  },
+
+  r_fusarium_patch: {
+    id:"r_fusarium_patch", type:"result",
+    name: "인삼 집단 고사 (Fusarium·선충 복합)",
+    nameEn: "Patch decline – Fusarium + nematode",
+    level: "danger",
+    symptoms: [
+      "특정 구획 포기 집단 고사, 윤곽이 점차 확대",
+      "뿌리 갈변·부패 + 선충 혹 동반 多",
+      "지상부 황화 후 쓰러짐",
+      "연작지·전작 이력 불량 포장 다발"
+    ],
+    control_phys: "피해 구획 격리 후 토양 훈증 소독. 연작 회피(5~7년 윤작). 저항성 품종 검토.",
+    control_chem: "다조멧 입제 토양 훈증. 포스티아제이트 입제 선충 방제 병행. 티람 수화제 관주",
+    timing: "봄·초여름 지온 낮고 습한 조건, 연작 3년 이상 포장",
+    caution: "복합 원인이므로 반드시 뿌리 및 토양 분석 후 종합 방제 설계."
+  },
+
+  r_random_disease: {
+    id:"r_random_disease", type:"result",
+    name: "산발적 복합 병해 (감염 초기)",
+    nameEn: "Sporadic disease complex",
+    level: "warning",
+    symptoms: [
+      "포장 내 군데군데 증상 포기 발생",
+      "다양한 병반 혼재, 원인 불명확",
+      "조기 발생 시 확산 방지가 관건"
+    ],
+    control_phys: "발병 포기 즉시 제거. 방제 후 작업 도구 소독. 통풍·배수 환경 점검.",
+    control_chem: "광범위 살균제(만코제브·테부코나졸 혼합) 예방 살포 후 원인 분석 병행",
+    timing: "계절과 무관하게 발생 가능. 빠른 진단과 격리가 핵심",
+    caution: "정확한 진단 전 과다 약제 살포는 내성 유발. 도·농업기술원 분석 의뢰 권장."
+  },
+
+  r_edge_pest: {
+    id:"r_edge_pest", type:"result",
+    name: "포장 가장자리 해충 침입 피해",
+    nameEn: "Border pest infestation",
+    level: "warning",
+    symptoms: [
+      "가장자리 두둑부터 피해 진행, 안쪽으로 확산",
+      "잎 갉아먹힘, 줄기 절단, 구멍 형성",
+      "주요 해충: 거세미나방, 풍뎅이 유충, 응애류"
+    ],
+    control_phys: "포장 주변 잡초 제거. 방충망 설치. 끈끈이 트랩 가장자리 집중 배치.",
+    control_chem: "클로르플루아주론 유제(나방류), 포스팜 유제 토양 처리(굼벵이류). 발생 해충 종 확인 후 등록 약제 사용",
+    timing: "5~6월 봄 해충 이동기, 9~10월 가을 해충 월동 준비 시기",
+    caution: "가장자리 피해는 외부 유입이므로 조기 차단이 중요."
+  }
+};
+
+let history = [];
+let currentId = "start";
+
+function getProgress() {
+  const maxDepth = 5;
+  return Math.min(Math.round((history.length / maxDepth) * 100), 95);
+}
+
+function buildCrumbs() {
+  const row = document.getElementById('crumb-row');
+  row.innerHTML = '';
+  if (history.length === 0) return;
+  history.forEach((id, i) => {
+    const node = nodes[id];
+    if (!node || !node.crumb) return;
+    const span = document.createElement('span');
+    span.className = 'crumb';
+    if (i > 0) {
+      const arrow = document.createElement('span');
+      arrow.className = 'crumb-arrow';
+      arrow.textContent = '›';
+      row.appendChild(arrow);
+    }
+    span.textContent = node.crumb;
+    row.appendChild(span);
+  });
+}
+
+function setProgress(pct, label) {
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('progress-label').textContent = label;
+}
+
+function render(id) {
+  currentId = id;
+  const node = nodes[id];
+  const main = document.getElementById('main');
+  main.innerHTML = '';
+  buildCrumbs();
+
+  if (!node) { main.innerHTML = '<p style="color:var(--text-s);font-size:14px;padding:1rem">노드를 찾을 수 없습니다.</p>'; return; }
+
+  if (node.type === 'result') {
+    setProgress(100, '진단 완료');
+    renderResult(node, main);
+    return;
+  }
+
+  const pct = getProgress();
+  setProgress(pct, `${history.length}단계`);
+
+  const card = document.createElement('div');
+  card.className = 'question-card';
+
+  const stepEl = document.createElement('div');
+  stepEl.className = 'q-step';
+  stepEl.textContent = `질문 ${history.length + 1}`;
+  card.appendChild(stepEl);
+
+  const qEl = document.createElement('p');
+  qEl.className = 'q-text';
+  qEl.textContent = node.q;
+  card.appendChild(qEl);
+
+  if (node.hint) {
+    const hEl = document.createElement('p');
+    hEl.className = 'q-hint';
+    hEl.textContent = '확인 방법: ' + node.hint;
+    card.appendChild(hEl);
+  }
+
+  const choices = document.createElement('div');
+  choices.className = 'choices';
+
+  node.choices.forEach(ch => {
+    const btn = document.createElement('button');
+    btn.className = 'choice-btn';
+
+    const iconEl = document.createElement('div');
+    iconEl.className = 'choice-icon ' + ch.icon;
+    iconEl.textContent = ch.icon === 'yes' ? '예' : ch.icon === 'no' ? '아니요' : '•';
+    btn.appendChild(iconEl);
+
+    const lblWrap = document.createElement('div');
+    lblWrap.className = 'choice-label';
+    const lblEl = document.createElement('div');
+    lblEl.textContent = ch.label;
+    lblWrap.appendChild(lblEl);
+    if (ch.sub) {
+      const subEl = document.createElement('div');
+      subEl.className = 'choice-sub';
+      subEl.textContent = ch.sub;
+      lblWrap.appendChild(subEl);
+    }
+    btn.appendChild(lblWrap);
+
+    const arrow = document.createElement('span');
+    arrow.style.cssText = 'font-size:16px;color:var(--text-t)';
+    arrow.textContent = '›';
+    btn.appendChild(arrow);
+
+    btn.addEventListener('click', () => {
+      history.push(id);
+      render(ch.next);
+    });
+    choices.appendChild(btn);
+  });
+
+  card.appendChild(choices);
+  main.appendChild(card);
+
+  if (history.length > 0) {
+    const backRow = document.createElement('div');
+    backRow.className = 'btn-row';
+    const backBtn = document.createElement('button');
+    backBtn.className = 'btn-back';
+    backBtn.innerHTML = '‹ 이전 질문으로';
+    backBtn.addEventListener('click', () => {
+      currentId = history.pop();
+      render(currentId);
+    });
+    backRow.appendChild(backBtn);
+    main.appendChild(backRow);
+  }
+
+  renderTips(main);
+}
+
+function renderResult(node, main) {
+  const card = document.createElement('div');
+  card.className = 'result-card';
+
+  const header = document.createElement('div');
+  header.className = 'result-header';
+
+  const badge = document.createElement('div');
+  badge.className = 'result-badge ' + node.level;
+  badge.textContent = node.level === 'danger' ? '즉각 방제 필요' : node.level === 'warning' ? '주의 관찰 필요' : '생리 장해 의심';
+  header.appendChild(badge);
+
+  const nameEl = document.createElement('p');
+  nameEl.className = 'result-name';
+  nameEl.textContent = node.name;
+  header.appendChild(nameEl);
+
+  const nameEnEl = document.createElement('p');
+  nameEnEl.className = 'result-name-ko';
+  nameEnEl.textContent = node.nameEn;
+  header.appendChild(nameEnEl);
+
+  card.appendChild(header);
+
+  const body = document.createElement('div');
+  body.className = 'result-body';
+
+  const syLabel = document.createElement('div');
+  syLabel.className = 'section-label';
+  syLabel.textContent = '주요 증상';
+  body.appendChild(syLabel);
+
+  const syList = document.createElement('ul');
+  syList.className = 'symptom-list';
+  node.symptoms.forEach(s => {
+    const li = document.createElement('li');
+    li.textContent = s;
+    syList.appendChild(li);
+  });
+  body.appendChild(syList);
+
+  const makeRow = (cls, titleTxt, bodyTxt) => {
+    const row = document.createElement('div');
+    row.className = cls;
+    const t = document.createElement('div');
+    t.className = cls.split('-')[0] + '-title';
+    t.textContent = titleTxt;
+    row.appendChild(t);
+    const b = document.createElement('div');
+    b.className = cls.split('-')[0] + '-body';
+    b.textContent = bodyTxt;
+    row.appendChild(b);
+    return row;
+  };
+
+  body.appendChild(makeRow('control-row', '물리적·경종적 방제', node.control_phys));
+  body.appendChild(makeRow('chemical-row', '약제 방제', node.control_chem));
+  body.appendChild(makeRow('timing-row', '발생 시기 및 특성', node.timing));
+
+  const caution = document.createElement('div');
+  caution.className = 'caution-box';
+  caution.textContent = '주의사항: ' + node.caution;
+  body.appendChild(caution);
+
+  card.appendChild(body);
+  main.appendChild(card);
+
+  const btnRow = document.createElement('div');
+  btnRow.className = 'btn-row';
+
+  const restartBtn = document.createElement('button');
+  restartBtn.className = 'btn-restart';
+  restartBtn.textContent = '처음부터 다시 진단하기';
+  restartBtn.addEventListener('click', () => {
+    history = [];
+    render('start');
+  });
+  btnRow.appendChild(restartBtn);
+
+  const backBtn = document.createElement('button');
+  backBtn.className = 'btn-back';
+  backBtn.textContent = '‹ 뒤로';
+  backBtn.addEventListener('click', () => {
+    currentId = history.pop();
+    render(currentId);
+  });
+  btnRow.appendChild(backBtn);
+
+  main.appendChild(btnRow);
+
+  const ver = document.createElement('div');
+  ver.className = 'version-tag';
+  ver.textContent = '충남농업기술원 인삼약초연구소 · 병해충 진단 가이드 v1.0';
+  main.appendChild(ver);
+}
+
+function renderTips(main) {
+  const tips = [
+    { dot:'#3B6D11', text:'이슬 맺힌 이른 아침 증상 가장 잘 보임' },
+    { dot:'#185FA5', text:'잎 뒷면·뿌리 기부 반드시 확인' },
+    { dot:'#854F0B', text:'인근 포기도 함께 관찰 (전파 여부)' },
+    { dot:'#A32D2D', text:'진단 결과는 방제 참고용 — 심할 경우 연구소 문의' }
+  ];
+  const card = document.createElement('div');
+  card.className = 'tip-card';
+  const lbl = document.createElement('div');
+  lbl.className = 'tip-label';
+  lbl.textContent = '현장 진단 팁';
+  card.appendChild(lbl);
+  const grid = document.createElement('div');
+  grid.className = 'tip-grid';
+  tips.forEach(t => {
+    const item = document.createElement('div');
+    item.className = 'tip-item';
+    item.innerHTML = `<span class="tip-dot" style="background:${t.dot}"></span>${t.text}`;
+    grid.appendChild(item);
+  });
+  card.appendChild(grid);
+  main.appendChild(card);
+}
+
+render('start');
+</script>
+<script>/* kg-preview: #<heading> \uc704\uce58\ub85c \uc774\ub3d9 */
+(function(){function norm(t){return (t||'').replace(/\s+/g,'').toLowerCase()}
+function go(){var h=decodeURIComponent(location.hash.slice(1));if(!h)return;var k=norm(h).slice(0,24);if(!k)return;
+var best=null,bl=1e9,els=document.body.querySelectorAll('h1,h2,h3,h4,h5,p,div,span,li,td,text,tspan,section,article');
+for(var i=0;i<els.length;i++){var e=els[i],t=norm(e.textContent);if(t.length<bl&&t.indexOf(k)>-1){best=e;bl=t.length}}
+if(!best)return;var box=best.closest('section,[class*=slide],[class*=page],article')||best;
+box.scrollIntoView({block:'start'});box.style.outline='3px solid #c0504d';box.style.outlineOffset='4px';
+setTimeout(function(){box.style.outline=''},2600)}
+window.addEventListener('load',function(){setTimeout(go,400)});window.addEventListener('hashchange',go)})();</script></body>
+</html>

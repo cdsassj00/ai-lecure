@@ -1,0 +1,2472 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head><meta name="robots" content="noindex, nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>모듈 카드 라이브러리 — 2026 AI 강사양성과정</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@600;700;900&family=Noto+Sans+KR:wght@400;500;700;800;900&display=swap" rel="stylesheet" />
+<style>
+  /* ═══ 덱 엔진 ═══ */
+  html, body { margin:0; padding:0; height:100%; background:#211710; overflow:hidden; }
+  #scaler { position:absolute; left:50%; top:50%; width:1920px; height:1080px; }
+  #scaler > section { position:absolute; inset:0; width:1920px; height:1080px; }
+  #scaler > section:not(.active) { display:none !important; }
+  #hud { position:fixed; right:20px; bottom:16px; display:flex; align-items:center; gap:8px; z-index:10; font-family:'Noto Sans KR',sans-serif; }
+  #hud button { background:rgba(51,36,26,.88); color:#F2EBDD; border:1px solid rgba(242,235,221,.28); font-size:17px; width:44px; height:42px; cursor:pointer; }
+  #hud button:hover { background:#A87B4F; color:#33241A; }
+  #hud button:focus-visible { outline:2px solid #A87B4F; outline-offset:2px; }
+  #counter { color:rgba(242,235,221,.9); font-size:15px; font-weight:700; letter-spacing:.08em; background:rgba(51,36,26,.88); border:1px solid rgba(242,235,221,.28); padding:10px 14px; font-variant-numeric:tabular-nums; }
+  #slidelabel { position:fixed; left:20px; bottom:16px; color:rgba(242,235,221,.55); font-size:14px; font-family:'Noto Sans KR',sans-serif; z-index:10; letter-spacing:.04em; }
+  @media print {
+    html, body { overflow:visible; background:#fff; }
+    #hud, #slidelabel { display:none; }
+    #scaler { position:static; transform:none !important; width:auto; height:auto; }
+    #scaler > section { display:flex !important; position:relative; page-break-after:always; }
+  }
+
+  /* ═══ 모듈 카드 디자인 시스템 (100장 공통) ═══ */
+  .card {
+    background:#FFFFFF; color:#2E2318;
+    display:flex; flex-direction:column;
+    padding:56px 88px 40px; box-sizing:border-box;
+    font-family:'Noto Sans KR',sans-serif;
+  }
+
+  /* 헤더 */
+  .card-head { display:flex; flex-direction:column; gap:14px; }
+  .head-row { display:flex; justify-content:space-between; align-items:center; }
+  .meta { display:flex; align-items:center; gap:10px; }
+  .id-badge { background:#33241A; color:#F2EBDD; font-size:19px; font-weight:800; letter-spacing:.1em; padding:8px 18px; }
+  .chip { border:1px solid #D5C8B2; color:#5C4F3F; font-size:16px; font-weight:700; padding:7px 16px; letter-spacing:.03em; }
+  .chip.accent { border-color:#A87B4F; color:#A87B4F; }
+  .lib-mark { font-size:15px; font-weight:700; letter-spacing:.14em; color:#B4A48D; }
+  .card-title { margin:0; font-weight:900; font-size:44px; line-height:1.15; letter-spacing:-0.01em; color:#2E2318; }
+  .card-sub { margin:0; font-size:19px; line-height:1.5; color:#7E6E5B; }
+  .head-rule { height:1px; background:#E5DBC8; position:relative; margin-top:4px; }
+  .head-rule::before { content:''; position:absolute; left:0; top:-2px; width:64px; height:5px; background:#A87B4F; }
+
+  /* 본문 3단 그리드 */
+  .card-body { flex:1; display:grid; grid-template-columns:1.08fr 1.12fr 1fr; gap:26px; padding:24px 0 20px; }
+  .col { display:flex; flex-direction:column; gap:18px; }
+  .zone { border:1px solid #E0D5C2; padding:22px 26px; display:flex; flex-direction:column; gap:13px; }
+  .zone.fill { flex:1; }
+  .zone.cream { background:#F5EFE3; border-color:#F5EFE3; }
+  .zone.line-accent { border-left:4px solid #A87B4F; }
+  .zone.dark { background:#33241A; border-color:#33241A; color:#F2EBDD; }
+  .zone-label { font-size:15px; font-weight:800; letter-spacing:.16em; color:#A87B4F; }
+  .zone.dark .zone-label { color:#C0A177; }
+
+  /* 불릿 · 스텝 · 텍스트 */
+  .bullets { display:flex; flex-direction:column; gap:11px; font-size:19px; line-height:1.55; color:#3D3226; }
+  .bullets .b { display:flex; gap:11px; }
+  .bullets .b::before { content:'·'; color:#A87B4F; font-weight:900; }
+  .steps { display:flex; flex-direction:column; gap:12px; font-size:19px; line-height:1.5; color:#4A3E30; }
+  /* fill 존: 항목마다 동일 높이 행을 배정해 줄간격을 완전히 균등하게 */
+  .zone.fill > .bullets, .zone.fill > .steps { flex:1; gap:0; }
+  .zone.fill > .bullets .b, .zone.fill > .steps .step { flex:1; align-items:center; }
+  .zone.fill > .steps .step { border-bottom:1px solid #F1EAD9; }
+  .zone.fill > .steps .step:last-child { border-bottom:none; }
+  .step { display:flex; gap:14px; }
+  .step-no { flex:0 0 30px; height:30px; display:flex; align-items:center; justify-content:center;
+             background:#F5EFE3; color:#33241A; font-size:15px; font-weight:800; white-space:nowrap; }
+  .step-no.demo { background:#A87B4F; color:#fff; }
+  .small { font-size:17px; line-height:1.55; color:#5C4F3F; }
+  .zone .divider { border-top:1px solid #E5DBC8; margin-top:auto; padding-top:12px; }
+  .zone.dark .small { color:#EDE4D2; font-weight:500; }
+  strong { color:#2E2318; }
+  .zone.dark strong { color:#F7F1E5; }
+  .hl { color:#A87B4F; font-weight:800; }
+
+  /* 복붙 프롬프트 바 */
+  .prompt-bar { background:#211710; padding:18px 28px; display:flex; align-items:center; gap:22px; }
+  .prompt-label { font-size:16px; font-weight:800; letter-spacing:.12em; color:#C0A177; white-space:nowrap; }
+  .prompt-text { font-size:17px; line-height:1.55; color:#F2EBDD; }
+  .prompt-text .var { color:#C0A177; }
+
+  /* 푸터 */
+  .card-foot { display:flex; justify-content:space-between; align-items:baseline; border-top:1px solid #E5DBC8; padding-top:12px; margin-top:14px; font-size:15px; color:#9A8B76; letter-spacing:.03em; }
+  .card-foot .page { font-weight:800; color:#33241A; }
+</style>
+</head>
+<body>
+<div id="scaler">
+
+<!-- ═══ W-001 브라우저에서 음성 전사하기 ═══ -->
+  <section class="card" data-label="W-001 브라우저 음성 전사" data-speaker-notes="오프닝 데모: 빈 메모장에서 시작해 AI 프롬프트 → HTML 저장 → 크롬 실행 → 수강생 말이 실시간 전사되는 것까지 3분. '설치한 프로그램 0개'로 마무리. 자주 막히는 곳: 마이크 권한 팝업(주소창 왼쪽 아이콘), 메모장 저장 시 .txt로 저장되는 실수(모든 파일 선택), 크롬 외 브라우저 동작 차이. 보안: 크롬 음성인식은 구글 서버 경유 — 민감 내용 전사 금지, 폐쇄망에서는 파일 반입 워크플로우 자체를 가르치는 것으로 대체.">
+    <header class="card-head">
+      <div class="head-row">
+        <div class="meta">
+          <span class="id-badge">W-001</span>
+          <span class="chip accent">L2 어시스트 워크플로우</span>
+          <span class="chip">문서 × 바이브코딩</span>
+          <span class="chip">⏱ 40–60분</span>
+          <span class="chip">★ 폐쇄망 유효</span>
+        </div>
+        <span class="lib-mark">모듈 카드 라이브러리 · 2026</span>
+      </div>
+      <h2 class="card-title">브라우저에서 음성 전사하기</h2>
+      <p class="card-sub">설치 없이 브라우저 + 생성형 AI로 음성 전사 도구(단일 HTML) 제작 · 제작 15분 · 용도: 회의록 · 민원 청취 · 구술 메모</p>
+      <div class="head-rule"></div>
+    </header>
+
+    <div class="card-body">
+      <div class="col">
+        <div class="zone cream fill">
+          <div class="zone-label">핵심 메시지</div>
+          <div class="bullets">
+            <div class="b"><span>"브라우저를 재발견합시다 — 여러분 PC엔 이미 훌륭한 도구가 깔려 있습니다"</span></div>
+            <div class="b"><span>코드를 몰라도 된다 — 무엇을 만들지 <strong>말로 설명</strong>할 수 있으면 된다</span></div>
+            <div class="b"><span>만든 파일 하나가 오늘부터 여러분의 <strong>업무 도구</strong>다</span></div>
+          </div>
+        </div>
+        <div class="zone line-accent">
+          <div class="zone-label">보안 · 책임 경계</div>
+          <div class="small">크롬 음성인식은 <strong>구글 서버를 거친다</strong> — 민감 내용 전사 금지. 폐쇄망에서는 밖에서 만들어 <strong>파일만 반입</strong>하는 워크플로우로 대체</div>
+        </div>
+      </div>
+
+      <div class="col">
+        <div class="zone fill">
+          <div class="zone-label">실습 워크플로우</div>
+          <div class="steps">
+            <div class="step"><span class="step-no demo">D</span><span><strong>3분 오프닝 데모</strong> — 메모장에서 실시간 전사까지, "설치한 프로그램 0개"</span></div>
+            <div class="step"><span class="step-no">1</span><span>ChatGPT·Claude·Gemini에 아래 프롬프트 붙여넣기 (괄호만 내 업무로 수정)</span></div>
+            <div class="step"><span class="step-no">2</span><span>생성된 코드 전체 복사 — "코드는 읽는 게 아니라 옮기는 것"</span></div>
+            <div class="step"><span class="step-no">3</span><span>메모장에 붙여 <strong>전사도구.html</strong> 저장 (모든 파일 · UTF-8)</span></div>
+            <div class="step"><span class="step-no">4</span><span>크롬으로 열고 마이크 권한 허용 → 말하면 텍스트가 쌓인다</span></div>
+            <div class="step"><span class="step-no">5</span><span><strong>변형</strong> — 타임스탬프·회의록 양식·발언자 구분 중 하나를 AI에 추가 요청</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col">
+        <div class="zone fill">
+          <div class="zone-label">결과물</div>
+          <div class="bullets">
+            <div class="b"><span>내 업무에 맞게 변형한 음성 전사 도구 .html 1개</span></div>
+            <div class="b"><span>변형에 쓴 나의 프롬프트 기록 (게시판 공유)</span></div>
+          </div>
+          <div class="small divider"><span class="hl">진행 포인트</span> — 마이크 권한 팝업 놓침 · .txt 저장 실수 · 크롬 기준 통일</div>
+        </div>
+        <div class="zone dark">
+          <div class="zone-label">확장 연결 카드</div>
+          <div class="small">전사문 요약·회의록 변환 · 음성 민원 파싱(농촌진흥청 사례) · Whisper 로컬(L4 · 완전 오프라인) · 브라우저 재발견 시리즈</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="prompt-bar">
+      <span class="prompt-label">복붙 프롬프트</span>
+      <span class="prompt-text">단일 HTML 파일 하나로 동작하는 음성 전사 도구를 만들어줘. Web Speech API(ko-KR), 시작/정지 버튼, 전사 텍스트가 쌓이는 큰 창, 전체 복사·.txt 다운로드 버튼, 외부 라이브러리 없이 파일 하나로 완결. 디자인은 <span class="var">(우리 기관 보고서처럼 단정하게)</span>, 추가 기능: <span class="var">(문장마다 시간 표시)</span>. 코드 전체를 하나의 코드블록으로 주고, 저장·실행 방법을 세 줄로 알려줘.</span>
+    </div>
+
+    <footer class="card-foot">
+      <div>모듈 카드 라이브러리 · W-001</div>
+      <div>2026 AI데이터분석 역량강화 · 강사양성과정</div>
+      <div class="page">01</div>
+    </footer>
+  </section>
+
+<!-- ═══ W-002 긴 PDF·보고서 통째로 요약하고 질의응답하기 ═══ -->
+  <section class="card" data-label="W-002 PDF 통째로 요약·질의응답" data-speaker-notes="오프닝: 300쪽 정책백서를 1분 만에 1장 요약으로 만드는 데모. 요약은 끝이 아니라 질문의 시작이라는 점을 강조. 쪽수 인용을 시키면 환각이 크게 줄어든다는 팁 전달.">
+    <header class="card-head">
+      <div class="head-row">
+        <div class="meta">
+          <span class="id-badge">W-002</span>
+          <span class="chip accent">L1 기능·프롬프트</span>
+          <span class="chip">문서</span>
+          <span class="chip">⏱ 30–50분</span>
+        </div>
+        <span class="lib-mark">모듈 카드 라이브러리 · 2026</span>
+      </div>
+      <h2 class="card-title">긴 PDF·보고서 통째로 요약하고 질의응답하기</h2>
+      <p class="card-sub">수백 쪽 문서를 첨부해 목적별 요약 + 근거 쪽수 질의응답 · 용도: 정책자료 검토 · 업무 인수인계 · 회의 준비</p>
+      <div class="head-rule"></div>
+    </header>
+    <div class="card-body">
+      <div class="col">
+        <div class="zone cream fill">
+          <div class="zone-label">핵심 메시지</div>
+          <div class="bullets">
+            <div class="b"><span>"AI에는 교과서도 매뉴얼도 없다" — 문서를 통째로 주고 묻는 것부터 시작</span></div>
+            <div class="b"><span>요약은 끝이 아니라 <strong>질문의 시작</strong> — 요약 후 3번은 되물어라</span></div>
+            <div class="b"><span>"프롬프트보다 맥락" — 첨부한 문서가 곧 맥락이다</span></div>
+          </div>
+        </div>
+        <div class="zone line-accent">
+          <div class="zone-label">보안 · 책임 경계</div>
+          <div class="small">비공개 문서는 외부 AI에 올리지 않는다 — 실습은 <strong>공개 자료</strong>로, 내부자료는 등급 확인 후. 요약 결과는 반드시 원문 대조</div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="zone fill">
+          <div class="zone-label">실습 워크플로우</div>
+          <div class="steps">
+            <div class="step"><span class="step-no demo">D</span><span><strong>1분 데모</strong> — 300쪽 정책백서를 1장 요약으로, "다 읽는 시대는 끝났다"</span></div>
+            <div class="step"><span class="step-no">1</span><span>공개 PDF(백서·연구보고서) 1개 준비해 첨부</span></div>
+            <div class="step"><span class="step-no">2</span><span>목적 지정 요약 — "과장 보고용 1장, 결론 3개 + 쟁점 3개"</span></div>
+            <div class="step"><span class="step-no">3</span><span>질의응답 3회 — 답마다 <strong>근거 쪽수</strong>를 표시하게 한다</span></div>
+            <div class="step"><span class="step-no">4</span><span>표·수치만 추출해 보고서용 표로 재구성</span></div>
+            <div class="step"><span class="step-no">5</span><span><strong>변형</strong> — 문서 2개를 첨부해 공통점·차이점 비교표 요청</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="zone fill">
+          <div class="zone-label">결과물</div>
+          <div class="bullets">
+            <div class="b"><span>내 업무 문서로 만든 1장 요약 브리핑</span></div>
+            <div class="b"><span>근거 쪽수가 달린 질의응답 기록</span></div>
+          </div>
+          <div class="small divider"><span class="hl">진행 포인트</span> — 파일 크기 제한 · 쪽수 인용 검증 · 스캔본(이미지 PDF)은 OCR 필요</div>
+        </div>
+        <div class="zone dark">
+          <div class="zone-label">확장 연결 카드</div>
+          <div class="small">W-011 환각 검증 · W-015 여러 문서 통합 요약 · W-013 NotebookLM 지식창고</div>
+        </div>
+      </div>
+    </div>
+    <div class="prompt-bar">
+      <span class="prompt-label">복붙 프롬프트</span>
+      <span class="prompt-text">첨부한 보고서를 <span class="var">(과장 보고용)</span> 1장 분량으로 요약해줘. 핵심 결론 3개, 각 결론의 근거 쪽수, 담당자가 확인해야 할 쟁점 3개를 표로 정리. 이후 내 질문에는 이 문서의 근거로만 답하고 쪽수를 함께 표시해줘.</span>
+    </div>
+    <footer class="card-foot">
+      <div>모듈 카드 라이브러리 · W-002</div>
+      <div>2026 AI데이터분석 역량강화 · 강사양성과정</div>
+      <div class="page">02</div>
+    </footer>
+  </section>
+
+<!-- ═══ W-003 메타 프롬프트 ═══ -->
+  <section class="card" data-label="W-003 메타 프롬프트" data-speaker-notes="핵심 반전: 프롬프트를 배우지 말고 AI에게 짓게 하라. 직접 쓴 프롬프트와 메타 프롬프트 결과를 나란히 비교하면 수강생이 바로 납득한다.">
+    <header class="card-head">
+      <div class="head-row">
+        <div class="meta">
+          <span class="id-badge">W-003</span>
+          <span class="chip accent">L1 기능·프롬프트</span>
+          <span class="chip">문서</span>
+          <span class="chip">⏱ 30–40분</span>
+        </div>
+        <span class="lib-mark">모듈 카드 라이브러리 · 2026</span>
+      </div>
+      <h2 class="card-title">메타 프롬프트 — AI에게 프롬프트를 짓게 하기</h2>
+      <p class="card-sub">프롬프트 작성 자체를 AI에 위임하는 한 단계 위 사용법 · 용도: 보도자료 · 계획서 · 반복 업무 지시문 표준화</p>
+      <div class="head-rule"></div>
+    </header>
+    <div class="card-body">
+      <div class="col">
+        <div class="zone cream fill">
+          <div class="zone-label">핵심 메시지</div>
+          <div class="bullets">
+            <div class="b"><span>최고의 프롬프트 엔지니어는 <strong>AI 자신</strong>이다</span></div>
+            <div class="b"><span>"프롬프트보다 맥락" — 내 업무를 잘 설명하는 사람이 좋은 프롬프트를 얻는다</span></div>
+            <div class="b"><span>좋은 프롬프트는 외우는 것이 아니라 <strong>만들게 하는 것</strong></span></div>
+          </div>
+        </div>
+        <div class="zone line-accent">
+          <div class="zone-label">보안 · 책임 경계</div>
+          <div class="small">업무 설명에 실명·내부 시스템명·미공개 정보를 넣지 않는다 — 익명화한 업무 설명으로도 충분히 좋은 프롬프트가 나온다</div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="zone fill">
+          <div class="zone-label">실습 워크플로우</div>
+          <div class="steps">
+            <div class="step"><span class="step-no demo">D</span><span><strong>비교 데모</strong> — "보고서 써줘" vs 메타 프롬프트 결과를 나란히</span></div>
+            <div class="step"><span class="step-no">1</span><span>내가 자주 하는 업무를 한 줄로 설명한다</span></div>
+            <div class="step"><span class="step-no">2</span><span>"이 업무를 시킬 최적의 프롬프트를 만들어줘"라고 요청</span></div>
+            <div class="step"><span class="step-no">3</span><span>생성된 프롬프트를 새 대화에서 실행해본다</span></div>
+            <div class="step"><span class="step-no">4</span><span>결과를 비교하고 부족한 조건을 프롬프트에 추가</span></div>
+            <div class="step"><span class="step-no">5</span><span><strong>변형</strong> — 부서 표준 프롬프트로 다듬어 공유한다</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="zone fill">
+          <div class="zone-label">결과물</div>
+          <div class="bullets">
+            <div class="b"><span>내 업무 전용 프롬프트 3종 (AI가 지어준 것)</span></div>
+            <div class="b"><span>직접 작성 vs 메타 프롬프트 결과 비교 기록</span></div>
+          </div>
+          <div class="small divider"><span class="hl">진행 포인트</span> — 업무 설명이 빈약하면 결과도 빈약 · "빈칸은 괄호로" 조건이 핵심</div>
+        </div>
+        <div class="zone dark">
+          <div class="zone-label">확장 연결 카드</div>
+          <div class="small">W-095 프롬프트 5요소 · W-021 프롬프트 라이브러리 · W-005 계획서 초안</div>
+        </div>
+      </div>
+    </div>
+    <div class="prompt-bar">
+      <span class="prompt-label">복붙 프롬프트</span>
+      <span class="prompt-text">나는 <span class="var">(민원 답변서 작성)</span> 업무를 자주 한다. 이 업무를 AI에게 시킬 때 쓸 최고의 프롬프트를 만들어줘. 역할·맥락·출력 형식·검증 조건을 포함하고, 매번 바뀌는 부분은 괄호 빈칸으로 표시해줘. 완성 후 이 프롬프트의 약점 2개와 보완 방법도 알려줘.</span>
+    </div>
+    <footer class="card-foot">
+      <div>모듈 카드 라이브러리 · W-003</div>
+      <div>2026 AI데이터분석 역량강화 · 강사양성과정</div>
+      <div class="page">03</div>
+    </footer>
+  </section>
+
+<!-- ═══ W-004 보도자료 초안 작성 ═══ -->
+  <section class="card" data-label="W-004 보도자료 초안" data-speaker-notes="개조식 메모 몇 줄이 3분 만에 보도자료 형태가 되는 데모가 효과적. 단, 수치·명칭·직함 오류가 가장 잦은 지점이라 검증 단계를 강조.">
+    <header class="card-head">
+      <div class="head-row">
+        <div class="meta">
+          <span class="id-badge">W-004</span>
+          <span class="chip accent">L1 기능·프롬프트</span>
+          <span class="chip">문서</span>
+          <span class="chip">⏱ 40분</span>
+        </div>
+        <span class="lib-mark">모듈 카드 라이브러리 · 2026</span>
+      </div>
+      <h2 class="card-title">보도자료 초안 작성 워크플로우</h2>
+      <p class="card-sub">개조식 메모 → 보도자료 형식(제목·리드·본문·인용) 초안 · 용도: 기관 홍보 · 사업 성과 발표</p>
+      <div class="head-rule"></div>
+    </header>
+    <div class="card-body">
+      <div class="col">
+        <div class="zone cream fill">
+          <div class="zone-label">핵심 메시지</div>
+          <div class="bullets">
+            <div class="b"><span>AI는 형식을 알고 있다 — 우리는 <strong>사실과 수치</strong>만 정확히 주면 된다</span></div>
+            <div class="b"><span>초안 생성 3분, 검증 20분 — 시간 배분이 뒤집힌다</span></div>
+            <div class="b"><span>우리 기관 보도자료 3건을 예시로 주면 <strong>기관 톤</strong>이 복제된다</span></div>
+          </div>
+        </div>
+        <div class="zone line-accent">
+          <div class="zone-label">보안 · 책임 경계</div>
+          <div class="small">발표 전 정보는 유출 주의 — <strong>확정·공개 가능한 정보만</strong> 입력. 인용문(기관장 코멘트)은 반드시 당사자 확인 후 사용</div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="zone fill">
+          <div class="zone-label">실습 워크플로우</div>
+          <div class="steps">
+            <div class="step"><span class="step-no demo">D</span><span><strong>3분 데모</strong> — 개조식 메모 5줄이 보도자료가 되는 과정</span></div>
+            <div class="step"><span class="step-no">1</span><span>사업 개요·핵심 수치·일정을 개조식으로 정리</span></div>
+            <div class="step"><span class="step-no">2</span><span>형식 지정 — 제목·부제·리드문·본문·인용·문의처</span></div>
+            <div class="step"><span class="step-no">3</span><span>초안 생성 후 제목 5개 후보 추가 요청</span></div>
+            <div class="step"><span class="step-no">4</span><span>수치·명칭·직함 <strong>전수 검증</strong> (가장 잦은 오류 지점)</span></div>
+            <div class="step"><span class="step-no">5</span><span><strong>변형</strong> — 기관 보도자료 3건 첨부해 톤 맞춤 재생성</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="zone fill">
+          <div class="zone-label">결과물</div>
+          <div class="bullets">
+            <div class="b"><span>내 사업 보도자료 초안 1건 (제목 후보 5개 포함)</span></div>
+            <div class="b"><span>기관 톤 재현용 예시 프롬프트</span></div>
+          </div>
+          <div class="small divider"><span class="hl">진행 포인트</span> — 과장 표현 걷어내기 · 존재하지 않는 인용문 생성 주의</div>
+        </div>
+        <div class="zone dark">
+          <div class="zone-label">확장 연결 카드</div>
+          <div class="small">W-007 문체 변환 · W-020 공지문 초안 · W-024 카드뉴스 이미지</div>
+        </div>
+      </div>
+    </div>
+    <div class="prompt-bar">
+      <span class="prompt-label">복붙 프롬프트</span>
+      <span class="prompt-text">아래 개조식 메모로 <span class="var">(우리 기관)</span> 보도자료 초안을 작성해줘. 구성: 제목(후보 5개)·부제·리드문(누가/무엇을/왜)·본문 3문단·담당자 인용 1개(자리표시)·문의처. 과장 표현 없이 사실 위주로, 수치는 메모에 있는 것만 사용해줘. 메모: <span class="var">(개조식 메모 붙여넣기)</span></span>
+    </div>
+    <footer class="card-foot">
+      <div>모듈 카드 라이브러리 · W-004</div>
+      <div>2026 AI데이터분석 역량강화 · 강사양성과정</div>
+      <div class="page">04</div>
+    </footer>
+  </section>
+
+<!-- ═══ W-005 계획서·기안문 초안 ═══ -->
+  <section class="card" data-label="W-005 계획서·기안문 초안" data-speaker-notes="아인슈타인의 55분 문제정의 인용으로 시작. AI에게 답을 시키기 전에 질문을 시키는 역발상 — 질문 10개에 답하다 보면 계획서 뼈대가 완성된다.">
+    <header class="card-head">
+      <div class="head-row">
+        <div class="meta">
+          <span class="id-badge">W-005</span>
+          <span class="chip accent">L1 기능·프롬프트</span>
+          <span class="chip">문서</span>
+          <span class="chip">⏱ 40–60분</span>
+        </div>
+        <span class="lib-mark">모듈 카드 라이브러리 · 2026</span>
+      </div>
+      <h2 class="card-title">계획서·기안문 초안 — 프레임워크 질문법</h2>
+      <p class="card-sub">AI가 던지는 질문에 답하며 뼈대를 세우는 역발상 초안법 · 용도: 사업계획 · 행사계획 · 내부 기안</p>
+      <div class="head-rule"></div>
+    </header>
+    <div class="card-body">
+      <div class="col">
+        <div class="zone cream fill">
+          <div class="zone-label">핵심 메시지</div>
+          <div class="bullets">
+            <div class="b"><span>아인슈타인 — "1시간 중 55분은 <strong>문제 정의</strong>에 쓴다"</span></div>
+            <div class="b"><span>AI에게 답을 시키기 전에 <strong>질문을 시켜라</strong></span></div>
+            <div class="b"><span>"업무 분해가 중요하다" — 질문에 답하다 보면 계획이 분해된다</span></div>
+          </div>
+        </div>
+        <div class="zone line-accent">
+          <div class="zone-label">보안 · 책임 경계</div>
+          <div class="small">예산·인사 등 확정 전 내부 정보는 구체 수치 대신 <strong>범위·가정</strong>으로 입력. 최종 기안 책임은 작성자에게 있다</div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="zone fill">
+          <div class="zone-label">실습 워크플로우</div>
+          <div class="steps">
+            <div class="step"><span class="step-no demo">D</span><span><strong>데모</strong> — 한 줄 아이디어가 질문 10개를 거쳐 목차가 되는 과정</span></div>
+            <div class="step"><span class="step-no">1</span><span>사업 목적·배경을 한두 줄로 쓴다</span></div>
+            <div class="step"><span class="step-no">2</span><span>"계획서를 쓰기 전 나에게 필요한 질문 10개를 만들어줘"</span></div>
+            <div class="step"><span class="step-no">3</span><span>질문에 짧게 답하며 내용을 채운다</span></div>
+            <div class="step"><span class="step-no">4</span><span>답변 기반으로 목차·개요 생성 → 부족한 부분 재질문</span></div>
+            <div class="step"><span class="step-no">5</span><span><strong>변형</strong> — 기관 기안문 형식(추진배경·계획·예산·일정)으로 변환</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="zone fill">
+          <div class="zone-label">결과물</div>
+          <div class="bullets">
+            <div class="b"><span>질문-답변 기록 (계획의 논리 뼈대)</span></div>
+            <div class="b"><span>기안문 형식 계획서 초안 1건</span></div>
+          </div>
+          <div class="small divider"><span class="hl">진행 포인트</span> — 답을 대충 쓰면 목차도 대충 나온다 · 질문 단계 생략 금지</div>
+        </div>
+        <div class="zone dark">
+          <div class="zone-label">확장 연결 카드</div>
+          <div class="small">W-003 메타 프롬프트 · W-016 제안서 골격 · W-093 자동화 설계 문서</div>
+        </div>
+      </div>
+    </div>
+    <div class="prompt-bar">
+      <span class="prompt-label">복붙 프롬프트</span>
+      <span class="prompt-text">나는 <span class="var">(주민 대상 AI 교육 행사)</span> 계획서를 써야 한다. 바로 초안을 쓰지 말고, 좋은 계획서를 만들기 위해 내가 답해야 할 질문 10개를 중요한 순서로 먼저 만들어줘. 내가 답하면 그 답을 바탕으로 추진배경·추진계획·소요예산·추진일정 구조의 기안문 초안을 작성해줘.</span>
+    </div>
+    <footer class="card-foot">
+      <div>모듈 카드 라이브러리 · W-005</div>
+      <div>2026 AI데이터분석 역량강화 · 강사양성과정</div>
+      <div class="page">05</div>
+    </footer>
+  </section>
+
+<!-- ═══ W-006 회의 녹음→전사→회의록 ═══ -->
+  <section class="card" data-label="W-006 회의록 자동 정리" data-speaker-notes="W-001에서 만든 전사 도구가 다시 등장하는 연결 카드. 전사문이 지저분해도 AI가 회의록 양식으로 정리해주는 것이 포인트. 녹음 고지·동의는 반드시 언급.">
+    <header class="card-head">
+      <div class="head-row">
+        <div class="meta">
+          <span class="id-badge">W-006</span>
+          <span class="chip accent">L2 어시스트 워크플로우</span>
+          <span class="chip">문서</span>
+          <span class="chip">⏱ 40–60분</span>
+        </div>
+        <span class="lib-mark">모듈 카드 라이브러리 · 2026</span>
+      </div>
+      <h2 class="card-title">회의 녹음 → 전사 → 회의록·액션아이템 정리</h2>
+      <p class="card-sub">음성을 텍스트로 만든 뒤 결정사항·담당·기한이 있는 회의록으로 변환 · 용도: 부서 회의 · 협의체 · 간담회</p>
+      <div class="head-rule"></div>
+    </header>
+    <div class="card-body">
+      <div class="col">
+        <div class="zone cream fill">
+          <div class="zone-label">핵심 메시지</div>
+          <div class="bullets">
+            <div class="b"><span>회의록은 받아쓰기가 아니라 <strong>결정과 할 일의 기록</strong>이다</span></div>
+            <div class="b"><span>전사문이 지저분해도 된다 — 정리는 AI의 일</span></div>
+            <div class="b"><span>액션아이템에 <strong>담당자와 기한</strong>이 없으면 회의는 없던 일이 된다</span></div>
+          </div>
+        </div>
+        <div class="zone line-accent">
+          <div class="zone-label">보안 · 책임 경계</div>
+          <div class="small">녹음은 <strong>사전 고지·동의</strong>가 원칙. 인사·감사 등 민감 회의는 대상 제외. 외부 AI에 올리기 전 실명·민감 발언 마스킹</div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="zone fill">
+          <div class="zone-label">실습 워크플로우</div>
+          <div class="steps">
+            <div class="step"><span class="step-no demo">D</span><span><strong>데모</strong> — 10분 회의 음성이 액션아이템 표가 되는 과정</span></div>
+            <div class="step"><span class="step-no">1</span><span>W-001 전사 도구(또는 클로바노트)로 회의를 텍스트화</span></div>
+            <div class="step"><span class="step-no">2</span><span>전사문 붙여넣고 회의 배경을 한 줄 설명</span></div>
+            <div class="step"><span class="step-no">3</span><span>양식 지정 — 안건·논의요지·결정사항·액션아이템(담당·기한)</span></div>
+            <div class="step"><span class="step-no">4</span><span>참석자 이름·결정사항을 원음 기준으로 검토·수정</span></div>
+            <div class="step"><span class="step-no">5</span><span><strong>변형</strong> — 참석자별 후속 안내 메일 초안까지 생성</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="zone fill">
+          <div class="zone-label">결과물</div>
+          <div class="bullets">
+            <div class="b"><span>표준 양식 회의록 1건 (액션아이템 표 포함)</span></div>
+            <div class="b"><span>재사용할 회의록 변환 프롬프트</span></div>
+          </div>
+          <div class="small divider"><span class="hl">진행 포인트</span> — 동음이의 이름 오기 · 결정 아닌 발언을 결정으로 승격시키는 오류 주의</div>
+        </div>
+        <div class="zone dark">
+          <div class="zone-label">확장 연결 카드</div>
+          <div class="small">W-001 브라우저 음성 전사 · W-020 메일 초안 · W-041 포스트잇 사진 정리</div>
+        </div>
+      </div>
+    </div>
+    <div class="prompt-bar">
+      <span class="prompt-label">복붙 프롬프트</span>
+      <span class="prompt-text">아래는 <span class="var">(부서 주간회의)</span> 전사문이다. ① 안건별 논의 요지 ② 결정사항 ③ 액션아이템 표(할 일·담당자·기한) ④ 다음 회의 확인사항 순서로 회의록을 정리해줘. 전사 오류로 보이는 부분은 [확인 필요]로 표시하고, 결정되지 않은 사항을 결정된 것처럼 쓰지 마. 전사문: <span class="var">(붙여넣기)</span></span>
+    </div>
+    <footer class="card-foot">
+      <div>모듈 카드 라이브러리 · W-006</div>
+      <div>2026 AI데이터분석 역량강화 · 강사양성과정</div>
+      <div class="page">06</div>
+    </footer>
+  </section>
+
+<!-- ═══ W-007 문체 변환 ═══ -->
+  <section class="card" data-label="W-007 문체 변환" data-speaker-notes="같은 내용이 임원용·민원인용·보도용으로 즉석에서 바뀌는 데모가 짧고 강렬하다. 독자를 정의하는 습관이 핵심이라는 메시지로 마무리.">
+    <header class="card-head">
+      <div class="head-row">
+        <div class="meta">
+          <span class="id-badge">W-007</span>
+          <span class="chip accent">L1 기능·프롬프트</span>
+          <span class="chip">문서</span>
+          <span class="chip">⏱ 30분</span>
+        </div>
+        <span class="lib-mark">모듈 카드 라이브러리 · 2026</span>
+      </div>
+      <h2 class="card-title">문체 변환 — 임원용·민원인용·보도용으로 다시 쓰기</h2>
+      <p class="card-sub">같은 내용을 독자에 맞춰 3가지 버전으로 변환 · 용도: 보고 · 민원 안내 · 대외 홍보</p>
+      <div class="head-rule"></div>
+    </header>
+    <div class="card-body">
+      <div class="col">
+        <div class="zone cream fill">
+          <div class="zone-label">핵심 메시지</div>
+          <div class="bullets">
+            <div class="b"><span>글쓰기의 절반은 <strong>독자 정의</strong>다 — 누가 읽는가부터</span></div>
+            <div class="b"><span>내용은 하나, 표현은 독자 수만큼</span></div>
+            <div class="b"><span>어려운 행정용어를 <strong>주민의 언어</strong>로 바꾸는 것도 공공서비스다</span></div>
+          </div>
+        </div>
+        <div class="zone line-accent">
+          <div class="zone-label">보안 · 책임 경계</div>
+          <div class="small">쉽게 바꾸는 과정에서 <strong>법적 표현·요건이 누락</strong>되지 않았는지 확인 — 안내문은 근거 조항 유지가 원칙</div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="zone fill">
+          <div class="zone-label">실습 워크플로우</div>
+          <div class="steps">
+            <div class="step"><span class="step-no demo">D</span><span><strong>데모</strong> — 같은 공고문이 3가지 버전으로 즉석 변환</span></div>
+            <div class="step"><span class="step-no">1</span><span>변환할 원문(공고문·보고서 일부)을 준비한다</span></div>
+            <div class="step"><span class="step-no">2</span><span>독자 3명을 정의 — 임원 / 민원인 / 기자</span></div>
+            <div class="step"><span class="step-no">3</span><span>버전별 분량·톤·형식을 지정해 3버전 생성</span></div>
+            <div class="step"><span class="step-no">4</span><span>사실 왜곡·요건 누락 여부를 원문과 대조</span></div>
+            <div class="step"><span class="step-no">5</span><span><strong>변형</strong> — 우리 부서 "표준 톤 정의서"를 만들어 저장</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="zone fill">
+          <div class="zone-label">결과물</div>
+          <div class="bullets">
+            <div class="b"><span>독자별 3버전 문서 세트</span></div>
+            <div class="b"><span>부서 표준 톤 정의 프롬프트</span></div>
+          </div>
+          <div class="small divider"><span class="hl">진행 포인트</span> — "쉽게"만 요청하면 유치해진다 · 독자·상황·분량을 함께 지정</div>
+        </div>
+        <div class="zone dark">
+          <div class="zone-label">확장 연결 카드</div>
+          <div class="small">W-004 보도자료 · W-009 민원 답변서 · W-020 공지문 초안</div>
+        </div>
+      </div>
+    </div>
+    <div class="prompt-bar">
+      <span class="prompt-label">복붙 프롬프트</span>
+      <span class="prompt-text">아래 글을 세 버전으로 다시 써줘. ① 임원 보고용 — 개조식 5줄, 결론 먼저 ② 민원인 안내용 — 존댓말, 행정용어를 일상어로, 예시 1개 포함 ③ 보도자료용 — 3문단, 객관적 톤. 각 버전에서 사실과 요건은 바꾸지 마. 원문: <span class="var">(붙여넣기)</span></span>
+    </div>
+    <footer class="card-foot">
+      <div>모듈 카드 라이브러리 · W-007</div>
+      <div>2026 AI데이터분석 역량강화 · 강사양성과정</div>
+      <div class="page">07</div>
+    </footer>
+  </section>
+
+<!-- ═══ W-008 규정·지침 비교 ═══ -->
+  <section class="card" data-label="W-008 신구조문 대비표" data-speaker-notes="공공 특화 카드. 개정 전후 규정을 넣으면 대비표가 나오는 데모. 반드시 원문 대조 검증을 세트로 — 조문 번호가 어긋나는 환각이 종종 있다.">
+    <header class="card-head">
+      <div class="head-row">
+        <div class="meta">
+          <span class="id-badge">W-008</span>
+          <span class="chip accent">L2 어시스트 워크플로우</span>
+          <span class="chip">문서</span>
+          <span class="chip">⏱ 40–60분</span>
+        </div>
+        <span class="lib-mark">모듈 카드 라이브러리 · 2026</span>
+      </div>
+      <h2 class="card-title">규정·지침 비교 검토 — 신구조문 대비표 만들기</h2>
+      <p class="card-sub">개정 전후 텍스트에서 변경사항 추출 → 대비표 + 영향 검토 · 용도: 규정 개정 · 지침 개정 검토보고</p>
+      <div class="head-rule"></div>
+    </header>
+    <div class="card-body">
+      <div class="col">
+        <div class="zone cream fill">
+          <div class="zone-label">핵심 메시지</div>
+          <div class="bullets">
+            <div class="b"><span>줄 단위 눈비교의 시대는 끝났다 — <strong>차이 찾기는 AI가 가장 잘하는 일</strong></span></div>
+            <div class="b"><span>대비표는 시작 — "이 개정으로 우리 업무에 뭐가 바뀌나"까지 물어라</span></div>
+            <div class="b"><span>검증 없는 대비표는 검토보고가 아니다</span></div>
+          </div>
+        </div>
+        <div class="zone line-accent">
+          <div class="zone-label">보안 · 책임 경계</div>
+          <div class="small">시행 전 개정안은 <strong>비공개 자료</strong>일 수 있다 — 등급 확인 후 사용. 조문 번호·문구는 반드시 원문 대조 (어긋나는 환각 빈발)</div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="zone fill">
+          <div class="zone-label">실습 워크플로우</div>
+          <div class="steps">
+            <div class="step"><span class="step-no demo">D</span><span><strong>데모</strong> — 공개 법령 개정 전후가 대비표로 정리되는 과정</span></div>
+            <div class="step"><span class="step-no">1</span><span>신·구 조문 텍스트를 확보한다 (국가법령정보센터 활용)</span></div>
+            <div class="step"><span class="step-no">2</span><span>대비표 형식 지정 — 조문 / 현행 / 개정 / 변경 요지</span></div>
+            <div class="step"><span class="step-no">3</span><span>변경사항 추출 + 신설·삭제·자구수정 구분 표시</span></div>
+            <div class="step"><span class="step-no">4</span><span>"우리 기관 업무에 미치는 영향 3가지" 검토 질문</span></div>
+            <div class="step"><span class="step-no">5</span><span><strong>검증</strong> — 원문과 조문 단위 대조 후 확정</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="zone fill">
+          <div class="zone-label">결과물</div>
+          <div class="bullets">
+            <div class="b"><span>신구조문 대비표 1건</span></div>
+            <div class="b"><span>업무 영향 검토 메모 (검토보고 재료)</span></div>
+          </div>
+          <div class="small divider"><span class="hl">진행 포인트</span> — 긴 규정은 장·절 단위로 나눠 입력 · 표 형식 유지 요청</div>
+        </div>
+        <div class="zone dark">
+          <div class="zone-label">확장 연결 카드</div>
+          <div class="small">W-002 PDF 질의응답 · W-011 환각 검증 · W-015 통합 요약</div>
+        </div>
+      </div>
+    </div>
+    <div class="prompt-bar">
+      <span class="prompt-label">복붙 프롬프트</span>
+      <span class="prompt-text">아래 현행 규정과 개정안을 비교해 신구조문 대비표를 만들어줘. 열 구성: 조문 번호 / 현행 / 개정안 / 변경 요지(신설·삭제·자구수정 구분). 표 아래에 <span class="var">(우리 부서)</span> 업무에 미치는 영향 3가지와 후속 조치 필요사항을 정리해줘. 현행: <span class="var">(붙여넣기)</span> / 개정안: <span class="var">(붙여넣기)</span></span>
+    </div>
+    <footer class="card-foot">
+      <div>모듈 카드 라이브러리 · W-008</div>
+      <div>2026 AI데이터분석 역량강화 · 강사양성과정</div>
+      <div class="page">08</div>
+    </footer>
+  </section>
+
+<!-- ═══ W-009 민원 답변서 초안 ═══ -->
+  <section class="card" data-label="W-009 민원 답변서 템플릿" data-speaker-notes="개인정보 마스킹을 먼저 가르치고 시작. 공감-근거-안내 3단 구조를 템플릿으로 만들면 부서 자산이 된다는 점이 핵심.">
+    <header class="card-head">
+      <div class="head-row">
+        <div class="meta">
+          <span class="id-badge">W-009</span>
+          <span class="chip accent">L1 기능·프롬프트</span>
+          <span class="chip">문서</span>
+          <span class="chip">⏱ 40–60분</span>
+        </div>
+        <span class="lib-mark">모듈 카드 라이브러리 · 2026</span>
+      </div>
+      <h2 class="card-title">민원 답변서 초안 + 유형별 템플릿화</h2>
+      <p class="card-sub">민원 요지 → 공감·근거·안내 구조의 답변 초안 → 유형별 템플릿 축적 · 용도: 반복 민원 대응</p>
+      <div class="head-rule"></div>
+    </header>
+    <div class="card-body">
+      <div class="col">
+        <div class="zone cream fill">
+          <div class="zone-label">핵심 메시지</div>
+          <div class="bullets">
+            <div class="b"><span>민원 답변의 품질은 <strong>첫 문단의 공감</strong>에서 갈린다</span></div>
+            <div class="b"><span>반복 민원은 템플릿으로 — <strong>한 번 잘 만들어 계속 쓴다</strong></span></div>
+            <div class="b"><span>"AI 활용은 업무를 이해하는 사람이 전문가가 된다" — 근거 조항은 담당자가 안다</span></div>
+          </div>
+        </div>
+        <div class="zone line-accent">
+          <div class="zone-label">보안 · 책임 경계</div>
+          <div class="small"><strong>민원인 개인정보는 절대 입력 금지</strong> — 이름·연락처·주소를 지운 요지만 입력. 법령 근거는 반드시 원문 확인 후 발송</div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="zone fill">
+          <div class="zone-label">실습 워크플로우</div>
+          <div class="steps">
+            <div class="step"><span class="step-no demo">D</span><span><strong>데모</strong> — 민원 요지 3줄이 정중한 답변서가 되는 과정</span></div>
+            <div class="step"><span class="step-no">1</span><span>민원 요지를 <strong>익명화</strong>해 3줄로 정리</span></div>
+            <div class="step"><span class="step-no">2</span><span>구조 지정 — 공감 → 검토 결과·근거 → 안내·대안</span></div>
+            <div class="step"><span class="step-no">3</span><span>초안 생성 후 어조 점검 (변명조·책임회피 표현 제거)</span></div>
+            <div class="step"><span class="step-no">4</span><span>근거 법령·절차를 원문으로 검증해 확정</span></div>
+            <div class="step"><span class="step-no">5</span><span><strong>변형</strong> — 자주 오는 민원 3유형의 템플릿으로 저장</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="zone fill">
+          <div class="zone-label">결과물</div>
+          <div class="bullets">
+            <div class="b"><span>민원 답변서 초안 1건</span></div>
+            <div class="b"><span>유형별 답변 템플릿 3종 (부서 공유 자산)</span></div>
+          </div>
+          <div class="small divider"><span class="hl">진행 포인트</span> — 수용 불가 민원일수록 대안 제시 필수 · 기계적 복붙 티 제거</div>
+        </div>
+        <div class="zone dark">
+          <div class="zone-label">확장 연결 카드</div>
+          <div class="small">W-007 문체 변환 · W-017 설문 응답 분류 · W-067 민원 접수 폼</div>
+        </div>
+      </div>
+    </div>
+    <div class="prompt-bar">
+      <span class="prompt-label">복붙 프롬프트</span>
+      <span class="prompt-text">아래 민원 요지에 대한 답변서 초안을 써줘. 구조: ① 불편에 대한 공감 ② 검토 결과와 근거(관련 규정은 <span class="var">(조항)</span> 자리표시) ③ 처리 계획 또는 대안 안내. 정중하되 변명조가 아니게, 민원인이 다음에 무엇을 하면 되는지 명확하게. 민원 요지: <span class="var">(익명화해 붙여넣기)</span></span>
+    </div>
+    <footer class="card-foot">
+      <div>모듈 카드 라이브러리 · W-009</div>
+      <div>2026 AI데이터분석 역량강화 · 강사양성과정</div>
+      <div class="page">09</div>
+    </footer>
+  </section>
+
+<!-- ═══ W-010 손글씨·스캔 문서 OCR ═══ -->
+  <section class="card" data-label="W-010 손글씨·스캔 OCR" data-speaker-notes="농촌진흥청 사례로 오프닝 — 갈겨 쓴 손글씨를 직원들이 못 읽어 음성으로 받아 파싱했다는 이야기. 사진 한 장 올리면 표까지 복원되는 데모가 강렬하다.">
+    <header class="card-head">
+      <div class="head-row">
+        <div class="meta">
+          <span class="id-badge">W-010</span>
+          <span class="chip accent">L1 기능·프롬프트</span>
+          <span class="chip">문서</span>
+          <span class="chip">⏱ 30–40분</span>
+        </div>
+        <span class="lib-mark">모듈 카드 라이브러리 · 2026</span>
+      </div>
+      <h2 class="card-title">손글씨·스캔 문서를 텍스트로 — OCR·비전 활용</h2>
+      <p class="card-sub">사진·스캔본을 편집 가능한 텍스트·표로 복원 · 용도: 손글씨 접수증 · 옛 문서 전산화 · 팩스 민원</p>
+      <div class="head-rule"></div>
+    </header>
+    <div class="card-body">
+      <div class="col">
+        <div class="zone cream fill">
+          <div class="zone-label">핵심 메시지</div>
+          <div class="bullets">
+            <div class="b"><span>이미지도 이제 <strong>읽는 대상</strong>이다 — 멀티모달의 실용 지점</span></div>
+            <div class="b"><span>농촌진흥청 사례 — 손글씨를 못 읽어 음성으로 받아 파싱했다</span></div>
+            <div class="b"><span>전산화 안 된 서류 더미가 <strong>데이터 자산</strong>으로 바뀐다</span></div>
+          </div>
+        </div>
+        <div class="zone line-accent">
+          <div class="zone-label">보안 · 책임 경계</div>
+          <div class="small">신분증·개인정보가 담긴 서류는 <strong>업로드 금지</strong>. 숫자·금액·이름은 오인식 빈발 — 원본 대조 없이 확정하지 않는다</div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="zone fill">
+          <div class="zone-label">실습 워크플로우</div>
+          <div class="steps">
+            <div class="step"><span class="step-no demo">D</span><span><strong>데모</strong> — 손글씨 메모 사진이 표 있는 텍스트로 복원</span></div>
+            <div class="step"><span class="step-no">1</span><span>손글씨 메모·스캔 문서를 사진으로 준비 (개인정보 없는 것)</span></div>
+            <div class="step"><span class="step-no">2</span><span>이미지 첨부 후 "텍스트로 옮기고 표는 표로 복원" 요청</span></div>
+            <div class="step"><span class="step-no">3</span><span>읽기 불확실한 글자를 [?]로 표시하게 한다</span></div>
+            <div class="step"><span class="step-no">4</span><span>원본과 대조해 [?] 부분을 사람이 확정</span></div>
+            <div class="step"><span class="step-no">5</span><span><strong>변형</strong> — 여러 장을 연속 처리해 하나의 표로 취합</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="zone fill">
+          <div class="zone-label">결과물</div>
+          <div class="bullets">
+            <div class="b"><span>편집 가능한 텍스트·표로 복원된 문서</span></div>
+            <div class="b"><span>불확실 글자 표시 규칙이 든 OCR 프롬프트</span></div>
+          </div>
+          <div class="small divider"><span class="hl">진행 포인트</span> — 촬영 각도·조명이 인식률 좌우 · 숫자 검증 필수</div>
+        </div>
+        <div class="zone dark">
+          <div class="zone-label">확장 연결 카드</div>
+          <div class="small">W-001 음성 전사(음성 우회) · W-041 포스트잇 정리 · W-017 응답 분류</div>
+        </div>
+      </div>
+    </div>
+    <div class="prompt-bar">
+      <span class="prompt-label">복붙 프롬프트</span>
+      <span class="prompt-text">첨부한 이미지의 내용을 텍스트로 옮겨줘. 표 구조는 표로 복원하고, 읽기 불확실한 글자는 [?]로 표시해. 임의로 추측해 채우지 마. 완료 후 [?] 목록을 따로 정리해줘. 이 문서의 용도는 <span class="var">(현장 접수 내용 전산 입력)</span>이다.</span>
+    </div>
+    <footer class="card-foot">
+      <div>모듈 카드 라이브러리 · W-010</div>
+      <div>2026 AI데이터분석 역량강화 · 강사양성과정</div>
+      <div class="page">10</div>
+    </footer>
+  </section>
+
+<!-- ═══ W-011 환각 검증 ═══ -->
+  <section class="card" data-label="W-011 환각 검증" data-speaker-notes="공공 필수 카드. AI가 쓴 그럴듯한 보고서에서 근거 없는 문장을 스스로 표시하게 하는 데모 — 수강생들이 가장 놀라는 순간 중 하나.">
+    <header class="card-head">
+      <div class="head-row">
+        <div class="meta">
+          <span class="id-badge">W-011</span>
+          <span class="chip accent">L1 기능·프롬프트</span>
+          <span class="chip">문서</span>
+          <span class="chip">⏱ 30분</span>
+        </div>
+        <span class="lib-mark">모듈 카드 라이브러리 · 2026</span>
+      </div>
+      <h2 class="card-title">환각 검증 — 사실·추론 분리와 출처 확인</h2>
+      <p class="card-sub">AI 초안을 사실·추론·의견으로 분해하고 출처를 검증하는 습관 만들기 · 용도: 모든 AI 산출물의 품질관리</p>
+      <div class="head-rule"></div>
+    </header>
+    <div class="card-body">
+      <div class="col">
+        <div class="zone cream fill">
+          <div class="zone-label">핵심 메시지</div>
+          <div class="bullets">
+            <div class="b"><span>AI의 답은 <strong>검토 가능한 초안</strong>이지 결재 문서가 아니다</span></div>
+            <div class="b"><span>그럴듯함과 사실은 다르다 — 확신에 찬 어조에 속지 마라</span></div>
+            <div class="b"><span>검증을 시키는 것도 AI에게 — <strong>"근거 없는 문장에 표시해"</strong></span></div>
+          </div>
+        </div>
+        <div class="zone line-accent">
+          <div class="zone-label">보안 · 책임 경계</div>
+          <div class="small">AI 산출물을 검증 없이 대외 문서에 쓰면 <strong>책임은 사용자</strong>에게 있다. 통계·법령·인명은 3대 환각 빈발 지점</div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="zone fill">
+          <div class="zone-label">실습 워크플로우</div>
+          <div class="steps">
+            <div class="step"><span class="step-no demo">D</span><span><strong>데모</strong> — AI가 쓴 보고서에서 AI가 직접 근거 없는 문장을 표시</span></div>
+            <div class="step"><span class="step-no">1</span><span>아무 주제로 짧은 보고서 초안을 생성한다</span></div>
+            <div class="step"><span class="step-no">2</span><span>문장별로 사실 / 추론 / 의견 분류를 요청</span></div>
+            <div class="step"><span class="step-no">3</span><span>"사실" 문장의 출처·확인 방법을 요구</span></div>
+            <div class="step"><span class="step-no">4</span><span>핵심 수치 2~3개를 실제 검색으로 교차 확인</span></div>
+            <div class="step"><span class="step-no">5</span><span><strong>변형</strong> — 부서용 "AI 산출물 검증 체크리스트" 작성</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="zone fill">
+          <div class="zone-label">결과물</div>
+          <div class="bullets">
+            <div class="b"><span>사실·추론·의견이 표시된 검증 문서</span></div>
+            <div class="b"><span>부서용 AI 검증 체크리스트 초안</span></div>
+          </div>
+          <div class="small divider"><span class="hl">진행 포인트</span> — 검증 프롬프트도 환각 가능 · 최종 확인은 사람의 검색</div>
+        </div>
+        <div class="zone dark">
+          <div class="zone-label">확장 연결 카드</div>
+          <div class="small">W-099 윤리·보안 가이드 · W-097 리서치 도구 · W-002 PDF 질의응답</div>
+        </div>
+      </div>
+    </div>
+    <div class="prompt-bar">
+      <span class="prompt-label">복붙 프롬프트</span>
+      <span class="prompt-text">방금 작성한 글의 모든 문장을 [사실] [추론] [의견]으로 분류해 다시 보여줘. [사실] 문장마다 출처 또는 확인 방법을 적고, 출처를 제시할 수 없는 문장은 [근거불명]으로 바꿔 표시해. 마지막에 [근거불명] 문장 목록과 내가 직접 확인해야 할 항목을 정리해줘.</span>
+    </div>
+    <footer class="card-foot">
+      <div>모듈 카드 라이브러리 · W-011</div>
+      <div>2026 AI데이터분석 역량강화 · 강사양성과정</div>
+      <div class="page">11</div>
+    </footer>
+  </section>
+
+<!-- ═══ W-012 보고서→슬라이드→대본 ═══ -->
+  <section class="card" data-label="W-012 보고서→슬라이드→대본" data-speaker-notes="문서 산출물이 발표 산출물로 이어지는 풀 체인. 슬라이드 구성안(장별 제목+핵심 메시지+시각자료 지시)까지 뽑고, 디자인은 도구(감마 등)에 맡기는 분업을 보여준다.">
+    <header class="card-head">
+      <div class="head-row">
+        <div class="meta">
+          <span class="id-badge">W-012</span>
+          <span class="chip accent">L2 어시스트 워크플로우</span>
+          <span class="chip">문서</span>
+          <span class="chip">⏱ 60분</span>
+        </div>
+        <span class="lib-mark">모듈 카드 라이브러리 · 2026</span>
+      </div>
+      <h2 class="card-title">보고서 → 슬라이드 → 발표 대본 풀 체인</h2>
+      <p class="card-sub">문서 하나에서 발표자료 구성안과 대본까지 한 흐름으로 · 용도: 보고회 · 설명회 · 교육 발표</p>
+      <div class="head-rule"></div>
+    </header>
+    <div class="card-body">
+      <div class="col">
+        <div class="zone cream fill">
+          <div class="zone-label">핵심 메시지</div>
+          <div class="bullets">
+            <div class="b"><span>보고서와 발표자료는 <strong>같은 내용, 다른 문법</strong>이다</span></div>
+            <div class="b"><span>장표는 "한 장 한 메시지" — 구성안을 먼저, 디자인은 나중</span></div>
+            <div class="b"><span>대본과 예상 질문까지 뽑아야 발표 준비가 끝난다</span></div>
+          </div>
+        </div>
+        <div class="zone line-accent">
+          <div class="zone-label">보안 · 책임 경계</div>
+          <div class="small">보고서 원문이 내부자료라면 <strong>요지만 발췌</strong>해 입력. 슬라이드 자동화 도구(외부 서비스) 업로드 전 등급 확인</div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="zone fill">
+          <div class="zone-label">실습 워크플로우</div>
+          <div class="steps">
+            <div class="step"><span class="step-no demo">D</span><span><strong>데모</strong> — 10쪽 보고서가 슬라이드 구성안 + 대본이 되는 과정</span></div>
+            <div class="step"><span class="step-no">1</span><span>보고서에서 핵심 메시지 3개를 추출하게 한다</span></div>
+            <div class="step"><span class="step-no">2</span><span>슬라이드 구성안 생성 — 장별 제목·핵심 메시지·시각자료 지시</span></div>
+            <div class="step"><span class="step-no">3</span><span>장별 발표 대본 작성 (발표 시간 지정)</span></div>
+            <div class="step"><span class="step-no">4</span><span>예상 질문 5개와 답변 요지 생성</span></div>
+            <div class="step"><span class="step-no">5</span><span><strong>변형</strong> — 구성안을 Gamma 등에 넣어 초안 디자인까지 (W-022)</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="zone fill">
+          <div class="zone-label">결과물</div>
+          <div class="bullets">
+            <div class="b"><span>슬라이드 구성안 (장별 제목·메시지·시각자료 지시)</span></div>
+            <div class="b"><span>발표 대본 + 예상 질문·답변 세트</span></div>
+          </div>
+          <div class="small divider"><span class="hl">진행 포인트</span> — 장수 제한을 먼저 지정 · 대본은 구어체로 요청</div>
+        </div>
+        <div class="zone dark">
+          <div class="zone-label">확장 연결 카드</div>
+          <div class="small">W-022 슬라이드 도구 비교 · W-032 도식 만들기 · W-040 발표 영상</div>
+        </div>
+      </div>
+    </div>
+    <div class="prompt-bar">
+      <span class="prompt-label">복붙 프롬프트</span>
+      <span class="prompt-text">아래 보고서로 <span class="var">(10분)</span> 발표를 준비한다. ① 핵심 메시지 3개 ② 슬라이드 <span class="var">(8)</span>장 구성안 — 장별 제목, 한 줄 메시지, 넣을 표·도식 지시 ③ 장별 발표 대본(구어체) ④ 예상 질문 5개와 답변 요지 순서로 만들어줘. 청중은 <span class="var">(타 부서 실무자)</span>다. 보고서: <span class="var">(붙여넣기)</span></span>
+    </div>
+    <footer class="card-foot">
+      <div>모듈 카드 라이브러리 · W-012</div>
+      <div>2026 AI데이터분석 역량강화 · 강사양성과정</div>
+      <div class="page">12</div>
+    </footer>
+  </section>
+
+<!-- ═══ W-013 NotebookLM 지식창고 ═══ -->
+  <section class="card" data-label="W-013 NotebookLM 지식창고" data-speaker-notes="'출처 기반으로만 답한다'는 점이 일반 챗봇과의 차이. 부서 매뉴얼·규정·FAQ를 넣어 신입도 바로 묻고 답 얻는 장면을 보여주면 설득 끝. 위키화(지식창고) 명제와 연결.">
+    <header class="card-head">
+      <div class="head-row">
+        <div class="meta">
+          <span class="id-badge">W-013</span>
+          <span class="chip accent">L1 기능·프롬프트</span>
+          <span class="chip">문서 × 콘텐츠</span>
+          <span class="chip">⏱ 40–60분</span>
+        </div>
+        <span class="lib-mark">모듈 카드 라이브러리 · 2026</span>
+      </div>
+      <h2 class="card-title">NotebookLM으로 기관 자료 지식창고 만들기</h2>
+      <p class="card-sub">부서 자료를 올려 출처 기반 질의응답 노트북 구축 · 용도: 업무 인수인계 · 신규 직원 온보딩 · 규정 문의</p>
+      <div class="head-rule"></div>
+    </header>
+    <div class="card-body">
+      <div class="col">
+        <div class="zone cream fill">
+          <div class="zone-label">핵심 메시지</div>
+          <div class="bullets">
+            <div class="b"><span>NotebookLM은 <strong>올린 자료 안에서만</strong> 답한다 — 환각이 구조적으로 준다</span></div>
+            <div class="b"><span>흩어진 파일 더미가 <strong>물어볼 수 있는 지식창고</strong>가 된다</span></div>
+            <div class="b"><span>지식은 쌓는 것보다 <strong>꺼내 쓰는 구조</strong>가 중요하다</span></div>
+          </div>
+        </div>
+        <div class="zone line-accent">
+          <div class="zone-label">보안 · 책임 경계</div>
+          <div class="small">외부 클라우드 서비스다 — <strong>공개·내부공유 가능 자료만</strong> 업로드. 비공개 자료는 폐쇄망 대안(로컬 RAG) 검토</div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="zone fill">
+          <div class="zone-label">실습 워크플로우</div>
+          <div class="steps">
+            <div class="step"><span class="step-no demo">D</span><span><strong>데모</strong> — 매뉴얼 5개를 올리고 신입 질문에 출처와 함께 답하는 장면</span></div>
+            <div class="step"><span class="step-no">1</span><span>부서 공개 자료 3~10개 수집 (매뉴얼·지침·FAQ)</span></div>
+            <div class="step"><span class="step-no">2</span><span>NotebookLM 노트북 생성 후 자료 업로드</span></div>
+            <div class="step"><span class="step-no">3</span><span>실전 질문 5개를 던지고 출처 표시를 확인</span></div>
+            <div class="step"><span class="step-no">4</span><span>브리핑 문서·FAQ·학습 가이드 자동 생성 기능 활용</span></div>
+            <div class="step"><span class="step-no">5</span><span><strong>변형</strong> — 팀원과 노트북 공유해 부서 공용화</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="zone fill">
+          <div class="zone-label">결과물</div>
+          <div class="bullets">
+            <div class="b"><span>부서 자료 지식창고 노트북 1개</span></div>
+            <div class="b"><span>자동 생성된 FAQ·브리핑 문서</span></div>
+          </div>
+          <div class="small divider"><span class="hl">진행 포인트</span> — 자료 품질이 답변 품질 · 오래된 자료 버전 정리 먼저</div>
+        </div>
+        <div class="zone dark">
+          <div class="zone-label">확장 연결 카드</div>
+          <div class="small">W-027 오디오 브리핑 · W-088 RAG 챗봇 · W-100 트렌드 수집·위키화</div>
+        </div>
+      </div>
+    </div>
+    <div class="prompt-bar">
+      <span class="prompt-label">복붙 프롬프트</span>
+      <span class="prompt-text">(NotebookLM에 자료 업로드 후) 업로드한 자료를 바탕으로 ① 신규 직원이 가장 자주 물을 질문 10개와 답 ② 자료 간 상충되거나 버전이 다른 부분 ③ <span class="var">(우리 업무)</span> 처리 절차 요약을 만들어줘. 각 항목에 출처 문서명을 표시해줘.</span>
+    </div>
+    <footer class="card-foot">
+      <div>모듈 카드 라이브러리 · W-013</div>
+      <div>2026 AI데이터분석 역량강화 · 강사양성과정</div>
+      <div class="page">13</div>
+    </footer>
+  </section>
+
+<!-- ═══ W-014 공문서 HWPX 자동 생성 ═══ -->
+  <section class="card" data-label="W-014 공문서 HWPX 자동 생성" data-speaker-notes="L4 카드 — 코딩 에이전트가 python-hwpx로 행안부 표준서식 한글 문서를 직접 생성. '한글 문서까지 자동화가 닿는다'는 충격이 포인트. 서식 검수는 사람 몫.">
+    <header class="card-head">
+      <div class="head-row">
+        <div class="meta">
+          <span class="id-badge">W-014</span>
+          <span class="chip accent">L4 코딩 에이전트</span>
+          <span class="chip">문서 × 바이브코딩</span>
+          <span class="chip">⏱ 90분</span>
+        </div>
+        <span class="lib-mark">모듈 카드 라이브러리 · 2026</span>
+      </div>
+      <h2 class="card-title">공문서 HWPX 자동 생성</h2>
+      <p class="card-sub">코딩 에이전트 + python-hwpx로 표준서식 한글 문서를 프로그램으로 생성 · 용도: 반복 보고서 · 통지문 대량 생성</p>
+      <div class="head-rule"></div>
+    </header>
+    <div class="card-body">
+      <div class="col">
+        <div class="zone cream fill">
+          <div class="zone-label">핵심 메시지</div>
+          <div class="bullets">
+            <div class="b"><span>공공 문서의 종착지 <strong>한글(HWPX)까지 자동화가 닿는다</strong></span></div>
+            <div class="b"><span>같은 서식 100부 — 사람은 데이터만, 생성은 코드가</span></div>
+            <div class="b"><span>서식 하나를 코드로 만들어두면 <strong>부서의 재사용 자산</strong>이 된다</span></div>
+          </div>
+        </div>
+        <div class="zone line-accent">
+          <div class="zone-label">보안 · 책임 경계</div>
+          <div class="small">생성 문서의 <strong>서식·결재선·표기 검수는 사람 몫</strong>. 대량 생성 시 개인정보 포함 여부를 먼저 점검</div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="zone fill">
+          <div class="zone-label">실습 워크플로우</div>
+          <div class="steps">
+            <div class="step"><span class="step-no demo">D</span><span><strong>데모</strong> — 명단 엑셀 1개로 통지문 HWPX 30부가 생성되는 장면</span></div>
+            <div class="step"><span class="step-no">1</span><span>표준서식 샘플 HWPX와 채울 데이터(엑셀)를 준비</span></div>
+            <div class="step"><span class="step-no">2</span><span>코딩 에이전트에 서식 구조 분석을 요청</span></div>
+            <div class="step"><span class="step-no">3</span><span>python-hwpx로 템플릿 치환 스크립트 생성</span></div>
+            <div class="step"><span class="step-no">4</span><span>1부 생성 → 한글에서 열어 서식 검수 → 수정 반복</span></div>
+            <div class="step"><span class="step-no">5</span><span><strong>변형</strong> — 데이터 행 수만큼 일괄 생성 + 파일명 규칙 적용</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="zone fill">
+          <div class="zone-label">결과물</div>
+          <div class="bullets">
+            <div class="b"><span>표준서식 HWPX 생성 스크립트</span></div>
+            <div class="b"><span>데이터 기반 일괄 생성된 문서 세트</span></div>
+          </div>
+          <div class="small divider"><span class="hl">진행 포인트</span> — 폰트·자간 어긋남 검수 · 한글 미설치 환경 주의</div>
+        </div>
+        <div class="zone dark">
+          <div class="zone-label">확장 연결 카드</div>
+          <div class="small">W-019 Word 템플릿 · W-078 코딩 에이전트 입문 · W-075 엑셀 자동화</div>
+        </div>
+      </div>
+    </div>
+    <div class="prompt-bar">
+      <span class="prompt-label">복붙 프롬프트</span>
+      <span class="prompt-text">(코딩 에이전트에서) 첨부한 표준서식 HWPX와 명단 엑셀로 <span class="var">(교육 이수 통지문)</span>을 일괄 생성하는 파이썬 스크립트를 만들어줘. python-hwpx 사용, 치환 필드는 이름·소속·날짜, 출력 파일명은 "통지문_이름.hwpx". 먼저 1부만 생성해서 검수하게 해줘.</span>
+    </div>
+    <footer class="card-foot">
+      <div>모듈 카드 라이브러리 · W-014</div>
+      <div>2026 AI데이터분석 역량강화 · 강사양성과정</div>
+      <div class="page">14</div>
+    </footer>
+  </section>
+
+<!-- ═══ W-015 여러 문서 통합 요약 ═══ -->
+  <section class="card" data-label="W-015 여러 문서 통합 요약" data-speaker-notes="회의자료 묶음이 1장 브리핑이 되는 데모. 문서별 요약이 아니라 '문서를 가로지르는 종합'이 포인트 — 공통 쟁점과 상충 지점을 뽑게 한다.">
+    <header class="card-head">
+      <div class="head-row">
+        <div class="meta">
+          <span class="id-badge">W-015</span>
+          <span class="chip accent">L1 기능·프롬프트</span>
+          <span class="chip">문서</span>
+          <span class="chip">⏱ 30–40분</span>
+        </div>
+        <span class="lib-mark">모듈 카드 라이브러리 · 2026</span>
+      </div>
+      <h2 class="card-title">여러 문서 통합 요약 — 회의자료 묶음을 한 장 브리핑으로</h2>
+      <p class="card-sub">문서 여러 개를 가로질러 공통점·차이·쟁점을 종합 · 용도: 회의 준비 · 검토 의견 취합 · 현안 브리핑</p>
+      <div class="head-rule"></div>
+    </header>
+    <div class="card-body">
+      <div class="col">
+        <div class="zone cream fill">
+          <div class="zone-label">핵심 메시지</div>
+          <div class="bullets">
+            <div class="b"><span>문서별 요약의 나열이 아니라 <strong>문서를 가로지르는 종합</strong></span></div>
+            <div class="b"><span>상충 지점을 찾는 것이 통합 요약의 진짜 가치다</span></div>
+            <div class="b"><span>회의 30분 전, 자료 5개도 늦지 않았다</span></div>
+          </div>
+        </div>
+        <div class="zone line-accent">
+          <div class="zone-label">보안 · 책임 경계</div>
+          <div class="small">기관 간 협의자료는 <strong>공유 범위 확인 후</strong> 입력. 종합 과정에서 출처(어느 문서의 주장인지)가 섞이지 않게 표시 요구</div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="zone fill">
+          <div class="zone-label">실습 워크플로우</div>
+          <div class="steps">
+            <div class="step"><span class="step-no demo">D</span><span><strong>데모</strong> — 검토의견 4건이 쟁점표 하나로 종합되는 과정</span></div>
+            <div class="step"><span class="step-no">1</span><span>관련 문서 3~5개를 첨부한다</span></div>
+            <div class="step"><span class="step-no">2</span><span>문서별 핵심 주장 요약 (출처 문서명 표시)</span></div>
+            <div class="step"><span class="step-no">3</span><span>공통점 · 차이점 · 상충 지점을 표로 추출</span></div>
+            <div class="step"><span class="step-no">4</span><span>"회의에서 결정해야 할 것" 목록 생성</span></div>
+            <div class="step"><span class="step-no">5</span><span><strong>변형</strong> — 1장 브리핑(개조식)으로 압축해 보고용 완성</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="zone fill">
+          <div class="zone-label">결과물</div>
+          <div class="bullets">
+            <div class="b"><span>쟁점 비교표 (문서 출처 표시)</span></div>
+            <div class="b"><span>1장 회의 브리핑 문서</span></div>
+          </div>
+          <div class="small divider"><span class="hl">진행 포인트</span> — 문서 수가 많으면 2단계로 나눠 요약 · 출처 혼동 검증</div>
+        </div>
+        <div class="zone dark">
+          <div class="zone-label">확장 연결 카드</div>
+          <div class="small">W-002 PDF 질의응답 · W-008 신구조문 대비 · W-013 지식창고</div>
+        </div>
+      </div>
+    </div>
+    <div class="prompt-bar">
+      <span class="prompt-label">복붙 프롬프트</span>
+      <span class="prompt-text">첨부한 문서들을 종합해줘. ① 문서별 핵심 주장 2줄씩(문서명 표시) ② 공통점과 차이점 비교표 ③ 상충되는 지점과 그 이유 ④ <span class="var">(내일 회의)</span>에서 결정해야 할 사항 목록. 마지막에 전체를 개조식 1장 브리핑으로 압축해줘. 어느 문서의 내용인지 항상 표시해.</span>
+    </div>
+    <footer class="card-foot">
+      <div>모듈 카드 라이브러리 · W-015</div>
+      <div>2026 AI데이터분석 역량강화 · 강사양성과정</div>
+      <div class="page">15</div>
+    </footer>
+  </section>
+
+<!-- ═══ W-016 사업계획서·제안서 골격 ═══ -->
+  <section class="card" data-label="W-016 제안서 골격 자동화" data-speaker-notes="한 줄 아이디어가 문제-해결-실행-예산 구조로 확장되는 과정. 공모사업 신청서에 바로 적용 가능하다는 점을 짚으면 몰입도가 높다.">
+    <header class="card-head">
+      <div class="head-row">
+        <div class="meta">
+          <span class="id-badge">W-016</span>
+          <span class="chip accent">L2 어시스트 워크플로우</span>
+          <span class="chip">문서</span>
+          <span class="chip">⏱ 60분</span>
+        </div>
+        <span class="lib-mark">모듈 카드 라이브러리 · 2026</span>
+      </div>
+      <h2 class="card-title">사업계획서·제안서 골격 자동화</h2>
+      <p class="card-sub">한 줄 아이디어를 문제정의 → 해결방안 → 실행계획 → 예산 구조로 확장 · 용도: 공모사업 신청 · 신규 사업 기획</p>
+      <div class="head-rule"></div>
+    </header>
+    <div class="card-body">
+      <div class="col">
+        <div class="zone cream fill">
+          <div class="zone-label">핵심 메시지</div>
+          <div class="bullets">
+            <div class="b"><span>제안서의 핵심은 분량이 아니라 <strong>문제정의의 선명함</strong>이다</span></div>
+            <div class="b"><span>골격은 AI가, <strong>우리 기관의 구체성</strong>은 담당자가</span></div>
+            <div class="b"><span>심사자 관점 검토까지 시켜야 한 바퀴가 끝난다</span></div>
+          </div>
+        </div>
+        <div class="zone line-accent">
+          <div class="zone-label">보안 · 책임 경계</div>
+          <div class="small">공모 제출 전 내용은 경쟁 정보 — <strong>기관 특정 정보는 익명화</strong>해 실습. 예산 수치는 AI가 지어내지 않게 자리표시 처리</div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="zone fill">
+          <div class="zone-label">실습 워크플로우</div>
+          <div class="steps">
+            <div class="step"><span class="step-no demo">D</span><span><strong>데모</strong> — 한 줄 아이디어가 제안서 목차로 확장되는 과정</span></div>
+            <div class="step"><span class="step-no">1</span><span>사업 아이디어와 대상을 두 줄로 정의</span></div>
+            <div class="step"><span class="step-no">2</span><span>문제정의·현황 근거를 구조화 (통계 자리표시)</span></div>
+            <div class="step"><span class="step-no">3</span><span>공모 양식 목차에 맞춰 골격 생성</span></div>
+            <div class="step"><span class="step-no">4</span><span>"심사위원이라면 어디를 지적할까" 약점 검토</span></div>
+            <div class="step"><span class="step-no">5</span><span><strong>변형</strong> — 요약본(1장)과 발표 스크립트 생성</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="zone fill">
+          <div class="zone-label">결과물</div>
+          <div class="bullets">
+            <div class="b"><span>공모 양식에 맞춘 제안서 골격</span></div>
+            <div class="b"><span>심사자 관점 약점 검토 메모</span></div>
+          </div>
+          <div class="small divider"><span class="hl">진행 포인트</span> — 통계·예산을 지어내는 환각 주의 · 자리표시 강제</div>
+        </div>
+        <div class="zone dark">
+          <div class="zone-label">확장 연결 카드</div>
+          <div class="small">W-005 계획서 초안 · W-012 발표 체인 · W-086 딥리서치 조사</div>
+        </div>
+      </div>
+    </div>
+    <div class="prompt-bar">
+      <span class="prompt-label">복붙 프롬프트</span>
+      <span class="prompt-text"><span class="var">(주민 디지털 역량 교육)</span> 공모사업 제안서 골격을 만들어줘. 목차: 사업 필요성(문제정의) · 사업 내용 · 추진 체계 · 기대효과 · 소요예산. 통계와 예산은 지어내지 말고 (자리표시)로 남겨. 완성 후 심사위원 관점에서 약점 3개와 보완 방향을 알려줘.</span>
+    </div>
+    <footer class="card-foot">
+      <div>모듈 카드 라이브러리 · W-016</div>
+      <div>2026 AI데이터분석 역량강화 · 강사양성과정</div>
+      <div class="page">16</div>
+    </footer>
+  </section>
+
+<!-- ═══ W-017 설문 주관식 분류 ═══ -->
+  <section class="card" data-label="W-017 설문 주관식 분류" data-speaker-notes="주관식 300개를 읽지 않고 분류표 하나로 받는 데모. 분류 기준을 AI가 먼저 제안하게 하는 순서가 포인트 — 기준을 사람이 다 정하지 않아도 된다.">
+    <header class="card-head">
+      <div class="head-row">
+        <div class="meta">
+          <span class="id-badge">W-017</span>
+          <span class="chip accent">L1 기능·프롬프트</span>
+          <span class="chip">문서 × 데이터분석</span>
+          <span class="chip">⏱ 40분</span>
+        </div>
+        <span class="lib-mark">모듈 카드 라이브러리 · 2026</span>
+      </div>
+      <h2 class="card-title">설문 주관식 응답 분류·요약</h2>
+      <p class="card-sub">자유 서술 응답 수백 건을 유형 분류 + 대표 의견 + 시사점으로 · 용도: 만족도 조사 · 의견 수렴 · 민원 동향</p>
+      <div class="head-rule"></div>
+    </header>
+    <div class="card-body">
+      <div class="col">
+        <div class="zone cream fill">
+          <div class="zone-label">핵심 메시지</div>
+          <div class="bullets">
+            <div class="b"><span>주관식 300개, 읽지 말고 <strong>분류하게 하라</strong></span></div>
+            <div class="b"><span>분류 기준도 AI에게 먼저 제안시켜라 — 사람은 승인만</span></div>
+            <div class="b"><span>소수 의견이 사라지지 않게 <strong>기타 항목을 따로</strong> 받는다</span></div>
+          </div>
+        </div>
+        <div class="zone line-accent">
+          <div class="zone-label">보안 · 책임 경계</div>
+          <div class="small">응답에 포함된 <strong>이름·연락처 등 개인정보를 제거</strong> 후 입력. 특정인 비방 응답은 요약에서 익명 처리</div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="zone fill">
+          <div class="zone-label">실습 워크플로우</div>
+          <div class="steps">
+            <div class="step"><span class="step-no demo">D</span><span><strong>데모</strong> — 주관식 100건이 유형표 + 대표 의견으로 정리</span></div>
+            <div class="step"><span class="step-no">1</span><span>주관식 응답을 복사해 붙여넣기 (개인정보 제거)</span></div>
+            <div class="step"><span class="step-no">2</span><span>"먼저 분류 기준 5~7개를 제안해줘" 요청 → 승인·수정</span></div>
+            <div class="step"><span class="step-no">3</span><span>기준별 건수·비율·대표 응답 3개씩 추출</span></div>
+            <div class="step"><span class="step-no">4</span><span>개선 시사점과 우선순위 도출</span></div>
+            <div class="step"><span class="step-no">5</span><span><strong>변형</strong> — 결과를 보고서 문단으로 변환</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="zone fill">
+          <div class="zone-label">결과물</div>
+          <div class="bullets">
+            <div class="b"><span>유형별 분류표 (건수·비율·대표 의견)</span></div>
+            <div class="b"><span>개선 시사점 보고 문단</span></div>
+          </div>
+          <div class="small divider"><span class="hl">진행 포인트</span> — 중복 응답 처리 기준 명시 · 분류 근거 샘플 검증</div>
+        </div>
+        <div class="zone dark">
+          <div class="zone-label">확장 연결 카드</div>
+          <div class="small">W-049 만족도 분석 · W-009 민원 답변 · W-044 CSV 분석</div>
+        </div>
+      </div>
+    </div>
+    <div class="prompt-bar">
+      <span class="prompt-label">복붙 프롬프트</span>
+      <span class="prompt-text">아래는 <span class="var">(교육 만족도 조사)</span> 주관식 응답이다. ① 응답을 훑고 분류 기준 5~7개를 먼저 제안해줘(내가 승인하면 진행) ② 승인된 기준으로 전체를 분류해 건수·비율·대표 응답 3개씩 표로 ③ 기타/소수 의견 별도 정리 ④ 개선 시사점 3가지. 응답: <span class="var">(붙여넣기)</span></span>
+    </div>
+    <footer class="card-foot">
+      <div>모듈 카드 라이브러리 · W-017</div>
+      <div>2026 AI데이터분석 역량강화 · 강사양성과정</div>
+      <div class="page">17</div>
+    </footer>
+  </section>
+
+<!-- ═══ W-018 논문·연구동향 초읽기 ═══ -->
+  <section class="card" data-label="W-018 연구동향 초읽기" data-speaker-notes="어려운 논문도 초록·결론 중심으로 몇 분 만에 지형이 잡힌다. 정책 근거 만들 때 연구동향 표가 보고서 설득력을 크게 올린다는 점을 강조.">
+    <header class="card-head">
+      <div class="head-row">
+        <div class="meta">
+          <span class="id-badge">W-018</span>
+          <span class="chip accent">L2 어시스트 워크플로우</span>
+          <span class="chip">문서</span>
+          <span class="chip">⏱ 40–60분</span>
+        </div>
+        <span class="lib-mark">모듈 카드 라이브러리 · 2026</span>
+      </div>
+      <h2 class="card-title">정책 연구·논문 동향 초읽기</h2>
+      <p class="card-sub">논문·연구보고서 묶음에서 연구 흐름·방법론·쟁점을 빠르게 파악 · 용도: 정책 근거 마련 · 연구용역 검토</p>
+      <div class="head-rule"></div>
+    </header>
+    <div class="card-body">
+      <div class="col">
+        <div class="zone cream fill">
+          <div class="zone-label">핵심 메시지</div>
+          <div class="bullets">
+            <div class="b"><span>논문은 정독이 아니라 <strong>지형 파악</strong>부터 — 초록·결론 우선</span></div>
+            <div class="b"><span>연구동향 표 하나가 정책 보고서의 <strong>근거 체력</strong>을 만든다</span></div>
+            <div class="b"><span>존재하지 않는 논문 인용 — AI 최악의 환각, 반드시 실물 확인</span></div>
+          </div>
+        </div>
+        <div class="zone line-accent">
+          <div class="zone-label">보안 · 책임 경계</div>
+          <div class="small">인용 논문의 <strong>실존 여부·서지사항을 원문 검색으로 확인</strong> — 가짜 인용은 보고서 신뢰를 무너뜨린다. 유료 논문 저작권 유의</div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="zone fill">
+          <div class="zone-label">실습 워크플로우</div>
+          <div class="steps">
+            <div class="step"><span class="step-no demo">D</span><span><strong>데모</strong> — 논문 5편 초록이 연구동향 표가 되는 과정</span></div>
+            <div class="step"><span class="step-no">1</span><span>Google Scholar·RISS에서 주제 논문 5~10편 검색</span></div>
+            <div class="step"><span class="step-no">2</span><span>초록·결론을 모아 붙여넣기 (서지사항 포함)</span></div>
+            <div class="step"><span class="step-no">3</span><span>연구동향 표 생성 — 연도·주제·방법·핵심 결론</span></div>
+            <div class="step"><span class="step-no">4</span><span>공통 결론과 이견·공백(연구가 없는 지점) 추출</span></div>
+            <div class="step"><span class="step-no">5</span><span><strong>변형</strong> — 정책 시사점 문단으로 변환해 보고서 삽입</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="zone fill">
+          <div class="zone-label">결과물</div>
+          <div class="bullets">
+            <div class="b"><span>연구동향 표 (서지사항 검증 완료)</span></div>
+            <div class="b"><span>정책 시사점 문단</span></div>
+          </div>
+          <div class="small divider"><span class="hl">진행 포인트</span> — 원문 아닌 초록 기반임을 표시 · 인용 실존 확인 필수</div>
+        </div>
+        <div class="zone dark">
+          <div class="zone-label">확장 연결 카드</div>
+          <div class="small">W-086 딥리서치 · W-097 리서치 도구 · W-011 환각 검증</div>
+        </div>
+      </div>
+    </div>
+    <div class="prompt-bar">
+      <span class="prompt-label">복붙 프롬프트</span>
+      <span class="prompt-text">아래는 <span class="var">(고령층 디지털 격차)</span> 관련 논문 초록 모음이다. ① 연구동향 표(저자·연도·주제·방법·핵심 결론) ② 연구들이 합의하는 결론 3개 ③ 이견이 있는 지점 ④ 아직 연구가 부족한 공백 ⑤ 정책 시사점 2문단을 만들어줘. 초록에 없는 내용은 지어내지 마. 초록: <span class="var">(붙여넣기)</span></span>
+    </div>
+    <footer class="card-foot">
+      <div>모듈 카드 라이브러리 · W-018</div>
+      <div>2026 AI데이터분석 역량강화 · 강사양성과정</div>
+      <div class="page">18</div>
+    </footer>
+  </section>
+
+<!-- ═══ W-019 Word 템플릿 자동 채우기 ═══ -->
+  <section class="card" data-label="W-019 Word 템플릿 자동화" data-speaker-notes="L4 카드. HWPX(W-014)의 Word 버전 — python-docx는 더 안정적이라 첫 문서 자동화 입문으로 좋다. 월간보고서가 데이터만 바꿔 자동 생성되는 데모.">
+    <header class="card-head">
+      <div class="head-row">
+        <div class="meta">
+          <span class="id-badge">W-019</span>
+          <span class="chip accent">L4 코딩 에이전트</span>
+          <span class="chip">문서 × 바이브코딩</span>
+          <span class="chip">⏱ 60분</span>
+        </div>
+        <span class="lib-mark">모듈 카드 라이브러리 · 2026</span>
+      </div>
+      <h2 class="card-title">Word 템플릿 자동 채우기</h2>
+      <p class="card-sub">python-docx로 표·문단이 있는 정형 보고서를 데이터 기반 자동 생성 · 용도: 월간보고 · 결과보고 · 증명서류</p>
+      <div class="head-rule"></div>
+    </header>
+    <div class="card-body">
+      <div class="col">
+        <div class="zone cream fill">
+          <div class="zone-label">핵심 메시지</div>
+          <div class="bullets">
+            <div class="b"><span>매달 같은 보고서라면 <strong>문서가 아니라 템플릿</strong>을 만들어라</span></div>
+            <div class="b"><span>사람은 데이터 확인, 조립은 코드 — 역할 분담의 시작</span></div>
+            <div class="b"><span>"파이썬 처음이어도 15분" — 코드는 에이전트가 쓴다</span></div>
+          </div>
+        </div>
+        <div class="zone line-accent">
+          <div class="zone-label">보안 · 책임 경계</div>
+          <div class="small">템플릿에 들어가는 데이터의 <strong>개인정보 포함 여부 확인</strong>. 자동 생성 문서도 발송 전 최종 검토는 사람이</div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="zone fill">
+          <div class="zone-label">실습 워크플로우</div>
+          <div class="steps">
+            <div class="step"><span class="step-no demo">D</span><span><strong>데모</strong> — 엑셀 수치가 월간보고서 Word로 자동 조립</span></div>
+            <div class="step"><span class="step-no">1</span><span>기존 보고서에서 매달 바뀌는 부분에 {{필드}} 표시</span></div>
+            <div class="step"><span class="step-no">2</span><span>코딩 에이전트에 템플릿 + 데이터 파일 제공</span></div>
+            <div class="step"><span class="step-no">3</span><span>python-docx 치환 스크립트 생성·실행</span></div>
+            <div class="step"><span class="step-no">4</span><span>서식(표·글꼴·줄바꿈) 검수 후 스크립트 보완</span></div>
+            <div class="step"><span class="step-no">5</span><span><strong>변형</strong> — 그래프 이미지 자동 삽입까지 확장</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="zone fill">
+          <div class="zone-label">결과물</div>
+          <div class="bullets">
+            <div class="b"><span>재사용 가능한 Word 템플릿 + 생성 스크립트</span></div>
+            <div class="b"><span>데이터만 바꿔 만든 보고서 샘플 2부</span></div>
+          </div>
+          <div class="small divider"><span class="hl">진행 포인트</span> — 표 안 치환이 자주 깨짐 · 1부 검수 후 일괄 생성</div>
+        </div>
+        <div class="zone dark">
+          <div class="zone-label">확장 연결 카드</div>
+          <div class="small">W-014 HWPX 자동 생성 · W-075 엑셀 병합 · W-078 코딩 에이전트</div>
+        </div>
+      </div>
+    </div>
+    <div class="prompt-bar">
+      <span class="prompt-label">복붙 프롬프트</span>
+      <span class="prompt-text">(코딩 에이전트에서) 첨부한 Word 보고서를 템플릿화해줘. {{월}} {{실적수치}} {{특이사항}} 필드를 엑셀 데이터로 치환하는 python-docx 스크립트를 만들고, 표 서식과 글꼴이 원본과 동일하게 유지되는지 확인해줘. 먼저 1부만 생성해서 보여줘.</span>
+    </div>
+    <footer class="card-foot">
+      <div>모듈 카드 라이브러리 · W-019</div>
+      <div>2026 AI데이터분석 역량강화 · 강사양성과정</div>
+      <div class="page">19</div>
+    </footer>
+  </section>
+
+<!-- ═══ W-020 이메일·공지문 초안 ═══ -->
+  <section class="card" data-label="W-020 이메일·공지문 초안" data-speaker-notes="가장 낮은 문턱의 카드 — 오늘 배워 오늘 쓴다. 거절·독촉·정정 같은 어려운 메일일수록 AI 초안의 가치가 크다는 점이 포인트.">
+    <header class="card-head">
+      <div class="head-row">
+        <div class="meta">
+          <span class="id-badge">W-020</span>
+          <span class="chip accent">L1 기능·프롬프트</span>
+          <span class="chip">문서</span>
+          <span class="chip">⏱ 30분</span>
+        </div>
+        <span class="lib-mark">모듈 카드 라이브러리 · 2026</span>
+      </div>
+      <h2 class="card-title">이메일·공지문 자동 초안 + 톤 조정</h2>
+      <p class="card-sub">상황·대상·목적을 주면 메일과 공지문 초안 완성 · 용도: 협조 요청 · 일정 공지 · 정중한 거절·독촉</p>
+      <div class="head-rule"></div>
+    </header>
+    <div class="card-body">
+      <div class="col">
+        <div class="zone cream fill">
+          <div class="zone-label">핵심 메시지</div>
+          <div class="bullets">
+            <div class="b"><span>쓰기 어려운 메일일수록 — <strong>거절·독촉·정정</strong> — AI 초안의 가치가 크다</span></div>
+            <div class="b"><span>목적을 한 줄로 말할 수 있으면 초안은 30초</span></div>
+            <div class="b"><span>오늘 배워 <strong>오늘 퇴근 전에 쓰는</strong> 가장 빠른 활용</span></div>
+          </div>
+        </div>
+        <div class="zone line-accent">
+          <div class="zone-label">보안 · 책임 경계</div>
+          <div class="small">수신자 실명·소속은 익명화해 입력하고 <strong>발송 직전에 채운다</strong>. 감사·징계 등 민감 사안 메일은 AI 초안 대상 제외</div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="zone fill">
+          <div class="zone-label">실습 워크플로우</div>
+          <div class="steps">
+            <div class="step"><span class="step-no demo">D</span><span><strong>데모</strong> — "정중한 독촉 메일"이 30초 만에 완성</span></div>
+            <div class="step"><span class="step-no">1</span><span>상황·수신자·목적을 각각 한 줄로 정리</span></div>
+            <div class="step"><span class="step-no">2</span><span>초안 생성 — 제목 3개 후보 포함</span></div>
+            <div class="step"><span class="step-no">3</span><span>톤 조정 — "더 정중하게 / 더 간결하게" 반복</span></div>
+            <div class="step"><span class="step-no">4</span><span>수신자 입장에서 오해 소지 점검 요청</span></div>
+            <div class="step"><span class="step-no">5</span><span><strong>변형</strong> — 자주 쓰는 메일 5종 템플릿 세트 제작</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="zone fill">
+          <div class="zone-label">결과물</div>
+          <div class="bullets">
+            <div class="b"><span>바로 발송 가능한 메일 초안</span></div>
+            <div class="b"><span>자주 쓰는 메일 5종 템플릿</span></div>
+          </div>
+          <div class="small divider"><span class="hl">진행 포인트</span> — 과공손 어색함 다듬기 · 핵심 요청·기한 굵게 표시</div>
+        </div>
+        <div class="zone dark">
+          <div class="zone-label">확장 연결 카드</div>
+          <div class="small">W-007 문체 변환 · W-006 회의록 후속 메일 · W-076 알림 자동화</div>
+        </div>
+      </div>
+    </div>
+    <div class="prompt-bar">
+      <span class="prompt-label">복붙 프롬프트</span>
+      <span class="prompt-text">다음 상황의 메일 초안을 써줘. 상황: <span class="var">(자료 제출 기한이 지난 부서에 두 번째 요청)</span>. 수신자: <span class="var">(타 부서 담당자)</span>. 목적: <span class="var">(이번 주 금요일까지 제출)</span>. 정중하지만 기한이 명확하게, 제목 후보 3개와 함께. 상대가 기분 상하지 않으면서도 미룰 수 없게 써줘.</span>
+    </div>
+    <footer class="card-foot">
+      <div>모듈 카드 라이브러리 · W-020</div>
+      <div>2026 AI데이터분석 역량강화 · 강사양성과정</div>
+      <div class="page">20</div>
+    </footer>
+  </section>
+
+<!-- ═══ W-021 프롬프트 라이브러리 ═══ -->
+  <section class="card" data-label="W-021 프롬프트 라이브러리" data-speaker-notes="개인의 좋은 프롬프트를 부서 자산으로 승격시키는 카드. 목적·입력·출력·주의사항 4필드 구조만 지키면 어떤 도구(시트·노션)든 된다.">
+    <header class="card-head">
+      <div class="head-row">
+        <div class="meta">
+          <span class="id-badge">W-021</span>
+          <span class="chip accent">L2 어시스트 워크플로우</span>
+          <span class="chip">문서</span>
+          <span class="chip">⏱ 40–60분</span>
+        </div>
+        <span class="lib-mark">모듈 카드 라이브러리 · 2026</span>
+      </div>
+      <h2 class="card-title">프롬프트 라이브러리 구축 — 부서 공용 자산화</h2>
+      <p class="card-sub">검증된 프롬프트를 목적·입력·출력·주의사항 구조로 축적 · 용도: 부서 지식 공유 · 신규자 온보딩</p>
+      <div class="head-rule"></div>
+    </header>
+    <div class="card-body">
+      <div class="col">
+        <div class="zone cream fill">
+          <div class="zone-label">핵심 메시지</div>
+          <div class="bullets">
+            <div class="b"><span>좋은 프롬프트는 <strong>개인기가 아니라 부서 자산</strong>이다</span></div>
+            <div class="b"><span>"강의안 모음 = 맥락 자산" — 프롬프트 모음도 같은 원리</span></div>
+            <div class="b"><span>기록 없는 성공은 반복되지 않는다</span></div>
+          </div>
+        </div>
+        <div class="zone line-accent">
+          <div class="zone-label">보안 · 책임 경계</div>
+          <div class="small">프롬프트 예시에 <strong>실제 사건·실명이 남지 않게</strong> 가상 예시로 치환해 저장. 공유 범위(부서/기관)를 정하고 시작</div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="zone fill">
+          <div class="zone-label">실습 워크플로우</div>
+          <div class="steps">
+            <div class="step"><span class="step-no demo">D</span><span><strong>데모</strong> — 부서 라이브러리에서 프롬프트 꺼내 30초 만에 업무 처리</span></div>
+            <div class="step"><span class="step-no">1</span><span>이번 과정에서 잘 됐던 프롬프트 3개를 고른다</span></div>
+            <div class="step"><span class="step-no">2</span><span>4필드 정리 — 목적 / 입력 / 출력 / 주의사항</span></div>
+            <div class="step"><span class="step-no">3</span><span>변수 부분을 (괄호)로 표준화</span></div>
+            <div class="step"><span class="step-no">4</span><span>공용 시트·노션에 등록하고 태그 부여</span></div>
+            <div class="step"><span class="step-no">5</span><span><strong>변형</strong> — 월 1회 "이달의 프롬프트" 공유 루틴 설계</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="zone fill">
+          <div class="zone-label">결과물</div>
+          <div class="bullets">
+            <div class="b"><span>4필드 구조 프롬프트 카드 3장</span></div>
+            <div class="b"><span>부서 공용 라이브러리 시트 골격</span></div>
+          </div>
+          <div class="small divider"><span class="hl">진행 포인트</span> — 검증 안 된 프롬프트 등록 금지 · 갱신 담당 지정</div>
+        </div>
+        <div class="zone dark">
+          <div class="zone-label">확장 연결 카드</div>
+          <div class="small">W-003 메타 프롬프트 · W-095 프롬프트 5요소 · W-013 지식창고</div>
+        </div>
+      </div>
+    </div>
+    <div class="prompt-bar">
+      <span class="prompt-label">복붙 프롬프트</span>
+      <span class="prompt-text">방금 성공한 이 대화의 프롬프트를 부서 라이브러리용으로 정리해줘. 형식: ① 프롬프트 이름 ② 목적(한 줄) ③ 입력으로 준비할 것 ④ 출력 형태 ⑤ 주의사항 ⑥ 변수를 (괄호)로 표준화한 최종 프롬프트. 실제 사건·이름은 가상 예시로 바꿔줘.</span>
+    </div>
+    <footer class="card-foot">
+      <div>모듈 카드 라이브러리 · W-021</div>
+      <div>2026 AI데이터분석 역량강화 · 강사양성과정</div>
+      <div class="page">21</div>
+    </footer>
+  </section>
+
+<!-- ═══ W-022 슬라이드 도구 비교 ═══ -->
+  <section class="card" data-label="W-022 슬라이드 도구 비교" data-speaker-notes="같은 개요를 감마·필로 등 여러 도구에 넣어 결과를 나란히 비교하는 것 자체가 강의 콘텐츠. 도구 추천이 아니라 '판단 기준'을 주는 것이 강사의 역할.">
+    <header class="card-head">
+      <div class="head-row">
+        <div class="meta">
+          <span class="id-badge">W-022</span>
+          <span class="chip accent">L3 에이전트 서비스</span>
+          <span class="chip">문서 × 콘텐츠</span>
+          <span class="chip">⏱ 40분</span>
+        </div>
+        <span class="lib-mark">모듈 카드 라이브러리 · 2026</span>
+      </div>
+      <h2 class="card-title">슬라이드 자동화 도구 비교 — Gamma·Felo·SlidesGPT</h2>
+      <p class="card-sub">같은 개요를 여러 도구에 넣어 결과 비교 → 용도별 선택 기준 수립 · 용도: 발표자료 초안 · 교육자료 제작</p>
+      <div class="head-rule"></div>
+    </header>
+    <div class="card-body">
+      <div class="col">
+        <div class="zone cream fill">
+          <div class="zone-label">핵심 메시지</div>
+          <div class="bullets">
+            <div class="b"><span>도구는 계속 바뀐다 — 남는 것은 <strong>비교하는 기준</strong>이다</span></div>
+            <div class="b"><span>자동 생성 장표는 <strong>초안</strong> — 핵심 장 3장은 손으로 다듬어라</span></div>
+            <div class="b"><span>입력 개요의 품질이 결과의 90%를 정한다 (W-012 연결)</span></div>
+          </div>
+        </div>
+        <div class="zone line-accent">
+          <div class="zone-label">보안 · 책임 경계</div>
+          <div class="small">모두 <strong>외부 클라우드 서비스</strong> — 내부자료 업로드 금지, 공개 가능 내용만. 생성 이미지 저작권 조건 확인</div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="zone fill">
+          <div class="zone-label">실습 워크플로우</div>
+          <div class="steps">
+            <div class="step"><span class="step-no demo">D</span><span><strong>데모</strong> — 같은 개요가 도구 3곳에서 다른 덱으로 태어나는 비교</span></div>
+            <div class="step"><span class="step-no">1</span><span>발표 개요 1개 준비 (W-012 산출물 재사용)</span></div>
+            <div class="step"><span class="step-no">2</span><span>Gamma·Felo 등 2~3개 도구에 동일 입력</span></div>
+            <div class="step"><span class="step-no">3</span><span>구조·디자인·한국어 품질·수정 편의 4기준 채점</span></div>
+            <div class="step"><span class="step-no">4</span><span>최선 결과물을 골라 핵심 3장 수동 보정</span></div>
+            <div class="step"><span class="step-no">5</span><span><strong>변형</strong> — 용도별(보고/교육/홍보) 추천표 작성</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="zone fill">
+          <div class="zone-label">결과물</div>
+          <div class="bullets">
+            <div class="b"><span>도구별 비교 채점표</span></div>
+            <div class="b"><span>실제 발표에 쓸 초안 덱 1개</span></div>
+          </div>
+          <div class="small divider"><span class="hl">진행 포인트</span> — 무료 플랜 제한 사전 안내 · 한글 폰트 깨짐 확인</div>
+        </div>
+        <div class="zone dark">
+          <div class="zone-label">확장 연결 카드</div>
+          <div class="small">W-012 보고서→슬라이드 · W-024 이미지 생성 · W-096 모델 비교</div>
+        </div>
+      </div>
+    </div>
+    <div class="prompt-bar">
+      <span class="prompt-label">복붙 프롬프트</span>
+      <span class="prompt-text">(슬라이드 도구에 입력할 개요를 먼저 다듬기) 아래 발표 개요를 슬라이드 자동화 도구에 넣을 입력용으로 정리해줘. 장별 제목과 핵심 메시지 한 줄씩, 총 <span class="var">(8)</span>장, 대상은 <span class="var">(기관 실무자)</span>, 톤은 차분한 보고형. 개요: <span class="var">(붙여넣기)</span></span>
+    </div>
+    <footer class="card-foot">
+      <div>모듈 카드 라이브러리 · W-022</div>
+      <div>2026 AI데이터분석 역량강화 · 강사양성과정</div>
+      <div class="page">22</div>
+    </footer>
+  </section>
+
+<!-- ═══ W-023 기관 소개 콘텐츠 ═══ -->
+  <section class="card" data-label="W-023 기관 소개 콘텐츠" data-speaker-notes="흩어진 성과자료가 스토리 있는 소개 콘텐츠로 바뀌는 카드. 독자를 '처음 방문한 주민'으로 정의하는 순간 글이 달라진다는 것을 보여준다.">
+    <header class="card-head">
+      <div class="head-row">
+        <div class="meta">
+          <span class="id-badge">W-023</span>
+          <span class="chip accent">L2 어시스트 워크플로우</span>
+          <span class="chip">문서 × 콘텐츠</span>
+          <span class="chip">⏱ 60–90분</span>
+        </div>
+        <span class="lib-mark">모듈 카드 라이브러리 · 2026</span>
+      </div>
+      <h2 class="card-title">기관 소개 책자·스토리 콘텐츠 만들기</h2>
+      <p class="card-sub">흩어진 조직·사업·성과 자료를 스토리 구조의 소개 콘텐츠로 · 용도: 기관 홍보물 · 방문객 안내 · 채용 홍보</p>
+      <div class="head-rule"></div>
+    </header>
+    <div class="card-body">
+      <div class="col">
+        <div class="zone cream fill">
+          <div class="zone-label">핵심 메시지</div>
+          <div class="bullets">
+            <div class="b"><span>나열된 성과는 잊히고 <strong>스토리는 기억된다</strong></span></div>
+            <div class="b"><span>독자를 정하라 — "처음 방문한 주민"에게 쓰는 순간 글이 달라진다</span></div>
+            <div class="b"><span>자료 수집이 절반 — AI는 재료 없이 요리하지 못한다</span></div>
+          </div>
+        </div>
+        <div class="zone line-accent">
+          <div class="zone-label">보안 · 책임 경계</div>
+          <div class="small">직원 사진·실명은 <strong>동의 후</strong> 사용. 성과 수치는 공표 자료 기준으로 통일 — 부풀린 서술은 걷어낸다</div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="zone fill">
+          <div class="zone-label">실습 워크플로우</div>
+          <div class="steps">
+            <div class="step"><span class="step-no demo">D</span><span><strong>데모</strong> — 연혁·성과 나열이 "주민의 하루" 스토리로 바뀌는 비교</span></div>
+            <div class="step"><span class="step-no">1</span><span>기관 공개 자료 수집 (연혁·조직·사업·성과)</span></div>
+            <div class="step"><span class="step-no">2</span><span>독자와 사용 장면 정의 (방문 주민 / 채용 지원자)</span></div>
+            <div class="step"><span class="step-no">3</span><span>챕터 구조 생성 — 문제→역할→성과→비전 흐름</span></div>
+            <div class="step"><span class="step-no">4</span><span>샘플 챕터 1개 집필 + 사진·도식 배치 지시</span></div>
+            <div class="step"><span class="step-no">5</span><span><strong>변형</strong> — 리플릿용 축약본·웹페이지용 버전 파생</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="zone fill">
+          <div class="zone-label">결과물</div>
+          <div class="bullets">
+            <div class="b"><span>소개 책자 목차 + 샘플 챕터 1개</span></div>
+            <div class="b"><span>리플릿·웹용 파생 버전 초안</span></div>
+          </div>
+          <div class="small divider"><span class="hl">진행 포인트</span> — 기관 자랑 나열 회피 · 독자 이익 관점 유지</div>
+        </div>
+        <div class="zone dark">
+          <div class="zone-label">확장 연결 카드</div>
+          <div class="small">W-024 카드뉴스 · W-034 리플릿 시안 · W-071 보고서→랜딩</div>
+        </div>
+      </div>
+    </div>
+    <div class="prompt-bar">
+      <span class="prompt-label">복붙 프롬프트</span>
+      <span class="prompt-text">아래 기관 자료로 소개 책자를 기획해줘. 독자: <span class="var">(처음 방문한 주민)</span>. ① 챕터 구조(문제→우리의 역할→성과→비전) ② 챕터별 핵심 메시지와 들어갈 사진·도식 지시 ③ 1장 "우리가 하는 일" 샘플 집필. 기관 자랑 나열이 아니라 독자가 얻는 것 중심으로. 자료: <span class="var">(붙여넣기)</span></span>
+    </div>
+    <footer class="card-foot">
+      <div>모듈 카드 라이브러리 · W-023</div>
+      <div>2026 AI데이터분석 역량강화 · 강사양성과정</div>
+      <div class="page">23</div>
+    </footer>
+  </section>
+
+<!-- ═══ W-024 카드뉴스·포스터 이미지 생성 ═══ -->
+  <section class="card" data-label="W-024 카드뉴스 이미지 생성" data-speaker-notes="콘텐츠 분야 첫 카드. 프롬프트 4요소(피사체·스타일·구도·분위기)만 잡아주면 비전공자도 쓸 만한 시안이 나온다. 문구는 이미지에 넣지 말고 디자인 도구에서 얹는 것이 실무 팁.">
+    <header class="card-head">
+      <div class="head-row">
+        <div class="meta">
+          <span class="id-badge">W-024</span>
+          <span class="chip accent">L1 기능·프롬프트</span>
+          <span class="chip">콘텐츠 × 멀티모달</span>
+          <span class="chip">⏱ 40–60분</span>
+        </div>
+        <span class="lib-mark">모듈 카드 라이브러리 · 2026</span>
+      </div>
+      <h2 class="card-title">카드뉴스·포스터 이미지 생성</h2>
+      <p class="card-sub">텍스트 프롬프트로 홍보 이미지 시안 제작 · 용도: 기관 SNS · 행사 포스터 · 교육 홍보</p>
+      <div class="head-rule"></div>
+    </header>
+    <div class="card-body">
+      <div class="col">
+        <div class="zone cream fill">
+          <div class="zone-label">핵심 메시지</div>
+          <div class="bullets">
+            <div class="b"><span>디자이너 없이도 <strong>시안 회의</strong>가 가능해졌다</span></div>
+            <div class="b"><span>프롬프트 4요소 — 피사체 · 스타일 · 구도 · 분위기</span></div>
+            <div class="b"><span>글자는 이미지에 맡기지 말 것 — <strong>문구는 도구에서 얹는다</strong></span></div>
+          </div>
+        </div>
+        <div class="zone line-accent">
+          <div class="zone-label">보안 · 책임 경계</div>
+          <div class="small">생성 이미지의 <strong>상업·공공 사용 조건</strong>을 도구별로 확인. 실존 인물·타 기관 로고 모방 금지 (W-037 연결)</div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="zone fill">
+          <div class="zone-label">실습 워크플로우</div>
+          <div class="steps">
+            <div class="step"><span class="step-no demo">D</span><span><strong>데모</strong> — 행사 포스터 시안 4종이 3분 만에 생성</span></div>
+            <div class="step"><span class="step-no">1</span><span>홍보 대상·목적·핵심 메시지를 한 줄씩 정리</span></div>
+            <div class="step"><span class="step-no">2</span><span>4요소 프롬프트 작성 후 시안 4종 생성</span></div>
+            <div class="step"><span class="step-no">3</span><span>마음에 드는 시안 기준으로 색·구도 변형 반복</span></div>
+            <div class="step"><span class="step-no">4</span><span>Canva 등에서 문구·로고 얹어 완성</span></div>
+            <div class="step"><span class="step-no">5</span><span><strong>변형</strong> — 같은 시안으로 SNS 정사각·현수막 가로 파생</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="zone fill">
+          <div class="zone-label">결과물</div>
+          <div class="bullets">
+            <div class="b"><span>행사 홍보 이미지 시안 3~4종</span></div>
+            <div class="b"><span>재사용할 이미지 프롬프트 기록</span></div>
+          </div>
+          <div class="small divider"><span class="hl">진행 포인트</span> — 이미지 속 한글 깨짐 · 손가락 등 신체 오류 검수</div>
+        </div>
+        <div class="zone dark">
+          <div class="zone-label">확장 연결 카드</div>
+          <div class="small">W-025 프롬프트 변수화 · W-034 리플릿 · W-037 저작권 체크</div>
+        </div>
+      </div>
+    </div>
+    <div class="prompt-bar">
+      <span class="prompt-label">복붙 프롬프트</span>
+      <span class="prompt-text"><span class="var">(가을 주민 걷기 행사)</span> 홍보 포스터 배경 이미지를 만들어줘. 피사체: <span class="var">(단풍길을 걷는 다양한 연령의 사람들)</span>, 스타일: 밝은 플랫 일러스트, 구도: 상단 1/3 여백(문구 자리), 분위기: 따뜻하고 활기차게. 글자는 넣지 마. 서로 다른 느낌으로 4종.</span>
+    </div>
+    <footer class="card-foot">
+      <div>모듈 카드 라이브러리 · W-024</div>
+      <div>2026 AI데이터분석 역량강화 · 강사양성과정</div>
+      <div class="page">24</div>
+    </footer>
+  </section>
+
+<!-- ═══ W-025 이미지 프롬프트 변수화 ═══ -->
+  <section class="card" data-label="W-025 이미지 프롬프트 변수화" data-speaker-notes="잘 나온 프롬프트를 1회용으로 버리지 않고 템플릿으로 만드는 카드. 고정값(기관 스타일)과 변수(주제)를 분리하는 사고가 콘텐츠 일관성의 비결.">
+    <header class="card-head">
+      <div class="head-row">
+        <div class="meta">
+          <span class="id-badge">W-025</span>
+          <span class="chip accent">L2 어시스트 워크플로우</span>
+          <span class="chip">콘텐츠 × 멀티모달</span>
+          <span class="chip">⏱ 40분</span>
+        </div>
+        <span class="lib-mark">모듈 카드 라이브러리 · 2026</span>
+      </div>
+      <h2 class="card-title">이미지 프롬프트 변수화 — 재사용 템플릿 만들기</h2>
+      <p class="card-sub">잘 나온 프롬프트에서 고정값과 변수를 분리해 템플릿화 · 용도: 시리즈 콘텐츠 · 기관 톤 일관성 유지</p>
+      <div class="head-rule"></div>
+    </header>
+    <div class="card-body">
+      <div class="col">
+        <div class="zone cream fill">
+          <div class="zone-label">핵심 메시지</div>
+          <div class="bullets">
+            <div class="b"><span>좋은 프롬프트는 <strong>1회용이 아니라 금형</strong>이다</span></div>
+            <div class="b"><span>고정값(기관 스타일) + 변수(주제) 분리가 일관성의 비결</span></div>
+            <div class="b"><span>시리즈물은 템플릿 없이는 톤이 흔들린다</span></div>
+          </div>
+        </div>
+        <div class="zone line-accent">
+          <div class="zone-label">보안 · 책임 경계</div>
+          <div class="small">템플릿을 부서 공유할 때 <strong>도구 계정·요금 정책</strong>을 함께 안내. 특정 작가 화풍 모방 표현은 저작권 논란 소지</div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="zone fill">
+          <div class="zone-label">실습 워크플로우</div>
+          <div class="steps">
+            <div class="step"><span class="step-no demo">D</span><span><strong>데모</strong> — 템플릿 하나로 1~12월 캠페인 이미지가 착착 나오는 장면</span></div>
+            <div class="step"><span class="step-no">1</span><span>W-024에서 잘 나온 프롬프트 1개 선택</span></div>
+            <div class="step"><span class="step-no">2</span><span>AI에게 프롬프트 분해 요청 — 고정값 vs 변수</span></div>
+            <div class="step"><span class="step-no">3</span><span>변수를 (괄호)로 표준화한 템플릿 작성</span></div>
+            <div class="step"><span class="step-no">4</span><span>변수만 바꿔 3회 생성 — 톤 유지 확인</span></div>
+            <div class="step"><span class="step-no">5</span><span><strong>변형</strong> — 부서 "이미지 스타일 템플릿집"으로 축적</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="zone fill">
+          <div class="zone-label">결과물</div>
+          <div class="bullets">
+            <div class="b"><span>변수화된 이미지 프롬프트 템플릿</span></div>
+            <div class="b"><span>동일 톤 시리즈 이미지 3종</span></div>
+          </div>
+          <div class="small divider"><span class="hl">진행 포인트</span> — 변수 과다 시 톤 붕괴 · 고정값은 3개 이상 유지</div>
+        </div>
+        <div class="zone dark">
+          <div class="zone-label">확장 연결 카드</div>
+          <div class="small">W-024 이미지 생성 · W-031 스타일가이드 · W-021 프롬프트 라이브러리</div>
+        </div>
+      </div>
+    </div>
+    <div class="prompt-bar">
+      <span class="prompt-label">복붙 프롬프트</span>
+      <span class="prompt-text">아래 이미지 프롬프트를 분해해줘. ① 스타일을 결정하는 고정 요소와 ② 주제에 따라 바뀌는 변수를 나누고, 변수를 (괄호)로 표시한 재사용 템플릿으로 정리해줘. 이어서 변수만 바꾼 예시 3개를 만들어줘. 프롬프트: <span class="var">(잘 나온 프롬프트 붙여넣기)</span></span>
+    </div>
+    <footer class="card-foot">
+      <div>모듈 카드 라이브러리 · W-025</div>
+      <div>2026 AI데이터분석 역량강화 · 강사양성과정</div>
+      <div class="page">25</div>
+    </footer>
+  </section>
+
+<!-- ═══ W-026 사진·이미지 분석 ═══ -->
+  <section class="card" data-label="W-026 현장 사진 분석" data-speaker-notes="현장점검 사진 몇 장이 점검 보고서 초안이 되는 데모. 생성이 아니라 '읽기' 방향의 멀티모달 — 관리자 데모로도 임팩트가 크다.">
+    <header class="card-head">
+      <div class="head-row">
+        <div class="meta">
+          <span class="id-badge">W-026</span>
+          <span class="chip accent">L1 기능·프롬프트</span>
+          <span class="chip">콘텐츠 × 멀티모달</span>
+          <span class="chip">⏱ 30–40분</span>
+        </div>
+        <span class="lib-mark">모듈 카드 라이브러리 · 2026</span>
+      </div>
+      <h2 class="card-title">사진·이미지 분석 — 현장 사진을 보고서로</h2>
+      <p class="card-sub">현장 사진을 읽혀 상태 설명·문제점·조치사항 초안 생성 · 용도: 현장점검 · 시설관리 · 행사 결과보고</p>
+      <div class="head-rule"></div>
+    </header>
+    <div class="card-body">
+      <div class="col">
+        <div class="zone cream fill">
+          <div class="zone-label">핵심 메시지</div>
+          <div class="bullets">
+            <div class="b"><span>멀티모달은 생성만이 아니다 — <strong>읽는 방향</strong>이 실무의 절반</span></div>
+            <div class="b"><span>현장에서 찍고, 사무실 도착 전에 보고서 초안이 나온다</span></div>
+            <div class="b"><span>AI는 사진 속 사실을 말하고 <strong>판단은 담당자</strong>가 한다</span></div>
+          </div>
+        </div>
+        <div class="zone line-accent">
+          <div class="zone-label">보안 · 책임 경계</div>
+          <div class="small">사진 속 <strong>행인 얼굴·차량 번호판</strong> 등 개인정보 확인 후 업로드. 안전 판정 등 책임 판단을 AI에 위임하지 않는다</div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="zone fill">
+          <div class="zone-label">실습 워크플로우</div>
+          <div class="steps">
+            <div class="step"><span class="step-no demo">D</span><span><strong>데모</strong> — 시설 사진 3장이 점검 보고서 표가 되는 과정</span></div>
+            <div class="step"><span class="step-no">1</span><span>현장 사진 2~3장 준비 (개인정보 없는 것)</span></div>
+            <div class="step"><span class="step-no">2</span><span>사진별 상태 설명 요청 — 보이는 사실만</span></div>
+            <div class="step"><span class="step-no">3</span><span>점검표 형식으로 정리 — 위치·상태·특이사항</span></div>
+            <div class="step"><span class="step-no">4</span><span>후속 조치 후보를 제안받고 담당자가 취사선택</span></div>
+            <div class="step"><span class="step-no">5</span><span><strong>변형</strong> — 행사 사진 묶음 → 결과보고 스케치 문단</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="zone fill">
+          <div class="zone-label">결과물</div>
+          <div class="bullets">
+            <div class="b"><span>사진 기반 점검 보고서 초안</span></div>
+            <div class="b"><span>현장 보고용 사진 분석 프롬프트</span></div>
+          </div>
+          <div class="small divider"><span class="hl">진행 포인트</span> — 사진에 없는 내용 추측 금지 지시 · 촬영 정보(위치·시각) 별도 기록</div>
+        </div>
+        <div class="zone dark">
+          <div class="zone-label">확장 연결 카드</div>
+          <div class="small">W-010 OCR · W-041 포스트잇 정리 · W-068 카메라 업무도구</div>
+        </div>
+      </div>
+    </div>
+    <div class="prompt-bar">
+      <span class="prompt-label">복붙 프롬프트</span>
+      <span class="prompt-text">첨부한 <span class="var">(경로당 시설 점검)</span> 사진들을 분석해줘. 사진별로 ① 보이는 상태 설명(사실만) ② 파손·노후 등 특이사항 ③ 확인이 더 필요한 부분을 표로 정리해. 사진에 없는 것은 추측하지 말고, 마지막에 조치 검토 후보를 우선순위로 제안해줘.</span>
+    </div>
+    <footer class="card-foot">
+      <div>모듈 카드 라이브러리 · W-026</div>
+      <div>2026 AI데이터분석 역량강화 · 강사양성과정</div>
+      <div class="page">26</div>
+    </footer>
+  </section>
+
+<!-- ═══ W-027 NotebookLM 오디오 오버뷰 ═══ -->
+  <section class="card" data-label="W-027 오디오 브리핑 팟캐스트" data-speaker-notes="자료를 올리면 두 진행자가 대화하는 팟캐스트가 생성되는 순간이 이 카드의 하이라이트. 출퇴근길 정책 브리핑이라는 사용 장면을 제시.">
+    <header class="card-head">
+      <div class="head-row">
+        <div class="meta">
+          <span class="id-badge">W-027</span>
+          <span class="chip accent">L1 기능·프롬프트</span>
+          <span class="chip">콘텐츠 × 멀티모달</span>
+          <span class="chip">⏱ 30–40분</span>
+        </div>
+        <span class="lib-mark">모듈 카드 라이브러리 · 2026</span>
+      </div>
+      <h2 class="card-title">NotebookLM 오디오 오버뷰 — 정책 브리핑 팟캐스트</h2>
+      <p class="card-sub">올린 자료가 두 진행자의 대화형 오디오로 변환 · 용도: 출퇴근 학습 · 교육 보조자료 · 정책 내부 공유</p>
+      <div class="head-rule"></div>
+    </header>
+    <div class="card-body">
+      <div class="col">
+        <div class="zone cream fill">
+          <div class="zone-label">핵심 메시지</div>
+          <div class="bullets">
+            <div class="b"><span>읽을 시간이 없으면 <strong>듣게 만들어라</strong></span></div>
+            <div class="b"><span>딱딱한 지침도 대화로 풀면 넘어간다 — 형식이 수용성을 만든다</span></div>
+            <div class="b"><span>교육 전 예습 자료로 배포하면 강의 출발선이 달라진다</span></div>
+          </div>
+        </div>
+        <div class="zone line-accent">
+          <div class="zone-label">보안 · 책임 경계</div>
+          <div class="small">외부 클라우드 — <strong>공개 자료만</strong> 업로드. 오디오도 출처 자료 밖 내용을 섞을 수 있어 핵심 수치는 원문 확인</div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="zone fill">
+          <div class="zone-label">실습 워크플로우</div>
+          <div class="steps">
+            <div class="step"><span class="step-no demo">D</span><span><strong>데모</strong> — 정책 보고서가 10분 팟캐스트로 변하는 장면</span></div>
+            <div class="step"><span class="step-no">1</span><span>NotebookLM에 공개 정책자료 업로드 (W-013 재사용)</span></div>
+            <div class="step"><span class="step-no">2</span><span>오디오 오버뷰 생성 — 초점 지시(맞춤 설정) 입력</span></div>
+            <div class="step"><span class="step-no">3</span><span>청취하며 원문 대비 누락·과장 체크</span></div>
+            <div class="step"><span class="step-no">4</span><span>대상별 초점을 바꿔 재생성 (신입용 / 관리자용)</span></div>
+            <div class="step"><span class="step-no">5</span><span><strong>변형</strong> — 교육과정 예습 오디오로 배포 설계</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="zone fill">
+          <div class="zone-label">결과물</div>
+          <div class="bullets">
+            <div class="b"><span>정책 브리핑 오디오 1편</span></div>
+            <div class="b"><span>대상별 초점 지시문 2종</span></div>
+          </div>
+          <div class="small divider"><span class="hl">진행 포인트</span> — 언어 설정 확인 · 긴 자료는 챕터 나눠 생성</div>
+        </div>
+        <div class="zone dark">
+          <div class="zone-label">확장 연결 카드</div>
+          <div class="small">W-013 지식창고 · W-028 TTS 내레이션 · W-030 영상 재가공</div>
+        </div>
+      </div>
+    </div>
+    <div class="prompt-bar">
+      <span class="prompt-label">복붙 프롬프트</span>
+      <span class="prompt-text">(NotebookLM 오디오 오버뷰 맞춤 설정에) 청취자는 <span class="var">(이 정책을 처음 접하는 직원)</span>이다. ① 이 제도가 왜 생겼는지 ② 우리 업무에서 바뀌는 것 ③ 자주 묻는 질문 3개를 중심으로, 전문용어는 풀어서 10분 내로 다뤄줘.</span>
+    </div>
+    <footer class="card-foot">
+      <div>모듈 카드 라이브러리 · W-027</div>
+      <div>2026 AI데이터분석 역량강화 · 강사양성과정</div>
+      <div class="page">27</div>
+    </footer>
+  </section>
+
+<!-- ═══ W-028 TTS 안내방송·내레이션 ═══ -->
+  <section class="card" data-label="W-028 TTS 안내방송" data-speaker-notes="대본 다듬기(구어체·숫자 읽기)가 품질의 절반. 성우 섭외 없이 안내방송·교육 내레이션이 나온다는 것이 기관 실무 포인트.">
+    <header class="card-head">
+      <div class="head-row">
+        <div class="meta">
+          <span class="id-badge">W-028</span>
+          <span class="chip accent">L2 어시스트 워크플로우</span>
+          <span class="chip">콘텐츠 × 멀티모달</span>
+          <span class="chip">⏱ 40분</span>
+        </div>
+        <span class="lib-mark">모듈 카드 라이브러리 · 2026</span>
+      </div>
+      <h2 class="card-title">TTS 안내방송·내레이션 제작</h2>
+      <p class="card-sub">안내문을 TTS용 대본으로 다듬어 음성 파일 생성 · 용도: 청사 안내방송 · 교육 영상 내레이션 · ARS 멘트</p>
+      <div class="head-rule"></div>
+    </header>
+    <div class="card-body">
+      <div class="col">
+        <div class="zone cream fill">
+          <div class="zone-label">핵심 메시지</div>
+          <div class="bullets">
+            <div class="b"><span>성우 섭외 없이 <strong>당일 안내방송</strong>이 가능해졌다</span></div>
+            <div class="b"><span>TTS 품질의 절반은 <strong>대본 다듬기</strong> — 구어체·숫자 읽기</span></div>
+            <div class="b"><span>ElevenLabs·GPT Voice — 도구는 골라 쓰되 원리는 같다</span></div>
+          </div>
+        </div>
+        <div class="zone line-accent">
+          <div class="zone-label">보안 · 책임 경계</div>
+          <div class="small">특정인 목소리 복제는 <strong>동의 없이 금지</strong> (W-036 연결). 대외 방송은 기관 표준 안내문구·법적 고지 포함 확인</div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="zone fill">
+          <div class="zone-label">실습 워크플로우</div>
+          <div class="steps">
+            <div class="step"><span class="step-no demo">D</span><span><strong>데모</strong> — 공지문이 자연스러운 안내방송 음성이 되는 과정</span></div>
+            <div class="step"><span class="step-no">1</span><span>안내문 원문을 준비한다</span></div>
+            <div class="step"><span class="step-no">2</span><span>AI로 TTS용 대본 변환 — 구어체·쉼표 호흡·숫자 한글 표기</span></div>
+            <div class="step"><span class="step-no">3</span><span>TTS 도구에서 목소리·속도 선택해 생성</span></div>
+            <div class="step"><span class="step-no">4</span><span>어색한 발음 구간을 대본 수정으로 보정</span></div>
+            <div class="step"><span class="step-no">5</span><span><strong>변형</strong> — 교육 슬라이드 내레이션 세트 제작</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="zone fill">
+          <div class="zone-label">결과물</div>
+          <div class="bullets">
+            <div class="b"><span>안내방송 음성 파일 1건</span></div>
+            <div class="b"><span>TTS 대본 변환 프롬프트 (숫자·기호 읽기 규칙 포함)</span></div>
+          </div>
+          <div class="small divider"><span class="hl">진행 포인트</span> — 기관명·고유명사 발음 확인 · 무료 플랜 분량 제한</div>
+        </div>
+        <div class="zone dark">
+          <div class="zone-label">확장 연결 카드</div>
+          <div class="small">W-027 오디오 브리핑 · W-036 음성 클로닝 경계 · W-040 발표 영상</div>
+        </div>
+      </div>
+    </div>
+    <div class="prompt-bar">
+      <span class="prompt-label">복붙 프롬프트</span>
+      <span class="prompt-text">아래 안내문을 TTS로 읽힐 방송 대본으로 바꿔줘. 문어체를 구어체로, 숫자·날짜는 읽는 그대로 한글 표기(예: 3월 5일→삼월 오일), 문장은 짧게, 쉼표로 호흡 표시. 길이는 낭독 <span class="var">(40초)</span> 분량. 안내문: <span class="var">(붙여넣기)</span></span>
+    </div>
+    <footer class="card-foot">
+      <div>모듈 카드 라이브러리 · W-028</div>
+      <div>2026 AI데이터분석 역량강화 · 강사양성과정</div>
+      <div class="page">28</div>
+    </footer>
+  </section>
+
+<!-- ═══ W-029 정책 홍보 숏폼 영상 ═══ -->
+  <section class="card" data-label="W-029 숏폼 영상 제작" data-speaker-notes="영상 도구보다 스토리보드가 먼저라는 순서가 이 카드의 교훈. 5컷 구조(훅-문제-해결-증거-행동)만 잡으면 도구는 뭘 쓰든 된다.">
+    <header class="card-head">
+      <div class="head-row">
+        <div class="meta">
+          <span class="id-badge">W-029</span>
+          <span class="chip accent">L3 에이전트 서비스</span>
+          <span class="chip">콘텐츠 × 멀티모달</span>
+          <span class="chip">⏱ 60–90분</span>
+        </div>
+        <span class="lib-mark">모듈 카드 라이브러리 · 2026</span>
+      </div>
+      <h2 class="card-title">정책 홍보 숏폼 영상 — 스토리보드 → 영상 생성</h2>
+      <p class="card-sub">5컷 스토리보드 설계 후 생성 도구로 클립 제작 · 용도: 정책 홍보 · 행사 안내 · 기관 SNS</p>
+      <div class="head-rule"></div>
+    </header>
+    <div class="card-body">
+      <div class="col">
+        <div class="zone cream fill">
+          <div class="zone-label">핵심 메시지</div>
+          <div class="bullets">
+            <div class="b"><span>도구보다 먼저 <strong>스토리보드</strong> — 컷 설계가 영상의 뼈대다</span></div>
+            <div class="b"><span>숏폼 공식 — 훅 · 문제 · 해결 · 증거 · 행동 유도</span></div>
+            <div class="b"><span>Google Flow·Kling — 컷·프레임 개념만 알면 도구는 바뀌어도 된다</span></div>
+          </div>
+        </div>
+        <div class="zone line-accent">
+          <div class="zone-label">보안 · 책임 경계</div>
+          <div class="small">생성 영상 속 인물은 <strong>실존 인물과 무관함</strong>을 확인·표기. 정책 수치는 자막으로 정확히 — 영상 속 임의 수치 금지</div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="zone fill">
+          <div class="zone-label">실습 워크플로우</div>
+          <div class="steps">
+            <div class="step"><span class="step-no demo">D</span><span><strong>데모</strong> — 스토리보드 5컷이 30초 클립이 되는 과정</span></div>
+            <div class="step"><span class="step-no">1</span><span>메시지·타깃 정의 — "누가 보고 무엇을 하게 할 것인가"</span></div>
+            <div class="step"><span class="step-no">2</span><span>AI와 5컷 스토리보드 작성 — 장면·자막·내레이션</span></div>
+            <div class="step"><span class="step-no">3</span><span>컷별 영상 프롬프트 생성 → 도구에서 클립 제작</span></div>
+            <div class="step"><span class="step-no">4</span><span>편집 도구에서 자막·음성(W-028) 결합</span></div>
+            <div class="step"><span class="step-no">5</span><span><strong>변형</strong> — 같은 스토리보드로 플랫폼별(쇼츠/릴스) 파생</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="zone fill">
+          <div class="zone-label">결과물</div>
+          <div class="bullets">
+            <div class="b"><span>5컷 스토리보드 (재사용 템플릿)</span></div>
+            <div class="b"><span>30초 내외 홍보 클립 1편</span></div>
+          </div>
+          <div class="small divider"><span class="hl">진행 포인트</span> — 생성 실패 컷은 이미지+줌 효과로 대체 · 첫 3초 훅에 집중</div>
+        </div>
+        <div class="zone dark">
+          <div class="zone-label">확장 연결 카드</div>
+          <div class="small">W-028 TTS · W-030 영상 재가공 · W-040 발표 영상</div>
+        </div>
+      </div>
+    </div>
+    <div class="prompt-bar">
+      <span class="prompt-label">복붙 프롬프트</span>
+      <span class="prompt-text"><span class="var">(청년 월세 지원 신청)</span>을 알리는 30초 숏폼 스토리보드를 만들어줘. 5컷 구조: ①훅(3초, 시선 잡기) ②문제 공감 ③제도 소개 ④신청 방법 ⑤행동 유도. 컷마다 장면 묘사·자막 문구·내레이션 문장·영상 생성용 프롬프트(영문)를 표로 정리해줘. 타깃: <span class="var">(20~30대)</span></span>
+    </div>
+    <footer class="card-foot">
+      <div>모듈 카드 라이브러리 · W-029</div>
+      <div>2026 AI데이터분석 역량강화 · 강사양성과정</div>
+      <div class="page">29</div>
+    </footer>
+  </section>
+
+<!-- ═══ W-030 영상 클립·자막 재가공 ═══ -->
+  <section class="card" data-label="W-030 영상 재가공" data-speaker-notes="이미 있는 강의·행사 영상이 잠자는 자산이라는 지적에서 출발. 전사(W-001 계열)→하이라이트 추출→숏폼 대본이 한 흐름이 된다.">
+    <header class="card-head">
+      <div class="head-row">
+        <div class="meta">
+          <span class="id-badge">W-030</span>
+          <span class="chip accent">L2 어시스트 워크플로우</span>
+          <span class="chip">콘텐츠 × 멀티모달</span>
+          <span class="chip">⏱ 50분</span>
+        </div>
+        <span class="lib-mark">모듈 카드 라이브러리 · 2026</span>
+      </div>
+      <h2 class="card-title">강의·행사 영상을 클립·자막·요약으로 재가공</h2>
+      <p class="card-sub">긴 영상에서 하이라이트 추출 → 숏폼 대본·자막·설명문 생성 · 용도: 교육 아카이브 · 행사 사후 홍보</p>
+      <div class="head-rule"></div>
+    </header>
+    <div class="card-body">
+      <div class="col">
+        <div class="zone cream fill">
+          <div class="zone-label">핵심 메시지</div>
+          <div class="bullets">
+            <div class="b"><span>찍어둔 영상은 <strong>잠자는 콘텐츠 자산</strong>이다</span></div>
+            <div class="b"><span>1시간 영상 하나에서 숏폼 5개가 나온다</span></div>
+            <div class="b"><span>영상 편집이 아니라 <strong>텍스트 편집</strong>부터 — 전사가 출발점</span></div>
+          </div>
+        </div>
+        <div class="zone line-accent">
+          <div class="zone-label">보안 · 책임 경계</div>
+          <div class="small">영상 속 <strong>참석자 초상권·발언 동의</strong> 확인 후 공개. 발언 맥락을 자르는 편집은 왜곡 위험 — 원 발언 취지 유지</div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="zone fill">
+          <div class="zone-label">실습 워크플로우</div>
+          <div class="steps">
+            <div class="step"><span class="step-no demo">D</span><span><strong>데모</strong> — 1시간 강의 전사문에서 숏폼 대본 3개 추출</span></div>
+            <div class="step"><span class="step-no">1</span><span>영상을 전사한다 (클로바노트·유튜브 자막 활용)</span></div>
+            <div class="step"><span class="step-no">2</span><span>전사문에서 하이라이트 구간 5개 추출 (시간값 포함)</span></div>
+            <div class="step"><span class="step-no">3</span><span>구간별 숏폼 대본 — 훅 문장·자막·제목 생성</span></div>
+            <div class="step"><span class="step-no">4</span><span>업로드 설명문·해시태그·썸네일 문구 생성</span></div>
+            <div class="step"><span class="step-no">5</span><span><strong>변형</strong> — 전체 영상 요약문으로 아카이브 목록 구축</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="zone fill">
+          <div class="zone-label">결과물</div>
+          <div class="bullets">
+            <div class="b"><span>하이라이트 구간표 + 숏폼 대본 3종</span></div>
+            <div class="b"><span>업로드 설명문·썸네일 문구 세트</span></div>
+          </div>
+          <div class="small divider"><span class="hl">진행 포인트</span> — 시간값 정확도 확인 · 발언 왜곡 없는지 원본 대조</div>
+        </div>
+        <div class="zone dark">
+          <div class="zone-label">확장 연결 카드</div>
+          <div class="small">W-001 음성 전사 · W-029 숏폼 제작 · W-013 지식창고 축적</div>
+        </div>
+      </div>
+    </div>
+    <div class="prompt-bar">
+      <span class="prompt-label">복붙 프롬프트</span>
+      <span class="prompt-text">아래는 <span class="var">(기관 특강)</span> 영상 전사문(시간값 포함)이다. ① 시청자가 반응할 하이라이트 구간 5개(시작~끝 시간, 선정 이유) ② 상위 3개 구간의 60초 숏폼 대본(훅 문장·자막 흐름·제목) ③ 업로드 설명문과 해시태그를 만들어줘. 발언 취지를 왜곡하지 마. 전사문: <span class="var">(붙여넣기)</span></span>
+    </div>
+    <footer class="card-foot">
+      <div>모듈 카드 라이브러리 · W-030</div>
+      <div>2026 AI데이터분석 역량강화 · 강사양성과정</div>
+      <div class="page">30</div>
+    </footer>
+  </section>
+
+<!-- ═══ W-031 브랜드 일관성 스타일가이드 ═══ -->
+  <section class="card" data-label="W-031 기관 스타일가이드" data-speaker-notes="콘텐츠가 담당자마다 제각각이 되는 문제의 해법. 스타일가이드를 시스템 프롬프트처럼 앞에 붙이는 습관 하나로 톤이 통일된다.">
+    <header class="card-head">
+      <div class="head-row">
+        <div class="meta">
+          <span class="id-badge">W-031</span>
+          <span class="chip accent">L2 어시스트 워크플로우</span>
+          <span class="chip">콘텐츠 × 멀티모달</span>
+          <span class="chip">⏱ 40분</span>
+        </div>
+        <span class="lib-mark">모듈 카드 라이브러리 · 2026</span>
+      </div>
+      <h2 class="card-title">홍보 콘텐츠 브랜드 일관성 — 기관 스타일가이드 프롬프트</h2>
+      <p class="card-sub">기관 톤앤매너를 프롬프트로 문서화해 모든 콘텐츠 앞에 재사용 · 용도: SNS 운영 · 홍보물 품질 통일</p>
+      <div class="head-rule"></div>
+    </header>
+    <div class="card-body">
+      <div class="col">
+        <div class="zone cream fill">
+          <div class="zone-label">핵심 메시지</div>
+          <div class="bullets">
+            <div class="b"><span>담당자가 바뀌어도 <strong>기관의 목소리</strong>는 유지되어야 한다</span></div>
+            <div class="b"><span>스타일가이드는 디자인 문서가 아니라 <strong>재사용 프롬프트</strong>다</span></div>
+            <div class="b"><span>금지 표현 목록이 선호 표현 목록만큼 중요하다</span></div>
+          </div>
+        </div>
+        <div class="zone line-accent">
+          <div class="zone-label">보안 · 책임 경계</div>
+          <div class="small">기관 CI·심벌 사용 규정과 충돌하지 않게 <strong>공식 지침 확인</strong>. 정치적 해석 여지가 있는 표현은 금지 목록에 명시</div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="zone fill">
+          <div class="zone-label">실습 워크플로우</div>
+          <div class="steps">
+            <div class="step"><span class="step-no demo">D</span><span><strong>데모</strong> — 같은 요청이 가이드 유/무에 따라 다른 결과가 되는 비교</span></div>
+            <div class="step"><span class="step-no">1</span><span>잘 된 기관 콘텐츠 3~5개를 모은다</span></div>
+            <div class="step"><span class="step-no">2</span><span>AI로 공통 톤 분석 — 어조·문장 길이·어휘·이모지 규칙</span></div>
+            <div class="step"><span class="step-no">3</span><span>스타일가이드 프롬프트 작성 (선호/금지 표현 포함)</span></div>
+            <div class="step"><span class="step-no">4</span><span>가이드를 붙여 신규 콘텐츠 생성 — 톤 일치 확인</span></div>
+            <div class="step"><span class="step-no">5</span><span><strong>변형</strong> — 이미지 스타일 규칙(W-025)과 합본</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="zone fill">
+          <div class="zone-label">결과물</div>
+          <div class="bullets">
+            <div class="b"><span>기관 스타일가이드 프롬프트 1건</span></div>
+            <div class="b"><span>가이드 적용 전후 비교 샘플</span></div>
+          </div>
+          <div class="small divider"><span class="hl">진행 포인트</span> — 과한 규칙은 창의성 죽임 · 핵심 규칙 7개 이내</div>
+        </div>
+        <div class="zone dark">
+          <div class="zone-label">확장 연결 카드</div>
+          <div class="small">W-025 이미지 변수화 · W-021 프롬프트 라이브러리 · W-024 카드뉴스</div>
+        </div>
+      </div>
+    </div>
+    <div class="prompt-bar">
+      <span class="prompt-label">복붙 프롬프트</span>
+      <span class="prompt-text">아래는 우리 기관의 잘 된 홍보 콘텐츠들이다. 공통 스타일을 분석해 "스타일가이드 프롬프트"로 정리해줘. 포함: 어조, 문장 길이, 자주 쓰는 어휘, 이모지·해시태그 규칙, 금지 표현. 앞으로 콘텐츠 요청 앞에 붙일 수 있는 형태로 200자 내외. 콘텐츠: <span class="var">(붙여넣기)</span></span>
+    </div>
+    <footer class="card-foot">
+      <div>모듈 카드 라이브러리 · W-031</div>
+      <div>2026 AI데이터분석 역량강화 · 강사양성과정</div>
+      <div class="page">31</div>
+    </footer>
+  </section>
+
+<!-- ═══ W-032 Canvas·SVG 도식 만들기 ═══ -->
+  <section class="card" data-label="W-032 지식의 도식화" data-speaker-notes="'지식을 쉬운 그림으로 도식화하는 게 강사의 핵심 역량' — 이 과정 전체의 철학 카드. 내 생각이 명확해야 AI도 잘 그려준다는 순서를 강조.">
+    <header class="card-head">
+      <div class="head-row">
+        <div class="meta">
+          <span class="id-badge">W-032</span>
+          <span class="chip accent">L2 어시스트 워크플로우</span>
+          <span class="chip">콘텐츠 × 바이브코딩</span>
+          <span class="chip">⏱ 40–60분</span>
+        </div>
+        <span class="lib-mark">모듈 카드 라이브러리 · 2026</span>
+      </div>
+      <h2 class="card-title">Canvas·SVG로 도식 만들기 — 지식의 도식화</h2>
+      <p class="card-sub">업무 프로세스·개념 구조를 SVG 도식 HTML로 생성 · 용도: 보고서 도식 · 강의 슬라이드 · 안내 게시물</p>
+      <div class="head-rule"></div>
+    </header>
+    <div class="card-body">
+      <div class="col">
+        <div class="zone cream fill">
+          <div class="zone-label">핵심 메시지</div>
+          <div class="bullets">
+            <div class="b"><span>지식을 <strong>쉬운 그림으로 도식화</strong>하는 것이 강사의 핵심 역량</span></div>
+            <div class="b"><span>내 생각이 명확해야 AI도 잘 그린다 — <strong>구조 먼저, 그림 나중</strong></span></div>
+            <div class="b"><span>파워포인트 도형 씨름 대신 말로 그린다</span></div>
+          </div>
+        </div>
+        <div class="zone line-accent">
+          <div class="zone-label">보안 · 책임 경계</div>
+          <div class="small">조직도·업무 흐름 도식에 <strong>내부 시스템명·담당자 실명</strong>이 남지 않게 일반화. 대외 공개 전 내용 검수</div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="zone fill">
+          <div class="zone-label">실습 워크플로우</div>
+          <div class="steps">
+            <div class="step"><span class="step-no demo">D</span><span><strong>데모</strong> — 말로 설명한 절차가 화살표 도식 HTML로 태어나는 과정</span></div>
+            <div class="step"><span class="step-no">1</span><span>도식화할 개념을 말로 3~5개 요소로 분해</span></div>
+            <div class="step"><span class="step-no">2</span><span>구조 유형 선택 — 흐름형 / 방사형 / 계층형 / 매트릭스</span></div>
+            <div class="step"><span class="step-no">3</span><span>SVG 도식 단일 HTML 생성 요청</span></div>
+            <div class="step"><span class="step-no">4</span><span>색·강조·문구를 대화로 수정 반복</span></div>
+            <div class="step"><span class="step-no">5</span><span><strong>변형</strong> — 캡처해 보고서·슬라이드에 삽입</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="zone fill">
+          <div class="zone-label">결과물</div>
+          <div class="bullets">
+            <div class="b"><span>업무 도식 SVG .html 1개 (수정 가능한 원본)</span></div>
+            <div class="b"><span>나의 도식 구조 유형 목록</span></div>
+          </div>
+          <div class="small divider"><span class="hl">진행 포인트</span> — 요소 7개 초과 시 분할 · 텍스트 겹침 확인</div>
+        </div>
+        <div class="zone dark">
+          <div class="zone-label">확장 연결 카드</div>
+          <div class="small">W-033 인포그래픽 · W-065 단일 HTML 도구 · W-012 슬라이드 체인</div>
+        </div>
+      </div>
+    </div>
+    <div class="prompt-bar">
+      <span class="prompt-label">복붙 프롬프트</span>
+      <span class="prompt-text"><span class="var">(민원 처리 절차)</span>를 도식으로 그려줘. 요소: <span class="var">(접수→검토→처리→통보, 반려 분기 포함)</span>. 단일 HTML 파일에 SVG로, 가로 흐름형, 각 단계는 둥근 사각형과 화살표, 색은 차분한 남색 계열, 제목 포함, 1200×600. 코드 전체를 하나의 코드블록으로 줘.</span>
+    </div>
+    <footer class="card-foot">
+      <div>모듈 카드 라이브러리 · W-032</div>
+      <div>2026 AI데이터분석 역량강화 · 강사양성과정</div>
+      <div class="page">32</div>
+    </footer>
+  </section>
+
+<!-- ═══ W-033 인포그래픽·통계 카드 ═══ -->
+  <section class="card" data-label="W-033 인포그래픽 카드" data-speaker-notes="통계 보도자료의 표가 SNS용 숫자 카드로 바뀌는 카드. 숫자 하나를 크게 — 인포그래픽의 제1원칙을 반복 강조.">
+    <header class="card-head">
+      <div class="head-row">
+        <div class="meta">
+          <span class="id-badge">W-033</span>
+          <span class="chip accent">L2 어시스트 워크플로우</span>
+          <span class="chip">콘텐츠 × 데이터분석</span>
+          <span class="chip">⏱ 40–60분</span>
+        </div>
+        <span class="lib-mark">모듈 카드 라이브러리 · 2026</span>
+      </div>
+      <h2 class="card-title">인포그래픽·통계 카드 만들기</h2>
+      <p class="card-sub">통계·성과 수치를 한눈에 읽히는 카드형 그래픽으로 · 용도: 성과 홍보 · 통계 발표 · 기관 SNS</p>
+      <div class="head-rule"></div>
+    </header>
+    <div class="card-body">
+      <div class="col">
+        <div class="zone cream fill">
+          <div class="zone-label">핵심 메시지</div>
+          <div class="bullets">
+            <div class="b"><span>표를 올리면 스치고 <strong>숫자 카드</strong>를 올리면 멈춘다</span></div>
+            <div class="b"><span>인포그래픽 제1원칙 — <strong>숫자 하나를 크게</strong></span></div>
+            <div class="b"><span>수치의 맥락(전년 대비·의미)이 함께 있어야 정보다</span></div>
+          </div>
+        </div>
+        <div class="zone line-accent">
+          <div class="zone-label">보안 · 책임 경계</div>
+          <div class="small">공표 전 통계는 사용 금지 — <strong>공식 발표 수치만</strong>. 반올림·기준 시점을 카드에 명시해 오해 방지</div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="zone fill">
+          <div class="zone-label">실습 워크플로우</div>
+          <div class="steps">
+            <div class="step"><span class="step-no demo">D</span><span><strong>데모</strong> — 통계표 하나가 SNS 숫자 카드 3장이 되는 과정</span></div>
+            <div class="step"><span class="step-no">1</span><span>공표 통계에서 전달할 수치 3개 선정</span></div>
+            <div class="step"><span class="step-no">2</span><span>수치별 헤드라인 문구 생성 — 맥락 포함</span></div>
+            <div class="step"><span class="step-no">3</span><span>카드 레이아웃 HTML(또는 이미지) 생성</span></div>
+            <div class="step"><span class="step-no">4</span><span>기관 톤(W-031) 적용해 색·문구 정리</span></div>
+            <div class="step"><span class="step-no">5</span><span><strong>변형</strong> — 시리즈 템플릿화해 매월 갱신 체계로</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="zone fill">
+          <div class="zone-label">결과물</div>
+          <div class="bullets">
+            <div class="b"><span>통계 카드 3장 세트</span></div>
+            <div class="b"><span>매월 재사용할 카드 템플릿</span></div>
+          </div>
+          <div class="small divider"><span class="hl">진행 포인트</span> — 출처·기준시점 표기 필수 · 그래프 왜곡(축 조작) 금지</div>
+        </div>
+        <div class="zone dark">
+          <div class="zone-label">확장 연결 카드</div>
+          <div class="small">W-032 도식화 · W-056 브라우저 대시보드 · W-046 차트 해석</div>
+        </div>
+      </div>
+    </div>
+    <div class="prompt-bar">
+      <span class="prompt-label">복붙 프롬프트</span>
+      <span class="prompt-text">아래 통계로 SNS용 숫자 카드 3장을 기획해줘. 카드마다 ① 크게 보여줄 핵심 숫자 ② 헤드라인 한 줄(맥락 포함) ③ 보조 설명 한 줄 ④ 출처·기준시점 표기. 이어서 카드 1장을 1080×1080 단일 HTML로 만들어줘 — 큰 숫자 중심, 기관 색상 <span class="var">(남색)</span>. 통계: <span class="var">(붙여넣기)</span></span>
+    </div>
+    <footer class="card-foot">
+      <div>모듈 카드 라이브러리 · W-033</div>
+      <div>2026 AI데이터분석 역량강화 · 강사양성과정</div>
+      <div class="page">33</div>
+    </footer>
+  </section>
+
+<!-- CARDS-END -->
+</div>
+<div id="slidelabel"></div>
+<div id="hud">
+  <button id="prev" aria-label="이전 슬라이드">◀</button>
+  <span id="counter"></span>
+  <button id="next" aria-label="다음 슬라이드">▶</button>
+</div>
+<script>
+(function () {
+  var slides = [].slice.call(document.querySelectorAll('#scaler > section'));
+  var n = slides.length, i = 0;
+  var counter = document.getElementById('counter');
+  var label = document.getElementById('slidelabel');
+  function go(k) {
+    i = Math.max(0, Math.min(n - 1, k));
+    slides.forEach(function (s, j) { s.classList.toggle('active', j === i); });
+    counter.textContent = (i + 1) + ' / ' + n;
+    label.textContent = slides[i].getAttribute('data-label') || '';
+    if (('' + (i + 1)) !== location.hash.slice(1)) location.hash = i + 1;
+  }
+  function fit() {
+    var s = Math.min(window.innerWidth / 1920, window.innerHeight / 1080);
+    document.getElementById('scaler').style.transform = 'translate(-50%, -50%) scale(' + s + ')';
+  }
+  window.addEventListener('resize', fit);
+  window.addEventListener('keydown', function (e) {
+    if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') { e.preventDefault(); go(i + 1); }
+    else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); go(i - 1); }
+    else if (e.key === 'Home') go(0);
+    else if (e.key === 'End') go(n - 1);
+  });
+  window.addEventListener('hashchange', function () {
+    var h = parseInt(location.hash.slice(1), 10);
+    if (!isNaN(h) && h - 1 !== i) go(h - 1);
+  });
+  document.getElementById('prev').addEventListener('click', function () { go(i - 1); });
+  document.getElementById('next').addEventListener('click', function () { go(i + 1); });
+  var x0 = null;
+  window.addEventListener('touchstart', function (e) { x0 = e.touches[0].clientX; }, { passive: true });
+  window.addEventListener('touchend', function (e) {
+    if (x0 === null) return;
+    var dx = e.changedTouches[0].clientX - x0;
+    if (dx < -40) go(i + 1); else if (dx > 40) go(i - 1);
+    x0 = null;
+  }, { passive: true });
+  fit();
+  var h = parseInt(location.hash.slice(1), 10);
+  go(isNaN(h) ? 0 : h - 1);
+})();
+</script>
+<script>/* kg-preview: #<heading> \uc704\uce58\ub85c \uc774\ub3d9 */
+(function(){function norm(t){return (t||'').replace(/\s+/g,'').toLowerCase()}
+function go(){var h=decodeURIComponent(location.hash.slice(1));if(!h)return;var k=norm(h).slice(0,24);if(!k)return;
+var best=null,bl=1e9,els=document.body.querySelectorAll('h1,h2,h3,h4,h5,p,div,span,li,td,text,tspan,section,article');
+for(var i=0;i<els.length;i++){var e=els[i],t=norm(e.textContent);if(t.length<bl&&t.indexOf(k)>-1){best=e;bl=t.length}}
+if(!best)return;var box=best.closest('section,[class*=slide],[class*=page],article')||best;
+box.scrollIntoView({block:'start'});box.style.outline='3px solid #c0504d';box.style.outlineOffset='4px';
+setTimeout(function(){box.style.outline=''},2600)}
+window.addEventListener('load',function(){setTimeout(go,400)});window.addEventListener('hashchange',go)})();</script></body>
+</html>

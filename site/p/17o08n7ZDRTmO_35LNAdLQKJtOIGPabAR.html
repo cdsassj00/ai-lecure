@@ -1,0 +1,625 @@
+import React, { useState } from 'react';
+import { 
+    Move, MousePointer2, TrendingUp, Users, Heart, Lightbulb, 
+    Download, Mail, Phone, ExternalLink, Award, PenTool, 
+    BarChart2, Video, Megaphone, Smartphone, CheckCircle2,
+    Menu, X, Play, Globe, Instagram, Youtube, BookOpen, Target, Zap, 
+    Layers, Search, AlertTriangle, RefreshCcw
+} from 'lucide-react';
+
+/* -------------------------------------------------------------------------- */
+/* UI COMPONENTS                                                              */
+/* -------------------------------------------------------------------------- */
+
+const SectionTitle = ({ number, title, subtitle, color = "bg-black" }) => (
+    <div className="flex flex-col md:flex-row items-start md:items-end gap-4 mb-12 border-b-4 border-black/10 pb-6">
+        <div className={`text-white ${color} px-4 py-2 font-black text-xl rounded-lg shadow-[4px_4px_0px_rgba(0,0,0,0.2)] transform -rotate-2`}>
+            {number}
+        </div>
+        <div>
+            <h2 className="text-4xl md:text-6xl font-black font-montserrat tracking-tighter text-slate-800 uppercase">
+                {title}
+            </h2>
+            <p className="font-bold text-slate-500 mt-2 text-lg">{subtitle}</p>
+        </div>
+    </div>
+);
+
+const Tape = ({ className, color = "bg-yellow-100/80" }) => (
+    <div className={`absolute h-8 w-32 ${color} backdrop-blur-sm shadow-sm z-20 pointer-events-none ${className}`} style={{clipPath: 'polygon(5% 0, 100% 0, 95% 100%, 0% 100%)'}}></div>
+);
+
+const Sticker = ({ text, className, color="bg-blue-500" }) => (
+    <div className={`absolute ${className} ${color} text-white font-black px-4 py-2 text-sm rounded-sm shadow-md z-10 uppercase tracking-widest border-2 border-white/20`}>
+        {text}
+    </div>
+);
+
+/* -------------------------------------------------------------------------- */
+/* MAIN APP                                                                   */
+/* -------------------------------------------------------------------------- */
+
+const App = () => {
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+    const customStyles = `
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap');
+        
+        body { 
+            font-family: 'Noto Sans KR', sans-serif; 
+            background-color: #F0EBE0; 
+            color: #1F2937;
+            overflow-x: hidden;
+        }
+        .font-montserrat { font-family: 'Montserrat', sans-serif; }
+        
+        /* Detailed Grid Pattern */
+        .bg-grid-dense {
+            background-image: 
+                linear-gradient(#E5E7EB 1px, transparent 1px),
+                linear-gradient(90deg, #E5E7EB 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+
+        .paper-texture {
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' opacity='0.08'/%3E%3C/svg%3E");
+        }
+
+        .highlight-pen {
+            background: linear-gradient(120deg, rgba(255, 107, 53, 0) 0%, rgba(255, 107, 53, 0.2) 100%);
+            padding: 0 4px;
+        }
+    `;
+
+    return (
+        <div className="min-h-screen relative paper-texture bg-grid-dense">
+            <style>{customStyles}</style>
+
+            {/* Navigation */}
+            <nav className="fixed top-0 w-full z-50 bg-[#F0EBE0]/95 backdrop-blur-md border-b-2 border-black/10">
+                <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+                    <div className="font-montserrat font-black text-2xl tracking-tight text-[#FF6B35]">
+                        YOON DONGJU.
+                    </div>
+                    <div className="hidden md:flex space-x-8 text-sm font-black text-slate-800">
+                        {['About', 'Skill', 'Knowledge', 'Ability', 'Competence', 'Projects'].map((item) => (
+                            <a key={item} href={`#${item.toLowerCase()}`} className="hover:text-[#FF6B35] transition-colors uppercase">
+                                {item}
+                            </a>
+                        ))}
+                    </div>
+                    <a href="mailto:dtr200@naver.com" className="hidden md:flex bg-black text-white px-6 py-3 rounded-xl font-bold hover:bg-[#FF6B35] transition-all shadow-[4px_4px_0px_rgba(0,0,0,0.2)]">
+                        HIRE ME
+                    </a>
+                    <button className="md:hidden" onClick={() => setIsMenuOpen(!isMenuOpen)}><Menu /></button>
+                </div>
+            </nav>
+
+            {/* 1. HERO SECTION */}
+            <header className="pt-32 pb-20 px-6 max-w-7xl mx-auto min-h-screen flex items-center"><meta name="robots" content="noindex, nofollow">
+                <div className="w-full bg-[#FF6B35] rounded-[3rem] p-4 md:p-6 shadow-[16px_16px_0px_#1F2937] border-4 border-black relative overflow-hidden">
+                    <div className="bg-[#F0EBE0] rounded-[2.5rem] p-8 md:p-16 border-4 border-black flex flex-col md:flex-row gap-12 relative overflow-hidden">
+                        
+                        {/* Content */}
+                        <div className="flex-1 relative z-10 flex flex-col justify-center">
+                            <div className="inline-block bg-black text-white px-4 py-2 font-bold mb-6 rotate-[-2deg] self-start shadow-[4px_4px_0px_rgba(0,0,0,0.2)]">
+                                PORTFOLIO 2025
+                            </div>
+                            <h1 className="font-montserrat font-black text-6xl md:text-9xl leading-[0.85] tracking-tighter mb-8 text-slate-900">
+                                SPREAD<br/><span className="text-white text-stroke-3">VALUE.</span>
+                            </h1>
+                            <p className="text-xl md:text-2xl font-bold text-slate-700 leading-relaxed mb-10 border-l-8 border-[#FF6B35] pl-6">
+                                브랜드의 씨앗을 세상 곳곳에 퍼뜨리는<br/>
+                                <span className="highlight-pen">마케터 윤동주</span>입니다.
+                            </p>
+                            <div className="flex gap-4">
+                                <a href="#skill" className="bg-black text-white px-8 py-4 rounded-xl font-bold text-lg hover:translate-y-1 transition-transform border-2 border-black">
+                                    SKACI 분석 보기
+                                </a>
+                                <a href="#projects" className="bg-white text-black px-8 py-4 rounded-xl font-bold text-lg hover:bg-slate-100 transition-transform border-2 border-black shadow-[4px_4px_0px_black]">
+                                    프로젝트 보기
+                                </a>
+                            </div>
+                        </div>
+
+                        {/* Visual */}
+                        <div className="flex-1 flex items-center justify-center relative">
+                            <div className="w-80 h-80 md:w-[500px] md:h-[500px] bg-white border-4 border-black rounded-full flex items-center justify-center shadow-[12px_12px_0px_rgba(0,0,0,0.1)] relative">
+                                <div className="text-center">
+                                    <div className="text-9xl mb-4 animate-bounce">🍀</div>
+                                    <div className="font-black text-2xl">HOLSSI</div>
+                                </div>
+                                <Sticker text="Creative" className="-top-4 right-10 rotate-12" color="bg-yellow-400 text-black"/>
+                                <Sticker text="Analytical" className="bottom-10 -left-6 -rotate-6" color="bg-blue-500"/>
+                                <Sticker text="Growth" className="top-1/2 -right-10 rotate-3" color="bg-green-500"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            {/* -------------------------------------------------------------------------- */}
+            {/* SKACI DEEP DIVE (Expanded Sections)                                       */}
+            {/* -------------------------------------------------------------------------- */}
+
+            <div className="max-w-5xl mx-auto px-6 pb-24">
+                <div className="text-center mb-24">
+                    <span className="bg-black text-white px-4 py-1 font-bold rounded-full text-sm uppercase tracking-widest mb-4 inline-block">Competence Analysis</span>
+                    <h2 className="text-5xl md:text-7xl font-black font-montserrat tracking-tighter">
+                        SKACI <span className="text-[#FF6B35] underline decoration-4 underline-offset-8">REPORT</span>
+                    </h2>
+                </div>
+
+                {/* 1. SKILL SECTION */}
+                <section id="skill" className="mb-32">
+                    <SectionTitle number="01" title="Skill" subtitle="제작 능력 & 데이터 리터러시" color="bg-blue-600" />
+                    <div className="bg-white p-8 md:p-12 rounded-3xl border-4 border-black shadow-[12px_12px_0px_#BFDBFE] relative">
+                        <Tape className="-top-4 left-1/2 -translate-x-1/2 rotate-2 bg-blue-200" />
+                        
+                        <div className="grid md:grid-cols-3 gap-8">
+                            <div className="bg-blue-50 p-6 rounded-2xl border-2 border-blue-100">
+                                <div className="w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center text-white mb-4 shadow-lg"><PenTool /></div>
+                                <h3 className="font-black text-xl mb-3">제작 능력</h3>
+                                <p className="font-bold text-slate-700 leading-relaxed text-sm">
+                                    콘텐츠 아이디어를 시각적 결과물로 전환하는 제작 능력 보유
+                                </p>
+                                <div className="mt-4 flex flex-wrap gap-2">
+                                    {['Photoshop','Illustrator','Premiere','AfterEffects'].map(t=>(<span key={t} className="bg-white px-2 py-1 rounded text-xs font-bold border border-blue-200">{t}</span>))}
+                                </div>
+                            </div>
+                            <div className="bg-blue-50 p-6 rounded-2xl border-2 border-blue-100">
+                                <div className="w-12 h-12 bg-indigo-600 rounded-xl flex items-center justify-center text-white mb-4 shadow-lg"><BarChart2 /></div>
+                                <h3 className="font-black text-xl mb-3">데이터 리터러시</h3>
+                                <p className="font-bold text-slate-700 leading-relaxed text-sm">
+                                    정성적 정보를 정량·구조화된 형태로 재해석하는 표현 능력 (GA 자격 보유)
+                                </p>
+                                <div className="mt-4 flex flex-wrap gap-2">
+                                    {['Google Analytics','Infographic','Data Viz'].map(t=>(<span key={t} className="bg-white px-2 py-1 rounded text-xs font-bold border border-blue-200">{t}</span>))}
+                                </div>
+                            </div>
+                            <div className="bg-blue-50 p-6 rounded-2xl border-2 border-blue-100">
+                                <div className="w-12 h-12 bg-sky-600 rounded-xl flex items-center justify-center text-white mb-4 shadow-lg"><Smartphone /></div>
+                                <h3 className="font-black text-xl mb-3">미디어 설계</h3>
+                                <p className="font-bold text-slate-700 leading-relaxed text-sm">
+                                    플랫폼별 특성(릴스·블로그·카드뉴스·웹툰)에 맞는 최적의 포맷 설계 기술
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                {/* 2. KNOWLEDGE SECTION */}
+                <section id="knowledge" className="mb-32">
+                    <SectionTitle number="02" title="Knowledge" subtitle="전략적 사고 & 이론적 배경" color="bg-yellow-500" />
+                    <div className="bg-[#FFFBEB] p-8 md:p-12 rounded-3xl border-4 border-black shadow-[12px_12px_0px_#FCD34D] relative overflow-hidden">
+                        {/* Background Lines for Notebook feel */}
+                        <div className="absolute inset-0 opacity-10 pointer-events-none" style={{backgroundImage: 'linear-gradient(#000 1px, transparent 1px)', backgroundSize: '100% 2rem', marginTop: '3rem'}}></div>
+                        <Tape className="-right-4 top-20 rotate-45 bg-yellow-400" />
+
+                        <div className="grid md:grid-cols-2 gap-x-12 gap-y-8 relative z-10">
+                            <div className="space-y-6">
+                                <div className="flex gap-4 items-start">
+                                    <BookOpen className="shrink-0 mt-1 text-yellow-600" />
+                                    <div>
+                                        <h3 className="font-black text-lg underline decoration-2 decoration-yellow-400 mb-1">커뮤니케이션 & 메시징</h3>
+                                        <p className="text-sm font-medium text-slate-700">언어전환·내러티브 구성·스토리텔링 구조 및 타깃 기반 메시징 지식(세그멘테이션·페르소나)</p>
+                                    </div>
+                                </div>
+                                <div className="flex gap-4 items-start">
+                                    <Target className="shrink-0 mt-1 text-yellow-600" />
+                                    <div>
+                                        <h3 className="font-black text-lg underline decoration-2 decoration-yellow-400 mb-1">마케팅 전략 모델</h3>
+                                        <p className="text-sm font-medium text-slate-700">SWOT, IMC, STP 전략 수립 및 브랜드 커뮤니케이션 구조(메시지 맵·핵심가치 도출) 이해</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="space-y-6">
+                                <div className="flex gap-4 items-start">
+                                    <Search className="shrink-0 mt-1 text-yellow-600" />
+                                    <div>
+                                        <h3 className="font-black text-lg underline decoration-2 decoration-yellow-400 mb-1">데이터 & 정보 구조화</h3>
+                                        <p className="text-sm font-medium text-slate-700">기초 통계, 사회데이터 리터러시, 정보의 시각적 의미화 체계 지식</p>
+                                    </div>
+                                    </div>
+                                <div className="flex gap-4 items-start">
+                                    <AlertTriangle className="shrink-0 mt-1 text-yellow-600" />
+                                    <div>
+                                        <h3 className="font-black text-lg underline decoration-2 decoration-yellow-400 mb-1">위기 관리 & 미디어 문법</h3>
+                                        <p className="text-sm font-medium text-slate-700">이슈·위기 커뮤니케이션(사건-메시지-대응), 플랫폼 알고리즘 및 소비 패턴 이해</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                {/* 3. ABILITY SECTION */}
+                <section id="ability" className="mb-32">
+                    <SectionTitle number="03" title="Ability" subtitle="실행 프로세스 & 태도" color="bg-red-500" />
+                    <div className="relative">
+                        {/* Connecting Line */}
+                        <div className="absolute left-6 md:left-1/2 top-0 bottom-0 w-1 bg-slate-300 md:-translate-x-1/2 z-0"></div>
+                        
+                        <div className="space-y-8 relative z-10">
+                            {[
+                                { title: "End-to-End 완결성", desc: "아이디어 발굴 → 제작 → 실행 → 측정까지 하나의 흐름을 끝까지 완주", icon: CheckCircle2 },
+                                { title: "커뮤니케이션 리더십", desc: "다양한 이해관계자를 조율하며 협업하는 팀 운영 경험", icon: Users },
+                                { title: "상황 대응력", desc: "상황 변화에 따라 메시지를 조정하고 콘텐츠 방향을 재설계", icon: RefreshCcw },
+                                { title: "학습·적응 태도", desc: "새로운 시도와 실험을 기반으로 성과를 개선하는 업무 태도", icon: Lightbulb }
+                            ].map((item, idx) => (
+                                <div key={idx} className={`flex flex-col md:flex-row items-center gap-6 ${idx % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'}`}>
+                                    <div className="w-full md:w-1/2">
+                                        <div className="bg-white p-6 rounded-2xl border-2 border-slate-200 shadow-md hover:border-red-400 transition-colors flex items-center gap-4">
+                                            <div className="bg-red-100 p-3 rounded-full text-red-500 shrink-0">
+                                                <item.icon size={24}/>
+                                            </div>
+                                            <div>
+                                                <h3 className="font-black text-lg text-slate-800">{item.title}</h3>
+                                                <p className="text-sm text-slate-600">{item.desc}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="hidden md:block w-4 h-4 bg-red-500 rounded-full border-4 border-white shadow"></div>
+                                    <div className="w-full md:w-1/2"></div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+
+                {/* 4. COMPETENCE SECTION (Impact Highlights) */}
+                <section id="competence" className="mb-32">
+                    <SectionTitle number="04" title="Competence" subtitle="증명된 실무 역량" color="bg-green-600" />
+                    <div className="grid md:grid-cols-3 gap-6">
+                        <div className="bg-[#1F2937] text-white p-8 rounded-3xl shadow-[8px_8px_0px_#4B5563] flex flex-col justify-between border-4 border-black group hover:-translate-y-2 transition-transform">
+                            <TrendingUp size={48} className="text-green-400 mb-6 group-hover:scale-110 transition-transform" />
+                            <div>
+                                <h3 className="text-2xl font-black mb-2 text-green-400">Growth Hacking</h3>
+                                <p className="font-bold text-slate-300 mb-4">정량적 성과 창출 실행역량</p>
+                                <div className="text-4xl font-black mb-1">763%</div>
+                                <div className="text-sm opacity-70">조회수 증가</div>
+                                <div className="w-full h-px bg-white/20 my-4"></div>
+                                <div className="text-4xl font-black mb-1">94%</div>
+                                <div className="text-sm opacity-70">블로그 유입 증가</div>
+                            </div>
+                        </div>
+                        <div className="bg-[#1F2937] text-white p-8 rounded-3xl shadow-[8px_8px_0px_#4B5563] flex flex-col justify-between border-4 border-black group hover:-translate-y-2 transition-transform">
+                            <AlertTriangle size={48} className="text-yellow-400 mb-6 group-hover:scale-110 transition-transform" />
+                            <div>
+                                <h3 className="text-2xl font-black mb-2 text-yellow-400">Crisis Comms</h3>
+                                <p className="font-bold text-slate-300 mb-4">위기 관리 커뮤니케이션</p>
+                                <p className="text-sm leading-relaxed text-slate-300">
+                                    정책·이슈 상황에서 긴급 메시지를 적절히 구성해 신뢰도를 회복시키는 대응 역량 보유
+                                </p>
+                            </div>
+                        </div>
+                        <div className="bg-[#1F2937] text-white p-8 rounded-3xl shadow-[8px_8px_0px_#4B5563] flex flex-col justify-between border-4 border-black group hover:-translate-y-2 transition-transform">
+                            <Layers size={48} className="text-blue-400 mb-6 group-hover:scale-110 transition-transform" />
+                            <div>
+                                <h3 className="text-2xl font-black mb-2 text-blue-400">End-to-End PM</h3>
+                                <p className="font-bold text-slate-300 mb-4">프로젝트 완결 수행능력</p>
+                                <p className="text-sm leading-relaxed text-slate-300">
+                                    프로젝트 전체 구조를 설계하고 기획부터 운영·평가까지 책임지는 PM 역량
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                {/* 5. INTEREST SECTION */}
+                <section id="interest">
+                    <SectionTitle number="05" title="Interest" subtitle="가치관 & 동기" color="bg-pink-500" />
+                    <div className="bg-white p-10 rounded-3xl border-4 border-black shadow-lg relative overflow-hidden flex flex-col md:flex-row items-center gap-12">
+                        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-20"></div>
+                        <div className="flex-1 z-10 space-y-8">
+                             <div className="bg-pink-50 p-6 rounded-2xl border-2 border-pink-100 rotate-1">
+                                <h3 className="font-black text-xl mb-2 flex items-center gap-2"><Heart className="text-pink-500" /> Social Impact</h3>
+                                <p className="text-slate-700 font-medium">사회적 가치·공공적 메시지를 대중에게 전달하는 브랜딩·커뮤니케이션 분야에 대한 지속적 흥미</p>
+                             </div>
+                             <div className="bg-purple-50 p-6 rounded-2xl border-2 border-purple-100 -rotate-1">
+                                <h3 className="font-black text-xl mb-2 flex items-center gap-2"><Zap className="text-purple-500" /> Translation</h3>
+                                <p className="text-slate-700 font-medium">브랜드·정책·데이터 등 다양한 정보의 의미를 찾아 대중 언어로 재해석하는 과정 자체에 대한 동기</p>
+                             </div>
+                        </div>
+                        <div className="flex-1 z-10 text-center md:text-right">
+                             <div className="inline-block bg-black text-white p-8 rounded-full shadow-2xl relative">
+                                <span className="absolute -top-4 -right-4 text-4xl">✨</span>
+                                <h3 className="font-black text-3xl mb-2">HOLSSI</h3>
+                                <p className="text-sm font-medium opacity-80">IDENTITY</p>
+                             </div>
+                             <p className="mt-8 font-black text-2xl text-slate-800 leading-tight">
+                                "세상에 가치를 퍼뜨리는<br/>
+                                <span className="bg-pink-200 px-2">'홀씨'</span>로서의 정체성"
+                             </p>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            {/* -------------------------------------------------------------------------- */}
+            {/* PORTFOLIO DEEP DIVE (Detailed Case Studies)                               */}
+            {/* -------------------------------------------------------------------------- */}
+            <section id="projects" className="py-24 bg-[#1F2937] text-white">
+                <div className="max-w-6xl mx-auto px-6">
+                    <div className="text-center mb-20">
+                        <h2 className="text-5xl md:text-7xl font-black font-montserrat text-white mb-4">PROJECTS</h2>
+                        <p className="text-slate-400 text-lg">기획부터 성과 측정까지 완결된 프로젝트 경험</p>
+                    </div>
+
+                    <div className="space-y-20">
+                        {/* PROJECT 1: 질병관리청 */}
+                        <div className="bg-white text-slate-900 rounded-[2.5rem] p-8 md:p-12 shadow-[20px_20px_0px_#000] border-4 border-slate-200 relative overflow-hidden group">
+                            <div className="absolute top-0 right-0 bg-[#FF6B35] text-white font-bold px-6 py-2 rounded-bl-2xl text-lg">CASE STUDY 01</div>
+                            
+                            <div className="flex flex-col md:flex-row gap-12">
+                                <div className="md:w-1/3">
+                                    <h3 className="text-4xl font-black mb-4 leading-tight">질병관리청<br/>SNS 채널 운영</h3>
+                                    <div className="flex flex-wrap gap-2 mb-8">
+                                        <span className="px-3 py-1 bg-black text-white rounded-full text-xs font-bold">공공PR</span>
+                                        <span className="px-3 py-1 bg-slate-200 text-slate-700 rounded-full text-xs font-bold">캐릭터 마케팅</span>
+                                    </div>
+                                    <div className="bg-slate-100 p-6 rounded-2xl border border-slate-200">
+                                        <div className="mb-4">
+                                            <div className="text-xs font-bold text-slate-500 uppercase">Total Views</div>
+                                            <div className="text-4xl font-black text-[#FF6B35]">763% 🔼</div>
+                                        </div>
+                                        <div>
+                                            <div className="text-xs font-bold text-slate-500 uppercase">Contribution</div>
+                                            <div className="font-bold">기획 80% / 운영 90%</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="md:w-2/3 space-y-8">
+                                    <div>
+                                        <h4 className="font-black text-xl mb-2 flex items-center gap-2"><Lightbulb size={20}/> 기획 의도</h4>
+                                        <p className="text-slate-700 font-medium leading-relaxed bg-[#FFFBEB] p-4 rounded-xl border border-yellow-200">
+                                            딱딱하고 어려운 질병 정보를 국민들이 거부감 없이 받아들일 수 있도록 '번역'하는 것이 핵심이었습니다. 기관 마스코트 '뽀득이'를 활용해 친근감을 높이고, 최신 밈(Meme)을 패러디하여 정보 확산을 유도했습니다.
+                                        </p>
+                                    </div>
+                                    <div className="grid md:grid-cols-2 gap-6">
+                                        <div>
+                                            <h4 className="font-black text-lg mb-2">실행 전략</h4>
+                                            <ul className="list-disc list-inside text-sm text-slate-600 space-y-2 font-medium">
+                                                <li>인스타그램 '무물' 기능을 활용한 Q&A 콘텐츠</li>
+                                                <li>질병 정보 카드뉴스 정기 발행 및 톤앤매너 통일</li>
+                                                <li>참여형 이벤트 기획으로 인터랙션 증대</li>
+                                            </ul>
+                                        </div>
+                                        <div>
+                                            <h4 className="font-black text-lg mb-2">주요 성과</h4>
+                                            <ul className="list-disc list-inside text-sm text-slate-600 space-y-2 font-medium">
+                                                <li>패러디 콘텐츠로 평균 조회수 대폭 상승</li>
+                                                <li>질병 이슈 발생 시 긴급 콘텐츠로 국민 불안 해소</li>
+                                                <li>기관 신뢰도 및 정책 수용도 증진 기여</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* PROJECT 2: 통계청 */}
+                        <div className="bg-white text-slate-900 rounded-[2.5rem] p-8 md:p-12 shadow-[20px_20px_0px_#000] border-4 border-slate-200 relative overflow-hidden group">
+                             <div className="absolute top-0 right-0 bg-blue-500 text-white font-bold px-6 py-2 rounded-bl-2xl text-lg">CASE STUDY 02</div>
+                             <div className="flex flex-col md:flex-row gap-12">
+                                <div className="md:w-1/3">
+                                    <h3 className="text-4xl font-black mb-4 leading-tight">통계청 블로그<br/>기획기사 작성</h3>
+                                    <div className="flex flex-wrap gap-2 mb-8">
+                                        <span className="px-3 py-1 bg-black text-white rounded-full text-xs font-bold">데이터 시각화</span>
+                                        <span className="px-3 py-1 bg-slate-200 text-slate-700 rounded-full text-xs font-bold">스토리텔링</span>
+                                    </div>
+                                    <div className="bg-slate-100 p-6 rounded-2xl border border-slate-200">
+                                        <div className="mb-4">
+                                            <div className="text-xs font-bold text-slate-500 uppercase">Blog Traffic</div>
+                                            <div className="text-4xl font-black text-blue-500">94% 🔼</div>
+                                        </div>
+                                        <div>
+                                            <div className="text-xs font-bold text-slate-500 uppercase">Contribution</div>
+                                            <div className="font-bold">기사 작성 90%</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="md:w-2/3 space-y-8">
+                                    <div>
+                                        <h4 className="font-black text-xl mb-2 flex items-center gap-2"><PenTool size={20}/> 솔루션</h4>
+                                        <p className="text-slate-700 font-medium leading-relaxed bg-blue-50 p-4 rounded-xl border border-blue-100">
+                                            "통계는 어렵다"는 인식을 깨기 위해 귀농, 여름휴가 등 시의성 있는 키워드와 통계 데이터를 연결했습니다. 복잡한 수치 데이터를 인포그래픽으로 구조화하여 가독성을 극대화했습니다.
+                                        </p>
+                                    </div>
+                                    <div className="grid md:grid-cols-2 gap-6">
+                                        <div>
+                                            <h4 className="font-black text-lg mb-2">실행 내용</h4>
+                                            <ul className="list-disc list-inside text-sm text-slate-600 space-y-2 font-medium">
+                                                <li>사회 현상 주제 기획기사 및 인포그래픽 제작</li>
+                                                <li>인스타툰 작가 '단무지' 협업 콘텐츠 기획</li>
+                                                <li>잠재적 이슈 모니터링 및 댓글 관리</li>
+                                            </ul>
+                                        </div>
+                                        <div>
+                                            <h4 className="font-black text-lg mb-2">인사이트</h4>
+                                            <ul className="list-disc list-inside text-sm text-slate-600 space-y-2 font-medium">
+                                                <li>검색 유입을 고려한 키워드 선정의 중요성 확인</li>
+                                                <li>데이터 기반의 객관성과 친근한 톤앤매너의 균형</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                         {/* PROJECT 3: 지구자판기 */}
+                         <div className="bg-white text-slate-900 rounded-[2.5rem] p-8 md:p-12 shadow-[20px_20px_0px_#000] border-4 border-slate-200 relative overflow-hidden group">
+                             <div className="absolute top-0 right-0 bg-green-500 text-white font-bold px-6 py-2 rounded-bl-2xl text-lg">CASE STUDY 03</div>
+                             <div className="flex flex-col md:flex-row gap-12">
+                                <div className="md:w-1/3">
+                                    <h3 className="text-4xl font-black mb-4 leading-tight">지구자판기<br/>프로모션</h3>
+                                    <div className="flex flex-wrap gap-2 mb-8">
+                                        <span className="px-3 py-1 bg-black text-white rounded-full text-xs font-bold">오프라인 행사</span>
+                                        <span className="px-3 py-1 bg-slate-200 text-slate-700 rounded-full text-xs font-bold">ESG</span>
+                                    </div>
+                                    <div className="bg-slate-100 p-6 rounded-2xl border border-slate-200">
+                                        <div className="mb-4">
+                                            <div className="text-xs font-bold text-slate-500 uppercase">Goal Achievement</div>
+                                            <div className="text-4xl font-black text-green-500">100%</div>
+                                        </div>
+                                        <div>
+                                            <div className="text-xs font-bold text-slate-500 uppercase">Contribution</div>
+                                            <div className="font-bold">기획 80% / 제작 100%</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="md:w-2/3 space-y-8">
+                                    <div>
+                                        <h4 className="font-black text-xl mb-2 flex items-center gap-2"><Globe size={20}/> 기획 의도</h4>
+                                        <p className="text-slate-700 font-medium leading-relaxed bg-green-50 p-4 rounded-xl border border-green-100">
+                                            리필 스테이션 이용 활성화를 위해 초등학생과 학부모를 타겟으로 체험형 마케팅을 기획했습니다. '용기(Container/Courage)'라는 중의적 키워드를 활용해 캠페인 메시지를 전달했습니다.
+                                        </p>
+                                    </div>
+                                    <div className="grid md:grid-cols-2 gap-6">
+                                        <div>
+                                            <h4 className="font-black text-lg mb-2">프로모션 구성</h4>
+                                            <ul className="list-disc list-inside text-sm text-slate-600 space-y-2 font-medium">
+                                                <li>용기(Container) 지참 시 할인 혜택 제공</li>
+                                                <li>'지구자판기 절망편' 등 유머 소구 릴스 제작</li>
+                                                <li>현장 설문조사를 통한 페인포인트 분석</li>
+                                            </ul>
+                                        </div>
+                                        <div>
+                                            <h4 className="font-black text-lg mb-2">성과</h4>
+                                            <ul className="list-disc list-inside text-sm text-slate-600 space-y-2 font-medium">
+                                                <li>준비된 프로모션 물량 전량 소진 (완판)</li>
+                                                <li>타겟층의 높은 참여율과 긍정적 피드백 확보</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                         {/* PROJECT 4: SPAM */}
+                         <div className="bg-white text-slate-900 rounded-[2.5rem] p-8 md:p-12 shadow-[20px_20px_0px_#000] border-4 border-slate-200 relative overflow-hidden group">
+                             <div className="absolute top-0 right-0 bg-yellow-400 text-black font-bold px-6 py-2 rounded-bl-2xl text-lg">CASE STUDY 04</div>
+                             <div className="flex flex-col md:flex-row gap-12">
+                                <div className="md:w-1/3">
+                                    <h3 className="text-4xl font-black mb-4 leading-tight">SPAM<br/>Z세대 타겟 전략</h3>
+                                    <div className="flex flex-wrap gap-2 mb-8">
+                                        <span className="px-3 py-1 bg-black text-white rounded-full text-xs font-bold">브랜드 리포지셔닝</span>
+                                        <span className="px-3 py-1 bg-slate-200 text-slate-700 rounded-full text-xs font-bold">SNS 부계정</span>
+                                    </div>
+                                    <div className="bg-slate-100 p-6 rounded-2xl border border-slate-200">
+                                        <div className="mb-4">
+                                            <div className="text-xs font-bold text-slate-500 uppercase">Targeting</div>
+                                            <div className="text-2xl font-black text-yellow-500">Gen Z</div>
+                                        </div>
+                                        <div>
+                                            <div className="text-xs font-bold text-slate-500 uppercase">Contribution</div>
+                                            <div className="font-bold">전략 기획 90%</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="md:w-2/3 space-y-8">
+                                    <div>
+                                        <h4 className="font-black text-xl mb-2 flex items-center gap-2"><Target size={20}/> 전략 포인트</h4>
+                                        <p className="text-slate-700 font-medium leading-relaxed bg-yellow-50 p-4 rounded-xl border border-yellow-100">
+                                            전통적인 캔햄 이미지에서 벗어나기 위해 '스팸 메일' 컨셉의 부계정(Sub-Account)을 제안했습니다. B급 감성과 FOOH(가상 옥외광고) 콘텐츠로 브랜드의 이미지를 젊고 힙하게 변모시켰습니다.
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <h4 className="font-black text-lg mb-2">실행 전략 Detail</h4>
+                                        <div className="grid md:grid-cols-3 gap-4 text-center">
+                                            <div className="bg-slate-50 p-4 rounded-lg border border-slate-200">
+                                                <div className="font-black mb-1">Concept</div>
+                                                <div className="text-xs text-slate-500">스팸 메일 바이러스</div>
+                                            </div>
+                                            <div className="bg-slate-50 p-4 rounded-lg border border-slate-200">
+                                                <div className="font-black mb-1">Channel</div>
+                                                <div className="text-xs text-slate-500">Instagram 부계정</div>
+                                            </div>
+                                            <div className="bg-slate-50 p-4 rounded-lg border border-slate-200">
+                                                <div className="font-black mb-1">Content</div>
+                                                <div className="text-xs text-slate-500">숏폼 & FOOH</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* PROJECT 5: VIDEO */}
+                         <div className="bg-black text-white rounded-[2.5rem] p-8 md:p-12 shadow-[20px_20px_0px_#4B5563] border-4 border-slate-700 relative overflow-hidden group">
+                             <div className="absolute top-0 right-0 bg-red-600 text-white font-bold px-6 py-2 rounded-bl-2xl text-lg">VIDEO PRODUCTION</div>
+                             
+                             <div className="flex flex-col md:flex-row gap-12">
+                                <div className="md:w-1/3 border-r border-slate-700 pr-8">
+                                    <h3 className="text-4xl font-black mb-6 leading-tight">영상 제작<br/>컬렉션</h3>
+                                    <p className="text-slate-400 font-medium mb-8">
+                                        시나리오부터 촬영, 편집, 모션그래픽까지 영상 제작의 전 과정을 직접 수행하며 크리에이티브 역량을 증명했습니다.
+                                    </p>
+                                    <div className="flex gap-4">
+                                        <div className="bg-slate-800 p-4 rounded-xl text-center flex-1">
+                                            <Video className="mx-auto mb-2 text-red-500"/>
+                                            <div className="font-bold text-sm"> 촬영/편집</div>
+                                        </div>
+                                        <div className="bg-slate-800 p-4 rounded-xl text-center flex-1">
+                                            <PenTool className="mx-auto mb-2 text-purple-500"/>
+                                            <div className="font-bold text-sm"> 모션그래픽</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="md:w-2/3 space-y-6">
+                                    <div className="bg-slate-900 p-6 rounded-2xl border border-slate-700 flex gap-6 items-center">
+                                        <div className="w-16 h-16 bg-red-900/30 rounded-xl flex items-center justify-center shrink-0 text-red-500"><Youtube size={32}/></div>
+                                        <div>
+                                            <h4 className="font-black text-xl text-white mb-1">스케치 코미디 '오발탄'</h4>
+                                            <p className="text-slate-400 text-sm">MZ세대 공감 숏폼 기획 및 연출. 배우 섭외부터 현장 디렉팅까지 1인 다역 수행.</p>
+                                        </div>
+                                    </div>
+                                    <div className="bg-slate-900 p-6 rounded-2xl border border-slate-700 flex gap-6 items-center">
+                                        <div className="w-16 h-16 bg-purple-900/30 rounded-xl flex items-center justify-center shrink-0 text-purple-500"><PenTool size={32}/></div>
+                                        <div>
+                                            <h4 className="font-black text-xl text-white mb-1">Coloring Myself</h4>
+                                            <p className="text-slate-400 text-sm">자아 정체성을 주제로 한 2D 모션그래픽. 일러스트레이터와 애프터이펙트 활용.</p>
+                                        </div>
+                                    </div>
+                                    <div className="bg-slate-900 p-6 rounded-2xl border border-slate-700 flex gap-6 items-center">
+                                        <div className="w-16 h-16 bg-blue-900/30 rounded-xl flex items-center justify-center shrink-0 text-blue-500"><Video size={32}/></div>
+                                        <div>
+                                            <h4 className="font-black text-xl text-white mb-1">M/V: Martini Blues</h4>
+                                            <p className="text-slate-400 text-sm">가수 하이디 뮤직비디오 조연출. 세트 디자인 및 촬영 보조.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+
+             {/* FOOTER */}
+             <footer className="bg-[#1F2937] text-white py-16 text-center border-t-8 border-[#FF6B35]">
+                <div className="max-w-4xl mx-auto px-6">
+                    <p className="font-montserrat font-black text-3xl mb-4 text-[#FF6B35]">YOON DONGJU</p>
+                    <p className="text-slate-400 text-sm mb-12 font-medium leading-relaxed">
+                        All-Rounder Content Marketer<br/>
+                        Copyright © 2025. All Rights Reserved.
+                    </p>
+                    <div className="flex justify-center gap-6">
+                        <a href="mailto:dtr200@naver.com" className="bg-white/10 p-4 rounded-full hover:bg-[#FF6B35] hover:text-white transition-all"><Mail size={24}/></a>
+                        <span className="bg-white/10 p-4 rounded-full"><Phone size={24}/></span>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    );
+};
+
+export default App;<script>/* kg-preview: #<heading> \uc704\uce58\ub85c \uc774\ub3d9 */
+(function(){function norm(t){return (t||'').replace(/\s+/g,'').toLowerCase()}
+function go(){var h=decodeURIComponent(location.hash.slice(1));if(!h)return;var k=norm(h).slice(0,24);if(!k)return;
+var best=null,bl=1e9,els=document.body.querySelectorAll('h1,h2,h3,h4,h5,p,div,span,li,td,text,tspan,section,article');
+for(var i=0;i<els.length;i++){var e=els[i],t=norm(e.textContent);if(t.length<bl&&t.indexOf(k)>-1){best=e;bl=t.length}}
+if(!best)return;var box=best.closest('section,[class*=slide],[class*=page],article')||best;
+box.scrollIntoView({block:'start'});box.style.outline='3px solid #c0504d';box.style.outlineOffset='4px';
+setTimeout(function(){box.style.outline=''},2600)}
+window.addEventListener('load',function(){setTimeout(go,400)});window.addEventListener('hashchange',go)})();</script>

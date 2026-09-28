@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head><meta name="robots" content="noindex, nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>5회차 — 바이브 코딩 2: 업무 자동화 (로컬 LLM·콘솔·엑셀)</title>
+<link rel="preconnect" href="https://cdnjs.cloudflare.com">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+<style>
+:root{
+  --bg:#fafaf6; --panel:#ffffff; --ink:#1b1e24; --ink-soft:#5a6069; --ink-faint:#8b919b;
+  --line:#e7e6df; --line-soft:#f0efe9;
+  --teal:#127c71; --teal-d:#0c5249; --teal-bg:#e6f4f1;
+  --amber:#b9722a; --amber-bg:#fbf1e4;
+  --red:#c0392b; --red-bg:#fbe9e7;
+  --code-bg:#f6f6f0;
+  --mono:ui-monospace,"SF Mono","Cascadia Code","JetBrains Mono",Consolas,monospace;
+  --sans:-apple-system,BlinkMacSystemFont,"Pretendard","Apple SD Gothic Neo","Segoe UI","Malgun Gothic",sans-serif;
+  --rad:12px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);
+  font-size:16px;line-height:1.72;-webkit-font-smoothing:antialiased}
+
+/* layout */
+.shell{display:grid;grid-template-columns:300px minmax(0,1fr);max-width:1240px;margin:0 auto}
+.print-toc{display:none}
+.side{position:sticky;top:0;align-self:start;height:100vh;overflow-y:auto;
+  padding:30px 22px 60px;border-right:1px solid var(--line)}
+.main{min-width:0;padding:46px 60px 120px;max-width:880px}
+
+/* sidebar */
+.brand{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--teal);margin-bottom:6px}
+.brand-t{font-weight:700;font-size:17px;line-height:1.35;margin:0 0 4px}
+.brand-s{font-size:12.5px;color:var(--ink-faint);margin:0 0 24px;line-height:1.5}
+nav a{display:block;text-decoration:none;color:var(--ink-soft);border-left:2px solid transparent;
+  padding:3px 0 3px 12px;font-size:13.5px;transition:color .15s,border-color .15s}
+nav a:hover{color:var(--ink)}
+nav a.nav-h1{margin-top:16px;font-weight:700;color:var(--ink);font-size:13px;
+  font-family:var(--mono);letter-spacing:.02em}
+nav a.nav-h2{font-size:13px}
+nav a.active{color:var(--teal-d);border-left-color:var(--teal);font-weight:600}
+
+/* headings */
+h1.modhead{font-size:13px;font-family:var(--mono);letter-spacing:.06em;text-transform:uppercase;
+  color:var(--teal);margin:72px 0 0;padding-top:28px;border-top:2px solid var(--ink);
+  font-weight:700}
+h1.modhead::after{content:attr(data-full);display:block;font-family:var(--sans);
+  font-size:30px;letter-spacing:-.01em;text-transform:none;color:var(--ink);
+  margin-top:8px;font-weight:750;line-height:1.2}
+h1.modhead{font-size:0}            /* hide raw, show via ::after */
+h1.modhead.intro{font-size:13px}
+h2{font-size:21px;font-weight:720;letter-spacing:-.01em;margin:46px 0 14px;
+  padding-bottom:8px;border-bottom:1px solid var(--line)}
+h3{font-size:16.5px;font-weight:700;margin:32px 0 10px;color:var(--ink)}
+h2.starred,h3.starred{color:var(--teal-d)}
+h2.starred::before,h3.starred::before{content:"★ ";color:var(--teal);font-size:.85em}
+h2.starred,h3.starred{}
+.main h1:first-of-type{margin-top:0}
+
+p{margin:12px 0}
+a{color:var(--teal-d)}
+strong{font-weight:700;color:var(--ink)}
+ul,ol{padding-left:22px;margin:12px 0}
+li{margin:5px 0}
+hr{border:none;border-top:1px solid var(--line);margin:40px 0}
+
+/* intro hero */
+.hero{background:linear-gradient(135deg,#0c5249,#127c71);color:#eafaf6;
+  border-radius:16px;padding:34px 36px;margin:0 0 14px}
+.hero .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.16em;
+  text-transform:uppercase;color:#9fdfd2;margin-bottom:10px}
+.hero h1{font-size:32px;line-height:1.18;margin:0 0 12px;font-weight:780;letter-spacing:-.02em}
+.hero p{margin:0;color:#cfeee7;font-size:14.5px;line-height:1.6}
+
+/* tables */
+table{width:100%;border-collapse:collapse;margin:18px 0;font-size:14px;
+  border:1px solid var(--line);border-radius:var(--rad);overflow:hidden}
+thead th{background:var(--teal-bg);color:var(--teal-d);text-align:left;
+  font-weight:700;padding:10px 13px;font-size:13px}
+td{padding:10px 13px;border-top:1px solid var(--line-soft);vertical-align:top}
+tbody tr:nth-child(even){background:#fbfbf8}
+.tablescroll{overflow-x:auto}
+
+/* code */
+.codewrap{margin:16px 0;border:1px solid var(--line);border-radius:var(--rad);
+  overflow:hidden;background:var(--code-bg)}
+.codebar{display:flex;justify-content:space-between;align-items:center;
+  padding:7px 12px;background:#efeee7;border-bottom:1px solid var(--line)}
+.codelang{font-family:var(--mono);font-size:11px;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink-faint);font-weight:600}
+.copybtn{font-family:var(--mono);font-size:11px;border:1px solid var(--line);
+  background:#fff;color:var(--ink-soft);padding:3px 11px;border-radius:6px;cursor:pointer;
+  transition:all .15s}
+.copybtn:hover{border-color:var(--teal);color:var(--teal-d)}
+.copybtn.ok{background:var(--teal);color:#fff;border-color:var(--teal)}
+.codewrap pre{margin:0;padding:0}
+pre code,pre.hljs{display:block;padding:15px 16px;overflow-x:auto;
+  font-family:var(--mono);font-size:13px;line-height:1.6;background:var(--code-bg)!important}
+:not(pre)>code{font-family:var(--mono);font-size:.88em;background:#eeede6;
+  padding:1.5px 6px;border-radius:5px;color:var(--teal-d);white-space:nowrap}
+
+/* mermaid */
+pre.mermaid{background:var(--panel);border:1px solid var(--line);border-radius:var(--rad);
+  padding:22px;margin:20px 0;text-align:center;overflow-x:auto;line-height:1.4}
+
+/* callouts */
+.callout{position:relative;margin:18px 0;padding:14px 18px 14px 18px;border-radius:10px;
+  border-left:4px solid var(--ink-faint);background:#f4f4ee;font-size:14.5px}
+.callout p{margin:8px 0}
+.callout p:first-of-type{margin-top:0}
+.callout p:last-child{margin-bottom:0}
+.callout-badge{display:inline-block;font-family:var(--mono);font-size:10.5px;
+  letter-spacing:.1em;text-transform:uppercase;font-weight:700;
+  padding:2px 9px;border-radius:20px;margin-bottom:8px}
+.callout-note{border-left-color:#9aa0a8;background:#f3f3ee}
+.callout-note .callout-badge{background:#e4e4dd;color:#5a6069}
+.callout-key{border-left-color:var(--teal);background:var(--teal-bg)}
+.callout-key .callout-badge{background:var(--teal);color:#fff}
+.callout-warn{border-left-color:var(--amber);background:var(--amber-bg)}
+.callout-warn .callout-badge{background:var(--amber);color:#fff}
+.callout-add{border-left-color:var(--teal-d);background:#e9f3f1}
+.callout-add .callout-badge{background:var(--teal-d);color:#fff}
+
+/* topbar (mobile) */
+.topbar{display:none}
+
+@media (max-width:880px){
+  .shell{grid-template-columns:1fr}
+  .side{position:fixed;z-index:40;top:0;left:0;width:84%;max-width:320px;height:100vh;
+    background:var(--panel);transform:translateX(-105%);transition:transform .25s;
+    box-shadow:0 0 40px rgba(0,0,0,.18)}
+  .side.open{transform:translateX(0)}
+  .main{padding:70px 22px 90px}
+  .topbar{display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:30;
+    background:rgba(250,250,246,.92);backdrop-filter:blur(8px);
+    padding:12px 18px;border-bottom:1px solid var(--line)}
+  .menubtn{font-family:var(--mono);font-size:13px;border:1px solid var(--line);
+    background:#fff;padding:6px 12px;border-radius:8px;cursor:pointer}
+  .topbar .tt{font-family:var(--mono);font-size:12px;color:var(--teal);letter-spacing:.05em}
+  .scrim{display:none;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:35}
+  .scrim.show{display:block}
+  h1.modhead::after{font-size:25px}
+  .hero h1{font-size:25px}
+  .main{max-width:100%}
+}
+
+/* ── 인쇄 / PDF 저장 (출력 시 목차 먼저 → 본문) ── */
+@media print{
+  @page{margin:14mm 12mm}
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .topbar,.scrim,.menubtn,.copybtn{display:none!important}
+  .shell{display:block;max-width:none}
+  /* 화면용 사이드바는 인쇄에서 완전히 숨김 (변환 불안정 → 빈 페이지 방지) */
+  .side{display:none!important}
+  /* 인쇄 전용 목차: 본문 맨 앞 일반 블록으로 깔끔히 출력 후 페이지 넘김 */
+  .print-toc{display:block!important;break-after:page;page-break-after:always}
+  .print-toc .ptoc-title{font-size:19pt;font-weight:800;color:#0c5249;letter-spacing:-.01em;
+    margin:0 0 16px;padding-bottom:10px;border-bottom:2px solid #127c71}
+  .print-toc a{display:block;color:#1b1e24;text-decoration:none;padding:3px 0;font-size:11.5pt;border:none}
+  .print-toc a.nav-h1{margin-top:13px;font-weight:700;color:#0c5249;font-size:12.5pt}
+  .print-toc a.nav-h2{padding-left:16px;color:#3a3f47}
+  /* 본문 */
+  .main{padding:0;max-width:none}
+  body{font-size:10.5pt;line-height:1.5;background:#fff}
+  a{text-decoration:none;color:inherit}
+  .hero{break-inside:avoid;background:#fff!important;color:#1b1e24!important;
+    border:none;border-bottom:2px solid #127c71;border-radius:0;
+    padding:0 0 14px!important;margin:0 0 18px}
+  .hero .eyebrow{color:#127c71!important}
+  .hero h1{color:#0c5249!important}
+  .hero p{color:#444!important}
+  /* 주제 헤더가 페이지 맨 아래 외롭게 걸리지 않게만 (새 페이지 강제는 빼서 빈 페이지 방지) */
+  h1.modhead{break-after:avoid;page-break-after:avoid}
+  h2,h3{break-after:avoid;page-break-after:avoid}
+  /* 코드·콜아웃·표·다이어그램은 페이지 중간에서 잘리지 않게 */
+  .codewrap,.callout,pre.mermaid,.tablescroll,table{break-inside:avoid;page-break-inside:avoid}
+  pre code,pre.hljs{white-space:pre-wrap;word-break:break-word}
+  pre.mermaid{text-align:center;border:1px solid #ddd;padding:12px 8px;margin:14px auto}
+  pre.mermaid svg{max-width:100%!important;height:auto!important;
+    max-height:200mm!important;display:inline-block!important}
+  .codewrap{border-color:#ccc}
+}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <button class="menubtn" id="menubtn" aria-label="목차 열기">☰ 목차</button>
+  <span class="tt">강의노트 · 보강판</span>
+</div>
+<div class="scrim" id="scrim"></div>
+<div class="shell">
+  <aside class="side" id="side">
+    <div class="brand">강의노트 · 05회차</div>
+    <p class="brand-t">5회차 — 바이브 코딩 2: 업무 자동화 (로컬 LLM·콘솔·엑셀)</p>
+    <p class="brand-s">현장 강의 · 기술 보강판</p>
+    <nav id="nav">
+<a class="nav-h1" href="#0-0">0. 관통하는 태도 — &quot;토큰 0 자동화&quot;</a>
+<a class="nav-h1" href="#1-llm-ollama-pc">1. 로컬 LLM — Ollama (인터넷 없이 내 PC에서)</a>
+<a class="nav-h2" href="#_1">설치</a>
+<a class="nav-h2" href="#5">핵심 명령어 — 5개면 충분</a>
+<a class="nav-h2" href="#gemma-4-e4b">모델 고르기 — Gemma 4 (E4B, 멀티모달)</a>
+<a class="nav-h2" href="#_2">포트·노출 — 여기서 값 하나 바로잡자</a>
+<a class="nav-h2" href="#ui">코딩 에이전트로 채팅 UI 만들기</a>
+<a class="nav-h1" href="#2-ollama-vba-ai">2. Ollama × 엑셀 — VBA로 AI 함수 만들고 배포</a>
+<a class="nav-h1" href="#3-apps-script-llm">3. 구글 설문 자동화 — Apps Script + LLM</a>
+<a class="nav-h1" href="#4-f12">4. 브라우저 콘솔 자동화 (F12) — 겁나서 껐던 그 창</a>
+<a class="nav-h2" href="#_3">기본기 — 헬로월드</a>
+<a class="nav-h2" href="#chatgpt-js">핵심 워크플로우 — 요소 캡처 → ChatGPT → JS</a>
+<a class="nav-h2" href="#4-1">4-1. 첨부파일 일괄 다운로드</a>
+<a class="nav-h2" href="#4-2">4-2. 두 번 클릭 자동화 (행안부 정책자료)</a>
+<a class="nav-h2" href="#4-3-ocr-dx">4-3. 종이 양식 → 이미지 OCR → 폼 자동 입력 (DX)</a>
+<a class="nav-h2" href="#4-4">4-4. 데이터 시각화 + 확장 프로그램(익스텐션) 등록</a>
+<a class="nav-h1" href="#5-0-power-query-powershell">5. 토큰 0 자동화 — 엑셀 Power Query + PowerShell</a>
+<a class="nav-h2" href="#5-1-power-query">5-1. Power Query로 폴더 단위 가져오기</a>
+<a class="nav-h2" href="#5-2">5-2. 함수 없이 전처리 (열 분할)</a>
+<a class="nav-h2" href="#5-3-powershell">5-3. 데이터 추가 → 새로 고침 → PowerShell 무인 실행</a>
+<a class="nav-h2" href="#5-4-task-scheduler">5-4. 작업 스케줄러(Task Scheduler) 등록 — 마지막 무인화</a>
+<a class="nav-h2" href="#5-5">5-5. 왜 이 방식인가 — 오버엔지니어링 경계</a>
+<a class="nav-h1" href="#_4">마무리 &amp;amp; 과제</a>
+<a class="nav-h1" href="#_5">부록 — 도구 · 개념 맵</a>
+<a class="nav-h2" href="#_6">검색 보강 출처</a>
+    </nav>
+  </aside>
+  <main class="main" id="main">
+<nav class="print-toc">
+<div class="ptoc-title">목차</div>
+<a class="nav-h1" href="#0-0">0. 관통하는 태도 — &quot;토큰 0 자동화&quot;</a>
+<a class="nav-h1" href="#1-llm-ollama-pc">1. 로컬 LLM — Ollama (인터넷 없이 내 PC에서)</a>
+<a class="nav-h2" href="#_1">설치</a>
+<a class="nav-h2" href="#5">핵심 명령어 — 5개면 충분</a>
+<a class="nav-h2" href="#gemma-4-e4b">모델 고르기 — Gemma 4 (E4B, 멀티모달)</a>
+<a class="nav-h2" href="#_2">포트·노출 — 여기서 값 하나 바로잡자</a>
+<a class="nav-h2" href="#ui">코딩 에이전트로 채팅 UI 만들기</a>
+<a class="nav-h1" href="#2-ollama-vba-ai">2. Ollama × 엑셀 — VBA로 AI 함수 만들고 배포</a>
+<a class="nav-h1" href="#3-apps-script-llm">3. 구글 설문 자동화 — Apps Script + LLM</a>
+<a class="nav-h1" href="#4-f12">4. 브라우저 콘솔 자동화 (F12) — 겁나서 껐던 그 창</a>
+<a class="nav-h2" href="#_3">기본기 — 헬로월드</a>
+<a class="nav-h2" href="#chatgpt-js">핵심 워크플로우 — 요소 캡처 → ChatGPT → JS</a>
+<a class="nav-h2" href="#4-1">4-1. 첨부파일 일괄 다운로드</a>
+<a class="nav-h2" href="#4-2">4-2. 두 번 클릭 자동화 (행안부 정책자료)</a>
+<a class="nav-h2" href="#4-3-ocr-dx">4-3. 종이 양식 → 이미지 OCR → 폼 자동 입력 (DX)</a>
+<a class="nav-h2" href="#4-4">4-4. 데이터 시각화 + 확장 프로그램(익스텐션) 등록</a>
+<a class="nav-h1" href="#5-0-power-query-powershell">5. 토큰 0 자동화 — 엑셀 Power Query + PowerShell</a>
+<a class="nav-h2" href="#5-1-power-query">5-1. Power Query로 폴더 단위 가져오기</a>
+<a class="nav-h2" href="#5-2">5-2. 함수 없이 전처리 (열 분할)</a>
+<a class="nav-h2" href="#5-3-powershell">5-3. 데이터 추가 → 새로 고침 → PowerShell 무인 실행</a>
+<a class="nav-h2" href="#5-4-task-scheduler">5-4. 작업 스케줄러(Task Scheduler) 등록 — 마지막 무인화</a>
+<a class="nav-h2" href="#5-5">5-5. 왜 이 방식인가 — 오버엔지니어링 경계</a>
+<a class="nav-h1" href="#_4">마무리 &amp;amp; 과제</a>
+<a class="nav-h1" href="#_5">부록 — 도구 · 개념 맵</a>
+<a class="nav-h2" href="#_6">검색 보강 출처</a>
+</nav>
+    <div class="hero">
+      <div class="eyebrow">Lecture Note · 기술 보강판</div>
+      <h1>5회차 — 바이브 코딩 2: 업무 자동화 (로컬 LLM·콘솔·엑셀)</h1>
+      <p>현장 강의를 기술적으로 보강한 학습 레퍼런스 — 강사의 의도는 살리고, 빠지거나 틀린 기술은 정확히 채웠습니다.</p>
+    </div>
+
+<p>이 강의 하나로 무엇을 할 수 있게 하려는가 →
+<strong>"AI를 최소한으로 쓰거나 아예 안 쓰고도 내 PC·폐쇄망 안에서 도는 업무 자동화 4종(로컬 LLM Ollama, 브라우저 콘솔 자동화, 구글 설문 자동생성, 엑셀 Power Query+PowerShell 무인 통합)을 직접 만들어, 거점 리더로서 동료 업무를 덜어주는 '도구화' 감각을 잡는 것."</strong></p>
+<blockquote class="callout callout-key"><span class="callout-badge">핵심</span>
+<p>★ 이 회차는 강사가 <strong>모듈 단위로 직접 번호를 매겨</strong> 진행했다. 그래서 이 노트도 그 실제 모듈 구조를 그대로 따른다(억지 위계 없음). 관통하는 태도 한 줄: <strong>"AI가 다가 아니다 — 토큰 안 드는 로컬·내장 도구(Ollama·콘솔·VBA·Power Query·PowerShell)로도 충분히 자동화된다. 겁나서 껐던 F12를 ChatGPT와 함께 열면 누구나 만든다. 그리고 도구보다 '어디에 적용할지'가 제일 어렵다."</strong></p>
+<p><strong>보강 안내</strong> — 강사가 결과만 보여주고 건너뛴 부분은 실제 동작하는 명령어·코드로 채웠고, 틀린 값(포트 등)은 [정정]했다. 모델명·포트는 웹으로 확인해 <code>(검색 보강)</code>으로 표시했다. 운영성 멘트(점심·쉬는시간·장비 안내 등)는 뺐고, 학습에 도움 되는 일화·사례는 살렸다.</p>
+</blockquote>
+<hr/>
+<h1 class="modhead" data-full='0. 관통하는 태도 — "토큰 0 자동화"' id="0-0">0. 관통하는 태도 — "토큰 0 자동화"</h1>
+<p>오늘 다룬 4가지는 묶는 실 한 가닥이 있다.</p>
+<div class="codewrap"><div class="codebar"><span class="codelang">code</span><button class="copybtn" type="button">복사</button></div><pre class="mermaid">flowchart TD
+  T["업무 자동화 4종&lt;br/&gt;(토큰 0 지향)"]
+  T --&gt; A["① 로컬 LLM&lt;br/&gt;Ollama (폐쇄망)"]
+  T --&gt; B["② 브라우저 콘솔&lt;br/&gt;F12 자동화"]
+  T --&gt; C["③ 구글 설문&lt;br/&gt;Apps Script"]
+  T --&gt; D["④ 엑셀 무인 통합&lt;br/&gt;Power Query + PowerShell"]
+</pre></div>
+<ul>
+<li><strong>공공·폐쇄망 현실에서 쓸 수 있는 작은 자동화</strong>다. ChatGPT를 마음껏 못 쓰는 환경에서도 돈다.</li>
+<li><strong>도구는 쉽다. 어디에 적용할지가 어렵다.</strong> 강사가 가장 많이 반복한 말. "도대체 뭐가 문제야"를 찾는 것, 이해관계자를 느슨하게 푸는 것이 본체다.</li>
+<li><strong>거점 리더 = 동료 업무 덜어주기.</strong> 설문 만드느라 밤새는 사람, 종이 폼 입력하는 계약직, 매달 엑셀 합치는 담당자 — 이들을 도우면 기관이 바뀐다.</li>
+</ul>
+<hr/>
+<h1 class="modhead" data-full="1. 로컬 LLM — Ollama (인터넷 없이 내 PC에서)" id="1-llm-ollama-pc">1. 로컬 LLM — Ollama (인터넷 없이 내 PC에서)</h1>
+<p><strong>Ollama</strong>는 로컬에서 언어 모델을 쉽게 돌리게 해주는 "껍데기(런타임)". 내 PC에 모델을 받아 인터넷 끊고도 쓴다 — 폐쇄망의 핵심 도구.</p>
+<div class="codewrap"><div class="codebar"><span class="codelang">code</span><button class="copybtn" type="button">복사</button></div><pre class="mermaid">flowchart LR
+  G["Gemma 4 E4B&lt;br/&gt;(멀티모달 모델)"] --&gt; M["Ollama 서버&lt;br/&gt;localhost:11434"]
+  M --&gt; E["코딩 에이전트&lt;br/&gt;채팅 UI"]
+  M --&gt; X["엑셀 VBA&lt;br/&gt;AI_함수"]
+  M --&gt; B["내부망 다른 PC&lt;br/&gt;(노출 설정 시)"]
+</pre></div>
+<h2 id="_1">설치</h2>
+<div class="codewrap"><div class="codebar"><span class="codelang">PowerShell</span><button class="copybtn" type="button">복사</button></div><pre><code class="language-powershell"># 방법 1) winget (권장) — 설치 후 서비스가 자동 시작, localhost:11434 리슨
+winget install -e --id Ollama.Ollama
+# 방법 2) ollama.com/download/windows 에서 OllamaSetup.exe 받아 설치 (약 1.3GB)
+ollama --version        # 설치 확인
+</code></pre></div>
+<blockquote class="callout callout-add"><span class="callout-badge">보강</span>
+<p>보강 — 강사가 "최근 PowerShell 한 줄 명령으로 설치된다"고 한 게 바로 <strong>winget</strong>. (리눅스/맥은 <code>curl -fsSL https://ollama.com/install.sh | sh</code>.) 기존 사용자도 다시 깔면 업데이트로 덮어쓴다. (검색 보강: docs.ollama.com/windows)</p>
+</blockquote>
+<h2 id="5">핵심 명령어 — 5개면 충분</h2>
+<div class="codewrap"><div class="codebar"><span class="codelang">PowerShell</span><button class="copybtn" type="button">복사</button></div><pre><code class="language-powershell">ollama pull gemma4:e4b   # 모델 다운로드만
+ollama run  gemma4:e4b   # 있으면 실행, 없으면 받고 실행 (채팅 시작)
+ollama list              # 내 PC에 깔린 모델 목록
+ollama ps                # 지금 메모리에 올라간(실행 중) 모델
+ollama rm   gemma4:e4b   # 모델 삭제
+</code></pre></div>
+<p><code>ollama ps</code>가 비어 있으면 Ollama는 떠 있지만 모델은 안 올라간 상태다. <code>run</code> 하면 메모리에 올라온다(예: 4B는 약 9.5GB 점유).</p>
+<h2 id="gemma-4-e4b">모델 고르기 — Gemma 4 (E4B, 멀티모달)</h2>
+<p>내 노트북 사양(RAM)에 맞춰 크기를 고른다: 2B / 4B / 12B. 강사는 가장 만만한 <strong>Gemma 4의 E4B</strong>를 썼다.</p>
+<blockquote class="callout callout-add"><span class="callout-badge">보강</span>
+<p>보강 — <strong>Gemma 4 / "E4B"의 정체</strong> (검색 보강). <code>gemma4:e4b</code>는 Ollama 라이브러리에 실재하는 모델로 <strong>멀티모달(텍스트+이미지 입력)</strong>이다. <strong>E4B = "실효(effective) 4B"</strong> — 선택적 파라미터 활성화(selective activation) 기술로 전체 파라미터보다 적은 자원으로 4B급 성능을 낸다(Gemma 3n 계열의 기법을 이음). 그래서 CPU·노트북에서도 돈다. 강사가 스커트 이미지를 넣었더니 색·질감·패턴을 잘 뽑았다는 게 이 멀티모달 덕분. (검색 보강: ollama.com/library/gemma4, ai.google.dev/gemma/docs/gemma-3n)</p>
+</blockquote>
+<h2 id="_2">포트·노출 — 여기서 값 하나 바로잡자</h2>
+<blockquote class="callout callout-note"><span class="callout-badge">참고</span>
+<p>⚠ 정정 — <strong>Ollama 기본 포트는 <code>11434</code>다</strong> (강사가 말한 "12434"는 착오). 도는지 확인은 브라우저나 curl로:
+<code>powershell
+curl http://localhost:11434          # → "Ollama is running"</code>
+(검색 보강: Ollama는 기본적으로 <code>127.0.0.1:11434</code>에 바인딩, API는 <code>http://localhost:11434/api/generate</code>.)</p>
+<p>⚠ 정정 — <strong>내부망 IP 표기.</strong> 강사가 "127로 시작하는 내부망, 196으로 시작하는 IP"라고 했는데, 정확히는 <code>127.0.0.1</code>은 <strong>내 PC 자신(loopback)</strong>이지 LAN이 아니고, 사설망 대역은 <strong><code>192.168.x</code> / <code>10.x</code> / <code>172.16~31.x</code></strong>다("196"은 192.168의 착오로 보임). 내부망 다른 PC에서 내 Ollama를 쓰게 하려면 외부 노출을 켜야 한다:
+<code>powershell
+setx OLLAMA_HOST "0.0.0.0:11434"     # (Ollama 재시작 필요)</code>
+어느 군(郡)에서 폐쇄망에 Ollama를 큰 규모로 올렸다는 사례가 이 방식이다.</p>
+</blockquote>
+<h2 id="ui">코딩 에이전트로 채팅 UI 만들기</h2>
+<p>VS Code·Windsurf·Antigravity 등 아무 코딩 에이전트에서 "내 PC에 Ollama 깔려 있으니 그걸로 간단한 챗봇 만들자"고 하면 금방 만들어진다. 강사 팁: <strong>"첫 토큰까지 걸린 시간 + 총 출력 시간"을 화면에 찍게</strong> 해서 내 PC/서버 성능을 체감하라(강사 측정: 첫 토큰 103초, 총 260초 — 느리지만 됨).</p>
+<blockquote class="callout callout-warn"><span class="callout-badge">주의</span>
+<p>보강 — <strong>llama.cpp / MSTY.</strong> Ollama는 편하지만 껍데기를 올려 자원을 좀 더 먹는다. <strong>llama.cpp</strong>는 C++로 짜여 더 가볍고 빠른 대안(서버 올리고 특정 모델만 띄워 localhost로 사용). UI 도구로는 <strong>MSTY</strong>도 있다. 작업 끝나면 Ollama는 트레이의 양(羊) 아이콘 → <strong>Quit Ollama</strong>로 내려라.</p>
+<p>⚠ 주의(미확인) — 강사가 전한 "MS가 Claude Code 토큰 비용 5억 달러가 나와 사내에 쓰지 말라 했다"는 <strong>출처 불명의 소문</strong>이다. 사실로 단정 말 것. 다만 클라우드 LLM 토큰 비용이 부담이 되면서 로컬 LLM 수요가 커지는 흐름 자체는 맞다.</p>
+</blockquote>
+<hr/>
+<h1 class="modhead" data-full="2. Ollama × 엑셀 — VBA로 AI 함수 만들고 배포" id="2-ollama-vba-ai">2. Ollama × 엑셀 — VBA로 AI 함수 만들고 배포</h1>
+<p>엑셀 셀에서 <code>=AI_Summarize(...)</code>처럼 로컬 LLM을 부르는 사용자 정의 함수를 만든다. (5주차 교안 14p "VBA + Ollama 완전 내부망".)</p>
+<p>만들 함수 예: <strong>AI_Summarize, AI_Classify, AI_Extract, AI_Translate, AI_Ask</strong>. Ollama의 로컬 API(<code>:11434</code>)를 POST로 호출한다.</p>
+<div class="codewrap"><div class="codebar"><span class="codelang">VBA</span><button class="copybtn" type="button">복사</button></div><pre><code class="language-vbscript">' 엑셀 사용자 정의 함수: 셀 내용을 로컬 Ollama로 요약
+Function AI_Summarize(rng As Range, Optional max_len As Long = 150, _
+                      Optional model As String = "gemma4:e4b") As String
+    Dim http As Object, body As String, prompt As String
+    prompt = "다음을 " &amp; max_len &amp; "자 이내 한국어로 요약: " &amp; rng.Value
+    body = "{""model"":""" &amp; model &amp; """,""prompt"":""" &amp; _
+           Replace(prompt, """", "\""") &amp; """,""stream"":false}"
+    Set http = CreateObject("MSXML2.XMLHTTP")
+    http.Open "POST", "http://localhost:11434/api/generate", False
+    http.setRequestHeader "Content-Type", "application/json"
+    http.send body
+    ' 응답 JSON의 "response" 값만 뽑는다 (실제 코드는 LLM이 파싱까지 생성)
+    AI_Summarize = ParseResponse(http.responseText)
+End Function
+</code></pre></div>
+<p><strong>등록 → 배포 흐름:</strong>
+1. 엑셀에서 <code>Alt+F11</code>(VBA 편집기) → <strong>삽입 → 모듈</strong> → 위 코드 붙여넣기.
+2. <strong><code>.xlsm</code></strong>(매크로 사용 통합 문서)으로 저장 → 내 엑셀에서 <code>=AI_</code>로 함수 검색되면 성공.
+3. <strong>남들에게 배포</strong>하려면 <strong><code>.xlam</code></strong>(엑셀 추가 기능)으로 저장 → 받는 사람은 <strong>파일 → 옵션 → 추가 기능 → "Excel 추가 기능" → 찾아보기</strong>로 그 <code>.xlam</code>을 등록.</p>
+<blockquote class="callout callout-add"><span class="callout-badge">보강</span>
+<p>보강 — Ollama 대신 <strong>외부 모델(GPT 등)도</strong> 같은 구조로 가능. URL과 인증 헤더만 바꾸면 된다. 즉 "기관만의 AI 함수 팩(.xlam)"을 만들어 사내 배포하는 그림이다.</p>
+</blockquote>
+<hr/>
+<h1 class="modhead" data-full="3. 구글 설문 자동화 — Apps Script + LLM" id="3-apps-script-llm">3. 구글 설문 자동화 — Apps Script + LLM</h1>
+<p>설문은 손으로 만들면 귀찮아서 문항을 줄이게 된다. <strong>LLM으로 문항을 기획</strong>하고 <strong>Apps Script로 구글 폼을 코드 생성</strong>하면 15개든 100개든 한 방에.</p>
+<blockquote class="callout callout-add"><span class="callout-badge">보강</span>
+<p>보강 — <strong>Apps Script</strong>는 구글이 제공하는 자동화 언어(VBA의 구글판). <code>script.google.com</code>에서 실행한다. 구글 설문은 이름이 <strong>구글 폼(Google Forms)</strong>으로 바뀌었다.</p>
+</blockquote>
+<div class="codewrap"><div class="codebar"><span class="codelang">JavaScript</span><button class="copybtn" type="button">복사</button></div><pre><code class="language-javascript">// script.google.com → 새 프로젝트 → 붙여넣고 저장 → 실행(권한 "모두 허용")
+function createSurvey() {
+  const form = FormApp.create('우리 관내 만족도 설문');
+  form.addMultipleChoiceItem()
+      .setTitle('서비스에 만족하십니까?')
+      .setChoiceValues(['매우 만족', '만족', '보통', '불만족']);
+  form.addParagraphTextItem().setTitle('개선 의견을 자유롭게 적어주세요');
+  Logger.log('응답(배포) 주소: ' + form.getPublishedUrl());
+  Logger.log('편집 주소: '      + form.getEditUrl());
+}
+</code></pre></div>
+<p>실제로는 ChatGPT에 "이 설문을 구글 Apps Script로 작성해줘" 하면 15문항짜리 함수를 통째로 만들어준다. 위는 최소 패턴.</p>
+<p><strong>적용 흐름:</strong> ChatGPT에서 문항 기획 → "Apps Script로 작성" → 코드 복사 → 구글 드라이브 <strong>신규 → 더보기 → Google Apps Script</strong>(없으면 "더 많은 앱 연결하기"에서 추가) → 함수 붙여넣고 프로젝트명 저장 → <strong>저장해야 "실행" 버튼이 활성화</strong>됨 → 실행 → 권한 허용 → 응답/편집/스프레드시트 주소 생성.</p>
+<blockquote class="callout callout-add"><span class="callout-badge">보강</span>
+<p>보강 — <strong>결과 분석.</strong> 응답은 구글 시트로 쌓인다. 구글 드라이브에 붙은 <strong>Gemini</strong>로 바로 분석·차트를 뽑거나, 시트 링크를 VS Code/코딩 에이전트로 연동해 <strong>파이썬 대시보드</strong>까지 자동화할 수 있다. 활용 의도: 개인/팀 프로젝트 주제를 정할 때 동료 대상 설문으로 "문제"를 데이터로 잡는 것.</p>
+</blockquote>
+<hr/>
+<h1 class="modhead" data-full="4. 브라우저 콘솔 자동화 (F12) — 겁나서 껐던 그 창" id="4-f12">4. 브라우저 콘솔 자동화 (F12) — 겁나서 껐던 그 창</h1>
+<p><code>F12</code>(개발자 도구). 예전엔 "이거 뭐야" 하고 껐던 창인데, <strong>Elements + Console</strong> 두 탭과 요령 하나면 충분하다.</p>
+<div class="codewrap"><div class="codebar"><span class="codelang">code</span><button class="copybtn" type="button">복사</button></div><pre class="mermaid">flowchart LR
+  F["F12 → 요소 선택&lt;br/&gt;(Name/Role 캡처)"] --&gt; P["ChatGPT에&lt;br/&gt;이미지 + URL 전달"]
+  P --&gt; J["JS 콘솔 코드 생성"]
+  J --&gt; C["콘솔에 붙여 실행&lt;br/&gt;(매번 휘발)"]
+  C --&gt; Z["확장 프로그램으로 등록&lt;br/&gt;manifest.json (영속화)"]
+</pre></div>
+<h2 id="_3">기본기 — 헬로월드</h2>
+<div class="codewrap"><div class="codebar"><span class="codelang">JavaScript</span><button class="copybtn" type="button">복사</button></div><pre><code class="language-javascript">console.log("안녕하세요");                 // 출력 (파이썬 print 같은 것)
+const name = prompt("이름 입력하세요");     // 입력 팝업
+alert("환영합니다 " + name + "님");         // 알림 팝업
+</code></pre></div>
+<blockquote class="callout callout-warn"><span class="callout-badge">주의</span>
+<p>⚠ 함정 — <strong>콘솔에 코드 붙여넣기가 막히면</strong>, 콘솔에 먼저 <code>allow pasting</code>을 타이핑하고 엔터 친 뒤 붙여넣어라. 콘솔을 지울 땐 <code>delete</code>가 아니라 <strong>콘솔 지우기(⊘) 버튼</strong>.</p>
+</blockquote>
+<h2 id="chatgpt-js">핵심 워크플로우 — 요소 캡처 → ChatGPT → JS</h2>
+<p><code>F12</code> → <strong>요소 선택(Select an element) 아이콘</strong> 클릭 → 원하는 부분에 마우스 올리면 뜨는 <strong>접근성 팝업(Name / Role …)</strong> 을 <strong>캡처</strong> → ChatGPT에 이미지 + 페이지 URL을 주고 "이걸 ○○하는 콘솔 코드 작성해줘" → 나온 JS를 콘솔에 붙여 엔터.</p>
+<h2 id="4-1">4-1. 첨부파일 일괄 다운로드</h2>
+<p>증권사 리포트·행안부 지침처럼 첨부가 여러 개일 때, 다운로드 버튼 요소를 캡처해 "이 페이지의 첨부를 한 번에 다 받는 콘솔 코드" 요청 → 콘솔 실행 → 한 번에 다운로드.</p>
+<h2 id="4-2">4-2. 두 번 클릭 자동화 (행안부 정책자료)</h2>
+<p>목록 클릭 → 상세 → 다운로드, 처럼 <strong>2단계 클릭</strong>이 필요한 경우. 첫 화면 요소 + 넘어간 화면의 다운로드 버튼을 <strong>둘 다 캡처</strong>해 주면, JS가 내부 코드를 읽어 한 번에 처리한다.</p>
+<blockquote class="callout callout-key"><span class="callout-badge">핵심</span>
+<p>★ <strong>왜 파이썬 크롤러 대신 콘솔인가.</strong> 콘솔 코드는 <strong>내가 지금 보고 있는 브라우저(클라이언트) 안에서</strong> 실행된다. 그래서 네이버처럼 서버에서 IP를 차단(블로킹)하는 크롤링 방어를 <strong>우회</strong>하기 쉽다. 파이썬 크롤러보다 기능은 제한적이지만, 막히는 사이트엔 이 방식이 통한다. RAG용 자료를 대량 수집할 때 유용.</p>
+</blockquote>
+<h2 id="4-3-ocr-dx">4-3. 종이 양식 → 이미지 OCR → 폼 자동 입력 (DX)</h2>
+<p>가장 임팩트 큰 사례. 농촌진흥청에 농민이 지퍼백 흙 시료에 <strong>손글씨로 지번·이름</strong>을 써 오면, 접수자가 종이에 옮기고 또 관리 프로그램에 입력한다(계약직까지 둘 정도). 이걸 콘솔로 줄인다.</p>
+<p>흐름: 웹 입력 폼에서 <code>F12</code> → 폼 구조 캡처 → ChatGPT에 "종이에 적힌 회원 정보를 <strong>이미지로 주면</strong> 이 양식에 채우는 콘솔 코드" 요청(이미지 글자 인식은 <strong>Gemini API 키</strong> 붙여서) → 실행하면 <strong>이미지 업로드 메뉴</strong>가 생기고, 손글씨 사진을 넣으면 이름·성별·주소가 자동 입력됨(사용자는 눈으로 확인 후 제출).</p>
+<blockquote class="callout callout-key"><span class="callout-badge">핵심</span>
+<p>★ <strong>AX보다 DX가 먼저.</strong> 종이 문서를 디지털로 바꾸는 게 선결. 옛 종이 차트(병원 EMR 이전), 학생 생기부 손글씨 기록 등 — 스캔 → 브라우저에서 바로 입력. 수천·수만 장이면 고속 스캔 후 PDF+OCR, 밤에 걸어두고 아침에 확인하는 식으로 작은 프로젝트화.</p>
+</blockquote>
+<h2 id="4-4">4-4. 데이터 시각화 + 확장 프로그램(익스텐션) 등록</h2>
+<p>콘솔 코드는 <strong>매번 붙여 실행해야</strong> 한다(휘발). 자주 쓰면 <strong>확장 프로그램으로 등록(영속화)</strong>한다. 강사가 만든 "외인 애널라이저"(네이버 증권에서 외국인·기관 순매수를 시계열 차트로) 사례.</p>
+<p>흐름: 시각화 콘솔 코드를 ChatGPT가 만들어 줌 → "이걸 크롬/엣지 확장 프로그램으로 만드는 절차 알려줘" → <code>manifest.json</code> + 팝업 html 폴더 생성.</p>
+<div class="codewrap"><div class="codebar"><span class="codelang">JSON</span><button class="copybtn" type="button">복사</button></div><pre><code class="language-json">{
+  "manifest_version": 3,
+  "name": "외인 애널라이저",
+  "version": "1.0",
+  "action": { "default_popup": "popup.html" },
+  "permissions": ["activeTab", "scripting"]
+}
+</code></pre></div>
+<p>등록: 브라우저 <strong>확장 프로그램 → 개발자 모드 ON → "압축 해제된 확장 프로그램 로드" → 폴더 선택</strong>. (Netlify에 index.html 폴더를 드래그하는 것과 같은 감각.) 남에게 배포하려면 크롬 웹스토어 심사 등록이 필요.</p>
+<blockquote class="callout callout-warn"><span class="callout-badge">주의</span>
+<p>보강 — <strong>temperature 한 줄.</strong> 코딩처럼 정확해야 하면 <code>temperature=0</code>(가장 확률 높은 토큰만 → 결정적, 환각·버그↓), 창의가 필요하면 <code>1</code>. <strong>코딩 에이전트는 보통 0.</strong> 버그가 잦으면 0으로 낮춰 다시 짜라. (덤: 시스템 프롬프트를 0으로 두면 "멋진 생각이에요" 같은 아첨 없이 드라이하게 답함.)</p>
+<p>⚠ 주의 — <strong>페이지 표시값은 못 믿는다.</strong> 콘솔로 페이지의 숫자·텍스트를 그 자리에서 바꿀 수 있다(강사가 11번가 벨트를 천만 원으로, 통장 잔고·수상자 이름도). URL이 그대로여도 <strong>새로고침하면 사라지는 가짜</strong>다. "통장 인증/수익 인증" 캡처를 곧이곧대로 믿지 말 것 — "리프레시 해봐"가 검증.</p>
+</blockquote>
+<hr/>
+<h1 class="modhead" data-full="5. 토큰 0 자동화 — 엑셀 Power Query + PowerShell" id="5-0-power-query-powershell">5. 토큰 0 자동화 — 엑셀 Power Query + PowerShell</h1>
+<p>AI와는 거리가 있지만 "old is best". 주기적으로 떨어지는 동일 양식 엑셀을 <strong>함수·코드·토큰 없이</strong> 통합·전처리하고, 그 갱신마저 무인으로 돌린다.</p>
+<div class="codewrap"><div class="codebar"><span class="codelang">code</span><button class="copybtn" type="button">복사</button></div><pre class="mermaid">flowchart LR
+  FD["폴더&lt;br/&gt;월별 엑셀 적재"] --&gt; PQ["Power Query&lt;br/&gt;통합 + 전처리(열 분할)"]
+  PQ --&gt; XL["통합 엑셀&lt;br/&gt;(연결 보존)"]
+  PS["PowerShell .ps1&lt;br/&gt;RefreshAll"] --&gt; XL
+  TS["작업 스케줄러&lt;br/&gt;매월 10일 06:00"] --&gt; PS
+</pre></div>
+<h2 id="5-1-power-query">5-1. Power Query로 폴더 단위 가져오기</h2>
+<p>엑셀은 <strong>여러 파일을 한 번에 못 연다</strong>(하나씩). HIRA(심평원)·AirKorea 같은 월별 CSV 12개를 시계열로 합치려면 노가다. <strong>Power Query 편집기</strong>가 이걸 푼다.</p>
+<p>경로: 빈 엑셀에서 <strong>데이터 → 데이터 가져오기 → 파일에서 → 폴더에서</strong> → (월별 파일이 쌓일) 폴더 지정 → <strong>데이터 결합 및 변환 → 데이터 결합</strong> → 파일 병합. (여기서 "가져오기"는 열기(open)가 아니라 <strong>연결(connect)</strong> 개념. DB(오라클·PostgreSQL·MySQL 등)에서도 직접 연결 가능.)</p>
+<blockquote class="callout callout-warn"><span class="callout-badge">주의</span>
+<p>⚠ 함정 — 가져올 폴더 안 엑셀 파일이 <strong>열려 있으면 안 된다</strong>(닫고 진행). 그리고 <strong>맥/구버전 제약</strong>: 맥 일부·MS Office 2016에는 "폴더에서"가 없을 수 있다(2016은 <code>Alt+F12</code>로 Power Query 별도 설치). M365 권장.</p>
+</blockquote>
+<h2 id="5-2">5-2. 함수 없이 전처리 (열 분할)</h2>
+<p>한 셀에 <code>서비스;정보</code>, <code>영업중|허가</code>처럼 여러 값이 섞인(원-셀-원-데이터 위반) 데이터. 엑셀이면 FIND/LEFT 함수로 발라내는데, Power Query는 <strong>클릭만으로</strong>: 열 선택 → <strong>열 분할 → 구분 기호 기준</strong>(세미콜론·파이프 <code>|</code> 등) → 확인. 함수 한 줄 없이 쪼개진다.</p>
+<blockquote class="callout callout-add"><span class="callout-badge">보강</span>
+<p>보강 — 이 단계 데이터는 아직 엑셀 시트엔 없다(Power Query 안에만 있음). 다 만지고 <strong>"닫기 및 로드"</strong>를 눌러야 시트로 내려온다. 이 통합 엑셀은 <strong>원본을 담은 게 아니라, 폴더를 읽어 전처리한 결과만</strong> 뿌리는 "껍데기+프로세스"다.</p>
+</blockquote>
+<h2 id="5-3-powershell">5-3. 데이터 추가 → 새로 고침 → PowerShell 무인 실행</h2>
+<p>폴더에 다음 달 파일(2월)을 넣고 <strong>데이터 → 모두 새로 고침</strong>만 누르면 통합본이 갱신된다(202행부터 2월 데이터 추가). 이 클릭조차 자동화 → <strong>엑셀을 열지 않고</strong> PowerShell로.</p>
+<div class="codewrap"><div class="codebar"><span class="codelang">PowerShell</span><button class="copybtn" type="button">복사</button></div><pre><code class="language-powershell"># 엑셀리프레시.ps1 — 엑셀을 화면에 안 띄우고 '모두 새로 고침' 실행
+$path  = "C:\월단위매출데이터\강남구_소상공인_통합데이터.xlsx"
+$excel = New-Object -ComObject Excel.Application
+$excel.Visible = $false
+$wb = $excel.Workbooks.Open($path)
+$wb.RefreshAll()                 # = 데이터 → 모두 새로 고침
+Start-Sleep -Seconds 5           # 새로고침 완료 대기
+$wb.Save(); $wb.Close($true); $excel.Quit()
+</code></pre></div>
+<div class="codewrap"><div class="codebar"><span class="codelang">PowerShell</span><button class="copybtn" type="button">복사</button></div><pre><code class="language-powershell"># 실행 (경로는 캡처해서 ChatGPT에 주면 오류 적다)
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File "C:\월단위매출데이터\엑셀리프레시.ps1"
+</code></pre></div>
+<blockquote class="callout callout-warn"><span class="callout-badge">주의</span>
+<p>⚠ 함정 — <strong>경로 오류가 제일 많다</strong>(파이썬도 마찬가지: 경로 + "No module named ○○"). 경로를 손으로 치지 말고 <strong>폴더 화면을 캡처해서</strong> "내 경로 이거야"라고 주면 한 글자 실수가 준다. 또 <strong>PowerShell 한글 깨짐</strong>이 잦다 → 콘솔 인코딩을 UTF-8로(<code>chcp 65001</code>, 또는 스크립트 상단 <code>[Console]::OutputEncoding=[Text.Encoding]::UTF8</code>). 붙여넣을 때 따옴표·틸드(<code>~</code>)가 섞여 깨지는 것도 주의.</p>
+</blockquote>
+<h2 id="5-4-task-scheduler">5-4. 작업 스케줄러(Task Scheduler) 등록 — 마지막 무인화</h2>
+<p>PowerShell 스크립트를 <strong>매월 자동 실행</strong>. <code>Win+R</code> → <code>taskschd.msc</code> → 작업 스케줄러.</p>
+<div class="codewrap"><div class="codebar"><span class="codelang">PowerShell</span><button class="copybtn" type="button">복사</button></div><pre><code class="language-powershell"># 명령으로 등록 (매월 10일 06:00 실행)
+schtasks /create /tn "엑셀월간통합" ^
+  /tr "powershell -NoProfile -ExecutionPolicy Bypass -File C:\월단위매출데이터\엑셀리프레시.ps1" ^
+  /sc monthly /d 10 /st 06:00
+</code></pre></div>
+<p>이러면 PC(또는 윈도우 서버)가 켜져 있는 한, 매월 10일 새벽에 스스로 폴더를 읽어 통합·전처리·갱신한다. 자동화 안 된 단 하나는 <strong>폴더에 새 파일을 넣는 것</strong>뿐. 통합본 위에 차트/대시보드를 그려놨다면 그것도 같이 갱신된다 — <strong>사람 손이 0</strong>.</p>
+<h2 id="5-5">5-5. 왜 이 방식인가 — 오버엔지니어링 경계</h2>
+<blockquote class="callout callout-warn"><span class="callout-badge">주의</span>
+<p>★ 강사의 메시지: 민원 누적 분석처럼 <strong>개인 PC에서 도는 반복 업무</strong>라면, 파이썬(인메모리라 데이터 커지면 부담)이나 MCP·에이전트로 <strong>오버 엔지니어링</strong> 하지 말고, <strong>윈도우 내장(Power Query + PowerShell + 스케줄러)</strong>으로 충분할 때가 많다. 토큰도 0, 파이썬 설치도 불필요. "이걸 해보면 오히려 'AI가 여기 들어가면 좋겠다'는 지점이 보인다"는 게 의도. 단, 원본은 보통 전처리가 안 돼 있어 <strong>누군가는 전처리(마사지)를 해야</strong> 하는데, 그 자리를 Power Query가 메운다.</p>
+</blockquote>
+<hr/>
+<h1 class="modhead" data-full="마무리 &amp; 과제" id="_4">마무리 &amp; 과제</h1>
+<p>오늘 한 4가지: ① Ollama 로컬 LLM(설치·모델·내 PC 성능 체감) ② Ollama×엑셀 VBA 함수 ③ 구글 설문 Apps Script ④ 콘솔 자동화(다운로드·폼입력·시각화·확장) ⑤ Power Query+PowerShell 무인 통합. 공통 메시지는 <strong>"기능은 쉽다 — 내 업무·동료 업무 어디에 붙일지가 핵심"</strong>.</p>
+<blockquote class="callout callout-key"><span class="callout-badge">핵심</span>
+<p>★ <strong>과제</strong> — 가장 재밌었을 <strong>콘솔 프로그램</strong>으로, 내 기관에 맞는 걸 하나 만들어 <strong>확장 프로그램으로 압축</strong>하고, 누구나 등록할 수 있게 <strong>README</strong>를 붙여 공유 폴더에 올리기. (작은 자동화로 동료를 돕는 '거점 리더' 연습.)</p>
+</blockquote>
+<hr/>
+<h1 class="modhead" data-full="부록 — 도구 · 개념 맵" id="_5">부록 — 도구 · 개념 맵</h1>
+<div class="tablescroll"><table>
+<thead>
+<tr>
+<th>분류</th>
+<th>키워드</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>로컬 LLM</td>
+<td>Ollama(:11434), <code>pull/run/list/ps/rm</code>, Gemma 4 E4B(멀티모달), llama.cpp, MSTY, OLLAMA_HOST</td>
+</tr>
+<tr>
+<td>엑셀×AI</td>
+<td>VBA 사용자정의함수, MSXML2.XMLHTTP, <code>.xlsm</code>→<code>.xlam</code> 배포, 파일→옵션→추가기능</td>
+</tr>
+<tr>
+<td>구글 자동화</td>
+<td>Apps Script, FormApp, getPublishedUrl, 구글 폼, 드라이브 Gemini</td>
+</tr>
+<tr>
+<td>브라우저 콘솔</td>
+<td>F12, Elements/Console, 요소 선택, allow pasting, console.log/prompt/alert</td>
+</tr>
+<tr>
+<td>확장 프로그램</td>
+<td>manifest.json(v3), 개발자 모드, 압축 해제 로드, Listly·Easy Scraper</td>
+</tr>
+<tr>
+<td>엑셀 자동화</td>
+<td>Power Query(데이터 가져오기→폴더에서), 열 분할, 모두 새로 고침, 닫기 및 로드</td>
+</tr>
+<tr>
+<td>무인 실행</td>
+<td>PowerShell(.ps1, Excel COM, RefreshAll), <code>taskschd.msc</code>, schtasks</td>
+</tr>
+<tr>
+<td>개념</td>
+<td>temperature 0/1, 클라이언트 vs 서버 크롤링, DX→AX, 사설망 IP(192.168.x)</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="_6">검색 보강 출처</h2>
+<ul>
+<li>Ollama 기본 포트 11434 / <code>:11434/api/generate</code>: docs.ollama.com/faq, pinggy.io</li>
+<li>Ollama Windows 설치(winget): docs.ollama.com/windows, winstall.app</li>
+<li>Gemma 4 E4B 멀티모달 / 선택적 활성화: ollama.com/library/gemma4, ai.google.dev/gemma/docs/gemma-3n</li>
+</ul>
+  </main>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/powershell.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/vbscript.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.9.1/mermaid.min.js"></script>
+<script>
+// 주제 헤더 raw 텍스트를 data-full로 옮겨 ::after 표시
+document.querySelectorAll('h1.modhead').forEach(function(h){
+  h.setAttribute('data-full', h.textContent);
+});
+
+// highlight.js
+if(window.hljs){
+  document.querySelectorAll('.codewrap pre code').forEach(function(b){
+    try{hljs.highlightElement(b);}catch(e){}
+  });
+}
+
+// mermaid
+if(window.mermaid){
+  mermaid.initialize({
+    startOnLoad:true, theme:'base',
+    htmlLabels:false,
+    themeVariables:{
+      fontFamily:'-apple-system,Pretendard,"Malgun Gothic",sans-serif',
+      fontSize:'13px',
+      primaryColor:'#e6f4f1', primaryBorderColor:'#127c71', primaryTextColor:'#0c5249',
+      lineColor:'#9aa0a8', secondaryColor:'#f4f1ea', tertiaryColor:'#fbf1e4',
+      clusterBkg:'#f6f6f0', clusterBorder:'#cfd3cb'
+    },
+    flowchart:{curve:'basis', useMaxWidth:true, htmlLabels:false},
+    sequence:{useMaxWidth:true}
+  });
+}
+
+// 복사 버튼
+document.querySelectorAll('.copybtn').forEach(function(btn){
+  btn.addEventListener('click', function(){
+    var code = btn.closest('.codewrap').querySelector('pre code');
+    var txt = code ? code.innerText : '';
+    navigator.clipboard.writeText(txt).then(function(){
+      btn.textContent='복사됨'; btn.classList.add('ok');
+      setTimeout(function(){btn.textContent='복사'; btn.classList.remove('ok');},1400);
+    });
+  });
+});
+
+// 스크롤 스파이
+var links = Array.from(document.querySelectorAll('#nav a'));
+var map = {};
+links.forEach(function(a){ map[a.getAttribute('href').slice(1)] = a; });
+var heads = Array.from(document.querySelectorAll('.main h1[id], .main h2[id]'));
+var spy = new IntersectionObserver(function(entries){
+  entries.forEach(function(en){
+    if(en.isIntersecting){
+      links.forEach(function(l){l.classList.remove('active');});
+      var act = map[en.target.id];
+      if(act){act.classList.add('active');
+        act.scrollIntoView({block:'nearest'});}
+    }
+  });
+}, {rootMargin:'-10% 0px -75% 0px', threshold:0});
+heads.forEach(function(h){spy.observe(h);});
+
+// 모바일 사이드바
+var side=document.getElementById('side'), scrim=document.getElementById('scrim'),
+    mb=document.getElementById('menubtn');
+function toggle(open){side.classList.toggle('open',open);scrim.classList.toggle('show',open);}
+if(mb){mb.addEventListener('click',function(){toggle(!side.classList.contains('open'));});}
+if(scrim){scrim.addEventListener('click',function(){toggle(false);});}
+links.forEach(function(a){a.addEventListener('click',function(){if(window.innerWidth<=880)toggle(false);});});
+</script>
+<script>/* kg-preview: #<heading> \uc704\uce58\ub85c \uc774\ub3d9 */
+(function(){function norm(t){return (t||'').replace(/\s+/g,'').toLowerCase()}
+function go(){var h=decodeURIComponent(location.hash.slice(1));if(!h)return;var k=norm(h).slice(0,24);if(!k)return;
+var best=null,bl=1e9,els=document.body.querySelectorAll('h1,h2,h3,h4,h5,p,div,span,li,td,text,tspan,section,article');
+for(var i=0;i<els.length;i++){var e=els[i],t=norm(e.textContent);if(t.length<bl&&t.indexOf(k)>-1){best=e;bl=t.length}}
+if(!best)return;var box=best.closest('section,[class*=slide],[class*=page],article')||best;
+box.scrollIntoView({block:'start'});box.style.outline='3px solid #c0504d';box.style.outlineOffset='4px';
+setTimeout(function(){box.style.outline=''},2600)}
+window.addEventListener('load',function(){setTimeout(go,400)});window.addEventListener('hashchange',go)})();</script></body>
+</html>

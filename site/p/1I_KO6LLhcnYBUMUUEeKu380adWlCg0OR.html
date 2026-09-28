@@ -1,0 +1,871 @@
+<!doctype html>
+<html lang="ko">
+<head><meta name="robots" content="noindex, nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>강의안 템플릿</title>
+<!--
+  사용법: 이 파일을 결과 경로로 복사한 뒤, <section class="slide"> 들을 주제에 맞게 채운다.
+  CSS는 손대지 말고 그대로 둔다(디자인 일관성). 아래 슬라이드들은 레이아웃 예시이며,
+  필요한 것만 골라 복제·편집하고 나머지는 지운다. 캔버스는 1280x720(16:9) 고정.
+  팔레트는 <body data-palette="..."> 값으로 고른다. 색상 버튼은 미리보기용이며 저장 시 유지된다.
+-->
+<style>
+/* Pretendard는 CDN 대신 base64 @font-face로 임베드한다. references/font-pretendard.md 참고. */
+@font-face{font-family:'Pretendard';font-style:normal;font-weight:400;font-display:block;src:url(data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==) format('woff2')}
+@font-face{font-family:'Pretendard';font-style:normal;font-weight:600;font-display:block;src:url(data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==) format('woff2')}
+@font-face{font-family:'Pretendard';font-style:normal;font-weight:700;font-display:block;src:url(data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==) format('woff2')}
+@font-face{font-family:'Pretendard';font-style:normal;font-weight:900;font-display:block;src:url(data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==) format('woff2')}
+/* __PRETENDARD_FONTFACE_BASE64__ */
+@import url("https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500;600;700;900&family=JetBrains+Mono:wght@400;600&display=swap");
+:root{
+  --pagebg:#cfc8ba; --presentbg:#0c0907;
+  --paper:#f8f4ed; --paper2:#fbf8f1; --band:#efe8d7; --band2:#e7dcc6;
+  --dark:#1a130f; --ink:#211913; --ink2:#473d33; --muted:#8c8275;
+  --rust:#bf571d; --rust2:#9c440f; --gold:#c98a3a; --line:#ddd1ba; --line2:#cabb9c;
+  --soft-bg:#eef1e9; --soft-fg:#3a5240; --force-bg:#34190f; --force-fg:#ffcfa8;
+  --stack1:#9c440f; --stack2:#b35a26; --stack3:#c47a45; --stack4:#caa06e; --stack4fg:#2a1d12;
+  --fail-bg:#2a1812; --fail-title:#ffd9bb; --fail-text:#d3c6b8;
+}
+body[data-palette="slate-teal"]{
+  --pagebg:#c6d0ce; --presentbg:#071819;
+  --paper:#f4f7f4; --paper2:#fbfcf9; --band:#e4ece8; --band2:#d5e1dd;
+  --dark:#102425; --ink:#172223; --ink2:#3d4b4c; --muted:#738181;
+  --rust:#00756f; --rust2:#005f5a; --gold:#b97923; --line:#cedbd8; --line2:#b8c9c5;
+  --soft-bg:#e8f0e6; --soft-fg:#34533b; --force-bg:#123331; --force-fg:#aee7df;
+  --stack1:#005f5a; --stack2:#087c75; --stack3:#39978e; --stack4:#9fc9bd; --stack4fg:#123331;
+  --fail-bg:#182a2c; --fail-title:#bceee7; --fail-text:#d0dddc;
+}
+body[data-palette="forest-gold"]{
+  --pagebg:#c9c8b8; --presentbg:#0b160d;
+  --paper:#f6f5ec; --paper2:#fbfaf4; --band:#e6ead9; --band2:#d7ddc3;
+  --dark:#172719; --ink:#1f271f; --ink2:#454c42; --muted:#7b8173;
+  --rust:#5d7c2f; --rust2:#46651f; --gold:#b98222; --line:#d7dcc9; --line2:#bdc7a8;
+  --soft-bg:#edf0df; --soft-fg:#405225; --force-bg:#263317; --force-fg:#d6e89a;
+  --stack1:#46651f; --stack2:#5d7c2f; --stack3:#819b4b; --stack4:#c6c983; --stack4fg:#263317;
+  --fail-bg:#1f2b18; --fail-title:#e3efad; --fail-text:#d4dbc8;
+}
+body[data-palette="navy-coral"]{
+  --pagebg:#c8ccd3; --presentbg:#070d18;
+  --paper:#f5f6f8; --paper2:#fbfbfd; --band:#e5e9ef; --band2:#d7dde6;
+  --dark:#101827; --ink:#171d2a; --ink2:#424a59; --muted:#767f90;
+  --rust:#b94a48; --rust2:#943539; --gold:#c38424; --line:#d6dce5; --line2:#bdc7d4;
+  --soft-bg:#e8edf3; --soft-fg:#314760; --force-bg:#241d2c; --force-fg:#ffc9c5;
+  --stack1:#943539; --stack2:#b94a48; --stack3:#c96c63; --stack4:#dba89d; --stack4fg:#2b1e24;
+  --fail-bg:#241d2c; --fail-title:#ffc9c5; --fail-text:#d8d3dc;
+}
+body[data-palette="graphite-rose"]{
+  --pagebg:#cbc7c8; --presentbg:#101011;
+  --paper:#f7f5f4; --paper2:#fcfaf9; --band:#e9e3e2; --band2:#ddd4d2;
+  --dark:#202022; --ink:#222122; --ink2:#4c4849; --muted:#807879;
+  --rust:#a8485c; --rust2:#873447; --gold:#b47a2f; --line:#ded6d3; --line2:#c8bdb9;
+  --soft-bg:#eee8e6; --soft-fg:#4c4748; --force-bg:#332026; --force-fg:#ffd2dc;
+  --stack1:#873447; --stack2:#a8485c; --stack3:#bd6c79; --stack4:#d4a7ad; --stack4fg:#332026;
+  --fail-bg:#332026; --fail-title:#ffd2dc; --fail-text:#ded1d4;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;background:var(--pagebg);font-family:'Pretendard',"Noto Sans KR",sans-serif;color:var(--ink);-webkit-font-smoothing:antialiased;}
+.deck{display:flex;flex-direction:column;align-items:center;gap:22px;padding:22px 0 40px;}
+.slide{position:relative;width:1280px;height:720px;background:var(--paper);overflow:hidden;box-shadow:0 10px 34px rgba(0,0,0,.22);}
+h1,h2,h3,h4,p,ul,ol,li{margin:0;padding:0;}
+
+/* 머리글: 솔리드 다크 마스트헤드 (그림자/그라데이션 금지) */
+.hdr{position:absolute;top:0;left:0;right:0;height:44px;display:flex;align-items:center;justify-content:space-between;padding:0 46px;background:var(--dark);z-index:3;}
+.hdr .ht{font-size:12.5px;font-weight:700;color:#f3ede2;letter-spacing:.2px;}
+.hdr .ht span{color:rgba(243,237,226,.42);font-weight:600;letter-spacing:1px;font-size:10px;margin-left:7px;}
+.hdr .hr{font-size:10.5px;font-weight:600;letter-spacing:1.2px;color:rgba(243,237,226,.55);}
+
+.stage{position:absolute;top:44px;left:0;right:0;bottom:0;padding:26px 50px 38px;display:flex;flex-direction:column;}
+.crumb{font-size:14px;font-weight:600;color:var(--rust);letter-spacing:.3px;margin-bottom:6px;}
+.atitle{font-family:"Noto Serif KR",serif;font-weight:700;font-size:28px;line-height:1.28;color:#13100c;letter-spacing:-.4px;}
+.atitle .lbl{color:var(--rust2);}
+.atitle .sub{font-weight:500;color:#3a322a;}
+.titlerule{height:0;border-bottom:1.5px solid var(--line2);margin:14px 0 0;}
+
+.body{flex:1;min-height:0;display:grid;gap:26px;padding-top:18px;}
+.split{grid-template-columns:1fr 1fr;}
+.split-l{grid-template-columns:1.08fr .92fr;}
+.split-r{grid-template-columns:.9fr 1.1fr;}
+.colflow{display:flex;flex-direction:column;min-height:0;}
+
+/* 인트로 설명문(합니다체) */
+.lead{font-size:16.5px;line-height:1.82;color:var(--ink);font-weight:400;}
+.lead b{font-weight:700;color:#13100c;}
+.lead .hl{color:var(--rust2);font-weight:700;}
+
+/* 번호 개념 정의 — 박스 그리드 대신 이것을 쓴다 */
+.concepts{display:flex;flex-direction:column;}
+.concepts.fill{flex:1;justify-content:flex-start;}          /* 칼럼 높이를 균등 분배해 채움 */
+.concepts.fill .concept{flex:1;align-items:center;}
+.concept{padding:16px 0 17px;border-bottom:1px solid var(--line);display:flex;gap:16px;}
+.concept:first-child{padding-top:5px;}
+.concept .no{flex:0 0 auto;font-family:"Noto Serif KR",serif;font-size:22px;font-weight:700;color:var(--rust);line-height:1.25;width:30px;}
+.concept .cbody{flex:1;}
+.concept .cbody .cn{font-size:17.5px;font-weight:700;color:#15100c;line-height:1.3;}
+.concept .cbody .cn .en{font-size:12px;font-weight:600;color:var(--muted);letter-spacing:.6px;margin-left:8px;}
+.concept .cbody p{font-size:15px;line-height:1.7;color:var(--ink2);margin-top:6px;font-weight:400;}
+.concept .cbody p b{color:#2a231c;font-weight:700;}
+.concepts.big .concept .cbody .cn{font-size:19px;}
+.concepts.big .concept .cbody p{font-size:16px;line-height:1.74;}
+.boxmore{display:block;margin-top:6px;color:var(--rust2);font-weight:650;}
+.boxcheck{display:block;margin-top:3px;color:#5d5044;font-weight:500;}
+
+/* 하단 정리/캡션 바 — 슬로건 금지, 사실 설명만 */
+.note{margin-top:auto;display:flex;gap:16px;align-items:flex-start;padding:16px 20px;background:var(--band);border-left:3px solid var(--rust);border-radius:0 3px 3px 0;}
+.note .nl{flex:0 0 auto;font-size:12px;font-weight:700;letter-spacing:1px;color:var(--rust2);padding-top:2px;}
+.note p{font-size:15px;line-height:1.66;color:var(--ink);font-weight:400;}
+.note p b{font-weight:700;color:var(--rust2);}
+.srcline{position:absolute;left:50px;bottom:15px;font-size:11px;color:var(--muted);font-weight:400;}
+.pageno{position:absolute;right:30px;bottom:13px;font-size:13.5px;font-weight:700;color:var(--rust);}
+
+/* 표 */
+.tablefill{flex:1;min-height:0;display:flex;align-items:stretch;}
+.tablefill table.grid{height:100%;}
+table.grid{width:100%;border-collapse:collapse;font-size:14.2px;}
+table.grid th{background:var(--dark);color:#f1ebe0;font-weight:700;font-size:13.4px;padding:9.5px 12px;text-align:left;}
+table.grid td{padding:10px 12px;border-bottom:1px solid var(--line);color:var(--ink2);vertical-align:top;line-height:1.52;}
+table.grid tr:nth-child(even) td{background:rgba(231,220,198,.36);}
+table.grid td b{color:#1c1610;font-weight:700;}
+.grp td{background:var(--band2)!important;color:var(--rust2);font-weight:700;font-size:13px;letter-spacing:.5px;}
+table.grid.even{--rows:3;--head-h:44px;height:100%;table-layout:fixed;}
+table.grid.even th,table.grid.even td{vertical-align:middle;}
+table.grid.even tr:first-child{height:var(--head-h);}
+table.grid.even .grp{height:34px;}
+table.grid.even tr:not(:first-child):not(.grp){height:calc((100% - var(--head-h)) / var(--rows));}
+table.grid.roomy{font-size:14.7px;}
+table.grid.roomy th{font-size:13.8px;padding:11px 13px;}
+table.grid.roomy td{padding:12px 13px;line-height:1.58;}
+table.grid.tight{font-size:13px;}
+table.grid.tight th,table.grid.tight td{padding:6.5px 12px;}
+table.grid.tight td{line-height:1.45;}
+.pill{display:inline-block;font-size:11px;font-weight:700;padding:2px 8px;border-radius:3px;white-space:nowrap;}
+.pill.soft{background:var(--soft-bg);color:var(--soft-fg);}
+.pill.force{background:var(--force-bg);color:var(--force-fg);}
+
+/* === 도식 === */
+.figcap{font-size:12px;font-weight:700;letter-spacing:1px;color:var(--muted);margin-bottom:16px;text-transform:uppercase;}
+
+.svgfig{display:flex;flex-direction:column;height:100%;justify-content:center;gap:10px;}
+.svgfig-inner{flex:0 1 auto;display:flex;align-items:center;justify-content:center;}
+.svgfig-inner svg{width:100%;height:auto;max-height:340px;display:block;}
+.svgcap{font-size:13px;font-weight:600;color:var(--muted,#68758a);text-align:center;}
+.body.with-svg{display:grid;grid-template-columns:1fr;gap:12px;}
+.figwrap{display:flex;flex-direction:column;justify-content:center;min-height:0;height:100%;}
+.figwrap.flow .veri{flex:1;justify-content:space-between;}  /* 5단 이상 흐름만 채우기. 항목 3개 이하면 .flow 빼기 */
+
+/* 가로 타임라인 */
+.lineage{display:flex;align-items:stretch;}
+.lineage .ln{flex:1;text-align:center;padding:0 10px;position:relative;}
+.lineage .ln .dot{width:17px;height:17px;border-radius:50%;background:var(--paper);border:4px solid var(--rust);margin:0 auto 16px;position:relative;z-index:2;}
+.lineage .ln.hot .dot{background:var(--rust);}
+.lineage .ln::before{content:"";position:absolute;top:8px;left:0;right:0;height:2px;background:var(--line2);z-index:1;}
+.lineage .ln:first-child::before{left:50%;}.lineage .ln:last-child::before{right:50%;}
+.lineage .ln .yr{font-size:12px;font-weight:700;color:var(--muted);margin-bottom:5px;}
+.lineage .ln .tm{font-size:16px;font-weight:700;color:#15100c;line-height:1.25;margin-bottom:8px;}
+.lineage .ln p{font-size:13.5px;line-height:1.5;color:var(--ink2);}
+
+/* 2계층 스택(대비) */
+.layer2{display:flex;flex-direction:column;gap:15px;}
+.layer2 .lay{border-radius:6px;padding:21px 24px;}
+.layer2 .lay.top{background:var(--band);border:1.5px solid var(--line2);}
+.layer2 .lay.bot{background:var(--dark);color:#efe7da;}
+.layer2 .lay .lh{font-size:17.5px;font-weight:700;margin-bottom:6px;}
+.layer2 .lay.top .lh{color:#15100c;}
+.layer2 .lay .lt{font-size:12.5px;font-weight:600;color:var(--rust);letter-spacing:.5px;margin-bottom:9px;}
+.layer2 .lay.bot .lt{color:var(--gold);}
+.layer2 .lay p{font-size:14px;line-height:1.6;}
+.layer2 .lay.top p{color:var(--ink2);}.layer2 .lay.bot p{color:#cabfb0;}
+.layer2 .conn{text-align:center;color:var(--muted);font-size:13px;font-weight:600;}
+.layer2.big .lay{padding:25px 28px;}
+.layer2.big .lay .lh{font-size:20px;}
+.layer2.big .lay p{font-size:15.5px;line-height:1.68;}
+
+/* 순서 흐름 도식(반복 포함) */
+.loop{display:flex;flex-direction:column;gap:13px;}
+.loop .lp{display:flex;align-items:center;gap:14px;background:var(--paper2);border:1px solid var(--line);border-radius:5px;padding:15px 18px;}
+.loop .lp .lpn{flex:0 0 auto;width:27px;height:27px;border-radius:50%;background:var(--dark);color:#f1ebe0;font-size:12.5px;font-weight:700;display:flex;align-items:center;justify-content:center;}
+.loop .lp .lpt{font-size:15px;color:var(--ink);line-height:1.4;}
+.loop .lp .lpt b{font-weight:700;color:#15100c;}
+.loop .back{font-size:13px;color:var(--rust2);font-weight:700;text-align:center;align-self:center;margin-top:5px;background:var(--band);border:1px dashed var(--line2);border-radius:20px;padding:7px 18px;}
+.loop.big .lp{padding:18px 20px;}
+.loop.big .lp .lpt{font-size:16.5px;line-height:1.55;}
+
+/* 폭 증가 계층 스택 */
+.stack{display:flex;flex-direction:column;gap:12px;align-items:center;}
+.stack .sb{border-radius:5px;padding:16px 22px;color:#fff;text-align:left;}
+.stack .sb .sh{font-size:16px;font-weight:700;}
+.stack .sb .sd{font-size:13px;opacity:.92;margin-top:3px;line-height:1.45;}
+.stack .s1{width:56%;background:var(--stack1);}.stack .s2{width:70%;background:var(--stack2);}
+.stack .s3{width:84%;background:var(--stack3);}.stack .s4{width:98%;background:var(--stack4);color:var(--stack4fg);}
+
+/* 분기 흐름(검증/판정) */
+.veri{display:flex;flex-direction:column;gap:11px;}
+.veri .vrow{display:flex;align-items:center;gap:13px;}
+.veri .vbox{flex:1;background:var(--paper2);border:1px solid var(--line);border-radius:5px;padding:15px 18px;}
+.veri .vbox .vt{font-size:15px;font-weight:700;color:#15100c;}
+.veri .vbox p{font-size:13.5px;color:var(--ink2);line-height:1.5;margin-top:3px;}
+.veri .vbox.fail{background:var(--fail-bg);border-color:var(--fail-bg);}
+.veri .vbox.fail .vt{color:var(--fail-title);}.veri .vbox.fail p{color:var(--fail-text);}
+.veri .arr{color:var(--rust);font-size:18px;font-weight:700;flex:0 0 auto;}
+.veri.big .vbox{padding:18px 21px;}
+.veri.big .vbox .vt{font-size:16.5px;}
+.veri.big .vbox p{font-size:14.8px;line-height:1.58;}
+
+/* 가로 단계(좌→우) */
+.steps{display:flex;align-items:stretch;}
+.steps .st{flex:1;padding:0 18px;position:relative;}
+.steps .st:not(:last-child)::after{content:"›";position:absolute;right:-7px;top:15px;color:var(--rust);font-size:24px;font-weight:700;}
+.steps .st .sn{font-size:12px;font-weight:700;color:var(--rust);letter-spacing:.5px;margin-bottom:7px;}
+.steps .st .sh{font-size:16.5px;font-weight:700;color:#15100c;margin-bottom:7px;}
+.steps .st p{font-size:14.5px;line-height:1.58;color:var(--ink2);}
+.steps.big .st .sh{font-size:18.2px;}
+.steps.big .st p{font-size:15.6px;line-height:1.64;}
+
+/* 단계 사이 데이터 릴레이 바 */
+.relay{display:flex;align-items:stretch;gap:9px;}
+.relay .rc{flex:1;background:var(--band);border:1px solid var(--line2);border-radius:5px;padding:13px 12px;text-align:center;display:flex;flex-direction:column;justify-content:center;}
+.relay .rc .rk{font-size:11px;font-weight:700;color:var(--rust2);letter-spacing:.5px;margin-bottom:5px;}
+.relay .rc .rv{font-size:14.5px;font-weight:700;color:#15100c;}
+.relay .ra{display:flex;align-items:center;color:var(--rust);font-size:17px;font-weight:700;}
+.relay.big .rc{padding:16px 14px;}
+.relay.big .rc .rk{font-size:12px;margin-bottom:7px;}
+.relay.big .rc .rv{font-size:16.6px;line-height:1.35;}
+
+/* 영역 카드(3열) */
+.domain{flex:1;background:var(--paper2);border:1px solid var(--line);border-top:3px solid var(--rust);border-radius:5px;padding:18px 19px;display:flex;flex-direction:column;}
+.domain .dh{font-size:17.5px;font-weight:700;color:#15100c;margin-bottom:6px;}
+.domain .dh span{font-size:12px;font-weight:600;color:var(--muted);margin-left:7px;}
+.dl{list-style:none;display:flex;flex-direction:column;flex:1;justify-content:space-around;padding-top:4px;}
+.dl li{position:relative;padding-left:16px;font-size:14.5px;line-height:1.55;color:var(--ink2);}
+.dl li::before{content:"";position:absolute;left:0;top:9px;width:6px;height:6px;background:var(--rust);border-radius:1px;}
+.dl li b{color:var(--rust2);font-weight:700;margin-right:5px;}
+.domain.big{padding:21px 22px;}
+.domain.big .dh{font-size:20px;margin-bottom:8px;}
+.domain.big .dl li{font-size:15.8px;line-height:1.64;}
+
+/* 인용(좌측 빈 중단 채울 때) */
+.pull{border-left:3px solid var(--rust);padding:6px 0 6px 20px;font-family:"Noto Serif KR",serif;font-size:19.5px;font-weight:600;color:#15100c;line-height:1.5;}
+.pull span{display:block;font-family:Pretendard,sans-serif;font-size:14px;font-weight:400;color:var(--ink2);line-height:1.65;margin-top:11px;}
+
+/* 수치 강조 */
+.stats{display:flex;gap:16px;margin-top:8px;}
+.stat{flex:1;text-align:center;background:var(--paper2);border:1px solid var(--line);border-radius:5px;padding:16px 12px;}
+.stat .sv{font-family:"Noto Serif KR",serif;font-size:28px;font-weight:700;color:var(--rust2);line-height:1;}
+.stat .sl{font-size:13px;color:var(--ink2);margin-top:7px;line-height:1.4;}
+
+/* 다크 표지/마무리 */
+.slide.dark{background:var(--dark);color:#f1ebe0;}
+.slide.dark .hdr{background:transparent;border-bottom:1px solid rgba(255,255,255,.1);}
+.dwrap{position:absolute;inset:44px 0 0;display:flex;flex-direction:column;justify-content:center;padding:0 80px;}
+.dwrap .eye{font-size:13px;font-weight:600;letter-spacing:3px;color:var(--gold);margin-bottom:20px;text-transform:uppercase;}
+.dwrap h1{font-family:"Noto Serif KR",serif;font-weight:700;font-size:56px;line-height:1.16;color:#fdfbf6;letter-spacing:-1px;}
+.dwrap h1 .ac{color:var(--rust);}
+.dwrap .ds{font-size:19px;color:#c6bbac;font-weight:400;margin-top:20px;line-height:1.65;max-width:900px;}
+.dwrap .den{font-family:"Noto Serif KR",serif;font-size:17px;font-weight:500;letter-spacing:5px;color:rgba(255,255,255,.14);margin-top:16px;text-transform:uppercase;}
+.dmeta{position:absolute;left:80px;right:80px;bottom:52px;display:flex;justify-content:space-between;align-items:flex-end;border-top:1px solid rgba(255,255,255,.14);padding-top:18px;}
+.dmeta .who{font-size:14.5px;color:#e6ddd0;font-weight:600;}
+.dmeta .who span{display:block;font-size:12px;color:var(--muted);font-weight:400;margin-top:3px;}
+.dmeta .topic{font-size:13px;color:#c6bbac;text-align:right;line-height:1.55;max-width:520px;}
+.dmeta .topic b{color:var(--gold);font-weight:600;}
+.recap{position:absolute;inset:44px 0 0;display:flex;flex-direction:column;justify-content:center;padding:0 80px;}
+.recap .eye{font-size:13px;font-weight:600;letter-spacing:3px;color:var(--gold);margin-bottom:16px;}
+.recap h1{font-family:"Noto Serif KR",serif;font-size:40px;font-weight:700;color:#fdfbf6;line-height:1.3;margin-bottom:30px;}
+.recap .ritems{display:flex;flex-direction:column;gap:18px;max-width:960px;}
+.recap .ri{display:flex;gap:16px;align-items:baseline;}
+.recap .ri .rn{font-family:"Noto Serif KR",serif;color:var(--rust);font-size:19px;font-weight:700;flex:0 0 auto;}
+.recap .ri p{font-size:16.5px;color:#d8cdbe;line-height:1.62;}
+.recap .ri p b{color:#fdfbf6;font-weight:700;}
+
+/* === 강의 도구: 편집 · PDF · 발표 (인쇄/발표 시 자동 숨김) === */
+.tool{position:fixed;top:12px;right:12px;z-index:9999;display:flex;gap:6px;font-family:Pretendard,sans-serif;}
+.tool button{font-size:12px;font-weight:700;padding:7px 12px;border-radius:6px;border:1px solid var(--line2);background:#fffdf8;color:#3a322a;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.18);}
+.tool button:hover{background:var(--band);}
+.tool button.on{background:var(--rust);color:#fff;border-color:var(--rust);}
+body.editing .slide{outline:2px dashed rgba(191,87,29,.45);outline-offset:-2px;}
+body.presenting{overflow:hidden;background:var(--presentbg);}
+body.presenting .deck{display:block;padding:0;gap:0;margin:0;}
+body.presenting .slide{display:none!important;}
+body.presenting .slide.present-current{display:block!important;position:fixed;left:50%;top:50%;transform:translate(-50%,-50%) scale(var(--ps,1));box-shadow:0 0 70px rgba(0,0,0,.6);}
+.pnav{position:fixed;bottom:14px;left:0;right:0;text-align:center;color:rgba(255,255,255,.55);font-size:13px;font-family:Pretendard,sans-serif;z-index:9999;display:none;}
+body.presenting .pnav{display:block;}
+@page{size:1280px 720px;margin:0;}
+@media print{
+  html,body{margin:0;padding:0;background:#fff;width:1280px;}
+  .tool,.pnav{display:none!important;}
+  .deck{display:block;gap:0;padding:0;margin:0;}
+  .slide{margin:0;box-shadow:none;page-break-after:always;break-after:page;}
+  .slide:last-child{page-break-after:auto;break-after:auto;}
+  *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}
+}
+</style>
+</head>
+<body data-palette="slate-teal">
+<div class="tool">
+  <button id="btnPalette">색상</button>
+  <button id="btnEdit">편집</button>
+  <button id="btnSave">저장(HTML)</button>
+  <button id="btnPdf">PDF</button>
+  <button id="btnPlay">발표</button>
+</div>
+<div class="pnav"></div>
+<div class="deck">
+<section class="slide dark">
+  <div class="hdr"><div class="ht">생성형 AI 전문역량 강화<span>전산직 공무원을 위한 · GENERATIVE AI</span></div><div class="hr">전북교육청 · 2026. 10. 8.(목)</div></div>
+  <div class="dwrap">
+    <div class="eye">전북교육청 전산직 공무원 · 직무연수 · 7시간</div>
+    <h1>전산직 공무원을 위한<br>생성형 AI <span class="ac">전문역량</span> 강화</h1>
+    <div class="ds">프롬프트 한 줄이 어떻게 컨텍스트와 하네스를 거쳐 업무 서비스가 되는지, 그 원리와 구조를 비개발자 눈높이에서 하나씩 설명합니다. 용어를 외우는 강의가 아니라, 어디에 AI를 넣고 무엇을 확인해야 하는지 판단하는 힘을 기릅니다.</div>
+    <div class="den">Prompt to RAG</div>
+  </div>
+  <div class="dmeta">
+    <div class="who">신성진<span>한국데이터사이언티스트협회 · 대표</span></div>
+    <div class="topic">전북교육청 전산직 직무연수<br><b>강의·시연·실습 · 총 7시간</b></div>
+  </div>
+</section>
+<section class="slide">
+  <div class="hdr"><div class="ht">생성형 AI 전문역량 강화<span>전산직 공무원을 위한 · GENERATIVE AI</span></div><div class="hr">CURRICULUM</div></div>
+  <div class="stage">
+    <div class="crumb">과정 안내</div>
+    <h2 class="atitle"><span class="lbl">[과정 안내]</span> 커리큘럼 <span class="sub">— 프롬프트 → 컨텍스트 → 하네스 → 도입 → 로컬·RAG</span></h2>
+    <div class="titlerule"></div>
+    <div class="body colflow" style="padding-top:14px;">
+      <div class="tablefill"><table class="grid tight">
+        <tr><th style="width:70px;">교시</th><th style="width:230px;">주제</th><th>핵심 이론과 실습</th><th style="width:150px;">방법</th></tr>
+        <tr class="grp"><td colspan="4">1부 — 개념과 원리 (1~4교시)</td></tr>
+        <tr><td>1교시</td><td><b>오늘의 큰 그림</b></td><td>AI가 ‘한 번 답’에서 ‘일을 대신’으로 바뀐 흐름, 프롬프트·컨텍스트·하네스의 관계</td><td>강의</td></tr>
+        <tr><td>2교시</td><td><b>프롬프트와 컨텍스트</b></td><td>프롬프트는 부탁, 컨텍스트는 붙여주는 자료. 자료가 품질을 바꾸는 이유</td><td>강의·실습</td></tr>
+        <tr><td>3교시</td><td><b>하네스와 오케스트레이션</b></td><td>도구를 순서로 묶기, 승인·기록, 챗봇·에이전트·하네스 구분</td><td>강의</td></tr>
+        <tr><td>4교시</td><td><b>모델 원리와 도입 지점</b></td><td>다음 토큰 예측, 큰·작은 모델, 병목 네 곳만 좁게 고르기</td><td>강의</td></tr>
+        <tr class="grp"><td colspan="4">2부 — 제작과 운영 (5~7교시)</td></tr>
+        <tr><td>5교시</td><td><b>바이브코딩</b></td><td>PowerShell·Python·Node.js, 코딩에이전트에게 일 맡기는 법</td><td>시연·실습</td></tr>
+        <tr><td>6교시</td><td><b>로컬 AI</b></td><td>Ollama로 사내망에서 돌리는 챗봇, 장점과 한계</td><td>시연·실습</td></tr>
+        <tr><td>7교시</td><td><b>RAG와 도구 관리</b></td><td>우리 문서로만 답하는 챗봇, 직원 제작 py·html·exe 관리 기준</td><td>강의·실습</td></tr>
+      </table></div>
+      <div class="note"><div class="nl">과정 목표</div><p>생성형 AI를 챗봇 사용법이 아니라 업무 도구와 서비스 구조로 이해하고, 우리 부서 업무 어디에 AI를 넣을지 스스로 판단하는 것을 목표로 합니다.</p></div>
+    </div>
+  </div>
+  <div class="pageno">02</div>
+</section>
+<section class="slide">
+  <div class="hdr"><div class="ht">생성형 AI 전문역량 강화<span>전산직 공무원을 위한 · GENERATIVE AI</span></div><div class="hr">1부 · 개념</div></div>
+  <div class="stage">
+    <div class="crumb">1부 · 생성형 AI란 무엇인가</div>
+    <h2 class="atitle"><span class="lbl">[이론]</span> 생성형 AI의 정의와 변화 <span class="sub">— 한 번 답에서 일을 대신하는 도구로</span></h2>
+    <div class="titlerule"></div>
+    <div class="body split-l" style="padding-top:18px;">
+  <div class="colflow">
+    <p class="lead" style="margin-bottom:14px;">생성형 AI는 사람이 준 글·자료를 보고 <b>다음에 올 내용을 만들어 내는</b> 프로그램입니다. 예전에는 질문에 답 한 줄을 주고 끝났지만, 지금은 검색하고 파일을 열고 계산해 표까지 이어서 만들어 냅니다. 그래서 ‘무엇을 물어볼까’가 아니라 ‘일이 어떻게 흘러가게 만들까’가 중요해졌습니다.</p>
+    <div class="concepts fill">
+      <div class="concept"><div class="no">1</div><div class="cbody"><div class="cn">생성(Generative)<span class="en">GEN</span></div>
+        <p>정답표에서 꺼내는 것이 아니라, 학습한 패턴으로 <b>새 문장·표·코드를 만들어</b> 냅니다. 예 — 회의록을 넣으면 후속조치 표를 새로 작성합니다.</p></div></div>
+      <div class="concept"><div class="no">2</div><div class="cbody"><div class="cn">이어서 처리<span class="en">AGENT</span></div>
+        <p>여러 도구를 <b>순서대로 이어받아</b> 검색·열기·정리까지 스스로 진행합니다. 예 — 폴더의 엑셀을 모아 하나로 합치고 누락값을 보고합니다.</p></div></div>
+    </div>
+  </div>
+  <div class="figwrap">
+    <div class="figcap">도구의 변화 — 한 번 답 vs 이어서 처리</div>
+    <div class="layer2">
+      <div class="lay top"><div class="lt">예전</div><div class="lh">질문 → 답 한 줄</div><p>나머지는 사람이 복사해 처리</p></div>
+      <div class="conn">▼ AI가 도구와 연결되며 확장</div>
+      <div class="lay bot"><div class="lt">지금</div><div class="lh">질문 → 검색·정리·저장까지</div><p>사람은 확인과 승인만 담당</p></div>
+    </div>
+  </div>
+</div>
+<div class="note"><div class="nl">정리</div><p>생성형 AI는 ‘새로 만들어 내는’ 도구이며, 이제는 여러 작업을 이어서 처리합니다. 그래서 전산직은 프롬프트 기술이 아니라 업무가 흘러가는 구조를 이해해야 합니다.</p></div>
+  </div>
+  <div class="pageno">03</div>
+</section>
+<section class="slide">
+  <div class="hdr"><div class="ht">생성형 AI 전문역량 강화<span>전산직 공무원을 위한 · GENERATIVE AI</span></div><div class="hr">1부 · 개념</div></div>
+  <div class="stage">
+    <div class="crumb">1부 · 전체 흐름</div>
+    <h2 class="atitle"><span class="lbl">[이론]</span> 프롬프트에서 하네스까지 <span class="sub">— 네 단계로 이어지는 하나의 흐름</span></h2>
+    <div class="titlerule"></div>
+    <div class="body colflow" style="padding-top:18px;">
+  <p class="lead" style="margin-bottom:8px;">오늘 배우는 개념은 낱개가 아니라 왼쪽에서 오른쪽으로 이어지는 <b>한 줄기</b>입니다. 프롬프트로 시작해 컨텍스트를 붙이고, 하네스로 묶으면 누구나 쓰는 업무 서비스가 됩니다.</p>
+  <div style="flex:1;display:flex;flex-direction:column;justify-content:space-around;padding:8px 0;">
+    <div class="steps big">
+      <div class="st"><div class="sn">① 프롬프트</div><div class="sh">한 번의 부탁</div><p>무엇을, 어떤 자료로, 어떤 모양으로 달라고 말합니다.</p></div>
+      <div class="st"><div class="sn">② 컨텍스트</div><div class="sh">자료 붙이기</div><p>부탁에 필요한 문서·데이터·조건을 함께 줍니다.</p></div>
+      <div class="st"><div class="sn">③ 하네스</div><div class="sh">도구를 순서로</div><p>검색·열기·정리·저장을 이어붙이고 기록합니다.</p></div>
+      <div class="st"><div class="sn">④ 업무 서비스</div><div class="sh">누구나 사용</div><p>화면·권한·로그를 갖춰 반복해 안전하게 씁니다.</p></div>
+    </div>
+    <div>
+      <div class="figcap" style="margin-bottom:12px;">단계 사이로 넘어가는 것</div>
+      <div class="relay big">
+        <div class="rc"><div class="rk">프롬프트 후</div><div class="rv">부탁 한 줄</div></div><div class="ra">›</div>
+        <div class="rc"><div class="rk">컨텍스트 후</div><div class="rv">근거 자료 첨부</div></div><div class="ra">›</div>
+        <div class="rc"><div class="rk">하네스 후</div><div class="rv">반복 가능한 흐름</div></div><div class="ra">›</div>
+        <div class="rc"><div class="rk">서비스 후</div><div class="rv">버튼 하나로 실행</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="note"><div class="nl">정리</div><p>오른쪽으로 갈수록 사람의 손이 덜 들고, 반복·안전·인수인계가 좋아집니다. 이 흐름을 기억하면 이후 모든 내용이 한 그림 안에 놓입니다.</p></div>
+</div>
+  </div>
+  <div class="pageno">04</div>
+</section>
+<section class="slide">
+  <div class="hdr"><div class="ht">생성형 AI 전문역량 강화<span>전산직 공무원을 위한 · GENERATIVE AI</span></div><div class="hr">1부 · 개념</div></div>
+  <div class="stage">
+    <div class="crumb">1부 · 프롬프트</div>
+    <h2 class="atitle"><span class="lbl">[이론]</span> 프롬프트의 정의 <span class="sub">— 작성 기술이 아니라 부탁의 구조</span></h2>
+    <div class="titlerule"></div>
+    <div class="body split-l" style="padding-top:18px;">
+  <div class="colflow">
+    <p class="lead" style="margin-bottom:14px;">프롬프트는 AI에게 하는 <b>한 번의 부탁</b>입니다. 길게 꾸미는 기술이 아니라, 무엇을·어떤 자료로·어떤 모양으로 달라는 요청입니다. ‘출장비 기준 알려줘’라고만 하면 일반적 관행으로 답하지만, 여비 지침을 붙이면 그 조항을 근거로 답합니다. 문장보다 <b>자료를 붙이는 것</b>이 결과를 바꿉니다.</p>
+    <div class="concepts fill big">
+      <div class="concept"><div class="no">1</div><div class="cbody"><div class="cn">무엇을</div>
+        <p>할 일을 동사로 분명히 말합니다.<span class="boxmore">예 — “이 회의록을 보고 후속조치를 정리해줘”.</span><span class="boxcheck">확인 — 결과가 표인지 요약인지 정해졌는가.</span></p></div></div>
+      <div class="concept"><div class="no">2</div><div class="cbody"><div class="cn">어떤 자료로</div>
+        <p>참고할 문서·데이터를 함께 붙입니다.<span class="boxmore">예 — 회의록 파일, 부서 지침을 첨부합니다.</span><span class="boxcheck">확인 — 개인정보가 들어가 있지 않은가.</span></p></div></div>
+    </div>
+  </div>
+  <div class="figwrap">
+    <div class="figcap">부탁의 좋고 나쁨</div>
+    <div class="veri big">
+      <div class="vrow"><div class="vbox"><div class="vt">자료 없이 부탁</div><p>“보고서 써줘” — AI가 상황을 혼자 상상해 엉뚱하게 답합니다.</p></div></div>
+      <div class="vrow"><div class="vbox"><div class="vt">자료 붙여 부탁</div><p>회의록·지침을 붙이면 상상 대신 근거로 답합니다.</p></div></div>
+    </div>
+  </div>
+</div>
+<div class="note"><div class="nl">정리</div><p>프롬프트 한 줄만으로는 부족합니다. AI가 볼 자료를 붙이는 순간 품질이 달라집니다. 그래서 다음 개념이 ‘컨텍스트’입니다.</p></div>
+  </div>
+  <div class="pageno">05</div>
+</section>
+<section class="slide">
+  <div class="hdr"><div class="ht">생성형 AI 전문역량 강화<span>전산직 공무원을 위한 · GENERATIVE AI</span></div><div class="hr">1부 · 개념</div></div>
+  <div class="stage">
+    <div class="crumb">1부 · 컨텍스트</div>
+    <h2 class="atitle"><span class="lbl">[이론]</span> 컨텍스트의 구성 <span class="sub">— AI에게 함께 붙여주는 배경자료 네 가지</span></h2>
+    <div class="titlerule"></div>
+    <div class="body split" style="padding-top:16px;">
+  <div class="concepts fill big">
+    <div class="concept"><div class="no">1</div><div class="cbody"><div class="cn">붙인 문서</div>
+      <p>회의록·공문·매뉴얼처럼 답의 근거가 될 원문입니다.<span class="boxmore">예 — 부서 지침 PDF, 회의록 한글 파일.</span><span class="boxcheck">확인 — 최신본인지, 폐지된 문서는 아닌지.</span></p></div></div>
+    <div class="concept"><div class="no">2</div><div class="cbody"><div class="cn">우리 데이터</div>
+      <p>표·수치처럼 계산과 집계의 재료가 되는 자료입니다.<span class="boxmore">예 — 엑셀·CSV, 조회한 DB 결과.</span><span class="boxcheck">확인 — 원본 행 수와 결과가 맞는지.</span></p></div></div>
+  </div>
+  <div class="concepts fill big">
+    <div class="concept"><div class="no">3</div><div class="cbody"><div class="cn">지켜야 할 선</div>
+      <p>반드시 지킬 규칙을 미리 알려 사고를 막습니다.<span class="boxmore">예 — 개인정보 빼기, 근거 없는 추측 금지.</span><span class="boxcheck">확인 — 금지사항이 구체적으로 적혔는지.</span></p></div></div>
+    <div class="concept"><div class="no">4</div><div class="cbody"><div class="cn">원하는 모양</div>
+      <p>결과 형식을 정해 바로 업무에 쓸 수 있게 합니다.<span class="boxmore">예 — 표, 3줄 요약, 체크리스트로 출력.</span><span class="boxcheck">확인 — 담당·기한 같은 칸이 채워졌는지.</span></p></div></div>
+  </div>
+</div>
+<div class="note"><div class="nl">정리</div><p>컨텍스트가 없으면 AI는 상황을 혼자 상상합니다. 이 네 가지 자료를 붙이면 상상 대신 근거로 답하게 됩니다.</p></div>
+  </div>
+  <div class="pageno">06</div>
+</section>
+<section class="slide">
+  <div class="hdr"><div class="ht">생성형 AI 전문역량 강화<span>전산직 공무원을 위한 · GENERATIVE AI</span></div><div class="hr">1부 · 개념</div></div>
+  <div class="stage">
+    <div class="crumb">1부 · 하네스</div>
+    <h2 class="atitle"><span class="lbl">[이론]</span> 하네스와 오케스트레이션 <span class="sub">— 여러 도구를 순서로 묶은 작업 틀</span></h2>
+    <div class="titlerule"></div>
+    <div class="body split-l" style="padding-top:18px;">
+  <div class="colflow">
+    <p class="lead" style="margin-bottom:14px;">하네스는 AI가 <b>여러 도구를 정해진 순서로 이어받아</b> 일하도록 묶은 작업 틀입니다. 한 번 답하고 끝이 아니라 지시 → 도구 → 결과가 이어지고, 중간에 사람 승인과 기록이 들어갑니다. 이렇게 묶어 두면 같은 일을 반복할 수 있습니다.</p>
+    <div class="concepts fill big">
+      <div class="concept"><div class="no">1</div><div class="cbody"><div class="cn">도구를 순서로</div>
+        <p>검색 → 열기 → 정리 → 저장을 이어붙입니다.<span class="boxmore">예 — 폴더 엑셀을 찾아 합치고 결과를 저장.</span></p></div></div>
+      <div class="concept"><div class="no">2</div><div class="cbody"><div class="cn">안전장치</div>
+        <p>되돌릴 수 없는 동작 앞에 사람 승인을 둡니다.<span class="boxcheck">확인 — 발송·삭제·덮어쓰기 전 승인 단계.</span></p></div></div>
+    </div>
+  </div>
+  <div class="figwrap"><div class="svgfig"><div class="svgfig-inner"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 460" font-family="Pretendard, sans-serif">
+<rect width="920" height="460" fill="#F5F1ED"/><g transform="translate(0,26)"><defs><marker id="ah" markerWidth="11" markerHeight="11" refX="7.5" refY="3.2" orient="auto"><path d="M0,0 L8,3.2 L0,6.4 Z" fill="#865461"/></marker></defs><text x="48" y="46" font-size="16" fill="#756D70" font-weight="800" text-anchor="start">하네스 — 지시에서 시작해 도구를 순서로 이어 처리하고 기록한다</text><text x="48" y="96" font-size="14" fill="#865461" font-weight="800" text-anchor="start">지시  →</text><rect x="48" y="120" width="186.5" height="96" rx="10" fill="#fff" stroke="#865461" stroke-width="1.6"/><text x="141.25" y="160" font-size="16" fill="#2B2728" font-weight="800" text-anchor="middle">1. 검색</text><text x="141.25" y="188" font-size="13" fill="#756D70" font-weight="550" text-anchor="middle">필요한 문서 찾기</text><line x1="237.5" y1="168.0" x2="257.5" y2="168.0" stroke="#865461" stroke-width="2.2" marker-end="url(#ah)"/><rect x="260.5" y="120" width="186.5" height="96" rx="10" fill="#fff" stroke="#D8CFC7" stroke-width="1.3"/><text x="353.75" y="160" font-size="16" fill="#2B2728" font-weight="800" text-anchor="middle">2. 열기·읽기</text><text x="353.75" y="188" font-size="13" fill="#756D70" font-weight="550" text-anchor="middle">값 뽑기</text><line x1="450.0" y1="168.0" x2="470.0" y2="168.0" stroke="#865461" stroke-width="2.2" marker-end="url(#ah)"/><rect x="473.0" y="120" width="186.5" height="96" rx="10" fill="#fff" stroke="#D8CFC7" stroke-width="1.3"/><text x="566.25" y="160" font-size="16" fill="#2B2728" font-weight="800" text-anchor="middle">3. 정리·계산</text><text x="566.25" y="188" font-size="13" fill="#756D70" font-weight="550" text-anchor="middle">표 만들기</text><line x1="662.5" y1="168.0" x2="682.5" y2="168.0" stroke="#865461" stroke-width="2.2" marker-end="url(#ah)"/><rect x="685.5" y="120" width="186.5" height="96" rx="10" fill="#fff" stroke="#D8CFC7" stroke-width="1.3"/><text x="778.75" y="160" font-size="16" fill="#2B2728" font-weight="800" text-anchor="middle">4. 저장·기록</text><text x="778.75" y="188" font-size="13" fill="#756D70" font-weight="550" text-anchor="middle">결과 남기기</text><rect x="48" y="270" width="824" height="96" rx="10" fill="#faf3f1" stroke="#9A7A64" stroke-width="1.4"/><text x="72" y="306" font-size="14" fill="#9A7A64" font-weight="900" text-anchor="start">사이에 넣는 안전장치</text><text x="72" y="336" font-size="14.5" fill="#2B2728" font-weight="600" text-anchor="start">위험한 동작(개인정보 조회·외부 발송·원본 수정) 앞에는 사람 승인 · 모든 단계는 로그로 기록</text></g></svg></div><div class="svgcap">지시에서 시작해 도구를 순서로 잇고, 위험한 동작 앞에 승인·기록을 둔다</div></div></div>
+</div><div class="note"><div class="nl">정리</div><p>프롬프트가 한 번의 부탁이라면, 하네스는 반복할 수 있는 업무 흐름입니다. 위험한 작업 앞에는 사람 승인을, 모든 단계에는 기록을 둡니다.</p></div>
+  </div>
+  <div class="pageno">07</div>
+</section>
+<section class="slide">
+  <div class="hdr"><div class="ht">생성형 AI 전문역량 강화<span>전산직 공무원을 위한 · GENERATIVE AI</span></div><div class="hr">1부 · 개념</div></div>
+  <div class="stage">
+    <div class="crumb">1부 · 성숙 단계</div>
+    <h2 class="atitle"><span class="lbl">[이론]</span> 챗봇·에이전트·하네스·서비스 <span class="sub">— 어디까지 묶느냐에 따른 네 단계</span></h2>
+    <div class="titlerule"></div>
+    <div class="body colflow" style="padding-top:16px;">
+  <p class="lead" style="margin-bottom:13px;">같은 AI라도 어디까지 묶느냐에 따라 쓰임이 달라집니다. 위로 갈수록 편하지만, 그만큼 승인·기록·권한 같은 안전장치가 필요합니다.</p>
+  <div class="tablefill">
+    <table class="grid even roomy" style="--rows:4;">
+      <tr><th style="width:150px;">단계</th><th>무엇을 하는가</th><th style="width:360px;">전산직이 확인할 점</th></tr>
+      <tr><td><b>챗봇</b></td><td>묻는 말에 답하고 문서를 요약합니다. 다음 행동은 사람이 직접 합니다.</td><td>근거 표시, 개인정보 입력 여부, 답변 품질</td></tr>
+      <tr><td><b>에이전트</b></td><td>검색·파일 읽기·계산·표 작성처럼 여러 도구를 스스로 이어서 씁니다.</td><td>도구 권한, 실패 시 중단, 처리 기록</td></tr>
+      <tr><td><b>하네스</b></td><td>지시·도구·검증·기록을 하나로 묶은 반복 가능한 작업 틀입니다.</td><td>표준 절차, 재사용성, 담당자 인수인계</td></tr>
+      <tr><td><b>업무 서비스</b></td><td>화면·권한·로그·오류처리를 갖춰 누구나 안전하게 쓰는 프로그램입니다.</td><td>입력 검증, 예외 처리, 운영 매뉴얼</td></tr>
+    </table>
+  </div>
+  <div class="note"><div class="nl">정리</div><p>챗봇에서 서비스로 갈수록 자동화 효과는 커지지만, 통제 장치도 함께 커져야 합니다. 우리 업무에 맞는 단계를 고르는 것이 중요합니다.</p></div>
+</div>
+  </div>
+  <div class="pageno">08</div>
+</section>
+<section class="slide">
+  <div class="hdr"><div class="ht">생성형 AI 전문역량 강화<span>전산직 공무원을 위한 · GENERATIVE AI</span></div><div class="hr">1부 · 개념</div></div>
+  <div class="stage">
+    <div class="crumb">1부 · 모델 원리</div>
+    <h2 class="atitle"><span class="lbl">[이론]</span> 언어모델의 작동 원리 <span class="sub">— 다음에 올 글자를 확률로 맞히는 방식</span></h2>
+    <div class="titlerule"></div>
+    <div class="body split-l" style="padding-top:18px;">
+  <div class="colflow">
+    <p class="lead" style="margin-bottom:14px;">언어모델(LLM)은 앞 문장을 보고 <b>다음에 올 말을 확률로 골라</b> 이어 붙이는 방식으로 글을 만듭니다. ‘대한민국의 수도는’ 뒤에는 ‘서울’을 높은 확률로 맞히지만, ‘우리 부서 지난달 초과근무’ 뒤에는 근거가 없어 <b>그럴듯한 숫자를 지어냅니다.</b> 이 원리만 알아도 AI를 어디까지 믿을지 판단할 수 있습니다.</p>
+    <div class="concepts fill big">
+      <div class="concept"><div class="no">1</div><div class="cbody"><div class="cn">토큰<span class="en">TOKEN</span></div>
+        <p>모델이 읽고 쓰는 <b>작은 글자 조각</b>입니다. 문장 길이와 비용을 토큰 수로 셉니다.<span class="boxmore">예 — 긴 공문은 토큰이 많아 한 번에 다 못 넣을 수 있습니다.</span></p></div></div>
+      <div class="concept"><div class="no">2</div><div class="cbody"><div class="cn">확률 선택<span class="en">PROB</span></div>
+        <p>다음 토큰을 <b>확률이 높은 순</b>으로 고릅니다. 그래서 같은 질문에도 답이 조금씩 달라집니다.<span class="boxcheck">확인 — 숫자·날짜는 사람이 원문으로 검증합니다.</span></p></div></div>
+    </div>
+  </div>
+  <div class="figwrap">
+    <div class="figcap">왜 검증이 필요한가</div>
+    <div class="layer2">
+      <div class="lay top"><div class="lt">강점</div><div class="lh">자연스러운 요약·정리</div><p>초안 작성을 빠르게 도와줍니다</p></div>
+      <div class="conn">▼ 그러나 확률로 만들기 때문에</div>
+      <div class="lay bot"><div class="lt">한계</div><div class="lh">그럴듯한 오답</div><p>사실이 아닌 내용을 지어낼 수 있음</p></div>
+    </div>
+  </div>
+</div>
+<div class="note"><div class="nl">정리</div><p>AI 답은 초안입니다. 틀리면 안 되는 숫자·날짜·규정은 사람이 원문으로 다시 확인한다 — 이 원칙만 지켜도 사고를 크게 줄입니다.</p></div>
+  </div>
+  <div class="pageno">09</div>
+</section>
+<section class="slide">
+  <div class="hdr"><div class="ht">생성형 AI 전문역량 강화<span>전산직 공무원을 위한 · GENERATIVE AI</span></div><div class="hr">1부 · 개념</div></div>
+  <div class="stage">
+    <div class="crumb">1부 · 모델 선택</div>
+    <h2 class="atitle"><span class="lbl">[이론]</span> 큰 모델과 작은 모델 <span class="sub">— 일의 무게에 맞게 나눠 쓰기</span></h2>
+    <div class="titlerule"></div>
+    <div class="body colflow" style="padding-top:16px;">
+  <p class="lead" style="margin-bottom:13px;">모든 일에 제일 큰 모델이 필요한 것은 아닙니다. 무겁고 복잡한 일은 큰 모델, 가볍고 빠른 일은 작은 모델로 나누면 속도와 비용을 지키면서 필요한 곳에만 품질을 투자할 수 있습니다.</p>
+  <div class="tablefill">
+    <table class="grid even roomy" style="--rows:3;">
+      <tr><th style="width:150px;">구분</th><th style="width:230px;">잘하는 일</th><th>예시</th><th style="width:200px;">대신 감수할 점</th></tr>
+      <tr><td><b>큰 모델</b></td><td>정책 해석, 긴 문서 요약, 보고서 초안</td><td>여러 지침을 비교해 개정 전후 차이를 표로 정리</td><td>느리고 비용·장비 요구가 큼</td></tr>
+      <tr><td><b>작은 모델</b></td><td>분류, 키워드 뽑기, 짧은 요약</td><td>민원 제목을 유형·긴급도·담당부서로 자동 분류</td><td>어려운 추론에는 부족할 수 있음</td></tr>
+      <tr><td><b>섞어 쓰기</b></td><td>난이도로 나눠 배치</td><td>분류는 작은 모델 → 답변 작성만 큰 모델 호출</td><td>분기 조건 설계가 필요함</td></tr>
+    </table>
+  </div>
+  <div class="note"><div class="nl">정리</div><p>모델 이름 경쟁이 아니라, 어떤 일에 어떤 크기를 붙일지 나누는 설계가 실무 성과를 만듭니다.</p></div>
+</div>
+  </div>
+  <div class="pageno">10</div>
+</section>
+<section class="slide">
+  <div class="hdr"><div class="ht">생성형 AI 전문역량 강화<span>전산직 공무원을 위한 · GENERATIVE AI</span></div><div class="hr">1부 · 개념</div></div>
+  <div class="stage">
+    <div class="crumb">1부 · 오해 교정</div>
+    <h2 class="atitle"><span class="lbl">[이론]</span> 흔한 오해와 바로잡기 <span class="sub">— 최신 큰 모델 하나면 다 된다?</span></h2>
+    <div class="titlerule"></div>
+    <div class="body colflow" style="padding-top:16px;">
+  <p class="lead" style="margin-bottom:12px;">‘모델만 좋으면 업무가 자동으로 좋아진다’는 생각은 자주 하는 오해입니다. 성과는 모델이 아니라 <b>자료를 붙이고·흐름으로 묶고·사람이 확인하는</b> 구조에서 나옵니다.</p>
+  <div style="flex:1;display:flex;flex-direction:column;justify-content:center;padding:6px 0;">
+    <div class="veri big" style="gap:16px;">
+      <div class="vrow"><div class="vbox fail"><div class="vt">오해 — 큰 모델이면 끝</div><p>같은 모델도 자료(컨텍스트)를 주지 않으면 엉뚱하게 답합니다.</p></div></div>
+      <div class="vrow"><div class="vbox"><div class="vt">근거 ① 흐름이 만든다</div><p>반복·안전·기록은 모델이 아니라 하네스가 만듭니다.</p></div></div>
+      <div class="vrow"><div class="vbox"><div class="vt">근거 ② 검색이 따로 필요</div><p>우리 문서로 답하게 하려면 RAG라는 검색 구조가 별도로 필요합니다.</p></div></div>
+    </div>
+  </div>
+  <div class="note"><div class="nl">바로잡기</div><p>전산직의 역할은 좋은 모델 찾기보다 좋은 흐름 만들기입니다. 자료·흐름·검증이 갖춰질 때 모델의 힘이 업무 성과로 바뀝니다.</p></div>
+</div>
+  </div>
+  <div class="pageno">11</div>
+</section>
+<section class="slide">
+  <div class="hdr"><div class="ht">생성형 AI 전문역량 강화<span>전산직 공무원을 위한 · GENERATIVE AI</span></div><div class="hr">2부 · 도입</div></div>
+  <div class="stage">
+    <div class="crumb">2부 · 도입 지점</div>
+    <h2 class="atitle"><span class="lbl">[이론]</span> AI 도입 지점 선정 <span class="sub">— 레거시 전체 교체가 아니라 병목만</span></h2>
+    <div class="titlerule"></div>
+    <div class="body split-l" style="padding-top:18px;">
+  <div class="colflow">
+    <p class="lead" style="margin-bottom:14px;">기존 문서함·게시판·엑셀은 그대로 두고, <b>시간이 새는 병목</b>에만 AI를 넣습니다. 예 — 여러 기관 공문에서 사업명·기간·예산을 뽑아 대장에 넣는 ‘텍스트 추출’ 구간에만 AI를 붙이면 앞뒤 업무는 그대로입니다.</p>
+    <div class="concepts fill big">
+      <div class="concept"><div class="no">1</div><div class="cbody"><div class="cn">넣을 곳</div>
+        <p>자료검색·텍스트추출·데이터정리·초안작성.<span class="boxmore">반복되고, 참고 자료가 있고, 결과를 확인할 수 있는 일.</span></p></div></div>
+      <div class="concept"><div class="no">2</div><div class="cbody"><div class="cn">피할 곳</div>
+        <p>한 번뿐인 일, 정답을 확인 못 하는 일.<span class="boxcheck">확인 — 민감정보를 그대로 처리하는 업무는 뒤로.</span></p></div></div>
+    </div>
+  </div>
+  <div class="figwrap"><div class="svgfig"><div class="svgfig-inner"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 460" font-family="Pretendard, sans-serif">
+<rect width="920" height="460" fill="#F5F1ED"/><g transform="translate(0,0)"><defs><marker id="ah" markerWidth="11" markerHeight="11" refX="7.5" refY="3.2" orient="auto"><path d="M0,0 L8,3.2 L0,6.4 Z" fill="#865461"/></marker></defs><text x="48" y="46" font-size="16" fill="#756D70" font-weight="800" text-anchor="start">AI 도입 지점 — 기존 업무는 유지하고 병목 네 곳만 좁게 돕는다</text><circle cx="460.0" cy="244.0" r="78" fill="#2B2728" stroke="none"/><text x="460.0" y="238.0" font-size="16" fill="#fff" font-weight="800" text-anchor="middle">기존 업무</text><text x="460.0" y="262.0" font-size="12.5" fill="#ccc" font-weight="600" text-anchor="middle">( 유지 )</text><rect x="48" y="94" width="248" height="66" rx="10" fill="#fff" stroke="#865461" stroke-width="1.4"/><text x="66" y="122" font-size="15.5" fill="#865461" font-weight="800" text-anchor="start">자료검색</text><text x="66" y="144" font-size="12.5" fill="#756D70" font-weight="550" text-anchor="start">지침·공문·매뉴얼 찾기</text><line x1="296" y1="127.0" x2="405.4" y2="212.8" stroke="#D8CFC7" stroke-width="1.6"/><circle cx="296" cy="127.0" r="4" fill="#865461" stroke="none"/><rect x="624" y="94" width="248" height="66" rx="10" fill="#fff" stroke="#865461" stroke-width="1.4"/><text x="642" y="122" font-size="15.5" fill="#865461" font-weight="800" text-anchor="start">텍스트추출</text><text x="642" y="144" font-size="12.5" fill="#756D70" font-weight="550" text-anchor="start">PDF·한글에서 항목 뽑기</text><line x1="624" y1="127.0" x2="514.6" y2="212.8" stroke="#D8CFC7" stroke-width="1.6"/><circle cx="624" cy="127.0" r="4" fill="#9A7A64" stroke="none"/><rect x="48" y="300" width="248" height="66" rx="10" fill="#fff" stroke="#865461" stroke-width="1.4"/><text x="66" y="328" font-size="15.5" fill="#865461" font-weight="800" text-anchor="start">데이터정리</text><text x="66" y="350" font-size="12.5" fill="#756D70" font-weight="550" text-anchor="start">엑셀 집계·이상값 확인</text><line x1="296" y1="333.0" x2="405.4" y2="275.2" stroke="#D8CFC7" stroke-width="1.6"/><circle cx="296" cy="333.0" r="4" fill="#865461" stroke="none"/><rect x="624" y="300" width="248" height="66" rx="10" fill="#fff" stroke="#865461" stroke-width="1.4"/><text x="642" y="328" font-size="15.5" fill="#865461" font-weight="800" text-anchor="start">초안작성</text><text x="642" y="350" font-size="12.5" fill="#756D70" font-weight="550" text-anchor="start">보고·안내문 초안</text><line x1="624" y1="333.0" x2="514.6" y2="275.2" stroke="#D8CFC7" stroke-width="1.6"/><circle cx="624" cy="333.0" r="4" fill="#9A7A64" stroke="none"/></g></svg></div><div class="svgcap">기존 업무는 유지하고 병목 네 곳만 좁게 돕는다</div></div></div>
+</div><div class="note"><div class="nl">공통점</div><p>AI 도입 1순위는 반복되고, 참고할 자료가 있고, 결과를 확인할 수 있는 업무입니다. 이 세 조건을 병목 판단 기준으로 씁니다.</p></div>
+  </div>
+  <div class="pageno">12</div>
+</section>
+<section class="slide">
+  <div class="hdr"><div class="ht">생성형 AI 전문역량 강화<span>전산직 공무원을 위한 · GENERATIVE AI</span></div><div class="hr">2부 · 도입</div></div>
+  <div class="stage">
+    <div class="crumb">2부 · 도입 판단</div>
+    <h2 class="atitle"><span class="lbl">[판정]</span> 도입 후보 판단 기준 <span class="sub">— 다섯 가지로 병목을 걸러내기</span></h2>
+    <div class="titlerule"></div>
+    <div class="body colflow" style="padding-top:16px;">
+  <p class="lead" style="margin-bottom:13px;">좋아 보이는 아이디어보다 반복성과 확인 가능성을 봅니다. 아래 다섯 기준에서 ‘적합’ 쪽이 많을수록 먼저 시작하기 좋은 업무입니다.</p>
+  <div class="tablefill">
+    <table class="grid even roomy" style="--rows:5;">
+      <tr><th style="width:170px;">기준</th><th>이러면 적합</th><th>이러면 아직</th></tr>
+      <tr><td><b>반복성</b></td><td>매주·매월 반복되는 업무</td><td>한 번뿐인 업무</td></tr>
+      <tr><td><b>참고 자료</b></td><td>문서·표가 정리되어 있음</td><td>말로만 지시가 오감</td></tr>
+      <tr><td><b>확인 가능성</b></td><td>정답·규정·샘플이 있음</td><td>맞는지 알 방법이 없음</td></tr>
+      <tr><td><b>위험도</b></td><td>개인정보를 뺄 수 있음</td><td>민감정보를 그대로 처리</td></tr>
+      <tr><td><b>효과</b></td><td>줄어든 시간이 뚜렷함</td><td>효과를 재기 어려움</td></tr>
+    </table>
+  </div>
+  <div class="note"><div class="nl">정리</div><p>이 표는 도입 회의에서 그대로 쓸 수 있는 체크리스트입니다. 적합 쪽이 3개 이상이면 소규모로 시작해 봅니다.</p></div>
+</div>
+  </div>
+  <div class="pageno">13</div>
+</section>
+<section class="slide">
+  <div class="hdr"><div class="ht">생성형 AI 전문역량 강화<span>전산직 공무원을 위한 · GENERATIVE AI</span></div><div class="hr">2부 · 제작</div></div>
+  <div class="stage">
+    <div class="crumb">2부 · 바이브코딩</div>
+    <h2 class="atitle"><span class="lbl">[이론]</span> 바이브코딩과 도구 선택 <span class="sub">— 코딩을 몰라도 도구에게 시키기</span></h2>
+    <div class="titlerule"></div>
+    <div class="body split-l" style="padding-top:18px;">
+  <div class="colflow">
+    <p class="lead" style="margin-bottom:14px;">바이브코딩은 직접 프로그램을 짜는 것이 아니라 <b>도구에게 말로 시켜</b> 반복 업무를 줄이는 방식입니다. 파일명 정리, 여러 엑셀 병합, PDF 표 추출처럼 시중 소프트웨어로는 애매하고 손으로 하기엔 반복이 많은 일에 특히 유용합니다.</p>
+    <div class="concepts fill big">
+      <div class="concept"><div class="no">1</div><div class="cbody"><div class="cn">도구 고르기</div>
+        <p>일의 종류에 맞는 도구를 씁니다.<span class="boxmore">파일 정리는 PowerShell, 데이터는 Python, 화면은 Node.js.</span></p></div></div>
+      <div class="concept"><div class="no">2</div><div class="cbody"><div class="cn">검증은 필수</div>
+        <p>만든 코드도 오류가 있을 수 있습니다.<span class="boxcheck">확인 — 샘플로 먼저 시험하고 원본은 보존.</span></p></div></div>
+    </div>
+  </div>
+  <div class="figwrap"><div class="svgfig"><div class="svgfig-inner"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 460" font-family="Pretendard, sans-serif">
+<rect width="920" height="460" fill="#F5F1ED"/><g transform="translate(0,18)"><defs><marker id="ah" markerWidth="11" markerHeight="11" refX="7.5" refY="3.2" orient="auto"><path d="M0,0 L8,3.2 L0,6.4 Z" fill="#865461"/></marker></defs><text x="48" y="46" font-size="16" fill="#756D70" font-weight="800" text-anchor="start">바이브코딩 — 업무 종류에 따라 세 도구를 나눠 쓴다</text><rect x="48.0" y="100" width="256.0" height="210" rx="10" fill="#fff" stroke="#D8CFC7" stroke-width="1.3"/><rect x="48.0" y="100" width="256.0" height="52" rx="10" fill="#865461" stroke="#865461" stroke-width="1.3"/><text x="176.0" y="133" font-size="19" fill="#fff" font-weight="800" text-anchor="middle">PowerShell</text><text x="176.0" y="192" font-size="15" fill="#2B2728" font-weight="800" text-anchor="middle">윈도우 파일 정리</text><text x="176.0" y="240" font-size="12" fill="#756D70" font-weight="800" text-anchor="middle">예시</text><text x="176.0" y="266" font-size="13" fill="#756D70" font-weight="550" text-anchor="middle">폴더·파일명·로그 정리</text><rect x="332.0" y="100" width="256.0" height="210" rx="10" fill="#fff" stroke="#D8CFC7" stroke-width="1.3"/><rect x="332.0" y="100" width="256.0" height="52" rx="10" fill="#865461" stroke="#865461" stroke-width="1.3"/><text x="460.0" y="133" font-size="19" fill="#fff" font-weight="800" text-anchor="middle">Python</text><text x="460.0" y="192" font-size="15" fill="#2B2728" font-weight="800" text-anchor="middle">문서·데이터 처리</text><text x="460.0" y="240" font-size="12" fill="#756D70" font-weight="800" text-anchor="middle">예시</text><text x="460.0" y="266" font-size="13" fill="#756D70" font-weight="550" text-anchor="middle">엑셀 병합·PDF 추출·집계</text><rect x="616.0" y="100" width="256.0" height="210" rx="10" fill="#fff" stroke="#D8CFC7" stroke-width="1.3"/><rect x="616.0" y="100" width="256.0" height="52" rx="10" fill="#865461" stroke="#865461" stroke-width="1.3"/><text x="744.0" y="133" font-size="19" fill="#fff" font-weight="800" text-anchor="middle">Node.js</text><text x="744.0" y="192" font-size="15" fill="#2B2728" font-weight="800" text-anchor="middle">간단한 웹·화면</text><text x="744.0" y="240" font-size="12" fill="#756D70" font-weight="800" text-anchor="middle">예시</text><text x="744.0" y="266" font-size="13" fill="#756D70" font-weight="550" text-anchor="middle">입력 화면·사내 API·챗봇 UI</text></g></svg></div><div class="svgcap">업무 종류에 따라 세 도구를 나눠 쓴다</div></div></div>
+</div><div class="note"><div class="nl">정리</div><p>전산직 바이브코딩은 앱을 멋지게 짜는 것이 아니라, 반복 업무를 짧은 명령으로 줄이는 실무 기술입니다.</p></div>
+  </div>
+  <div class="pageno">14</div>
+</section>
+<section class="slide">
+  <div class="hdr"><div class="ht">생성형 AI 전문역량 강화<span>전산직 공무원을 위한 · GENERATIVE AI</span></div><div class="hr">2부 · 제작</div></div>
+  <div class="stage">
+    <div class="crumb">2부 · 코딩에이전트</div>
+    <h2 class="atitle"><span class="lbl">[실습]</span> 코딩에이전트에게 일 맡기기 <span class="sub">— 목표·지켜야 할 선·끝나고 확인</span></h2>
+    <div class="titlerule"></div>
+    <div class="body split-l" style="padding-top:18px;">
+  <div class="colflow">
+    <p class="lead" style="margin-bottom:14px;">코딩에이전트(예 — Cursor)는 대신 타이핑하는 도구가 아니라 <b>만들고·고치고·확인하는 작업 파트너</b>입니다. 아래 세 가지만 함께 말하면 됩니다. 실제 지시는 오른쪽 예시처럼 짧고 구체적이면 충분합니다.</p>
+    <div class="concepts fill big">
+      <div class="concept"><div class="no">1</div><div class="cbody"><div class="cn">목표와 입력</div>
+        <p>무엇을 만들지, 입력 파일이 어디 있는지 말합니다.<span class="boxmore">예 — “이 폴더의 엑셀들을 하나로 합쳐줘”.</span></p></div></div>
+      <div class="concept"><div class="no">2</div><div class="cbody"><div class="cn">지켜야 할 선</div>
+        <p>개인정보 제외·원본 보존 같은 규칙을 말합니다.<span class="boxmore">예 — “개인정보 같은 칸은 빼고, 원본은 두고 output에 저장”.</span></p></div></div>
+      <div class="concept"><div class="no">3</div><div class="cbody"><div class="cn">끝나고 확인</div>
+        <p>결과 수와 오류를 보고하게 합니다.<span class="boxcheck">예 — “몇 줄인지, 빠진 값 있는지 알려주고 샘플 3개로 먼저 시험해줘”.</span></p></div></div>
+    </div>
+  </div>
+  <div class="figwrap">
+    <div class="figcap">실제 지시 예시 (그대로 말하기)</div>
+    <div class="loop big">
+      <div class="lp"><div class="lpn">1</div><div class="lpt">이 폴더의 <b>엑셀들을 하나로</b> 합쳐줘</div></div>
+      <div class="lp"><div class="lpn">2</div><div class="lpt"><b>개인정보</b> 같은 칸은 빼줘</div></div>
+      <div class="lp"><div class="lpn">3</div><div class="lpt">결과는 <b>output 폴더</b>에 저장해줘</div></div>
+      <div class="lp"><div class="lpn">4</div><div class="lpt">다 되면 <b>몇 줄·빠진 값</b>을 알려줘</div></div>
+      <div class="lp"><div class="lpn">5</div><div class="lpt"><b>샘플 3개</b>로 먼저 시험해줘</div></div>
+    </div>
+  </div>
+</div>
+<div class="note"><div class="nl">정리</div><p>핵심은 목표·지켜야 할 선·끝나고 확인 세 가지를 함께 말하는 것입니다. 그러면 에이전트가 스스로 만들고 검증해 보고합니다.</p></div>
+  </div>
+  <div class="pageno">15</div>
+</section>
+<section class="slide">
+  <div class="hdr"><div class="ht">생성형 AI 전문역량 강화<span>전산직 공무원을 위한 · GENERATIVE AI</span></div><div class="hr">2부 · 제작</div></div>
+  <div class="stage">
+    <div class="crumb">2부 · 로컬 AI</div>
+    <h2 class="atitle"><span class="lbl">[이론]</span> Ollama 로컬 AI의 구조 <span class="sub">— 내 컴퓨터 안에서만 도는 챗봇</span></h2>
+    <div class="titlerule"></div>
+    <div class="body split-l" style="padding-top:18px;">
+  <div class="colflow">
+    <p class="lead" style="margin-bottom:14px;">Ollama는 인터넷으로 자료를 내보내지 않고 <b>내 컴퓨터(장비) 안에서 모델을 실행</b>하는 도구입니다. 자료 유출 걱정 없이 챗봇 구조를 실습하기 좋지만, 장비에 따라 느리고 덜 정확할 수 있습니다. 모델만 켜는 것과 ‘서비스’는 다릅니다.</p>
+    <div class="concepts fill big">
+      <div class="concept"><div class="no">1</div><div class="cbody"><div class="cn">장점 — 외부 전송 없음</div>
+        <p>자료를 밖으로 보내지 않아 <b>검토·실습에 안전</b>합니다.<span class="boxmore">예 — 개인정보 없는 내부 문서로 시험.</span></p></div></div>
+      <div class="concept"><div class="no">2</div><div class="cbody"><div class="cn">한계 — 장비 의존</div>
+        <p>그래픽카드·메모리에 따라 <b>속도와 품질이 크게</b> 달라집니다.<span class="boxcheck">확인 — 응답속도·메모리를 미리 측정.</span></p></div></div>
+    </div>
+  </div>
+  <div class="figwrap">
+    <div class="figcap">모델 실행 → 서비스로 가는 층</div>
+    <div class="stack">
+      <div class="sb s2"><div class="sh">① 모델 실행</div><div class="sd">Ollama가 로컬 모델을 장비 위에서 돌림</div></div>
+      <div class="sb s3"><div class="sh">② 연결</div><div class="sd">질문과 자료를 모델에 전달</div></div>
+      <div class="sb s4"><div class="sh">③ 화면·기록</div><div class="sd">질문 화면·파일 올리기·오류 안내·로그</div></div>
+    </div>
+  </div>
+</div>
+<div class="note"><div class="nl">정리</div><p>로컬 AI 실습의 목표는 대단한 서비스가 아니라, 모델이 프로그램과 어떻게 붙는지 이해하는 것입니다. 모델만 켜면 서비스가 아니라, 화면·파일·기록이 있어야 서비스입니다.</p></div>
+  </div>
+  <div class="pageno">16</div>
+</section>
+<section class="slide">
+  <div class="hdr"><div class="ht">생성형 AI 전문역량 강화<span>전산직 공무원을 위한 · GENERATIVE AI</span></div><div class="hr">2부 · 제작</div></div>
+  <div class="stage">
+    <div class="crumb">2부 · RAG</div>
+    <h2 class="atitle"><span class="lbl">[이론]</span> RAG의 작동 흐름 <span class="sub">— 우리 문서로만 답하는 챗봇의 원리</span></h2>
+    <div class="titlerule"></div>
+    <div class="body split-l" style="padding-top:18px;">
+  <div class="colflow">
+    <p class="lead" style="margin-bottom:14px;">RAG는 문서를 넣으면 알아서 답하는 기능이 아니라 <b>먼저 찾아본 뒤 그 내용으로만 답하는</b> 구조입니다. 예 — ‘숙박 한도?’에 ‘1박 7만원(여비지침 5조)’처럼 출처와 함께 답하고, 지침에 없는 질문엔 지어내지 않고 ‘찾을 수 없다’고 답합니다.</p>
+    <div class="concepts fill big">
+      <div class="concept"><div class="no">1</div><div class="cbody"><div class="cn">찾고 답한다</div>
+        <p>문단으로 나눠 색인해 두고, 질문에 맞는 문단을 찾아 답합니다.<span class="boxmore">문서 수집 → 문단 분할 → 색인 → 검색 후 생성.</span></p></div></div>
+      <div class="concept"><div class="no">2</div><div class="cbody"><div class="cn">출처 표시</div>
+        <p>어느 문서·문단을 봤는지 답 아래 표시합니다.<span class="boxcheck">확인 — 문서에 없으면 ‘모른다’고 답하는가.</span></p></div></div>
+    </div>
+  </div>
+  <div class="figwrap"><div class="svgfig"><div class="svgfig-inner"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 460" font-family="Pretendard, sans-serif">
+<rect width="920" height="460" fill="#F5F1ED"/><g transform="translate(0,26)"><defs><marker id="ah" markerWidth="11" markerHeight="11" refX="7.5" refY="3.2" orient="auto"><path d="M0,0 L8,3.2 L0,6.4 Z" fill="#865461"/></marker></defs><text x="48" y="46" font-size="16" fill="#756D70" font-weight="800" text-anchor="start">RAG — 우리 문서에서 근거를 찾은 뒤 출처와 함께 답한다</text><rect x="48" y="104" width="186.5" height="86" rx="10" fill="#fff" stroke="#D8CFC7" stroke-width="1.3"/><text x="141.25" y="142" font-size="15.5" fill="#2B2728" font-weight="800" text-anchor="middle">1. 모으기</text><text x="141.25" y="168" font-size="13" fill="#756D70" font-weight="550" text-anchor="middle">문서 수집</text><line x1="237.5" y1="147.0" x2="257.5" y2="147.0" stroke="#865461" stroke-width="2.2" marker-end="url(#ah)"/><rect x="260.5" y="104" width="186.5" height="86" rx="10" fill="#fff" stroke="#D8CFC7" stroke-width="1.3"/><text x="353.75" y="142" font-size="15.5" fill="#2B2728" font-weight="800" text-anchor="middle">2. 나누기</text><text x="353.75" y="168" font-size="13" fill="#756D70" font-weight="550" text-anchor="middle">문단 분할</text><line x1="450.0" y1="147.0" x2="470.0" y2="147.0" stroke="#865461" stroke-width="2.2" marker-end="url(#ah)"/><rect x="473.0" y="104" width="186.5" height="86" rx="10" fill="#fff" stroke="#D8CFC7" stroke-width="1.3"/><text x="566.25" y="142" font-size="15.5" fill="#2B2728" font-weight="800" text-anchor="middle">3. 색인</text><text x="566.25" y="168" font-size="13" fill="#756D70" font-weight="550" text-anchor="middle">검색 준비</text><line x1="662.5" y1="147.0" x2="682.5" y2="147.0" stroke="#865461" stroke-width="2.2" marker-end="url(#ah)"/><rect x="685.5" y="104" width="186.5" height="86" rx="10" fill="#fff" stroke="#865461" stroke-width="1.6"/><text x="778.75" y="142" font-size="15.5" fill="#2B2728" font-weight="800" text-anchor="middle">4. 검색 후 생성</text><text x="778.75" y="168" font-size="13" fill="#756D70" font-weight="550" text-anchor="middle">출처와 답</text><rect x="48" y="250" width="824" height="110" rx="10" fill="#faf3f1" stroke="#9A7A64" stroke-width="1.4"/><text x="72" y="288" font-size="14.5" fill="#9A7A64" font-weight="900" text-anchor="start">핵심 — 출처 표시와 ‘모르면 모른다’</text><text x="72" y="320" font-size="14" fill="#2B2728" font-weight="600" text-anchor="start">답 아래에 어느 문서·어느 문단을 봤는지 표시한다</text><text x="72" y="346" font-size="14" fill="#2B2728" font-weight="600" text-anchor="start">문서에 없는 질문에는 지어내지 않고 ‘찾을 수 없다’고 답한다</text></g></svg></div><div class="svgcap">우리 문서에서 근거를 찾은 뒤 출처와 함께 답한다</div></div></div>
+</div><div class="note"><div class="nl">정리</div><p>RAG의 핵심은 출처 표시입니다. 어느 문서·어느 문단을 봤는지 나와야 담당자가 검토할 수 있고, 문서에 없는 질문에는 추측 없이 모른다고 답하게 만듭니다.</p></div>
+  </div>
+  <div class="pageno">17</div>
+</section>
+<section class="slide">
+  <div class="hdr"><div class="ht">생성형 AI 전문역량 강화<span>전산직 공무원을 위한 · GENERATIVE AI</span></div><div class="hr">2부 · 제작</div></div>
+  <div class="stage">
+    <div class="crumb">2부 · 실습</div>
+    <h2 class="atitle"><span class="lbl">[실습]</span> 코딩에이전트로 RAG 챗봇 만들기 <span class="sub">— 무엇을 시킬지 잘 나누기</span></h2>
+    <div class="titlerule"></div>
+    <div class="body split-l" style="padding-top:18px;">
+  <div class="colflow">
+    <p class="lead" style="margin-bottom:14px;">코딩 실력보다 <b>무엇을 시킬지 잘 나누는 것</b>이 중요합니다. 우리 문서(샘플)로만 답하고 출처를 보여주는 작은 챗봇을 목표로, 아래 순서를 에이전트에게 맡깁니다.</p>
+    <div class="concepts fill big">
+      <div class="concept"><div class="no">1</div><div class="cbody"><div class="cn">목표와 입력</div>
+        <p>개인정보 없는 지침·FAQ 폴더를 준비합니다.<span class="boxmore">입력 — docs 폴더의 샘플 문서 몇 개.</span></p></div></div>
+      <div class="concept"><div class="no">2</div><div class="cbody"><div class="cn">핵심 행동</div>
+        <p>글자 뽑기 → 문단 저장 → 질문화면 붙이기.<span class="boxcheck">확인 — 답 아래 문서명·문단이 나오는가.</span></p></div></div>
+    </div>
+  </div>
+  <div class="figwrap">
+    <div class="figcap">완료 신호로 볼 것</div>
+    <div class="veri big">
+      <div class="vrow"><div class="vbox"><div class="vt">출처 표시</div><p>답 아래에 문서명·문단 번호가 나오면 성공입니다.</p></div></div>
+      <div class="vrow"><div class="vbox"><div class="vt">모르면 모른다</div><p>문서에 없는 질문에는 추측 없이 ‘찾을 수 없다’고 답합니다.</p></div></div>
+      <div class="vrow"><div class="vbox"><div class="vt">샘플 검증</div><p>샘플 질문 5개에 출처와 함께 답하면 완료로 봅니다.</p></div></div>
+    </div>
+  </div>
+</div>
+<div class="note"><div class="nl">정리</div><p>완성도보다 ‘찾아서·출처 붙여·모르면 모른다’ 세 가지가 되는지가 실습의 목표입니다. 강사 큐 — 시간이 없으면 출처 표시와 ‘모르면 모른다’ 두 가지만 시연해도 충분합니다.</p></div>
+  </div>
+  <div class="pageno">18</div>
+</section>
+<section class="slide">
+  <div class="hdr"><div class="ht">생성형 AI 전문역량 강화<span>전산직 공무원을 위한 · GENERATIVE AI</span></div><div class="hr">2부 · 운영</div></div>
+  <div class="stage">
+    <div class="crumb">2부 · 도구 관리</div>
+    <h2 class="atitle"><span class="lbl">[운영]</span> 직원 제작 도구 관리 <span class="sub">— py·html·exe를 네 등급으로</span></h2>
+    <div class="titlerule"></div>
+    <div class="body colflow" style="padding-top:16px;">
+  <p class="lead" style="margin-bottom:13px;">직원들이 만든 작은 자동화 파일은 막기보다 <b>등급을 나눠 관리</b>하는 것이 현실적입니다. 개인 실험은 열어두되, 기관 운영으로 넘어갈수록 통제를 강화합니다.</p>
+  <div class="tablefill">
+    <table class="grid even roomy" style="--rows:4;">
+      <tr><th style="width:150px;">등급</th><th>예시</th><th style="width:360px;">전산직 대응</th></tr>
+      <tr><td><b>개인 보조</b></td><td>엑셀 정리 스크립트, 단일 계산기, 파일명 일괄 변경</td><td>개인정보 제외, 개인 PC 실행, 공유 전 점검</td></tr>
+      <tr><td><b>부서 공유</b></td><td>부서용 변환 도구, 통계표 생성기, 반복 보고서 생성</td><td>소스 보관, 사용법 문서, 담당자 지정</td></tr>
+      <tr><td><b>기관 운영</b></td><td>여러 부서가 쓰는 exe, 내부 웹도구, DB 조회 자동화</td><td>보안 점검, 권한, 로그, 백업, 운영 책임</td></tr>
+      <tr><td><b>중단 대상</b></td><td>출처 불명 실행파일, 외부 전송 도구, 원본 삭제 스크립트</td><td>격리 환경 시험 전 배포 금지, 위험 기능 제거</td></tr>
+    </table>
+  </div>
+  <div class="note"><div class="nl">정리</div><p>전산직의 역할은 현장을 막는 것이 아니라, 안전하게 실험하고 운영으로 넘기는 기준을 만드는 것입니다.</p></div>
+</div>
+  </div>
+  <div class="pageno">19</div>
+</section>
+<section class="slide dark">
+  <div class="hdr"><div class="ht">생성형 AI 전문역량 강화<span>전산직 공무원을 위한 · GENERATIVE AI</span></div><div class="hr">강의 요약 · Q &amp; A</div></div>
+  <div class="recap">
+    <div class="eye">마무리</div>
+    <h1>강의 요약</h1>
+    <div class="ritems">
+      <div class="ri"><div class="rn">01</div><p><b>프롬프트 → 컨텍스트 → 하네스</b>는 낱개 개념이 아니라 이어지는 하나의 흐름이다.</p></div>
+      <div class="ri"><div class="rn">02</div><p>성과는 모델이 아니라 <b>자료를 붙이고·흐름으로 묶고·사람이 확인하는</b> 구조에서 나온다.</p></div>
+      <div class="ri"><div class="rn">03</div><p>AI 도입은 레거시 전체 교체가 아니라 <b>반복·자료·검증</b>이 갖춰진 병목만 좁게 고른다.</p></div>
+      <div class="ri"><div class="rn">04</div><p>로컬 AI와 RAG로 <b>우리 문서를 안전하게</b> 다루고, 직원 제작 도구는 등급으로 관리한다.</p></div>
+    </div>
+  </div>
+  <div class="dmeta">
+    <div class="who">신성진<span>한국데이터사이언티스트협회 · 대표</span></div>
+    <div class="topic">전북교육청 전산직 직무연수<br><b>생성형 AI 전문역량 강화 · 프롬프트에서 RAG까지</b></div>
+  </div>
+</section>
+</div>
+<script>
+(function(){
+  var slides=[].slice.call(document.querySelectorAll('.slide'));
+  var editing=false, pidx=0;
+  var palettes=[
+    {id:'slate-teal', label:'슬레이트 틸'},
+    {id:'classic-rust', label:'클래식 러스트'},
+    {id:'forest-gold', label:'포레스트 골드'},
+    {id:'navy-coral', label:'네이비 코랄'},
+    {id:'graphite-rose', label:'그래파이트 로즈'}
+  ];
+  var bPalette=document.getElementById('btnPalette'),
+      bEdit=document.getElementById('btnEdit'), bSave=document.getElementById('btnSave'),
+      bPdf=document.getElementById('btnPdf'), bPlay=document.getElementById('btnPlay'),
+      nav=document.querySelector('.pnav');
+  function paletteIndex(id){for(var i=0;i<palettes.length;i++){if(palettes[i].id===id)return i;}return 0;}
+  function setPalette(id){
+    var idx=paletteIndex(id), p=palettes[idx];
+    document.body.dataset.palette=p.id;
+    if(bPalette)bPalette.textContent='색상: '+p.label;
+  }
+  if(bPalette){
+    bPalette.onclick=function(){setPalette(palettes[(paletteIndex(document.body.dataset.palette)+1)%palettes.length].id);};
+    setPalette(document.body.dataset.palette||palettes[0].id);
+  }
+  function setEdit(v){editing=v;document.body.classList.toggle('editing',v);
+    slides.forEach(function(s){s.contentEditable=v;});bEdit.classList.toggle('on',v);bEdit.textContent=v?'편집 끝':'편집';}
+  bEdit.onclick=function(){setEdit(!editing);};
+  bPdf.onclick=function(){window.print();};
+  bSave.onclick=function(){
+    var wasEdit=editing; if(editing)setEdit(false);
+    var clone=document.documentElement.cloneNode(true);
+    clone.querySelectorAll('.slide').forEach(function(s){s.removeAttribute('contenteditable');s.classList.remove('present-current');});
+    clone.querySelector('body').classList.remove('editing','presenting');
+    var html='<!doctype html>\n'+clone.outerHTML;
+    var a=document.createElement('a');
+    a.href=URL.createObjectURL(new Blob([html],{type:'text/html;charset=utf-8'}));
+    a.download=(document.title.replace(/\s+/g,'_')||'lecture')+'_편집본.html';
+    document.body.appendChild(a);a.click();a.remove();
+    if(wasEdit)setEdit(true);
+  };
+  function fit(){var s=Math.min(window.innerWidth/1280,window.innerHeight/720);
+    var cur=document.querySelector('.slide.present-current');if(cur)cur.style.setProperty('--ps',s);}
+  function show(i){pidx=(i+slides.length)%slides.length;
+    slides.forEach(function(s){s.classList.remove('present-current');});
+    slides[pidx].classList.add('present-current');fit();
+    nav.textContent=(pidx+1)+' / '+slides.length+'   ·   ← →  이동,  Esc  종료';}
+  function enter(){if(editing)setEdit(false);document.body.classList.add('presenting');show(pidx);
+    if(document.documentElement.requestFullscreen)document.documentElement.requestFullscreen().catch(function(){});}
+  function exit(){document.body.classList.remove('presenting');
+    slides.forEach(function(s){s.classList.remove('present-current');s.style.removeProperty('--ps');});
+    if(document.fullscreenElement)document.exitFullscreen().catch(function(){});}
+  bPlay.onclick=enter;
+  window.addEventListener('resize',function(){if(document.body.classList.contains('presenting'))fit();});
+  document.addEventListener('keydown',function(e){
+    if(!document.body.classList.contains('presenting'))return;
+    if(e.key==='ArrowRight'||e.key==='PageDown'||e.key===' '){e.preventDefault();show(pidx+1);}
+    else if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();show(pidx-1);}
+    else if(e.key==='Escape'){exit();}
+  });
+  document.addEventListener('click',function(e){
+    if(document.body.classList.contains('presenting')&&!editing){
+      var cur=document.querySelector('.slide.present-current');
+      if(cur&&cur.contains(e.target))show(pidx+1);
+    }
+  });
+})();
+</script>
+<script>/* kg-preview: #<heading> \uc704\uce58\ub85c \uc774\ub3d9 */
+(function(){function norm(t){return (t||'').replace(/\s+/g,'').toLowerCase()}
+function go(){var h=decodeURIComponent(location.hash.slice(1));if(!h)return;var k=norm(h).slice(0,24);if(!k)return;
+var best=null,bl=1e9,els=document.body.querySelectorAll('h1,h2,h3,h4,h5,p,div,span,li,td,text,tspan,section,article');
+for(var i=0;i<els.length;i++){var e=els[i],t=norm(e.textContent);if(t.length<bl&&t.indexOf(k)>-1){best=e;bl=t.length}}
+if(!best)return;var box=best.closest('section,[class*=slide],[class*=page],article')||best;
+box.scrollIntoView({block:'start'});box.style.outline='3px solid #c0504d';box.style.outlineOffset='4px';
+setTimeout(function(){box.style.outline=''},2600)}
+window.addEventListener('load',function(){setTimeout(go,400)});window.addEventListener('hashchange',go)})();</script></body>
+</html>

@@ -11,11 +11,12 @@
   본문이 없어도 '제목만 있는 문서' 노드로 그래프에 들어간다.
 
 산출물 (graph/)
-  graph.json     : 노드·엣지 (뷰어·쿼리용)
+  graph.json     : 노드·엣지 (문서·개념·고객사 관계)
+  topics.json    : 내용 주제 지도 (대주제→소주제→슬라이드, 중복 제거)
   documents.json : 문서 카드 (유형·고객사·개념·목차·버전)
   chunks.jsonl   : 슬라이드/섹션 단위 본문 (검색·재활용용)
   INDEX.md       : 사람과 Claude가 바로 읽는 카탈로그
-  viewer.html    : 브라우저에서 여는 인터랙티브 그래프
+  viewer.html    : 강의 콘텐츠 지도 (주제별 슬라이드 → 컨텍스트 만들기). site/index.html 과 동일
 """
 from __future__ import annotations
 
@@ -27,10 +28,12 @@ import os
 import re
 import sys
 from collections import Counter, defaultdict
+from datetime import date
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from extract import extract  # noqa: E402
+from topic_map import build_topic_map  # noqa: E402
 from vocab import CLIENTS, CONCEPTS, DOC_TYPES, TOPICS  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -235,6 +238,15 @@ def build(src_dirs: list[Path], raw_dirs: list[Path], max_chunk_chars: int) -> N
             page_title, sections, indexed = pm.get("page_title", ""), prev_secs[canon["id"]], pm.get("indexed_modified")
         else:
             page_title, indexed = pm.get("page_title", ""), pm.get("indexed_modified")
+        prev_dir = ROOT / "site" / "p"
+        prev_dir.mkdir(parents=True, exist_ok=True)
+        pv = prev_dir / f"{canon['id']}.html"
+        if canon["path"] is not None and sections:
+            has_preview = write_preview(canon["path"], pv)
+            if not has_preview and pv.exists():
+                pv.unlink()
+        else:
+            has_preview = pv.exists()
         text_all = "\n".join(s["heading"] + "\n" + s["text"] for s in sections)
         title_text = fam.replace("_", " ") + " " + page_title
         cc = count_concepts(text_all)
@@ -252,6 +264,7 @@ def build(src_dirs: list[Path], raw_dirs: list[Path], max_chunk_chars: int) -> N
             "date": date_from(canon["title"], canon["modified"]),
             "has_content": bool(sections),
             "indexed_modified": indexed,
+            "has_preview": has_preview,
             "n_sections": len(sections),
             "text_chars": len(text_all),
             "concepts": dict(concepts.most_common(15)),
@@ -277,23 +290,57 @@ def build(src_dirs: list[Path], raw_dirs: list[Path], max_chunk_chars: int) -> N
         del d["_tok"]
 
     graph = make_graph(docs)
+    tmap = build_topic_map(docs, chunks)
+    keep = {d["id"] for d in docs if d.get("has_preview")}
+    for f in (ROOT / "site" / "p").glob("*.html"):
+        if f.stem not in keep:
+            f.unlink()
     OUT.mkdir(exist_ok=True)
+    (OUT / "topics.json").write_text(json.dumps(tmap, ensure_ascii=False), encoding="utf-8")
     (OUT / "documents.json").write_text(json.dumps(docs, ensure_ascii=False, indent=1), encoding="utf-8")
     with (OUT / "chunks.jsonl").open("w", encoding="utf-8") as fh:
         for c in chunks:
             fh.write(json.dumps(c, ensure_ascii=False) + "\n")
     (OUT / "graph.json").write_text(json.dumps(graph, ensure_ascii=False), encoding="utf-8")
     (OUT / "INDEX.md").write_text(make_index(docs, graph), encoding="utf-8")
-    page = ('<!doctype html>\n<html lang="ko">\n<meta charset="utf-8">\n'
+    head = ('<!doctype html>\n<html lang="ko">\n<meta charset="utf-8">\n'
             '<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">\n'
-            '<meta name="robots" content="noindex, nofollow">\n' + viewer_body(graph, docs))
-    (OUT / "viewer.html").write_text(page, encoding="utf-8")
-    site = ROOT / "site"  # Vercel 배포 폴더: 뷰어 한 장만 내보낸다 (본문 청크는 올리지 않음)
+            '<meta name="robots" content="noindex, nofollow">\n')
+    (OUT / "viewer.html").write_text(head + viewer_body(tmap, docs, chunks, "../site/p/"), encoding="utf-8")
+    site = ROOT / "site"  # Vercel 배포 폴더: 콘텐츠 지도 + 강의안 미리보기(p/)
     site.mkdir(exist_ok=True)
-    (site / "index.html").write_text(page, encoding="utf-8")
+    (site / "index.html").write_text(head + viewer_body(tmap, docs, chunks, "p/"), encoding="utf-8")
     with_c = sum(d["has_content"] for d in docs)
     print(f"파일 {len(files)}개 → 문서(계열) {len(docs)}개, 본문 확보 {with_c}개, 섹션 {len(chunks)}개")
     print(f"노드 {len(graph['nodes'])}개, 엣지 {len(graph['edges'])}개 → {OUT}")
+
+
+PREVIEW_MAX = 1_500_000
+_DATA_URI_B = re.compile(rb"data:(?:image|font|application)/[a-z0-9.+-]+;base64,[A-Za-z0-9+/=\s]+", re.I)
+_BLANK = b"data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
+_JUMP = b"""<script>/* kg-preview: #<heading> \uc704\uce58\ub85c \uc774\ub3d9 */
+(function(){function norm(t){return (t||'').replace(/\\s+/g,'').toLowerCase()}
+function go(){var h=decodeURIComponent(location.hash.slice(1));if(!h)return;var k=norm(h).slice(0,24);if(!k)return;
+var best=null,bl=1e9,els=document.body.querySelectorAll('h1,h2,h3,h4,h5,p,div,span,li,td,text,tspan,section,article');
+for(var i=0;i<els.length;i++){var e=els[i],t=norm(e.textContent);if(t.length<bl&&t.indexOf(k)>-1){best=e;bl=t.length}}
+if(!best)return;var box=best.closest('section,[class*=slide],[class*=page],article')||best;
+box.scrollIntoView({block:'start'});box.style.outline='3px solid #c0504d';box.style.outlineOffset='4px';
+setTimeout(function(){box.style.outline=''},2600)}
+window.addEventListener('load',function(){setTimeout(go,400)});window.addEventListener('hashchange',go)})();</script>"""
+
+
+def write_preview(src: Path, dst: Path) -> bool:
+    """원본 강의안을 사이트용 미리보기로 복사한다. 크면 base64 이미지를 빼고, 그래도 크면 만들지 않는다."""
+    b = src.read_bytes()
+    if len(b) > PREVIEW_MAX:
+        b = _DATA_URI_B.sub(_BLANK, b)
+        if len(b) > PREVIEW_MAX:
+            return False
+    b = re.sub(rb"(?i)<head([^>]*)>", rb'<head\1><meta name="robots" content="noindex, nofollow">', b, count=1)
+    i = b.lower().rfind(b"</body>")
+    b = b[:i] + _JUMP + b[i:] if i > -1 else b + _JUMP
+    dst.write_bytes(b)
+    return True
 
 
 def load_previous() -> tuple[dict[str, list[dict]], dict[str, dict]]:
@@ -312,20 +359,34 @@ def load_previous() -> tuple[dict[str, list[dict]], dict[str, dict]]:
     return secs, meta
 
 
-def viewer_body(graph: dict, docs: list[dict]) -> str:
-    """뷰어 템플릿에 그래프와 문서 카드(요약본)를 끼워 넣는다."""
-    payload = dict(graph)
-    payload["docs"] = {
-        d["id"]: {
-            "title": d["title"], "page_title": d["page_title"], "clients": d["clients"],
-            "summary": d["summary"], "keywords": d["keywords"], "outline": d["outline"][:40],
-            "topic_alt": d.get("topic_alt"),
-            "versions": len(d["versions"]),
-        } for d in docs
+def _nice_title(d: dict) -> str:
+    """페이지 제목이 'Presentation', 'index' 같은 빈 이름이면 파일 이름을 쓴다."""
+    pt = (d.get("page_title") or "").strip()
+    if pt and (re.search(r"[가-힣]", pt) or len(pt) >= 18) and pt.lower() not in {"document", "presentation", "index"}:
+        return pt
+    return d["family"].replace("_", " ")
+
+
+def viewer_body(tmap: dict, docs: list[dict], chunks: list[dict] | None = None, preview_base: str | None = "p/") -> str:
+    """콘텐츠 지도 템플릿에 주제 지도와 강의안 카드를 끼워 넣는다."""
+    used = {did for s in tmap["slides"] for did in s["docs"]}
+    payload = {
+        "groups": tmap["groups"], "slides": tmap["slides"], "stats": tmap["stats"],
+        "built": date.today().isoformat(),
+        "lectures": {
+            d["id"]: {"t": _nice_title(d), "f": d["family"], "date": d["date"],
+                      "c": d["clients"], "ty": d["doc_type"], "url": d["url"], "n": d["n_sections"],
+                      "o": [h[:90] for h in d["outline"][:80]],
+                      "p": 1 if (preview_base and d.get("has_preview")) else 0}
+            for d in docs if d["id"] in used
+        },
+        "previewBase": preview_base or "",
     }
-    tpl = (Path(__file__).parent / "viewer_template.html").read_text(encoding="utf-8")
-    data = json.dumps(payload, ensure_ascii=False).replace("</", "<\\/")
-    return tpl.replace("/*__GRAPH__*/null", data)
+    for s in payload["slides"]:
+        s.pop("s", None)
+    tpl = (Path(__file__).parent / "map_template.html").read_text(encoding="utf-8")
+    data = json.dumps(payload, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/")
+    return tpl.replace("/*__DATA__*/null", data)
 
 
 def _summary(sections: list[dict]) -> str:

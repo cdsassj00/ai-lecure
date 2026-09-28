@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head><meta name="robots" content="noindex, nofollow">
+<meta charset="UTF-8">
+<title>채팅이 아니라 액션이다 — AI 트렌드 특강</title>
+<style>
+  :root{
+    --paper:#f4ecda; --paper2:#faf4e6; --surf:#fffdf6; --tint:#f0e6cf;
+    --ink:#2a2015; --ink2:#3d3020; --body:#5c4f3d; --mut:#8f8069; --faint:#b3a488;
+    --acc:#c85a1e; --acc2:#a5431a; --camel:#b07a2e; --gold:#c69a3e; --green:#3f8f57; --blue:#3a6ea5;
+    --line:rgba(120,90,50,.18); --line2:rgba(200,90,30,.32);
+    --sans:'Pretendard Variable',Pretendard,'Noto Sans KR','Malgun Gothic',sans-serif;
+    --serif:'Noto Serif KR','Nanum Myeongjo',serif;
+    /* diagram (match hand-drawing) */
+    --dgreen:#3f8f57; --dgreenbg:#e7f5e9; --dgreentx:#256b37;
+    --dblue:#4f88c4; --dbluebg:#dceaf7; --dbluetx:#2c5788;
+    --dyellow:#d9b038; --dyellowbg:#f8e7a6; --dyellowtx:#6b520f;
+    --dred:#c9432f; --dredbg:#fceae6; --dink:#2f2820; --dmut:#7c7160;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{background:#cfc4ac}
+  body{font-family:var(--sans);color:var(--ink);-webkit-font-smoothing:antialiased}
+  .deck{display:flex;flex-direction:column;align-items:center;gap:26px;padding:26px 0}
+  body.shot .deck{padding:0;gap:0}
+
+  .slide{width:1280px;height:720px;position:relative;overflow:hidden;flex:none;
+    background:
+      radial-gradient(900px 540px at 84% -10%, rgba(200,90,30,.10), transparent 60%),
+      radial-gradient(720px 480px at 6% 110%, rgba(176,122,46,.08), transparent 62%),
+      var(--paper);
+    display:flex;flex-direction:column;word-break:keep-all;overflow-wrap:break-word}
+  .slide::before{content:'';position:absolute;inset:0 0 auto 0;height:4px;
+    background:linear-gradient(90deg,var(--acc) 0 42%,var(--camel) 42% 74%,var(--gold) 74% 100%);opacity:.9}
+
+  .ktop{flex:none;height:48px;display:flex;align-items:center;justify-content:space-between;padding:0 46px;border-bottom:1px solid var(--line)}
+  .ktop .l{font-size:11.5px;font-weight:700;letter-spacing:.02em;color:var(--mut)}
+  .ktop .l b{color:var(--camel);font-weight:800}
+  .ktop .r{font-size:11px;font-weight:800;letter-spacing:.2em;color:var(--acc);text-transform:uppercase}
+
+  .kmid{flex:1;display:flex;flex-direction:column;justify-content:center;padding:0 60px;min-height:0}
+  .eyebrow{font-size:11px;font-weight:800;letter-spacing:.24em;color:var(--acc);text-transform:uppercase;margin-bottom:14px}
+  .eyebrow b{color:var(--camel)}
+  .pnum{display:flex;align-items:center;gap:15px;margin-bottom:9px}
+  .pnum .no{font-family:var(--serif);font-size:44px;font-weight:700;color:var(--acc);line-height:.9;letter-spacing:-1.5px}
+  .pnum .no b{color:var(--camel);font-weight:700}
+  .pnum .ln{width:56px;height:2px;background:var(--line2)}
+  .pnum .ey{font-size:11px;font-weight:800;letter-spacing:.22em;color:var(--camel);text-transform:uppercase}
+  .pnum + .ptitle{margin-top:2px}
+  .ptitle{font-size:42px;font-weight:800;line-height:1.22;letter-spacing:-1.1px;color:var(--ink)}
+  .ptitle em{font-style:normal;color:var(--acc)}
+  .ptitle .s{font-family:var(--serif);font-weight:700}
+  .ptitle .u{background:linear-gradient(transparent 62%, rgba(200,90,30,.22) 62%)}
+  .psub{margin-top:18px;font-size:17px;line-height:1.75;color:var(--body);font-weight:400;max-width:1030px}
+  .psub b{color:var(--ink);font-weight:700}
+  .psub .hl{color:var(--acc);font-weight:700}
+
+  /* faint demo / case strip */
+  .demo{flex:none;margin:0 46px 12px;border:1px dashed var(--line2);border-radius:10px;padding:9px 16px;
+    display:flex;align-items:center;gap:13px;background:rgba(200,90,30,.035);opacity:.6}
+  .demo .dk{flex:none;font-size:9.5px;font-weight:900;letter-spacing:.14em;color:#fff;background:var(--camel);border-radius:4px;padding:3px 8px}
+  .demo .dk.play{background:var(--acc)} .demo .dk.link{background:var(--blue)} .demo .dk.think{background:#6b7a52}
+  .demo .dt{font-size:13px;color:var(--body);font-weight:600;line-height:1.4}
+  .demo .dt b{color:var(--ink);font-weight:800}
+  .demo .dt .url{color:var(--acc);font-weight:800}
+
+  .insight{flex:none;margin:0 46px 12px;min-height:56px;border-radius:12px;display:flex;align-items:center;gap:16px;padding:10px 22px;
+    background:linear-gradient(92deg,rgba(200,90,30,.14),rgba(200,90,30,.03));border:1px solid var(--line2)}
+  .insight .k{flex:none;font-size:10.5px;font-weight:900;letter-spacing:.16em;color:#fff;background:var(--acc);border-radius:5px;padding:4px 10px}
+  .insight .t{font-size:16px;font-weight:700;color:var(--ink);letter-spacing:-.2px}
+  .insight .t b{color:var(--acc)}
+  .insight .r{margin-left:auto;font-size:12px;font-weight:700;color:var(--mut);text-align:right}
+  .insight .r b{color:var(--camel)}
+
+  .kfoot{flex:none;height:30px;display:flex;align-items:center;gap:12px;padding:0 46px;font-size:10px;color:var(--faint);letter-spacing:.05em;border-top:1px solid var(--line)}
+  .kfoot .pg{margin-left:auto;font-weight:900;color:var(--mut);font-size:11px}
+  .kfoot .pg b{color:var(--acc)}
+
+  /* COVER */
+  .cover{justify-content:space-between;padding:0}
+  .cover::before{opacity:1}
+  .cover .ctop{flex:none;height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 52px;border-bottom:1px solid var(--line)}
+  .cover .ctop .l{font-size:12px;font-weight:800;letter-spacing:.14em;color:var(--camel)}
+  .cover .ctop .r{font-size:11px;font-weight:800;letter-spacing:.22em;color:var(--acc)}
+  .cover .cmid{flex:1;display:flex;flex-direction:column;justify-content:center;padding:0 62px;gap:20px}
+  .cover .badge{font-size:11px;font-weight:800;letter-spacing:.3em;color:var(--acc);text-transform:uppercase}
+  .cover h1{font-size:56px;font-weight:800;line-height:1.12;letter-spacing:-1.6px;color:var(--ink)}
+  .cover h1 em{font-style:normal;color:var(--acc)}
+  .cover h1 .s{font-family:var(--serif);font-weight:600;letter-spacing:-1px}
+  .cover h1 .s2{display:block;font-family:var(--serif);font-size:33px;font-weight:600;color:var(--camel);letter-spacing:-.8px;margin-top:14px;line-height:1.1}
+  .cover h1 .s2 em{color:var(--acc)}
+  .cover .lead{font-size:16.5px;line-height:1.7;color:var(--body);max-width:920px}
+  .cover .lead b{color:var(--ink);font-weight:700}
+  .cover .cflow{display:flex;align-items:center;gap:10px;margin-top:4px;flex-wrap:wrap}
+  .cover .cflow .st{font-family:var(--serif);font-size:19px;font-weight:700;color:var(--ink);letter-spacing:-.4px}
+  .cover .cflow .st em{font-style:normal;color:var(--acc)}
+  .cover .cflow .ar{color:var(--faint);font-weight:900;font-size:16px}
+  .cover .cbot{flex:none;height:74px;display:flex;align-items:center;justify-content:space-between;padding:0 52px;border-top:1px solid var(--line);background:rgba(176,122,46,.06)}
+  .cover .spk{display:flex;flex-direction:column;gap:3px}
+  .cover .spk .n{font-size:15px;font-weight:800;color:var(--ink)}
+  .cover .spk .o{font-size:12px;color:var(--mut);font-weight:600}
+  .cover .whn{text-align:right;font-size:12px;color:var(--mut);font-weight:600;line-height:1.6}
+  .cover .whn b{color:var(--camel);font-weight:800}
+
+  /* 4-STAGE (point 0) */
+  .stg4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:14px;margin-top:8px}
+  .stgc{background:var(--surf);border:1px solid var(--line);border-top:3px solid var(--camel);border-radius:13px;padding:15px 16px;display:flex;flex-direction:column;gap:8px;box-shadow:0 6px 16px -12px rgba(80,50,20,.4)}
+  .stgc .n{font-family:var(--serif);font-size:15px;font-weight:700;color:var(--camel);letter-spacing:.06em}
+  .stgc .t{font-size:20px;font-weight:900;color:var(--ink);letter-spacing:-.5px;line-height:1.2}
+  .stgc .t em{font-style:normal;color:var(--acc)}
+  .stgc .d{font-size:13px;line-height:1.55;color:var(--body)}
+  .stgc .d b{color:var(--acc);font-weight:700}
+  .stgc.now{border-top-color:var(--acc);background:linear-gradient(180deg,rgba(200,90,30,.07),var(--surf))}
+  .stgc.next{border-top-style:dashed;border-top-color:var(--gold)}
+  .stgc.next .n{color:var(--gold)}
+
+  /* chips */
+  .chips{display:flex;flex-wrap:wrap;gap:9px;margin-top:6px}
+  .chip{border:1px solid var(--line2);border-radius:22px;padding:7px 15px;font-size:13.5px;font-weight:700;color:var(--ink2);background:var(--surf)}
+  .chip b{color:var(--acc)}
+  .chip.on{background:var(--acc);color:#fff;border-color:var(--acc)}
+  .chip.ghost{background:transparent;color:var(--mut);border-style:dashed}
+
+  /* CBFE (closing) */
+  .cbfe{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:10px}
+  .cbfe .c{background:var(--surf);border:1px solid var(--line);border-radius:13px;padding:16px 18px;display:flex;flex-direction:column;gap:6px;box-shadow:0 6px 16px -12px rgba(80,50,20,.4)}
+  .cbfe .c .e{font-family:var(--serif);font-size:26px;font-weight:700;color:var(--acc);line-height:1}
+  .cbfe .c .k{font-size:16px;font-weight:900;color:var(--ink)}
+  .cbfe .c .d{font-size:12.5px;color:var(--body);line-height:1.5}
+
+  /* two-column support for dense org points */
+  .cols{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:12px}
+  .cbox{background:var(--surf);border:1px solid var(--line);border-left:3px solid var(--camel);border-radius:11px;padding:14px 17px}
+  .cbox .h{font-size:14px;font-weight:900;color:var(--ink);margin-bottom:6px}
+  .cbox .h em{font-style:normal;color:var(--acc)}
+  .cbox p{font-size:13.5px;line-height:1.6;color:var(--body)}
+  .cbox p b{color:var(--ink);font-weight:700}
+  .cbox.hot{border-left-color:var(--acc);background:linear-gradient(180deg,rgba(200,90,30,.06),var(--surf))}
+
+  /* ============ MAP (bright board) ============ */
+  .map{padding:0}
+  .maphd{flex:none;padding:11px 44px 3px}
+  .maphd .eyebrow{margin-bottom:5px;font-size:10.5px}
+  .maphd h2{font-size:23px;font-weight:800;letter-spacing:-.7px;color:var(--ink);line-height:1.16}
+  .maphd h2 em{font-style:normal;color:var(--acc)}
+  .maphd .mh-sub{margin-top:3px;font-size:12.5px;color:var(--body);line-height:1.4}
+  .maphd .mh-sub b{color:var(--ink);font-weight:700}
+  .stepdots{display:flex;gap:7px;margin-top:6px;align-items:center}
+  .stepdots i{width:22px;height:4px;border-radius:3px;background:rgba(200,90,30,.2);transition:background .35s ease}
+  .stepdots i.on{background:var(--acc);box-shadow:0 0 8px rgba(200,90,30,.4)}
+  .stepdots .lbl{margin-left:8px;font-size:10.5px;font-weight:800;letter-spacing:.12em;color:var(--mut)}
+  .mapstage{flex:1;position:relative;min-height:0;display:flex;align-items:center;justify-content:center;padding:2px 22px 6px}
+
+  .board{position:relative;width:1236px;height:100%;max-height:516px;border-radius:14px;
+    background:radial-gradient(1200px 760px at 50% -10%, #fffdf7, #f6efdd);
+    border:1px solid var(--line);box-shadow:0 12px 34px -18px rgba(80,50,20,.5), inset 0 0 0 1px rgba(255,255,255,.5);overflow:hidden}
+  .board svg.links{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none;z-index:1}
+  .board svg .link{transition:opacity .55s ease}
+  .el{position:absolute;z-index:2;transition:opacity .55s ease,filter .55s ease}
+  .el.z1{z-index:1}
+  .el.dim{opacity:.2;filter:grayscale(.5)}
+
+  .gbox{border:1.6px solid var(--dgreen);background:var(--dgreenbg);border-radius:7px;color:var(--dgreentx);font-weight:800;display:flex;align-items:center;justify-content:center;text-align:center;font-size:12px;line-height:1.15;padding:2px 6px}
+  .gbox small{color:#5a8a6a;font-weight:600;font-size:10px}
+  .frame-green{border:2px solid var(--dgreen);border-radius:12px;background:rgba(63,143,87,.05)}
+  .frame-dark{border:1.8px solid #6a6152;border-radius:10px;background:rgba(255,255,255,.4)}
+  .caption{color:var(--dgreentx);font-weight:900;font-size:12px}
+  .listbox{border:1px solid #b9af97;background:#fffdf3;border-radius:7px;padding:7px 9px;display:flex;flex-direction:column;justify-content:space-between}
+  .listbox .li{font-size:11.5px;font-weight:700;color:#3a3226;line-height:1.15;display:flex;align-items:center;gap:6px}
+  .listbox .li b{color:var(--dred);font-weight:800}
+  .listbox .li .sq{width:13px;height:10px;border:1.5px solid #7a7160;border-radius:2px;flex:none;background:#fff}
+  .circ{border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;line-height:1.1}
+  .c-blue{background:radial-gradient(circle at 40% 34%, #e7f0fb, #cbe0f4);border:1.7px solid var(--dblue);color:var(--dbluetx);font-weight:800}
+  .c-yellow{background:radial-gradient(circle at 40% 32%, #fae9a4, #efd071);border:1.7px solid var(--dyellow);color:var(--dyellowtx);font-weight:800}
+  .llmc{border-radius:50%;background:radial-gradient(circle at 42% 34%, #f7e6a2, #eed079 68%, #e6c65e);border:2.2px solid #cfa838;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#5a481a}
+  .llmc .g{font-size:11px;font-weight:900;color:#8a6a18;letter-spacing:.04em}
+  .llmc .b{font-family:var(--serif);font-size:44px;font-weight:800;letter-spacing:-1px;color:#33280d;line-height:.9}
+  .llmc .s{font-size:10.5px;font-weight:800;color:#6b520f;margin-top:2px}
+  .doc{border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800}
+  .doc.y{border:1.6px solid var(--dyellow);background:var(--dyellowbg);color:var(--dyellowtx)}
+  .doc.r{border:1.6px solid var(--dred);background:var(--dredbg);color:var(--dred)}
+  .minidocs{display:flex;gap:4px}
+  .minidocs i{width:14px;height:18px;border:1.4px solid var(--dred);border-radius:2px;background:#fff}
+  .ragbox{border:2px solid var(--dred);border-radius:14px;background:rgba(201,67,47,.05)}
+  .redbar{height:9px;border:1.2px solid var(--dred);border-radius:2px;background:#fbe1db}
+  .vec{font-family:'Consolas','D2Coding',monospace;font-size:8px;color:var(--dred);white-space:nowrap;letter-spacing:-.3px}
+  .bluebar{background:linear-gradient(#c2daf3,#a1c4ea);border:1.2px solid var(--dblue);border-radius:3px;color:var(--dbluetx);font-weight:800;font-size:10px;display:flex;align-items:center;justify-content:center}
+  .brow{background:linear-gradient(160deg,#c2daf3,#9dc0e8);border:2px solid var(--dblue);border-radius:12px;display:flex;align-items:center;justify-content:center}
+  .brow .vtxt{writing-mode:vertical-rl;text-orientation:mixed;font-size:13px;font-weight:900;color:#254e7d;letter-spacing:.1em}
+  .lab{font-size:11px;font-weight:800;line-height:1.2}
+  .lab.red{color:var(--dred)} .lab.green{color:var(--dgreentx)} .lab.blue{color:var(--dbluetx)} .lab.ink{color:var(--dink)} .lab.mut{color:var(--dmut);font-weight:700}
+  .lab.big{font-size:15px;font-weight:900}
+  .mcp .head{position:absolute;top:0;left:50%;transform:translateX(-50%);display:flex;gap:3px}
+  .mcp .head i{width:15px;height:15px;border-radius:50%;background:#cbe0f4;border:1.6px solid var(--dblue)}
+  .mcp .body{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:46px;height:30px;border-radius:16px 16px 7px 7px;background:#cbe0f4;border:1.6px solid var(--dblue)}
+
+  /* tools / present */
+  .ptools{position:fixed;right:18px;bottom:16px;z-index:60;display:flex;align-items:center;gap:8px;user-select:none}
+  .ptools .hintxt{font-size:11px;color:#8a7a5f;font-weight:700;margin-right:4px;background:rgba(255,255,255,.7);border-radius:14px;padding:4px 10px}
+  .ptools button{appearance:none;border:none;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:6px;border-radius:22px;padding:10px 16px;font-size:12.5px;font-weight:800;background:#fff;color:var(--ink);box-shadow:0 8px 22px -6px rgba(80,50,20,.4);border:1px solid var(--line2)}
+  .ptools button:hover{background:var(--tint)}
+  .ptools button.primary{background:var(--acc);color:#fff;border-color:var(--acc)}
+  .ptools button.on{background:var(--camel);color:#fff}
+  body.shot .ptools,body.present .ptools{display:none}
+  @media print{.ptools{display:none}}
+  body.editing .slide{outline:2px dashed var(--acc);outline-offset:-3px;cursor:text}
+  body.present{overflow:hidden;background:#0a0805}
+  body.present .deck{padding:0;gap:0}
+  body.present .slide{display:none}
+  body.present .slide.cur{display:flex;position:fixed;left:50%;top:50%;margin:0;transform:translate(-50%,-50%) scale(var(--sc,1));box-shadow:0 30px 90px rgba(0,0,0,.6)}
+  body.present .slide.cur .a-el{opacity:0;transform:translateY(16px)}
+  body.present .slide.cur .a-el.demo{opacity:0}
+  body.present .slide.cur.reveal .a-el{opacity:1;transform:none;transition:opacity .6s ease,transform .6s cubic-bezier(.2,.75,.25,1);transition-delay:var(--d,0ms)}
+  body.present .slide.cur.reveal .a-el.demo{opacity:.6}
+
+  @page{size:1280px 720px;margin:0}
+  @media print{
+    html,body{background:var(--paper)}
+    .deck{padding:0;gap:0}
+    .slide{page-break-after:always;break-inside:avoid;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  }
+</style>
+</head>
+<body>
+<div class="deck">
+
+<!-- ============ 00 COVER ============ -->
+<section class="slide cover" id="s0">
+  <div class="ctop"><span class="l">한국방송통신전파진흥원 · AI 트렌드 특강</span><span class="r">Keynote · 2026</span></div>
+  <div class="cmid">
+    <div class="badge">AI Trend · Prompt → Agent</div>
+    <h1>질문의 시대는 <em>끝났다.</em><span class="s2">프롬프트에서 <em>에이전트</em>로.</span></h1>
+    <div class="lead">같은 ‘AI’라는 단어가 해마다 다른 생물을 가리킵니다. 한 번 묻고 한 번 답받던 시대를 지나, <b>스스로 계획하고 도구를 부르는 에이전트</b>의 시대로 — 그 흐름과, 조직·개인이 무엇을 해야 하는지를 함께 봅니다.</div>
+    <div class="cflow">
+      <span class="st">프롬프트</span><span class="ar">→</span>
+      <span class="st">컨텍스트</span><span class="ar">→</span>
+      <span class="st"><em>하네스</em></span><span class="ar">→</span>
+      <span class="st">피지컬 AI</span>
+    </div>
+  </div>
+  <div class="cbot">
+    <div class="spk"><span class="n">신성진</span><span class="o">한국데이터사이언티스트협회 대표이사</span></div>
+    <div class="whn">한국방송통신전파진흥원 임직원 특강<br><b>3시간 · 시연 + 실습</b></div>
+  </div>
+</section>
+
+<!-- ============ 00 · MEGA TREND (point 0) ============ -->
+<section class="slide" id="p0">
+  <div class="ktop"><span class="l"><b>프롬프트에서 에이전트로</b> · AI 트렌드 특강</span><span class="r">00 / Mega Trend</span></div>
+  <div class="kmid">
+    <div class="pnum"><span class="no">00</span><span class="ln"></span><span class="ey">Mega Trend</span></div>
+    <div class="ptitle">프롬프트 · 컨텍스트 · <em>하네스</em> · 피지컬 AI</div>
+    <div class="psub" style="margin-top:12px">모델 성능이 부족할 땐 <b>프롬프트</b>였습니다. 멀티모달·긴 컨텍스트·리즈닝이 되면서 <b>맥락을 제공하는 일</b>이 중요해졌고, 다른 도구와의 연결을 이어주는 <span class="hl">하네스</span>, 그 연결을 넓혀 세상을 이해하고 행동하는 <b>피지컬 AI</b>로 확장됩니다. <b>컨텍스트와 하네스가 붐이 되며 ‘에이전트’가 활발해졌습니다.</b></div>
+    <div class="stg4" style="margin-top:18px">
+      <div class="stgc">
+        <span class="n">01</span><span class="t">프롬프트</span>
+        <span class="d">모델 성능이 부족할 때 — <b>잘 묻는 기술</b>이 결과를 좌우한다.</span>
+      </div>
+      <div class="stgc">
+        <span class="n">02</span><span class="t">컨텍스트</span>
+        <span class="d">멀티모달·긴 컨텍스트·리즈닝 — <b>맥락 제공</b>이 핵심이 된다.</span>
+      </div>
+      <div class="stgc now">
+        <span class="n">03 · 지금</span><span class="t"><em>하네스</em></span>
+        <span class="d">도구·데이터와의 <b>연결</b>. AI가 스스로 실행 — 이것이 에이전트.</span>
+      </div>
+      <div class="stgc next">
+        <span class="n">04 · 다음</span><span class="t">피지컬 AI</span>
+        <span class="d">연결을 넓혀 <b>세상을 이해하고 행동</b>. 모델이 월드로 나온다.</span>
+      </div>
+    </div>
+  </div>
+  <div class="demo"><span class="dk think">관점</span><span class="dt">이 네 단계를 <b>그림 한 장</b>으로 보면 — 다음 장에서 블록을 하나씩 켜 봅니다</span></div>
+  <div class="kfoot"><span>AI 트렌드 특강 · 한국방송통신전파진흥원</span><span class="pg"><b>00</b></span></div>
+</section>
+
+<!-- ============ 지도 ① (BUILD A) ============ -->
+<section class="slide map build" id="mapA">
+  <div class="maphd">
+    <div class="eyebrow" data-role="eyebrow"></div>
+    <h2 data-role="title"></h2>
+    <div class="mh-sub" data-role="sub"></div>
+    <div class="stepdots" data-role="dots"></div>
+  </div>
+  <div class="mapstage"></div>
+  <div class="insight"><span class="k" data-role="ik">MAP</span>
+    <span class="t" data-role="itext"></span>
+    <span class="r" data-role="ihint"></span>
+  </div>
+</section>
+
+<!-- ============ 지도 ② (BUILD B) ============ -->
+<section class="slide map build" id="mapB">
+  <div class="maphd">
+    <div class="eyebrow" data-role="eyebrow"></div>
+    <h2 data-role="title"></h2>
+    <div class="mh-sub" data-role="sub"></div>
+    <div class="stepdots" data-role="dots"></div>
+  </div>
+  <div class="mapstage"></div>
+  <div class="insight"><span class="k" data-role="ik">MAP</span>
+    <span class="t" data-role="itext"></span>
+    <span class="r" data-role="ihint"></span>
+  </div>
+</section>
+
+<!-- ============ 01 CHAT → ACTION ============ -->
+<section class="slide" id="p1">
+  <div class="ktop"><span class="l"><b>프롬프트에서 에이전트로</b> · AI 트렌드 특강</span><span class="r">01 / Chat → Action</span></div>
+  <div class="kmid">
+    <div class="pnum"><span class="no">01</span><span class="ln"></span><span class="ey">Chat → Action</span></div>
+    <div class="ptitle">이제는 <em>chat</em>이 아니라 <em class="u">action</em>입니다.</div>
+    <div class="psub">채팅창이 곧 작업대가 됐습니다. <b>ChatGPT Work · Claude Cowork · Gemini</b> 같은 제품은 대화가 아니라 <b>일</b>을 합니다 — 자료를 읽고, 분석하고, 결과를 문서와 인포그래픽으로 이어냅니다. 우리가 ‘물어보는’ 동안, 누군가는 ‘시켜서 끝냅니다.’</div>
+    <div class="chips" style="margin-top:18px">
+      <span class="chip on">ChatGPT Work</span><span class="chip">Claude Cowork</span><span class="chip">Gemini</span>
+      <span class="chip ghost">대화 → 데이터 분석 → 보고서 → 인포그래픽</span>
+    </div>
+  </div>
+  <div class="demo"><span class="dk play">시연</span><span class="dt"><b>ChatGPT Work · Claude Desktop</b>으로 방송통신전파진흥원 데이터 분석 → <b>분석결과 보고서</b> → <b>인포그래픽</b>까지 한 흐름</span></div>
+  <div class="kfoot"><span>AI 트렌드 특강 · 한국방송통신전파진흥원</span><span class="pg"><b>01</b></span></div>
+</section>
+
+<!-- ============ 02 WHY AGENT ============ -->
+<section class="slide" id="p2">
+  <div class="ktop"><span class="l"><b>프롬프트에서 에이전트로</b> · AI 트렌드 특강</span><span class="r">02 / Why Agent</span></div>
+  <div class="kmid">
+    <div class="pnum"><span class="no">02</span><span class="ln"></span><span class="ey">Why Agent</span></div>
+    <div class="ptitle">계획을 세우고 도구를 부른다 —<br>그래서 <em>에이전트</em>라 부릅니다.</div>
+    <div class="psub">LLM은 이제 <b>계획을 세우는 힘</b>을 가졌고, <b>컨텍스트를 읽는 능력</b>도 강해졌습니다. 스스로 필요한 <b>도구를 호출</b>해 단계를 밟아 나갑니다. 한 번의 지시에 수집·작성·검증·수정까지 — 대화가 아니라 실행입니다.</div>
+  </div>
+  <div class="demo"><span class="dk play">시연</span><span class="dt">ChatGPT에 지시 → 오른쪽 <b>사이드바</b>에서 AI가 ‘<b>생각하고 · 행동하는</b>’ 과정을 그대로 관찰</span></div>
+  <div class="kfoot"><span>AI 트렌드 특강 · 한국방송통신전파진흥원</span><span class="pg"><b>02</b></span></div>
+</section>
+
+<!-- ============ 03 CODING AGENTS = HARNESS ============ -->
+<section class="slide" id="p3">
+  <div class="ktop"><span class="l"><b>프롬프트에서 에이전트로</b> · AI 트렌드 특강</span><span class="r">03 / Coding Agents</span></div>
+  <div class="kmid">
+    <div class="pnum"><span class="no">03</span><span class="ln"></span><span class="ey">Coding Agents</span></div>
+    <div class="ptitle">코딩 에이전트가 곧 <em>‘하네스’</em>의 실체입니다.</div>
+    <div class="psub">그래서 코딩 에이전트가 대거 등장하고 있습니다. AI에 <b>도구·권한·코드베이스</b>를 묶어 스스로 일하게 만드는 이 도구들이, 앞서 말한 <span class="hl">하네스</span> 그 자체입니다.</div>
+    <div class="chips" style="margin-top:16px">
+      <span class="chip on">Claude Code</span><span class="chip">Gemini Antigravity</span><span class="chip">ChatGPT Desktop</span><span class="chip">Claude Desktop</span>
+      <span class="chip">Cursor</span><span class="chip">Grok</span><span class="chip">VS Code + Copilot</span><span class="chip">OpenHands</span><span class="chip">Cline</span><span class="chip">Hermes</span><span class="chip">OpenClaw</span>
+    </div>
+  </div>
+  <div class="demo"><span class="dk play">시연</span><span class="dt">코딩 에이전트 <b>Claude Code</b>로 ‘<b>3D 방송통신전파진흥원</b>’ 만들기 — 말 한마디로 실행·검증까지</span></div>
+  <div class="kfoot"><span>AI 트렌드 특강 · 한국방송통신전파진흥원</span><span class="pg"><b>03</b></span></div>
+</section>
+
+<!-- ============ 04 PHYSICAL AI ============ -->
+<section class="slide" id="p4">
+  <div class="ktop"><span class="l"><b>프롬프트에서 에이전트로</b> · AI 트렌드 특강</span><span class="r">04 / Physical AI</span></div>
+  <div class="kmid">
+    <div class="pnum"><span class="no">04</span><span class="ln"></span><span class="ey">Physical AI</span></div>
+    <div class="ptitle">LLM은 손·발·눈·코·입이 없었습니다.<br>이제 <em>세상을 이해</em>하려 합니다.</div>
+    <div class="psub">최근 <b>Gemini의 로봇 모델</b>처럼, 모델이 언어를 넘어 <b>물리 세계를 이해하고 행동</b>하려는 방향으로 나아갑니다 — 피지컬 AI. 이 최전선은 매주 바뀝니다. <b>최신 자료·기사를 검색해 스스로 정리</b>하는 습관이 필요합니다.</div>
+  </div>
+  <div class="demo"><span class="dk link">검색</span><span class="dt">‘<b>Gemini Robotics</b>’ · 로봇 파운데이션 모델 최신 동향 — <span class="url">기사 정리를 AI에게 맡겨 보기</span></span></div>
+  <div class="kfoot"><span>AI 트렌드 특강 · 한국방송통신전파진흥원</span><span class="pg"><b>04</b></span></div>
+</section>
+
+<!-- ============ 05 RAG → AGENT ============ -->
+<section class="slide" id="p5">
+  <div class="ktop"><span class="l"><b>프롬프트에서 에이전트로</b> · AI 트렌드 특강</span><span class="r">05 / RAG → Agent</span></div>
+  <div class="kmid">
+    <div class="pnum"><span class="no">05</span><span class="ln"></span><span class="ey">RAG → Agent</span></div>
+    <div class="ptitle">RAG 구축에 바빴다면,<br>이제는 <em>에이전트</em>를 향합니다.</div>
+    <div class="psub">공공부문은 이제 더 넓고 <b>최신화된 정보</b>를 잘 습득하고 변화에 적응해야 합니다. 문서를 검색·활용하는 방식도, 무작정 <b>청크로 쪼개던</b> 방법을 넘어 다양하게 고민해야 합니다 — 컨텍스트를 읽는 길이가 길어지고, AI가 <b>맥락을 통째로 해석</b>하기 때문입니다.</div>
+  </div>
+  <div class="demo"><span class="dk think">참고</span><span class="dt"><b>롱컨텍스트 · 에이전틱 RAG</b> — “문서를 어떻게 쪼갤까”에서 “맥락을 어떻게 통째로 줄까”로</span></div>
+  <div class="kfoot"><span>AI 트렌드 특강 · 한국방송통신전파진흥원</span><span class="pg"><b>05</b></span></div>
+</section>
+
+<!-- ============ 06 BUILD TOGETHER ============ -->
+<section class="slide" id="p6">
+  <div class="ktop"><span class="l"><b>프롬프트에서 에이전트로</b> · AI 트렌드 특강</span><span class="r">06 / Build Together</span></div>
+  <div class="kmid">
+    <div class="pnum"><span class="no">06</span><span class="ln"></span><span class="ey">Build Together</span></div>
+    <div class="ptitle">용역에 <em>맡기는</em> AI에서,<br>함께 <em>만들어가는</em> AI로.</div>
+    <div class="psub">유지보수와 트렌드에 따라 사업의 양태가 계속 바뀝니다. 이를 쫓아가려면 <b>전문인재를 양성</b>해야 합니다. 실무자가 AI를 잘 쓰는 것도 좋지만, 기관에는 <b>쓸 수 있고 · 써야 하고 · 쓰고 싶은 AI 서비스</b>를 도입하는 것이 필수입니다.</div>
+    <div class="cols">
+      <div class="cbox"><div class="h">지금까지</div><p>용역회사에 맡기고 받는 사업 — 바뀌는 트렌드를 따라가기 어렵다</p></div>
+      <div class="cbox hot"><div class="h"><em>이제부터</em></div><p>업무를 아는 사람이 <b>직접 설계</b> — 인터뷰·보고서만으론 맥락을 못 담는다</p></div>
+    </div>
+  </div>
+  <div class="demo"><span class="dk think">질문</span><span class="dt">우리 기관의 AI 사업은 지금 <b>‘맡기고’</b> 있습니까, <b>‘함께 만들고’</b> 있습니까?</span></div>
+  <div class="kfoot"><span>AI 트렌드 특강 · 한국방송통신전파진흥원</span><span class="pg"><b>06</b></span></div>
+</section>
+
+<!-- ============ 07 WORK & PEOPLE FIRST ============ -->
+<section class="slide" id="p7">
+  <div class="ktop"><span class="l"><b>프롬프트에서 에이전트로</b> · AI 트렌드 특강</span><span class="r">07 / Work & People</span></div>
+  <div class="kmid">
+    <div class="pnum"><span class="no">07</span><span class="ln"></span><span class="ey">Work &amp; People</span></div>
+    <div class="ptitle">리더는 도구가 아니라,<br><em>업무와 사람</em>부터 봅니다.</div>
+    <div class="psub">AI를 도입할 때는 먼저 <b>업무를 쪼개어 분석</b>하고, 그 안에서 <b>병목·어려움·막힌 지점</b>을 찾아야 합니다. AI의 강점은 이제 ‘글을 읽고 쓰는 것’을 넘어 확대되고 있어, <b>어떤 도구·어떤 기존 프로그램과 엮을지 — 오케스트레이션</b>이 핵심입니다.</div>
+  </div>
+  <div class="demo"><span class="dk think">실습</span><span class="dt">내 업무 <b>쪼개기 → 병목 찾기</b> — “5분이면 될 일에 몇 시간 쓰고 있나?”</span></div>
+  <div class="kfoot"><span>AI 트렌드 특강 · 한국방송통신전파진흥원</span><span class="pg"><b>07</b></span></div>
+</section>
+
+<!-- ============ 08 MIDDLE MANAGER = CONTEXT ============ -->
+<section class="slide" id="p8">
+  <div class="ktop"><span class="l"><b>프롬프트에서 에이전트로</b> · AI 트렌드 특강</span><span class="r">08 / Manager = Context</span></div>
+  <div class="kmid">
+    <div class="pnum"><span class="no">08</span><span class="ln"></span><span class="ey">Manager = Context</span></div>
+    <div class="ptitle">맥락을 만드는 사람 —<br>그가 <em>중간관리자</em>입니다.</div>
+    <div class="psub">AI는 <b>맥락 정보를 받기 전까지는 할루시네이션</b>입니다. 조직의 암묵적 분위기, 상하관계 속 지시의 맥락과 의도, 판단·의사결정의 환경 — 이것을 아무리 팔란티어라도 데이터화하기 어렵습니다. 그 <span class="hl">맥락(컨텍스트)</span>을 만들어내는 것이 중간관리자입니다. 최상위의 지시를 해석·판단해 직원에게 <b>역할·책임·권한</b>을 부여하는 역할.</div>
+  </div>
+  <div class="demo"><span class="dk think">관점</span><span class="dt">“중간관리자를 더 둬야 하나?” → 오히려 <b>중간관리자 = 컨텍스트 생성자</b>, AI 시대에 더 중요해진다</span></div>
+  <div class="kfoot"><span>AI 트렌드 특강 · 한국방송통신전파진흥원</span><span class="pg"><b>08</b></span></div>
+</section>
+
+<!-- ============ 10 AX TEAM ============ -->
+<section class="slide" id="p10">
+  <div class="ktop"><span class="l"><b>프롬프트에서 에이전트로</b> · AI 트렌드 특강</span><span class="r">10 / AX Team</span></div>
+  <div class="kmid">
+    <div class="pnum"><span class="no">10</span><span class="ln"></span><span class="ey">AX Team</span></div>
+    <div class="ptitle">AX팀은 <em>개발자만의</em> 팀이 아닙니다.</div>
+    <div class="psub">업무를 잘 이해하고 <b>다양한 부서의 경험</b>을 가진 사람이 필요합니다. 그들이 <b>업무를 재설계</b>하고 직원들과 소통하며 ‘무엇을 해결할지’ 과제를 풀어갑니다. 기술이 아니라 <b>해결할 문제를 먼저</b> 찾는 것.</div>
+  </div>
+  <div class="demo"><span class="dk link">사례</span><span class="dt">국민권익위원회 — <span class="url">public-task.lovable.app</span> · <b>해결할 문제를 먼저 찾기</b></span></div>
+  <div class="kfoot"><span>AI 트렌드 특강 · 한국방송통신전파진흥원</span><span class="pg"><b>10</b></span></div>
+</section>
+
+<!-- ============ 11 FIND THE TALENT ============ -->
+<section class="slide" id="p11">
+  <div class="ktop"><span class="l"><b>프롬프트에서 에이전트로</b> · AI 트렌드 특강</span><span class="r">11 / Find the Talent</span></div>
+  <div class="kmid">
+    <div class="pnum"><span class="no">11</span><span class="ln"></span><span class="ey">Find the Talent</span></div>
+    <div class="ptitle">AI 잘 쓰는 사람은,<br><em>교육으로 발굴</em>합니다.</div>
+    <div class="psub">AX팀을 IT·개발자로만 채우지 마십시오. <b>업무 전문가가 각 팀·조직에</b> 있어야 하고, AI를 잘 쓰는 사람을 <b>교육을 통해 발굴</b>해야 합니다. 교육을 하다 보면 IT·SaaS·웹서비스를 <b>본능적으로 잘 다루는 ‘튀는 사람’</b>이 보입니다 — 그들을 최전선 첨병으로. 인사와 조직개편의 방식을 달리해야 합니다.</div>
+  </div>
+  <div class="demo"><span class="dk think">관점</span><span class="dt">교육장에서 <b>‘튀는 사람’</b>을 찾아라 — 발굴 → 첨병 → 인사·조직개편으로 연결</span></div>
+  <div class="kfoot"><span>AI 트렌드 특강 · 한국방송통신전파진흥원</span><span class="pg"><b>11</b></span></div>
+</section>
+
+<!-- ============ 12 VIBE CODING = CHALLENGE ============ -->
+<section class="slide" id="p12">
+  <div class="ktop"><span class="l"><b>프롬프트에서 에이전트로</b> · AI 트렌드 특강</span><span class="r">12 / Challenge</span></div>
+  <div class="kmid">
+    <div class="pnum"><span class="no">12</span><span class="ln"></span><span class="ey">Vibe Coding</span></div>
+    <div class="ptitle">한 번도 해보지 않은 일에 도전하는 것 —<br>그것이 <em>바이브코딩</em>입니다.</div>
+    <div class="psub">바이브코딩과 AI 도입의 의미는, 개발자·IT 소수만 보던 기술을 <b>공유해 다양한 관점</b>을 제시하는 데 있습니다. <b>한 번도 해보지 않은 것에 도전</b>하고, 내 영역의 경계를 확장하는 것. <b>Try &amp; Error, 중간에 포기하지 않고 완수하는 것</b> — 그것이 생성형 AI 시대가 우리에게 주는 메시지입니다.</div>
+  </div>
+  <div class="demo"><span class="dk play">시연</span><span class="dt"><b>콘솔(F12)로 브라우저 제어</b> · <b>파이썬</b> 처음 해보기 — 겁나서 껐던 그 창을 열어보기</span></div>
+  <div class="kfoot"><span>AI 트렌드 특강 · 한국방송통신전파진흥원</span><span class="pg"><b>12</b></span></div>
+</section>
+
+<!-- ============ 13 THE ALLEY ============ -->
+<section class="slide" id="p13">
+  <div class="ktop"><span class="l"><b>프롬프트에서 에이전트로</b> · AI 트렌드 특강</span><span class="r">13 / The Alley</span></div>
+  <div class="kmid">
+    <div class="pnum"><span class="no">13</span><span class="ln"></span><span class="ey">The Alley</span></div>
+    <div class="ptitle">골목길은 아무도 치워주지 않습니다.<br><em>스스로</em> 치워야 합니다.</div>
+    <div class="psub">생각보다 조직도 국가도 당신의 엑셀·한글에 관심이 없습니다. <b>고속도로(거시 인프라)와 골목길(현장)</b> — 골목길은 누가 치워주지 않습니다. 내 책상에서 AI로 <b>나의 불편함을 해소할 일</b>을 찾으십시오. 작은 혁신이 어떻게 변화를 만드느냐고요?</div>
+  </div>
+  <div class="demo"><span class="dk link">사례</span><span class="dt">광진구청 <b>류승인 주무관</b>이 만든 <b>국가법령정보 MCP</b> → 개인의 작은 불편이 알려져 <b>국가데이터처의 공식 MCP 공개</b>로 확산 <span class="url">(검색: 국가데이터처 MCP)</span></span></div>
+  <div class="kfoot"><span>AI 트렌드 특강 · 한국방송통신전파진흥원</span><span class="pg"><b>13</b></span></div>
+</section>
+
+<!-- ============ 14 CLOSING · NOT A MASTER KEY ============ -->
+<section class="slide" id="p14">
+  <div class="ktop"><span class="l"><b>프롬프트에서 에이전트로</b> · AI 트렌드 특강</span><span class="r">14 / Not a Master Key</span></div>
+  <div class="kmid">
+    <div class="pnum"><span class="no">14</span><span class="ln"></span><span class="ey">Not a Master Key</span></div>
+    <div class="ptitle">AI는 <em>만능 키</em>가 아닙니다.</div>
+    <div class="psub">업무 사이사이의 <b>공백과 비효율을 메꿔주는 최첨단 도구</b>일 뿐입니다. 이걸로 <b>무엇을 풀고 싶은지</b>를 되물어야 합니다. AI를 도입해 <b>더 싸게 · 더 좋게 · 더 빠르게 · 더 쉽게</b>가 되었는지 되물을 때, 비로소 진짜 잘 쓰이는 AI 전환이 가능합니다.</div>
+    <div class="cbfe" style="margin-top:14px">
+      <div class="c"><span class="e">₩</span><span class="k">Cheaper</span><span class="d">더 싸게 — 비용·시간</span></div>
+      <div class="c"><span class="e">★</span><span class="k">Better</span><span class="d">더 좋게 — 품질·정확도</span></div>
+      <div class="c"><span class="e">⚡</span><span class="k">Faster</span><span class="d">더 빠르게 — 속도·처리량</span></div>
+      <div class="c"><span class="e">◎</span><span class="k">Easier</span><span class="d">더 쉽게 — 문턱·재사용</span></div>
+    </div>
+  </div>
+  <div class="insight"><span class="k">묻기</span>
+    <span class="t">“AI가 우리 일을 <b>Cheaper · Better · Faster · Easier</b>하게 만들었는가?” — 그 질문이 진짜 AX입니다</span>
+    <span class="r">여러분 차례입니다</span>
+  </div>
+  <div class="kfoot"><span>AI 트렌드 특강 · 한국방송통신전파진흥원 · 신성진</span><span class="pg"><b>14</b></span></div>
+</section>
+
+</div>
+
+<!-- ============ MAP TEMPLATE (faithful to hand-drawing) ============ -->
+<template id="maptpl">
+  <div class="board">
+    <svg class="links" viewBox="0 0 1236 520" preserveAspectRatio="none">
+      <defs>
+        <marker id="ab" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#4a4233"/></marker>
+        <marker id="abs" markerWidth="9" markerHeight="9" refX="1.6" refY="3" orient="auto"><path d="M7,0 L0,3 L7,6 Z" fill="#4a4233"/></marker>
+        <marker id="ag" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#3f8f57"/></marker>
+        <marker id="ar" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#c9432f"/></marker>
+      </defs>
+      <!-- ① 데이터소스 → MCP → 컴퓨터(하네스) : 좌→우 스파인 -->
+      <path class="link" data-link="data" d="M216 293 H230" stroke="#4a4233" stroke-width="1.8" fill="none" marker-end="url(#ab)"/>
+      <path class="link" data-link="data harness" d="M296 293 H309" stroke="#3f8f57" stroke-width="2.3" fill="none" marker-end="url(#ag)"/>
+      <!-- ② 컴퓨터(하네스) → LLM : 도구·맥락 공급 -->
+      <path class="link" data-link="harness llm" d="M540 340 H555" stroke="#3f8f57" stroke-width="2.6" fill="none" marker-end="url(#ag)"/>
+      <!-- ③ RAG → LLM : 검색된 근거를 맥락으로 주입 (컴퓨터 위를 지나지 않게 우측으로) -->
+      <path class="link" data-link="rag llm" d="M612 136 C634 188 650 216 668 242" stroke="#c9432f" stroke-width="2.4" fill="none" marker-end="url(#ar)"/>
+      <!-- ③' Generation(증강생성) → LLM -->
+      <path class="link" data-link="rag llm" d="M824 330 H817" stroke="#c9432f" stroke-width="2.2" fill="none" marker-end="url(#ar)"/>
+      <!-- ④ 임베딩모델 → RAG(벡터DB) : 문서 임베딩 적재 -->
+      <path class="link" data-link="rag" d="M856 156 C814 120 758 112 724 112" stroke="#4a4233" stroke-width="1.7" fill="none" marker-end="url(#ab)"/>
+      <!-- ④' 브라우저 → 임베딩모델 : 새 문서 임베딩 -->
+      <path class="link" data-link="browser rag" d="M1090 190 H915" stroke="#4a4233" stroke-width="1.7" fill="none" marker-end="url(#ab)"/>
+      <!-- ⑤ 브라우저 ↔ LLM : any→any 입출력 (하단으로 우회) -->
+      <path class="link" data-link="browser llm" d="M1090 446 C980 446 852 462 766 456" stroke="#4a4233" stroke-width="2" fill="none" marker-end="url(#ab)" marker-start="url(#abs)"/>
+    </svg>
+
+    <!-- DATA -->
+    <div class="el circ c-blue" data-zone="data" style="left:6px;top:2px;width:56px;height:56px;font-size:13px">데이터</div>
+    <div class="el circ c-blue" data-zone="data" style="left:68px;top:2px;width:56px;height:56px;font-size:13px">기능</div>
+    <div class="el frame-dark z1" data-zone="data" style="left:4px;top:64px;width:212px;height:450px"></div>
+    <div class="el gbox" data-zone="data" style="left:14px;top:72px;width:192px;height:30px">외부프로그램</div>
+    <div class="el gbox" data-zone="data" style="left:14px;top:106px;width:192px;height:30px">기에환 · <b>DB</b>컴퓨터</div>
+    <div class="el listbox" data-zone="data" style="left:14px;top:140px;width:192px;height:302px">
+      <div class="li"><span class="sq"></span>국가법령정보<b>DB</b></div>
+      <div class="li"><span class="sq"></span>기후에너지환경부 <b>DB</b>컴퓨터</div>
+      <div class="li">엑셀</div>
+      <div class="li">지메일</div>
+      <div class="li"><span class="sq"></span>제컴퓨터데이터베이스</div>
+      <div class="li">구글드라이브</div>
+      <div class="li">노션</div>
+    </div>
+    <div class="el gbox" data-zone="data" style="left:14px;top:448px;width:192px;height:30px">외부프로그램</div>
+    <div class="el lab green" data-zone="data" style="left:236px;top:230px">접속</div>
+    <div class="el lab big blue" data-zone="data" style="left:236px;top:246px">MCP</div>
+    <div class="el mcp" data-zone="data" style="left:236px;top:266px;width:58px;height:56px"><div class="head"><i></i><i></i></div><div class="body"></div></div>
+    <div class="el lab mut" data-zone="data" style="left:230px;top:326px">키 · API</div>
+
+    <!-- HARNESS -->
+    <div class="el frame-green z1" data-zone="harness" style="left:300px;top:78px;width:240px;height:436px"></div>
+    <div class="el caption" data-zone="harness" style="left:314px;top:92px"><span class="lab green" style="font-size:11.5px">claude · openai <span class="lab ink">컴퓨터</span></span></div>
+    <div class="el gbox" data-zone="harness" style="left:312px;top:118px;width:216px;height:44px;justify-content:space-between;padding:0 10px"><span>메모리<small>(채팅기록)</small></span><span class="minidocs"><i></i><i></i><i></i></span></div>
+    <div class="el gbox" data-zone="harness" style="left:312px;top:170px;width:216px;height:36px"><b>Skill</b>&nbsp;<small>(만드는방법)</small></div>
+    <div class="el gbox" data-zone="harness" style="left:312px;top:212px;width:216px;height:36px">web search tool</div>
+    <div class="el gbox" data-zone="harness" style="left:312px;top:254px;width:216px;height:36px">OS <small>(윈도우)</small></div>
+    <div class="el gbox" data-zone="harness" style="left:312px;top:296px;width:216px;height:36px">python</div>
+    <div class="el gbox" data-zone="harness" style="left:312px;top:338px;width:216px;height:36px">MCP</div>
+    <div class="el lab mut" data-zone="harness" style="left:312px;top:378px">커넥터</div>
+    <div class="el lab green" data-zone="harness" style="left:396px;top:430px;font-size:9.5px">코드 · 프로그래밍언어</div>
+
+    <!-- LLM -->
+    <div class="el circ c-yellow" data-zone="llm" style="left:556px;top:300px;width:74px;height:74px;font-size:11px">생각<br>reasoning</div>
+    <div class="el llmc" data-zone="llm" style="left:600px;top:240px;width:218px;height:218px"><span class="g">gpt · claude</span><span class="b">LLM</span><span class="s">생각 · reasoning</span></div>
+    <div class="el doc r" data-zone="llm" style="left:678px;top:226px;width:60px;height:40px">문서</div>
+    <div class="el circ c-yellow" data-zone="llm" style="left:774px;top:412px;width:46px;height:46px;font-size:9.5px">real<br>time</div>
+    <div class="el lab red" data-zone="llm" style="left:824px;top:250px;font-size:10px;line-height:1.25">컨텍스트<br>윈도우 128K</div>
+    <div class="el lab mut" data-zone="llm" style="left:648px;top:466px;font-size:9.5px">text · multi modal <span style="color:#a89a80">(입·출력)</span></div>
+
+    <!-- RAG -->
+    <div class="el lab big green" data-zone="rag" style="left:474px;top:4px;font-size:17px">RAG</div>
+    <div class="el ragbox z1" data-zone="rag" style="left:464px;top:26px;width:474px;height:110px"></div>
+    <div class="el lab mut" data-zone="rag" style="left:474px;top:32px;font-size:8.5px">기후에너지환경부업무계획</div>
+    <div class="el doc y" data-zone="rag" style="left:474px;top:50px;width:42px;height:56px;font-size:10px">문서</div>
+    <div class="el lab green" data-zone="rag" style="left:604px;top:32px;font-size:10px">임베딩</div>
+    <div class="el lab green" data-zone="rag" style="left:704px;top:32px;font-size:10px">벡터DB</div>
+    <div class="el redbar" data-zone="rag" style="left:534px;top:50px;width:52px;height:9px"></div>
+    <div class="el vec" data-zone="rag" style="left:592px;top:50px">[0.3, 0.4, 0.6, 0.9, 1.2~~~]</div>
+    <div class="el redbar" data-zone="rag" style="left:534px;top:64px;width:52px;height:9px"></div>
+    <div class="el vec" data-zone="rag" style="left:592px;top:64px">[0.3, 0.4, 0.6, 0.9, 1.2~~~]</div>
+    <div class="el redbar" data-zone="rag" style="left:534px;top:78px;width:52px;height:9px"></div>
+    <div class="el vec" data-zone="rag" style="left:592px;top:78px">[0.3, 0.4, 0.6, 0.9, 1.2~~~]</div>
+    <div class="el redbar" data-zone="rag" style="left:534px;top:92px;width:52px;height:9px"></div>
+    <div class="el vec" data-zone="rag" style="left:592px;top:92px">[0.3, 0.4, 0.6, 0.9, 1.2~~~]</div>
+    <div class="el redbar" data-zone="rag" style="left:534px;top:106px;width:52px;height:9px"></div>
+    <div class="el vec" data-zone="rag" style="left:592px;top:106px">[0.3, 0.4, 0.6, 0.9, 1.2~~~]</div>
+    <div class="el lab green" data-zone="rag" style="left:814px;top:40px;font-size:10px">Retrieval</div>
+    <div class="el vec" data-zone="rag" style="left:792px;top:58px">[0.3, 0.4, 0.6, 0.9, 1.2~~]</div>
+    <div class="el vec" data-zone="rag" style="left:826px;top:140px">[0.3, 0.4, 0.6, 0.9, 1.2~~]</div>
+    <div class="el circ c-yellow" data-zone="rag" style="left:838px;top:152px;width:72px;height:72px;font-size:10px">임베딩<br>모델</div>
+    <div class="el bluebar" data-zone="rag" style="left:826px;top:228px;width:110px;height:15px">임베딩</div>
+    <div class="el bluebar" data-zone="rag" style="left:826px;top:288px;width:120px;height:20px">Augmented</div>
+    <div class="el bluebar" data-zone="rag" style="left:826px;top:320px;width:120px;height:20px">Generation</div>
+
+    <!-- BROWSER -->
+    <div class="el lab green" data-zone="browser" style="left:1010px;top:54px;font-size:11px">www.chatgpt.com · www.claude.ai</div>
+    <div class="el brow" data-zone="browser" style="left:1092px;top:80px;width:66px;height:424px"><span class="vtxt">브라우저</span></div>
+    <div class="el lab green" data-zone="browser" style="left:970px;top:372px;font-size:13px;font-weight:900">25달러</div>
+    <div class="el lab red" data-zone="browser" style="left:974px;top:404px;font-size:13px;font-weight:900">API →</div>
+    <div class="el lab green" data-zone="browser" style="left:966px;top:436px;font-size:11px">쓰는 만큼 돈 내</div>
+    <div class="el lab ink" data-zone="browser" style="left:1176px;top:112px;font-size:16px;font-weight:900">any</div>
+    <div class="el lab mut" data-zone="browser" style="left:1170px;top:136px;font-size:9px">text · image<br>speech · video</div>
+    <div class="el lab red" data-zone="browser" style="left:1178px;top:250px;font-size:14px;font-weight:900">to</div>
+    <div class="el lab ink" data-zone="browser" style="left:1176px;top:372px;font-size:16px;font-weight:900">any</div>
+    <div class="el lab mut" data-zone="browser" style="left:1170px;top:396px;font-size:9px">text · image<br>speech · video</div>
+  </div>
+</template>
+
+<script>
+var BUILD={
+  mapA:[
+    {lit:[], k:'The Map · <b>오늘의 지도</b>', t:'이 <em>그림 한 장</em>이 곧 ‘에이전트’입니다.',
+     sub:'프롬프트 → 컨텍스트 → 하네스 → 피지컬 AI. 지금부터 <b>한 블록씩</b> 켜 나갑니다.',
+     ik:'MAP', it:'도구 이름은 바뀌어도 <b>이 구조</b>는 남습니다', ih:'NEXT — <b>① LLM 코어</b>'},
+    {lit:['llm'], k:'Block 01 · <b>LLM · 프롬프트</b>', t:'① 혼자서는 <em>텍스트만</em> 주고받습니다.',
+     sub:'두뇌(<b>생각·reasoning</b>)와 입출력(<b>문서·멀티모달</b>). 한 번에 기억하는 양이 <b>컨텍스트 윈도우</b>.',
+     ik:'①', it:'병목은 성능이 아니라 <b>무엇을 넣어주느냐(컨텍스트)</b>', ih:'NEXT — <b>② 하네스</b>'},
+    {lit:['llm','harness'], k:'Block 02 · <b>하네스 · 컴퓨터</b>', t:'② 기억·스킬·도구를 붙이면 — <em>컴퓨터(하네스)</em>.',
+     sub:'메모리·Skill·web search·OS·python·<b>MCP 커넥터</b>. claude·openai가 도는 이 묶음이 하네스.',
+     ik:'②', it:'지시 + <b>도구·권한·코드</b>를 묶으면 AI가 <b>직접 실행</b>', ih:'NEXT — <b>③ 데이터 연결</b>'},
+    {lit:['llm','harness','data'], k:'Block 03 · <b>MCP · 데이터 연결</b>', t:'③ 우리 <em>데이터·기능</em>에 연결 — MCP.',
+     sub:'국가법령정보·기후부 DB·엑셀·지메일·드라이브·노션을 <b>접속·키·API</b>로 붙입니다.',
+     ik:'③', it:'MCP는 기술이 아니라 <b>권한과 범위</b>의 문제', ih:'NEXT — <b>지도 ②로</b>'}
+  ],
+  mapB:[
+    {lit:['llm','harness','data'], k:'The Map · <b>이어서</b>', t:'여기까지가 ‘내 <em>도구·데이터</em>에 연결된 AI’.',
+     sub:'이제 <b>근거(RAG)</b>와 <b>창구(브라우저)</b>를 붙여 그림을 완성합니다.',
+     ik:'MAP', it:'절반이 켜졌습니다 — 남은 두 블록', ih:'NEXT — <b>④ RAG</b>'},
+    {lit:['llm','harness','data','rag'], k:'Block 04 · <b>RAG · 근거 있는 답</b>', t:'④ 우리 <em>문서를 근거로</em> — RAG.',
+     sub:'문서 → <b>임베딩모델 → 벡터DB</b> → Retrieval → <b>Augmented → Generation</b>. 환각↓ 출처↑.',
+     ik:'④', it:'컨텍스트가 길어지며 <b>‘어떻게 통째로 줄까’</b>로', ih:'NEXT — <b>⑤ 브라우저</b>'},
+    {lit:['llm','harness','data','rag','browser'], k:'Block 05 · <b>Browser · Any→Any</b>', t:'⑤ 창구는 <em>브라우저</em> — 무엇이든 넣고 받는다.',
+     sub:'chatgpt.com·claude.ai에서 <b>text·image·speech·video</b>. 요금은 <b>월 25달러</b> 또는 <b>API 쓰는 만큼</b>.',
+     ik:'⑤', it:'API는 <b>쓰는 만큼</b>, 화면은 <b>월정액</b>', ih:'NEXT — <b>완성</b>'},
+    {lit:['llm','harness','data','rag','browser'], k:'Assembled · <b>이 전체가 에이전트</b>', t:'다섯 블록이 모이면 — <em>이 전체가 에이전트</em>.',
+     sub:'재료는 이미 다 있습니다. 차이는 <b>어떻게 조합하느냐</b> — 오케스트레이션.',
+     ik:'DONE', it:'블록은 대부분 <b>무료·저렴·공개</b> — 조합력이 경쟁력', ih:'NEXT — <b>Point 01</b>'}
+  ]
+};
+
+(function(){
+  var tpl=document.getElementById('maptpl');
+  if(tpl){ document.querySelectorAll('.mapstage').forEach(function(st){ st.appendChild(tpl.content.cloneNode(true)); }); }
+})();
+
+function renderStep(slide, i){
+  var steps=BUILD[slide.id]; if(!steps) return;
+  i=Math.max(0,Math.min(steps.length-1,i));
+  slide.dataset.step=i;
+  var s=steps[i], lit=s.lit;
+  var q=function(r){return slide.querySelector('[data-role="'+r+'"]');};
+  if(q('eyebrow')) q('eyebrow').innerHTML=s.k;
+  if(q('title')) q('title').innerHTML=s.t;
+  if(q('sub')) q('sub').innerHTML=s.sub;
+  if(q('ik')) q('ik').textContent=s.ik;
+  if(q('itext')) q('itext').innerHTML=s.it;
+  if(q('ihint')) q('ihint').innerHTML=s.ih;
+  var dots=q('dots');
+  if(dots){ dots.innerHTML=''; for(var d=0;d<steps.length;d++){var e=document.createElement('i'); if(d<=i)e.className='on'; dots.appendChild(e);}
+    var lbl=document.createElement('span'); lbl.className='lbl'; lbl.textContent=(i+1)+' / '+steps.length; dots.appendChild(lbl); }
+  var on={}; lit.forEach(function(z){on[z]=1;});
+  slide.querySelectorAll('.mapstage [data-zone]').forEach(function(n){ n.classList.toggle('dim', !on[n.dataset.zone]); });
+  slide.querySelectorAll('.mapstage .link').forEach(function(p){
+    var toks=(p.dataset.link||'').split(' ');
+    p.style.opacity=toks.every(function(t){return on[t];})?'':'.06';
+  });
+}
+document.querySelectorAll('.slide.build').forEach(function(s){ renderStep(s, BUILD[s.id].length-1); });
+
+(function(){
+  var p=new URLSearchParams(location.search).get('slide');
+  if(p){
+    document.body.classList.add('shot');
+    document.querySelectorAll('.slide').forEach(function(s,i){ if(i+1!==+p) s.style.display='none'; });
+    var st=new URLSearchParams(location.search).get('step');
+    if(st!==null){ var cur=document.querySelectorAll('.slide')[+p-1]; if(cur&&cur.classList.contains('build')) renderStep(cur,+st); }
+    window.scrollTo(0,0);
+  }
+})();
+
+(function(){
+  if(document.body.classList.contains('shot')) return;
+  var slides=[].slice.call(document.querySelectorAll('.slide'));
+  var cur=0, present=false, editing=false;
+  var SEL='.ktop,.eyebrow,.ptitle,.psub,.badge,.cover h1,.cover .lead,.cflow,.stgc,.chips,.cols .cbox,.cbfe .c,'+
+    '.demo,.insight,.maphd .eyebrow,.maphd h2,.mh-sub,.stepdots,.spk,.whn';
+  var bar=document.createElement('div');
+  bar.className='ptools';
+  bar.innerHTML='<span class="hintxt">P 발표 · ←→ 이동/빌드 · Esc 종료</span>'+
+    '<button type="button" data-act="edit">✏ 편집</button>'+
+    '<button type="button" data-act="save">💾 저장 HTML</button>'+
+    '<button type="button" data-act="pdf">📄 PDF</button>'+
+    '<button type="button" class="primary" data-act="play">▶ 발표</button>';
+  document.body.appendChild(bar);
+  var btnEdit=bar.querySelector('[data-act="edit"]');
+  function setEdit(on){
+    editing=on;document.body.classList.toggle('editing',on);
+    document.querySelectorAll('.slide').forEach(function(s){ on?s.setAttribute('contenteditable','true'):s.removeAttribute('contenteditable'); });
+    btnEdit.classList.toggle('on',on);btnEdit.textContent=on?'✔ 편집 완료':'✏ 편집';
+  }
+  function saveHTML(){
+    if(editing) setEdit(false);
+    var clone=document.documentElement.cloneNode(true);
+    clone.querySelectorAll('.ptools').forEach(function(e){e.remove();});
+    clone.querySelectorAll('[contenteditable]').forEach(function(e){e.removeAttribute('contenteditable');});
+    clone.querySelectorAll('.a-el').forEach(function(e){e.classList.remove('a-el');e.style.removeProperty('--d');if(!e.getAttribute('style'))e.removeAttribute('style');});
+    var b=clone.querySelector('body');if(b)b.removeAttribute('class');
+    clone.querySelectorAll('.slide').forEach(function(s){s.classList.remove('cur','reveal');s.style.removeProperty('--sc');s.style.removeProperty('display');if(!s.getAttribute('style'))s.removeAttribute('style');});
+    var html='<!DOCTYPE html>\n'+clone.outerHTML;
+    var a=document.createElement('a');
+    a.href=URL.createObjectURL(new Blob([html],{type:'text/html;charset=utf-8'}));
+    var d=new Date(),z=function(n){return String(n).padStart(2,'0');};
+    a.download='AI트렌드특강_수정_'+d.getFullYear()+z(d.getMonth()+1)+z(d.getDate())+'_'+z(d.getHours())+z(d.getMinutes())+'.html';
+    a.click();URL.revokeObjectURL(a.href);
+  }
+  bar.addEventListener('click',function(e){
+    var btn=e.target.closest('button');if(!btn)return;
+    var act=btn.dataset.act;
+    if(act==='edit')setEdit(!editing);
+    else if(act==='save')saveHTML();
+    else if(act==='pdf'){if(editing)setEdit(false);setTimeout(function(){window.print();},120);}
+    else if(act==='play'){if(editing)setEdit(false);enter();}
+  });
+  function mark(s){
+    var build=s.classList.contains('build');
+    s.querySelectorAll(SEL).forEach(function(e,i){
+      if(build && e.closest('.mapstage')) return;
+      e.classList.add('a-el');e.style.setProperty('--d',Math.min(i*40,1300)+'ms');
+    });
+  }
+  function fit(){var sc=Math.min(innerWidth/1280,innerHeight/720);slides.forEach(function(s){s.style.setProperty('--sc',sc);});}
+  function show(n,dir){
+    cur=Math.max(0,Math.min(slides.length-1,n));
+    slides.forEach(function(s,i){s.classList.toggle('cur',i===cur);s.classList.remove('reveal');});
+    var s=slides[cur];
+    if(s.classList.contains('build')){ renderStep(s, dir<0? BUILD[s.id].length-1 : 0); }
+    mark(s);
+    requestAnimationFrame(function(){requestAnimationFrame(function(){s.classList.add('reveal');});});
+  }
+  function enter(){
+    if(present)return;var idx=0;
+    slides.forEach(function(s,i){if(s.getBoundingClientRect().top<innerHeight/2)idx=i;});
+    present=true;document.body.classList.add('present');fit();show(idx,1);
+    if(document.documentElement.requestFullscreen)document.documentElement.requestFullscreen().catch(function(){});
+  }
+  function exit(){
+    if(!present)return;present=false;document.body.classList.remove('present');
+    slides.forEach(function(s){s.classList.remove('cur','reveal');});
+    document.querySelectorAll('.slide.build').forEach(function(s){ renderStep(s, BUILD[s.id].length-1); });
+    if(document.fullscreenElement)document.exitFullscreen().catch(function(){});
+    slides[cur].scrollIntoView();
+  }
+  document.addEventListener('dblclick',function(){if(!present&&!editing)enter();});
+  addEventListener('resize',function(){if(present)fit();});
+  document.addEventListener('fullscreenchange',function(){if(!document.fullscreenElement)exit();});
+  document.addEventListener('keydown',function(e){
+    if(editing){if(e.key==='Escape')setEdit(false);return;}
+    if(!present){
+      if(e.key==='p'||e.key==='P'){enter();return;}
+      if(e.key==='ArrowRight'||e.key==='PageDown'){cur=Math.min(slides.length-1,cur+1);slides[cur].scrollIntoView({behavior:'smooth'});}
+      else if(e.key==='ArrowLeft'||e.key==='PageUp'){cur=Math.max(0,cur-1);slides[cur].scrollIntoView({behavior:'smooth'});}
+      return;
+    }
+    if(e.key==='Escape'){exit();return;}
+    var s=slides[cur];
+    if(e.key==='ArrowRight'||e.key==='PageDown'||e.key===' '||e.key==='Enter'){
+      e.preventDefault();
+      if(s.classList.contains('build')){ var cs=+(s.dataset.step||0), last=BUILD[s.id].length-1; if(cs<last){ renderStep(s, cs+1); return; } }
+      show(cur+1,1);
+    } else if(e.key==='ArrowLeft'||e.key==='PageUp'){
+      e.preventDefault();
+      if(s.classList.contains('build')){ var cs2=+(s.dataset.step||0); if(cs2>0){ renderStep(s, cs2-1); return; } }
+      show(cur-1,-1);
+    } else if(e.key==='Home'){ show(0,1); } else if(e.key==='End'){ show(slides.length-1,1); }
+  });
+  if(new URLSearchParams(location.search).get('present'))setTimeout(enter,120);
+})();
+</script>
+<script>/* kg-preview: #<heading> \uc704\uce58\ub85c \uc774\ub3d9 */
+(function(){function norm(t){return (t||'').replace(/\s+/g,'').toLowerCase()}
+function go(){var h=decodeURIComponent(location.hash.slice(1));if(!h)return;var k=norm(h).slice(0,24);if(!k)return;
+var best=null,bl=1e9,els=document.body.querySelectorAll('h1,h2,h3,h4,h5,p,div,span,li,td,text,tspan,section,article');
+for(var i=0;i<els.length;i++){var e=els[i],t=norm(e.textContent);if(t.length<bl&&t.indexOf(k)>-1){best=e;bl=t.length}}
+if(!best)return;var box=best.closest('section,[class*=slide],[class*=page],article')||best;
+box.scrollIntoView({block:'start'});box.style.outline='3px solid #c0504d';box.style.outlineOffset='4px';
+setTimeout(function(){box.style.outline=''},2600)}
+window.addEventListener('load',function(){setTimeout(go,400)});window.addEventListener('hashchange',go)})();</script></body>
+</html>

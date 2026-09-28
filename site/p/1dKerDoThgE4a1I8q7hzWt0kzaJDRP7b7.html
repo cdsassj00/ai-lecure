@@ -1,0 +1,1730 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head><meta name="robots" content="noindex, nofollow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2026 ASTIS 거점기관 맞춤형 교육·컨설팅 — 중간보고</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<style>
+/* ============================================================
+   MONOCHROME CINEMATIC STAGE — ASTIS 중간보고 발표 사이트
+   팔레트: 순수 모노톤 (블랙 스테이지 + 화이트 라이트)
+============================================================ */
+:root{
+  --stage:#050505;
+  --ink:#f5f5f5;
+  --mid:#b4b4b4;
+  --dim:#909090;
+  --line:#242424;
+  --card:#0d0d0d;
+  --card-edge:#2a2a2a;
+  --paper:#f2f2f0;
+  --paper-ink:#111111;
+  --mono:'JetBrains Mono', ui-monospace, 'SFMono-Regular', Menlo, 'Pretendard Variable', Pretendard, 'Noto Sans KR', monospace;
+  --sans:'Pretendard Variable', Pretendard, -apple-system, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:auto}
+body{
+  background:var(--stage);
+  color:var(--ink);
+  font-family:var(--sans);
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+  line-height:1.6;
+}
+::selection{background:#fff;color:#000}
+::-webkit-scrollbar{width:10px}
+::-webkit-scrollbar-track{background:#000}
+::-webkit-scrollbar-thumb{background:#333;border-radius:5px}
+::-webkit-scrollbar-thumb:hover{background:#555}
+
+/* ---------- 그레인 오버레이 ---------- */
+.grain{position:fixed;inset:-50%;width:200%;height:200%;pointer-events:none;z-index:120;opacity:.05;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation:grain 8s steps(10) infinite}
+@keyframes grain{
+  0%,100%{transform:translate(0,0)}10%{transform:translate(-5%,-8%)}20%{transform:translate(-12%,4%)}
+  30%{transform:translate(6%,-12%)}40%{transform:translate(-4%,14%)}50%{transform:translate(-12%,8%)}
+  60%{transform:translate(12%,0)}70%{transform:translate(0,12%)}80%{transform:translate(3%,14%)}90%{transform:translate(-8%,8%)}
+}
+
+/* ---------- 사이드 레일 ---------- */
+.rail{position:fixed;left:0;top:0;bottom:0;width:56px;z-index:110;display:flex;flex-direction:column;
+  align-items:center;justify-content:space-between;padding:28px 0;border-right:1px solid var(--line);
+  background:rgba(5,5,5,.55);backdrop-filter:blur(8px)}
+.rail .brand{writing-mode:vertical-rl;font-family:var(--mono);font-size:11.5px;letter-spacing:.13em;color:var(--dim);text-transform:uppercase}
+.rail .track{flex:1;width:2px;background:var(--line);margin:22px 0;position:relative;border-radius:2px}
+.rail .fill{position:absolute;top:0;left:0;width:100%;height:0%;background:#fff;border-radius:2px;
+  box-shadow:0 0 12px rgba(255,255,255,.7)}
+.rail .pct{font-family:var(--mono);font-size:12px;color:var(--mid);font-variant-numeric:tabular-nums}
+
+/* ---------- 공통 타이포 ---------- */
+.kicker{font-family:var(--mono);font-size:12px;letter-spacing:.13em;text-transform:uppercase;color:var(--mid);
+  display:flex;align-items:center;gap:14px}
+.kicker::before{content:'';width:34px;height:1px;background:#fff;box-shadow:0 0 8px rgba(255,255,255,.8);flex:none}
+.h-xl{font-weight:900;letter-spacing:-.035em;line-height:1.04;font-size:clamp(44px,7.4vw,118px)}
+.h-lg{font-weight:900;letter-spacing:-.03em;line-height:1.08;font-size:clamp(34px,4.6vw,72px)}
+.lead{font-size:clamp(17px,1.35vw,21px);color:var(--mid);line-height:1.75;font-weight:400}
+.lead strong,.lead b{color:var(--ink);font-weight:700}
+.num-huge{font-weight:900;font-variant-numeric:tabular-nums;letter-spacing:-.05em;line-height:.9}
+section{position:relative;padding:0 8vw 0 calc(56px + 6vw)}
+.sec-inner{max-width:1480px;margin:0 auto;padding:16vh 0 14vh}
+
+/* ---------- HERO ---------- */
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;position:relative;
+  padding:0 8vw 0 calc(56px + 6vw);overflow:hidden}
+#stage3d{position:absolute;inset:0;z-index:0}
+.hero::after{content:'';position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:radial-gradient(ellipse 90% 70% at 50% 42%,transparent 0%,rgba(5,5,5,.55) 62%,var(--stage) 100%)}
+.hero-content{position:relative;z-index:2;max-width:1480px;margin:0 auto;width:100%}
+.hero .kicker{margin-bottom:4vh}
+.hero-title{overflow:hidden}
+.hero-title .line{display:block;overflow:hidden}
+.hero-title .line>span{display:inline-block;will-change:transform}
+.hero-title .ghost{
+  color:transparent;-webkit-text-stroke:1.5px rgba(255,255,255,.55);text-stroke:1.5px rgba(255,255,255,.55)}
+.hero-sub{margin-top:4vh;max-width:760px}
+.hero-stats{position:relative;z-index:2;display:flex;gap:0;margin:7vh auto 0;max-width:1480px;width:100%;
+  border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.hstat{flex:1;padding:26px 28px;border-right:1px solid var(--line)}
+.hstat:last-child{border-right:none}
+.hstat .v{font-size:clamp(30px,3vw,46px);font-weight:900;letter-spacing:-.04em;font-variant-numeric:tabular-nums}
+.hstat .v em{font-style:normal;font-size:.44em;font-weight:700;color:var(--mid);margin-left:4px;letter-spacing:0}
+.hstat .l{font-family:var(--mono);font-size:12px;letter-spacing:.15em;color:var(--dim);text-transform:uppercase;margin-top:6px}
+.scroll-cue{position:absolute;bottom:26px;left:50%;transform:translateX(-50%);z-index:3;
+  font-family:var(--mono);font-size:11.5px;letter-spacing:.13em;color:var(--dim);text-transform:uppercase;
+  display:flex;flex-direction:column;align-items:center;gap:12px}
+.scroll-cue .wire{width:1px;height:52px;background:linear-gradient(#fff,transparent);position:relative;overflow:hidden}
+.scroll-cue .wire::after{content:'';position:absolute;top:-20px;left:0;width:1px;height:20px;background:#fff;
+  box-shadow:0 0 8px #fff;animation:drop 1.8s ease-in-out infinite}
+@keyframes drop{to{top:60px}}
+
+/* ---------- 마퀴 ---------- */
+.marquee{border-top:1px solid var(--line);border-bottom:1px solid var(--line);overflow:hidden;
+  padding:20px 0;background:#080808;position:relative;z-index:2}
+.marquee .track-m{display:flex;width:max-content;animation:mq 34s linear infinite}
+.marquee span{font-weight:900;font-size:clamp(20px,2.2vw,32px);letter-spacing:-.02em;white-space:nowrap;
+  padding:0 34px;color:var(--ink)}
+.marquee span.o{color:transparent;-webkit-text-stroke:1px rgba(255,255,255,.4)}
+@keyframes mq{to{transform:translateX(-50%)}}
+
+/* ---------- 섹션 헤더 ---------- */
+.sec-head{margin-bottom:8vh}
+.sec-head .kicker{margin-bottom:26px}
+.sec-head .sub{margin-top:24px;max-width:720px}
+
+/* ---------- FLOW (핀 3D 스테이지) ---------- */
+#flow{padding:0}
+.flow-pin{height:100vh;display:flex;flex-direction:column;justify-content:center;overflow:hidden;
+  padding:0 4vw 0 calc(56px + 3vw)}
+.flow-head{max-width:1480px;margin:0 auto 4vh;width:100%;padding-left:2vw}
+.flow-viewport{width:100%;display:flex;justify-content:center;perspective:1600px;perspective-origin:50% 34%}
+.flow-stage{position:relative;width:1280px;height:600px;transform-style:preserve-3d;flex:none}
+.flow-floor{position:absolute;left:50%;top:58%;width:1900px;height:1300px;transform:translate(-50%,-14%) rotateX(78deg);
+  transform-origin:50% 50%;opacity:0;
+  background:
+    linear-gradient(rgba(255,255,255,.06) 1px,transparent 1px) 0 0/80px 80px,
+    linear-gradient(90deg,rgba(255,255,255,.06) 1px,transparent 1px) 0 0/80px 80px;
+  -webkit-mask-image:radial-gradient(ellipse 55% 55% at 50% 42%,#000 30%,transparent 75%);
+  mask-image:radial-gradient(ellipse 55% 55% at 50% 42%,#000 30%,transparent 75%)}
+.flow-svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.flow-svg path{fill:none;stroke:rgba(255,255,255,.75);stroke-width:1.6}
+.flow-svg .arrowdot{fill:#fff;filter:drop-shadow(0 0 6px rgba(255,255,255,.9))}
+.fnode{position:absolute;width:262px;background:linear-gradient(160deg,#141414,#090909);
+  border:1px solid var(--card-edge);border-radius:14px;padding:20px 22px 18px;
+  transform-style:preserve-3d;will-change:transform,opacity;
+  box-shadow:0 30px 60px rgba(0,0,0,.65), inset 0 1px 0 rgba(255,255,255,.07)}
+.fnode::before{content:'';position:absolute;inset:-1px;border-radius:14px;pointer-events:none;
+  background:linear-gradient(120deg,rgba(255,255,255,.22),transparent 30%,transparent 70%,rgba(255,255,255,.1));
+  -webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
+  -webkit-mask-composite:xor;mask-composite:exclude;padding:1px}
+.fnode .step{font-family:var(--mono);font-size:11.5px;letter-spacing:.16em;color:var(--dim);text-transform:uppercase}
+.fnode h3{font-size:23px;font-weight:900;letter-spacing:-.02em;margin:8px 0 6px}
+.fnode .meta{font-size:13.5px;color:var(--mid);line-height:1.55}
+.fnode .meta b{color:var(--ink);font-weight:700}
+.fnode.goal{background:#fff;color:#000;border-color:#fff;text-align:center;width:190px;
+  box-shadow:0 0 70px rgba(255,255,255,.35),0 30px 60px rgba(0,0,0,.6)}
+.fnode.goal .step{color:#777}
+.fnode.goal h3{font-size:30px;color:#000;margin:6px 0 2px}
+.fnode.goal .meta{color:#444}
+.fnode .tag{display:inline-block;margin-top:10px;font-family:var(--mono);font-size:11.5px;letter-spacing:.13em;
+  color:var(--ink);border:1px solid #3a3a3a;border-radius:99px;padding:4px 12px;text-transform:uppercase}
+#n1{left:20px;top:232px}
+#n2{left:392px;top:232px}
+#n3a{left:764px;top:56px}
+#n3b{left:764px;top:408px}
+#n4{left:1082px;top:252px}
+.flow-legend{max-width:1480px;margin:4vh auto 0;width:100%;display:flex;gap:34px;padding-left:2vw;
+  font-family:var(--mono);font-size:12px;letter-spacing:.13em;color:var(--dim);text-transform:uppercase;flex-wrap:wrap}
+.flow-legend i{font-style:normal;color:var(--ink)}
+
+/* ---------- PEOPLE (48/12/5) ---------- */
+.people-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:26px}
+.pcard{position:relative;border:1px solid var(--card-edge);border-radius:18px;padding:44px 38px 38px;
+  background:linear-gradient(170deg,#121212,#070707);transform-style:preserve-3d;
+  transition:border-color .3s;overflow:hidden;will-change:transform}
+.pcard::after{content:'';position:absolute;inset:0;background:radial-gradient(600px circle at var(--mx,50%) var(--my,50%),rgba(255,255,255,.08),transparent 45%);
+  opacity:0;transition:opacity .3s;pointer-events:none}
+.pcard:hover{border-color:#4a4a4a}
+.pcard:hover::after{opacity:1}
+.pcard .big{font-size:clamp(88px,8.6vw,150px)}
+.pcard .big em{font-style:normal;font-size:.3em;font-weight:800;color:var(--mid);letter-spacing:0}
+.pcard h4{font-size:21px;font-weight:800;margin-top:8px;letter-spacing:-.01em}
+.pcard p{color:var(--mid);font-size:15px;margin-top:8px;line-height:1.65}
+.pcard .foot{margin-top:24px;padding-top:18px;border-top:1px solid var(--line);
+  font-family:var(--mono);font-size:12px;letter-spacing:.13em;color:var(--dim);text-transform:uppercase}
+.consultants{margin-top:44px;border:1px dashed #333;border-radius:14px;padding:24px 30px;display:flex;
+  align-items:center;gap:18px 30px;flex-wrap:wrap}
+.consultants .lab{font-family:var(--mono);font-size:12px;letter-spacing:.16em;color:var(--dim);text-transform:uppercase;flex:none}
+.consultants .name{font-weight:800;font-size:17px;position:relative;padding-left:16px}
+.consultants .name::before{content:'';position:absolute;left:0;top:50%;width:6px;height:6px;background:#fff;
+  border-radius:50%;transform:translateY(-50%);box-shadow:0 0 8px rgba(255,255,255,.8)}
+
+/* ---------- PHASE 공통 ---------- */
+.phase-num{position:absolute;right:2vw;top:8vh;font-weight:900;font-size:clamp(140px,22vw,360px);
+  line-height:1;letter-spacing:-.06em;color:transparent;-webkit-text-stroke:1px rgba(255,255,255,.09);
+  pointer-events:none;user-select:none;z-index:0}
+.weeks{display:grid;grid-template-columns:repeat(4,1fr);gap:22px;position:relative;z-index:2}
+.wk{border:1px solid var(--card-edge);border-radius:16px;padding:28px 26px;background:linear-gradient(165deg,#131313,#080808);
+  position:relative;transform-style:preserve-3d;will-change:transform}
+.wk .wtag{font-family:var(--mono);font-size:12px;letter-spacing:.16em;color:var(--dim);text-transform:uppercase}
+.wk h4{font-size:20px;font-weight:900;margin:14px 0 10px;letter-spacing:-.01em}
+.wk p{font-size:14.5px;color:var(--mid);line-height:1.7}
+.wk p b{color:var(--ink);font-weight:700}
+.wk .bar{height:3px;background:var(--line);border-radius:2px;margin-top:22px;overflow:hidden}
+.wk .bar i{display:block;height:100%;width:0%;background:#fff;box-shadow:0 0 10px rgba(255,255,255,.8)}
+.wk.hot{background:#fff;border-color:#fff}
+.wk.hot .wtag{color:#888}
+.wk.hot h4{color:#000}
+.wk.hot p{color:#444}
+.wk.hot p b{color:#000}
+.wk.hot .bar{background:#ddd}
+.wk.hot .bar i{background:#000;box-shadow:none}
+.chips{margin-top:44px;position:relative;z-index:2}
+.chips .lab{font-family:var(--mono);font-size:12px;letter-spacing:.16em;color:var(--dim);text-transform:uppercase;margin-bottom:16px}
+.chips .row{display:flex;flex-wrap:wrap;gap:12px}
+.chip{border:1px solid #3a3a3a;border-radius:99px;padding:10px 20px;font-size:14.5px;font-weight:600;color:var(--ink);
+  background:rgba(255,255,255,.02);will-change:transform}
+.note-line{margin-top:30px;display:flex;gap:14px;align-items:flex-start;color:var(--mid);font-size:15px;position:relative;z-index:2}
+.note-line .dot{width:8px;height:8px;background:#fff;border-radius:50%;margin-top:8px;flex:none;
+  box-shadow:0 0 10px rgba(255,255,255,.9)}
+.note-line b{color:var(--ink)}
+
+/* ---------- SELECT (48→5 핀) ---------- */
+#select{padding:0}
+.sel-pin{height:100vh;display:flex;align-items:center;overflow:hidden;padding:0 8vw 0 calc(56px + 6vw)}
+.sel-wrap{max-width:1480px;margin:0 auto;width:100%;display:grid;grid-template-columns:1fr 1.15fr;gap:6vw;align-items:center}
+.sel-copy .kicker{margin-bottom:26px}
+.sel-count{display:flex;align-items:baseline;gap:22px;margin:30px 0 22px}
+.sel-count .from{font-size:clamp(90px,9vw,160px)}
+.sel-count .arrow{font-size:clamp(30px,3vw,52px);font-weight:300;color:var(--dim)}
+.sel-count .to{font-size:clamp(90px,9vw,160px);color:transparent;-webkit-text-stroke:2px #fff;position:relative}
+.sel-count .to.lit{color:#fff;-webkit-text-stroke:0;text-shadow:0 0 40px rgba(255,255,255,.55)}
+.judges{display:flex;gap:12px;margin-top:30px;flex-wrap:wrap}
+.judge{border:1px solid #3a3a3a;border-radius:10px;padding:12px 20px;font-weight:800;font-size:15px;
+  font-family:var(--mono);letter-spacing:.08em}
+.dots-grid{display:grid;grid-template-columns:repeat(8,1fr);gap:clamp(12px,1.6vw,26px);perspective:900px}
+.pdot{aspect-ratio:1;border-radius:50%;background:#2c2c2c;position:relative;will-change:transform,opacity;
+  transform-style:preserve-3d}
+.pdot.win{background:#fff;box-shadow:0 0 26px rgba(255,255,255,.85),0 0 70px rgba(255,255,255,.3)}
+.pdot.win::after{content:'';position:absolute;inset:-9px;border:1px solid rgba(255,255,255,.5);border-radius:50%}
+.sel-cap{margin-top:26px;font-family:var(--mono);font-size:12px;letter-spacing:.15em;color:var(--dim);text-transform:uppercase;text-align:right}
+
+/* ---------- CONSULTING (트라이앵글) ---------- */
+.consult-grid{display:grid;grid-template-columns:1.05fr 1fr;gap:6vw;align-items:start;position:relative;z-index:2}
+.tri-wrap{perspective:1200px}
+.tri{position:relative;width:100%;aspect-ratio:1.04;transform-style:preserve-3d}
+.tri-svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.tri-svg path{fill:none;stroke:rgba(255,255,255,.35);stroke-width:1.4;stroke-dasharray:5 7}
+.role{position:absolute;width:min(240px,44%);border-radius:16px;padding:20px 22px;background:linear-gradient(165deg,#141414,#090909);
+  border:1px solid var(--card-edge);box-shadow:0 26px 50px rgba(0,0,0,.6);will-change:transform;transform-style:preserve-3d}
+.role .rlab{font-family:var(--mono);font-size:11.5px;letter-spacing:.16em;color:var(--dim);text-transform:uppercase}
+.role h4{font-size:21px;font-weight:900;margin:8px 0 4px}
+.role p{font-size:13.5px;color:var(--mid);line-height:1.6}
+.role.pm{left:50%;top:0;transform:translateX(-50%);background:#fff;border-color:#fff;
+  box-shadow:0 0 60px rgba(255,255,255,.28),0 26px 50px rgba(0,0,0,.55)}
+.role.pm .rlab{color:#777}.role.pm h4{color:#000}.role.pm p{color:#444}
+.role.staff{left:0;bottom:4%}
+.role.cons{right:0;bottom:4%}
+.tri-center{position:absolute;left:50%;top:56%;transform:translate(-50%,-50%);text-align:center;
+  font-family:var(--mono);font-size:11.5px;letter-spacing:.16em;color:var(--dim);text-transform:uppercase;line-height:2}
+.budget-block{border:1px solid var(--card-edge);border-radius:18px;padding:36px;background:linear-gradient(165deg,#111,#070707)}
+.budget-block .lab{font-family:var(--mono);font-size:12px;letter-spacing:.16em;color:var(--dim);text-transform:uppercase}
+.budget-block .amount{font-size:clamp(52px,4.6vw,78px);font-weight:900;letter-spacing:-.04em;margin:10px 0 4px;
+  font-variant-numeric:tabular-nums}
+.budget-block .amount em{font-style:normal;font-size:.4em;color:var(--mid);font-weight:700}
+.budget-block .per{color:var(--mid);font-size:14px;margin-bottom:26px}
+.brow{margin-top:18px}
+.brow .t{display:flex;justify-content:space-between;font-size:14px;margin-bottom:8px}
+.brow .t b{font-weight:700}
+.brow .t span{color:var(--mid);font-variant-numeric:tabular-nums}
+.brow .g{height:10px;background:#1c1c1c;border-radius:6px;overflow:hidden}
+.brow .g i{display:block;height:100%;width:0%;background:linear-gradient(90deg,#666,#fff);border-radius:6px}
+.brow.solid .g i{background:#fff;box-shadow:0 0 14px rgba(255,255,255,.5)}
+.budget-block .fine{margin-top:24px;padding-top:20px;border-top:1px solid var(--line);color:var(--dim);
+  font-size:13px;line-height:1.7}
+.budget-block .amount .pre{font-style:normal;font-size:.34em;font-weight:800;color:var(--mid);margin-right:10px;letter-spacing:0}
+.cover-list{list-style:none;margin-top:6px}
+.cover-list li{display:flex;align-items:center;gap:14px;padding:15px 2px;border-bottom:1px solid var(--line);
+  font-size:15.5px;font-weight:700}
+.cover-list li:last-child{border-bottom:none}
+.cover-list li::before{content:'';width:9px;height:9px;background:#fff;flex:none;box-shadow:0 0 10px rgba(255,255,255,.8)}
+.cover-list li .d{margin-left:auto;font-family:var(--mono);font-size:11.5px;letter-spacing:.14em;color:var(--dim);
+  font-weight:500;text-transform:uppercase;text-align:right}
+.ops-strip{margin-top:40px;display:grid;grid-template-columns:repeat(3,1fr);gap:18px;position:relative;z-index:2}
+.op{border:1px solid var(--card-edge);border-radius:14px;padding:22px 24px;background:#0b0b0b}
+.op .k{font-family:var(--mono);font-size:11.5px;letter-spacing:.15em;color:var(--dim);text-transform:uppercase;margin-bottom:10px}
+.op p{font-size:14.5px;color:var(--mid);line-height:1.65}
+.op p b{color:var(--ink)}
+
+/* ---------- 경고 콜아웃 ---------- */
+.warn{margin-top:44px;background:#fff;color:#000;border-radius:18px;padding:34px 38px;display:flex;
+  gap:26px;align-items:center;position:relative;z-index:2;overflow:hidden}
+.warn::before{content:'';position:absolute;left:0;top:0;bottom:0;width:8px;background:#000}
+.warn .sign{flex:none;width:58px;height:58px;border:3px solid #000;border-radius:50%;display:grid;place-items:center;
+  font-weight:900;font-size:30px}
+.warn h4{font-size:21px;font-weight:900;letter-spacing:-.01em}
+.warn p{color:#444;font-size:15px;margin-top:6px;line-height:1.65}
+.warn p b{color:#000}
+
+/* ---------- BUDGET (화이트 반전) ---------- */
+#budget{background:var(--paper);color:var(--paper-ink)}
+#budget .kicker{color:#8a8a8a}
+#budget .kicker::before{background:#111;box-shadow:none}
+#budget .lead{color:#555}
+#budget .lead b{color:#111}
+.total-row{display:flex;align-items:baseline;gap:26px;flex-wrap:wrap;margin:5vh 0 6vh}
+.total-row .tnum{font-size:clamp(96px,12vw,220px);font-weight:900;letter-spacing:-.055em;line-height:.9;
+  font-variant-numeric:tabular-nums;color:#111}
+.total-row .tunit{font-size:clamp(26px,3vw,46px);font-weight:800;color:#666}
+.bud-bars{max-width:980px}
+.bud-bars .brow .t{color:#111}
+.bud-bars .brow .t span{color:#777}
+.bud-bars .brow .g{background:#ddd}
+.bud-bars .brow .g i{background:#111;box-shadow:none}
+.bud-note{margin-top:34px;font-size:14px;color:#777;font-family:var(--mono);letter-spacing:.04em}
+.total-row .tpre{font-size:clamp(22px,2.6vw,40px);font-weight:800;color:#999}
+.benefit-grid{display:grid;grid-template-columns:1.25fr 1fr 1fr;gap:22px;margin-top:1vh}
+.bcard{border:1px solid #d9d9d5;border-radius:18px;padding:32px 30px;background:#fff;position:relative;overflow:hidden}
+.bcard.main{background:#111;border-color:#111;
+  box-shadow:0 24px 50px rgba(0,0,0,.18)}
+.bcard .bk{font-family:var(--mono);font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;color:#999;margin-bottom:14px}
+.bcard.main .bk{color:#8a8a8a}
+.bcard h4{font-size:21px;font-weight:900;letter-spacing:-.01em;color:#111}
+.bcard.main h4{color:#fff}
+.bcard p{margin-top:10px;font-size:14.5px;line-height:1.7;color:#555}
+.bcard p b{color:#111}
+.bcard.main p{color:#b5b5b5}
+.bcard.main p b{color:#fff}
+
+/* ---------- OUTRO ---------- */
+#outro{min-height:100vh;display:flex;flex-direction:column;justify-content:center;position:relative;overflow:hidden}
+.outro-inner{max-width:1480px;margin:0 auto;width:100%;position:relative;z-index:2;padding:14vh 0}
+.outro-title .muted{color:var(--dim)}
+.outro-steps{display:flex;gap:0;margin-top:8vh;border-top:1px solid var(--line)}
+.ostep{flex:1;padding:34px 30px 8px;border-right:1px solid var(--line);position:relative}
+.ostep:last-child{border-right:none}
+.ostep .on{font-family:var(--mono);font-size:12px;letter-spacing:.16em;color:var(--dim)}
+.ostep h5{font-size:19px;font-weight:800;margin-top:14px}
+.ostep p{color:var(--mid);font-size:14px;margin-top:8px;line-height:1.65}
+footer{border-top:1px solid var(--line);padding:30px calc(56px + 6vw) 34px 8vw;display:flex;justify-content:space-between;
+  gap:20px;flex-wrap:wrap;font-family:var(--sans);font-size:13.5px;font-weight:500;letter-spacing:.02em;
+  color:#c2c2c2;line-height:1.7}
+footer b{color:#fff;font-weight:700}
+
+/* ---------- 산출물 링크 ---------- */
+.urls .ad a{color:var(--mid);text-decoration:none;border-bottom:1px solid #333;padding-bottom:2px;
+  transition:color .2s,border-color .2s}
+.urls .ad a:hover{color:#fff;border-color:#fff}
+.urls .ad a::after{content:'↗';margin-left:7px;font-size:11.5px;color:var(--dim)}
+.urls .ad a:hover::after{color:#fff}
+.urls li:hover .nm{color:#fff}
+
+/* ---------- 페이지네이션 ---------- */
+.pager{position:fixed;right:28px;bottom:26px;z-index:130;display:flex;align-items:center;gap:12px;
+  background:rgba(8,8,8,.78);backdrop-filter:blur(10px);border:1px solid var(--card-edge);
+  border-radius:99px;padding:9px 12px 9px 18px;box-shadow:0 18px 40px rgba(0,0,0,.55)}
+.pager .pg-label{font-family:var(--mono);font-size:11.5px;letter-spacing:.15em;color:var(--mid);
+  text-transform:uppercase;white-space:nowrap;max-width:180px;overflow:hidden;text-overflow:ellipsis}
+.pager .pg-num{font-family:var(--mono);font-size:12.5px;letter-spacing:.14em;color:var(--ink);
+  font-variant-numeric:tabular-nums;white-space:nowrap}
+.pager .pg-num em{font-style:normal;color:var(--dim)}
+.pager .pg-btn{width:34px;height:34px;border-radius:50%;border:1px solid #3a3a3a;background:transparent;
+  color:var(--ink);font-size:15px;line-height:1;cursor:pointer;display:grid;place-items:center;
+  font-family:var(--mono);transition:background .2s,border-color .2s,color .2s}
+.pager .pg-btn:hover:not(:disabled){background:#fff;color:#000;border-color:#fff}
+.pager .pg-btn:disabled{opacity:.28;cursor:default}
+.pager .pg-sep{width:1px;height:20px;background:var(--line)}
+
+.pgnav{position:fixed;right:30px;top:50%;transform:translateY(-50%);z-index:125;display:flex;
+  flex-direction:column;gap:13px;align-items:flex-end}
+.pgnav a{width:8px;height:8px;border-radius:50%;background:#3f3f3f;position:relative;display:block;
+  transition:background .25s,transform .25s,box-shadow .25s}
+.pgnav a.on{background:#fff;box-shadow:0 0 10px rgba(255,255,255,.9);transform:scale(1.4)}
+.pgnav a span{position:absolute;right:18px;top:50%;transform:translateY(-50%);white-space:nowrap;
+  font-family:var(--mono);font-size:11.5px;letter-spacing:.13em;color:var(--mid);text-transform:uppercase;
+  opacity:0;pointer-events:none;transition:opacity .2s}
+.pgnav a:hover span{opacity:1}
+body.lightbg .pgnav a{background:#c9c9c3}
+body.lightbg .pgnav a.on{background:#111;box-shadow:0 0 10px rgba(0,0,0,.28)}
+body.lightbg .pgnav a span{color:#777}
+
+/* 섹션 우하단 페이지 마커 */
+.pg-mark{position:fixed;left:calc(56px + 2.6vw);bottom:30px;z-index:124;font-family:var(--mono);font-size:12px;
+  letter-spacing:.16em;color:var(--dim);font-variant-numeric:tabular-nums}
+body.lightbg .pg-mark{color:#8d8d88}
+
+/* ---------- 리빌 기본 상태 ---------- */
+.rv{opacity:0;transform:translateY(60px)}
+.rv3{opacity:0;transform:perspective(1000px) rotateX(24deg) translateY(90px);transform-origin:50% 100%}
+
+/* ---------- 반응형 ---------- */
+@media (max-width:1100px){
+  .weeks{grid-template-columns:repeat(2,1fr)}
+  .people-grid{grid-template-columns:1fr}
+  .sel-wrap{grid-template-columns:1fr;gap:7vh}
+  .consult-grid{grid-template-columns:1fr;gap:8vh}
+  .ops-strip{grid-template-columns:1fr}
+  .benefit-grid{grid-template-columns:1fr}
+  .outro-steps{flex-direction:column}
+  .ostep{border-right:none;border-bottom:1px solid var(--line);padding-bottom:28px}
+  .hero-stats{flex-wrap:wrap}
+  .hstat{flex:1 1 46%;border-bottom:1px solid var(--line)}
+}
+@media (max-width:1100px){
+  .pgnav{display:none}
+  .pager .pg-label{display:none}
+}
+@media (max-width:760px){
+  .rail{display:none}
+  .pager{right:16px;bottom:16px;padding:7px 10px 7px 14px}
+  .pg-mark{display:none}
+  section,.hero,.sel-pin,.flow-pin{padding-left:6vw;padding-right:6vw}
+  footer{padding-left:6vw}
+  .weeks{grid-template-columns:1fr}
+}
+@media (prefers-reduced-motion:reduce){
+  .grain,.scroll-cue .wire::after,.marquee .track-m{animation:none}
+  .rv,.rv3{opacity:1;transform:none}
+}
+
+/* ============================================================
+   ASTIS 중간보고 전용 추가 컴포넌트
+============================================================ */
+.weeks.five{grid-template-columns:repeat(5,1fr)}
+.wk .wtag em{font-style:normal;color:#fff}
+.wk .state{display:inline-block;margin-left:10px;font-family:var(--mono);font-size:9.5px;letter-spacing:.16em;
+  border:1px solid #3a3a3a;border-radius:99px;padding:2px 8px;color:var(--mid)}
+.wk.hot .state{border-color:#000;color:#000}
+
+/* 범위 대비 (아닌 것 / 대상) */
+.scope-grid{display:grid;grid-template-columns:1fr 1.15fr;gap:22px;position:relative;z-index:2}
+.scope{border:1px solid var(--card-edge);border-radius:18px;padding:32px 32px 28px;background:linear-gradient(165deg,#121212,#070707)}
+.scope.on{background:#fff;border-color:#fff}
+.scope .sk{font-family:var(--mono);font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim)}
+.scope.on .sk{color:#888}
+.scope h4{font-size:22px;font-weight:900;margin:10px 0 20px;letter-spacing:-.015em}
+.scope.on h4{color:#000}
+.scope ul{list-style:none}
+.scope li{display:flex;gap:13px;padding:13px 0;border-bottom:1px solid var(--line);font-size:15px;color:var(--mid);line-height:1.6}
+.scope li:last-child{border-bottom:none}
+.scope li::before{content:'✕';font-family:var(--mono);font-size:12px;color:#555;flex:none;margin-top:3px}
+.scope.on li{border-bottom-color:#e4e4e0;color:#444}
+.scope.on li::before{content:'●';color:#000;font-size:9px;margin-top:6px}
+.scope.on li b{color:#000}
+.scope li b{color:var(--ink)}
+
+/* 데이터 테이블 */
+.tbl-wrap{border:1px solid var(--card-edge);border-radius:16px;overflow:hidden;background:#0a0a0a;position:relative;z-index:2}
+table.tbl{width:100%;border-collapse:collapse;font-size:14.5px}
+table.tbl th{font-family:var(--mono);font-size:11.5px;letter-spacing:.15em;text-transform:uppercase;color:var(--dim);
+  text-align:left;padding:16px 20px;background:#111;border-bottom:1px solid var(--card-edge);white-space:nowrap}
+table.tbl td{padding:17px 20px;border-bottom:1px solid var(--line);color:var(--mid);line-height:1.6;vertical-align:top}
+table.tbl tr:last-child td{border-bottom:none}
+table.tbl td.d{font-family:var(--mono);font-size:13px;color:var(--ink);white-space:nowrap;font-weight:600}
+table.tbl td.who{color:var(--ink);font-weight:700;white-space:nowrap}
+table.tbl td.org{color:#fff;font-weight:800;white-space:nowrap}
+table.tbl td b{color:var(--ink);font-weight:700}
+table.tbl tbody tr:hover td{background:rgba(255,255,255,.03)}
+
+/* 교육 6영역 */
+.dom-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;position:relative;z-index:2}
+.dom{border:1px solid var(--card-edge);border-radius:16px;padding:26px 26px 24px;background:linear-gradient(165deg,#111,#080808)}
+.dom .k{font-family:var(--mono);font-size:11.5px;letter-spacing:.15em;color:var(--dim);text-transform:uppercase}
+.dom h4{font-size:19px;font-weight:900;margin:12px 0 10px;letter-spacing:-.01em}
+.dom p{font-size:14px;color:var(--mid);line-height:1.7}
+.dom p b{color:var(--ink)}
+
+/* 산출물 리스트 */
+.deliv-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:6vh;position:relative;z-index:2}
+.dbox{border:1px solid var(--card-edge);border-radius:18px;padding:30px 30px 26px;background:linear-gradient(165deg,#111,#070707)}
+.dbox .k{font-family:var(--mono);font-size:11.5px;letter-spacing:.15em;color:var(--dim);text-transform:uppercase;margin-bottom:16px}
+.urls{list-style:none}
+.urls li{display:flex;align-items:baseline;gap:14px;padding:12px 0;border-bottom:1px solid var(--line);font-size:14.5px}
+.urls li:last-child{border-bottom:none}
+.urls .nm{font-weight:800;flex:none;width:64px}
+.urls .ad{font-family:var(--mono);font-size:12.5px;color:var(--mid);word-break:break-all}
+.urls li.demo .nm{color:var(--dim)}
+.dlist{list-style:none}
+.dlist li{padding:14px 0;border-bottom:1px solid var(--line)}
+.dlist li:last-child{border-bottom:none}
+.dlist h5{font-size:16px;font-weight:800}
+.dlist p{font-size:13.5px;color:var(--mid);margin-top:5px;line-height:1.6}
+
+/* 진단 3축 */
+.axis-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;position:relative;z-index:2}
+.axis{border:1px solid var(--card-edge);border-radius:18px;padding:32px 30px 28px;background:linear-gradient(170deg,#131313,#070707);
+  display:flex;flex-direction:column}
+.axis .an{font-family:var(--mono);font-size:11.5px;letter-spacing:.16em;color:var(--dim);text-transform:uppercase}
+.axis h4{font-size:23px;font-weight:900;margin:12px 0 14px;letter-spacing:-.015em}
+.axis p{font-size:14.5px;color:var(--mid);line-height:1.75}
+.axis p b{color:var(--ink)}
+.axis .quote{margin:22px 0 0;padding:20px 22px;background:#fff;color:#000;border-radius:12px;font-size:15px;
+  font-weight:700;line-height:1.6}
+.axis .tap{margin-top:auto;padding-top:20px;display:flex;gap:12px;align-items:flex-start;
+  border-top:1px solid var(--line);margin-top:22px}
+.axis .tap .lb{font-family:var(--mono);font-size:9.5px;letter-spacing:.13em;color:#000;background:#fff;border-radius:4px;
+  padding:4px 8px;flex:none;text-transform:uppercase;font-weight:700}
+.axis .tap span{font-size:13.5px;color:var(--ink);line-height:1.6}
+
+/* 한계 / 근거 2단 */
+.limit-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px;position:relative;z-index:2}
+.lbox{border:1px solid var(--card-edge);border-radius:18px;padding:32px 32px 28px;background:#0b0b0b}
+.lbox.good{border-color:#4a4a4a;background:linear-gradient(165deg,#151515,#090909)}
+.lbox .k{font-family:var(--mono);font-size:11.5px;letter-spacing:.15em;color:var(--dim);text-transform:uppercase;margin-bottom:18px}
+.lbox ul{list-style:none}
+.lbox li{display:flex;gap:13px;padding:12px 0;border-bottom:1px solid var(--line);font-size:14.5px;color:var(--mid);line-height:1.65}
+.lbox li:last-child{border-bottom:none}
+.lbox li::before{content:'—';color:#555;flex:none}
+.lbox.good li::before{content:'▸';color:#fff}
+.lbox li b{color:var(--ink)}
+
+/* 하반기 안 */
+.plan-grid{display:grid;grid-template-columns:1.3fr 1fr;gap:22px;position:relative;z-index:2}
+.plan{border:1px solid var(--card-edge);border-radius:18px;padding:34px 34px 30px;background:linear-gradient(165deg,#121212,#070707)}
+.plan.rec{background:#fff;border-color:#fff}
+.plan .pk{font-family:var(--mono);font-size:11.5px;letter-spacing:.15em;text-transform:uppercase;color:var(--dim)}
+.plan.rec .pk{color:#888}
+.plan h4{font-size:24px;font-weight:900;margin:12px 0 12px;letter-spacing:-.02em}
+.plan.rec h4{color:#000}
+.plan p{font-size:15px;color:var(--mid);line-height:1.75}
+.plan.rec p{color:#444}
+.plan p b{color:var(--ink)}
+.plan.rec p b{color:#000}
+
+/* 5단계 스텝 */
+.steps5{display:grid;grid-template-columns:repeat(5,1fr);gap:0;margin-top:44px;border-top:1px solid var(--line);
+  border-bottom:1px solid var(--line);position:relative;z-index:2}
+.st5{padding:28px 24px;border-right:1px solid var(--line);position:relative}
+.st5:last-child{border-right:none}
+.st5 .n{font-family:var(--mono);font-size:12px;letter-spacing:.16em;color:var(--dim)}
+.st5 h5{font-size:17px;font-weight:900;margin-top:12px;letter-spacing:-.01em}
+.st5 p{font-size:13.5px;color:var(--mid);margin-top:8px;line-height:1.6}
+.st5.last h5{color:#fff}
+.st5.last::after{content:'';position:absolute;left:0;right:0;bottom:-1px;height:2px;background:#fff;
+  box-shadow:0 0 12px rgba(255,255,255,.8)}
+
+/* 협의 요청 (화이트 반전) */
+.ask-grid{display:grid;grid-template-columns:1.08fr 1fr;gap:5vw;align-items:start;margin-top:2vh}
+.ask-lab{font-family:var(--mono);font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:#999;margin-bottom:22px}
+.ask{display:flex;gap:22px;align-items:flex-start;border:1px solid #d9d9d5;border-radius:14px;background:#fff;
+  padding:24px 26px;margin-bottom:14px}
+.ask .n{font-weight:900;font-size:30px;line-height:1;color:#111;flex:none;width:34px;font-variant-numeric:tabular-nums}
+.ask p{font-size:15.5px;color:#333;line-height:1.65;font-weight:600}
+.ask p b{color:#111;font-weight:800}
+.ask p .sub{display:block;margin-top:6px;font-size:13.5px;color:#777;font-weight:500}
+.exp{border-left:3px solid #111;padding:6px 0 6px 22px;margin-bottom:26px}
+.exp h4{font-size:19px;font-weight:900;color:#111;letter-spacing:-.01em}
+.exp p{font-size:14.5px;color:#555;margin-top:8px;line-height:1.7}
+.exp p b{color:#111}
+.verdict{margin-top:6vh;background:#111;color:#fff;border-radius:16px;padding:30px 34px;font-size:17px;
+  font-weight:800;line-height:1.6;letter-spacing:-.01em}
+.verdict .vk{font-family:var(--mono);font-size:11.5px;letter-spacing:.16em;color:#8a8a8a;text-transform:uppercase;
+  display:block;margin-bottom:12px;font-weight:500}
+
+/* 플로우 노드 배치 (진단→교육→구현→발표) */
+#n1{left:20px;top:222px}
+#n2{left:340px;top:222px}
+#n3{left:660px;top:222px}
+#n4{left:980px;top:222px}
+.fnode.goal{width:262px;text-align:left}
+.fnode.goal h3{font-size:23px;margin:8px 0 6px}
+.fnode.goal .tag{border-color:#c9c9c9;color:#000}
+
+/* 산출물 도트 그리드 (16건) */
+.dots-grid{grid-template-columns:repeat(4,1fr);gap:clamp(16px,2vw,32px)}
+.pdot.is-lov{background:#3f3f3f}
+.verdict u{text-decoration:none;border-bottom:2px solid rgba(255,255,255,.5);padding-bottom:2px}
+
+@media (max-width:1100px){
+  .scope-grid,.deliv-grid,.limit-grid,.plan-grid,.ask-grid{grid-template-columns:1fr}
+  .axis-grid,.dom-grid{grid-template-columns:1fr}
+  .weeks.five{grid-template-columns:repeat(2,1fr)}
+  .steps5{grid-template-columns:1fr}
+  .st5{border-right:none;border-bottom:1px solid var(--line)}
+  .tbl-wrap{overflow-x:auto}
+  table.tbl{min-width:760px}
+}
+
+/* ---------- 가독성 보정 (소형 라벨) ---------- */
+.kicker,.flow-legend,.hstat .l,.sel-cap,.chips .lab,.pg-mark,.op .k,.dbox .k,.lbox .k,
+.axis .an,.dom .k,.scope .sk,.ostep .on,.fnode .step,.pager .pg-label,.pgnav a span{font-weight:500}
+.pg-mark{color:#9d9d9d}
+.rail .brand,.rail .pct{color:#9a9a9a}
+.scroll-cue{color:#9d9d9d}
+table.tbl th{color:#a8a8a8}
+.urls .ad a{color:#c0c0c0}
+
+/* ---------- 발표 모드 (전체화면) ---------- */
+.pager{position:fixed;overflow:visible;isolation:isolate}
+.pg-prog{position:absolute;left:14px;right:14px;bottom:5px;height:2px;width:auto;background:#fff;
+  border-radius:2px;transform:scaleX(0);transform-origin:0 50%;
+  box-shadow:0 0 10px rgba(255,255,255,.8);opacity:0;transition:opacity .2s}
+.pager.playing .pg-prog{opacity:1}
+
+/* 발표 모드에서 한 화면에 담기도록 여백 축소 */
+body.presenting .sec-inner{padding:8.5vh 0 7vh}
+body.presenting .sec-head{margin-bottom:5vh}
+body.presenting .outro-inner{padding:9vh 0}
+body.presenting .phase-num{top:4vh}
+.pager.playing .pg-btn{opacity:.35;pointer-events:none}
+body.presenting .pager{background:rgba(8,8,8,.55);border-color:#333}
+body.presenting .scroll-cue{opacity:0}
+body.presenting #pgFull{background:#fff;color:#000;border-color:#fff}
+.pg-toast{position:fixed;left:50%;bottom:34px;transform:translate(-50%,14px);z-index:135;
+  background:rgba(10,10,10,.9);border:1px solid var(--card-edge);border-radius:99px;
+  padding:11px 22px;font-size:13.5px;font-weight:600;color:var(--ink);letter-spacing:.01em;
+  opacity:0;pointer-events:none;transition:opacity .35s,transform .35s;backdrop-filter:blur(8px);
+  box-shadow:0 18px 40px rgba(0,0,0,.6)}
+.pg-toast.on{opacity:1;transform:translate(-50%,0)}
+.pg-toast b{color:#fff;font-weight:800}
+@media (max-width:760px){ #pgFull{display:none} }
+</style>
+</head>
+<body>
+
+<div class="grain"></div>
+
+<!-- 사이드 레일 -->
+<nav class="rail" aria-hidden="true">
+  <div class="brand">CDSA · ASTIS 2026</div>
+  <div class="track"><div class="fill" id="railFill"></div></div>
+  <div class="pct" id="railPct">00</div>
+</nav>
+
+<!-- ============ HERO ============ -->
+<header class="hero" id="hero">
+  <div id="stage3d"></div>
+  <div class="hero-content">
+    <div class="kicker">2026 농업과학기술정보서비스(ASTIS) 거점기관 교육·컨설팅 — 중간보고 2026. 7. 23.</div>
+    <h1 class="hero-title h-xl">
+      <span class="line"><span>만들어서</span></span>
+      <span class="line"><span class="ghost">가져가는</span><span>&nbsp;교육</span></span>
+    </h1>
+    <p class="lead hero-sub rv">본 용역은 ASTIS <strong>시스템 개선 사업이 아닙니다</strong>. 시스템이 완전해지기 이전 구간에서,
+      ASTIS를 쓰는 직원이 <strong>반복·비효율 업무를 AI로 직접 해결하는 역량</strong>을 만드는 교육형 컨설팅입니다.</p>
+  </div>
+  <div class="hero-stats">
+    <div class="hstat rv"><div class="v"><span data-count="8">0</span><em>개소</em></div><div class="l">1차 컨설팅 전체 완료</div></div>
+    <div class="hstat rv"><div class="v"><span data-count="16">0</span><em>건</em></div><div class="l">참여 직원 산출물</div></div>
+    <div class="hstat rv"><div class="v"><span data-count="10">0</span><em>건</em></div><div class="l">컨설팅 녹취 분석</div></div>
+    <div class="hstat rv"><div class="v"><span data-count="180">0</span><em>일</em></div><div class="l">5.12 ~ 11.6 수행</div></div>
+  </div>
+  <div class="scroll-cue"><span>Scroll</span><span class="wire"></span></div>
+</header>
+
+<!-- 마퀴 -->
+<div class="marquee" aria-hidden="true">
+  <div class="track-m">
+    <span>현장 진단</span><span class="o">DIAGNOSIS</span><span>AI 도구 교육</span><span class="o">TRAINING</span>
+    <span>자동화 도구 구현</span><span class="o">BUILD</span><span>성과 발표</span><span class="o">RESULT</span>
+    <span>현장 진단</span><span class="o">DIAGNOSIS</span><span>AI 도구 교육</span><span class="o">TRAINING</span>
+    <span>자동화 도구 구현</span><span class="o">BUILD</span><span>성과 발표</span><span class="o">RESULT</span>
+  </div>
+</div>
+
+<!-- ============ FLOW : 수행구조 4단계 (핀) ============ -->
+<section id="flow">
+  <div class="flow-pin">
+    <div class="flow-head">
+      <div class="kicker">MASTER FLOW — 수행구조 4단계</div>
+      <h2 class="h-lg" style="margin-top:22px">진단에서 시작해<br>산출물로 끝냅니다</h2>
+    </div>
+    <div class="flow-viewport">
+      <div class="flow-stage" id="flowStage">
+        <div class="flow-floor" id="flowFloor"></div>
+        <svg class="flow-svg" viewBox="0 0 1280 600" aria-hidden="true">
+          <path id="c1" d="M282,300 L340,300"/>
+          <path id="c2" d="M602,300 L660,300"/>
+          <path id="c3" d="M922,300 L980,300"/>
+          <circle class="arrowdot" id="d1" r="4" opacity="0"/>
+          <circle class="arrowdot" id="d2" r="4" opacity="0"/>
+          <circle class="arrowdot" id="d3" r="4" opacity="0"/>
+        </svg>
+        <div class="fnode" id="n1">
+          <div class="step">Step 01 — Diagnosis</div>
+          <h3>현장 pain point 진단</h3>
+          <div class="meta">거점 방문 · <b>업무 인터뷰</b><br>반복·비효율 업무 도출</div>
+          <span class="tag">8개소 완료</span>
+        </div>
+        <div class="fnode" id="n2">
+          <div class="step">Step 02 — Training</div>
+          <h3>AI 도구 교육</h3>
+          <div class="meta">코딩에이전트 · <b>엑셀 자동화</b><br>바이브코딩 · OCR</div>
+          <span class="tag">6개 영역</span>
+        </div>
+        <div class="fnode" id="n3">
+          <div class="step">Step 03 — Build</div>
+          <h3>자동화 도구 구현</h3>
+          <div class="meta">직원이 <b>자기 업무의 도구</b>를<br>직접 만든다</div>
+          <span class="tag">1인 1도구</span>
+        </div>
+        <div class="fnode goal" id="n4">
+          <div class="step">Step 04 — Result</div>
+          <h3>결과보고회·경진대회</h3>
+          <div class="meta">10월 3주 · <b>성과 발표</b><br>절감 효과 정량 제시</div>
+          <span class="tag">최종 목표</span>
+        </div>
+      </div>
+    </div>
+    <div class="flow-legend">
+      <div><i>—</i>&nbsp; 진단 → 교육 → 구현 → 발표</div>
+      <div><i>●</i>&nbsp; 화이트 노드 = 결과보고 시점</div>
+      <div><i>◇</i>&nbsp; 성공 기준 : 직원이 만든 도구의 개수와 사용률</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 01 · 목적과 범위 ============ -->
+<section id="scope">
+  <div class="phase-num">01</div>
+  <div class="sec-inner">
+    <div class="sec-head">
+      <div class="kicker">SCOPE — 용역의 성격</div>
+      <h2 class="h-lg rv" style="margin-top:24px">시스템이 아니라<br>사용자 역량입니다</h2>
+      <p class="lead sub rv">시스템 기능 개선은 별도 개발사업의 영역입니다. 본 용역의 대상은
+        <b>입력·활용 과정에서 반복되는 직원의 업무</b>입니다.</p>
+    </div>
+    <div class="scope-grid">
+      <div class="scope rv3">
+        <div class="sk">Out of Scope — 과업 범위가 아닌 것</div>
+        <h4>하지 않는 일</h4>
+        <ul>
+          <li>ASTIS 시스템 기능 개선·개발 <b>(별도 개발사업 영역)</b></li>
+          <li>시스템 조작법·매뉴얼 전달 교육</li>
+          <li>일반 AI 이론 강의</li>
+          <li>일회성 특강 후 종료되는 교육</li>
+        </ul>
+      </div>
+      <div class="scope on rv3">
+        <div class="sk">In Scope — 과업의 대상</div>
+        <h4>하는 일</h4>
+        <ul>
+          <li><b>손글씨 신청서 재입력, 다단계 엑셀 취합, 건별 클릭 입력</b> 등 ASTIS 입력·활용 과정의 반복 업무</li>
+          <li>기관별 pain point 진단 → <b>AI 활용 시나리오 도출</b></li>
+          <li>직원이 자기 업무의 <b>자동화 도구를 직접 구현</b>하는 역량</li>
+          <li>결과보고회(경진대회) 발표까지 이어지는 <b>성과 관리</b></li>
+        </ul>
+      </div>
+    </div>
+    <div class="note-line rv"><span class="dot"></span>
+      <span>발주 <b>농촌진흥청</b> · 수행 <b>㈜한국데이터사이언티스트협회(CDSA)</b> — 2026. 5. 12. ~ 11. 6. (180일) · 거점기관 8개소</span></div>
+    <div class="chips">
+      <div class="lab rv">거점기관 8개소 — 기존 5 + 신규 3</div>
+      <div class="row">
+        <span class="chip rv">경기도원</span><span class="chip rv">강원 횡성</span><span class="chip rv">충남 부여</span>
+        <span class="chip rv">전북 정읍</span><span class="chip rv">전남 함평</span><span class="chip rv">경북도원</span>
+        <span class="chip rv">경남도원</span><span class="chip rv">부산광역시</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 과업 일정 ============ -->
+<section id="timeline">
+  <div class="sec-inner">
+    <div class="sec-head">
+      <div class="kicker">TIMELINE — 과업 개요 · 5월 ~ 11월</div>
+      <h2 class="h-lg rv" style="margin-top:24px">지금은<br>1차 컨설팅 완료 시점</h2>
+    </div>
+    <div class="weeks five">
+      <div class="wk rv3">
+        <div class="wtag">5월 <span class="state">완료</span></div>
+        <h4>착수 · 수요조사</h4>
+        <p>착수(5.12) · 수요조사 문항 설계·결과 분석 · <b>킥오프교육 커리큘럼 설계</b></p>
+        <div class="bar"><i data-w="20%"></i></div>
+      </div>
+      <div class="wk rv3">
+        <div class="wtag">6월 <span class="state">완료</span></div>
+        <h4>킥오프 · 1차 개시</h4>
+        <p>부여·함평·횡성·부산·경북 방문 · <b>AI×ASTIS 활용 시나리오 도출</b> · pain point 진단 병행</p>
+        <div class="bar"><i data-w="40%"></i></div>
+      </div>
+      <div class="wk hot rv3">
+        <div class="wtag">7월 <span class="state">진행 중</span></div>
+        <h4>1차 완료 · 중간보고</h4>
+        <p>정읍·경남·경기 완료(~7.10) · <b>중간보고회(7.23)</b></p>
+        <div class="bar"><i data-w="60%"></i></div>
+      </div>
+      <div class="wk rv3">
+        <div class="wtag">8~9월 <span class="state">예정</span></div>
+        <h4>2차 · 프로젝트형</h4>
+        <p>프로젝트형 집체교육(안) · <b>기관별 자동화 도구 구현</b> · Zoom 코칭 병행</p>
+        <div class="bar"><i data-w="80%"></i></div>
+      </div>
+      <div class="wk rv3">
+        <div class="wtag">10~11월 <span class="state">예정</span></div>
+        <h4>결과보고 · 경진대회</h4>
+        <p>결과보고회(10월 3주) · <b>용역보고서·컨설팅자료·교재 각 10부</b> 제출</p>
+        <div class="bar"><i data-w="100%"></i></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 02 · 진행 경과 ============ -->
+<section id="progress">
+  <div class="phase-num">02</div>
+  <div class="sec-inner">
+    <div class="sec-head">
+      <div class="kicker">PROGRESS — 1차 현장컨설팅 · 6.1 ~ 7.10</div>
+      <h2 class="h-lg rv" style="margin-top:24px">거점 8개소,<br>전체 완료했습니다</h2>
+      <p class="lead sub rv">모든 방문은 <b>AI 교육·실습 + 업무 인터뷰(pain point 진단)</b>를 병행했습니다.
+        전 회차를 녹취로 기록·분석했습니다.</p>
+    </div>
+    <div class="tbl-wrap rv3">
+      <table class="tbl">
+        <thead>
+          <tr><th>일자</th><th>담당</th><th>기관</th><th>교육·활동 내용</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="d">6.1</td><td class="who">이중균</td><td class="org">충남 부여</td>
+            <td>ASTIS 화면 진단·불편 청취 · <b>손글씨 OCR→엑셀 시연</b> · HWP 표 병합/대시보드 시연 · 사업비 취합 자동화 협의</td></tr>
+          <tr><td class="d">6.2</td><td class="who">이중균·신성진</td><td class="org">전남 함평</td>
+            <td>바이브코딩(Lovable) 실습 — <b>7명 전원 웹서비스 제작·배포</b> · 토양검정실 진단(연 7,500건) · 키오스크 API 협의</td></tr>
+          <tr><td class="d">6.15</td><td class="who">이중균</td><td class="org">강원 횡성</td>
+            <td>Antigravity·Python·Jupyter 환경 구축 실습 · HWP→HWPX 변환·시각화 · <b>HACCP·잔류농약(연 2,000건)</b> 업무 인터뷰</td></tr>
+          <tr><td class="d">6.22</td><td class="who">이중균</td><td class="org">부산광역시</td>
+            <td>AI 활용 교육 · 파일 병합 규칙 프롬프트 실습 · SVG→PPT 제작법 · 보안 원칙 교육 — <b>참여자 HTML 결과물 9건</b></td></tr>
+          <tr><td class="d">6.26</td><td class="who">이중균</td><td class="org">경북도원</td>
+            <td>도·시군 합동 간담 — <b>22개 시군 취합 자동화</b>, 온나라 연계, 업로드 제한 등 개선 수요 (농진청 배석)</td></tr>
+          <tr><td class="d">7.2</td><td class="who">이중균</td><td class="org">전북 정읍</td>
+            <td>엑셀 함수·VBA 실습 · <b>보안 원칙(데이터 내부, 코드만 외부 AI)</b> · 데이터 단위 비표준 문제 확인</td></tr>
+          <tr><td class="d">7.3</td><td class="who">이중균</td><td class="org">경남도원</td>
+            <td>시스템 개선 수요 청취(일괄 다운로드·업로드 안정성) · 직원 전파용 <b>교육자료 배포 협의</b></td></tr>
+          <tr><td class="d">7.10</td><td class="who">이중균</td><td class="org">경기도원</td>
+            <td>AI 활용 교육·업무 인터뷰 — 활용도 제고, 시군 커스터마이징 절충안, <b>키오스크 표준화·결과 일괄 업로드 개선 합의</b></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="note-line rv"><span class="dot"></span>
+      <span>회차 구성 — <b>AI 교육·실습 약 4시간 + 업무 인터뷰</b>. 진단과 교육을 한 방문에 병행했고, 교안은 공유 드라이브로 배포했습니다.</span></div>
+  </div>
+</section>
+
+<!-- ============ 교육 내용 6영역 ============ -->
+<section id="curriculum">
+  <div class="sec-inner">
+    <div class="sec-head">
+      <div class="kicker">CURRICULUM — 업무자동화 도구 6개 영역</div>
+      <h2 class="h-lg rv" style="margin-top:24px">도구 사용법이 아니라<br>해결 절차를 훈련합니다</h2>
+      <p class="lead sub rv">"<b>내 업무 문제 → AI 구현 → 검증</b>"의 절차를 반복해서 훈련하는 구성입니다.</p>
+    </div>
+    <div class="dom-grid">
+      <div class="dom rv3"><div class="k">01 — Research</div><h4>AI 모델 · 리서치</h4>
+        <p>NotebookLM · ChatGPT · Claude · Gemini<br><b>프롬프트 5요소</b>(역할·맥락·작업·형식·제약)</p></div>
+      <div class="dom rv3"><div class="k">02 — Coding Agent</div><h4>코딩에이전트 · 개발환경</h4>
+        <p>Antigravity · VS Code · Python · Jupyter 설치와 기초 실행<br><b>오류 메시지 재질의</b>(디버깅 루프)</p></div>
+      <div class="dom rv3"><div class="k">03 — Document</div><h4>엑셀 · 문서 자동화</h4>
+        <p>엑셀 함수·VBA · HWP 표 병합<br>HWP→HWPX 변환 · <b>PDF→CSV 변환</b></p></div>
+      <div class="dom rv3"><div class="k">04 — Data</div><h4>OCR · 데이터 처리</h4>
+        <p><b>손글씨 신청서 OCR→정형 엑셀</b><br>파일 병합 규칙(A우선-B보충) · 와이드→롱 전처리</p></div>
+      <div class="dom rv3"><div class="k">05 — Vibe Coding</div><h4>바이브코딩 · 웹</h4>
+        <p>Lovable 웹서비스 제작·배포<br>HTML 대시보드 · <b>SVG→PPT 변환 편집</b></p></div>
+      <div class="dom rv3"><div class="k">06 — Security</div><h4>보안 · 지원 체계</h4>
+        <p>개인정보 입력 금지 · 학습방(교안·프롬프트)<br><b>전화·온라인 멘토링</b></p></div>
+    </div>
+    <div class="warn rv3">
+      <div class="sign">!</div>
+      <div>
+        <h4>전 기관 공통 보안 지침 — 데이터는 내부에, 코드만 외부 AI</h4>
+        <p>민감 데이터는 내부망에 두고 외부 AI에는 <b>구조·샘플만</b> 전달합니다. 코드를 받아 내부 PC에서 실행 —
+          <b>데이터가 기관 경계를 넘지 않는 방식</b>으로 전 실습을 구성했습니다.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 산출 성과 (핀) ============ -->
+<section id="select">
+  <div class="sel-pin">
+    <div class="sel-wrap">
+      <div class="sel-copy">
+        <div class="kicker">OUTPUT — 참여 직원이 직접 만든 결과물</div>
+        <h2 class="h-lg">집중 실습 1회,<br>전원 완성</h2>
+        <div class="sel-count num-huge">
+          <span class="from" id="selFrom">8</span>
+          <span class="arrow">→</span>
+          <span class="to" id="selTo">16</span>
+        </div>
+        <p class="lead">거점 <b>8개소</b> 방문에서 참여 직원이 직접 만든 결과물 <b>16건</b> —
+          함평 Lovable 웹서비스 7건과 부산 단일 HTML 9건입니다. 모두 <b>실습 1회차에 제작·배포</b>했고,
+          공유 드라이브에 보존했습니다.</p>
+        <div class="judges">
+          <span class="judge">Lovable 7</span><span class="judge">HTML 9</span><span class="judge">시연 3</span>
+        </div>
+      </div>
+      <div>
+        <div class="dots-grid" id="dotsGrid"></div>
+        <div class="sel-cap">16 Deliverables — Built &amp; Deployed in One Session</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="deliverables">
+  <div class="sec-inner" style="padding-top:10vh">
+    <div class="deliv-grid" style="margin-top:0">
+      <div class="dbox rv3">
+        <div class="k">Vibe Coding — 함평 6.2 · Lovable 제작·배포</div>
+        <ul class="urls">
+          <li><span class="nm">조현화</span><span class="ad"><a href="https://safety-public.lovable.app" target="_blank" rel="noopener">safety-public.lovable.app</a></span></li>
+          <li><span class="nm">노주영</span><span class="ad"><a href="https://hham-farm-vision.lovable.app" target="_blank" rel="noopener">hham-farm-vision.lovable.app</a></span></li>
+          <li><span class="nm">나재혁</span><span class="ad"><a href="https://expert-control-studio.lovable.app" target="_blank" rel="noopener">expert-control-studio.lovable.app</a></span></li>
+          <li><span class="nm">최설빈</span><span class="ad"><a href="https://supercharge-your-goals.lovable.app" target="_blank" rel="noopener">supercharge-your-goals.lovable.app</a></span></li>
+          <li><span class="nm">최선희</span><span class="ad"><a href="https://sunny-public.lovable.app" target="_blank" rel="noopener">sunny-public.lovable.app</a></span></li>
+          <li><span class="nm">전선혜</span><span class="ad"><a href="https://hampyeong.lovable.app" target="_blank" rel="noopener">hampyeong.lovable.app</a></span></li>
+          <li class="demo"><span class="nm">강사 시연</span><span class="ad"><a href="https://hero-public.lovable.app" target="_blank" rel="noopener">hero-public.lovable.app</a></span></li>
+        </ul>
+      </div>
+      <div class="dbox rv3">
+        <div class="k">부산 6.22 · HTML 결과물 9건 + 시연 산출물</div>
+        <ul class="dlist">
+          <li><h5>부산 단일 HTML 결과물 9건</h5>
+            <p>온열질환 3D 시각화, CSV 매출 대시보드 등 — 참여자가 당일 직접 제작</p></li>
+          <li><h5>손글씨 OCR 변환 도구 <span style="color:#5c5c5c">(시연)</span></h5>
+            <p>신청서 스캔 → OCR 파싱 → ASTIS 업로드용 정형 엑셀 자동 변환</p></li>
+          <li><h5>HWP 표 병합 프로그램 <span style="color:#5c5c5c">(시연)</span></h5>
+            <p>여러 한글문서의 표 병합·합산 취합 자동화 (Electron 기반)</p></li>
+          <li><h5>홍보실적 분석 대시보드 <span style="color:#5c5c5c">(배포)</span></h5>
+            <p>실적 데이터 기반 HTML 대시보드 — 주간회의·성과 모니터링용</p></li>
+        </ul>
+      </div>
+    </div>
+    <div class="note-line rv"><span class="dot"></span>
+      <span>공유 드라이브 운영 — 교안·실습 코드·프롬프트·참여자 산출물 일체를 기관 내 전파 자료로 축적하고 있습니다.
+        <b>집중 실습 1회로 참여자 전원이 산출물을 완성</b>한 것이 하반기 프로젝트형 교육의 실증 근거입니다.</span></div>
+  </div>
+</section>
+
+<!-- ============ 03 · 현장 진단 ============ -->
+<section id="diagnosis">
+  <div class="phase-num">03</div>
+  <div class="sec-inner">
+    <div class="sec-head">
+      <div class="kicker">DIAGNOSIS — 컨설팅 녹취 10건 분석</div>
+      <h2 class="h-lg rv" style="margin-top:24px">입력 비효율 · 이중 업무<br>그리고 활용도</h2>
+      <p class="lead sub rv">현장에서 확인한 문제의 <b>해결 단위는 시스템 개편이 아니라 업무 단위 자동화</b>입니다.</p>
+    </div>
+    <div class="axis-grid">
+      <div class="axis rv3">
+        <div class="an">Axis 01 — 수기 재입력</div>
+        <h4>손으로 쓴 것을<br>다시 친다</h4>
+        <p>시료봉투 손글씨 → 수기 대장 → 관리 엑셀 → 업로드 양식 → 흙토람의 <b>다단계 수작업</b>.
+          토양검정 <b>연 7,500건</b> · 성수기 일 50건 · 판독 불가로 전화 확인 20~30%.
+          잔류농약 결과는 <b>건별 클릭 입력</b>(연 2,000건 기관 확인).</p>
+        <blockquote class="quote">"손으로 적은 걸 다시 쳐 넣어요 — 그걸 위해 사람을 채용했더라"</blockquote>
+        <div class="tap"><span class="lb">AI 접점</span><span>OCR 자동 변환 · 결과 일괄 업로드 · 키오스크 접수</span></div>
+      </div>
+      <div class="axis rv3">
+        <div class="an">Axis 02 — 중복 작성</div>
+        <h4>같은 내용을<br>두 번 쓴다</h4>
+        <p>온나라 내부문서와 ASTIS 입력의 <b>동일 내용 이중 작성</b>. 지도사업 보고서는 책자+한글+시스템 <b>삼중 작업</b>.
+          시군 취합은 22개 시군 다중 탭 수작업, 시군 고유분류 미지원으로 별도 엑셀 이중 관리.</p>
+        <blockquote class="quote">"두 개를 지금 똑같이 하고 있는 거죠 — 예전엔 보고하면 끝났는데"</blockquote>
+        <div class="tap"><span class="lb">AI 접점</span><span>문서 변환·취합 자동화 (HWP 병합 · 엑셀 취합 스크립트)</span></div>
+      </div>
+      <div class="axis rv3">
+        <div class="an">Axis 03 — 산출 부재</div>
+        <h4>넣기만 하고<br>꺼내 쓰지 못한다</h4>
+        <p>입력 의무는 <b>평가지표</b>로 부여되지만, 입력 데이터를 꺼내 쓰는 <b>화면·산출물이 없습니다</b>.
+          165개 센터의 양식·업무 흐름이 상이해 전국 표준화에 구조적 난점이 있습니다.</p>
+        <blockquote class="quote">"이걸 넣어서 뭘 쓰냐 — 활용도가 없으니 필요성을 못 느낀다"</blockquote>
+        <div class="tap"><span class="lb">AI 접점</span><span>실적 비교·대시보드 등 활용 산출물을 직원이 직접 제작</span></div>
+      </div>
+    </div>
+    <div class="note-line rv"><span class="dot"></span>
+      <span><b>진단</b> — 수기 입력은 즉시 경감 가능합니다. 시스템 개편 완료를 기다릴 이유가 없습니다.
+        (상세 인용·수치는 중간보고서 본문 수록)</span></div>
+  </div>
+</section>
+
+<!-- ============ 방식의 한계 ============ -->
+<section id="limit">
+  <div class="sec-inner">
+    <div class="sec-head">
+      <div class="kicker">LIMIT — 방문형 교육의 구조적 한계</div>
+      <h2 class="h-lg rv" style="margin-top:24px">자동화 역량은<br>시행착오의 반복에서 완성됩니다</h2>
+      <p class="lead sub rv">구현 → 오류 → 재질의 → 재실행. 이 루프를 <b>끝까지 돌릴 시간</b>이 방문 1회에는 없었습니다.</p>
+    </div>
+    <div class="limit-grid">
+      <div class="lbox rv3">
+        <div class="k">Problem — 방문형 1회의 실제 구성</div>
+        <ul>
+          <li>회당 약 <b>4시간</b> — 환경 구축·기초 실습·업무 인터뷰 포함</li>
+          <li>실제 구현 실습에 쓸 수 있는 시간은 <b>2시간 내외</b></li>
+          <li>준비한 심화 실습이 시간 부족으로 <b>이월되는 사례 반복</b></li>
+          <li>결석자 <b>보강 기회 부재</b></li>
+          <li>방문 간 공백기의 지원 채널은 전화·메신저에 한정</li>
+        </ul>
+      </div>
+      <div class="lbox good rv3">
+        <div class="k">Evidence — 집중형 구성의 확인된 효과</div>
+        <ul>
+          <li>바이브코딩 집중 실습 1회 → 참여자 <b>7명 전원이 동작하는 웹서비스 제작·배포</b> (6.2 함평, 6.22 부산)</li>
+          <li>타 지자체(<b>의성군</b>) 장기 밀착 교육 → 직원이 인사고과 결과 및 승진 순위 확인 도구를 <b>자체 개발, 전 직원 배포</b></li>
+          <li>몰입형·프로젝트형 구성일수록 <b>산출물 완성률 상승</b></li>
+        </ul>
+      </div>
+    </div>
+    <div class="warn rv3">
+      <div class="sign">→</div>
+      <div>
+        <h4>결론 — 하반기는 몰입형·프로젝트형으로 전환합니다</h4>
+        <p>방문 1회당 약 4시간으로는 자동화 도구가 <b>완성 단계에 도달하지 않습니다</b>.
+          하반기 2차 컨설팅은 <b>산출물을 완성하는 구성</b>으로 전환합니다.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 04 · 하반기 운영 방안 ============ -->
+<section id="plan">
+  <div class="phase-num">04</div>
+  <div class="sec-inner">
+    <div class="sec-head">
+      <div class="kicker">PLAN — 하반기 운영 방안 · 프로젝트형 집체교육</div>
+      <h2 class="h-lg rv" style="margin-top:24px">전 거점 합동,<br>1일 몰입, 산출물 완성형</h2>
+      <p class="lead sub rv">코딩에이전트로 <b>자동화 도구를 1인 1개</b> 구현해 그날 안에 완성합니다.</p>
+    </div>
+    <div class="plan-grid">
+      <div class="plan rec rv3">
+        <div class="pk">1안 · 권장 — 농촌진흥청 집체형 프로젝트 교육</div>
+        <h4>모여서 하루,<br>끝내고 돌아갑니다</h4>
+        <p>전 거점 담당자가 진흥청(또는 지정 교육장)에 모여 <b>1일 종일 과정 × 2회</b>.
+          오전 과제 설계 → 오후 구현 → 종료 전 결과 발표.
+          <b>장비·네트워크 사전 준비</b>로 실습 손실 시간을 제거합니다.</p>
+      </div>
+      <div class="plan rv3">
+        <div class="pk">2안 · 대안 — Zoom 비대면 합동 워크숍</div>
+        <h4>이동 없이<br>전 거점 동시 참여</h4>
+        <p>이동 부담 없이 전 거점이 동시에 참여합니다. <b>화면 공유 실습 코칭</b>과 회차 간 과제 점검이 용이하고,
+          수시 반복 운영에 유리합니다.</p>
+      </div>
+    </div>
+    <div class="steps5">
+      <div class="st5 rv"><div class="n">Step 01</div><h5>과제 사전 접수</h5><p>기관별 반복 업무 1건을 미리 받습니다.</p></div>
+      <div class="st5 rv"><div class="n">Step 02</div><h5>양식·샘플 준비</h5><p>실데이터는 제외하고 양식과 샘플만 준비합니다.</p></div>
+      <div class="st5 rv"><div class="n">Step 03</div><h5>코딩에이전트 구현</h5><p>강사가 밀착 코칭하며 그 자리에서 만듭니다.</p></div>
+      <div class="st5 rv"><div class="n">Step 04</div><h5>검증 · 보안 점검</h5><p>내부망에서 실제 실행되는지 확인합니다.</p></div>
+      <div class="st5 last rv"><div class="n">Step 05</div><h5>당일 성과 발표</h5><p>1인 1도구를 완성해 발표로 마칩니다.</p></div>
+    </div>
+    <div class="ops-strip">
+      <div class="op rv"><div class="k">강사진</div><p><b>이중균·신성진 2인 공동 진행</b> — 과제 설계·구현 코칭을 분담해 전원을 밀착 지원합니다.</p></div>
+      <div class="op rv"><div class="k">비용</div><p>AI 구독료·활용 비용은 <b>컨설팅 비용 내 부담</b> — 기관 추가 부담이 없습니다.</p></div>
+      <div class="op rv"><div class="k">성과 연계</div><p>완성 도구를 <b>결과보고회·경진대회(10월)</b> 발표물로 직접 연계합니다.</p></div>
+    </div>
+    <div class="note-line rv"><span class="dot"></span>
+      <span><b>하반기 원칙</b> — 교육 후 각자 해결에 맡기지 않고, <b>만들어서 가져가는 교육</b>으로 완성까지 책임집니다.</span></div>
+  </div>
+</section>
+
+<!-- ============ 협의 요청 (화이트 반전) ============ -->
+<section id="budget">
+  <div class="sec-inner">
+    <div class="kicker">REQUEST — 중간보고회 협의 요청</div>
+    <div class="total-row">
+      <div class="tpre">확정 필요</div>
+      <div class="tnum"><span data-count="4">0</span></div>
+      <div class="tunit">건 확정 필요</div>
+    </div>
+    <p class="lead rv" style="max-width:820px;margin-top:-3vh">아래 4건이 중간보고회에서 확정되면
+      <b>8월 중 하반기 1회차 운영</b>이 가능합니다.</p>
+    <div class="ask-grid">
+      <div>
+        <div class="ask-lab">발주기관 협의 요청 · 4건</div>
+        <div class="ask rv"><div class="n">1</div>
+          <p><b>집체교육 방식·장소·일정 확정</b><span class="sub">집체형 / 비대면 중 선택 — 8~9월 중 2회</span></p></div>
+        <div class="ask rv"><div class="n">2</div>
+          <p><b>참석 대상 확정</b><span class="sub">거점기관별 실무 담당 1~2명 (노트북 지참, ASTIS 실무자 우선)</span></p></div>
+        <div class="ask rv"><div class="n">3</div>
+          <p><b>자동화 과제 사전 접수 공문 협조</b><span class="sub">기관별 반복 업무 1건 + 사용 양식 (실데이터 제외)</span></p></div>
+        <div class="ask rv"><div class="n">4</div>
+          <p><b>결과보고회(10월 3주) 경진대회 연계</b><span class="sub">집체교육 산출물을 발표 과제로 지정</span></p></div>
+      </div>
+      <div>
+        <div class="ask-lab">기대 성과 · 결과보고 시점</div>
+        <div class="exp rv"><h4>기관별 자동화 도구 1개 이상</h4>
+          <p>OCR 변환 · 엑셀 취합 · 문서 병합 · 대시보드 등 — <b>기관 pain point 기반 실사용 도구</b></p></div>
+        <div class="exp rv"><h4>성과보고 가능한 결과물</h4>
+          <p>동작 시연 + <b>절감 효과(처리 시간·건수) 정량 제시</b> 형태의 발표 자료</p></div>
+        <div class="exp rv"><h4>ASTIS 활용도 제고 기여</h4>
+          <p>입력 부담 경감·활용 산출물 확보 — <b>"넣으면 쓸모가 생기는" 순환 구조</b></p></div>
+        <div class="exp rv"><h4>자생적 AI 역량</h4>
+          <p>교안·코드·프롬프트 일체 이관 — <b>용역 종료 후 기관 자체 확산 가능</b></p></div>
+      </div>
+    </div>
+    <div class="verdict rv3">
+      <span class="vk">Success Criteria</span>
+      본 용역의 성공 기준은 시스템 만족도가 아니라, <u>직원이 스스로 만든 자동화 도구의 개수와 사용률</u>입니다.
+    </div>
+    <div class="bud-note">* 협의 확정 사항은 실무협의 2차에서 세부 일정·장소로 구체화합니다.</div>
+  </div>
+</section>
+
+<!-- ============ OUTRO ============ -->
+<section id="outro">
+  <div class="outro-inner">
+    <div class="kicker">CLOSING</div>
+    <h2 class="h-xl outro-title" style="margin-top:4vh">
+      <span class="line rv">교육을 듣는 것이 아니라,</span><br>
+      <span class="line rv"><span class="ghost">도구를 만들어</span> 돌아갑니다</span>
+    </h2>
+    <div class="outro-steps">
+      <div class="ostep rv">
+        <div class="on">01</div>
+        <h5>실무협의 2차</h5>
+        <p>집체교육 방식·장소·일정과 참석 대상, 과제 접수 공문을 확정합니다.</p>
+      </div>
+      <div class="ostep rv">
+        <div class="on">02</div>
+        <h5>8월 하반기 1회차</h5>
+        <p>프로젝트형 집체교육 — 기관별 자동화 도구를 1인 1개 완성합니다.</p>
+      </div>
+      <div class="ostep rv">
+        <div class="on">03</div>
+        <h5>10월 결과보고회</h5>
+        <p>경진대회 발표 — 동작 시연과 절감 효과로 성과를 증명합니다.</p>
+      </div>
+    </div>
+  </div>
+  <footer>
+    <div><b>2026 농업과학기술정보서비스(ASTIS) 거점기관 교육 및 컨설팅 용역</b> — 중간보고</div>
+    <div>농촌진흥청 · ㈜한국데이터사이언티스트협회 · 신성진 · 이중균</div>
+  </footer>
+</section>
+
+<!-- ============ 페이지네이션 ============ -->
+<nav class="pgnav" id="pgNav" aria-label="페이지 이동"></nav>
+<div class="pager" id="pagerBar" role="navigation" aria-label="페이지네이션">
+  <i class="pg-prog" id="pgProg"></i>
+  <span class="pg-label" id="pgLabel">표지</span>
+  <span class="pg-sep"></span>
+  <span class="pg-num"><span id="pgCur">01</span><em> / <span id="pgTot">13</span></em></span>
+  <button class="pg-btn" id="pgFull" type="button" aria-label="전체화면 발표 모드" title="전체화면 발표 모드 (F)">⛶</button>
+  <button class="pg-btn" id="pgPrev" type="button" aria-label="이전 페이지">‹</button>
+  <button class="pg-btn" id="pgNext" type="button" aria-label="다음 페이지">›</button>
+</div>
+<div class="pg-toast" id="pgToast"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+<script>
+(function(){
+'use strict';
+var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+var hasGsap = typeof gsap !== 'undefined';
+if (hasGsap && typeof ScrollTrigger !== 'undefined') gsap.registerPlugin(ScrollTrigger);
+
+/* ============ 0. 산출물 16건 도트 생성 ============ */
+var dotsGrid = document.getElementById('dotsGrid');
+/* 0~6 = 함평 Lovable 7건, 7~15 = 부산 HTML 9건 */
+for (var i = 0; i < 16; i++) {
+  var d = document.createElement('div');
+  d.className = 'pdot' + (i < 7 ? ' is-lov' : '');
+  dotsGrid.appendChild(d);
+}
+
+/* ============ 1. THREE.JS 히어로 (그레이스케일 파티클 지형) ============ */
+(function initStage(){
+  if (reduced || typeof THREE === 'undefined') return;
+  var mount = document.getElementById('stage3d');
+  var W = mount.clientWidth || window.innerWidth;
+  var H = mount.clientHeight || window.innerHeight;
+
+  var scene = new THREE.Scene();
+  scene.fog = new THREE.FogExp2(0x050505, 0.0016);
+  var camera = new THREE.PerspectiveCamera(60, W/H, 1, 3000);
+  camera.position.set(0, 90, 380);
+
+  var renderer = new THREE.WebGLRenderer({ antialias:true, alpha:true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.setSize(W, H);
+  mount.appendChild(renderer.domElement);
+
+  var COLS = 130, ROWS = 60, SEP = 22;
+  var count = COLS * ROWS;
+  var positions = new Float32Array(count * 3);
+  var shades = new Float32Array(count * 3);
+  var idx = 0;
+  for (var ix = 0; ix < COLS; ix++) {
+    for (var iz = 0; iz < ROWS; iz++) {
+      positions[idx*3]   = ix * SEP - (COLS * SEP) / 2;
+      positions[idx*3+1] = 0;
+      positions[idx*3+2] = iz * SEP - (ROWS * SEP) / 2;
+      var s = 0.35 + Math.random() * 0.65;
+      shades[idx*3] = s; shades[idx*3+1] = s; shades[idx*3+2] = s;
+      idx++;
+    }
+  }
+  var geo = new THREE.BufferGeometry();
+  geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+  geo.setAttribute('color', new THREE.BufferAttribute(shades, 3));
+  var mat = new THREE.PointsMaterial({
+    size: 2.4, vertexColors: true, transparent: true, opacity: 0.85,
+    sizeAttenuation: true, depthWrite: false
+  });
+  var terrain = new THREE.Points(geo, mat);
+  terrain.position.y = -60;
+  scene.add(terrain);
+
+  var ico = new THREE.Mesh(
+    new THREE.IcosahedronGeometry(120, 1),
+    new THREE.MeshBasicMaterial({ color: 0xffffff, wireframe: true, transparent: true, opacity: 0.05 })
+  );
+  ico.position.set(200, 60, -160);
+  scene.add(ico);
+
+  var ico2 = new THREE.Mesh(
+    new THREE.IcosahedronGeometry(60, 0),
+    new THREE.MeshBasicMaterial({ color: 0xffffff, wireframe: true, transparent: true, opacity: 0.08 })
+  );
+  ico2.position.set(-320, 120, -240);
+  scene.add(ico2);
+
+  var mouseX = 0, mouseY = 0;
+  window.addEventListener('mousemove', function(e){
+    mouseX = (e.clientX / window.innerWidth - 0.5);
+    mouseY = (e.clientY / window.innerHeight - 0.5);
+  }, { passive: true });
+
+  var t = 0, visible = true, pos = geo.attributes.position;
+  var io = new IntersectionObserver(function(en){ visible = en[0].isIntersecting; }, { threshold: 0 });
+  io.observe(mount);
+
+  function animate(){
+    requestAnimationFrame(animate);
+    if (!visible) return;
+    t += 0.012;
+    var k = 0;
+    for (var x = 0; x < COLS; x++) {
+      for (var z = 0; z < ROWS; z++) {
+        pos.array[k*3+1] = Math.sin((x + t*2.2) * 0.28) * 14 + Math.cos((z + t*1.6) * 0.34) * 14;
+        k++;
+      }
+    }
+    pos.needsUpdate = true;
+    ico.rotation.y += 0.0016; ico.rotation.x += 0.0009;
+    ico2.rotation.y -= 0.002;
+    camera.position.x += (mouseX * 60 - camera.position.x) * 0.04;
+    camera.position.y += (90 - mouseY * 40 - camera.position.y) * 0.04;
+    camera.lookAt(0, -20, 0);
+    renderer.render(scene, camera);
+  }
+  animate();
+
+  window.addEventListener('resize', function(){
+    var w = mount.clientWidth || window.innerWidth, h = mount.clientHeight || window.innerHeight;
+    camera.aspect = w/h; camera.updateProjectionMatrix(); renderer.setSize(w, h);
+  });
+})();
+
+/* ============ 2. 카운트업 ============ */
+function fmt(n, comma){ n = Math.round(n); return comma ? n.toLocaleString('ko-KR') : String(n); }
+function bindCounters(){
+  document.querySelectorAll('[data-count]').forEach(function(el){
+    var target = parseFloat(el.getAttribute('data-count'));
+    var comma = el.getAttribute('data-comma') === '1';
+    if (!hasGsap || reduced) { el.textContent = fmt(target, comma); return; }
+    var obj = { v: 0 };
+    ScrollTrigger.create({
+      trigger: el, start: 'top 88%', once: true,
+      onEnter: function(){
+        gsap.to(obj, { v: target, duration: 1.6, ease: 'power3.out',
+          onUpdate: function(){ el.textContent = fmt(obj.v, comma); } });
+      }
+    });
+  });
+}
+
+/* ============ 3. GSAP 씬 구성 ============ */
+if (hasGsap && !reduced) {
+
+  gsap.set('.hero-title .line>span', { yPercent: 115 });
+  var intro = gsap.timeline({ delay: 0.15 });
+  intro.to('.hero-title .line>span', { yPercent: 0, duration: 1.15, ease: 'power4.out', stagger: 0.14 })
+       .to('.hero .rv', { opacity: 1, y: 0, duration: 0.9, ease: 'power3.out', stagger: 0.1 }, '-=0.55')
+       .to('.hero-stats .rv', { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out', stagger: 0.08 }, '-=0.6');
+
+  gsap.to('.hero-content', {
+    yPercent: -18, opacity: 0.25, ease: 'none',
+    scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true }
+  });
+
+  var railFill = document.getElementById('railFill');
+  var railPct = document.getElementById('railPct');
+  ScrollTrigger.create({
+    trigger: document.body, start: 'top top', end: 'bottom bottom',
+    onUpdate: function(self){
+      var p = Math.round(self.progress * 100);
+      railFill.style.height = p + '%';
+      railPct.textContent = (p < 10 ? '0' : '') + p;
+    }
+  });
+
+  document.querySelectorAll('.rv').forEach(function(el){
+    if (el.closest('.hero')) return;
+    gsap.to(el, {
+      opacity: 1, y: 0, duration: 1.0, ease: 'power3.out',
+      scrollTrigger: { trigger: el, start: 'top 88%', once: true }
+    });
+  });
+  document.querySelectorAll('.rv3').forEach(function(el){
+    gsap.to(el, {
+      opacity: 1, y: 0, rotateX: 0, duration: 1.15, ease: 'power3.out',
+      transformPerspective: 1000,
+      scrollTrigger: { trigger: el, start: 'top 90%', once: true }
+    });
+  });
+  [['.weeks', '.wk'], ['.dom-grid', '.dom'], ['.axis-grid', '.axis'], ['.chips .row', '.chip'], ['.steps5', '.st5']].forEach(function(pair){
+    document.querySelectorAll(pair[0]).forEach(function(wrap){
+      var items = wrap.querySelectorAll(pair[1]);
+      gsap.fromTo(items, { opacity: 0, y: 70, rotateX: 18 },
+        { opacity: 1, y: 0, rotateX: 0, duration: 1.05, ease: 'power3.out', stagger: 0.12,
+          transformPerspective: 900, overwrite: 'auto',
+          scrollTrigger: { trigger: wrap, start: 'top 86%', once: true } });
+    });
+  });
+
+  document.querySelectorAll('[data-w]').forEach(function(bar){
+    gsap.to(bar, {
+      width: bar.getAttribute('data-w'), duration: 1.3, ease: 'power3.inOut',
+      scrollTrigger: { trigger: bar, start: 'top 92%', once: true }
+    });
+  });
+
+  /* ============ FLOW : 핀 + 스크럽 3D 조립 (진단→교육→구현→발표) ============ */
+  ScrollTrigger.matchMedia({
+    '(min-width: 900px)': function(){
+
+      function fitStage(){
+        var vp = document.querySelector('.flow-viewport');
+        var st = document.getElementById('flowStage');
+        var s = Math.min(1, (vp.clientWidth - 20) / 1280, (window.innerHeight * 0.62) / 600);
+        st.style.transform = 'scale(' + s + ')';
+        st.style.marginTop = ((s - 1) * 300) + 'px';
+        st.style.marginBottom = ((s - 1) * 300) + 'px';
+      }
+      fitStage();
+      window.addEventListener('resize', fitStage);
+
+      var paths = ['c1','c2','c3'].map(function(id){ return document.getElementById(id); });
+      paths.forEach(function(p){
+        var L = p.getTotalLength();
+        p.style.strokeDasharray = L;
+        p.style.strokeDashoffset = L;
+      });
+
+      gsap.set(['#n1','#n2','#n3','#n4'], { opacity: 0, z: -520, rotateY: -32, yPercent: 8 });
+      gsap.set('#n4', { rotateY: 0, scale: 0.6 });
+
+      var tl = gsap.timeline({
+        defaults: { ease: 'power2.out' },
+        scrollTrigger: {
+          trigger: '.flow-pin', start: 'top top', end: '+=260%',
+          pin: true, scrub: 0.6, anticipatePin: 1
+        }
+      });
+
+      tl.to('#flowFloor', { opacity: 1, duration: 0.6 })
+        .to('#n1', { opacity: 1, z: 0, rotateY: 0, yPercent: 0, duration: 0.9 }, 0.25)
+        .to('#c1', { strokeDashoffset: 0, duration: 0.45 }, '>-0.15')
+        .to('#n2', { opacity: 1, z: 0, rotateY: 0, yPercent: 0, duration: 0.9 }, '>-0.2')
+        .to('#c2', { strokeDashoffset: 0, duration: 0.45 }, '>-0.15')
+        .to('#n3', { opacity: 1, z: 0, rotateY: 0, yPercent: 0, duration: 0.9 }, '>-0.2')
+        .to('#c3', { strokeDashoffset: 0, duration: 0.45 }, '>-0.15')
+        .to('#n4', { opacity: 1, z: 0, scale: 1, yPercent: 0, duration: 0.85, ease: 'back.out(2.2)' }, '>-0.15')
+        .to('#n4', { boxShadow: '0 0 110px rgba(255,255,255,.55), 0 30px 60px rgba(0,0,0,.6)', duration: 0.5 }, '>-0.2')
+        .to({}, { duration: 0.5 });
+
+      [['d1','c1'],['d2','c2'],['d3','c3']].forEach(function(pair, pi){
+        var dot = document.getElementById(pair[0]);
+        var path = document.getElementById(pair[1]);
+        var L = path.getTotalLength();
+        var obj = { p: 0 };
+        gsap.to(obj, {
+          p: 1, duration: 1.8 + pi * 0.3, repeat: -1, ease: 'none', delay: pi * 0.5,
+          onUpdate: function(){
+            var pt = path.getPointAtLength(obj.p * L);
+            dot.setAttribute('cx', pt.x); dot.setAttribute('cy', pt.y);
+            dot.setAttribute('opacity', tl.progress() > 0.85 ? 0.9 : 0);
+          }
+        });
+      });
+    },
+    '(max-width: 899px)': function(){
+      gsap.set(['#n1','#n2','#n3','#n4','#flowFloor'], { clearProps: 'all', opacity: 1 });
+      ['c1','c2','c3'].forEach(function(id){
+        var p = document.getElementById(id);
+        p.style.strokeDasharray = 'none'; p.style.strokeDashoffset = 0;
+      });
+    }
+  });
+
+  /* ============ OUTPUT : 8개소 → 16건 핀 스크럽 ============ */
+  ScrollTrigger.matchMedia({
+    '(min-width: 900px)': function(){
+      var dots = gsap.utils.toArray('.pdot');
+      var lov = gsap.utils.toArray('.pdot.is-lov');
+      var selTo = document.getElementById('selTo');
+
+      gsap.set(dots, { opacity: 0, scale: 0, z: -260 });
+
+      var tl2 = gsap.timeline({
+        scrollTrigger: {
+          trigger: '.sel-pin', start: 'top top', end: '+=190%',
+          pin: true, scrub: 0.6, anticipatePin: 1
+        }
+      });
+      tl2.to(dots, { opacity: 1, scale: 1, z: 0, duration: 1.1, ease: 'power2.out',
+              stagger: { each: 0.05, from: 'start' } })
+         .to({}, { duration: 0.25 })
+         .to(dots, { scale: 1.18, duration: 0.75, ease: 'back.out(2.4)',
+              stagger: { each: 0.03, from: 'start' },
+              onStart: function(){ dots.forEach(function(w){ w.classList.add('win'); }); },
+              onReverseComplete: function(){ dots.forEach(function(w){ w.classList.remove('win'); }); }
+            })
+         .to(lov, { scale: 1.34, duration: 0.5, ease: 'power2.out' }, '<0.15')
+         .add(function(){ selTo.classList.add('lit'); })
+         .to({}, { duration: 0.45 });
+
+      tl2.eventCallback('onUpdate', function(){
+        if (tl2.progress() < 0.6) selTo.classList.remove('lit');
+        else selTo.classList.add('lit');
+      });
+    },
+    '(max-width: 899px)': function(){
+      gsap.set('.pdot', { clearProps: 'all', opacity: 1 });
+      document.querySelectorAll('.pdot').forEach(function(w){ w.classList.add('win'); });
+      document.getElementById('selTo').classList.add('lit');
+    }
+  });
+
+  document.querySelectorAll('.phase-num').forEach(function(el){
+    gsap.fromTo(el, { yPercent: 26 }, { yPercent: -26, ease: 'none',
+      scrollTrigger: { trigger: el.parentElement, start: 'top bottom', end: 'bottom top', scrub: true } });
+  });
+
+} else {
+  document.querySelectorAll('.rv,.rv3').forEach(function(el){ el.style.opacity = 1; el.style.transform = 'none'; });
+  document.querySelectorAll('[data-w]').forEach(function(b){ b.style.width = b.getAttribute('data-w'); });
+  document.querySelectorAll('.pdot').forEach(function(d){ d.style.opacity = 1; d.classList.add('win'); });
+  var st = document.getElementById('selTo'); if (st) st.classList.add('lit');
+  if (hasGsap) gsap.set('.hero-title .line>span', { yPercent: 0 });
+}
+
+bindCounters();
+})();
+</script>
+
+<script>
+/* ============ 페이지네이션 (페이지 단위 이동 · 키보드 · 도트 내비) ============ */
+(function(){
+'use strict';
+var PAGES = [
+  ['hero',        '표지'],
+  ['flow',        '수행구조 4단계'],
+  ['scope',       '용역의 성격'],
+  ['timeline',    '과업 개요'],
+  ['progress',    '1차 현장컨설팅'],
+  ['curriculum',  '교육 내용'],
+  ['select',      '산출 성과'],
+  ['deliverables','결과물 · 링크'],
+  ['diagnosis',   '현장 진단'],
+  ['limit',       '방식의 한계'],
+  ['plan',        '하반기 방안'],
+  ['budget',      '협의 요청'],
+  ['outro',       '마무리']
+];
+
+var items = [];
+PAGES.forEach(function(p){
+  var el = document.getElementById(p[0]);
+  if (el) items.push({ id: p[0], label: p[1], el: el });
+});
+var TOTAL = items.length;
+if (!TOTAL) return;
+
+var pad = function(n){ return (n < 10 ? '0' : '') + n; };
+
+var markEl  = document.createElement('div');
+markEl.className = 'pg-mark';
+document.body.appendChild(markEl);
+var navEl   = document.getElementById('pgNav');
+var labelEl = document.getElementById('pgLabel');
+var curEl   = document.getElementById('pgCur');
+var totEl   = document.getElementById('pgTot');
+var prevBtn = document.getElementById('pgPrev');
+var nextBtn = document.getElementById('pgNext');
+totEl.textContent = pad(TOTAL);
+
+/* — 도트 내비 + 섹션 우하단 페이지 마커 — */
+items.forEach(function(it, i){
+  var a = document.createElement('a');
+  a.href = '#' + it.id;
+  a.setAttribute('aria-label', pad(i + 1) + ' ' + it.label);
+  a.innerHTML = '<span>' + pad(i + 1) + ' · ' + it.label + '</span>';
+  a.addEventListener('click', function(e){ e.preventDefault(); go(i); });
+  navEl.appendChild(a);
+  it.dot = a;
+
+});
+
+/* — 위치 계산 — */
+var tops = [];
+function measure(){
+  var y = window.pageYOffset || document.documentElement.scrollTop;
+  tops = items.map(function(it){
+    return Math.max(0, Math.round(it.el.getBoundingClientRect().top + y));
+  });
+}
+measure();
+window.addEventListener('load', measure);
+window.addEventListener('resize', function(){ measure(); update(); });
+if (window.ScrollTrigger && ScrollTrigger.addEventListener) {
+  ScrollTrigger.addEventListener('refresh', function(){ measure(); update(); });
+}
+
+/* — 전체화면 발표 모드: 페이지를 넘기면 해당 구간 스크롤 애니메이션을 자동 재생 — */
+var pagerBar = document.getElementById('pagerBar');
+var progEl   = document.getElementById('pgProg');
+var toastEl  = document.getElementById('pgToast');
+var fullBtn  = document.getElementById('pgFull');
+var rafId = null, toastTimer = null;
+
+function isFull(){
+  return !!(document.fullscreenElement || document.webkitFullscreenElement ||
+            document.mozFullScreenElement || document.msFullscreenElement);
+}
+function cancelTween(){
+  if (rafId) cancelAnimationFrame(rafId);
+  rafId = null;
+  pagerBar.classList.remove('playing');
+  progEl.style.transform = 'scaleX(0)';
+}
+function tweenTo(y, dur){
+  cancelTween();
+  var start = window.pageYOffset || document.documentElement.scrollTop;
+  var dist  = y - start;
+  var t0 = (window.performance || Date).now();
+  pagerBar.classList.add('playing');
+  function step(now){
+    var p = Math.min(1, (now - t0) / dur);
+    var e = p < 0.5 ? 4*p*p*p : 1 - Math.pow(-2*p + 2, 3) / 2;   // easeInOutCubic
+    window.scrollTo(0, start + dist * e);
+    progEl.style.transform = 'scaleX(' + p + ')';
+    if (p < 1) { rafId = requestAnimationFrame(step); }
+    else { rafId = null; pagerBar.classList.remove('playing'); progEl.style.transform = 'scaleX(0)';
+           settle(target); }
+  }
+  rafId = requestAnimationFrame(step);
+}
+function toast(html, ms){
+  toastEl.innerHTML = html;
+  toastEl.classList.add('on');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(function(){ toastEl.classList.remove('on'); }, ms || 2600);
+}
+
+/* 사용자가 직접 스크롤하면 자동 재생 중단 */
+['wheel','touchstart','mousedown'].forEach(function(ev){
+  window.addEventListener(ev, function(e){
+    var t = e.target;
+    if (t && t.closest && t.closest('.pager, .pgnav')) return;   // 조작 버튼 클릭은 예외
+    if (rafId) cancelTween();
+  }, { passive: true });
+});
+
+/* 재생 종료 후 목표 지점에 정확히 안착 (핀 스페이서 오차 보정) */
+function settle(target){
+  setTimeout(function(){
+    var y = window.pageYOffset || document.documentElement.scrollTop;
+    if (Math.abs(y - target) > 1) window.scrollTo(0, target);
+    measure(); update();
+  }, 90);
+}
+
+function toggleFull(){
+  var el = document.documentElement;
+  if (!isFull()) {
+    var rq = el.requestFullscreen || el.webkitRequestFullscreen || el.msRequestFullscreen;
+    if (rq) rq.call(el);
+  } else {
+    var ex = document.exitFullscreen || document.webkitExitFullscreen || document.msExitFullscreen;
+    if (ex) ex.call(document);
+  }
+}
+fullBtn.addEventListener('click', toggleFull);
+
+['fullscreenchange','webkitfullscreenchange','msfullscreenchange'].forEach(function(ev){
+  document.addEventListener(ev, function(){
+    var on = isFull();
+    document.body.classList.toggle('presenting', on);
+    cancelTween();
+    // 화면 크기가 바뀌므로 핀 위치 재계산
+    setTimeout(function(){
+      if (window.ScrollTrigger && ScrollTrigger.refresh) ScrollTrigger.refresh();
+      measure(); update();
+    }, 240);
+    if (on) toast('발표 모드 — <b>→</b> 로 넘기면 해당 페이지 애니메이션이 자동 재생됩니다', 3400);
+    else toast('발표 모드 종료', 1600);
+  });
+});
+
+var current = 0;
+
+/* — 이 페이지에 스크롤 스크럽(핀) 애니메이션이 있는지 — */
+function pinInfo(el){
+  if (!window.ScrollTrigger || !ScrollTrigger.getAll) return null;
+  var best = null;
+  ScrollTrigger.getAll().forEach(function(st){
+    if (!st.pin) return;
+    var trg = st.trigger || st.pin;
+    if (trg && (trg === el || el.contains(trg))) {
+      if (!best || (st.end - st.start) > (best.end - best.start)) best = { start: st.start, end: st.end };
+    }
+  });
+  return (best && best.end - best.start > 200) ? best : null;
+}
+
+/* — 정지 지점 목록 —
+   일반 모드: 페이지 시작점만
+   발표 모드: 스크럽 페이지는 '애니메이션 종료 지점'에 정지, 긴 페이지는 하단 보기 지점 추가 */
+function buildStops(){
+  measure();
+  var vh = window.innerHeight, list = [];
+  items.forEach(function(it, i){
+    var top = tops[i] + 2;
+    if (!isFull()) { list.push({ y: top, page: i, kind: 'page' }); return; }
+    var pin = pinInfo(it.el);
+    if (pin) {
+      // 진입 + 스크럽 재생을 한 번에 흘려보내고 완성 상태에서 멈춘다
+      list.push({ y: Math.round(pin.start + (pin.end - pin.start) * 0.94), page: i, kind: 'play' });
+    } else {
+      list.push({ y: top, page: i, kind: 'page' });
+      var h = it.el.offsetHeight;
+      if (h > vh + 40) list.push({ y: Math.round(tops[i] + h - vh + 24), page: i, kind: 'more' });
+    }
+  });
+  list.sort(function(a, b){ return a.y - b.y; });
+  return list;
+}
+
+function scrollToY(target, kind){
+  var y = window.pageYOffset || document.documentElement.scrollTop;
+  var dist = Math.abs(target - y);
+  if (isFull()) {
+    var dur = (kind === 'play')
+      ? Math.min(8000, Math.max(2400, dist * 1.05))   // 스크럽 구간은 천천히 재생
+      : Math.min(5000, Math.max(950,  dist * 0.9));
+    tweenTo(target, dur);
+  } else {
+    cancelTween();
+    window.scrollTo({ top: target, behavior: 'smooth' });
+  }
+}
+
+/* — 다음/이전 정지 지점으로 — */
+function advance(dir){
+  var stops = buildStops();
+  var y = window.pageYOffset || document.documentElement.scrollTop;
+  var tgt = null, i;
+  if (dir > 0) {
+    for (i = 0; i < stops.length; i++) { if (stops[i].y > y + 14) { tgt = stops[i]; break; } }
+  } else {
+    for (i = stops.length - 1; i >= 0; i--) { if (stops[i].y < y - 14) { tgt = stops[i]; break; } }
+  }
+  if (!tgt) return;
+  scrollToY(tgt.y, tgt.kind);
+}
+
+/* — 도트 내비: 해당 페이지로 바로 이동 — */
+function go(i){
+  if (i < 0) i = 0;
+  if (i > TOTAL - 1) i = TOTAL - 1;
+  measure();
+  cancelTween();
+  window.scrollTo({ top: tops[i] + 2, behavior: 'smooth' });
+}
+
+function update(){
+  var sy = window.pageYOffset || document.documentElement.scrollTop;
+  var y = sy + 110;
+  var idx = 0;
+  for (var i = 0; i < TOTAL; i++) { if (tops[i] <= y) idx = i; }
+  var atEnd = (window.innerHeight + sy >= document.body.scrollHeight - 6);
+  if (atEnd) idx = TOTAL - 1;
+  prevBtn.disabled = (sy < 20);
+  nextBtn.disabled = atEnd;
+  if (idx === current) return;
+  current = idx;
+  curEl.textContent = pad(idx + 1);
+  markEl.textContent = pad(idx + 1) + ' / ' + pad(TOTAL);
+  labelEl.textContent = items[idx].label;
+  items.forEach(function(it, i){ it.dot.classList.toggle('on', i === idx); });
+  document.body.classList.toggle('lightbg', items[idx].id === 'budget');
+}
+markEl.textContent = '01 / ' + pad(TOTAL);
+items[0].dot.classList.add('on');
+prevBtn.disabled = true;
+
+var ticking = false;
+window.addEventListener('scroll', function(){
+  if (ticking) return;
+  ticking = true;
+  requestAnimationFrame(function(){ update(); ticking = false; });
+}, { passive: true });
+
+prevBtn.addEventListener('click', function(){ advance(-1); });
+nextBtn.addEventListener('click', function(){ advance(1); });
+
+/* — 키보드: ← → · PageUp/PageDown · Home/End — */
+document.addEventListener('keydown', function(e){
+  if (e.metaKey || e.ctrlKey || e.altKey) return;
+  var t = e.target;
+  if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable)) return;
+  if (e.key === 'f' || e.key === 'F' || e.key === 'ㄹ') { e.preventDefault(); toggleFull(); return; }
+  if (e.key === 'Escape') { cancelTween(); return; }
+  switch (e.key) {
+    case 'ArrowRight': case 'PageDown': e.preventDefault(); advance(1); break;
+    case 'ArrowLeft':  case 'PageUp':   e.preventDefault(); advance(-1); break;
+    case 'Home': e.preventDefault(); go(0); break;
+    case 'End':  e.preventDefault(); go(TOTAL - 1); break;
+  }
+});
+
+setTimeout(function(){ measure(); update(); }, 600);
+})();
+</script>
+<script>/* kg-preview: #<heading> \uc704\uce58\ub85c \uc774\ub3d9 */
+(function(){function norm(t){return (t||'').replace(/\s+/g,'').toLowerCase()}
+function go(){var h=decodeURIComponent(location.hash.slice(1));if(!h)return;var k=norm(h).slice(0,24);if(!k)return;
+var best=null,bl=1e9,els=document.body.querySelectorAll('h1,h2,h3,h4,h5,p,div,span,li,td,text,tspan,section,article');
+for(var i=0;i<els.length;i++){var e=els[i],t=norm(e.textContent);if(t.length<bl&&t.indexOf(k)>-1){best=e;bl=t.length}}
+if(!best)return;var box=best.closest('section,[class*=slide],[class*=page],article')||best;
+box.scrollIntoView({block:'start'});box.style.outline='3px solid #c0504d';box.style.outlineOffset='4px';
+setTimeout(function(){box.style.outline=''},2600)}
+window.addEventListener('load',function(){setTimeout(go,400)});window.addEventListener('hashchange',go)})();</script></body>
+</html>

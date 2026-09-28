@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head><meta name="robots" content="noindex, nofollow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>바이브코딩 과정 · 사전 프로젝트 기획서</title>
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<style>
+:root{
+  --navy:#1b2a4a; --ink:#12203a; --gold:#b8892a; --line:#d5dbe5;
+  --soft:#f4f6fa; --paper:#ffffff; --bg:#eceff4; --mute:#6b788f;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{
+  font-family:Pretendard,'Pretendard Variable',sans-serif;
+  background:var(--bg); color:var(--ink); line-height:1.6;
+  padding:0 0 120px; -webkit-text-size-adjust:100%;
+}
+.wrap{max-width:860px; margin:0 auto; padding:0 16px;}
+
+/* ── 헤더 ── */
+header{background:var(--navy); color:#fff; padding:34px 0 30px; margin-bottom:22px;}
+header .tag{font-size:11px; letter-spacing:.3em; color:#f0d69a; font-weight:800;}
+header h1{font-size:30px; font-weight:800; letter-spacing:-.02em; margin:8px 0 6px;}
+header p{font-size:14px; color:#c3cede;}
+header .meta{margin-top:14px; font-size:12.5px; color:#9db0cc; border-top:1px solid rgba(255,255,255,.18); padding-top:12px;}
+header .meta b{color:#f0d69a;}
+
+/* 제출 방법 3단계 */
+.howto{margin-top:18px; background:rgba(255,255,255,.07); border:1px solid rgba(255,255,255,.18); border-radius:12px; padding:16px 18px;}
+.howto-t{font-size:13px; font-weight:800; color:#f0d69a; letter-spacing:.02em; margin-bottom:12px;}
+.howto .steps{display:flex; align-items:stretch; gap:10px;}
+.howto .st{flex:1; display:flex; gap:9px; align-items:flex-start;}
+.howto .st .n{flex:0 0 auto; width:22px; height:22px; border-radius:50%; background:#f0d69a; color:var(--navy);
+  font-size:12px; font-weight:800; display:flex; align-items:center; justify-content:center; margin-top:1px;}
+.howto .st b{display:block; font-size:14px; color:#fff; font-weight:700; line-height:1.4;}
+.howto .st i{display:block; font-style:normal; font-size:12.5px; color:#a9bad3; margin-top:3px; line-height:1.5;}
+.howto .ar{align-self:center; color:#6d84a8; font-size:16px;}
+.howto-warn{margin-top:13px; padding-top:12px; border-top:1px solid rgba(255,255,255,.15);
+  font-size:13px; color:#ffd9c9; line-height:1.6;}
+.howto-warn b{color:#ffb59b;}
+@media(max-width:640px){
+  .howto .steps{flex-direction:column; gap:12px;}
+  .howto .ar{display:none;}
+}
+
+/* ── 안내 박스 ── */
+.notice{background:#fff; border-left:5px solid var(--gold); padding:20px 22px; border-radius:0 10px 10px 0; margin-bottom:18px;}
+.notice h3{font-size:16px; color:var(--navy); margin-bottom:8px;}
+.notice p{font-size:14px; color:#3d4a63;}
+.notice ul{margin:10px 0 0 18px; font-size:14px; color:#3d4a63;}
+.notice li{margin-bottom:5px;}
+.warn{background:#fff8ec; border:1px solid #f0dcae; border-radius:10px; padding:14px 18px; font-size:13.5px; color:#6b5320; margin-bottom:26px;}
+.warn b{color:#8a6414;}
+
+/* ── 섹션 ── */
+section.card{background:var(--paper); border-radius:14px; padding:26px 26px 22px; margin-bottom:16px; box-shadow:0 1px 3px rgba(20,35,60,.08);}
+.shead{display:flex; align-items:center; gap:12px; margin-bottom:6px;}
+.sno{background:var(--navy); color:#fff; font-size:12px; font-weight:800; min-width:34px; height:34px; border-radius:50%; display:flex; align-items:center; justify-content:center;}
+.shead h2{font-size:20px; font-weight:800; color:var(--navy); letter-spacing:-.02em;}
+.slead{font-size:14px; color:var(--mute); margin:0 0 18px 46px;}
+@media(max-width:600px){ .slead{margin-left:0;} }
+
+.q{margin-bottom:20px;}
+.q > label.qt{display:block; font-size:15px; font-weight:700; color:var(--navy); margin-bottom:4px;}
+.q .help{font-size:13px; color:var(--mute); margin-bottom:8px;}
+.req{color:#c0392b; font-size:12px; font-weight:700; margin-left:4px;}
+
+input[type=text], input[type=number], textarea, select{
+  width:100%; font-family:inherit; font-size:15px; color:var(--ink);
+  border:1.5px solid var(--line); border-radius:8px; padding:11px 13px;
+  background:#fdfdfe; transition:border-color .15s, background .15s;
+}
+textarea{resize:vertical; min-height:88px; line-height:1.65;}
+input:focus, textarea:focus, select:focus{outline:none; border-color:var(--navy); background:#fff;}
+input.miss, textarea.miss{border-color:#e07a6d; background:#fff6f5;}
+
+.row{display:flex; gap:12px; flex-wrap:wrap;}
+.row > div{flex:1; min-width:150px;}
+.row label.sub{display:block; font-size:12.5px; color:var(--mute); margin-bottom:4px; font-weight:600;}
+
+/* 선택지 */
+.opts{display:flex; flex-wrap:wrap; gap:8px;}
+.opts label{
+  display:inline-flex; align-items:center; gap:7px; font-size:14px;
+  border:1.5px solid var(--line); border-radius:8px; padding:9px 13px;
+  cursor:pointer; background:#fdfdfe; transition:all .12s; user-select:none;
+}
+.opts label:hover{border-color:#9fb0c9;}
+.opts input{accent-color:var(--navy); width:16px; height:16px; cursor:pointer;}
+.opts label.on{border-color:var(--navy); background:#eef2f8; font-weight:600;}
+.opts.col{flex-direction:column; align-items:stretch;}
+.opts.col label{width:100%;}
+
+/* 예시 토글 */
+details.ex{margin-top:8px; border:1px dashed #c2ccdb; border-radius:8px; background:var(--soft);}
+details.ex summary{cursor:pointer; font-size:13px; font-weight:700; color:var(--gold); padding:9px 13px; list-style:none;}
+details.ex summary::-webkit-details-marker{display:none;}
+details.ex summary::before{content:"＋ "; font-weight:800;}
+details.ex[open] summary::before{content:"－ ";}
+details.ex .exbody{padding:0 14px 13px; font-size:13.5px; color:#4a5876; line-height:1.75;}
+details.ex .exbody em{color:var(--navy); font-style:normal; font-weight:700;}
+
+/* 문장 만들기 */
+.sent{background:var(--soft); border-radius:10px; padding:16px; font-size:15px; line-height:2.4;}
+.sent input{display:inline-block; width:auto; min-width:120px; padding:6px 10px; margin:0 3px; background:#fff;}
+.sent .w1{min-width:140px;} .sent .w2{min-width:200px;} .sent .w3{min-width:170px;}
+
+/* 계산 결과 */
+.calc{margin-top:12px; background:var(--navy); color:#fff; border-radius:10px; padding:14px 18px; font-size:14.5px;}
+.calc b{color:#f0d69a; font-size:19px; font-weight:800;}
+.calc span.dim{color:#9db0cc; font-size:13px;}
+
+/* 체크 확인 */
+.selfcheck{background:var(--soft); border-radius:10px; padding:16px 18px;}
+.selfcheck .opts label{background:#fff;}
+
+/* 하단 저장바 */
+.savebar{position:fixed; left:0; right:0; bottom:0; background:rgba(255,255,255,.97);
+  border-top:1px solid var(--line); box-shadow:0 -3px 14px rgba(20,35,60,.1); padding:14px 16px; z-index:50;
+  backdrop-filter:blur(6px);}
+.savebar .inner{max-width:860px; margin:0 auto; display:flex; align-items:center; gap:14px; flex-wrap:wrap;}
+.savebar .txt{flex:1; min-width:180px; font-size:13px; color:var(--mute); line-height:1.5;}
+.savebar .txt b{color:var(--navy);}
+button.save{
+  font-family:inherit; font-size:16.5px; font-weight:800; color:#fff; background:var(--navy);
+  border:none; border-radius:10px; padding:15px 30px; cursor:pointer; letter-spacing:-.01em;
+  box-shadow:0 3px 10px rgba(27,42,74,.28); transition:transform .1s, background .15s; white-space:nowrap;
+}
+button.save:hover{background:#25375e; transform:translateY(-1px);}
+button.save:active{transform:translateY(0);}
+button.ghost{font-family:inherit; font-size:13.5px; font-weight:700; color:var(--navy); background:#fff;
+  border:1.5px solid var(--line); border-radius:9px; padding:13px 16px; cursor:pointer; white-space:nowrap;}
+button.ghost:hover{border-color:var(--navy);}
+button.save.pulse{animation:pulse 2.4s ease-out infinite;}
+button.save.pulse:hover{animation:none;}
+@keyframes pulse{
+  0%{box-shadow:0 3px 10px rgba(27,42,74,.28), 0 0 0 0 rgba(27,42,74,.42);}
+  55%{box-shadow:0 3px 10px rgba(27,42,74,.28), 0 0 0 14px rgba(27,42,74,0);}
+  100%{box-shadow:0 3px 10px rgba(27,42,74,.28), 0 0 0 0 rgba(27,42,74,0);}
+}
+
+/* 온보딩 */
+.modal.guide{max-width:520px; text-align:left; padding:30px 30px 24px;}
+.modal.guide h3{text-align:center; margin-bottom:4px;}
+.modal.guide .glead{text-align:center; font-size:14px; color:var(--mute); margin-bottom:20px;}
+.gstep{display:flex; gap:13px; align-items:flex-start; padding:14px 0; border-top:1px solid var(--line);}
+.gstep .gn{flex:0 0 auto; width:28px; height:28px; border-radius:50%; background:var(--navy); color:#fff;
+  font-size:13px; font-weight:800; display:flex; align-items:center; justify-content:center;}
+.gstep b{display:block; font-size:15.5px; color:var(--navy); font-weight:800; margin-bottom:3px;}
+.gstep span{font-size:13.5px; color:#4a5876; line-height:1.65;}
+.gstep .chip{display:inline-block; background:var(--navy); color:#fff; font-size:12.5px; font-weight:700;
+  border-radius:6px; padding:3px 9px; margin:0 2px;}
+.gwarn{background:#fff8ec; border:1px solid #f0dcae; border-radius:9px; padding:13px 15px; margin-top:16px;
+  font-size:13.5px; color:#6b5320; line-height:1.65;}
+.gwarn b{color:#8a6414;}
+.modal.guide button{display:block; width:100%; margin-top:18px;}
+
+/* 모달 */
+.dim{position:fixed; inset:0; background:rgba(18,32,58,.55); display:none; align-items:center; justify-content:center; z-index:100; padding:20px;}
+.dim.on{display:flex;}
+.modal{background:#fff; border-radius:16px; max-width:460px; width:100%; padding:32px 30px 26px; text-align:center;
+  box-shadow:0 14px 50px rgba(0,0,0,.3); animation:pop .18s ease-out;}
+@keyframes pop{from{transform:scale(.94); opacity:0;} to{transform:scale(1); opacity:1;}}
+.modal .ico{font-size:44px; line-height:1;}
+.modal h3{font-size:21px; color:var(--navy); font-weight:800; margin:12px 0 10px;}
+.modal p{font-size:14.5px; color:#3d4a63; line-height:1.7;}
+.modal .fname{display:block; background:var(--soft); border:1px solid var(--line); border-radius:9px;
+  padding:13px 12px; margin:16px 0; font-size:14.5px; font-weight:700; color:var(--navy); word-break:break-all;}
+.modal .to{background:#fff8ec; border:1px solid #f0dcae; border-radius:9px; padding:13px 15px; font-size:14px; color:#6b5320; text-align:left; line-height:1.7;}
+.modal .to b{color:#8a6414;}
+.modal button{margin-top:20px; font-family:inherit; font-size:15px; font-weight:800; color:#fff; background:var(--navy);
+  border:none; border-radius:9px; padding:13px 34px; cursor:pointer;}
+.modal.err h3{color:#c0392b;}
+.modal .misslist{text-align:left; font-size:14px; color:#3d4a63; background:var(--soft); border-radius:9px; padding:14px 16px; margin-top:14px;}
+.modal .misslist li{margin-left:18px; margin-bottom:4px;}
+
+footer{text-align:center; font-size:12.5px; color:#8a93a6; padding:26px 16px 0;}
+@media print{ .savebar,.dim{display:none!important;} body{background:#fff;} }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="tag" id="hTag">PRE-PROJECT SHEET</div>
+    <h1 id="hTitle">사전 프로젝트 기획서</h1>
+    <p id="hSub">4일간 바이브코딩으로 직접 만들어 볼 <b>나의 과제</b>를 미리 정리하는 양식입니다.</p>
+    <div class="meta" id="hMeta"></div>
+
+    <div class="howto">
+      <div class="howto-t">제출은 이렇게 하시면 됩니다</div>
+      <div class="steps">
+        <div class="st"><span class="n">1</span><div><b>이 화면에서 그대로 채우기</b><i>따로 다운로드하거나 프로그램을 설치할 필요 없습니다.</i></div></div>
+        <div class="ar">→</div>
+        <div class="st"><span class="n">2</span><div><b>맨 아래 파란 버튼 누르기</b><i>“제출할 파일 다운받기”를 누르면 파일이 1개 저장됩니다.</i></div></div>
+        <div class="ar">→</div>
+        <div class="st"><span class="n">3</span><div><b>그 파일을 담당자에게 전달</b><i>메모장 모양의 <u>.txt</u> 파일 하나만 보내시면 끝입니다.</i></div></div>
+      </div>
+      <div class="howto-warn">⚠ <b>이 화면을 인쇄하거나 PDF로 저장한 것은 제출 파일이 아닙니다.</b> 반드시 2번 버튼으로 받은 <b>.txt</b> 파일을 보내 주세요.</div>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <div class="notice">
+    <h3>먼저 읽어주세요</h3>
+    <p>이 양식은 <b>기술을 묻는 서류가 아닙니다.</b> 코딩을 몰라도, 만들 방법을 몰라도 괜찮습니다.
+       여러분이 매일 겪는 <b>“이거 참 번거롭다”</b> 하는 순간 하나를 붙잡아 적어 주시면 됩니다.
+       그 내용을 보고 강의 내용과 예제를 여러분의 업무에 맞춰 준비합니다.</p>
+    <ul>
+      <li><b>정답은 없습니다.</b> 잘 쓰려 하지 말고, 실제로 있었던 일을 그대로 적어 주세요.</li>
+      <li><b>크게 잡지 마세요.</b> “학교 전체 시스템”보다 “매주 하는 그 엑셀 취합 하나”가 훨씬 좋은 과제입니다.</li>
+      <li>작성 시간은 <b>20~30분</b> 정도입니다. 막히면 각 문항의 <b>＋ 이렇게 적으면 됩니다</b>를 눌러 보세요.</li>
+    </ul>
+  </div>
+
+  <div class="warn">
+    <b>⚠ 작성 중 브라우저를 닫으면 내용이 사라집니다.</b> 한 번에 작성하시거나, 중간중간 화면 맨 아래 <b>[⬇ 제출할 파일 다운받기]</b> 버튼을 눌러 파일로 남겨 주세요. 여러 번 눌러도 되고, 마지막에 받은 파일만 보내시면 됩니다.
+  </div>
+
+  <!-- 0 -->
+  <section class="card">
+    <div class="shead"><div class="sno">0</div><h2>먼저, 나에 대해</h2></div>
+    <p class="slead">누가 어떤 자리에서 겪는 문제인지 알아야 예제를 맞출 수 있습니다.</p>
+
+    <div class="q">
+      <div class="row">
+        <div><label class="sub">이름 <span class="req">필수</span></label><input type="text" id="f_name" placeholder="홍길동"></div>
+        <div><label class="sub">소속 <span class="req">필수</span></label><input type="text" id="f_org" placeholder="○○초등학교 / ○○교육지원청"></div>
+      </div>
+    </div>
+    <div class="q">
+      <div class="row">
+        <div><label class="sub">담당 업무 <span class="req">필수</span></label><input type="text" id="f_job" placeholder="6학년 담임 / 학교회계 / 방과후 업무"></div>
+        <div><label class="sub">연락받을 이메일</label><input type="text" id="f_mail" placeholder="선택 입력"></div>
+      </div>
+    </div>
+
+    <div class="q">
+      <label class="qt">컴퓨터·문서 작업 중 <u>해 보신 것</u>을 모두 골라 주세요 <span class="req">필수 · 여러 개 선택</span></label>
+      <div class="help">잘하는지 못하는지가 아니라, 해 본 적이 있는지만 표시해 주시면 됩니다. 실습 예제를 이 분포에 맞춰 준비합니다.</div>
+      <div class="opts" data-name="lv1">
+        <label><input type="checkbox" name="lv1" value="한글(HWP)로 공문·가정통신문 작성"> 한글(HWP)로 공문·가정통신문 작성</label>
+        <label><input type="checkbox" name="lv1" value="엑셀에 표 만들고 정렬·필터 사용"> 엑셀에 표 만들고 정렬·필터 사용</label>
+        <label><input type="checkbox" name="lv1" value="엑셀 함수 사용(SUM, VLOOKUP 등)"> 엑셀 함수 사용(SUM, VLOOKUP 등)</label>
+        <label><input type="checkbox" name="lv1" value="엑셀 피벗테이블로 집계"> 엑셀 피벗테이블로 집계</label>
+        <label><input type="checkbox" name="lv1" value="파워포인트로 발표자료 제작"> 파워포인트로 발표자료 제작</label>
+        <label><input type="checkbox" name="lv1" value="구글 문서·스프레드시트 사용"> 구글 문서·스프레드시트 사용</label>
+        <label><input type="checkbox" name="lv1" value="구글폼(설문) 만들어 응답 받기"> 구글폼(설문) 만들어 응답 받기</label>
+        <label><input type="checkbox" name="lv1" value="나이스·업무포털에서 자료 내려받아 가공"> 나이스·업무포털에서 자료 내려받아 가공</label>
+        <label><input type="checkbox" name="lv1" value="PDF 편집·변환"> PDF 편집·변환</label>
+        <label><input type="checkbox" name="lv1" value="여러 파일을 하나로 합치는 작업"> 여러 파일을 하나로 합치는 작업</label>
+        <label><input type="checkbox" name="lv1" value="사진·영상 편집"> 사진·영상 편집</label>
+        <label><input type="checkbox" name="lv1" value="학급·업무용 홈페이지나 블로그 운영"> 학급·업무용 홈페이지나 블로그 운영</label>
+        <label><input type="checkbox" name="lv1" value="엑셀 매크로 사용"> 엑셀 매크로 사용</label>
+        <label><input type="checkbox" name="lv1" value="코드를 직접 작성해 본 경험(파이썬·앱스스크립트 등)"> 코드를 직접 작성해 본 경험(파이썬·앱스스크립트 등)</label>
+        <label><input type="checkbox" name="lv1" value="해당되는 것이 거의 없다"> 해당되는 것이 거의 없다</label>
+      </div>
+    </div>
+
+    <div class="q">
+      <label class="qt">생성형 AI(챗GPT, 클로드 등)는 어느 정도 쓰시나요? <span class="req">필수</span></label>
+      <div class="opts col" data-name="lv2">
+        <label><input type="radio" name="lv2" value="거의 안 써 봤습니다"> 거의 안 써 봤습니다</label>
+        <label><input type="radio" name="lv2" value="가끔 물어보는 정도로 씁니다"> 가끔 물어보는 정도로 씁니다</label>
+        <label><input type="radio" name="lv2" value="업무 문서 작성에 자주 씁니다"> 업무 문서 작성에 자주 씁니다</label>
+        <label><input type="radio" name="lv2" value="AI로 뭔가 만들어 본 적이 있습니다"> AI로 뭔가 만들어 본 적이 있습니다</label>
+      </div>
+    </div>
+  </section>
+
+  <!-- 1 -->
+  <section class="card">
+    <div class="shead"><div class="sno">1</div><h2>가장 번거로운 순간 하나</h2></div>
+    <p class="slead">거창한 문제 말고, 지난 한 달 안에 실제로 “아 진짜 이거…” 했던 장면 하나만 떠올려 주세요.</p>
+
+    <div class="q">
+      <label class="qt">그 장면을 그대로 적어 주세요 <span class="req">필수</span></label>
+      <div class="help">언제 / 누가 / 무엇을 하다가 막혔는지가 보이게 3~5줄이면 충분합니다.</div>
+      <textarea id="f_scene" rows="5" placeholder="예) 매달 초, 담임 선생님 20분께 학급별 방과후 참여 명단을 엑셀로 받는다. 파일 형식이 다 달라서 열 순서를 하나씩 맞춰 붙여넣고, 이름 띄어쓰기가 달라 중복을 손으로 찾아낸다."></textarea>
+      <details class="ex"><summary>이렇게 적으면 됩니다</summary><div class="exbody">
+        ✗ 나쁜 예 — <em>“업무가 너무 많아 효율화가 필요하다.”</em> (장면이 없어서 무엇을 만들지 알 수 없습니다)<br>
+        ✓ 좋은 예 — <em>“학기 초마다 학부모 상담 신청을 문자로 받는다. 40건이 뒤섞여 오면 시간대별로 다시 정리하는 데 2시간이 걸리고, 겹치는 시간대를 놓쳐 다시 연락한 적도 있다.”</em><br>
+        ✓ 좋은 예 — <em>“공문에서 제출 기한과 담당자만 뽑아 표로 만드는 일을 매주 한다. 공문마다 위치가 달라 눈으로 찾는다.”</em>
+      </div></details>
+    </div>
+  </section>
+
+  <!-- 2 -->
+  <section class="card">
+    <div class="shead"><div class="sno">2</div><h2>지금은 어떻게 하고 계신가요</h2></div>
+    <p class="slead">현재 방식을 적어 두면, 그중 어디를 자동으로 바꿀 수 있는지 함께 찾아봅니다.</p>
+
+    <div class="q">
+      <label class="qt">지금 하시는 순서를 단계로 적어 주세요 <span class="req">필수</span></label>
+      <div class="help">“1) … 2) … 3) …” 처럼 손으로 하는 동작 그대로 적어 주세요. 3~6단계면 충분합니다.</div>
+      <textarea id="f_steps" rows="5" placeholder="1) 메일함에서 첨부파일 20개를 내려받는다&#10;2) 엑셀을 하나씩 열어 필요한 열만 복사한다&#10;3) 통합 시트에 붙여넣고 이름 중복을 확인한다&#10;4) 학년별로 나눠 다시 저장한다&#10;5) 결재 문서에 표를 옮겨 붙인다"></textarea>
+    </div>
+
+    <div class="q">
+      <label class="qt">이 일에 시간이 얼마나 드나요? <span class="req">필수</span></label>
+      <div class="row">
+        <div><label class="sub">한 번 할 때 걸리는 시간(분)</label><input type="number" id="f_min" min="0" placeholder="120"></div>
+        <div><label class="sub">얼마나 자주 하나요(횟수)</label><input type="number" id="f_cnt" min="0" placeholder="2"></div>
+        <div><label class="sub">기간</label>
+          <select id="f_unit">
+            <option value="주">한 주에</option>
+            <option value="월" selected>한 달에</option>
+            <option value="학기">한 학기에</option>
+            <option value="년">일 년에</option>
+          </select>
+        </div>
+      </div>
+      <div class="calc" id="calcBox"><span class="dim">시간을 입력하시면 1년 기준으로 계산해 드립니다.</span></div>
+    </div>
+  </section>
+
+  <!-- 3 -->
+  <section class="card">
+    <div class="shead"><div class="sno">3</div><h2>이 일이 번거로운 진짜 이유</h2></div>
+    <p class="slead">해당되는 것을 모두 골라 주세요. 이유에 따라 만드는 방법이 완전히 달라집니다.</p>
+    <div class="q">
+      <div class="opts" data-name="why">
+        <label><input type="checkbox" name="why" value="같은 내용을 여러 번 옮겨 적는다"> 같은 내용을 여러 번 옮겨 적는다</label>
+        <label><input type="checkbox" name="why" value="자료가 여러 곳에 흩어져 있다"> 자료가 여러 곳에 흩어져 있다</label>
+        <label><input type="checkbox" name="why" value="사람마다 양식이 제각각이다"> 사람마다 양식이 제각각이다</label>
+        <label><input type="checkbox" name="why" value="찾는 데 시간이 오래 걸린다"> 찾는 데 시간이 오래 걸린다</label>
+        <label><input type="checkbox" name="why" value="같은 질문에 반복해서 답한다"> 같은 질문에 반복해서 답한다</label>
+        <label><input type="checkbox" name="why" value="숫자를 세거나 집계해야 한다"> 숫자를 세거나 집계해야 한다</label>
+        <label><input type="checkbox" name="why" value="형식·서식을 맞추는 게 일이다"> 형식·서식을 맞추는 게 일이다</label>
+        <label><input type="checkbox" name="why" value="실수하면 뒷수습이 크다"> 실수하면 뒷수습이 크다</label>
+        <label><input type="checkbox" name="why" value="긴 문서를 다 읽어야 한다"> 긴 문서를 다 읽어야 한다</label>
+        <label><input type="checkbox" name="why" value="마감에 쫓겨 몰아서 한다"> 마감에 쫓겨 몰아서 한다</label>
+      </div>
+      <div class="q" style="margin-top:12px;">
+        <label class="sub">그 밖에 있다면 적어 주세요</label>
+        <input type="text" id="f_why_etc" placeholder="선택 입력">
+      </div>
+    </div>
+  </section>
+
+  <!-- 4 -->
+  <section class="card">
+    <div class="shead"><div class="sno">4</div><h2>이게 해결되면 누가 편해지나요</h2></div>
+    <p class="slead">쓰는 사람이 분명할수록 결과물이 뚜렷해집니다.</p>
+    <div class="q">
+      <div class="opts" data-name="who">
+        <label><input type="checkbox" name="who" value="나 혼자"> 나 혼자</label>
+        <label><input type="checkbox" name="who" value="같은 부서 동료"> 같은 부서 동료</label>
+        <label><input type="checkbox" name="who" value="우리 학교(기관) 전체"> 우리 학교(기관) 전체</label>
+        <label><input type="checkbox" name="who" value="다른 학교·기관 담당자"> 다른 학교·기관 담당자</label>
+        <label><input type="checkbox" name="who" value="학생"> 학생</label>
+        <label><input type="checkbox" name="who" value="학부모·민원인"> 학부모·민원인</label>
+      </div>
+      <div class="q" style="margin-top:12px;">
+        <label class="sub">그 사람은 이걸로 무엇이 달라지나요? (한 줄) <span class="req">필수</span></label>
+        <input type="text" id="f_benefit" placeholder="예) 명단 취합에 쓰던 2시간이 10분으로 줄고, 중복 확인을 안 해도 된다">
+      </div>
+    </div>
+  </section>
+
+  <!-- 5 -->
+  <section class="card">
+    <div class="shead"><div class="sno">5</div><h2>만들고 싶은 것, 한 문장으로</h2></div>
+    <p class="slead">빈칸을 채우면 문장이 완성됩니다. 방법은 몰라도 됩니다. <b>무엇이 되면 좋겠는지</b>만 적어 주세요.</p>
+    <div class="q">
+      <div class="sent">
+        <input type="text" class="w1" id="f_s1" placeholder="누가">
+        가(이)
+        <input type="text" class="w2" id="f_s2" placeholder="무엇을">
+        을(를)
+        <input type="text" class="w3" id="f_s3" placeholder="어떻게">
+        할 수 있게 해 주는
+        <input type="text" class="w2" id="f_s4" placeholder="무엇">
+        을(를) 만들고 싶습니다. <span class="req">필수</span>
+      </div>
+      <details class="ex"><summary>이렇게 적으면 됩니다</summary><div class="exbody">
+        <em>담당 교사</em>가(이) <em>학급별 엑셀 파일</em>을(를) <em>한 번에 합치고 중복을 걸러</em> 할 수 있게 해 주는 <em>취합 도구</em>를 만들고 싶습니다.<br>
+        <em>학부모</em>가(이) <em>상담 가능한 시간</em>을(를) <em>직접 골라 신청</em>할 수 있게 해 주는 <em>신청 페이지</em>를 만들고 싶습니다.<br>
+        <em>업무 담당자</em>가(이) <em>공문</em>을(를) <em>기한·담당자만 뽑아 표로 정리</em>할 수 있게 해 주는 <em>요약 화면</em>을 만들고 싶습니다.
+      </div></details>
+    </div>
+  </section>
+
+  <!-- 6 -->
+  <section class="card">
+    <div class="shead"><div class="sno">6</div><h2>완성됐다고 상상하고, 첫 화면을 그려 보세요</h2></div>
+    <p class="slead">이 문항이 가장 중요합니다. 화면이 떠오르면 4일 안에 만들 수 있는 과제입니다.</p>
+    <div class="q">
+      <label class="qt">화면을 열면 무엇이 보이고, 무엇을 누르면 무엇이 나오나요? <span class="req">필수</span></label>
+      <textarea id="f_screen" rows="5" placeholder="예) 화면 가운데에 '파일 올리기' 버튼이 하나 있다. 엑셀 여러 개를 끌어다 놓으면 아래에 합쳐진 표가 나타난다. 중복된 이름은 노란색으로 표시된다. 오른쪽 위 '내려받기'를 누르면 정리된 엑셀 하나가 저장된다."></textarea>
+      <details class="ex"><summary>어렵게 느껴진다면</summary><div class="exbody">
+        “<em>버튼 하나 → 결과 하나</em>”로만 생각하셔도 충분합니다.<br>
+        · 무엇을 넣나요? (파일, 붙여넣은 글, 입력한 내용)<br>
+        · 무엇이 나오나요? (표, 목록, 요약문, 저장 파일, 메시지)<br>
+        이 두 줄만 적어 주셔도 됩니다.
+      </div></details>
+    </div>
+  </section>
+
+  <!-- 7 -->
+  <section class="card">
+    <div class="shead"><div class="sno">7</div><h2>지금 가지고 있는 재료</h2></div>
+    <p class="slead">실습에 쓸 자료가 있는지 확인하는 문항입니다. 없어도 괜찮습니다. 가짜 자료로 연습합니다.</p>
+    <div class="q">
+      <label class="qt">어떤 형태로 가지고 계신가요? <span class="req">필수</span></label>
+      <div class="opts" data-name="mat">
+        <label><input type="checkbox" name="mat" value="엑셀·CSV 파일"> 엑셀·CSV 파일</label>
+        <label><input type="checkbox" name="mat" value="한글(HWP) 문서"> 한글(HWP) 문서</label>
+        <label><input type="checkbox" name="mat" value="PDF 문서"> PDF 문서</label>
+        <label><input type="checkbox" name="mat" value="구글 시트·설문 응답"> 구글 시트·설문 응답</label>
+        <label><input type="checkbox" name="mat" value="메일·메신저에 흩어진 글"> 메일·메신저에 흩어진 글</label>
+        <label><input type="checkbox" name="mat" value="종이 문서뿐"> 종이 문서뿐</label>
+        <label><input type="checkbox" name="mat" value="아직 아무 자료도 없음"> 아직 아무 자료도 없음</label>
+      </div>
+    </div>
+    <div class="q">
+      <label class="qt">그 자료에 개인정보가 들어 있나요? <span class="req">필수</span></label>
+      <div class="help">실습에 실제 자료를 그대로 쓰면 안 되는 경우가 있어 미리 확인합니다.</div>
+      <div class="opts col" data-name="priv">
+        <label><input type="radio" name="priv" value="이름·연락처 등 개인정보가 있다"> 이름·연락처 등 개인정보가 있다</label>
+        <label><input type="radio" name="priv" value="개인정보는 없다"> 개인정보는 없다</label>
+        <label><input type="radio" name="priv" value="잘 모르겠다"> 잘 모르겠다</label>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8 -->
+  <section class="card">
+    <div class="shead"><div class="sno">8</div><h2>4일 뒤, 무엇이 되면 성공인가요</h2></div>
+    <p class="slead">딱 하나만 정해 주세요. 목표가 작을수록 실제로 끝까지 만들어집니다.</p>
+    <div class="q">
+      <label class="qt">“4일 뒤에 ______ 만 되면 성공입니다.” <span class="req">필수</span></label>
+      <input type="text" id="f_success" placeholder="예) 엑셀 3개를 올려서 하나로 합쳐진 표가 화면에 뜨기만 하면 성공">
+      <details class="ex"><summary>이렇게 적으면 됩니다</summary><div class="exbody">
+        ✗ <em>“완벽한 업무 시스템 구축”</em> → 4일에 끝나지 않습니다.<br>
+        ✓ <em>“파일 2개를 합쳐서 화면에 표로 보여 주기”</em><br>
+        ✓ <em>“긴 공문을 붙여넣으면 기한과 담당자가 뽑혀 나오기”</em><br>
+        ✓ <em>“신청 화면에서 이름·시간을 넣으면 목록에 쌓이기”</em>
+      </div></details>
+    </div>
+  </section>
+
+  <!-- 9 -->
+  <section class="card">
+    <div class="shead"><div class="sno">9</div><h2>마지막으로, 하고 싶은 이야기</h2></div>
+    <div class="q">
+      <label class="qt">이 과정에서 가장 걱정되는 점은 무엇인가요?</label>
+      <div class="help">솔직하게 적어 주실수록 좋습니다. 진도와 설명 속도를 조절하는 데 씁니다.</div>
+      <textarea id="f_worry" rows="3" placeholder="예) 코딩을 한 번도 해 본 적이 없어서 따라가지 못할까 걱정됩니다 / 학교 컴퓨터에 프로그램 설치가 안 됩니다"></textarea>
+    </div>
+    <div class="q">
+      <label class="qt">강사에게 미리 묻고 싶은 것이 있다면</label>
+      <textarea id="f_ask" rows="3" placeholder="예) 만든 것을 다른 선생님들도 쓰게 하려면 어떻게 해야 하나요?"></textarea>
+    </div>
+
+    <div class="q selfcheck">
+      <label class="qt" style="margin-bottom:10px;">제출 전 스스로 확인</label>
+      <div class="opts col" data-name="chk">
+        <label><input type="checkbox" name="chk" value="실제로 겪는 일을 적었다"> 상상이 아니라 <b>실제로 겪는 일</b>을 적었다</label>
+        <label><input type="checkbox" name="chk" value="화면이 머릿속에 그려진다"> 완성된 <b>화면이 머릿속에 그려진다</b></label>
+        <label><input type="checkbox" name="chk" value="4일 안에 해 볼 만한 크기다"> <b>4일 안에</b> 해 볼 만한 크기다</label>
+      </div>
+    </div>
+  </section>
+
+  <footer id="footNote"></footer>
+</div>
+
+<!-- 저장 바 -->
+<div class="savebar">
+  <div class="inner">
+    <div class="txt">다 채우셨으면 오른쪽 버튼을 눌러 주세요.<br><b>메모장(.txt) 파일 1개</b>가 저장됩니다. 그 파일이 제출 파일입니다.</div>
+    <button class="save pulse" id="btnSave" onclick="saveSheet()">⬇ 제출할 파일 다운받기</button>
+  </div>
+</div>
+
+<!-- 첫 진입 안내 -->
+<div class="dim on" id="dimGuide">
+  <div class="modal guide">
+    <div class="ico" style="text-align:center;">👋</div>
+    <h3>작성 전에 30초만 읽어 주세요</h3>
+    <div class="glead">컴퓨터에 무엇을 설치하실 필요는 없습니다.</div>
+
+    <div class="gstep"><div class="gn">1</div><div>
+      <b>이 화면에 바로 적으시면 됩니다</b>
+      <span>칸을 눌러 그대로 입력하세요. 20~30분이면 끝납니다.<br>막히면 각 문항의 <b style="display:inline;font-size:13.5px;">＋ 이렇게 적으면 됩니다</b>를 눌러 예시를 보세요.</span>
+    </div></div>
+
+    <div class="gstep"><div class="gn">2</div><div>
+      <b>다 쓰면 화면 맨 아래 버튼</b>
+      <span>파란색 <span class="chip">⬇ 제출할 파일 다운받기</span> 버튼을 누르면<br>메모장 파일(.txt) 1개가 <b style="display:inline;font-size:13.5px;">다운로드 폴더</b>에 저장됩니다.</span>
+    </div></div>
+
+    <div class="gstep"><div class="gn">3</div><div>
+      <b>그 파일 하나만 전달하시면 끝</b>
+      <span>파일 이름은 <b style="display:inline;font-size:13.5px;">사전기획서_소속_이름_날짜.txt</b> 입니다.<br>전달 방법은 안내 메일을 확인해 주세요.</span>
+    </div></div>
+
+    <div class="gwarn">
+      ⚠ <b>화면을 인쇄하거나 PDF로 저장한 것, 이 HTML 파일 자체는 제출 파일이 아닙니다.</b><br>
+      반드시 2번 버튼으로 받은 <b>.txt</b> 파일을 보내 주세요.<br><br>
+      ⚠ 작성 중 창을 닫으면 내용이 사라집니다. <b>한 번에 작성</b>하시거나, 중간에도 버튼을 눌러 파일로 남겨 두세요. (여러 번 눌러도 됩니다)
+    </div>
+
+    <button onclick="document.getElementById('dimGuide').classList.remove('on')">알겠습니다, 작성 시작하기</button>
+  </div>
+</div>
+
+<!-- 완료 모달 -->
+<div class="dim" id="dimOk">
+  <div class="modal">
+    <div class="ico">✅</div>
+    <h3>파일이 저장되었습니다</h3>
+    <p>컴퓨터의 <b>다운로드 폴더</b>에 아래 파일이 저장되었습니다.<br><b>이 파일이 제출 파일입니다.</b></p>
+    <span class="fname" id="okName"></span>
+    <div class="to" id="okTo"></div>
+    <button onclick="document.getElementById('dimOk').classList.remove('on')">확인</button>
+  </div>
+</div>
+
+<!-- 미작성 모달 -->
+<div class="dim" id="dimErr">
+  <div class="modal err">
+    <div class="ico">✏️</div>
+    <h3>아직 비어 있는 항목이 있습니다</h3>
+    <p>아래 항목만 채우시면 저장됩니다.</p>
+    <div class="misslist"><ul id="errList"></ul></div>
+    <button onclick="closeErr()">돌아가서 작성하기</button>
+  </div>
+</div>
+
+<script>
+/* ══════════════════════════════════════════════════════
+   ▼▼▼ 담당자께서 여기 4줄만 고쳐 쓰시면 됩니다 ▼▼▼
+   ══════════════════════════════════════════════════════ */
+const CONFIG = {
+  과정명 : '서울교육연수원 · 바이브코딩 4일 과정',
+  일정   : '2026년 8월 31일(월) ~ 9월 7일(월) · 4일',
+  일자   : '8/31(월) · 9/1(화) · 9/2(수) · 9/7(월)'
+};
+/* ══════════════════════════════════════════════════════ */
+
+document.getElementById('hTag').textContent = '사전 과제 · PRE-PROJECT';
+document.getElementById('hMeta').innerHTML =
+  CONFIG.과정명 + '<br>' + CONFIG.일정 + ' &nbsp;<b>' + CONFIG.일자 + '</b>';
+document.getElementById('footNote').textContent = CONFIG.과정명 + ' · 사전 프로젝트 기획서';
+document.getElementById('okTo').innerHTML =
+  '📮 이 <b>.txt 파일 하나</b>만 담당자에게 전달해 주세요.<br><span style="font-size:13px;">전달 방법은 별도 안내 메일을 참고해 주시기 바랍니다.<br>찾기 어려우시면 브라우저 오른쪽 위 <b>다운로드(↓)</b> 표시를 눌러 보세요.</span>';
+
+/* 선택 시 강조 */
+document.querySelectorAll('.opts label').forEach(function(l){
+  var i = l.querySelector('input');
+  i.addEventListener('change', function(){
+    if(i.type === 'radio'){
+      l.closest('.opts').querySelectorAll('label').forEach(function(x){ x.classList.remove('on'); });
+    }
+    l.classList.toggle('on', i.checked);
+  });
+});
+
+/* 연간 시간 계산 */
+var mul = { '주':40, '월':10, '학기':2, '년':1 };  // 학기 기준 현실값
+function calc(){
+  var m = parseFloat(document.getElementById('f_min').value);
+  var c = parseFloat(document.getElementById('f_cnt').value);
+  var u = document.getElementById('f_unit').value;
+  var box = document.getElementById('calcBox');
+  if(!m || !c){ box.innerHTML = '<span class="dim">시간을 입력하시면 1년 기준으로 계산해 드립니다.</span>'; return; }
+  var hours = (m * c * mul[u]) / 60;
+  var disp = hours >= 10 ? Math.round(hours) : Math.round(hours*10)/10;
+  var days = Math.round(hours/8*10)/10;
+  box.innerHTML = '이 일에 1년이면 약 <b>' + disp + '시간</b>을 쓰고 계십니다. ' +
+                  '<span class="dim">(하루 8시간 기준 약 ' + days + '일)</span>';
+}
+['f_min','f_cnt','f_unit'].forEach(function(id){
+  document.getElementById(id).addEventListener('input', calc);
+  document.getElementById(id).addEventListener('change', calc);
+});
+
+/* 값 읽기 */
+function v(id){ var e=document.getElementById(id); return e ? e.value.trim() : ''; }
+function radio(n){ var e=document.querySelector('input[name="'+n+'"]:checked'); return e ? e.value : ''; }
+function checks(n){
+  return Array.prototype.map.call(document.querySelectorAll('input[name="'+n+'"]:checked'), function(e){ return e.value; });
+}
+function line(t){ return t ? t : '(작성하지 않음)'; }
+
+/* 필수 검사 */
+var REQ = [
+  {id:'f_name',    label:'0. 이름'},
+  {id:'f_org',     label:'0. 소속'},
+  {id:'f_job',     label:'0. 담당 업무'},
+  {check:'lv1',    label:'0. 해 보신 컴퓨터·문서 작업 (1개 이상 선택)'},
+  {radio:'lv2',    label:'0. 생성형 AI 사용 정도'},
+  {id:'f_scene',   label:'1. 가장 번거로운 순간(장면)'},
+  {id:'f_steps',   label:'2. 지금 하고 있는 순서'},
+  {id:'f_min',     label:'2. 한 번 할 때 걸리는 시간'},
+  {id:'f_cnt',     label:'2. 하는 횟수'},
+  {check:'why',    label:'3. 번거로운 이유(1개 이상 선택)'},
+  {check:'who',    label:'4. 편해지는 사람(1개 이상 선택)'},
+  {id:'f_benefit', label:'4. 무엇이 달라지는지 한 줄'},
+  {id:'f_s1',      label:'5. 한 문장 — 누가'},
+  {id:'f_s2',      label:'5. 한 문장 — 무엇을'},
+  {id:'f_s3',      label:'5. 한 문장 — 어떻게'},
+  {id:'f_s4',      label:'5. 한 문장 — 무엇을 만들고 싶은지'},
+  {id:'f_screen',  label:'6. 완성된 첫 화면'},
+  {check:'mat',    label:'7. 가지고 있는 재료(1개 이상 선택)'},
+  {radio:'priv',   label:'7. 개인정보 포함 여부'},
+  {id:'f_success', label:'8. 4일 뒤 성공 기준'}
+];
+
+function closeErr(){ document.getElementById('dimErr').classList.remove('on'); }
+
+function saveSheet(){
+  document.querySelectorAll('.miss').forEach(function(e){ e.classList.remove('miss'); });
+  var missing = [], first = null;
+
+  REQ.forEach(function(r){
+    var empty = false, el = null;
+    if(r.id){ el = document.getElementById(r.id); empty = !el.value.trim(); }
+    else if(r.radio){ empty = !radio(r.radio); el = document.querySelector('[data-name="'+r.radio+'"]'); }
+    else if(r.check){ empty = checks(r.check).length === 0; el = document.querySelector('[data-name="'+r.check+'"]'); }
+    if(empty){
+      missing.push(r.label);
+      if(r.id) el.classList.add('miss');
+      if(!first) first = el;
+    }
+  });
+
+  if(missing.length){
+    document.getElementById('errList').innerHTML = missing.map(function(m){ return '<li>'+m+'</li>'; }).join('');
+    document.getElementById('dimErr').classList.add('on');
+    window.__firstMiss = first;
+    return;
+  }
+
+  var now = new Date();
+  var pad = function(n){ return (n<10?'0':'')+n; };
+  var today = now.getFullYear()+'-'+pad(now.getMonth()+1)+'-'+pad(now.getDate());
+
+  var m = parseFloat(v('f_min')), c = parseFloat(v('f_cnt')), u = document.getElementById('f_unit').value;
+  var yearH = Math.round((m*c*mul[u])/60*10)/10;
+
+  var L = [];
+  L.push('════════════════════════════════════════════');
+  L.push(' ' + CONFIG.과정명);
+  L.push(' 사전 프로젝트 기획서');
+  L.push('════════════════════════════════════════════');
+  L.push('과정 일정 : ' + CONFIG.일자);
+  L.push('작성일 : ' + today);
+  L.push('');
+  L.push('[0] 작성자');
+  L.push(' · 이름 : ' + v('f_name'));
+  L.push(' · 소속 : ' + v('f_org'));
+  L.push(' · 담당 업무 : ' + v('f_job'));
+  L.push(' · 이메일 : ' + line(v('f_mail')));
+  L.push(' · 해 본 컴퓨터·문서 작업 : ' + checks('lv1').join(', '));
+  L.push(' · 생성형 AI 사용 정도 : ' + radio('lv2'));
+  L.push('');
+  L.push('[1] 가장 번거로운 순간');
+  L.push(v('f_scene'));
+  L.push('');
+  L.push('[2] 현재 처리 방식');
+  L.push(v('f_steps'));
+  L.push('');
+  L.push(' · 소요 시간 : 1회 ' + m + '분 × ' + u + ' ' + c + '회');
+  L.push(' · 연간 환산 : 약 ' + yearH + '시간');
+  L.push('');
+  L.push('[3] 번거로운 이유');
+  checks('why').forEach(function(x){ L.push(' - ' + x); });
+  if(v('f_why_etc')) L.push(' - (기타) ' + v('f_why_etc'));
+  L.push('');
+  L.push('[4] 해결되면 편해지는 사람');
+  L.push(' · 대상 : ' + checks('who').join(', '));
+  L.push(' · 달라지는 점 : ' + v('f_benefit'));
+  L.push('');
+  L.push('[5] 만들고 싶은 것 (한 문장)');
+  L.push(' ' + v('f_s1') + '가(이) ' + v('f_s2') + '을(를) ' + v('f_s3') + ' 할 수 있게 해 주는 ' + v('f_s4') + '을(를) 만들고 싶습니다.');
+  L.push('');
+  L.push('[6] 완성된 첫 화면');
+  L.push(v('f_screen'));
+  L.push('');
+  L.push('[7] 가지고 있는 재료');
+  L.push(' · 형태 : ' + checks('mat').join(', '));
+  L.push(' · 개인정보 : ' + radio('priv'));
+  L.push('');
+  L.push('[8] 4일 뒤 성공 기준');
+  L.push(' ' + v('f_success'));
+  L.push('');
+  L.push('[9] 걱정되는 점');
+  L.push(line(v('f_worry')));
+  L.push('');
+  L.push('[9] 강사에게 묻고 싶은 것');
+  L.push(line(v('f_ask')));
+  L.push('');
+  L.push('[자가 확인] ' + (checks('chk').length ? checks('chk').join(' / ') : '(체크하지 않음)'));
+  L.push('');
+  L.push('────────────────────────────────────────────');
+  L.push('※ 아래는 취합용 데이터입니다. 지우지 말아 주세요.');
+  L.push('###DATA###');
+  L.push(JSON.stringify({
+    작성일:today, 이름:v('f_name'), 소속:v('f_org'), 담당업무:v('f_job'), 이메일:v('f_mail'),
+    컴퓨터경험:checks('lv1'), AI수준:radio('lv2'),
+    장면:v('f_scene'), 현재절차:v('f_steps'),
+    분:m, 횟수:c, 기간단위:u, 연간시간:yearH,
+    이유:checks('why'), 이유기타:v('f_why_etc'),
+    수혜자:checks('who'), 효과:v('f_benefit'),
+    한문장:{누가:v('f_s1'), 무엇을:v('f_s2'), 어떻게:v('f_s3'), 산출물:v('f_s4')},
+    첫화면:v('f_screen'),
+    재료:checks('mat'), 개인정보:radio('priv'),
+    성공기준:v('f_success'), 걱정:v('f_worry'), 질문:v('f_ask'), 자가확인:checks('chk')
+  }));
+  L.push('###END###');
+
+  var text = L.join('\n');
+  var safe = function(s){ return s.replace(/[\\/:*?"<>|\s]/g, '_'); };
+  var fname = '사전기획서_' + safe(v('f_org')) + '_' + safe(v('f_name')) + '_' + today + '.txt';
+
+  var blob = new Blob(['\uFEFF' + text], {type:'text/plain;charset=utf-8'});
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = fname;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  setTimeout(function(){ URL.revokeObjectURL(a.href); }, 1500);
+
+  document.getElementById('okName').textContent = fname;
+  document.getElementById('dimOk').classList.add('on');
+  document.getElementById('btnSave').classList.remove('pulse');
+}
+
+/* 미작성 모달 닫으면 첫 항목으로 이동 */
+document.getElementById('dimErr').addEventListener('click', function(e){
+  if(e.target.id === 'dimErr') closeErr();
+});
+var _closeErr = closeErr;
+closeErr = function(){
+  _closeErr();
+  if(window.__firstMiss){
+    window.__firstMiss.scrollIntoView({behavior:'smooth', block:'center'});
+    if(window.__firstMiss.focus) try{ window.__firstMiss.focus(); }catch(e){}
+  }
+};
+</script>
+<script>/* kg-preview: #<heading> \uc704\uce58\ub85c \uc774\ub3d9 */
+(function(){function norm(t){return (t||'').replace(/\s+/g,'').toLowerCase()}
+function go(){var h=decodeURIComponent(location.hash.slice(1));if(!h)return;var k=norm(h).slice(0,24);if(!k)return;
+var best=null,bl=1e9,els=document.body.querySelectorAll('h1,h2,h3,h4,h5,p,div,span,li,td,text,tspan,section,article');
+for(var i=0;i<els.length;i++){var e=els[i],t=norm(e.textContent);if(t.length<bl&&t.indexOf(k)>-1){best=e;bl=t.length}}
+if(!best)return;var box=best.closest('section,[class*=slide],[class*=page],article')||best;
+box.scrollIntoView({block:'start'});box.style.outline='3px solid #c0504d';box.style.outlineOffset='4px';
+setTimeout(function(){box.style.outline=''},2600)}
+window.addEventListener('load',function(){setTimeout(go,400)});window.addEventListener('hashchange',go)})();</script></body>
+</html>

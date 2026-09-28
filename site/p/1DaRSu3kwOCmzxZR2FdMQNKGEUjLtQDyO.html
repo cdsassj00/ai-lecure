@@ -1,0 +1,1784 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head><meta name="robots" content="noindex, nofollow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Session 07 · RAG 파이프라인과 웹서비스 구축</title>
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700;9..144,800&family=Noto+Serif+KR:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f5efe4;--bg2:#ede4d3;--ink:#2b2015;--ink2:#5a4a38;--ink3:#8a7659;--acc:#b8532a;--acc3:#d49575;--ln:#d8c8ae;--ln2:#e6d9bf;--dk:#1a1612;--dk2:#241e17;--on:#ede4d3;--on2:#a89172;--serif:'Fraunces','Noto Serif KR',Georgia,serif;--sans:'Pretendard Variable',Pretendard,sans-serif;--mono:'JetBrains Mono',ui-monospace,Consolas,monospace}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{margin:0;padding:0;overflow:hidden;height:100vh;width:100vw;background:#0e0a06;font-family:var(--sans);-webkit-font-smoothing:antialiased}
+.deck{height:100vh;overflow-y:scroll;scroll-snap-type:y mandatory;scroll-behavior:smooth;scrollbar-width:none;-ms-overflow-style:none;background:#0e0a06}
+.deck::-webkit-scrollbar{display:none}
+.stage{width:100vw;min-height:100vh;display:flex;align-items:center;justify-content:center;scroll-snap-align:start;padding:0;background:#0e0a06}
+.slide{width:1600px;height:900px;background:var(--bg);position:relative;overflow:hidden;transform-origin:center;box-shadow:0 40px 90px -30px rgba(0,0,0,0.7);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' seed='3'/%3E%3CfeColorMatrix values='0 0 0 0 0.16  0 0 0 0 0.12  0 0 0 0 0.08  0 0 0 0.025 0'/%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E")}
+
+.hbar{position:absolute;top:0;left:0;right:0;height:52px;background:var(--dk);display:flex;align-items:center;justify-content:space-between;padding:0 80px}
+.hbar-l{display:flex;align-items:center;gap:12px;font-family:var(--mono);font-size:10.5px;color:#fff;letter-spacing:2.5px;font-weight:600}
+.hbar-l::before{content:"";width:22px;height:8px;background:var(--acc)}
+.hbar-r{font-family:var(--mono);font-size:10.5px;color:#bbb;letter-spacing:1.5px}
+.hl{position:absolute;left:80px;right:80px;top:86px}
+.hl-kicker{font-family:var(--mono);font-size:12px;color:var(--ink3);letter-spacing:2.5px;font-weight:700;margin-bottom:14px}
+.hl-title{font-family:var(--serif);font-weight:700;font-size:36px;line-height:1.22;letter-spacing:-0.5px;color:var(--ink)}
+.hl-sub{font-size:15.5px;color:var(--ink2);margin-top:12px;line-height:1.6}
+.hl-bar{width:60px;height:3px;background:var(--ink);margin-top:16px}
+.hl-rule{position:absolute;left:80px;right:80px;top:248px;height:1px;background:var(--ln2)}
+.fbar{position:absolute;bottom:0;left:0;right:0;height:52px;background:#f0e8d8;border-top:3px solid var(--ln);display:flex;align-items:center;justify-content:space-between;padding:0 80px}
+.fbar-l,.fbar-r{display:flex;flex-direction:column;gap:2px}.fbar-r{align-items:flex-end}
+.fbar-label{font-family:var(--mono);font-size:10px;color:var(--ink3);letter-spacing:2.5px;font-weight:700}
+.fbar-title{font-size:13px;color:var(--ink)}
+
+.bd{position:absolute;left:80px;right:80px;top:264px;bottom:72px;display:grid;gap:1px;background:var(--ln2)}
+.bd.col3{grid-template-columns:1fr 1fr 1fr}
+.bd.col2{grid-template-columns:1fr 1fr}
+.bd.col2w{grid-template-columns:1.25fr 1fr}
+.bd.col2n{grid-template-columns:1fr 1.3fr}
+.col{background:var(--bg);padding:30px 34px;display:flex;flex-direction:column;overflow:hidden;min-width:0;gap:14px}
+.col > .grow{flex:1;min-height:0;display:flex;flex-direction:column;justify-content:flex-end;gap:10px}
+
+.card{background:var(--bg);padding:34px 36px;display:flex;flex-direction:column;gap:16px;overflow:hidden;min-width:0}
+.card.dk{background:var(--dk);color:var(--on)}
+.card-k{font-family:var(--mono);font-size:11px;color:var(--acc);letter-spacing:2.5px;font-weight:700}
+.card.dk .card-k{color:var(--acc3)}
+.card-anchor{font-family:var(--serif);font-size:26px;font-weight:700;line-height:1.22;color:var(--ink);letter-spacing:-0.4px}
+.card.dk .card-anchor{color:var(--on)}
+.card-anchor em{color:var(--acc);font-style:normal}
+.card.dk .card-anchor em{color:var(--acc3)}
+.card-body{font-size:14px;line-height:1.75;color:var(--ink2)}
+.card.dk .card-body{color:var(--on2)}
+.card-body strong{color:var(--ink);font-weight:700}
+.card.dk .card-body strong{color:var(--on)}
+.card-spacer{flex:1;min-height:8px}
+.card-note{font-size:12.5px;color:var(--ink3);font-style:italic;line-height:1.6}
+.card.dk .card-note{color:var(--on2)}
+
+.sh{display:flex;align-items:baseline;gap:12px;margin-bottom:3px}
+.sh-n{font-family:var(--mono);font-size:11px;color:var(--ink3);letter-spacing:2.5px;font-weight:700;white-space:nowrap}
+.sh-t{font-size:12.5px;color:var(--ink2)}
+.sh-line{height:1px;background:var(--ln2);margin-bottom:10px}
+
+.mtbl{width:100%;border-collapse:collapse;font-size:12.5px}
+.mtbl thead th{font-family:var(--mono);font-size:10px;color:var(--ink3);letter-spacing:1.5px;font-weight:700;text-align:left;padding:9px 9px;border-bottom:1.5px solid var(--ink);background:var(--bg2)}
+.mtbl tbody td{padding:10px 9px;border-bottom:1px solid var(--ln2);color:var(--ink2);vertical-align:top;line-height:1.6}
+.mtbl tbody tr:last-child td{border-bottom:0}
+.mtbl tbody td:first-child{color:var(--ink);font-weight:700;font-family:var(--mono);font-size:10.5px;letter-spacing:1px;white-space:nowrap}
+.mtbl tbody td.q{color:var(--ink);font-weight:600;font-family:var(--sans);font-size:12.5px;letter-spacing:0}
+
+.co{background:var(--bg2);border-left:3px solid var(--acc);padding:14px 18px}
+.co-lb{font-family:var(--mono);font-size:10.5px;color:var(--acc);letter-spacing:2px;font-weight:700;margin-bottom:5px}
+.co-main{font-size:14.5px;color:var(--ink);font-weight:700;line-height:1.5}
+.co p{font-size:12.5px;color:var(--ink2);line-height:1.7;margin-top:5px}
+
+.next{background:var(--dk);padding:16px 20px;color:var(--on)}
+.next-k{font-family:var(--mono);font-size:10.5px;color:var(--acc3);letter-spacing:2px;font-weight:700;margin-bottom:5px}
+.next-t{font-size:13.5px;line-height:1.65;color:var(--on2)}
+.next-t strong{color:var(--on);font-weight:700}
+
+.pit{border-left:3px solid var(--ink);padding:11px 15px;background:var(--bg2)}
+.pit-lb{font-family:var(--mono);font-size:10px;color:var(--ink3);letter-spacing:2px;font-weight:700;margin-bottom:5px}
+.pit-h{font-size:13px;color:var(--ink);font-weight:700;line-height:1.45}
+.pit-d{font-size:12px;color:var(--ink2);line-height:1.65;margin-top:4px}
+
+.smap{display:flex;flex-direction:column;gap:7px}
+.smap-i{display:grid;grid-template-columns:50px 1fr;gap:12px;align-items:start;padding:9px 13px;background:var(--bg2);border-left:2px solid var(--ln)}
+.smap-i.on{border-left-color:var(--acc);background:#f0e7d6}
+.smap-n{font-family:var(--mono);font-size:11px;color:var(--acc);letter-spacing:1.5px;font-weight:700;padding-top:2px}
+.smap-t{font-size:13px;color:var(--ink);font-weight:600;line-height:1.5}
+
+.qex{background:var(--bg2);border-left:3px solid var(--ink);padding:20px 26px;font-family:var(--serif);font-size:19px;line-height:1.75;color:var(--ink)}
+.qex .hot{background:var(--ink);color:var(--on);padding:2px 7px;border-radius:2px;font-weight:700;font-family:var(--sans);font-size:16px;letter-spacing:-0.2px}
+.qex .dim{color:var(--ink3);font-style:italic;font-size:16px}
+
+.draft{padding:14px 18px}
+.draft.weak{background:var(--bg2);border-left:3px solid var(--ln)}
+.draft.strong{background:var(--dk);color:var(--on);border-left:3px solid var(--acc3)}
+.draft-k{font-family:var(--mono);font-size:10px;letter-spacing:1.8px;font-weight:700;color:var(--ink3);margin-bottom:5px}
+.draft.strong .draft-k{color:var(--acc3)}
+.draft-t{font-size:13.5px;line-height:1.7;color:var(--ink)}
+.draft.strong .draft-t{color:var(--on)}
+.draft-note{font-size:11px;color:var(--ink3);margin-top:7px;line-height:1.55;font-style:italic}
+.draft.strong .draft-note{color:var(--on2)}
+
+.cmp2{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--ln2)}
+.cmp2c{padding:18px 22px;display:flex;flex-direction:column;gap:9px;background:var(--bg2)}
+.cmp2c.dk{background:var(--dk);color:var(--on)}
+.cmp2c-k{font-family:var(--mono);font-size:10.5px;color:var(--acc);letter-spacing:2px;font-weight:700}
+.cmp2c.dk .cmp2c-k{color:var(--acc3)}
+.cmp2c-h{font-family:var(--serif);font-size:19px;font-weight:700;color:var(--ink);line-height:1.3;letter-spacing:-0.3px}
+.cmp2c.dk .cmp2c-h{color:var(--on)}
+.cmp2c-d{font-size:12.5px;color:var(--ink2);line-height:1.7}
+.cmp2c.dk .cmp2c-d{color:var(--on2)}
+.cmp2c-list{display:flex;flex-direction:column;gap:4px;font-size:12px;line-height:1.65;color:var(--ink2)}
+.cmp2c.dk .cmp2c-list{color:var(--on2)}
+.cmp2c-list li{list-style:none;padding-left:14px;position:relative}
+.cmp2c-list li::before{content:"—";position:absolute;left:0;color:var(--ink3);font-family:var(--mono)}
+.cmp2c.dk .cmp2c-list li::before{color:var(--on2)}
+.cmp2c-fig{font-family:var(--mono);font-size:10px;color:var(--ink3);letter-spacing:1.5px;font-weight:700;padding-top:7px;border-top:1px solid var(--ln);margin-top:auto}
+.cmp2c.dk .cmp2c-fig{color:var(--acc3);border-top-color:#3a2f24}
+
+.hybrid{background:#f0e7d6;border-left:4px solid var(--acc);padding:18px 24px;display:flex;flex-direction:column;gap:8px}
+.hybrid-k{font-family:var(--mono);font-size:11px;color:var(--acc);letter-spacing:2.5px;font-weight:700}
+.hybrid-h{font-family:var(--serif);font-size:21px;font-weight:700;color:var(--ink);line-height:1.3;letter-spacing:-0.3px}
+.hybrid-d{font-size:13px;color:var(--ink2);line-height:1.7}
+.hybrid-d strong{color:var(--ink);font-weight:700}
+
+.tline{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--ln2);width:100%}
+.tblock{background:var(--bg2);padding:18px 20px;display:flex;flex-direction:column;gap:8px;position:relative}
+.tblock.dk{background:var(--dk);color:var(--on)}
+.tblock-w{font-family:var(--mono);font-size:11px;color:var(--acc);letter-spacing:2px;font-weight:700}
+.tblock.dk .tblock-w{color:var(--acc3)}
+.tblock-h{font-family:var(--serif);font-size:21px;font-weight:700;line-height:1.25;color:var(--ink);letter-spacing:-0.3px}
+.tblock.dk .tblock-h{color:var(--on)}
+.tblock-sess{font-size:11.5px;color:var(--ink2);line-height:1.6;font-family:var(--mono);letter-spacing:0.3px}
+.tblock.dk .tblock-sess{color:var(--on2)}
+.tblock-d{font-size:12px;color:var(--ink2);line-height:1.7}
+.tblock.dk .tblock-d{color:var(--on2)}
+
+/* 추가 컴포넌트 */
+.flow{display:grid;gap:10px;align-items:center}
+.flow.h4{grid-template-columns:1fr auto 1fr auto 1fr auto 1fr}
+.flow.h3{grid-template-columns:1fr auto 1fr auto 1fr}
+.flow-box{background:var(--bg2);border:1px solid var(--ln);padding:12px 14px;text-align:center;display:flex;flex-direction:column;gap:4px}
+.flow-box.dk{background:var(--dk);color:var(--on);border-color:var(--dk)}
+.flow-box.on{background:#f0e7d6;border-color:var(--acc);border-width:2px}
+.flow-box-k{font-family:var(--mono);font-size:9.5px;color:var(--ink3);letter-spacing:1.5px;font-weight:700}
+.flow-box.dk .flow-box-k{color:var(--acc3)}
+.flow-box.on .flow-box-k{color:var(--acc)}
+.flow-box-t{font-size:12.5px;color:var(--ink);font-weight:700;line-height:1.4}
+.flow-box.dk .flow-box-t{color:var(--on)}
+.flow-arrow{font-family:var(--mono);font-size:22px;color:var(--acc);font-weight:700;text-align:center}
+
+.grid2x2{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:1px;background:var(--ln2)}
+.qd{background:var(--bg2);padding:16px 20px;display:flex;flex-direction:column;gap:6px}
+.qd.dk{background:var(--dk);color:var(--on)}
+.qd-k{font-family:var(--mono);font-size:10px;color:var(--ink3);letter-spacing:2px;font-weight:700}
+.qd.dk .qd-k{color:var(--acc3)}
+.qd-h{font-size:14px;color:var(--ink);font-weight:700;line-height:1.35;font-family:var(--serif)}
+.qd.dk .qd-h{color:var(--on)}
+.qd-d{font-size:12px;color:var(--ink2);line-height:1.65}
+.qd.dk .qd-d{color:var(--on2)}
+.qd-d strong{color:var(--ink);font-weight:700}
+.qd.dk .qd-d strong{color:var(--on)}
+
+.ladder{display:flex;flex-direction:column;gap:1px;background:var(--ln2)}
+.ladder-step{background:var(--bg);padding:14px 18px;display:grid;grid-template-columns:56px 1fr auto;gap:16px;align-items:center}
+.ladder-step.dk{background:var(--dk);color:var(--on)}
+.ladder-step.on{background:#f0e7d6}
+.ladder-n{font-family:var(--serif);font-size:28px;color:var(--acc);font-weight:700;letter-spacing:-0.03em}
+.ladder-step.dk .ladder-n{color:var(--acc3)}
+.ladder-b{display:flex;flex-direction:column;gap:3px;min-width:0}
+.ladder-h{font-size:14px;color:var(--ink);font-weight:700;line-height:1.4}
+.ladder-step.dk .ladder-h{color:var(--on)}
+.ladder-d{font-size:12px;color:var(--ink2);line-height:1.6}
+.ladder-step.dk .ladder-d{color:var(--on2)}
+.ladder-tag{font-family:var(--mono);font-size:9.5px;color:var(--ink3);letter-spacing:1.5px;font-weight:700;text-align:right;white-space:nowrap}
+.ladder-step.dk .ladder-tag{color:var(--acc3)}
+
+.code{background:var(--dk2);padding:14px 18px;font-family:var(--mono);font-size:11.5px;line-height:1.75;color:var(--on);white-space:pre-wrap;border-left:3px solid var(--acc3)}
+.code .cm{color:var(--on2)}
+.code .kw{color:var(--acc3);font-weight:600}
+
+.typelist{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--ln2);flex:1}
+.type{background:var(--bg2);padding:16px 18px;display:flex;flex-direction:column;gap:6px}
+.type.dk{background:var(--dk);color:var(--on)}
+.type-n{font-family:var(--serif);font-size:32px;color:var(--acc);font-weight:700;line-height:1;letter-spacing:-0.03em}
+.type.dk .type-n{color:var(--acc3)}
+.type-h{font-size:13px;color:var(--ink);font-weight:700;line-height:1.35}
+.type.dk .type-h{color:var(--on)}
+.type-d{font-size:11.5px;color:var(--ink2);line-height:1.6}
+.type.dk .type-d{color:var(--on2)}
+.type-tag{font-family:var(--mono);font-size:9.5px;color:var(--ink3);letter-spacing:1.5px;font-weight:700;margin-top:auto;padding-top:6px;border-top:1px solid var(--ln)}
+.type.dk .type-tag{color:var(--acc3);border-top-color:#3a2f24}
+
+.toolbar{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:center;justify-content:center;gap:6px;padding:6px 20px;background:rgba(14,10,6,0.92);backdrop-filter:blur(10px);border-bottom:1px solid rgba(255,255,255,0.08)}
+.toolbar button{background:rgba(255,255,255,0.08);color:#ccc;border:1px solid rgba(255,255,255,0.12);padding:5px 14px;font-family:var(--mono);font-size:10px;letter-spacing:1.5px;cursor:pointer;border-radius:3px;text-transform:uppercase;font-weight:600}
+.toolbar button:hover{background:var(--acc);color:#fff;border-color:var(--acc)}
+.toolbar .pg{color:rgba(255,255,255,0.55);font-size:11px;padding:5px 10px;min-width:80px;text-align:center;font-family:var(--mono);letter-spacing:1px}
+@media print{@page{size:423.33mm 237.5mm;margin:0}*{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}html,body{overflow:visible!important;height:auto!important;background:#fff!important}.deck{overflow:visible!important;height:auto!important;scroll-snap-type:none!important;background:#fff!important}.stage{min-height:0!important;height:auto!important;page-break-after:always;page-break-inside:avoid;padding:0!important;margin:0!important;background:#fff!important;display:block!important}.stage:last-child{page-break-after:avoid}.slide{transform:none!important;box-shadow:none!important;width:1600px!important;height:900px!important}.toolbar{display:none!important}}
+
+.sm{font-size:12px;color:var(--ink2);line-height:1.6}
+.st{font-size:11px;color:var(--ink3);margin-top:4px}
+/* S07 extras */
+.flow-box-lb{font-family:var(--mono);font-size:9.5px;letter-spacing:1.5px;color:var(--ink3);font-weight:700;text-transform:uppercase}
+.flow-box.dark .flow-box-lb{color:var(--acc3)}
+.chk{display:grid;grid-template-columns:13px 1fr;gap:8px;margin-bottom:5px}
+.chk-b{width:13px;height:13px;border:1.2px solid var(--ink);margin-top:3px}
+.chk-t{font-size:12px;color:var(--ink2);line-height:1.55}
+.step{display:grid;grid-template-columns:18px 1fr;gap:10px;margin-bottom:7px}
+.step-n{width:18px;height:18px;background:var(--ink);color:var(--bg);font-family:var(--mono);font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center;margin-top:2px}
+.step-t{font-size:12.5px;color:var(--ink);font-weight:700;line-height:1.35}
+.step-d{font-size:11.5px;color:var(--ink2);margin-top:2px;line-height:1.55}
+.netbox{border:1.5px dashed var(--ink3);padding:11px 14px;margin:8px 0;background:rgba(138,118,89,0.05);position:relative}
+.netbox-lb{position:absolute;top:-8px;left:12px;font-family:var(--mono);font-size:9.5px;letter-spacing:2px;color:var(--ink3);font-weight:700;background:var(--bg);padding:0 6px;text-transform:uppercase}
+.netbox.ext{border-color:var(--acc)}.netbox.ext .netbox-lb{color:var(--acc)}
+.pill{display:inline-block;font-family:var(--mono);font-size:10px;color:var(--acc);background:rgba(184,83,42,0.1);padding:2px 6px;letter-spacing:0.08em;text-transform:uppercase;font-weight:600;border-radius:2px;margin:1px 3px 1px 0}
+
+/* === S04 ORIGINAL COMPONENTS === */
+.bd.col1{grid-template-columns:1fr;background:transparent;gap:0}
+.bth{font-size:15px;color:var(--ink);font-weight:600;margin-bottom:7px;line-height:1.4}
+.bt{font-size:13.5px;line-height:1.78;color:var(--ink2);margin-bottom:8px}
+.bt strong{color:var(--ink);font-weight:600}
+.cod{background:var(--dk);padding:12px 15px;margin:8px 0;position:relative;overflow:hidden}
+.cod::before{content:"";position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='nd'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' seed='5'/%3E%3CfeColorMatrix values='0 0 0 0 1  0 0 0 0 0.92  0 0 0 0 0.78  0 0 0 0.04 0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23nd)'/%3E%3C/svg%3E");opacity:0.6;pointer-events:none}
+.cod>*{position:relative}
+.cod-lb{font-family:var(--mono);font-size:10px;color:var(--on2);letter-spacing:2px;font-weight:700;margin-bottom:6px}
+.cod-main{font-size:15.5px;color:var(--on);font-weight:700;line-height:1.35;margin-bottom:6px}
+.cod p{font-size:12.5px;color:var(--on2);line-height:1.7}
+.dstrip{background:var(--dk);padding:9px 16px;margin:8px 0;display:grid;grid-template-columns:repeat(3,1fr);position:relative;overflow:hidden}
+.dstrip::before{content:"";position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='ns'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' seed='7'/%3E%3CfeColorMatrix values='0 0 0 0 1  0 0 0 0 0.92  0 0 0 0 0.78  0 0 0 0.04 0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23ns)'/%3E%3C/svg%3E");opacity:0.6;pointer-events:none}
+.dstrip>*{position:relative}
+.ds-c:not(:first-child){border-left:1px solid rgba(255,255,255,0.12);padding-left:16px}
+.ds-a{font-family:var(--mono);font-size:9.5px;color:var(--on2);letter-spacing:1.5px;font-weight:700}
+.ds-n{font-size:22px;color:var(--on);font-weight:800;margin-top:3px}
+.ds-d{font-size:10px;color:var(--on2);margin-top:2px}
+.quote{border-left:3px solid var(--ink);padding:11px 15px;margin:8px 0}
+.quote-src{font-family:var(--mono);font-size:10px;color:var(--ink3);letter-spacing:2px;font-weight:700;margin-bottom:5px}
+.quote-q{font-family:var(--serif);font-size:14px;color:var(--ink);font-weight:700;font-style:italic;line-height:1.45}
+.quote-a{font-size:11.5px;color:var(--ink2);margin-top:3px}
+.cblk{background:var(--dk);color:var(--on);padding:11px 14px;font-family:var(--mono);font-size:11.5px;line-height:1.7;border-left:2px solid var(--acc);margin:8px 0;white-space:pre-wrap}
+.cblk .cm{color:var(--acc3);opacity:0.8}.cblk .kw{color:var(--acc3);font-weight:600}
+.cblk .cap{font-size:10px;color:var(--on2);margin-top:5px;letter-spacing:0.1em;white-space:normal}
+.icard{background:var(--bg2);border:1px solid var(--ln);padding:11px 14px;margin-bottom:7px}
+.icard-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:5px}
+.icard-lb{font-family:var(--mono);font-size:9.5px;color:var(--acc);letter-spacing:2px;font-weight:700}
+.icard-sess{font-family:var(--mono);font-size:9.5px;color:var(--ink3);letter-spacing:1.5px;font-weight:600}
+.icard.dark{background:var(--dk);border-color:var(--dk)}
+.icard.dark .icard-lb{color:var(--acc3)}.icard.dark .icard-sess{color:var(--on2)}
+.icard.dark .bth{color:var(--on)}.icard.dark .bt{color:var(--on2)}.icard.dark .bt strong{color:var(--on)}
+.fig{font-family:var(--mono);font-size:10.5px;color:var(--ink3);letter-spacing:1.5px;font-weight:700;margin:8px 0 5px}
+.hero{display:flex;flex-direction:column;justify-content:center;padding:56px 90px}
+.hero-k{font-family:var(--mono);font-size:11.5px;color:var(--acc3);letter-spacing:3px;font-weight:700;margin-bottom:18px}
+.hero-t{font-family:var(--serif);font-size:52px;line-height:1.18;font-weight:700;color:var(--on);letter-spacing:-0.02em}
+.hero-s{font-size:17px;color:var(--on2);line-height:1.7;margin-top:22px;max-width:1100px;font-style:italic}
+.hero-q{border-left:3px solid var(--acc3);padding:16px 24px;margin-top:26px;max-width:1000px}
+.hero-q-q{font-family:var(--serif);font-size:21px;color:var(--on);font-weight:700;font-style:italic;line-height:1.5}
+.hero-q-a{font-size:12px;color:var(--on2);letter-spacing:2px;margin-top:10px;font-family:var(--mono);font-weight:700}
+
+</style>
+</head>
+<body>
+<div class="deck" id="deck">
+<div class="stage"><div class="slide" data-title="Cover">
+  <div class="hbar"><div class="hbar-l">SESSION 07 · RAG &amp; WEB SERVICE</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 07
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">07 · RAG 파이프라인과 웹서비스 구축</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">001 / 032</span></div></div></div></div>
+  <div style="position:absolute;top:56px;left:80px;display:flex;align-items:center;gap:14px;font-family:var(--mono);font-size:10px;color:var(--acc);letter-spacing:2.5px;font-weight:600"><div style="width:22px;height:8px;background:var(--acc)"></div>PUBLIC AI EXPERT PROGRAM · 2026</div>
+  <div style="position:absolute;top:56px;right:80px;font-family:var(--mono);font-size:10px;color:var(--ink3);letter-spacing:2px;text-align:right;line-height:1.6">Module 07 / Session 07<br>Hub Leader Track</div>
+  <div style="position:absolute;top:130px;right:80px;font-family:var(--serif);font-size:260px;line-height:1;color:var(--acc);font-weight:300;opacity:0.07;letter-spacing:-0.06em;pointer-events:none;font-style:italic">07</div>
+  <div style="position:absolute;top:180px;left:80px;right:80px;bottom:140px;display:grid;grid-template-columns:1fr 380px;gap:60px">
+    <div>
+      <div style="font-family:var(--mono);font-size:10px;color:var(--acc);letter-spacing:3px;font-weight:700;margin-bottom:14px">SESSION 07 · LECTURE COVER</div>
+      <div style="font-family:var(--serif);font-weight:700;font-size:56px;line-height:1.08;letter-spacing:-0.03em;color:var(--ink)">RAG 파이프라인과<br>웹서비스 구축</div>
+      <div style="width:60px;height:2px;background:var(--acc);margin:22px 0 16px"></div>
+      <div style="font-family:var(--serif);font-size:19px;color:var(--ink);font-weight:600;line-height:1.5">부서 문서 위에서 답하는 AI — 내부망 완결</div>
+      <p style="margin-top:18px;font-size:14px;color:var(--ink2);line-height:1.8;max-width:640px"><strong style="color:var(--ink)">Part A.</strong> RAG 4단계(넣기·쪼개기·찾기·답하기) · 벡터 DB 없이 80%. <strong style="color:var(--ink)">Part B.</strong> 공공 4대 시나리오(규정·법령·민원·회의록) + 로컬 RAG(Ollama + 에이전트). <strong style="color:var(--ink)">Part C.</strong> 웹서비스 3요소(프론트·백엔드·저장소) + 내부망 이관 체크리스트. <strong style="color:var(--ink)">Part D.</strong> Remotion 영상 자동화 + SVG 자동화로 보고서까지.</p>
+    </div>
+    <div style="align-self:end;border-top:1px solid var(--ink);padding-top:16px">
+      <div style="display:grid;grid-template-columns:90px 1fr;gap:12px;padding:8px 0;border-bottom:1px solid var(--ln);font-size:13px"><span style="font-family:var(--mono);font-size:9.5px;letter-spacing:2px;color:var(--ink3);font-weight:700">PROGRAM</span><span style="font-family:var(--serif);color:var(--ink);font-weight:600">공공 AI 전문인재 양성과정</span></div>
+      <div style="display:grid;grid-template-columns:90px 1fr;gap:12px;padding:8px 0;border-bottom:1px solid var(--ln);font-size:13px"><span style="font-family:var(--mono);font-size:9.5px;letter-spacing:2px;color:var(--ink3);font-weight:700">SESSION</span><span style="font-family:var(--serif);color:var(--ink);font-weight:600">07 / 08</span></div>
+      <div style="display:grid;grid-template-columns:90px 1fr;gap:12px;padding:8px 0;border-bottom:1px solid var(--ln);font-size:13px"><span style="font-family:var(--mono);font-size:9.5px;letter-spacing:2px;color:var(--ink3);font-weight:700">GOAL</span><span style="font-family:var(--serif);color:var(--ink);font-weight:600">부서 문서로 답하는 내부망 AI</span></div>
+      <div style="display:grid;grid-template-columns:90px 1fr;gap:12px;padding:8px 0;border-bottom:1px solid var(--ln);font-size:13px"><span style="font-family:var(--mono);font-size:9.5px;letter-spacing:2px;color:var(--ink3);font-weight:700">FORMAT</span><span style="font-family:var(--serif);color:var(--ink);font-weight:600">강의 150m + 실습 120m</span></div>
+      <div style="display:grid;grid-template-columns:90px 1fr;gap:12px;padding:8px 0;border-bottom:1px solid var(--ln);font-size:13px"><span style="font-family:var(--mono);font-size:9.5px;letter-spacing:2px;color:var(--ink3);font-weight:700">SLIDES</span><span style="font-family:var(--serif);color:var(--ink);font-weight:600">32 pages</span></div>
+      <div style="display:grid;grid-template-columns:90px 1fr;gap:12px;padding:8px 0;font-size:13px"><span style="font-family:var(--mono);font-size:9.5px;letter-spacing:2px;color:var(--ink3);font-weight:700">PREREQ</span><span style="font-family:var(--serif);color:var(--ink);font-weight:600">5차시 Ollama · 6차시 에이전트</span></div>
+    </div>
+  </div>
+  <div style="position:absolute;bottom:64px;left:80px;font-family:var(--mono);font-size:10px;color:var(--ink3);letter-spacing:2px">— Editorial Warm Edition · Roomy Lecture Format</div>
+  <div style="position:absolute;bottom:64px;right:80px;font-size:13px;color:var(--ink2);text-align:right;line-height:1.7;max-width:520px">부서의 진짜 지식은 외부 인터넷이 아니라<br>우리가 써 온 문서 안에 있다.</div>
+</div></div>
+
+<!-- 02 HERO · 환각을 줄이는 가장 현실적 방법 -->
+<div class="stage"><div class="slide" data-title="Hero Hallucination">
+  <div class="hbar"><div class="hbar-l">MODULE 07 · SESSION KEY MESSAGE</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 07</div></div>
+  <div class="bd col1"><div class="col hero" style="background:var(--bg);color:var(--ink);padding:60px 90px">
+    <div style="font-family:var(--mono);font-size:11.5px;color:var(--acc);letter-spacing:3px;font-weight:700;margin-bottom:18px">SESSION 07 · ONE SENTENCE</div>
+    <div style="font-family:var(--serif);font-size:52px;line-height:1.18;font-weight:700;color:var(--ink);letter-spacing:-0.02em">환각을 줄이는 <span style="color:var(--acc)">가장 현실적</span> 방법.<br>거대 모델이 아니라 <span style="color:var(--acc)">우리 문서</span>를 읽히는 것.</div>
+    <div style="width:60px;height:3px;background:var(--acc);margin:22px 0 18px"></div>
+    <p style="font-size:17px;color:var(--ink2);line-height:1.75;max-width:1150px;font-style:italic">LLM은 세상 일반을 알지만 우리 부서의 규정·회의록·민원 DB는 모른다. <strong style="color:var(--ink)">답변 시점에 우리 문서를 옆에 놓고</strong> 참조하게 하는 기법 — 그것이 RAG다. 7차시는 RAG 4단계와 웹 배포, 그리고 내부망 이관까지를 하나로 연결한다.</p>
+    <div style="border-left:3px solid var(--acc);padding:16px 24px;margin-top:26px;max-width:1100px;background:var(--bg2)">
+      <div style="font-family:var(--serif);font-size:20px;color:var(--ink);font-weight:700;font-style:italic;line-height:1.5">"출처 없는 답변은 공공 업무에서 사용하지 않는다 — 이 원칙이 RAG 도입의 근거다."</div>
+      <div style="font-size:12px;color:var(--ink3);letter-spacing:2px;margin-top:10px;font-family:var(--mono);font-weight:700">— 공공 AI 도입 지침</div>
+    </div>
+  </div></div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">07 · RAG 파이프라인과 웹서비스 구축</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">002 / 032</span></div></div>
+</div></div>
+
+<!-- 03 Unit 01 RAG 4단계 개관 -->
+<div class="stage"><div class="slide" data-title="RAG 4 Steps Overview">
+  <div class="hbar"><div class="hbar-l">MODULE 07 · UNIT 01 · RAG · FOUR STEPS</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 07</div></div>
+  <div class="hl"><div class="hl-kicker">UNIT 01 · RAG 4단계 개관 · LECTURE 07-A-1 · 8MIN</div><div class="hl-title">RAG 파이프라인의 네 단계</div><div class="hl-sub">"검색-증강-생성"이라는 번역어에 겁먹지 않는다. 한국어 동사 4개로 바꾸면 고등학생도 이해할 수 있고, 70줄 안에 첫 구현을 할 수 있다.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col3">
+    <div class="col">
+      <div class="sh"><span class="sh-n">01 · WHY RAG</span><span class="sh-t">왜 LLM 단독으론 부족한가</span></div><div class="sh-line"></div>
+      <div class="bth">LLM은 "세상 일반"을 안다 — 우리 부서는 모른다</div>
+      <p class="bt">Claude·GPT는 인터넷 공개 지식으로 학습됐다. <strong>우리 기관의 내부 규정, 작년 감사 결과, 이번 분기 보고서는 모른다.</strong> RAG는 답변 시점에 우리 문서를 옆에 놓고 참조하게 하는 기법.</p>
+      <div class="flow">
+        <div class="flow-box"><div class="flow-box-lb">질문</div><div class="flow-box-t">사용자</div></div>
+        <div class="flow-arrow">▸</div>
+        <div class="flow-box dark"><div class="flow-box-lb">RAG</div><div class="flow-box-t">문서 검색</div></div>
+        <div class="flow-arrow">▸</div>
+        <div class="flow-box"><div class="flow-box-lb">답변</div><div class="flow-box-t">근거 포함</div></div>
+      </div>
+      <div class="fig">FIGURE 01 · RAG FLOW SIMPLIFIED</div>
+      <div class="co"><div class="co-lb">KEY TAKEAWAY</div><div class="co-main">"근거 있는 답"이 RAG의 핵심 가치</div><p>공공 업무에서 답변만큼 <strong>출처 표기</strong>가 중요하다. RAG는 출처 페이지를 그대로 반환할 수 있다.</p></div>
+      <div class="dstrip"><div class="ds-c"><div class="ds-a">LLM</div><div class="ds-n">일반 지식</div><div class="ds-d">학습 범위</div></div><div class="ds-c"><div class="ds-a">RAG</div><div class="ds-n">우리 문서</div><div class="ds-d">답변 시점</div></div><div class="ds-c"><div class="ds-a">SUM</div><div class="ds-n">정확도↑</div><div class="ds-d">헛소리↓</div></div></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">02 · FOUR VERBS</span><span class="sh-t">네 단계의 역할</span></div><div class="sh-line"></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">STEP 01 · 넣기</span><span class="icard-sess">INGEST</span></div><div class="bth">문서를 시스템에 수집·정제</div><p class="bt">PDF·HWP·DOCX → 텍스트 추출. PyMuPDF · pyhwpx · python-docx. 공공 문서의 표·머리말·각주 처리가 핵심.</p></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">STEP 02 · 쪼개기</span><span class="icard-sess">CHUNK</span></div><div class="bth">긴 문서를 검색 단위로 분할</div><p class="bt">500자 ± 100 청크. 문단·섹션 경계 우선. 겹침(overlap) 50자 권장. 규정은 조항, 회의록은 안건 단위.</p></div>
+      <div class="icard dark"><div class="icard-top"><span class="icard-lb">STEP 03 · 찾기</span><span class="icard-sess">RETRIEVE</span></div><div class="bth">질문과 관련된 청크 검색</div><p class="bt">키워드(BM25) · 임베딩(벡터) · 하이브리드. 상위 3~5개만 선정. 너무 많으면 LLM이 혼란.</p></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">STEP 04 · 답하기</span><span class="icard-sess">GENERATE</span></div><div class="bth">LLM이 청크 + 질문으로 답변</div><p class="bt">"아래 문서만 참고해서 답하라" 프롬프트. 출처 표기 강제. 근거가 없으면 "규정에 없음" 답변.</p></div>
+      <div class="quote"><div class="quote-src">SOURCE · 공공 AI 도입 지침</div><div class="quote-q">"출처 없는 답변은 공공 업무에서 사용하지 않는다."</div><div class="quote-a">— RAG의 존재 이유</div></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">03 · MIN CODE</span><span class="sh-t">30줄 RAG</span></div><div class="sh-line"></div>
+      <div class="bth">처음부터 끝까지 — 30줄로 완성되는 RAG</div>
+      <div class="cblk"><span class="cm"># 1. 넣기 — PDF 10건을 텍스트로</span>
+<span class="kw">import</span> fitz, pathlib
+docs=[]
+<span class="kw">for</span> p <span class="kw">in</span> pathlib.Path(<span class="st">"./규정"</span>).glob(<span class="st">"*.pdf"</span>):
+    d=fitz.open(p)
+    txt=<span class="st">"\n"</span>.join(pg.get_text() <span class="kw">for</span> pg <span class="kw">in</span> d)
+    docs.append({<span class="st">"src"</span>:p.name,<span class="st">"text"</span>:txt})
+
+<span class="cm"># 2. 쪼개기 — 500자 청크, 겹침 50</span>
+chunks=[]
+<span class="kw">for</span> d <span class="kw">in</span> docs:
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="kw">range</span>(0,<span class="kw">len</span>(d[<span class="st">"text"</span>]),450):
+        chunks.append({<span class="st">"src"</span>:d[<span class="st">"src"</span>],
+            <span class="st">"text"</span>:d[<span class="st">"text"</span>][i:i+500]})
+
+<span class="cm"># 3. 찾기 — 키워드 포함수</span>
+<span class="kw">def</span> search(q,k=3):
+    s=[(c,<span class="kw">sum</span>(w <span class="kw">in</span> c[<span class="st">"text"</span>] <span class="kw">for</span> w <span class="kw">in</span> q.split())) <span class="kw">for</span> c <span class="kw">in</span> chunks]
+    <span class="kw">return</span> <span class="kw">sorted</span>(s,key=<span class="kw">lambda</span> x:-x[1])[:k]
+
+<span class="cm"># 4. 답하기 — Ollama 호출</span>
+<span class="kw">def</span> answer(q):
+    hits=search(q)
+    ctx=<span class="st">"\n\n"</span>.join(h[0][<span class="st">"text"</span>] <span class="kw">for</span> h <span class="kw">in</span> hits)
+    <span class="kw">return</span> ollama.chat(
+        <span class="st">f"다음만 참고:\n{ctx}\n\n질문:{q}"</span>)</div>
+      <p class="bt">이 30줄이 RAG의 기본 구조다. 벡터 DB·임베딩도 없다. <strong>"진입이 열려 있다"</strong>는 사실이 이 단원의 핵심.</p>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">07 · RAG 파이프라인과 웹서비스 구축</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">003 / 032</span></div></div>
+</div></div>
+
+<!-- 04 STEP 01 넣기 -->
+<div class="stage"><div class="slide" data-title="Ingest">
+  <div class="hbar"><div class="hbar-l">MODULE 07 · UNIT 01 · STEP 01 · INGEST</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 07</div></div>
+  <div class="hl"><div class="hl-kicker">UNIT 01 · 넣기 — 문서 수집·정제 · LECTURE 07-A-2 · 7MIN</div><div class="hl-title">문서 추출과 정제의 품질 원리</div><div class="hl-sub">공공 문서의 80%는 PDF·HWP. 추출 품질이 RAG 답변 품질의 상한을 결정한다. 표·각주·머리말·스캔 페이지 처리가 관건.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col2">
+    <div class="col">
+      <div class="sh"><span class="sh-n">01 · TOOLS</span><span class="sh-t">포맷별 추출 도구</span></div><div class="sh-line"></div>
+      <table class="mtbl"><thead><tr><th>포맷</th><th>도구</th><th>공공 비중</th></tr></thead><tbody>
+        <tr><td>PDF</td><td>PyMuPDF(fitz)</td><td>★★★★★</td></tr>
+        <tr><td>HWP/HWPX</td><td>pyhwpx · olefile</td><td>★★★★★</td></tr>
+        <tr><td>DOCX</td><td>python-docx</td><td>★★★☆☆</td></tr>
+        <tr><td>스캔 PDF</td><td>Tesseract · Upstage OCR</td><td>★★★☆☆</td></tr>
+        <tr><td>엑셀</td><td>openpyxl · pandas</td><td>★★★★☆</td></tr>
+        <tr><td>표 많은 PDF</td><td>camelot · tabula</td><td>★★★☆☆</td></tr>
+      </tbody></table>
+      <div class="co"><div class="co-lb">KEY RULE</div><div class="co-main">"한 파일 = 한 원본" 추적을 유지</div><p>추출 후에도 파일명·페이지 번호를 끝까지 따라다니게 해야 답변에 출처가 붙는다.</p></div>
+      <div class="cblk"><span class="cm"># PyMuPDF로 페이지 단위 추출</span>
+<span class="kw">import</span> fitz
+<span class="kw">def</span> extract(pdf):
+    d=fitz.open(pdf)
+    <span class="kw">return</span> [{<span class="st">"src"</span>:<span class="kw">str</span>(pdf),
+             <span class="st">"page"</span>:i+1,
+             <span class="st">"text"</span>:pg.get_text()}
+            <span class="kw">for</span> i,pg <span class="kw">in</span> <span class="kw">enumerate</span>(d)]</div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">02 · CLEAN</span><span class="sh-t">정제 5원칙</span></div><div class="sh-line"></div>
+      <div class="bth">정제하지 않은 텍스트는 쓰레기 입력과 같다</div>
+      <div class="step"><div class="step-n">1</div><div><div class="step-t">머리말·쪽수·부서 로고 텍스트 제거</div><div class="step-d">정규식 또는 조건부 슬라이스. "공공기관 보고서" 같은 상투어 제거.</div></div></div>
+      <div class="step"><div class="step-n">2</div><div><div class="step-t">표 → 마크다운 또는 행 단위 문장</div><div class="step-d">| 행 | 열 | 형식. 숫자 표는 "2024년 접수 12,400건" 같은 문장으로 변환도 유효.</div></div></div>
+      <div class="step"><div class="step-n">3</div><div><div class="step-t">각주·참조는 본문 하단에 통합</div><div class="step-d">"※1" 같은 표시는 해당 문단 끝에 붙여 청크 경계가 깨지지 않게.</div></div></div>
+      <div class="step"><div class="step-n">4</div><div><div class="step-t">공백·줄바꿈 정규화</div><div class="step-d">연속 공백 1개로, 문단 끝 줄바꿈 2개로. 토큰 낭비 방지.</div></div></div>
+      <div class="step"><div class="step-n">5</div><div><div class="step-t">메타데이터 헤더 첨부</div><div class="step-d">"[출처: 인사규정 제3장]" 같은 헤더를 청크 맨 앞에. LLM이 근거 인용에 활용.</div></div></div>
+      <div class="pit"><div class="pit-lb">PITFALL</div><div class="pit-h">▸ "전부 다 넣자"는 유혹</div><div class="pit-d">결재선·과거 개정 이력을 통째 포함하면 잡음. "현재 유효본"만 넣는 규칙.</div><div class="pit-h">▸ 한글 문자 깨짐</div><div class="pit-d">euc-kr로 저장된 레거시 문서. <strong>UTF-8로 통일</strong>한 뒤 인덱싱 시작.</div></div>
+      <div class="dstrip"><div class="ds-c"><div class="ds-a">INPUT</div><div class="ds-n">300건</div><div class="ds-d">부서 평균</div></div><div class="ds-c"><div class="ds-a">CLEAN</div><div class="ds-n">-30%</div><div class="ds-d">잡음 제거 후</div></div><div class="ds-c"><div class="ds-a">RATE</div><div class="ds-n">~5m</div><div class="ds-d">자동 추출</div></div></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">07 · RAG 파이프라인과 웹서비스 구축</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">004 / 032</span></div></div>
+</div></div>
+
+<!-- 05 STEP 02 쪼개기 -->
+<div class="stage"><div class="slide" data-title="Chunking">
+  <div class="hbar"><div class="hbar-l">MODULE 07 · UNIT 01 · STEP 02 · CHUNKING</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 07</div></div>
+  <div class="hl"><div class="hl-kicker">UNIT 01 · 쪼개기 — 단위·크기·중첩 전략 · LECTURE 07-A-3 · 7MIN</div><div class="hl-title">쪼개기의 경계 존중 원리</div><div class="hl-sub">단순히 500자로 자르지 않는다. 공공 문서에는 자연스러운 경계(조항·안건·민원 1건)가 이미 있다. 그 경계를 존중하는 것이 품질의 1순위.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col3">
+    <div class="col">
+      <div class="sh"><span class="sh-n">01 · UNIT</span><span class="sh-t">쪼개기 단위 선택</span></div><div class="sh-line"></div>
+      <table class="mtbl"><thead><tr><th>문서 유형</th><th>1차 단위</th><th>폴백</th></tr></thead><tbody>
+        <tr><td>규정집</td><td>조항(제X조)</td><td>500자</td></tr>
+        <tr><td>회의록</td><td>안건</td><td>발언자 블록</td></tr>
+        <tr><td>민원 DB</td><td>1건</td><td>—</td></tr>
+        <tr><td>법령</td><td>조문</td><td>항·호</td></tr>
+        <tr><td>보고서</td><td>섹션 헤더</td><td>단락</td></tr>
+        <tr><td>일반 문서</td><td>문단</td><td>500자</td></tr>
+      </tbody></table>
+      <div class="co"><div class="co-lb">ROLE RULE</div><div class="co-main">"자연 경계 우선, 크기는 보조"</div><p>의미 단위가 깨지지 않게. 조항 하나를 두 청크로 자르면 답변이 흐트러진다.</p></div>
+      <div class="fig">SHORTCUT · 재귀 분할기</div>
+      <p class="bt">LangChain <code>RecursiveCharacterTextSplitter</code>는 줄바꿈 → 문단 → 문장 → 단어 순으로 기회 분할. 경계 존중 + 크기 제한을 동시에.</p>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">02 · SIZE · OVERLAP</span><span class="sh-t">크기·겹침 전략</span></div><div class="sh-line"></div>
+      <div class="bth">500자 ± 100 · 겹침 50자 — 공공 경험 기본값</div>
+      <p class="bt">너무 작으면 맥락 부족 → 답변이 얕다. 너무 크면 LLM이 관련 부분을 놓친다. <strong>500자는 한국어 기준 3~5문단</strong>로 맥락과 집중의 균형점.</p>
+      <div class="cblk"><span class="cm"># 겹침이 있는 재귀 분할 (간이 버전)</span>
+<span class="kw">def</span> chunk(text, size=500, overlap=50):
+    out=[]
+    i=0
+    <span class="kw">while</span> i &lt; <span class="kw">len</span>(text):
+        end=<span class="kw">min</span>(i+size,<span class="kw">len</span>(text))
+        <span class="cm"># 문단 경계까지 당기기</span>
+        <span class="kw">if</span> end &lt; <span class="kw">len</span>(text):
+            nl=text.rfind(<span class="st">"\n\n"</span>,i,end)
+            <span class="kw">if</span> nl &gt; i+size*0.5: end=nl
+        out.append(text[i:end])
+        i=end-overlap
+    <span class="kw">return</span> out</div>
+      <div class="dstrip"><div class="ds-c"><div class="ds-a">SIZE</div><div class="ds-n">500</div><div class="ds-d">글자 기본</div></div><div class="ds-c"><div class="ds-a">OVERLAP</div><div class="ds-n">50</div><div class="ds-d">경계 보완</div></div><div class="ds-c"><div class="ds-a">TEST</div><div class="ds-n">±100</div><div class="ds-d">AB 비교</div></div></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">03 · METADATA</span><span class="sh-t">청크 메타 설계</span></div><div class="sh-line"></div>
+      <div class="bth">"청크 텍스트만" 저장하지 않는다 — 메타가 출처 품질을 만든다</div>
+      <div class="cblk"><span class="cm"># 청크 1건의 JSON 구조</span>
+{
+  <span class="st">"id"</span>: <span class="st">"reg_03_002"</span>,
+  <span class="st">"src"</span>: <span class="st">"인사규정.pdf"</span>,
+  <span class="st">"page"</span>: 12,
+  <span class="st">"section"</span>: <span class="st">"제3장 휴가"</span>,
+  <span class="st">"clause"</span>: <span class="st">"제15조 연차"</span>,
+  <span class="st">"updated"</span>: <span class="st">"2026-02-14"</span>,
+  <span class="st">"text"</span>: <span class="st">"연차유급휴가는..."</span>
+}</div>
+      <p class="bt sm">답변 프롬프트에 메타를 같이 넣으면 LLM이 <strong>"인사규정 제15조에 따르면..."</strong> 식으로 자연스러운 인용을 생성한다.</p>
+      <div class="pit"><div class="pit-lb">PITFALL</div><div class="pit-h">▸ "갱신일"을 빠뜨리는 실수</div><div class="pit-d">규정은 개정된다. 구버전 청크가 남아 있으면 오답. 인덱스 재빌드 시 갱신일 기준 최신만.</div><div class="pit-h">▸ 조항 번호를 텍스트에서 분리</div><div class="pit-d">"제15조" 같은 키를 메타에만 두고 청크 본문에서 빼면 키워드 검색이 망가진다. 둘 다 유지.</div></div>
+      <div class="chk"><div class="chk-b"></div><div class="chk-t">자연 경계 우선 규칙 적용</div></div>
+      <div class="chk"><div class="chk-b"></div><div class="chk-t">메타 필드 6종 이상 설계</div></div>
+      <div class="chk"><div class="chk-b"></div><div class="chk-t">재빌드 스크립트 자동화</div></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">07 · RAG 파이프라인과 웹서비스 구축</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">005 / 032</span></div></div>
+</div></div>
+
+<!-- 06 STEP 03 찾기 -->
+<div class="stage"><div class="slide" data-title="Retrieval">
+  <div class="hbar"><div class="hbar-l">MODULE 07 · UNIT 01 · STEP 03 · RETRIEVAL</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 07</div></div>
+  <div class="hl"><div class="hl-kicker">UNIT 01 · 찾기 — 키워드·임베딩·하이브리드 · LECTURE 07-A-4 · 8MIN</div><div class="hl-title">찾기의 세 축 선택 기준</div><div class="hl-sub">공공 업무의 7할은 키워드(BM25)만으로 충분하다. 의미 검색이 필요한 질문에 임베딩을 보조로 얹는다. 하이브리드가 현장 기본값.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col3">
+    <div class="col">
+      <div class="sh"><span class="sh-n">01 · BM25</span><span class="sh-t">키워드가 먼저다</span></div><div class="sh-line"></div>
+      <div class="bth">Python <strong>rank_bm25</strong> — pip 한 줄, 50줄 구현</div>
+      <p class="bt">한국어는 형태소 분석 없이도 <strong>공백·조사 단순 분리</strong>로 70~85% 품질이 나온다. 더 필요하면 kiwi·okt를 얹는다.</p>
+      <div class="cblk"><span class="cm"># 30줄 한국어 BM25 검색</span>
+<span class="kw">from</span> rank_bm25 <span class="kw">import</span> BM25Okapi
+<span class="kw">import</span> re
+<span class="kw">def</span> tok(s):
+    <span class="kw">return</span> re.findall(
+        <span class="st">r"[가-힣]+|[a-zA-Z0-9]+"</span>, s)
+corpus=[tok(c[<span class="st">"text"</span>]) <span class="kw">for</span> c <span class="kw">in</span> chunks]
+bm=BM25Okapi(corpus)
+<span class="kw">def</span> search(q,k=5):
+    s=bm.get_scores(tok(q))
+    <span class="kw">return</span> [chunks[i] <span class="kw">for</span> i
+            <span class="kw">in</span> s.argsort()[-k:][::-1]]</div>
+      <div class="co"><div class="co-lb">FIT</div><div class="co-main">규정 Q&amp;A · 키워드가 명확한 질문 우위</div></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">02 · EMBEDDING</span><span class="sh-t">의미 기반 검색</span></div><div class="sh-line"></div>
+      <div class="bth">같은 뜻 다른 단어까지 잡는다</div>
+      <p class="bt">"연차"와 "휴가", "민원"과 "불편신고" 같은 <strong>동의어·유의어</strong>를 키워드로 잡기 어려울 때 임베딩이 힘을 발휘한다.</p>
+      <table class="mtbl"><thead><tr><th>모델</th><th>특징</th></tr></thead><tbody>
+        <tr><td>nomic-embed-text</td><td>Ollama 무료·로컬</td></tr>
+        <tr><td>multilingual-e5</td><td>한·영 혼합</td></tr>
+        <tr><td>bge-m3</td><td>장문 특화</td></tr>
+        <tr><td>OpenAI text-embedding-3</td><td>품질 우수(외부)</td></tr>
+      </tbody></table>
+      <div class="cblk"><span class="cm"># Ollama로 임베딩 + chromadb 저장</span>
+<span class="kw">import</span> ollama, chromadb
+client=chromadb.PersistentClient(<span class="st">"./idx"</span>)
+col=client.get_or_create_collection(<span class="st">"docs"</span>)
+<span class="kw">for</span> i,c <span class="kw">in</span> <span class="kw">enumerate</span>(chunks):
+    e=ollama.embed(<span class="st">"nomic-embed-text"</span>,
+                   c[<span class="st">"text"</span>])[<span class="st">"embeddings"</span>][0]
+    col.add(ids=[<span class="kw">str</span>(i)], embeddings=[e],
+            documents=[c[<span class="st">"text"</span>]])</div>
+      <div class="pit"><div class="pit-lb">주의</div><div class="pit-h">▸ 임베딩 재빌드 비용</div><div class="pit-d">문서 수천 건 기준 10~30분. 인덱스 갱신 주기를 주간·월간으로 스케줄.</div></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">03 · HYBRID</span><span class="sh-t">현장 기본값</span></div><div class="sh-line"></div>
+      <div class="bth">BM25 상위 20 → 임베딩 재랭킹 5</div>
+      <p class="bt"><strong>BM25로 후보 20개를 뽑고</strong>, 임베딩으로 상위 5개 재랭킹. 속도·품질 모두 우수. 이 조합이 국내 공공 RAG의 기본값.</p>
+      <div class="flow">
+        <div class="flow-box"><div class="flow-box-lb">Q</div><div class="flow-box-t">질문</div></div>
+        <div class="flow-arrow">▸</div>
+        <div class="flow-box dark"><div class="flow-box-lb">BM25</div><div class="flow-box-t">20개</div></div>
+        <div class="flow-arrow">▸</div>
+        <div class="flow-box"><div class="flow-box-lb">EMB</div><div class="flow-box-t">Top 5</div></div>
+      </div>
+      <div class="fig">FIGURE 02 · HYBRID RETRIEVAL</div>
+      <div class="cod"><div class="cod-lb">DECISION</div><div class="cod-main">문서 300건 미만 → BM25만 / 이상 → 하이브리드</div><p>1주만 BM25로 운영하며 실패 케이스 확보 → 그 케이스가 임베딩 도입 근거.</p></div>
+      <div class="quote"><div class="quote-src">SOURCE · 현장 관찰</div><div class="quote-q">"가장 나쁜 선택은 '임베딩부터 넣자'다. 언제나 BM25 먼저."</div><div class="quote-a">— 공공 RAG 운영 노트</div></div>
+      <div class="chk"><div class="chk-b"></div><div class="chk-t">BM25 베이스라인 구축</div></div>
+      <div class="chk"><div class="chk-b"></div><div class="chk-t">실패 케이스 10건 수집 후 임베딩 결정</div></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">07 · RAG 파이프라인과 웹서비스 구축</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">006 / 032</span></div></div>
+</div></div>
+
+<!-- 07 STEP 04 답하기 -->
+<div class="stage"><div class="slide" data-title="Generation">
+  <div class="hbar"><div class="hbar-l">MODULE 07 · UNIT 01 · STEP 04 · GENERATION</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 07</div></div>
+  <div class="hl"><div class="hl-kicker">UNIT 01 · 답하기 — 근거 주입 + 출처 명시 · LECTURE 07-A-5 · 6MIN</div><div class="hl-title">RAG 프롬프트 설계의 세 요소</div><div class="hl-sub">"청크만 보고 답하라"는 지시, 출처 형식 강제, 모르면 모른다고 답하는 루틴. 세 가지가 없으면 RAG가 일반 LLM처럼 헛소리를 한다.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col2">
+    <div class="col">
+      <div class="sh"><span class="sh-n">01 · PROMPT</span><span class="sh-t">답변 프롬프트 원형</span></div><div class="sh-line"></div>
+      <div class="bth">공공 RAG 답변 프롬프트 표준형</div>
+      <div class="cblk"><span class="cm"># system / user 역할 분리</span>
+<span class="kw">SYSTEM</span>:
+너는 공공기관 내부 규정 안내 담당자다.
+규칙:
+ 1. 아래 [문서] 블록에 있는 내용만 근거로 답한다.
+ 2. [문서]에 없으면 <span class="st">"규정에 없음"</span>이라고 답한다.
+ 3. 답변 끝에 <span class="st">"근거: [파일명 / 조항]"</span>을 표기한다.
+ 4. 추측·외부 지식·감정적 표현은 금지.
+
+<span class="kw">USER</span>:
+[문서]
+{% <span class="kw">for</span> c <span class="kw">in</span> chunks %}
+---
+출처: {{c.src}} / {{c.clause}}
+본문: {{c.text}}
+{% <span class="kw">endfor</span> %}
+
+[질문] {{query}}</div>
+      <p class="bt">프롬프트는 <strong>버전 관리</strong>한다. A/B 비교 후 기본 프롬프트 교체 시 정답률 재측정 필수.</p>
+      <div class="co"><div class="co-lb">KEY TAKEAWAY</div><div class="co-main">"규정에 없음" 출구를 남기는 것이 RAG의 품격</div><p>모르는 것을 아는 척하면 공공 업무에서 바로 사고. 차단을 프롬프트에 강제.</p></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">02 · ANSWER SHAPE</span><span class="sh-t">답변 포맷</span></div><div class="sh-line"></div>
+      <div class="bth">답변을 "구조화"하면 감사·재사용이 쉬워진다</div>
+      <div class="cblk"><span class="cm"># 구조화 답변 예시</span>
+{
+  <span class="st">"answer"</span>: <span class="st">"연차유급휴가는 1년간 80% 이상..."</span>,
+  <span class="st">"citations"</span>: [
+    {<span class="st">"src"</span>:<span class="st">"인사규정.pdf"</span>,
+     <span class="st">"clause"</span>:<span class="st">"제15조 제1항"</span>,
+     <span class="st">"page"</span>:12}
+  ],
+  <span class="st">"confidence"</span>: <span class="st">"high"</span>,
+  <span class="st">"abstain"</span>: <span class="kw">false</span>
+}</div>
+      <table class="mtbl"><thead><tr><th>필드</th><th>용도</th></tr></thead><tbody>
+        <tr><td>answer</td><td>사용자 노출 문장</td></tr>
+        <tr><td>citations</td><td>감사·링크 렌더</td></tr>
+        <tr><td>confidence</td><td>low → 사람 확인</td></tr>
+        <tr><td>abstain</td><td>true → "규정에 없음"</td></tr>
+      </tbody></table>
+      <div class="pit"><div class="pit-lb">PITFALL</div><div class="pit-h">▸ 출처가 뭉뚱그려진 답변</div><div class="pit-d">"규정에 따르면"이라고만 적으면 감사 대응 불가. 조항·페이지까지.</div><div class="pit-h">▸ 컨텍스트 초과</div><div class="pit-d">청크 10건을 통째로 넣으면 토큰 폭증. Top-K는 3~5로 제한.</div></div>
+      <div class="dstrip"><div class="ds-c"><div class="ds-a">TOP-K</div><div class="ds-n">3~5</div><div class="ds-d">프롬프트 삽입</div></div><div class="ds-c"><div class="ds-a">ABSTAIN</div><div class="ds-n">필수</div><div class="ds-d">모름 출구</div></div><div class="ds-c"><div class="ds-a">CITE</div><div class="ds-n">조항·쪽</div><div class="ds-d">감사 대응</div></div></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">07 · RAG 파이프라인과 웹서비스 구축</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">007 / 032</span></div></div>
+</div></div>
+
+<!-- 08 HERO · 벡터 DB 없이도 80% -->
+<div class="stage"><div class="slide" data-title="Hero 80 Percent">
+  <div class="hbar"><div class="hbar-l">MODULE 07 · UNIT 01 · REALITY CHECK</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 07</div></div>
+  <div class="bd col1"><div class="col hero" style="background:var(--dk);color:var(--on)">
+    <div class="hero-k">UNIT 01 · REALITY CHECK</div>
+    <div class="hero-t">벡터 DB 없이도 <span style="color:var(--acc3)">80%</span>는 된다.<br>시작하지 못하는 이유는 <span style="color:var(--acc3)">도구</span>가 아니라 <span style="color:var(--acc3)">핑계</span>다.</div>
+    <div class="hero-s">공공 업무의 대부분은 문서 100~500건 규모. Pinecone·Weaviate 없이도 <strong style="color:var(--on)">BM25 + 긴 컨텍스트 LLM</strong>만으로 충분히 동작한다. "Pinecone을 먼저 공부해야 해서" 시작하지 못하는 것 — 그게 진짜 장벽이다.</div>
+    <div class="hero-q"><div class="hero-q-q">"벡터 DB가 없어서 못 한 게 아니라, 시작을 미룬 것이었다."</div><div class="hero-q-a">— 공공 RAG 도입 현장 관찰</div></div>
+  </div></div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">07 · RAG 파이프라인과 웹서비스 구축</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">008 / 032</span></div></div>
+</div></div>
+
+<!-- 09 긴 컨텍스트 + 키워드 필터 -->
+<div class="stage"><div class="slide" data-title="Long Context + Keyword">
+  <div class="hbar"><div class="hbar-l">MODULE 07 · UNIT 01 · LONG CONTEXT APPROACH</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 07</div></div>
+  <div class="hl"><div class="hl-kicker">UNIT 01 · 128K/1M 컨텍스트 모델 + 키워드 필터 · LECTURE 07-A-6 · 7MIN</div><div class="hl-title">롱컨텍스트 통째 주입 전략</div><div class="hl-sub">Claude Sonnet 200K·Gemini 1M 시대. 문서 100건(약 300K 토큰) 정도는 통째로 프롬프트에 넣을 수 있다. 검색 품질을 걱정할 필요가 없어진다.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col2">
+    <div class="col">
+      <div class="sh"><span class="sh-n">01 · MODELS</span><span class="sh-t">긴 컨텍스트 모델</span></div><div class="sh-line"></div>
+      <table class="mtbl"><thead><tr><th>모델</th><th>컨텍스트</th><th>대략</th></tr></thead><tbody>
+        <tr><td>Claude Sonnet 4</td><td>200K</td><td>~150페이지</td></tr>
+        <tr><td>Claude Opus 4</td><td>200K</td><td>~150페이지</td></tr>
+        <tr><td>Gemini 2.5 Pro</td><td>1M</td><td>~750페이지</td></tr>
+        <tr><td>GPT-5</td><td>400K</td><td>~300페이지</td></tr>
+        <tr><td>Qwen2.5 128K</td><td>128K</td><td>~90페이지 · 로컬</td></tr>
+      </tbody></table>
+      <div class="co"><div class="co-lb">HYBRID RULE</div><div class="co-main">키워드 필터 5건 → 긴 컨텍스트 LLM에 통째</div><p>1차 필터로 후보를 좁히고, 2차에서 모델이 넓게 본다. 공공 현장 가장 안정적.</p></div>
+      <div class="cblk"><span class="cm"># 긴 컨텍스트 프롬프트 전략</span>
+hits = bm25_search(query, k=20)
+ctx = <span class="st">"\n---\n"</span>.join(
+    <span class="st">f"[{h.src}/{h.clause}] {h.text}"</span>
+    <span class="kw">for</span> h <span class="kw">in</span> hits)
+answer = llm(<span class="st">f"[문서]\n{ctx}\n\n[질문]\n{query}"</span>)
+<span class="cm"># 모델이 20건 중 관련 부분만 자동 추출</span></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">02 · ROI</span><span class="sh-t">비용·속도·품질</span></div><div class="sh-line"></div>
+      <div class="bth">토큰이 넉넉할 때 "덜 정교하게 검색"이 오히려 유리</div>
+      <p class="bt">검색을 너무 정밀하게 튜닝하는 시간 &gt; 토큰 비용. 공공 사내 도구는 <strong>일 100~1,000 쿼리</strong> 수준이라 비용 부담이 크지 않다. 시간을 검색 튜닝이 아니라 정답 세트·프롬프트 설계에 쓴다.</p>
+      <div class="dstrip"><div class="ds-c"><div class="ds-a">TUNE</div><div class="ds-n">-70%</div><div class="ds-d">검색 튜닝 시간</div></div><div class="ds-c"><div class="ds-a">TOKEN</div><div class="ds-n">+3배</div><div class="ds-d">컨텍스트 소모</div></div><div class="ds-c"><div class="ds-a">MATCH</div><div class="ds-n">+10%p</div><div class="ds-d">정답률 개선</div></div></div>
+      <div class="pit"><div class="pit-lb">PITFALL</div><div class="pit-h">▸ "1M 다 넣으면 되겠지"</div><div class="pit-d">비용 폭증 + 모델이 중간 내용 놓치는 lost-in-the-middle. <strong>Top-20 정도에서 제한.</strong></div><div class="pit-h">▸ 모델 바뀔 때 컨텍스트 한계 차이</div><div class="pit-d">로컬 모델(Qwen 128K) vs Claude 200K — 환경 바뀌면 청크 수 자동 조정.</div></div>
+      <div class="quote"><div class="quote-src">SOURCE · 전문인재 과정 강의 노트</div><div class="quote-q">"검색을 정교하게 만들 시간에, 정답 세트를 20개 더 준비하라."</div><div class="quote-a">— RAG 운영 철학</div></div>
+      <div class="chk"><div class="chk-b"></div><div class="chk-t">Top-20 하이브리드 파이프라인 구축</div></div>
+      <div class="chk"><div class="chk-b"></div><div class="chk-t">정답률 80% 도달 후 최적화 판단</div></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">07 · RAG 파이프라인과 웹서비스 구축</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">009 / 032</span></div></div>
+</div></div>
+
+<!-- 10 벡터 DB 필요 경계 -->
+<div class="stage"><div class="slide" data-title="Vector DB Threshold">
+  <div class="hbar"><div class="hbar-l">MODULE 07 · UNIT 01 · WHEN TO USE VECTOR DB</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 07</div></div>
+  <div class="hl"><div class="hl-kicker">UNIT 01 · 벡터 DB 도입 경계 · LECTURE 07-A-7 · 6MIN</div><div class="hl-title">벡터 DB 도입 판단 기준</div><div class="hl-sub">언제 Pinecone·Weaviate·Qdrant 같은 전용 벡터 DB를 도입하는가. 문서 규모·쿼리량·동시접속 세 축으로 판단한다.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col3">
+    <div class="col">
+      <div class="sh"><span class="sh-n">01 · SCALE</span><span class="sh-t">규모별 권장</span></div><div class="sh-line"></div>
+      <table class="mtbl"><thead><tr><th>문서 수</th><th>전략</th></tr></thead><tbody>
+        <tr><td>~100</td><td>BM25만</td></tr>
+        <tr><td>100~500</td><td>BM25 + 긴 컨텍스트</td></tr>
+        <tr><td>500~5k</td><td>+ 임베딩(chromadb)</td></tr>
+        <tr><td>5k~50k</td><td>qdrant / milvus</td></tr>
+        <tr><td>50k+</td><td>pinecone / weaviate</td></tr>
+      </tbody></table>
+      <div class="co"><div class="co-lb">RULE</div><div class="co-main">"서비스하다 막혔을 때 갈아타기"</div><p>처음부터 최적화 금지. chromadb → qdrant → pinecone 순으로 자연스럽게.</p></div>
+      <p class="bt sm">공공 부서 단위 RAG 대부분은 5천 건 미만. <strong>chromadb 파일 기반</strong>이면 충분.</p>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">02 · DB OPTIONS</span><span class="sh-t">벡터 DB 후보</span></div><div class="sh-line"></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">CHROMADB</span><span class="icard-sess">파일 기반</span></div><div class="bth">로컬 파일 한 개 · 서버 불필요</div><p class="bt">사내 도구엔 이만한 게 없다. <strong>pip install</strong> 한 줄. 5만 건까지 안정.</p></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">QDRANT</span><span class="icard-sess">내부망 서버</span></div><div class="bth">Rust 기반 · 고성능 · Docker 1줄 실행</div><p class="bt">수만~수십만 건 규모에서 1순위. REST/gRPC API. 메타데이터 필터 강점.</p></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">MILVUS</span><span class="icard-sess">대규모</span></div><div class="bth">억 단위 벡터 · 클러스터 구조</div><p class="bt">공공 기관 단위 도입에 적합. 운영 인력 필요 → 정보화 부서와 협업.</p></div>
+      <div class="icard dark"><div class="icard-top"><span class="icard-lb">PINECONE</span><span class="icard-sess">SaaS · 외부</span></div><div class="bth">관리형 · 빠른 시작 · 데이터 외부</div><p class="bt">가장 쉽지만 <strong>공공 내부망에선 사용 어려움.</strong> 비식별 연구용 또는 외부망 서비스용.</p></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">03 · MIGRATION</span><span class="sh-t">이전 경로</span></div><div class="sh-line"></div>
+      <div class="bth">"인터페이스 분리"가 이전 비용을 결정한다</div>
+      <p class="bt">RAG 코드 안에서 <strong>검색 함수 1개만 추상화</strong>해두면, 내부 구현을 chromadb → qdrant → milvus로 갈아끼우기 쉽다.</p>
+      <div class="cblk"><span class="cm"># VectorStore 추상화</span>
+<span class="kw">class</span> VectorStore:
+    <span class="kw">def</span> add(self, ids, embs, docs): ...
+    <span class="kw">def</span> search(self, emb, k): ...
+
+<span class="kw">class</span> ChromaStore(VectorStore): ...
+<span class="kw">class</span> QdrantStore(VectorStore): ...
+
+<span class="cm"># 교체는 한 줄</span>
+store = ChromaStore(<span class="st">"./idx"</span>)
+<span class="cm"># store = QdrantStore(url=os.getenv("QD"))</span></div>
+      <div class="pit"><div class="pit-lb">PITFALL</div><div class="pit-h">▸ DB를 먼저, 데이터를 나중에</div><div class="pit-d">공공 현장 최다 실패 패턴. <strong>BM25로 실서비스부터 시작</strong>하고, 막힐 때 DB 교체.</div></div>
+      <div class="dstrip"><div class="ds-c"><div class="ds-a">START</div><div class="ds-n">BM25</div><div class="ds-d">첫 주</div></div><div class="ds-c"><div class="ds-a">NEXT</div><div class="ds-n">chroma</div><div class="ds-d">정답률 80%+</div></div><div class="ds-c"><div class="ds-a">SCALE</div><div class="ds-n">qdrant</div><div class="ds-d">5k+ 문서</div></div></div>
+      <div class="chk"><div class="chk-b"></div><div class="chk-t">인터페이스 분리 확인</div></div>
+      <div class="chk"><div class="chk-b"></div><div class="chk-t">도입 트리거 문서화(규모·쿼리·속도)</div></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">07 · RAG 파이프라인과 웹서비스 구축</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">010 / 032</span></div></div>
+</div></div>
+
+<!-- 11 UNIT 02 공공 RAG 4가지 사례 개관 -->
+<div class="stage"><div class="slide" data-title="Public 4 Cases Intro">
+  <div class="hbar"><div class="hbar-l">MODULE 07 · UNIT 02 · PUBLIC RAG · FOUR CASES</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 07</div></div>
+  <div class="hl"><div class="hl-kicker">UNIT 02 · 공공 RAG 4대 시나리오 개관 · LECTURE 07-B-1 · 5MIN</div><div class="hl-title">공공 RAG의 네 가지 전형 시나리오</div><div class="hl-sub">네 가지 전형 시나리오. 각각 문서 특성·쪼개기 단위·답변 요건이 다르다. 다음 4장에서 사례별로 깊이 들어간다.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col3">
+    <div class="col">
+      <div class="sh"><span class="sh-n">CASE 1</span><span class="sh-t">규정 Q&amp;A</span></div><div class="sh-line"></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">INTERNAL REGULATIONS</span></div><div class="bth">내부 규정집 100~300건 PDF</div><p class="bt">쪼개기 <strong>조항 단위</strong>. 답변 끝 "제X조 제Y항". 연차·출장·전자결재·보안 규정이 1순위.</p></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">CASE 2</span></div><div class="bth">법령·조례 해석</div><p class="bt">소관 법령·시행령·시행규칙 + 조례. <strong>법령정보센터 Open API</strong> 연계 권장. 답변 끝에 "초안 — 법무 검토 필요" 강제.</p></div>
+      <div class="co"><div class="co-lb">공통 패턴</div><div class="co-main">"쪼개기 단위"가 첫 케이스 설계값</div><p>규정은 <strong>조항</strong>, 법령은 <strong>조문</strong>. 같은 RAG지만 쪼개기부터 달라진다.</p></div>
+      <div class="dstrip"><div class="ds-c"><div class="ds-a">CASE1</div><div class="ds-n">조항</div><div class="ds-d">규정 단위</div></div><div class="ds-c"><div class="ds-a">CASE2</div><div class="ds-n">조문</div><div class="ds-d">법령 단위</div></div><div class="ds-c"><div class="ds-a">API</div><div class="ds-n">law.go.kr</div><div class="ds-d">갱신 연계</div></div></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">CASE 3 · 4</span><span class="sh-t">민원·회의록</span></div><div class="sh-line"></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">MINWON DB</span></div><div class="bth">민원 매뉴얼 · 과거 응대 사례</div><p class="bt">신규 민원 → 과거 유사 5건 + 당시 응대안. 쪼개기 <strong>민원 1건 단위</strong>. 출처: 접수번호·처리결과.</p></div>
+      <div class="icard dark"><div class="icard-top"><span class="icard-lb">MEETING ARCHIVE</span></div><div class="bth">회의록 1~3년치</div><p class="bt">"지난 분기 A안건 결정 경과"에 50건에서 발췌. 쪼개기: <strong>회차+안건 단위</strong>. 출처: 날짜+안건명.</p></div>
+      <div class="quote"><div class="quote-src">SOURCE · 실무 인터뷰</div><div class="quote-q">"우리 부서에서 시작한 RAG는 결국 인수인계 도구가 됐다."</div><div class="quote-a">— 규정 Q&amp;A 도입 소감</div></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">MAP</span><span class="sh-t">사례 비교 매트릭스</span></div><div class="sh-line"></div>
+      <table class="mtbl"><thead><tr><th>CASE</th><th>단위</th><th>LLM 역할</th></tr></thead><tbody>
+        <tr><td>① 규정</td><td>조항</td><td>인용 · 조건 판단</td></tr>
+        <tr><td>② 법령</td><td>조문</td><td>초안 해석</td></tr>
+        <tr><td>③ 민원</td><td>1건</td><td>유사 사례 · 응대안</td></tr>
+        <tr><td>④ 회의록</td><td>안건</td><td>시간순 요약</td></tr>
+      </tbody></table>
+      <div class="co"><div class="co-lb">설계 원칙</div><div class="co-main">"어떤 단위로 쪼갤까"가 케이스 설계의 첫 질문</div><p>쪼개기 단위가 답변 품질의 70%를 결정. 크기보다 경계가 중요.</p></div>
+      <div class="pit"><div class="pit-lb">주의</div><div class="pit-h">▸ 네 케이스를 한 인덱스에 섞지 않는다</div><div class="pit-d">다른 쪼개기 단위 · 다른 프롬프트. <strong>케이스별 독립 인덱스.</strong></div></div>
+      <div class="dstrip"><div class="ds-c"><div class="ds-a">CASES</div><div class="ds-n">4</div><div class="ds-d">시나리오</div></div><div class="ds-c"><div class="ds-a">COMMON</div><div class="ds-n">RAG 4단계</div><div class="ds-d">동일 프레임</div></div><div class="ds-c"><div class="ds-a">DIFF</div><div class="ds-n">쪼개기</div><div class="ds-d">단위 다름</div></div></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">07 · RAG 파이프라인과 웹서비스 구축</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">011 / 032</span></div></div>
+</div></div>
+
+<!-- 12 CASE 1 규정 Q&A -->
+<div class="stage"><div class="slide" data-title="Case 1 Regulations">
+  <div class="hbar"><div class="hbar-l">MODULE 07 · UNIT 02 · CASE 1 · INTERNAL REGULATIONS</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 07</div></div>
+  <div class="hl"><div class="hl-kicker">CASE 1 · 내부 규정 PDF 질의응답 · LECTURE 07-B-2 · 8MIN</div><div class="hl-title">사례 1 내부 규정 RAG 구성</div><div class="hl-sub">입사·전보·휴가·전자결재·보안 규정. 담당자가 자주 받는 질문 Top 30 = RAG의 첫 사용자 시나리오. 인수인계 도구로 확장된다.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col2w">
+    <div class="col">
+      <div class="sh"><span class="sh-n">01 · SPEC</span><span class="sh-t">사례 설계서</span></div><div class="sh-line"></div>
+      <table class="mtbl"><thead><tr><th>항목</th><th>설계값</th></tr></thead><tbody>
+        <tr><td>문서</td><td>인사·복무·보안·전자결재 규정 PDF 80건</td></tr>
+        <tr><td>쪼개기</td><td>"제X조" 단위 + 부속 항·호</td></tr>
+        <tr><td>검색</td><td>BM25 상위 10 → 긴 컨텍스트</td></tr>
+        <tr><td>답변</td><td>2~3줄 요지 + "근거: 규정명 제X조 제Y항"</td></tr>
+        <tr><td>정답 세트</td><td>20건 (휴가·출장·인증·결재 각 5건)</td></tr>
+        <tr><td>목표 정답률</td><td>85% 이상</td></tr>
+        <tr><td>실패 모드</td><td>"규정에 없음" 또는 "담당자 문의" 응답</td></tr>
+      </tbody></table>
+      <div class="cblk"><span class="cm"># 규정 Q&amp;A 전용 프롬프트</span>
+아래 규정 조항만 참고해 답하라.
+출력 형식:
+ 답: [2~3줄, 판단 포함]
+ 근거: [규정명 제X조 제Y항]
+ 확신도: high / medium / low
+
+조항에 없으면 <span class="st">"규정에 없음"</span>이라 답하고
+조건이 애매하면 <span class="st">"담당자 확인 권장"</span> 문구 추가.
+
+[검색된 조항 5건]
+{chunks}
+
+[질문] {query}</div>
+      <div class="co"><div class="co-lb">설계 원칙</div><div class="co-main">"조항 단위 쪼개기"가 답변 품질의 70%</div><p>제X조·제Y항 단위가 깨지지 않게 한다. 크기 500자보다 경계가 우선.</p></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">02 · FIELD</span><span class="sh-t">현장 관찰</span></div><div class="sh-line"></div>
+      <div class="bth">시작은 "자주 묻는 30건", 진화는 "인수인계 도구"</div>
+      <p class="bt">도입 첫 달에는 <strong>FAQ 30건</strong> 수준으로 출발한다. 3개월이면 담당자 교대 시 <strong>신입 안내 도구</strong>로 쓰인다. 6개월이면 타 부서에서도 요청이 들어온다.</p>
+      <div class="co"><div class="co-lb">성공 지표</div><div class="co-main">"담당자 질문량" 감소 + "신입 적응 시간" 단축</div><p>주당 질문 수 80% 감소 사례 흔함.</p></div>
+      <div class="pit"><div class="pit-lb">PITFALL</div><div class="pit-h">▸ 개정 타이밍 누락</div><div class="pit-d">규정 개정 후 인덱스 미갱신 → 구버전 조항 인용. <strong>월 1회 자동 재빌드</strong> 스크립트 필수.</div><div class="pit-h">▸ "연차 며칠 남았나" 개인 질문</div><div class="pit-d">규정 해석 범위를 넘음. "연차 계산기"는 별도 도구로. 경계 명확히.</div></div>
+      <div class="quote"><div class="quote-src">FIELD CASE · 거점 부서</div><div class="quote-q">"신입이 2주면 알던 것을 3일이면 훑는다. 그게 진짜 체감이다."</div><div class="quote-a">— 인사과 사용 후기</div></div>
+      <div class="dstrip"><div class="ds-c"><div class="ds-a">DOCS</div><div class="ds-n">80건</div><div class="ds-d">규정 PDF</div></div><div class="ds-c"><div class="ds-a">Q/DAY</div><div class="ds-n">~30</div><div class="ds-d">초기</div></div><div class="ds-c"><div class="ds-a">ACC</div><div class="ds-n">87%</div><div class="ds-d">3개월 후</div></div></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">07 · RAG 파이프라인과 웹서비스 구축</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">012 / 032</span></div></div>
+</div></div>
+
+<!-- 13 CASE 2 법령 -->
+<div class="stage"><div class="slide" data-title="Case 2 Law">
+  <div class="hbar"><div class="hbar-l">MODULE 07 · UNIT 02 · CASE 2 · LAW &amp; ORDINANCE</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 07</div></div>
+  <div class="hl"><div class="hl-kicker">CASE 2 · 법령·조례 해석 · LECTURE 07-B-3 · 8MIN</div><div class="hl-title">사례 2 법령 API 연계 RAG</div><div class="hl-sub">법령은 자주 개정된다. 캐시한 PDF는 1개월 내 구식이 된다. <strong>Open API 연계</strong>가 원칙. 답변은 항상 "초안 — 유권해석 아님"으로 표기.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col2">
+    <div class="col">
+      <div class="sh"><span class="sh-n">01 · SOURCE</span><span class="sh-t">데이터 소스</span></div><div class="sh-line"></div>
+      <table class="mtbl"><thead><tr><th>소스</th><th>용도</th></tr></thead><tbody>
+        <tr><td>법령정보센터 API</td><td>법령·시행령·시행규칙 본문</td></tr>
+        <tr><td>소관 부처 고시</td><td>운영 기준·세부 지침</td></tr>
+        <tr><td>자치법규정보시스템</td><td>조례·규칙</td></tr>
+        <tr><td>판례·해석례 DB</td><td>참고 (최종 해석 아님)</td></tr>
+      </tbody></table>
+      <div class="cblk"><span class="cm"># law_api.py — 법령 본문 캐시</span>
+<span class="kw">import</span> requests, json, pathlib
+<span class="kw">def</span> fetch_law(name):
+    r = requests.get(
+        <span class="st">"https://www.law.go.kr/DRF/lawService.do"</span>,
+        params={<span class="st">"OC"</span>:<span class="st">"user"</span>,<span class="st">"target"</span>:<span class="st">"law"</span>,
+                <span class="st">"type"</span>:<span class="st">"JSON"</span>,<span class="st">"LM"</span>:name})
+    <span class="kw">return</span> r.json()
+
+<span class="cm"># 주간 스케줄: 법령 20종 재수집</span>
+<span class="kw">for</span> name <span class="kw">in</span> [<span class="st">"개인정보보호법"</span>,
+             <span class="st">"국가공무원법"</span>, ...]:
+    pathlib.Path(<span class="st">f"./laws/{name}.json"</span>).write_text(
+        json.dumps(fetch_law(name), ensure_ascii=<span class="kw">False</span>))</div>
+      <div class="co"><div class="co-lb">갱신 주기</div><div class="co-main">법령 · 주간 / 시행령 · 주간 / 고시 · 수시</div></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">02 · ANSWER</span><span class="sh-t">답변 원칙</span></div><div class="sh-line"></div>
+      <div class="bth">"초안 — 유권해석 아님"을 프롬프트에 강제</div>
+      <div class="cblk"><span class="cm"># 법령 해석 프롬프트 (발췌)</span>
+너는 공공기관 법무지원 초안 작성자다.
+규칙:
+ - 아래 조문만 근거로 답한다.
+ - 마지막에 반드시
+   <span class="st">"본 답변은 초안이며,"</span>
+   <span class="st">"최종 유권해석은 소관 부처/법무 담당 판단을 따릅니다."</span>
+   를 덧붙인다.
+ - <span class="st">"판례에 따르면"</span> 같은 단정 금지.
+
+[조문]
+{chunks}
+
+[사안] {query}</div>
+      <div class="pit"><div class="pit-lb">PITFALL · 공공 법무</div><div class="pit-h">▸ LLM이 "해석"을 단정</div><div class="pit-d">공공에서 가장 위험. 프롬프트·UI 양쪽에서 "초안" 배너 강제.</div><div class="pit-h">▸ 개정 전 조문 인용</div><div class="pit-d">PDF 스냅샷만으로는 한계. Open API가 유일한 해결책.</div></div>
+      <div class="quote"><div class="quote-src">SOURCE · 법무 담당 인터뷰</div><div class="quote-q">"초안이라는 배지가 있어야 AI를 쓸 수 있다. 법무에선 그 배지가 안전벨트다."</div><div class="quote-a">— 법령 RAG 도입 조건</div></div>
+      <div class="chk"><div class="chk-b"></div><div class="chk-t">"초안" 배너 UI 고정</div></div>
+      <div class="chk"><div class="chk-b"></div><div class="chk-t">법령 API 주간 갱신 스크립트</div></div>
+      <div class="chk"><div class="chk-b"></div><div class="chk-t">답변 로그 → 법무 월간 검토</div></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">07 · RAG 파이프라인과 웹서비스 구축</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">013 / 032</span></div></div>
+</div></div>
+
+<!-- 14 CASE 3 민원 -->
+<div class="stage"><div class="slide" data-title="Case 3 Minwon">
+  <div class="hbar"><div class="hbar-l">MODULE 07 · UNIT 02 · CASE 3 · MINWON MANUAL</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 07</div></div>
+  <div class="hl"><div class="hl-kicker">CASE 3 · 민원 매뉴얼 검색 + 유사 사례 · LECTURE 07-B-4 · 8MIN</div><div class="hl-title">사례 3 민원 RAG 운영</div><div class="hl-sub">민원 응대는 패턴 학습의 영역. 신규 민원 원문을 넣으면 과거 유사 3~5건과 당시 응대안이 돌아온다. 신입의 학습 곡선이 압축된다.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col3">
+    <div class="col">
+      <div class="sh"><span class="sh-n">01 · DATA</span><span class="sh-t">민원 데이터 구조</span></div><div class="sh-line"></div>
+      <div class="bth">민원 1건 = 청크 1건</div>
+      <p class="bt">접수번호·유형·원문·응대안·처리결과·담당자 필드. <strong>쪼개지 않는다.</strong> 민원 1건을 통째로 청크화하고, 메타로 유형·날짜 부여.</p>
+      <div class="cblk"><span class="cm"># minwon.json 스키마</span>
+{
+ <span class="st">"id"</span>:<span class="st">"M2026-0421-014"</span>,
+ <span class="st">"type"</span>:<span class="st">"도로/시설"</span>,
+ <span class="st">"date"</span>:<span class="st">"2026-04-05"</span>,
+ <span class="st">"text"</span>:<span class="st">"포트홀로 차량 파손..."</span>,
+ <span class="st">"response"</span>:<span class="st">"현장 확인 후..."</span>,
+ <span class="st">"result"</span>:<span class="st">"복구 완료·보상 안내"</span>,
+ <span class="st">"officer"</span>:<span class="st">"도로과 김○○"</span>
+}</div>
+      <div class="pit"><div class="pit-lb">개인정보</div><div class="pit-h">▸ 원문 비식별 필수</div><div class="pit-d">이름·전화·차번호 마스킹 후 인덱스. 정보화 부서 승인 선행.</div></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">02 · FLOW</span><span class="sh-t">응대 플로우</span></div><div class="sh-line"></div>
+      <div class="bth">신입이 질문 → 유사 3건 → 담당자 승인</div>
+      <div class="step"><div class="step-n">1</div><div><div class="step-t">신규 민원 원문 붙여넣기</div><div class="step-d">유형 미정 상태로 입력 가능</div></div></div>
+      <div class="step"><div class="step-n">2</div><div><div class="step-t">유사 3~5건 · 응대안 자동 표시</div><div class="step-d">임베딩 검색이 유리 — "표현은 다른데 같은 문제"</div></div></div>
+      <div class="step"><div class="step-n">3</div><div><div class="step-t">추천 응대안 초안 생성</div><div class="step-d">3건을 종합해 "이번 건 대응 초안" 산출</div></div></div>
+      <div class="step"><div class="step-n">4</div><div><div class="step-t">담당자 승인 후 발송</div><div class="step-d">자동 발송 금지. 사람 손을 거치는 체크포인트</div></div></div>
+      <div class="co"><div class="co-lb">RETRIEVAL</div><div class="co-main">하이브리드 — BM25(유형) + 임베딩(표현)</div><p>유형 필터로 후보를 좁히고, 임베딩으로 의미 재정렬.</p></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">03 · QUALITY</span><span class="sh-t">품질 측정</span></div><div class="sh-line"></div>
+      <div class="bth">"신입 응대 시간" + "담당자 수정률"</div>
+      <table class="mtbl"><thead><tr><th>지표</th><th>목표</th></tr></thead><tbody>
+        <tr><td>응대 시간</td><td>-50%</td></tr>
+        <tr><td>수정률</td><td>40% 이하</td></tr>
+        <tr><td>재발 방지</td><td>반복 민원 선제</td></tr>
+        <tr><td>만족도</td><td>유지·상승</td></tr>
+      </tbody></table>
+      <div class="quote"><div class="quote-src">FIELD · 민원팀</div><div class="quote-q">"신입이 과거 3건을 먼저 본다. 그 자체로 교육이 된다."</div><div class="quote-a">— 민원 RAG 체감 후기</div></div>
+      <div class="dstrip"><div class="ds-c"><div class="ds-a">CASES</div><div class="ds-n">2k+</div><div class="ds-d">과거 DB</div></div><div class="ds-c"><div class="ds-a">MATCH</div><div class="ds-n">Top 5</div><div class="ds-d">유사 사례</div></div><div class="ds-c"><div class="ds-a">HITRATE</div><div class="ds-n">72%</div><div class="ds-d">유용 판정</div></div></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">07 · RAG 파이프라인과 웹서비스 구축</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">014 / 032</span></div></div>
+</div></div>
+
+<!-- 15 CASE 4 회의록 -->
+<div class="stage"><div class="slide" data-title="Case 4 Meeting">
+  <div class="hbar"><div class="hbar-l">MODULE 07 · UNIT 02 · CASE 4 · MEETING ARCHIVE</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 07</div></div>
+  <div class="hl"><div class="hl-kicker">CASE 4 · 회의록 아카이브 검색 · LECTURE 07-B-5 · 7MIN</div><div class="hl-title">사례 4 회의록 아카이브 RAG</div><div class="hl-sub">연간 50~200건의 회의록. 시간이 지나면 "왜 그 결정을 했는지"가 사라진다. 회의록 RAG는 조직의 의사결정 기억을 복원한다.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col2">
+    <div class="col">
+      <div class="sh"><span class="sh-n">01 · STRUCTURE</span><span class="sh-t">회의록 구조화</span></div><div class="sh-line"></div>
+      <div class="bth">안건 1개 = 청크 1개 (회의 전체가 아니라)</div>
+      <p class="bt">회의록 50건을 그대로 넣으면 덩어리가 너무 크고, 문단 단위로 쪼개면 맥락이 끊긴다. <strong>회의 → 안건 → 결정</strong> 계층을 만들고 안건 단위로 쪼개는 것이 정답.</p>
+      <div class="cblk"><span class="cm"># meeting.yaml 형식 변환</span>
+- meeting: <span class="st">"2026-04-05 부서회의 #14"</span>
+  date: <span class="st">"2026-04-05"</span>
+  items:
+    - agenda: <span class="st">"A안건 — 홈페이지 개편"</span>
+      discussion: |
+        ... 발언·논의 ...
+      decision: <span class="st">"승인"</span>
+      actions:
+        - who: <span class="st">"기획팀"</span>
+          what: <span class="st">"RFP 초안 4/20까지"</span>
+    - agenda: <span class="st">"B안건 — 예산 추경"</span>
+      decision: <span class="st">"보류 · 재협의"</span></div>
+      <div class="co"><div class="co-lb">INPUT</div><div class="co-main">STT(클로바노트) → LLM 구조화 → YAML</div><p>6차시에서 다룬 에이전트 패턴 재활용. 녹취 → 구조화 → 인덱싱.</p></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">02 · QUERY</span><span class="sh-t">질의 유형</span></div><div class="sh-line"></div>
+      <table class="mtbl"><thead><tr><th>질의</th><th>처리</th></tr></thead><tbody>
+        <tr><td>"A안건 경과"</td><td>회차 정렬 + 결정 추출</td></tr>
+        <tr><td>"누가 맡았나"</td><td>actions.who 필드</td></tr>
+        <tr><td>"보류 안건 재개 이력"</td><td>decision 필터 + 후속 회차</td></tr>
+        <tr><td>"지난 분기 결정 요약"</td><td>날짜 필터 + 요약 LLM</td></tr>
+      </tbody></table>
+      <div class="cblk"><span class="cm"># 회의록 답변 프롬프트 (발췌)</span>
+다음 안건 기록만 참고해 답한다.
+출력은 시간순. 각 항목에
+ - [YYYY-MM-DD #회차] 간단 요지
+ - 결정 · 담당 · 기한
+를 달아라. 추정·보간 금지.
+
+[검색 안건]
+{chunks}
+
+[질문] {query}</div>
+      <div class="pit"><div class="pit-lb">주의</div><div class="pit-h">▸ 비공개 안건 필터</div><div class="pit-d">인사·징계·예산 비공개 건은 별도 보안 등급. RAG 인덱스 자체 분리.</div><div class="pit-h">▸ 발언자 개인 비판성 발언</div><div class="pit-d">기록 보존은 되나 AI 검색 대상에서 제외. 권한 분리 설계.</div></div>
+      <div class="quote"><div class="quote-src">FIELD · 전략기획실</div><div class="quote-q">"3개월 전에 왜 그렇게 결정했는지 복원하는 데 5분이면 된다."</div><div class="quote-a">— 회의록 RAG 실제 체감</div></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">07 · RAG 파이프라인과 웹서비스 구축</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">015 / 032</span></div></div>
+</div></div>
+
+<!-- 16 로컬 RAG + Ollama + 에이전트 -->
+<div class="stage"><div class="slide" data-title="Local RAG Ollama">
+  <div class="hbar"><div class="hbar-l">MODULE 07 · UNIT 02 · LOCAL RAG · OLLAMA + AGENT</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 07</div></div>
+  <div class="hl"><div class="hl-kicker">UNIT 02 · 로컬 RAG + 에이전트 결합 · LECTURE 07-B-6 · 10MIN</div><div class="hl-title">Ollama 기반 로컬 RAG 구성</div><div class="hl-sub">Ollama가 생성+임베딩을 같이 서빙. 에이전트(Claude Code·Cursor)가 코드를 쓰고 테스트한다. 거점리더의 역할은 설계서 작성과 정답 세트 준비.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col2">
+    <div class="col">
+      <div class="sh"><span class="sh-n">01 · STACK</span><span class="sh-t">내부망 RAG 스택</span></div><div class="sh-line"></div>
+      <table class="mtbl"><thead><tr><th>LAYER</th><th>TOOL</th><th>역할</th></tr></thead><tbody>
+        <tr><td>텍스트 추출</td><td>PyMuPDF · pyhwpx</td><td>PDF/HWP</td></tr>
+        <tr><td>임베딩</td><td>Ollama nomic-embed-text</td><td>로컬·무료</td></tr>
+        <tr><td>저장소</td><td>chromadb (파일)</td><td>서버 불필요</td></tr>
+        <tr><td>검색</td><td>BM25 + 임베딩</td><td>하이브리드</td></tr>
+        <tr><td>생성</td><td>Ollama qwen2.5:7b</td><td>한국어 양호</td></tr>
+        <tr><td>인터페이스</td><td>CLI + 단일 HTML</td><td>배포 간편</td></tr>
+        <tr><td>에이전트</td><td>Claude Code · Cursor</td><td>코드 자동 작성</td></tr>
+      </tbody></table>
+      <div class="netbox"><div class="netbox-lb">내부망 · 완전 오프라인</div><p class="bt sm" style="margin:0">문서·임베딩·답변 모두 기관 PC 한 대 안에서. 민감 데이터 외부 전송 없음. 외부망에서 에이전트로 코드 개발 → 내부망에 이관.</p></div>
+      <div class="dstrip"><div class="ds-c"><div class="ds-a">SETUP</div><div class="ds-n">30m</div><div class="ds-d">초기 설치</div></div><div class="ds-c"><div class="ds-a">INDEX</div><div class="ds-n">~10m</div><div class="ds-d">300건</div></div><div class="ds-c"><div class="ds-a">QUERY</div><div class="ds-n">2~5s</div><div class="ds-d">1건 응답</div></div></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">02 · SPEC→AGENT</span><span class="sh-t">에이전트 지시서</span></div><div class="sh-line"></div>
+      <div class="bth">이 한 장을 Claude Code에 붙여넣기만 하면 된다</div>
+      <div class="cblk"><span class="cm"># rag_spec.md — 에이전트 지시서</span>
+
+## 목표
+./docs/ 의 PDF/HWP 300건을 인덱싱하고,
+질문에 답하는 CLI/웹 RAG를 만든다.
+
+## 처리
+ - PyMuPDF/pyhwpx로 텍스트 추출 + 정제
+ - 500자 청크 + 50자 overlap (조항 경계 우선)
+ - nomic-embed-text로 임베딩
+ - chromadb <span class="st">./index</span> 로 저장
+
+## 출력
+ - <span class="st">rag.py</span>: index / query / eval 서브커맨드
+ - <span class="st">app.html</span>: 단일 HTML 채팅 UI
+ - <span class="st">main.py</span>: FastAPI /chat 엔드포인트
+
+## 검수
+ - 정답 20건 (eval.csv) 준비됨
+ - 목표 정답률 ≥ 80%
+ - 모든 응답에 [출처: 파일/조항] 포함
+
+## 금지
+ - 절대 경로, /tmp, localhost 하드코딩
+ - .env 바깥 API 키</div>
+      <p class="bt sm">에이전트는 구현·테스트·디버깅까지 수행. 거점리더는 <strong>정답 20건 준비</strong>와 <strong>정답률 측정</strong>이 핵심 역할.</p>
+      <div class="pit"><div class="pit-lb">주의</div><div class="pit-h">▸ 에이전트가 외부 서비스 호출 코드 삽입</div><div class="pit-d">프롬프트에 "외부 HTTP 호출 금지" 명시. AGENTS.md에 고정.</div></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">07 · RAG 파이프라인과 웹서비스 구축</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">016 / 032</span></div></div>
+</div></div>
+
+<!-- 17 UNIT 03 웹서비스 3요소 -->
+<div class="stage"><div class="slide" data-title="Web 3 Parts">
+  <div class="hbar"><div class="hbar-l">MODULE 07 · UNIT 03 · WEB SERVICE · THREE PARTS</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 07</div></div>
+  <div class="hl"><div class="hl-kicker">UNIT 03 · 웹서비스 3요소 · LECTURE 07-C-1 · 8MIN</div><div class="hl-title">웹서비스 3요소 구성</div><div class="hl-sub">복잡해 보이는 웹사이트도 이 세 덩어리의 조합이다. 각 덩어리가 무엇을 맡는지만 알면 에이전트에게 설계서를 쓸 수 있다.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col3">
+    <div class="col">
+      <div class="sh"><span class="sh-n">01 · FRONTEND</span><span class="sh-t">브라우저가 보는 쪽</span></div><div class="sh-line"></div>
+      <div class="bth">단일 HTML — 거점리더에게 최적</div>
+      <p class="bt">React·Vue는 배울 필요 없다. <strong>단일 HTML 파일</strong> 안에 CSS·JS를 포함하면 사내 도구는 충분. 빌드 없음, node_modules 없음, USB 하나로 배포.</p>
+      <div class="cblk"><span class="cm"># 최소 챗 UI (발췌)</span>
+&lt;script&gt;
+<span class="kw">async</span> <span class="kw">function</span> ask() {
+  <span class="kw">const</span> q = document.getElementById(<span class="st">"q"</span>).value;
+  <span class="kw">const</span> r = <span class="kw">await</span> fetch(<span class="st">"/chat"</span>, {
+    method: <span class="st">"POST"</span>,
+    headers: {<span class="st">"Content-Type"</span>:<span class="st">"application/json"</span>},
+    body: JSON.stringify({question: q})
+  });
+  <span class="kw">const</span> data = <span class="kw">await</span> r.json();
+  render(data.answer, data.citations);
+}
+&lt;/script&gt;</div>
+      <div class="co"><div class="co-lb">KEY TAKEAWAY</div><div class="co-main">빌드 도구 0개 — 에이전트가 가장 빨리 짠다</div></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">02 · BACKEND</span><span class="sh-t">뒤에서 돌아가는 쪽</span></div><div class="sh-line"></div>
+      <div class="bth">FastAPI 10줄 — 파이썬 함수에 HTTP 옷 입히기</div>
+      <div class="cblk"><span class="cm"># main.py · FastAPI 백엔드</span>
+<span class="kw">from</span> fastapi <span class="kw">import</span> FastAPI
+<span class="kw">from</span> pydantic <span class="kw">import</span> BaseModel
+<span class="kw">from</span> rag <span class="kw">import</span> answer
+<span class="kw">import</span> pathlib
+
+app = FastAPI()
+app.mount(<span class="st">"/"</span>, StaticFiles(directory=<span class="st">"public"</span>))
+
+<span class="kw">class</span> Q(BaseModel):
+    question: str
+
+<span class="kw">@app.post</span>(<span class="st">"/chat"</span>)
+<span class="kw">def</span> chat(q: Q):
+    out = answer(q.question)
+    <span class="kw">return</span> {<span class="st">"answer"</span>: out.text,
+            <span class="st">"citations"</span>: out.citations}
+
+<span class="cm"># uvicorn main:app --host 0.0.0.0 --port 8000</span></div>
+      <div class="flow">
+        <div class="flow-box"><div class="flow-box-lb">FRONT</div><div class="flow-box-t">index.html</div></div>
+        <div class="flow-arrow">▸</div>
+        <div class="flow-box dark"><div class="flow-box-lb">API</div><div class="flow-box-t">FastAPI</div></div>
+        <div class="flow-arrow">▸</div>
+        <div class="flow-box"><div class="flow-box-lb">RAG</div><div class="flow-box-t">rag.py</div></div>
+      </div>
+      <div class="fig">FIGURE 03 · THREE-PART WEB</div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">03 · STORAGE</span><span class="sh-t">데이터 보관</span></div><div class="sh-line"></div>
+      <div class="bth">SQLite · 파일 · 인덱스</div>
+      <p class="bt">서버 없는 <strong>SQLite</strong> 하나면 수백 명 동시 접속까지 감당. 필요해지면 PostgreSQL로 이전. RAG 인덱스는 chromadb 파일, 업로드는 ./uploads 폴더.</p>
+      <table class="mtbl"><thead><tr><th>종류</th><th>경로</th></tr></thead><tbody>
+        <tr><td>SQLite</td><td>./data/app.db</td></tr>
+        <tr><td>RAG 인덱스</td><td>./index/</td></tr>
+        <tr><td>업로드</td><td>./uploads/</td></tr>
+        <tr><td>로그</td><td>./logs/</td></tr>
+        <tr><td>설정</td><td>.env</td></tr>
+      </tbody></table>
+      <div class="cod"><div class="cod-lb">MINIMAL RAG WEB</div><div class="cod-main">index.html + main.py + rag.py + ./index/</div><p>파일 3개·폴더 1개. 압축하면 한 손에 잡힌다. 이게 "웹서비스"의 최소 단위.</p></div>
+      <div class="quote"><div class="quote-src">SOURCE · 운영 1년 관찰</div><div class="quote-q">"부서 내 도구는 단순할수록 오래 쓰인다."</div><div class="quote-a">— 복잡하면 유지보수가 끊긴다</div></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">07 · RAG 파이프라인과 웹서비스 구축</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">017 / 032</span></div></div>
+</div></div>
+
+<!-- 18 Vercel/Netlify 배포 -->
+<div class="stage"><div class="slide" data-title="Vercel Netlify">
+  <div class="hbar"><div class="hbar-l">MODULE 07 · UNIT 03 · VERCEL · NETLIFY</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 07</div></div>
+  <div class="hl"><div class="hl-kicker">UNIT 03 · 외부망 배포 가이드 · LECTURE 07-C-2 · 7MIN</div><div class="hl-title">외부망 연습 배포 5분 가이드</div><div class="hl-sub">공공 현업 배포는 내부망이지만, 연습·데모·외부 공개용은 Vercel·Netlify가 현실적이다. Git 연결만 하면 자동 배포·자동 HTTPS.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col3">
+    <div class="col">
+      <div class="sh"><span class="sh-n">01 · VERCEL</span><span class="sh-t">프론트 + 서버리스</span></div><div class="sh-line"></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">VERCEL</span><span class="icard-sess">vercel.com</span></div><div class="bth">Next.js 본거지 · Python·Go 서버리스 함수 지원</div><p class="bt">GitHub 저장소 연결 → 푸시마다 자동 배포. <strong>PR마다 미리보기 URL</strong>까지. RAG 백엔드를 <span class="pill">/api/chat</span> 함수로 구현 가능.</p></div>
+      <div class="cblk"><span class="cm"># vercel.json (최소)</span>
+{
+ <span class="st">"builds"</span>:[
+  {<span class="st">"src"</span>:<span class="st">"api/*.py"</span>,
+   <span class="st">"use"</span>:<span class="st">"@vercel/python"</span>}
+ ],
+ <span class="st">"routes"</span>:[
+  {<span class="st">"src"</span>:<span class="st">"/api/(.*)"</span>,
+   <span class="st">"dest"</span>:<span class="st">"/api/$1"</span>}
+ ]
+}</div>
+      <div class="co"><div class="co-lb">FIT</div><div class="co-main">연습·데모·외부 공개 홍보</div></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">02 · NETLIFY</span><span class="sh-t">정적 + Functions</span></div><div class="sh-line"></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">NETLIFY</span><span class="icard-sess">netlify.com</span></div><div class="bth">정적 사이트 + Netlify Functions(Node·Go)</div><p class="bt">Vercel과 유사하지만 <strong>정적 중심</strong>. 단일 HTML 웹서비스에는 Netlify가 단순. Drag&amp;Drop 배포도 가능.</p></div>
+      <table class="mtbl"><thead><tr><th>비교</th><th>Vercel</th><th>Netlify</th></tr></thead><tbody>
+        <tr><td>프레임워크</td><td>Next.js 우선</td><td>범용</td></tr>
+        <tr><td>Python</td><td>서버리스 지원</td><td>제한적</td></tr>
+        <tr><td>배포 UX</td><td>git push</td><td>git/드래그</td></tr>
+        <tr><td>무료 한도</td><td>개인 프로젝트</td><td>개인·학습</td></tr>
+      </tbody></table>
+      <p class="bt sm">공공 외부망 연습·학습용으로 <strong>둘 다 유효</strong>. 결정을 미루고 실제로 한 번씩 써본다.</p>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">03 · PUBLIC RULES</span><span class="sh-t">공공 적용 규칙</span></div><div class="sh-line"></div>
+      <div class="bth">외부망 배포는 "민감 데이터 없음"이 전제</div>
+      <div class="pit"><div class="pit-lb">공공 필수</div><div class="pit-h">▸ 실 데이터 업로드 금지</div><div class="pit-d">더미·비식별 데이터만. 사고 발생 시 공급자 로그까지 감사.</div><div class="pit-h">▸ 도메인·접근 제어</div><div class="pit-d">외부 공개 URL이면 기관명 도메인 대신 서비스용 도메인. BasicAuth로 1차 차단.</div></div>
+      <div class="co"><div class="co-lb">USE CASE</div><div class="co-main">해커톤·공모전·시민 체험 데모 · 외부 홍보</div><p>부서 내부용은 19장 "내부망 이관 체크리스트" 경로를 따른다.</p></div>
+      <div class="dstrip"><div class="ds-c"><div class="ds-a">DEPLOY</div><div class="ds-n">5m</div><div class="ds-d">첫 배포</div></div><div class="ds-c"><div class="ds-a">HTTPS</div><div class="ds-n">자동</div><div class="ds-d">인증서 무료</div></div><div class="ds-c"><div class="ds-a">COST</div><div class="ds-n">0원</div><div class="ds-d">소규모</div></div></div>
+      <div class="quote"><div class="quote-src">SOURCE · 공모전 운영</div><div class="quote-q">"URL을 심사위원에게 보내려면 Vercel/Netlify가 가장 빠르다."</div><div class="quote-a">— 외부망 배포 목적</div></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">07 · RAG 파이프라인과 웹서비스 구축</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">018 / 032</span></div></div>
+</div></div>
+
+<!-- 19 내부망 이관 체크리스트 -->
+<div class="stage"><div class="slide" data-title="Migration Checklist">
+  <div class="hbar"><div class="hbar-l">MODULE 07 · UNIT 03 · INTERNAL MIGRATION</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 07</div></div>
+  <div class="hl"><div class="hl-kicker">UNIT 03 · 내부망 이관 체크리스트 · LECTURE 07-C-3 · 9MIN</div><div class="hl-title">내부망 이관 4축 체크리스트</div><div class="hl-sub">에이전트로 만든 결과물을 공공 내부망에 이식하려면 네 축을 사전에 정리해야 한다. 체크리스트 16개로 마무리한다.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col2w">
+    <div class="col">
+      <div class="sh"><span class="sh-n">01 · DEPENDENCIES · PORTS · PATHS</span><span class="sh-t">이관 4축</span></div><div class="sh-line"></div>
+      <div class="bth">내부망에서 pip install이 안 된다는 전제</div>
+      <p class="bt">외부망에서 의존성을 <strong>휠(.whl) 파일 묶음</strong>으로 미리 다운로드 → USB/보안메일 이관 → 오프라인 설치. 네트워크 없이도 재현돼야 한다.</p>
+      <div class="cblk"><span class="cm"># 외부망 — 휠 일괄 다운로드</span>
+pip download -r requirements.txt \
+  -d ./wheels \
+  --platform win_amd64 \
+  --python-version 311 \
+  --only-binary=:all:
+
+<span class="cm"># 내부망 — 오프라인 설치</span>
+pip install --no-index \
+  --find-links=./wheels \
+  -r requirements.txt
+
+<span class="cm"># .env 예시 — 하드코딩 제거</span>
+DATA_DIR=./data
+INDEX_DIR=./index
+OLLAMA_URL=http://localhost:11434
+WEB_PORT=8000
+MODEL_GEN=qwen2.5:7b
+MODEL_EMB=nomic-embed-text
+LOG_DIR=./logs</div>
+      <table class="mtbl"><thead><tr><th>축</th><th>조치</th></tr></thead><tbody>
+        <tr><td>의존성</td><td>wheels 폴더 동봉</td></tr>
+        <tr><td>포트</td><td>기관 방화벽 허용값 · 8000 관례</td></tr>
+        <tr><td>경로</td><td>상대경로만 · .env로 추출</td></tr>
+        <tr><td>권한</td><td>실행 계정 · 로그 폴더 쓰기 확인</td></tr>
+      </tbody></table>
+      <div class="pit"><div class="pit-lb">PITFALL</div><div class="pit-h">▸ 에이전트가 /Users/claude 같은 맥 경로 삽입</div><div class="pit-d">AGENTS.md에 "절대 경로 금지, 상대 경로만" 명시.</div><div class="pit-h">▸ 인코딩 euc-kr / 개행 CRLF 문제</div><div class="pit-d">UTF-8 · LF 통일. 이관 직전 자동 변환 스크립트.</div></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">02 · CHECKLIST 16</span><span class="sh-t">이관 전 반드시</span></div><div class="sh-line"></div>
+      <div class="chk"><div class="chk-b"></div><div class="chk-t">requirements.txt 최신 · 버전 고정</div></div>
+      <div class="chk"><div class="chk-b"></div><div class="chk-t">wheels 폴더 OS·파이썬 버전 일치</div></div>
+      <div class="chk"><div class="chk-b"></div><div class="chk-t">하드코딩된 경로·URL 전원 제거</div></div>
+      <div class="chk"><div class="chk-b"></div><div class="chk-t">.env 파일 · 기관 PC 값으로 교체</div></div>
+      <div class="chk"><div class="chk-b"></div><div class="chk-t">API 키 · .env에만, 코드에 없음</div></div>
+      <div class="chk"><div class="chk-b"></div><div class="chk-t">Ollama 모델 파일 별도 준비(.gguf)</div></div>
+      <div class="chk"><div class="chk-b"></div><div class="chk-t">localhost가 아닌 0.0.0.0 바인딩</div></div>
+      <div class="chk"><div class="chk-b"></div><div class="chk-t">UTF-8 인코딩 · BOM 여부 확인</div></div>
+      <div class="chk"><div class="chk-b"></div><div class="chk-t">개행 LF 통일 · CRLF 호환</div></div>
+      <div class="chk"><div class="chk-b"></div><div class="chk-t">README.md · 3줄 내 실행 방법</div></div>
+      <div class="chk"><div class="chk-b"></div><div class="chk-t">정답 세트 20건 동봉(eval.csv)</div></div>
+      <div class="chk"><div class="chk-b"></div><div class="chk-t">샘플 데이터 10건 익명화</div></div>
+      <div class="chk"><div class="chk-b"></div><div class="chk-t">로그 폴더 자동 생성 코드</div></div>
+      <div class="chk"><div class="chk-b"></div><div class="chk-t">에러 시 담당자 안내 메시지</div></div>
+      <div class="chk"><div class="chk-b"></div><div class="chk-t">정보화 부서 사전 승인</div></div>
+      <div class="chk"><div class="chk-b"></div><div class="chk-t">시범 운영 · 10명 먼저</div></div>
+      <div class="cod"><div class="cod-lb">HANDOFF PACKAGE</div><div class="cod-main">README + 코드 + wheels + 모델 + 정답세트</div><p>다섯 덩어리가 한 ZIP에 담기면 이관 완료. 체크리스트 16개는 ZIP 뚜껑.</p></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">07 · RAG 파이프라인과 웹서비스 구축</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">019 / 032</span></div></div>
+</div></div>
+
+<!-- 20 비식별·권한·로그 -->
+<div class="stage"><div class="slide" data-title="Security Privacy Logs">
+  <div class="hbar"><div class="hbar-l">MODULE 07 · UNIT 03 · SECURITY · PRIVACY · LOGS</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 07</div></div>
+  <div class="hl"><div class="hl-kicker">UNIT 03 · 내부망 웹서비스 보안 · LECTURE 07-C-4 · 8MIN</div><div class="hl-title">내부망 운영 보안 3기둥</div><div class="hl-sub">운영 허가는 기능이 아니라 보안으로 받는다. 개인정보 비식별, 사용자·문서 권한, 감사 로그 세 가지가 최소 요건.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col3">
+    <div class="col">
+      <div class="sh"><span class="sh-n">01 · DEID</span><span class="sh-t">비식별</span></div><div class="sh-line"></div>
+      <div class="bth">인덱싱 전에 반드시 거치는 1단계</div>
+      <table class="mtbl"><thead><tr><th>대상</th><th>처리</th></tr></thead><tbody>
+        <tr><td>주민번호</td><td>전부 제거</td></tr>
+        <tr><td>이름</td><td>○○○ 마스킹</td></tr>
+        <tr><td>전화</td><td>010-****-****</td></tr>
+        <tr><td>차량번호</td><td>**가 ****</td></tr>
+        <tr><td>계좌</td><td>전부 제거</td></tr>
+        <tr><td>주소</td><td>동 단위 이하 마스킹</td></tr>
+      </tbody></table>
+      <div class="cblk"><span class="cm"># deid.py — 정규식 비식별</span>
+<span class="kw">import</span> re
+patterns = [
+ (<span class="st">r"\d{6}-\d{7}"</span>, <span class="st">"[주민번호]"</span>),
+ (<span class="st">r"\d{2,3}-\d{3,4}-\d{4}"</span>, <span class="st">"[전화]"</span>),
+ (<span class="st">r"[가-힣]{2,4}(?=(님|씨))"</span>, <span class="st">"○○○"</span>),
+]
+<span class="kw">def</span> clean(t):
+  <span class="kw">for</span> p,r <span class="kw">in</span> patterns: t=re.sub(p,r,t)
+  <span class="kw">return</span> t</div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">02 · AUTH</span><span class="sh-t">권한 설계</span></div><div class="sh-line"></div>
+      <div class="bth">"누가 어느 문서에 질문할 수 있나"</div>
+      <p class="bt">사용자(Role) · 문서 분류(Classification) 두 축. <strong>분류가 없는 문서는 인덱스에 들어가지 않는다</strong>는 규칙.</p>
+      <div class="cblk"><span class="cm"># 권한 매트릭스 (발췌)</span>
+ROLES = {
+  <span class="st">"general"</span>: [<span class="st">"공개"</span>, <span class="st">"내부"</span>],
+  <span class="st">"officer"</span>: [<span class="st">"공개"</span>, <span class="st">"내부"</span>, <span class="st">"대외비"</span>],
+  <span class="st">"admin"</span>:   [<span class="st">"공개"</span>, <span class="st">"내부"</span>, <span class="st">"대외비"</span>, <span class="st">"비밀"</span>]
+}
+<span class="kw">def</span> allowed(user, chunk):
+    <span class="kw">return</span> chunk.classification <span class="kw">in</span> ROLES[user.role]</div>
+      <div class="pit"><div class="pit-lb">PITFALL</div><div class="pit-h">▸ 인덱스에 권한 체크 넣지 않음</div><div class="pit-d">검색 결과에 권한 외 문서가 섞이면 유출. <strong>필터는 검색 레이어</strong>에 반드시.</div></div>
+      <div class="co"><div class="co-lb">RULE</div><div class="co-main">"분류 없는 문서는 인덱스 금지"</div></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">03 · LOGS</span><span class="sh-t">감사 로그</span></div><div class="sh-line"></div>
+      <div class="bth">질문·답변·인용 3종 세트를 로그로 남긴다</div>
+      <div class="cblk"><span class="cm"># log 스키마</span>
+{
+ <span class="st">"ts"</span>:<span class="st">"2026-04-20T10:14:30"</span>,
+ <span class="st">"user"</span>:<span class="st">"user_0421"</span>,
+ <span class="st">"q"</span>:<span class="st">"연차 며칠?"</span>,
+ <span class="st">"hits"</span>:[<span class="st">"인사규정.pdf/15조"</span>],
+ <span class="st">"abstain"</span>:<span class="kw">false</span>,
+ <span class="st">"latency_ms"</span>:1820,
+ <span class="st">"feedback"</span>:<span class="kw">null</span>
+}</div>
+      <table class="mtbl"><thead><tr><th>로그 용도</th><th>주기</th></tr></thead><tbody>
+        <tr><td>오답 분석</td><td>주간</td></tr>
+        <tr><td>데이터 유출 감사</td><td>월간</td></tr>
+        <tr><td>모델 재학습 금지 확인</td><td>분기</td></tr>
+        <tr><td>정답 세트 증식</td><td>상시(피드백)</td></tr>
+      </tbody></table>
+      <div class="co"><div class="co-lb">COMPLIANCE</div><div class="co-main">"답변 이력 + 출처"가 감사 대응의 1순위 자료</div></div>
+      <div class="quote"><div class="quote-src">SOURCE · 정보보안 담당</div><div class="quote-q">"로그가 없으면 도입 자체가 불가. 로그가 있으면 반대 사유가 줄어든다."</div><div class="quote-a">— 내부망 승인 기준</div></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">07 · RAG 파이프라인과 웹서비스 구축</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">020 / 032</span></div></div>
+</div></div>
+
+<!-- 21 HERO · 한 바이트도 나가지 않는다 -->
+<div class="stage"><div class="slide" data-title="Hero One Byte">
+  <div class="hbar"><div class="hbar-l">MODULE 07 · UNIT 03 · INTERNAL-ONLY</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 07</div></div>
+  <div class="bd col1"><div class="col hero" style="background:var(--dk);color:var(--on)">
+    <div class="hero-k">UNIT 03 · INTERNAL-ONLY PRINCIPLE</div>
+    <div class="hero-t">데이터가 밖으로<br><span style="color:var(--acc3)">한 바이트도</span> 나가지 않는다.</div>
+    <div class="hero-s">Ollama로 생성·임베딩을 로컬에서 돌리고, chromadb 파일에 인덱스를 저장하고, FastAPI가 localhost에서 응답한다. <strong style="color:var(--on)">클라우드 API 호출 0건, 외부 HTTP 요청 0건.</strong> 공공 내부망이 AI를 받아들일 수 있는 유일한 문이다.</div>
+    <div class="hero-q"><div class="hero-q-q">"외부망 배포는 실험이고, 내부망 운영은 도구다. 결국 남는 것은 도구다."</div><div class="hero-q-a">— 내부망 완결 원칙</div></div>
+  </div></div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">07 · RAG 파이프라인과 웹서비스 구축</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">021 / 032</span></div></div>
+</div></div>
+
+<!-- 22 Remotion 영상 자동화 -->
+<div class="stage"><div class="slide" data-title="Remotion">
+  <div class="hbar"><div class="hbar-l">MODULE 07 · UNIT 04 · REMOTION · VIDEO AUTOMATION</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 07</div></div>
+  <div class="hl"><div class="hl-kicker">UNIT 04 · Remotion 영상 자동화 · LECTURE 07-D-1 · 8MIN</div><div class="hl-title">Remotion 영상 자동화 원리</div><div class="hl-sub">공공 홍보·교육·안내 영상을 매번 편집 툴로 만들 필요 없다. 데이터가 바뀌면 영상이 자동 갱신된다.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col3">
+    <div class="col">
+      <div class="sh"><span class="sh-n">01 · CONCEPT</span><span class="sh-t">영상 = 코드</span></div><div class="sh-line"></div>
+      <div class="bth">타임라인 대신 타임 함수 — useCurrentFrame</div>
+      <p class="bt">Remotion은 <strong>React 기반 영상 렌더러</strong>. 각 프레임이 React 컴포넌트로 그려지고, <span class="pill">useCurrentFrame()</span>로 현재 프레임 번호를 받아 위치·투명도·크기를 결정한다.</p>
+      <div class="cblk"><span class="cm">// MyVideo.jsx · 30초 영상</span>
+<span class="kw">import</span> {useCurrentFrame, interpolate}
+  <span class="kw">from</span> <span class="st">'remotion'</span>;
+
+<span class="kw">export</span> <span class="kw">const</span> MyVideo = ({title, value}) =&gt; {
+  <span class="kw">const</span> f = useCurrentFrame();
+  <span class="kw">const</span> opacity = interpolate(f,[0,30],[0,1]);
+  <span class="kw">return</span> (
+    &lt;div style={{opacity, fontSize:80}}&gt;
+      {title}: {value.toLocaleString()}원
+    &lt;/div&gt;
+  );
+};</div>
+      <div class="co"><div class="co-lb">KEY TAKEAWAY</div><div class="co-main">데이터가 props로 들어간다 — 매번 렌더만</div><p>월별 통계·시설 현황·민원 요약을 데이터로 받아 영상 자동 생성.</p></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">02 · WORKFLOW</span><span class="sh-t">데이터→영상</span></div><div class="sh-line"></div>
+      <div class="bth">공공 영상 자동화 4단계</div>
+      <div class="step"><div class="step-n">1</div><div><div class="step-t">영상 템플릿 작성 (1회)</div><div class="step-d">Remotion 프로젝트 초기화, 씬 컴포넌트 1~3개</div></div></div>
+      <div class="step"><div class="step-n">2</div><div><div class="step-t">데이터 소스 연결</div><div class="step-d">CSV·JSON·DB에서 월별 수치 로드</div></div></div>
+      <div class="step"><div class="step-n">3</div><div><div class="step-t">CLI로 일괄 렌더링</div><div class="step-d">npx remotion render — 데이터 행마다 MP4</div></div></div>
+      <div class="step"><div class="step-n">4</div><div><div class="step-t">배포 (YouTube·내부 게시판)</div><div class="step-d">파일명에 날짜·부서 자동 매핑</div></div></div>
+      <div class="cblk"><span class="cm"># 12개월 일괄 렌더</span>
+<span class="kw">for</span> m <span class="kw">in</span> $(seq 1 12); <span class="kw">do</span>
+  npx remotion render MyVideo \
+    --props-file=<span class="st">"data/2026${m}.json"</span> \
+    <span class="st">"out/2026${m}.mp4"</span>
+<span class="kw">done</span></div>
+      <div class="dstrip"><div class="ds-c"><div class="ds-a">RENDER</div><div class="ds-n">~2m</div><div class="ds-d">30초 1080p</div></div><div class="ds-c"><div class="ds-a">COST</div><div class="ds-n">0원</div><div class="ds-d">로컬 CPU</div></div><div class="ds-c"><div class="ds-a">REUSE</div><div class="ds-n">무한</div><div class="ds-d">월·분기</div></div></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">03 · USE CASES</span><span class="sh-t">공공 시나리오</span></div><div class="sh-line"></div>
+      <div class="bth">반복이 전제일 때만 ROI가 난다</div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">CASE 01</span></div><div class="bth">월간 통계 브리핑 (60초)</div><p class="bt">민원 접수·처리·부서별 비율. 매달 숫자만 바뀐다.</p></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">CASE 02</span></div><div class="bth">시설 안내 영상 (30초)</div><p class="bt">주소·운영시간·전화. 시설 10개면 영상 10개 자동.</p></div>
+      <div class="icard dark"><div class="icard-top"><span class="icard-lb">CASE 03</span></div><div class="bth">교육 수료증 영상 (10초)</div><p class="bt">이름·과정·날짜 바뀌는 축하 영상. 120명 × 10초 자동.</p></div>
+      <div class="pit"><div class="pit-lb">PITFALL</div><div class="pit-h">▸ 1회성 영상에 Remotion</div><div class="pit-d">CapCut·Premiere가 더 빠르다. <strong>반복 생성</strong>이 전제.</div><div class="pit-h">▸ 한글 폰트 누락</div><div class="pit-d">Pretendard·Noto를 public/에 직접 두고 @font-face.</div></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">07 · RAG 파이프라인과 웹서비스 구축</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">022 / 032</span></div></div>
+</div></div>
+
+<!-- 23 공공 홍보 영상 자동 파이프라인 -->
+<div class="stage"><div class="slide" data-title="Public Video Pipeline">
+  <div class="hbar"><div class="hbar-l">MODULE 07 · UNIT 04 · PUBLIC VIDEO PIPELINE</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 07</div></div>
+  <div class="hl"><div class="hl-kicker">UNIT 04 · 공공 홍보 영상 자동 파이프라인 · LECTURE 07-D-2 · 7MIN</div><div class="hl-title">홍보 영상의 네 단계 자동 파이프라인</div><div class="hl-sub">RAG로 데이터 정리, LLM으로 스크립트, ElevenLabs/클로바더빙으로 내레이션, Remotion으로 영상 합성. 거점리더가 설계하고 에이전트가 돌린다.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col2">
+    <div class="col">
+      <div class="sh"><span class="sh-n">01 · PIPELINE</span><span class="sh-t">4단계 자동화</span></div><div class="sh-line"></div>
+      <div class="flow">
+        <div class="flow-box"><div class="flow-box-lb">DATA</div><div class="flow-box-t">월간 통계</div></div>
+        <div class="flow-arrow">▸</div>
+        <div class="flow-box dark"><div class="flow-box-lb">LLM</div><div class="flow-box-t">스크립트</div></div>
+        <div class="flow-arrow">▸</div>
+        <div class="flow-box"><div class="flow-box-lb">RENDER</div><div class="flow-box-t">MP4</div></div>
+      </div>
+      <div class="fig">FIGURE 04 · DATA-TO-VIDEO FLOW</div>
+      <div class="step"><div class="step-n">1</div><div><div class="step-t">데이터 수집 · RAG로 요지 추출</div><div class="step-d">월간 핵심 수치 3~5개 + 대표 사례 1개</div></div></div>
+      <div class="step"><div class="step-n">2</div><div><div class="step-t">60초 스크립트 · 톤 고정 프롬프트</div><div class="step-d">"공공 브리핑 톤 · 존댓말 · 숫자 강조" 템플릿 재사용</div></div></div>
+      <div class="step"><div class="step-n">3</div><div><div class="step-t">TTS 음성 생성</div><div class="step-d">ElevenLabs · 클로바더빙 · 로컬 TTS 선택지</div></div></div>
+      <div class="step"><div class="step-n">4</div><div><div class="step-t">Remotion 렌더 + 업로드</div><div class="step-d">정적 씬 + 오디오 합성 + 파일명 자동</div></div></div>
+      <div class="dstrip"><div class="ds-c"><div class="ds-a">TOTAL</div><div class="ds-n">~15m</div><div class="ds-d">데이터→MP4</div></div><div class="ds-c"><div class="ds-a">PEOPLE</div><div class="ds-n">1명</div><div class="ds-d">감수만</div></div><div class="ds-c"><div class="ds-a">REUSE</div><div class="ds-n">월1</div><div class="ds-d">고정 템플릿</div></div></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">02 · PROMPT</span><span class="sh-t">스크립트 프롬프트</span></div><div class="sh-line"></div>
+      <div class="cblk"><span class="cm"># 공공 브리핑 영상 스크립트 프롬프트</span>
+너는 공공기관 홍보 담당자다.
+아래 [데이터]를 근거로 <strong>60초</strong>(약 150자)
+브리핑 영상 내레이션을 작성한다.
+
+규칙:
+ - 존댓말, 수치는 반올림, 단위 명확
+ - 오프닝 1줄 · 핵심 3가지 · 마무리 1줄
+ - 추측·감정 표현 금지
+ - 출처 조직명 언급
+
+[데이터]
+{monthly_stats}
+{top_case}
+
+[출력]
+```json
+{
+  <span class="st">"title"</span>: <span class="st">"..."</span>,
+  <span class="st">"script"</span>: <span class="st">"..."</span>,
+  <span class="st">"chapters"</span>: [{<span class="st">"t"</span>:0,<span class="st">"text"</span>:<span class="st">"..."</span>},...]
+}
+```</div>
+      <div class="co"><div class="co-lb">GOVERNANCE</div><div class="co-main">"기계가 만든 영상"에도 공공 감수 체크포인트</div><p>자동 생성 → 담당자 승인 → 업로드. 승인 없이 배포 금지.</p></div>
+      <div class="pit"><div class="pit-lb">PITFALL</div><div class="pit-h">▸ 수치 오차 · LLM의 반올림 실수</div><div class="pit-d">숫자는 코드에서 포맷하고 프롬프트에는 "그대로 사용" 강제.</div><div class="pit-h">▸ TTS 음성 실제 인물 오해</div><div class="pit-d">기관 공식 안내는 프리셋 목소리 중 1개를 고정.</div></div>
+      <div class="quote"><div class="quote-src">FIELD · 홍보 담당</div><div class="quote-q">"월간 영상 제작 2일 → 30분. 시간 자체가 바뀌었다."</div><div class="quote-a">— 브리핑 영상 도입 후</div></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">07 · RAG 파이프라인과 웹서비스 구축</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">023 / 032</span></div></div>
+</div></div>
+
+<!-- 24 SVG 자동화 -->
+<div class="stage"><div class="slide" data-title="SVG Automation">
+  <div class="hbar"><div class="hbar-l">MODULE 07 · UNIT 04 · SVG · DIAGRAM AUTOMATION</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 07</div></div>
+  <div class="hl"><div class="hl-kicker">UNIT 04 · SVG 자동화 · LECTURE 07-D-3 · 7MIN</div><div class="hl-title">SVG 다이어그램 자동화</div><div class="hl-sub">매달 PowerPoint로 그리던 조직도·플로우차트·통계 차트를 템플릿 한 번에 자동 생성한다. 데이터가 바뀌면 도식이 바뀐다.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col3">
+    <div class="col">
+      <div class="sh"><span class="sh-n">01 · WHY SVG</span><span class="sh-t">이미지 아닌 코드</span></div><div class="sh-line"></div>
+      <div class="bth">SVG = XML = 텍스트 = Git 관리 가능</div>
+      <p class="bt">PNG·JPG는 픽셀 덩어리. SVG는 <strong>좌표·색·크기의 텍스트 기술</strong>이다. 에이전트가 직접 생성·수정 가능하고, 데이터가 바뀔 때마다 재렌더된다.</p>
+      <div class="cblk"><span class="cm">&lt;!-- bar.svg — 5줄 막대 차트 --&gt;</span>
+&lt;svg viewBox=<span class="st">"0 0 400 200"</span>&gt;
+ &lt;rect x=<span class="st">"10"</span> y=<span class="st">"120"</span> width=<span class="st">"40"</span>
+       height=<span class="st">"60"</span> fill=<span class="st">"#b8532a"</span>/&gt;
+ &lt;rect x=<span class="st">"60"</span> y=<span class="st">"80"</span> width=<span class="st">"40"</span>
+       height=<span class="st">"100"</span> fill=<span class="st">"#b8532a"</span>/&gt;
+ &lt;text x=<span class="st">"200"</span> y=<span class="st">"20"</span>&gt;월별 접수&lt;/text&gt;
+&lt;/svg&gt;</div>
+      <div class="co"><div class="co-lb">KEY TAKEAWAY</div><div class="co-main">에이전트가 "데이터→SVG"를 작성하게 한다</div><p>매번 손으로 그리지 않는다. 함수 1개 만들고 호출만.</p></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">02 · PIPELINE</span><span class="sh-t">데이터→SVG→PDF</span></div><div class="sh-line"></div>
+      <div class="bth">파이썬 50줄로 끝나는 차트 함수</div>
+      <div class="cblk"><span class="cm"># make_chart.py</span>
+<span class="kw">def</span> bar_chart(data, title):
+  w,h = 800, 400
+  mv = <span class="kw">max</span>(data.values())
+  bars = <span class="st">""</span>
+  <span class="kw">for</span> i,(k,v) <span class="kw">in</span> <span class="kw">enumerate</span>(data.items()):
+    bh = (v/mv)*300
+    x,y = 50+i*80, 350-bh
+    bars += (<span class="st">f'&lt;rect x="{x}" y="{y}" '</span>
+             <span class="st">f'width="60" height="{bh}" '</span>
+             <span class="st">f'fill="#b8532a"/&gt;'</span>
+             <span class="st">f'&lt;text x="{x+30}" y="375" '</span>
+             <span class="st">f'text-anchor="middle"&gt;'</span>
+             <span class="st">f'{k}&lt;/text&gt;'</span>)
+  <span class="kw">return</span> <span class="st">f'''&lt;svg viewBox="0 0 {w} {h}"&gt;
+   &lt;text x="400" y="30" text-anchor="middle"
+         font-size="24"&gt;{title}&lt;/text&gt;
+   {bars}
+  &lt;/svg&gt;'''</span>
+
+<span class="cm"># 사용</span>
+svg = bar_chart({<span class="st">"1월"</span>:120,<span class="st">"2월"</span>:180}, <span class="st">"접수"</span>)</div>
+      <div class="flow">
+        <div class="flow-box"><div class="flow-box-lb">DATA</div><div class="flow-box-t">CSV·엑셀</div></div>
+        <div class="flow-arrow">▸</div>
+        <div class="flow-box dark"><div class="flow-box-lb">SVG</div><div class="flow-box-t">함수</div></div>
+        <div class="flow-arrow">▸</div>
+        <div class="flow-box"><div class="flow-box-lb">OUT</div><div class="flow-box-t">HTML·PDF</div></div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">03 · LIBRARIES</span><span class="sh-t">도구 선택</span></div><div class="sh-line"></div>
+      <div class="bth">거점리더는 "이런 도구가 있다"만 알면 된다</div>
+      <table class="mtbl"><thead><tr><th>TOOL</th><th>USE</th></tr></thead><tbody>
+        <tr><td>matplotlib</td><td>과학·통계 차트</td></tr>
+        <tr><td>plotly</td><td>인터랙티브 웹</td></tr>
+        <tr><td>d3.js</td><td>프론트 커스텀</td></tr>
+        <tr><td>svgwrite</td><td>Python 네이티브</td></tr>
+        <tr><td>mermaid</td><td>텍스트→도식</td></tr>
+        <tr><td>graphviz</td><td>네트워크 그래프</td></tr>
+        <tr><td>CairoSVG</td><td>SVG→PNG/PDF</td></tr>
+      </tbody></table>
+      <div class="cod"><div class="cod-lb">FIELD CASE</div><div class="cod-main">월간 보고서 도식 7종 자동화</div><p>조직도·KPI·프로세스·민원 분포. 엑셀 갱신 → 도식 전부 재생성. 3h → 2m.</p></div>
+      <div class="pit"><div class="pit-lb">주의</div><div class="pit-h">▸ 한글 폰트 깨짐</div><div class="pit-d">SVG 텍스트는 뷰어 폰트를 따른다. font-family: Pretendard, Noto 명시.</div></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">07 · RAG 파이프라인과 웹서비스 구축</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">024 / 032</span></div></div>
+</div></div>
+
+<!-- 25 SVG + Mermaid + AI 스크립트 -->
+<div class="stage"><div class="slide" data-title="SVG Mermaid AI">
+  <div class="hbar"><div class="hbar-l">MODULE 07 · UNIT 04 · SVG + MERMAID + AI</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 07</div></div>
+  <div class="hl"><div class="hl-kicker">UNIT 04 · SVG + Mermaid + AI 스크립트 조합 · LECTURE 07-D-4 · 6MIN</div><div class="hl-title">데이터 연동 도식 자동화 조합</div><div class="hl-sub">SVG로 정밀 그래프, Mermaid로 플로우·간트, AI 스크립트로 텍스트→도식 변환. 보고서 제작 시간이 한 자릿수 시간대로 압축된다.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col3">
+    <div class="col">
+      <div class="sh"><span class="sh-n">01 · MERMAID</span><span class="sh-t">텍스트→도식</span></div><div class="sh-line"></div>
+      <div class="bth">플로우차트·간트차트·시퀀스 — 한 줄로 그린다</div>
+      <div class="cblk">```mermaid
+flowchart LR
+  A[민원접수] --&gt; B{유형}
+  B --&gt;|도로| C[도로과]
+  B --&gt;|환경| D[환경과]
+  C --&gt; E[현장확인]
+  D --&gt; E
+  E --&gt; F[응대초안]
+  F --&gt; G[담당 승인]
+  G --&gt; H[회신]
+```</div>
+      <div class="co"><div class="co-lb">FIT</div><div class="co-main">프로세스 도식 · ERD · 간트</div><p>공공 프로세스 개편안 설명에 최적. Markdown 문서에 그대로 삽입.</p></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">02 · COMBO</span><span class="sh-t">세 가지 조합</span></div><div class="sh-line"></div>
+      <table class="mtbl"><thead><tr><th>역할</th><th>도구</th></tr></thead><tbody>
+        <tr><td>정밀 수치 차트</td><td>SVG (svgwrite/matplotlib)</td></tr>
+        <tr><td>프로세스 · 관계</td><td>Mermaid</td></tr>
+        <tr><td>텍스트→도식 생성</td><td>AI 스크립트 (Claude/GPT)</td></tr>
+        <tr><td>PDF 산출</td><td>CairoSVG · Pandoc</td></tr>
+      </tbody></table>
+      <div class="cblk"><span class="cm"># 3단 조합 (발췌)</span>
+<span class="cm"># ① 데이터 → SVG 차트</span>
+chart = bar_chart(monthly, <span class="st">"접수현황"</span>)
+
+<span class="cm"># ② LLM → Mermaid 프로세스</span>
+mmd = llm(<span class="st">"다음을 Mermaid flowchart로..."</span>)
+
+<span class="cm"># ③ Markdown 합성 → PDF</span>
+md = <span class="st">f"# 월간 보고\n{chart}\n\n```mermaid\n{mmd}\n```"</span>
+subprocess.run([<span class="st">"pandoc"</span>, <span class="st">"-o"</span>, <span class="st">"report.pdf"</span>],
+               input=md.encode())</div>
+      <div class="dstrip"><div class="ds-c"><div class="ds-a">DIAGRAMS</div><div class="ds-n">7</div><div class="ds-d">보고서 1회</div></div><div class="ds-c"><div class="ds-a">TIME</div><div class="ds-n">3h→2m</div><div class="ds-d">재생성</div></div><div class="ds-c"><div class="ds-a">VERSION</div><div class="ds-n">Git</div><div class="ds-d">텍스트 저장</div></div></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">03 · AGENT SCRIPT</span><span class="sh-t">에이전트 시나리오</span></div><div class="sh-line"></div>
+      <div class="bth">"이번 달 보고서 도식 전부 갱신"이 한 명령</div>
+      <div class="cblk"><span class="cm"># agent_prompt.md</span>
+
+## 임무
+./data/ 아래 2026-04.csv를 읽어
+./templates/*.mmd 와 ./templates/*.svg.py
+의 입력값을 갱신한 뒤
+report_2026_04.pdf 를 산출한다.
+
+## 규칙
+ - 기존 템플릿을 수정하지 않는다
+ - 색·폰트는 기관 브랜드 고정값
+ - 차트 제목 · 단위 · 출처 표기 포함
+ - 결과물 경로는 ./out/</div>
+      <p class="bt sm">에이전트는 템플릿·데이터를 읽고 도식을 재생성한다. 거점리더는 결과 PDF만 확인.</p>
+      <div class="pit"><div class="pit-lb">PITFALL</div><div class="pit-h">▸ 자동화 후 설명력 상실</div><div class="pit-d">도식만 바뀌고 본문 해석이 그대로면 오독. LLM이 본문도 함께 갱신.</div></div>
+      <div class="chk"><div class="chk-b"></div><div class="chk-t">템플릿 7종 확보</div></div>
+      <div class="chk"><div class="chk-b"></div><div class="chk-t">데이터 표준 CSV 규정</div></div>
+      <div class="chk"><div class="chk-b"></div><div class="chk-t">월간 자동 스케줄 설정</div></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">07 · RAG 파이프라인과 웹서비스 구축</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">025 / 032</span></div></div>
+</div></div>
+
+<!-- 26 RAG 품질 점검 4지표 -->
+<div class="stage"><div class="slide" data-title="RAG Quality 4">
+  <div class="hbar"><div class="hbar-l">MODULE 07 · QUALITY · FOUR METRICS</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 07</div></div>
+  <div class="hl"><div class="hl-kicker">RAG 품질 점검 · 4지표 · LECTURE 07-Q-1 · 6MIN</div><div class="hl-title">RAG 품질 점검 4지표</div><div class="hl-sub">정답 세트 20건 + 4지표 측정 = RAG 운영의 최소 계기판. 개선했는지 악화했는지 측정 가능해야 개선한다.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col2">
+    <div class="col">
+      <div class="sh"><span class="sh-n">01 · ACCURACY · RECALL</span><span class="sh-t">정확성·검색성</span></div><div class="sh-line"></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">① 정확성 (Accuracy)</span></div><div class="bth">정답 20건 중 맞춘 비율 — 목표 80%+</div><p class="bt">답변이 기대 답을 포함하는가 + 출처가 기대 파일을 가리키는가. 단순 문자열 포함으로 시작해 LLM 평가로 확장.</p></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">② 검색성 (Recall@K)</span></div><div class="bth">상위 K 청크에 기대 청크가 포함될 확률</div><p class="bt">Recall@5 · Recall@10 측정. <strong>검색성이 낮으면 답변성은 그 이하</strong>가 된다. 병목을 찾는 1순위.</p></div>
+      <div class="cblk"><span class="cm"># eval.py — 자동 평가 (발췌)</span>
+<span class="kw">def</span> eval_row(q, expected_text, expected_src):
+    hits = retrieve(q, k=5)
+    a = generate(q, hits)
+    acc = expected_text <span class="kw">in</span> a.text
+    rec = <span class="kw">any</span>(expected_src <span class="kw">in</span> h.src <span class="kw">for</span> h <span class="kw">in</span> hits)
+    <span class="kw">return</span> {<span class="st">"acc"</span>:acc, <span class="st">"recall5"</span>:rec}</div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">02 · CONSISTENCY · SAFETY</span><span class="sh-t">재현성·안전성</span></div><div class="sh-line"></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">③ 재현성 (Consistency)</span></div><div class="bth">같은 질문을 3번 돌려서 답 일치율</div><p class="bt">LLM 무작위성 때문에 답이 출렁일 수 있다. <strong>일치율 70%+</strong> 목표. temperature 낮추고 프롬프트 구조화.</p></div>
+      <div class="icard dark"><div class="icard-top"><span class="icard-lb">④ 안전성 (Safety)</span></div><div class="bth">근거 없는 단정·유출·금칙어 발생률</div><p class="bt">자동 검사: 출처가 비어 있거나 답변에 개인정보 패턴이 보이면 차단. <strong>0%에 가까워야</strong> 운영 허용.</p></div>
+      <table class="mtbl"><thead><tr><th>지표</th><th>목표</th></tr></thead><tbody>
+        <tr><td>정확성</td><td>≥ 80%</td></tr>
+        <tr><td>Recall@5</td><td>≥ 90%</td></tr>
+        <tr><td>재현성</td><td>≥ 70%</td></tr>
+        <tr><td>안전성 위반</td><td>≤ 1%</td></tr>
+      </tbody></table>
+      <div class="co"><div class="co-lb">REPORT</div><div class="co-main">월 1회 4지표 리포트를 부서 회의에 공유</div><p>수치가 있어야 개선 논의가 된다. 감각 토론 금지.</p></div>
+      <div class="quote"><div class="quote-src">SOURCE · 운영 원칙</div><div class="quote-q">"측정되지 않는 RAG는 개선되지 않는다."</div><div class="quote-a">— 품질 관리 금언</div></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">07 · RAG 파이프라인과 웹서비스 구축</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">026 / 032</span></div></div>
+</div></div>
+
+<!-- 27 RAG 실패 패턴 5가지 -->
+<div class="stage"><div class="slide" data-title="RAG Failure Patterns">
+  <div class="hbar"><div class="hbar-l">MODULE 07 · FAILURE PATTERNS</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 07</div></div>
+  <div class="hl"><div class="hl-kicker">RAG 실패 패턴 5가지 · LECTURE 07-Q-2 · 7MIN</div><div class="hl-title">RAG 5가지 실패 모드</div><div class="hl-sub">실패는 대개 같은 곳에서 반복된다. 패턴별로 진단과 처방이 정해져 있다. 운영 시작 전에 눈에 익혀 둔다.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col3">
+    <div class="col">
+      <div class="sh"><span class="sh-n">PATTERNS 1-2</span><span class="sh-t">입력·쪼개기</span></div><div class="sh-line"></div>
+      <div class="pit"><div class="pit-lb">PATTERN 01</div><div class="pit-h">▸ 표·머리말이 본문과 섞임</div><div class="pit-d">PDF 추출 시 표가 엉키고 반복되는 머리말이 청크에 섞인다. <strong>처방:</strong> 표 전용 추출기(camelot), 머리말 regex 제거.</div></div>
+      <div class="pit"><div class="pit-lb">PATTERN 02</div><div class="pit-h">▸ 조항이 두 청크에 걸침</div><div class="pit-d">"제15조 ...에 해당하는" 중간에서 잘리면 답변이 절반. <strong>처방:</strong> 조항 경계 우선 분할, overlap 50자.</div></div>
+      <div class="cblk"><span class="cm"># 진단 스니펫</span>
+<span class="kw">for</span> c <span class="kw">in</span> chunks[:5]:
+    <span class="kw">if</span> <span class="st">"제"</span> <span class="kw">in</span> c.text[:10]:
+        <span class="kw">print</span>(c.src, c.text[:40])
+<span class="cm"># 조항 앞부분만 남은 청크가 보이면 쪼개기 수정</span></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">PATTERNS 3-4</span><span class="sh-t">검색·프롬프트</span></div><div class="sh-line"></div>
+      <div class="pit"><div class="pit-lb">PATTERN 03</div><div class="pit-h">▸ 동의어 못 잡음 ("연차" vs "휴가")</div><div class="pit-d">키워드 검색만 쓰면 전형적 실패. <strong>처방:</strong> 질의 전처리 동의어 사전 + 임베딩 추가.</div></div>
+      <div class="pit"><div class="pit-lb">PATTERN 04</div><div class="pit-h">▸ 프롬프트에 "아래만" 규칙 없음</div><div class="pit-d">모델이 일반 지식으로 답하면서 헛소리. <strong>처방:</strong> system에 "제공 문서만" 강제 + "규정에 없음" 출구.</div></div>
+      <div class="cblk"><span class="cm"># 동의어 사전 (발췌)</span>
+SYN = {
+  <span class="st">"연차"</span>:[<span class="st">"연차"</span>,<span class="st">"연가"</span>,<span class="st">"휴가"</span>,<span class="st">"유급휴가"</span>],
+  <span class="st">"출장"</span>:[<span class="st">"출장"</span>,<span class="st">"출장비"</span>,<span class="st">"여비"</span>,<span class="st">"여비교통비"</span>]
+}
+<span class="kw">def</span> expand(q):
+    <span class="kw">for</span> k,vs <span class="kw">in</span> SYN.items():
+        <span class="kw">if</span> k <span class="kw">in</span> q:
+            q += <span class="st">" "</span> + <span class="st">" "</span>.join(vs)
+    <span class="kw">return</span> q</div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">PATTERN 5 + FIX</span><span class="sh-t">유지보수</span></div><div class="sh-line"></div>
+      <div class="pit"><div class="pit-lb">PATTERN 05</div><div class="pit-h">▸ 개정판 인덱스 누락 · 구버전 인용</div><div class="pit-d">규정 개정 후 인덱스 갱신이 밀림. <strong>처방:</strong> 월간 자동 재빌드 + 갱신일 메타.</div></div>
+      <div class="co"><div class="co-lb">FIX WORKFLOW</div><div class="co-main">실패 → 정답 세트 추가 → 지표 재측정 → 원인 1개 수정</div><p>한 번에 여러 개 바꾸지 않는다. 1개씩 · 측정 · 롤백 가능.</p></div>
+      <div class="cod"><div class="cod-lb">REGRESSION TEST</div><div class="cod-main">정답 세트는 수정 후 항상 재측정</div><p>고쳐서 A가 좋아져도 B가 망가지면 안 된다.</p></div>
+      <div class="dstrip"><div class="ds-c"><div class="ds-a">PATTERNS</div><div class="ds-n">5</div><div class="ds-d">전형</div></div><div class="ds-c"><div class="ds-a">FIX</div><div class="ds-n">1개씩</div><div class="ds-d">측정 기반</div></div><div class="ds-c"><div class="ds-a">CYCLE</div><div class="ds-n">월 1회</div><div class="ds-d">개선 검토</div></div></div>
+      <div class="chk"><div class="chk-b"></div><div class="chk-t">5패턴 점검표 운영 문서화</div></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">07 · RAG 파이프라인과 웹서비스 구축</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">027 / 032</span></div></div>
+</div></div>
+
+<!-- 28 RAG 성숙도 단계 Phase 1~4 -->
+<div class="stage"><div class="slide" data-title="RAG Maturity">
+  <div class="hbar"><div class="hbar-l">MODULE 07 · MATURITY · PHASE 1-4</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 07</div></div>
+  <div class="hl"><div class="hl-kicker">RAG 운영 성숙도 · Phase 1~4 · LECTURE 07-Q-3 · 6MIN</div><div class="hl-title">거점리더 RAG 로드맵의 네 단계</div><div class="hl-sub">도입 첫 주부터 1년 뒤까지, RAG가 어떻게 진화하는지 성숙도 단계로 본다. 다음 단계의 조건을 미리 알면 자원 투입을 결정할 수 있다.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col2">
+    <div class="col">
+      <div class="sh"><span class="sh-n">PHASE 1 · 2</span><span class="sh-t">실험 → 부서 도구</span></div><div class="sh-line"></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">PHASE 01</span><span class="icard-sess">1~4주</span></div><div class="bth">"혼자 쓰는 실험판" — BM25 + CLI + 20건 정답</div><p class="bt">거점리더 1명. 문서 50건. 정답률 측정이 목표. <strong>웹 UI 없이 CLI.</strong> 실패 패턴 5개 발견.</p></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">PHASE 02</span><span class="icard-sess">1~3개월</span></div><div class="bth">"부서 5~10명이 쓰는 사내 도구" — 단일 HTML + FastAPI</div><p class="bt">문서 300건. 정답률 80%+. 웹 UI + 사용 로그. <strong>피드백 폼</strong> 운영. 월간 4지표 리포트.</p></div>
+      <div class="dstrip"><div class="ds-c"><div class="ds-a">P1 LOG</div><div class="ds-n">~20</div><div class="ds-d">정답 세트</div></div><div class="ds-c"><div class="ds-a">P2 USERS</div><div class="ds-n">5~10</div><div class="ds-d">부서 내</div></div><div class="ds-c"><div class="ds-a">P2 ACC</div><div class="ds-n">80%+</div><div class="ds-d">운영 기준</div></div></div>
+      <div class="co"><div class="co-lb">P1→P2 CONDITION</div><div class="co-main">정답률 80% 달성 · 실패 패턴 5개 수정 완료</div></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">PHASE 3 · 4</span><span class="sh-t">내부망 확장 → 표준</span></div><div class="sh-line"></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">PHASE 03</span><span class="icard-sess">3~6개월</span></div><div class="bth">"부서 20~50명 + 권한·로그 완비" — 내부망 본격 배포</div><p class="bt">Ollama 로컬 서버. chromadb 안정화. <strong>권한 Role 도입.</strong> 월간 리포트 + 정보화 부서 감사 통과.</p></div>
+      <div class="icard dark"><div class="icard-top"><span class="icard-lb">PHASE 04</span><span class="icard-sess">6~12개월</span></div><div class="bth">"기관 표준 RAG" — 여러 부서 공통 플랫폼</div><p class="bt">qdrant · 권한 세분화 · SSO 연동. 거점리더 커뮤니티. <strong>모델·인덱스 분리.</strong> 정책 문서로 운영 규정 고정.</p></div>
+      <table class="mtbl"><thead><tr><th>단계</th><th>다음 조건</th></tr></thead><tbody>
+        <tr><td>P2 → P3</td><td>권한·로그 · 정보화 승인</td></tr>
+        <tr><td>P3 → P4</td><td>복수 부서 수요 · SSO</td></tr>
+      </tbody></table>
+      <div class="quote"><div class="quote-src">SOURCE · 8주 여정의 출구</div><div class="quote-q">"P1~P2만 1년 안에 해내도, 우리 부서의 업무 속도는 달라진다."</div><div class="quote-a">— 거점리더의 현실적 목표</div></div>
+      <div class="chk"><div class="chk-b"></div><div class="chk-t">현재 단계 자가 진단</div></div>
+      <div class="chk"><div class="chk-b"></div><div class="chk-t">다음 단계 조건 체크리스트 작성</div></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">07 · RAG 파이프라인과 웹서비스 구축</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">028 / 032</span></div></div>
+</div></div>
+
+<!-- 29 HERO · 근거가 있는 답변이 더 옳다 -->
+<div class="stage"><div class="slide" data-title="Hero Evidence">
+  <div class="hbar"><div class="hbar-l">MODULE 07 · CLOSING KEY INSIGHT</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 07</div></div>
+  <div class="bd col1"><div class="col hero" style="background:var(--bg2);color:var(--ink);padding:60px 90px">
+    <div style="font-family:var(--mono);font-size:11.5px;color:var(--acc);letter-spacing:3px;font-weight:700;margin-bottom:18px">KEY INSIGHT</div>
+    <div style="font-family:var(--serif);font-size:52px;line-height:1.18;font-weight:700;color:var(--ink);letter-spacing:-0.02em">근거가 있는 답변이<br><span style="color:var(--acc)">더 느리지만</span> <span style="color:var(--acc)">더 옳다</span>.</div>
+    <div style="width:60px;height:3px;background:var(--acc);margin:22px 0 18px"></div>
+    <p style="font-size:17px;color:var(--ink2);line-height:1.75;max-width:1200px;font-style:italic">즉답을 그럴듯하게 하는 LLM과 <strong style="color:var(--ink)">"규정 제15조에 따르면…"이라고 답하는 RAG</strong>는 다르다. 공공은 속도보다 근거를 선택한다. 그 선택을 기술로 뒷받침하는 것이 거점리더의 일이다.</p>
+    <div style="border-left:3px solid var(--acc);padding:18px 24px;margin-top:26px;max-width:1100px;background:var(--bg)">
+      <div style="font-family:var(--serif);font-size:20px;color:var(--ink);font-weight:700;font-style:italic;line-height:1.5">"RAG가 성공하는 부서는 문서가 많아서가 아니라, 근거를 요구하는 문화를 가진 부서다."</div>
+      <div style="font-size:12px;color:var(--ink3);letter-spacing:2px;margin-top:10px;font-family:var(--mono);font-weight:700">— 공공 RAG 도입의 실제 조건</div>
+    </div>
+  </div></div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">07 · RAG 파이프라인과 웹서비스 구축</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">029 / 032</span></div></div>
+</div></div>
+
+<!-- 30 CLOSING 요약 -->
+<div class="stage"><div class="slide" data-title="Closing Summary">
+  <div class="hbar"><div class="hbar-l">MODULE 07 · CLOSING ①</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 07</div></div>
+  <div class="hl"><div class="hl-kicker">CLOSING ① · 7차시 정리 · LECTURE 07-Z-1 · 5MIN</div><div class="hl-title">7차시 전체 한 장 정리</div><div class="hl-sub">RAG 4단계, 공공 4사례 + 로컬 RAG, 웹서비스 3덩어리 + 내부망 이관, Remotion·SVG 자동화. 오늘의 산출물을 목록화한다.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col2">
+    <div class="col">
+      <div class="sh"><span class="sh-n">SUMMARY</span><span class="sh-t">오늘 다룬 4개 Unit</span></div><div class="sh-line"></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">UNIT 01</span><span class="icard-sess">Part A</span></div><div class="bth">RAG 4단계 · 벡터 DB 없이 80%</div><p class="bt">넣기·쪼개기·찾기·답하기. 키워드+긴 컨텍스트가 공공 기본값. 벡터 DB는 5k+ 문서에서만.</p></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">UNIT 02</span><span class="icard-sess">Part B</span></div><div class="bth">공공 4사례 + 로컬 RAG</div><p class="bt">규정·법령·민원·회의록. Ollama + chromadb로 내부망 완결. 에이전트가 구현, 사람이 정답 세트와 검수.</p></div>
+      <div class="icard dark"><div class="icard-top"><span class="icard-lb">UNIT 03</span><span class="icard-sess">Part C</span></div><div class="bth">웹서비스 3덩어리 + 내부망 이관</div><p class="bt">프론트(단일 HTML) · 백(FastAPI) · 저장(SQLite·chroma). 16개 체크리스트로 이관 완결.</p></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">UNIT 04</span><span class="icard-sess">Part D</span></div><div class="bth">Remotion · SVG 자동화</div><p class="bt">영상·도식도 데이터 바뀌면 자동 재생. 보고서·브리핑·수료증까지 템플릿화.</p></div>
+      <div class="dstrip"><div class="ds-c"><div class="ds-a">HOURS</div><div class="ds-n">4.5h</div><div class="ds-d">총 교시</div></div><div class="ds-c"><div class="ds-a">STEPS</div><div class="ds-n">4</div><div class="ds-d">RAG 단계</div></div><div class="ds-c"><div class="ds-a">PARTS</div><div class="ds-n">3</div><div class="ds-d">웹서비스</div></div></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">DELIVERABLES</span><span class="sh-t">거점리더 산출물 10</span></div><div class="sh-line"></div>
+      <div class="chk"><div class="chk-b"></div><div class="chk-t">부서 문서 20건 이상 RAG 인덱싱</div></div>
+      <div class="chk"><div class="chk-b"></div><div class="chk-t">정답 세트 20건 작성</div></div>
+      <div class="chk"><div class="chk-b"></div><div class="chk-t">정답률 80% 이상 달성</div></div>
+      <div class="chk"><div class="chk-b"></div><div class="chk-t">4지표 월간 리포트 1회 시범</div></div>
+      <div class="chk"><div class="chk-b"></div><div class="chk-t">단일 HTML 채팅 인터페이스</div></div>
+      <div class="chk"><div class="chk-b"></div><div class="chk-t">FastAPI /chat 엔드포인트</div></div>
+      <div class="chk"><div class="chk-b"></div><div class="chk-t">이관 16 체크리스트 전체 통과</div></div>
+      <div class="chk"><div class="chk-b"></div><div class="chk-t">wheels 오프라인 설치 성공</div></div>
+      <div class="chk"><div class="chk-b"></div><div class="chk-t">Remotion 30초 영상 1편</div></div>
+      <div class="chk"><div class="chk-b"></div><div class="chk-t">SVG 차트 함수 1개 작성</div></div>
+      <div class="co"><div class="co-lb">CORE MESSAGE</div><div class="co-main">"우리 부서 AI"는 RAG부터 시작한다</div><p>범용 AI 도입 논의보다, 내 부서 문서 50건으로 된 RAG가 훨씬 가치 있다.</p></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">07 · RAG 파이프라인과 웹서비스 구축</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">030 / 032</span></div></div>
+</div></div>
+
+<!-- 31 NEXT 8차시 예고 -->
+<div class="stage"><div class="slide" data-title="Next Session 8">
+  <div class="hbar"><div class="hbar-l">MODULE 07 · CLOSING ②</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 07</div></div>
+  <div class="hl"><div class="hl-kicker">CLOSING ② · 8차시 안내 · LECTURE 07-Z-2 · 4MIN</div><div class="hl-title">8차시 API와 MCP 예고</div><div class="hl-sub">내부 문서를 넘어 외부 데이터·도구와 연결한다. MCP로 Claude Desktop·에이전트가 우리 시스템을 조작하게 한다. 8주 정리와 거점리더 액션 플랜.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col2w">
+    <div class="col">
+      <div class="sh"><span class="sh-n">NEXT</span><span class="sh-t">8차시 미리보기</span></div><div class="sh-line"></div>
+      <div class="icard dark"><div class="icard-top"><span class="icard-lb">SESSION 08</span></div><div class="bth">API · MCP 기반 멀티 에이전트 아키텍처</div><p class="bt"><strong>Part A.</strong> 공공 API 6종 카탈로그(법령정보·공공데이터포털·주소·날씨·재난·지도). <strong>Part B.</strong> MCP 개념과 공식 서버 3종 설치. <strong>Part C.</strong> 멀티 에이전트 설계 패턴. <strong>Part D.</strong> AI 아키텍처 캔버스 워크숍 — 우리 부서의 8주 여정 한 장 요약. 8주 정리 + 거점리더 액션 플랜.</p></div>
+      <div class="co"><div class="co-lb">8차시 준비물</div><div class="co-main">① data.go.kr 계정 + API 키 1개 / ② Claude Desktop 설치</div><p>공공데이터포털 가입 후 간단한 키 1개 발급. MCP 실습에 Claude Desktop 필요. 둘 다 외부망에서 미리 세팅.</p></div>
+      <div class="chk"><div class="chk-b"></div><div class="chk-t">data.go.kr 회원가입 완료</div></div>
+      <div class="chk"><div class="chk-b"></div><div class="chk-t">공공 API 키 1개 확보</div></div>
+      <div class="chk"><div class="chk-b"></div><div class="chk-t">Claude Desktop 설치</div></div>
+      <div class="chk"><div class="chk-b"></div><div class="chk-t">오늘 RAG · 웹서비스 산출물 정리</div></div>
+    </div>
+    <div class="col" style="background:var(--dk);color:var(--on)">
+      <div class="sh"><span class="sh-n" style="color:var(--acc3)">QUOTE</span><span class="sh-t" style="color:var(--on2)">8차시 핵심 메시지</span></div><div class="sh-line" style="background:rgba(255,255,255,0.15)"></div>
+      <div style="border-left:3px solid var(--acc3);padding:18px 20px;margin:12px 0">
+        <div style="font-family:var(--mono);font-size:10px;color:var(--on2);letter-spacing:2px;font-weight:700;margin-bottom:10px">CLOSING OF STAGE C</div>
+        <div style="font-family:var(--serif);font-size:22px;color:var(--on);font-weight:700;font-style:italic;line-height:1.5">"부서 문서로 답하는 AI를 만들었다면, 이제 외부와 연결한다. MCP는 그 다리다."</div>
+        <div style="font-size:12px;color:var(--on2);margin-top:12px">— 8차시 핵심 메시지</div>
+      </div>
+      <table class="mtbl" style="margin-top:14px"><thead><tr><th style="color:var(--on2);border-color:var(--on2)">참고</th><th style="color:var(--on2);border-color:var(--on2)">자료</th></tr></thead><tbody>
+        <tr><td style="color:var(--on);border-color:rgba(255,255,255,0.12)">RAG 쿡북</td><td style="color:var(--on2);border-color:rgba(255,255,255,0.12)">anthropic.com/cookbook</td></tr>
+        <tr><td style="color:var(--on);border-color:rgba(255,255,255,0.12)">BM25</td><td style="color:var(--on2);border-color:rgba(255,255,255,0.12)">rank_bm25 · PyPI</td></tr>
+        <tr><td style="color:var(--on);border-color:rgba(255,255,255,0.12)">Ollama Embed</td><td style="color:var(--on2);border-color:rgba(255,255,255,0.12)">ollama.com · nomic-embed-text</td></tr>
+        <tr><td style="color:var(--on);border-color:rgba(255,255,255,0.12)">FastAPI</td><td style="color:var(--on2);border-color:rgba(255,255,255,0.12)">fastapi.tiangolo.com</td></tr>
+        <tr><td style="color:var(--on);border-color:rgba(255,255,255,0.12)">Remotion</td><td style="color:var(--on2);border-color:rgba(255,255,255,0.12)">remotion.dev</td></tr>
+      </tbody></table>
+      <div style="font-family:var(--serif);font-size:32px;color:var(--acc3);font-style:italic;margin-top:16px;text-align:right">— 수고하셨습니다</div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">07 · RAG 파이프라인과 웹서비스 구축</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">031 / 032</span></div></div>
+</div></div>
+
+<!-- 32 STAGE MAP -->
+<div class="stage"><div class="slide" data-title="Stage Map">
+  <div class="hbar"><div class="hbar-l">MODULE 07 · 8-WEEK STAGE MAP</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 07</div></div>
+  <div class="hl"><div class="hl-kicker">8주 로드맵 · 현재 위치 · LECTURE 07-Z-3 · 3MIN</div><div class="hl-title">8주 여정 현재 위치</div><div class="hl-sub">Stage C(응용·확장)가 2/3 끝났다. 다음 8차시가 C의 마지막이자 전체 과정의 종착. 4·5·6 → 7 → 8로 이어지는 응용 단계의 정점.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col2w">
+    <div class="col">
+      <div class="sh"><span class="sh-n">TABLE</span><span class="sh-t">8주 로드맵</span></div><div class="sh-line"></div>
+      <table class="mtbl"><thead><tr><th>회차</th><th>주제</th><th>스테이지</th><th>상태</th></tr></thead><tbody>
+        <tr><td>S01</td><td>AI 에이전트 시대 지형도</td><td>A</td><td>완료</td></tr>
+        <tr><td>S02</td><td>프론티어 + 도구 50선</td><td>A</td><td>완료</td></tr>
+        <tr><td>S03</td><td>메타 프롬프트 · 워크플로우</td><td>A</td><td>완료</td></tr>
+        <tr><td>S04</td><td>어시스트 바이브 ① 시각화</td><td>B</td><td>완료</td></tr>
+        <tr><td>S05</td><td>어시스트 바이브 ② 자동화</td><td>B</td><td>완료</td></tr>
+        <tr><td>S06</td><td>에이전트 도구 마스터리</td><td>C</td><td>완료</td></tr>
+        <tr><td><strong>S07</strong></td><td><strong>RAG · 웹서비스</strong></td><td><strong>C</strong></td><td><strong>오늘</strong></td></tr>
+        <tr><td>S08</td><td>API · MCP · 아키텍처 캔버스</td><td>C</td><td>다음</td></tr>
+      </tbody></table>
+      <div class="co"><div class="co-lb">현재 지점</div><div class="co-main">Stage C 2/3 · 응용 단계의 정점</div><p>Stage A(기초) → B(실습) → C(응용·확장)로 이어진 8주 여정에서, 오늘이 C의 두 번째 관문.</p></div>
+      <div class="dstrip"><div class="ds-c"><div class="ds-a">DONE</div><div class="ds-n">6/8</div><div class="ds-d">완료 차시</div></div><div class="ds-c"><div class="ds-a">TODAY</div><div class="ds-n">S07</div><div class="ds-d">RAG·웹</div></div><div class="ds-c"><div class="ds-a">LAST</div><div class="ds-n">S08</div><div class="ds-d">API·MCP</div></div></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">STAGE</span><span class="sh-t">구분 · 현재</span></div><div class="sh-line"></div>
+      <div class="cod"><div class="cod-lb">STAGE C · 응용·확장</div><div class="cod-main">6~8차시는 "부서 도구로 조립" — 에이전트·RAG·외부연결</div><p>6차시: 에이전트 도구. <strong>7차시: RAG + 웹서비스(오늘).</strong> 8차시: API·MCP·아키텍처 캔버스. Stage C가 끝나면 8주 여정이 마무리된다.</p></div>
+      <div class="dstrip"><div class="ds-c"><div class="ds-a">STAGE C</div><div class="ds-n">2/3</div><div class="ds-d">응용 단계(진행중)</div></div><div class="ds-c"><div class="ds-a">NEXT</div><div class="ds-n">S08</div><div class="ds-d">API · MCP</div></div><div class="ds-c"><div class="ds-a">BRING</div><div class="ds-n">API키</div><div class="ds-d">data.go.kr</div></div></div>
+      <div class="co"><div class="co-lb">거점리더의 당부</div><div class="co-main">오늘 만든 RAG를 "부서 동료 3명"에게 시연</div><p>8차시 전에 한 번이라도 현장 피드백을 받는다. 그 피드백이 8차시 API·MCP 설계의 실제 입력.</p></div>
+      <div class="quote"><div class="quote-src">SOURCE · 8주 여정 설계</div><div class="quote-q">"스스로 만든 RAG에 동료가 첫 질문을 하는 순간이, 이 과정의 실제 출구다."</div><div class="quote-a">— 커리큘럼 철학</div></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">07 · RAG 파이프라인과 웹서비스 구축</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">032 / 032</span></div></div>
+</div></div>
+</div>
+
+<script>
+(function(){
+  document.querySelectorAll('.toolbar,.deck-nav').forEach(e=>e.remove());
+  const tb = document.createElement('div');
+  tb.className = 'toolbar';
+  tb.innerHTML = `<button onclick="pNav(-1)">◀</button><span class="pg" id="pgInd">1 / 1</span><button onclick="pNav(1)">▶</button><button onclick="window.print()">⬇ PDF</button><button onclick="tFull()">⛶ FULL</button><button id="editBtn" onclick="tEdit()">✎ EDIT</button>`;
+  document.body.appendChild(tb);
+})();
+
+const allSlides = document.querySelectorAll('.slide');
+const allStages = document.querySelectorAll('.stage');
+const deck = document.getElementById('deck');
+
+function fitSlides(){const vw=innerWidth,vh=innerHeight;const r=Math.min(vw/1600,vh/900);allSlides.forEach(s=>{s.style.transform=`scale(${r})`;s.style.transformOrigin='center center'})}
+addEventListener('resize',fitSlides);fitSlides();
+
+function curIdx(){let i=0,m=1e9;allStages.forEach((s,x)=>{const d=Math.abs(s.getBoundingClientRect().top+s.getBoundingClientRect().height/2-innerHeight/2);if(d<m){m=d;i=x}});return i}
+function pNav(dir){const i=curIdx()+dir;if(i>=0&&i<allStages.length)allStages[i].scrollIntoView({behavior:'smooth'})}
+function updPg(){document.getElementById('pgInd').textContent=`${curIdx()+1} / ${allStages.length}`}
+deck.addEventListener('scroll',updPg);updPg();
+function tFull(){if(document.fullscreenElement)document.exitFullscreen();else document.documentElement.requestFullscreen().catch(()=>{})}
+
+let editMode=false;
+function tEdit(){
+  editMode=!editMode;
+  const btn=document.getElementById('editBtn'),tb=document.querySelector('.toolbar');
+  const SEL='.bth,.bt,.cod-lb,.cod-main,.cod p,.ds-n,.ds-d,.hero-k,.hero-t,.hero-s,.hero-q-q,.hero-q-a,.icard-lb,.icard-sess,.quote-q,.quote-a,.quote-src,.fig,.hl-kicker,.hl-title,.hl-sub,.card-k,.card-anchor,.card-body,.card-note,.co-lb,.co-main,.co p,.next-k,.next-t,.pit-lb,.pit-h,.pit-d,.sh-n,.sh-t,.hybrid-k,.hybrid-h,.hybrid-d,.draft-k,.draft-t,.draft-note,.cmp2c-k,.cmp2c-h,.cmp2c-d,.cmp2c-fig,.qd-k,.qd-h,.qd-d,.ladder-h,.ladder-d,.ladder-tag,.tblock-w,.tblock-h,.tblock-d,.tblock-sess,.type-h,.type-d,.type-tag,.flow-box-t,.hbar-l,.hbar-r,.fbar-title,.mtbl td,.mtbl th,h1,p';
+  if(editMode){
+    btn.textContent='✎ EDITING';btn.style.background='#b8532a';btn.style.color='#fff';tb.style.borderBottom='2px solid #b8532a';
+    document.querySelectorAll(SEL).forEach(el=>{el.contentEditable='true';el.style.outline='1px dashed rgba(184,83,42,0.3)';el.style.cursor='text'});
+    deck.style.scrollSnapType='none';
+    sToast('EDIT ON — 텍스트 클릭 수정 · Ctrl+S 저장 · E 또는 ESC로 종료');
+  }else{
+    btn.textContent='✎ EDIT';btn.style.background='';btn.style.color='';tb.style.borderBottom='';
+    document.querySelectorAll('[contenteditable="true"]').forEach(el=>{el.contentEditable='false';el.style.outline='';el.style.cursor=''});
+    deck.style.scrollSnapType='y mandatory';
+    sToast('EDIT OFF — 프레젠테이션 모드');
+  }
+}
+function sToast(m){let t=document.getElementById('toast');if(!t){t=document.createElement('div');t.id='toast';t.style.cssText='position:fixed;bottom:60px;left:50%;transform:translateX(-50%);background:rgba(14,10,6,0.92);color:#ede4d3;font-family:var(--mono,monospace);font-size:11px;letter-spacing:1.5px;padding:10px 24px;border-radius:4px;z-index:300;pointer-events:none;opacity:0;transition:opacity 0.4s';document.body.appendChild(t)}t.textContent=m;t.style.opacity='1';clearTimeout(t._tid);t._tid=setTimeout(()=>{t.style.opacity='0'},3000)}
+
+document.addEventListener('keydown',e=>{
+  if(editMode){
+    if(e.key==='s'&&(e.ctrlKey||e.metaKey)){e.preventDefault();const b=new Blob(['<!DOCTYPE html>\n'+document.documentElement.outerHTML],{type:'text/html'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=document.title.replace(/[^a-zA-Z0-9가-힣\s·_-]/g,'')+'.html';a.click();URL.revokeObjectURL(a.href);sToast('HTML 파일 저장 완료')}
+    if(e.key==='Escape'||e.key==='e'||e.key==='E'){if(!document.activeElement||document.activeElement===document.body)tEdit()}
+    return;
+  }
+  if(e.key==='ArrowRight'||e.key==='ArrowDown'||e.key===' '||e.key==='PageDown'){e.preventDefault();pNav(1)}
+  else if(e.key==='ArrowLeft'||e.key==='ArrowUp'||e.key==='PageUp'){e.preventDefault();pNav(-1)}
+  else if(e.key==='Home'){e.preventDefault();allStages[0].scrollIntoView({behavior:'smooth'})}
+  else if(e.key==='End'){e.preventDefault();allStages[allStages.length-1].scrollIntoView({behavior:'smooth'})}
+  else if(e.key==='f'||e.key==='F11'){e.preventDefault();tFull()}
+  else if(e.key==='Escape'){if(document.fullscreenElement)document.exitFullscreen()}
+  else if(e.key==='e'||e.key==='E'){tEdit()}
+});
+</script>
+<script>/* kg-preview: #<heading> \uc704\uce58\ub85c \uc774\ub3d9 */
+(function(){function norm(t){return (t||'').replace(/\s+/g,'').toLowerCase()}
+function go(){var h=decodeURIComponent(location.hash.slice(1));if(!h)return;var k=norm(h).slice(0,24);if(!k)return;
+var best=null,bl=1e9,els=document.body.querySelectorAll('h1,h2,h3,h4,h5,p,div,span,li,td,text,tspan,section,article');
+for(var i=0;i<els.length;i++){var e=els[i],t=norm(e.textContent);if(t.length<bl&&t.indexOf(k)>-1){best=e;bl=t.length}}
+if(!best)return;var box=best.closest('section,[class*=slide],[class*=page],article')||best;
+box.scrollIntoView({block:'start'});box.style.outline='3px solid #c0504d';box.style.outlineOffset='4px';
+setTimeout(function(){box.style.outline=''},2600)}
+window.addEventListener('load',function(){setTimeout(go,400)});window.addEventListener('hashchange',go)})();</script></body>
+</html>

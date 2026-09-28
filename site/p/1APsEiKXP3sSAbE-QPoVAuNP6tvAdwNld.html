@@ -1,0 +1,921 @@
+<!doctype html>
+<html lang="ko">
+<head><meta name="robots" content="noindex, nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI 데이터 챔피언 양성교육(마라토너)</title>
+<!--
+  사용법: 이 파일을 결과 경로로 복사한 뒤, <section class="slide"> 들을 주제에 맞게 채운다.
+  CSS는 손대지 말고 그대로 둔다(디자인 일관성). 아래 슬라이드들은 레이아웃 예시이며,
+  필요한 것만 골라 복제·편집하고 나머지는 지운다. 캔버스는 1280x720(16:9) 고정.
+-->
+<style>
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css");
+@import url("https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500;600;700;900&family=JetBrains+Mono:wght@400;600&display=swap");
+:root{
+  --paper:#f8f4ed; --paper2:#fbf8f1; --band:#efe8d7; --band2:#e7dcc6;
+  --dark:#1a130f; --ink:#211913; --ink2:#473d33; --muted:#8c8275;
+  --rust:#bf571d; --rust2:#9c440f; --gold:#c98a3a; --line:#ddd1ba; --line2:#cabb9c;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;background:#cfc8ba;font-family:Pretendard,"Apple SD Gothic Neo","Noto Sans KR",sans-serif;color:var(--ink);-webkit-font-smoothing:antialiased;}
+.deck{display:flex;flex-direction:column;align-items:center;gap:22px;padding:22px 0 40px;}
+.slide{position:relative;width:1280px;height:720px;background:var(--paper);overflow:hidden;box-shadow:0 10px 34px rgba(0,0,0,.22);}
+h1,h2,h3,h4,p,ul,ol,li{margin:0;padding:0;}
+
+/* 머리글: 솔리드 다크 마스트헤드 (그림자/그라데이션 금지) */
+.hdr{position:absolute;top:0;left:0;right:0;height:44px;display:flex;align-items:center;justify-content:space-between;padding:0 46px;background:var(--dark);z-index:3;}
+.hdr .ht{font-size:12.5px;font-weight:700;color:#f3ede2;letter-spacing:.2px;}
+.hdr .ht span{color:rgba(243,237,226,.42);font-weight:600;letter-spacing:1px;font-size:10px;margin-left:7px;}
+.hdr .hr{font-size:10.5px;font-weight:600;letter-spacing:1.2px;color:rgba(243,237,226,.55);}
+
+.stage{position:absolute;top:44px;left:0;right:0;bottom:0;padding:26px 50px 38px;display:flex;flex-direction:column;}
+.crumb{font-size:14px;font-weight:600;color:var(--rust);letter-spacing:.3px;margin-bottom:6px;}
+.atitle{font-family:"Noto Serif KR",serif;font-weight:700;font-size:28px;line-height:1.28;color:#13100c;letter-spacing:-.4px;}
+.atitle .lbl{color:var(--rust2);}
+.atitle .sub{font-weight:500;color:#3a322a;}
+.titlerule{height:0;border-bottom:1.5px solid var(--line2);margin:14px 0 0;}
+
+.body{flex:1;min-height:0;display:grid;gap:26px;padding-top:18px;}
+.split{grid-template-columns:1fr 1fr;}
+.split-l{grid-template-columns:1.08fr .92fr;}
+.split-r{grid-template-columns:.9fr 1.1fr;}
+.colflow{display:flex;flex-direction:column;min-height:0;}
+
+/* 인트로 설명문(합니다체) */
+.lead{font-size:16.5px;line-height:1.82;color:var(--ink);font-weight:400;}
+.lead b{font-weight:700;color:#13100c;}
+.lead .hl{color:var(--rust2);font-weight:700;}
+
+/* 번호 개념 정의 — 박스 그리드 대신 이것을 쓴다 */
+.concepts{display:flex;flex-direction:column;}
+.concepts.fill{flex:1;justify-content:flex-start;}          /* 칼럼 높이를 균등 분배해 채움 */
+.concepts.fill .concept{flex:1;align-items:center;}
+.concept{padding:16px 0 17px;border-bottom:1px solid var(--line);display:flex;gap:16px;}
+.concept:first-child{padding-top:5px;}
+.concept .no{flex:0 0 auto;font-family:"Noto Serif KR",serif;font-size:22px;font-weight:700;color:var(--rust);line-height:1.25;width:30px;}
+.concept .cbody{flex:1;}
+.concept .cbody .cn{font-size:17.5px;font-weight:700;color:#15100c;line-height:1.3;}
+.concept .cbody .cn .en{font-size:12px;font-weight:600;color:var(--muted);letter-spacing:.6px;margin-left:8px;}
+.concept .cbody p{font-size:15px;line-height:1.7;color:var(--ink2);margin-top:6px;font-weight:400;}
+.concept .cbody p b{color:#2a231c;font-weight:700;}
+
+/* 하단 정리/캡션 바 — 슬로건 금지, 사실 설명만 */
+.note{margin-top:auto;display:flex;gap:16px;align-items:flex-start;padding:16px 20px;background:var(--band);border-left:3px solid var(--rust);border-radius:0 3px 3px 0;}
+.note .nl{flex:0 0 auto;font-size:12px;font-weight:700;letter-spacing:1px;color:var(--rust2);padding-top:2px;}
+.note p{font-size:15px;line-height:1.66;color:var(--ink);font-weight:400;}
+.note p b{font-weight:700;color:var(--rust2);}
+.srcline{position:absolute;left:50px;bottom:15px;font-size:11px;color:var(--muted);font-weight:400;}
+.pageno{position:absolute;right:30px;bottom:13px;font-size:13.5px;font-weight:700;color:var(--rust);}
+
+/* 표 */
+table.grid{width:100%;border-collapse:collapse;font-size:13.8px;}
+table.grid th{background:var(--dark);color:#f1ebe0;font-weight:700;font-size:13px;padding:9px 12px;text-align:left;}
+table.grid td{padding:9.5px 12px;border-bottom:1px solid var(--line);color:var(--ink2);vertical-align:top;line-height:1.5;}
+table.grid tr:nth-child(even) td{background:rgba(231,220,198,.36);}
+table.grid td b{color:#1c1610;font-weight:700;}
+.grp td{background:var(--band2)!important;color:var(--rust2);font-weight:700;font-size:13px;letter-spacing:.5px;}
+table.grid.tight{font-size:13px;}
+table.grid.tight th,table.grid.tight td{padding:6.5px 12px;}
+table.grid.tight td{line-height:1.45;}
+.pill{display:inline-block;font-size:11px;font-weight:700;padding:2px 8px;border-radius:3px;white-space:nowrap;}
+.pill.soft{background:#eef1e9;color:#3a5240;}
+.pill.force{background:#34190f;color:#ffcfa8;}
+
+/* === 도식 === */
+.figcap{font-size:12px;font-weight:700;letter-spacing:1px;color:var(--muted);margin-bottom:16px;text-transform:uppercase;}
+.figwrap{display:flex;flex-direction:column;justify-content:center;min-height:0;height:100%;}
+.figwrap.flow .veri{flex:1;justify-content:space-between;}  /* 5단 이상 흐름만 채우기. 항목 3개 이하면 .flow 빼기 */
+
+/* 가로 타임라인 */
+.lineage{display:flex;align-items:stretch;}
+.lineage .ln{flex:1;text-align:center;padding:0 10px;position:relative;}
+.lineage .ln .dot{width:17px;height:17px;border-radius:50%;background:var(--paper);border:4px solid var(--rust);margin:0 auto 16px;position:relative;z-index:2;}
+.lineage .ln.hot .dot{background:var(--rust);}
+.lineage .ln::before{content:"";position:absolute;top:8px;left:0;right:0;height:2px;background:var(--line2);z-index:1;}
+.lineage .ln:first-child::before{left:50%;}.lineage .ln:last-child::before{right:50%;}
+.lineage .ln .yr{font-size:12px;font-weight:700;color:var(--muted);margin-bottom:5px;}
+.lineage .ln .tm{font-size:16px;font-weight:700;color:#15100c;line-height:1.25;margin-bottom:8px;}
+.lineage .ln p{font-size:13.5px;line-height:1.5;color:var(--ink2);}
+
+/* 2계층 스택(대비) */
+.layer2{display:flex;flex-direction:column;gap:15px;}
+.layer2 .lay{border-radius:6px;padding:21px 24px;}
+.layer2 .lay.top{background:var(--band);border:1.5px solid var(--line2);}
+.layer2 .lay.bot{background:var(--dark);color:#efe7da;}
+.layer2 .lay .lh{font-size:17.5px;font-weight:700;margin-bottom:6px;}
+.layer2 .lay.top .lh{color:#15100c;}
+.layer2 .lay .lt{font-size:12.5px;font-weight:600;color:var(--rust);letter-spacing:.5px;margin-bottom:9px;}
+.layer2 .lay.bot .lt{color:var(--gold);}
+.layer2 .lay p{font-size:14px;line-height:1.6;}
+.layer2 .lay.top p{color:var(--ink2);}.layer2 .lay.bot p{color:#cabfb0;}
+.layer2 .conn{text-align:center;color:var(--muted);font-size:13px;font-weight:600;}
+
+/* 순서 흐름 도식(반복 포함) */
+.loop{display:flex;flex-direction:column;gap:13px;}
+.loop .lp{display:flex;align-items:center;gap:14px;background:var(--paper2);border:1px solid var(--line);border-radius:5px;padding:15px 18px;}
+.loop .lp .lpn{flex:0 0 auto;width:27px;height:27px;border-radius:50%;background:var(--dark);color:#f1ebe0;font-size:12.5px;font-weight:700;display:flex;align-items:center;justify-content:center;}
+.loop .lp .lpt{font-size:15px;color:var(--ink);line-height:1.4;}
+.loop .lp .lpt b{font-weight:700;color:#15100c;}
+.loop .back{font-size:13px;color:var(--rust2);font-weight:700;text-align:center;align-self:center;margin-top:5px;background:var(--band);border:1px dashed var(--line2);border-radius:20px;padding:7px 18px;}
+
+/* 폭 증가 계층 스택 */
+.stack{display:flex;flex-direction:column;gap:12px;align-items:center;}
+.stack .sb{border-radius:5px;padding:16px 22px;color:#fff;text-align:left;}
+.stack .sb .sh{font-size:16px;font-weight:700;}
+.stack .sb .sd{font-size:13px;opacity:.92;margin-top:3px;line-height:1.45;}
+.stack .s1{width:56%;background:#9c440f;}.stack .s2{width:70%;background:#b35a26;}
+.stack .s3{width:84%;background:#c47a45;}.stack .s4{width:98%;background:#caa06e;color:#2a1d12;}
+
+/* 분기 흐름(검증/판정) */
+.veri{display:flex;flex-direction:column;gap:11px;}
+.veri .vrow{display:flex;align-items:center;gap:13px;}
+.veri .vbox{flex:1;background:var(--paper2);border:1px solid var(--line);border-radius:5px;padding:15px 18px;}
+.veri .vbox .vt{font-size:15px;font-weight:700;color:#15100c;}
+.veri .vbox p{font-size:13.5px;color:var(--ink2);line-height:1.5;margin-top:3px;}
+.veri .vbox.fail{background:#2a1812;border-color:#2a1812;}
+.veri .vbox.fail .vt{color:#ffd9bb;}.veri .vbox.fail p{color:#d3c6b8;}
+.veri .arr{color:var(--rust);font-size:18px;font-weight:700;flex:0 0 auto;}
+
+/* 가로 단계(좌→우) */
+.steps{display:flex;align-items:stretch;}
+.steps .st{flex:1;padding:0 18px;position:relative;}
+.steps .st:not(:last-child)::after{content:"›";position:absolute;right:-7px;top:15px;color:var(--rust);font-size:24px;font-weight:700;}
+.steps .st .sn{font-size:12px;font-weight:700;color:var(--rust);letter-spacing:.5px;margin-bottom:7px;}
+.steps .st .sh{font-size:16.5px;font-weight:700;color:#15100c;margin-bottom:7px;}
+.steps .st p{font-size:14.5px;line-height:1.58;color:var(--ink2);}
+
+/* 단계 사이 데이터 릴레이 바 */
+.relay{display:flex;align-items:stretch;gap:9px;}
+.relay .rc{flex:1;background:var(--band);border:1px solid var(--line2);border-radius:5px;padding:13px 12px;text-align:center;display:flex;flex-direction:column;justify-content:center;}
+.relay .rc .rk{font-size:11px;font-weight:700;color:var(--rust2);letter-spacing:.5px;margin-bottom:5px;}
+.relay .rc .rv{font-size:14.5px;font-weight:700;color:#15100c;}
+.relay .ra{display:flex;align-items:center;color:var(--rust);font-size:17px;font-weight:700;}
+
+/* 영역 카드(3열) */
+.domain{flex:1;background:var(--paper2);border:1px solid var(--line);border-top:3px solid var(--rust);border-radius:5px;padding:18px 19px;display:flex;flex-direction:column;}
+.domain .dh{font-size:17.5px;font-weight:700;color:#15100c;margin-bottom:6px;}
+.domain .dh span{font-size:12px;font-weight:600;color:var(--muted);margin-left:7px;}
+.dl{list-style:none;display:flex;flex-direction:column;flex:1;justify-content:space-around;padding-top:4px;}
+.dl li{position:relative;padding-left:16px;font-size:14.5px;line-height:1.55;color:var(--ink2);}
+.dl li::before{content:"";position:absolute;left:0;top:9px;width:6px;height:6px;background:var(--rust);border-radius:1px;}
+.dl li b{color:var(--rust2);font-weight:700;margin-right:5px;}
+
+/* 인용(좌측 빈 중단 채울 때) */
+.pull{border-left:3px solid var(--rust);padding:6px 0 6px 20px;font-family:"Noto Serif KR",serif;font-size:19.5px;font-weight:600;color:#15100c;line-height:1.5;}
+.pull span{display:block;font-family:Pretendard,sans-serif;font-size:14px;font-weight:400;color:var(--ink2);line-height:1.65;margin-top:11px;}
+
+/* 수치 강조 */
+.stats{display:flex;gap:16px;margin-top:8px;}
+.stat{flex:1;text-align:center;background:var(--paper2);border:1px solid var(--line);border-radius:5px;padding:16px 12px;}
+.stat .sv{font-family:"Noto Serif KR",serif;font-size:28px;font-weight:700;color:var(--rust2);line-height:1;}
+.stat .sl{font-size:13px;color:var(--ink2);margin-top:7px;line-height:1.4;}
+
+/* 다크 표지/마무리 */
+.slide.dark{background:var(--dark);color:#f1ebe0;}
+.slide.dark .hdr{background:transparent;border-bottom:1px solid rgba(255,255,255,.1);}
+.dwrap{position:absolute;inset:44px 0 0;display:flex;flex-direction:column;justify-content:center;padding:0 80px;}
+.dwrap .eye{font-size:13px;font-weight:600;letter-spacing:3px;color:var(--gold);margin-bottom:20px;text-transform:uppercase;}
+.dwrap h1{font-family:"Noto Serif KR",serif;font-weight:700;font-size:56px;line-height:1.16;color:#fdfbf6;letter-spacing:-1px;}
+.dwrap h1 .ac{color:var(--rust);}
+.dwrap .ds{font-size:19px;color:#c6bbac;font-weight:400;margin-top:20px;line-height:1.65;max-width:900px;}
+.dwrap .den{font-family:"Noto Serif KR",serif;font-size:17px;font-weight:500;letter-spacing:5px;color:rgba(255,255,255,.14);margin-top:16px;text-transform:uppercase;}
+.dmeta{position:absolute;left:80px;right:80px;bottom:52px;display:flex;justify-content:space-between;align-items:flex-end;border-top:1px solid rgba(255,255,255,.14);padding-top:18px;}
+.dmeta .who{font-size:14.5px;color:#e6ddd0;font-weight:600;}
+.dmeta .who span{display:block;font-size:12px;color:var(--muted);font-weight:400;margin-top:3px;}
+.dmeta .topic{font-size:13px;color:#c6bbac;text-align:right;line-height:1.55;max-width:520px;}
+.dmeta .topic b{color:var(--gold);font-weight:600;}
+.recap{position:absolute;inset:44px 0 0;display:flex;flex-direction:column;justify-content:center;padding:0 80px;}
+.recap .eye{font-size:13px;font-weight:600;letter-spacing:3px;color:var(--gold);margin-bottom:16px;}
+.recap h1{font-family:"Noto Serif KR",serif;font-size:40px;font-weight:700;color:#fdfbf6;line-height:1.3;margin-bottom:30px;}
+.recap .ritems{display:flex;flex-direction:column;gap:18px;max-width:960px;}
+.recap .ri{display:flex;gap:16px;align-items:baseline;}
+.recap .ri .rn{font-family:"Noto Serif KR",serif;color:var(--rust);font-size:19px;font-weight:700;flex:0 0 auto;}
+.recap .ri p{font-size:16.5px;color:#d8cdbe;line-height:1.62;}
+.recap .ri p b{color:#fdfbf6;font-weight:700;}
+
+/* 확장판 생성용 보강: 표 균등 배분과 박스 밀도 보정 */
+.tablefill{flex:1;min-height:0;display:flex;align-items:stretch;}
+.tablefill table.grid{height:100%;}
+table.grid.even{--rows:3;--head-h:44px;height:100%;table-layout:fixed;}
+table.grid.even th,table.grid.even td{vertical-align:middle;}
+table.grid.even tr:first-child{height:var(--head-h);}
+table.grid.even tr:not(:first-child):not(.grp){height:calc((100% - var(--head-h)) / var(--rows));}
+table.grid.roomy{font-size:14.7px;}
+table.grid.roomy td{padding:11px 13px;line-height:1.54;}
+.concepts.big .concept .cbody .cn{font-size:18.5px;}
+.concepts.big .concept{align-items:flex-start;padding-top:14px;padding-bottom:14px;}
+.concepts.big .concept .no{padding-top:2px;}
+.concepts.big .concept .cbody p{font-size:14.7px;line-height:1.52;}
+.boxmore{display:block;margin-top:6px;color:var(--rust2);font-weight:650;}
+.boxcheck{display:block;margin-top:3px;color:#5d5044;font-weight:500;}
+.steps.big .st .sh{font-size:18px;}
+.steps.big .st p{font-size:15.3px;line-height:1.6;}
+.relay.big .rc .rv{font-size:16px;line-height:1.35;}
+.domain.big{padding:21px 22px;}
+.domain.big .dh{font-size:19.5px;margin-bottom:8px;}
+.domain.big .dl li{font-size:15.5px;line-height:1.58;}
+.loop.big .lp .lpt{font-size:16px;line-height:1.52;}
+
+/* === 강의 도구: 편집 · PDF · 발표 (인쇄/발표 시 자동 숨김) === */
+.tool{position:fixed;top:12px;right:12px;z-index:9999;display:flex;gap:6px;font-family:Pretendard,sans-serif;}
+.tool button{font-size:12px;font-weight:700;padding:7px 12px;border-radius:6px;border:1px solid var(--line2);background:#fffdf8;color:#3a322a;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.18);}
+.tool button:hover{background:var(--band);}
+.tool button.on{background:var(--rust);color:#fff;border-color:var(--rust);}
+body.editing .slide{outline:2px dashed rgba(191,87,29,.45);outline-offset:-2px;}
+body.presenting{overflow:hidden;background:#0c0907;}
+body.presenting .deck{display:block;padding:0;gap:0;margin:0;}
+body.presenting .slide{display:none!important;}
+body.presenting .slide.present-current{display:block!important;position:fixed;left:50%;top:50%;transform:translate(-50%,-50%) scale(var(--ps,1));box-shadow:0 0 70px rgba(0,0,0,.6);}
+.pnav{position:fixed;bottom:14px;left:0;right:0;text-align:center;color:rgba(255,255,255,.55);font-size:13px;font-family:Pretendard,sans-serif;z-index:9999;display:none;}
+body.presenting .pnav{display:block;}
+@page{size:1280px 720px;margin:0;}
+@media print{
+  html,body{margin:0;padding:0;background:#fff;width:1280px;}
+  .tool,.pnav{display:none!important;}
+  .deck{display:block;gap:0;padding:0;margin:0;}
+  .slide{margin:0;box-shadow:none;page-break-after:always;break-after:page;}
+  .slide:last-child{page-break-after:auto;break-after:auto;}
+  *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}
+}
+</style>
+</head>
+<body>
+<div class="tool">
+  <button id="btnEdit">편집</button>
+  <button id="btnSave">저장(HTML)</button>
+  <button id="btnPdf">PDF</button>
+  <button id="btnPlay">발표</button>
+</div>
+<div class="pnav"></div>
+<div class="deck">
+
+<!-- ===== 표지 (다크) ===== -->
+<section class="slide dark">
+  <div class="hdr"><div class="ht">AI 데이터 챔피언 양성교육<span>GEN AI · CODING AGENT</span></div><div class="hr">한국보건복지인재원 · 2일 16시간</div></div>
+  <div class="dwrap">
+    <div class="eye">집합 실습 과정</div>
+    <h1>AI 데이터 챔피언<br><span class="ac">양성교육(마라토너)</span></h1>
+    <div class="ds">생성형 AI · 코딩에이전트 활용 실무를 에이전트 이해, 업무자동화, 데이터분석, RAG, 웹서비스 구현 흐름으로 다룹니다.</div>
+    <div class="den">Generative AI · Coding Agent Practice</div>
+  </div>
+  <div class="dmeta">
+    <div class="who">신성진 대표<span>한국데이터사이언티스트협회(CDSA)</span></div>
+    <div class="topic">생성형 AI · 코딩에이전트 활용 실무<br><b>한국보건복지인재원 · 2일 16시간 집합 실습 과정</b></div>
+  </div>
+</section>
+
+<!-- ===== 커리큘럼 표 ===== -->
+<section class="slide">
+  <div class="hdr"><div class="ht">AI 데이터 챔피언 양성교육<span>GEN AI · CODING AGENT</span></div><div class="hr">CURRICULUM</div></div>
+  <div class="stage">
+    <div class="crumb">과정 안내</div>
+    <h2 class="atitle"><span class="lbl">[과정 안내]</span> 2일 과정 한눈에 <span class="sub">— 이해·자동화·분석에서 웹서비스까지</span></h2>
+    <div class="titlerule"></div>
+    <div class="body colflow" style="padding-top:14px;">
+      <table class="grid tight">
+        <tr><th style="width:92px;">일차</th><th style="width:260px;">교과목</th><th>핵심 내용</th><th style="width:210px;">도구</th></tr>
+        <tr class="grp"><td colspan="4">Day 1 — 이해 · 자동화 · 분석</td></tr>
+        <tr><td>Day 1</td><td><b>에이전트 이해</b></td><td>LLM 본질, RAG·파인튜닝, 에이전트·하네스, 코딩에이전트 지형을 정리합니다.</td><td>ChatGPT · Claude · Gemini</td></tr>
+        <tr><td>Day 1</td><td><b>Python 업무자동화</b></td><td>코드를 외우기보다 업무 구조를 설명하고, 코드 생성·실행·오류 재질의 흐름을 익힙니다.</td><td>Python · Excel</td></tr>
+        <tr><td>Day 1</td><td><b>데이터분석</b></td><td>질문 설계, 전처리, 시각화, 모델링·평가, 보고서 스토리텔링을 연결합니다.</td><td>Excel · Python · LLM</td></tr>
+        <tr class="grp"><td colspan="4">Day 2 — 코딩에이전트 · 바이브코딩 · RAG · 웹서비스</td></tr>
+        <tr><td>Day 2</td><td><b>AI 코딩에이전트</b></td><td>파일을 읽고 고치고 실행하는 에이전트 루프와 안전 수칙을 실습합니다.</td><td>Antigravity · Claude Code · Codex</td></tr>
+        <tr><td>Day 2</td><td><b>RAG · 풀스택 웹서비스</b></td><td>내부 문서 챗봇, 로컬 LLM, Supabase 기반 업무용 웹서비스 구성으로 확장합니다.</td><td>Lovable · v0 · Supabase</td></tr>
+      </table>
+      <div style="flex:1;display:flex;flex-direction:column;justify-content:center;gap:12px;padding:14px 0 8px;">
+        <div class="figcap" style="margin-bottom:0;">2일 과정 진행 흐름</div>
+        <div class="relay">
+          <div class="rc"><div class="rk">이해</div><div class="rv">LLM · RAG · 에이전트</div></div><div class="ra">›</div>
+          <div class="rc"><div class="rk">자동화</div><div class="rv">Python · Excel</div></div><div class="ra">›</div>
+          <div class="rc"><div class="rk">분석</div><div class="rv">질문 · 시각화 · 보고</div></div><div class="ra">›</div>
+          <div class="rc"><div class="rk">제작</div><div class="rv">RAG · 웹서비스</div></div>
+        </div>
+      </div>
+      <div class="note"><div class="nl">산출물</div><p>프롬프트, 자동화 스크립트, 데이터분석 노트, 미니 RAG, 업무용 웹서비스를 2일 과정의 실습 결과물로 남깁니다.</p></div>
+    </div>
+  </div>
+  <div class="pageno">02</div>
+</section>
+
+<!-- ===== 과정 개요 ===== -->
+<section class="slide">
+  <div class="hdr"><div class="ht">AI 데이터 챔피언 양성교육<span>GEN AI · CODING AGENT</span></div><div class="hr">OVERVIEW</div></div>
+  <div class="stage">
+    <div class="crumb">과정 개요</div>
+    <h2 class="atitle"><span class="lbl">[과정 개요]</span> 7개 주제로 익히는 생성형 AI 실무 <span class="sub">— 이해에서 제작까지</span></h2>
+    <div class="titlerule"></div>
+    <div class="body split" style="padding-top:16px;">
+      <div class="concepts fill">
+        <div class="concept"><div class="no">1</div><div class="cbody"><div class="cn">에이전트·AI 트렌드</div><p>LLM 본질, RAG, 하네스, 코딩에이전트의 공통 구조를 먼저 이해합니다.</p></div></div>
+        <div class="concept"><div class="no">2</div><div class="cbody"><div class="cn">Python 업무자동화</div><p>반복 업무를 설명하고, AI가 작성한 코드를 로컬에서 실행·수정하는 흐름을 실습합니다.</p></div></div>
+        <div class="concept"><div class="no">3</div><div class="cbody"><div class="cn">데이터분석</div><p>전처리, 시각화, 모델링·평가를 보고서 작성 흐름과 연결합니다.</p></div></div>
+      </div>
+      <div class="concepts fill">
+        <div class="concept"><div class="no">4</div><div class="cbody"><div class="cn">AI 코딩에이전트</div><p>Antigravity, Claude Code, Codex 등 도구 지형과 작업 지시 방식을 비교합니다.</p></div></div>
+        <div class="concept"><div class="no">5</div><div class="cbody"><div class="cn">바이브코딩·RAG·웹서비스</div><p>정적 페이지, 백엔드, 내부 문서 챗봇, 풀스택 서비스를 하나의 제작 흐름으로 연결합니다.</p></div></div>
+        <div class="concept"><div class="no">6</div><div class="cbody"><div class="cn">관통 원칙</div><p>직접 코딩하지 않고 LLM·코딩에이전트에게 작성·실행을 맡기되, 확인과 판단은 사람이 수행합니다.</p></div></div>
+      </div>
+    </div>
+    <div class="note"><div class="nl">보안 원칙</div><p>민감자료는 로컬에서 처리하고, 외부 서비스에는 구조와 익명화 샘플만 공유합니다.</p></div>
+  </div>
+  <div class="pageno">03</div>
+</section>
+
+<!-- ===== LLM 본질 ===== -->
+<section class="slide">
+  <div class="hdr"><div class="ht">AI 데이터 챔피언 양성교육<span>GEN AI · CODING AGENT</span></div><div class="hr">PART 1 · CONCEPT</div></div>
+  <div class="stage">
+    <div class="crumb">Part 1 · 개념</div>
+    <h2 class="atitle"><span class="lbl">[이론]</span> LLM의 본질 <span class="sub">— 단어 예측과 세 가지 한계</span></h2>
+    <div class="titlerule"></div>
+    <div class="body split-l" style="padding-top:18px;">
+      <div class="colflow">
+        <p class="lead" style="margin-bottom:14px;">LLM은 수많은 인간의 글을 학습해, 주어진 맥락 다음에 올 단어를 확률적으로 이어 붙이는 모델입니다. 정답을 아는 사전이 아니라 그럴듯한 다음 말을 생성하는 모델이므로 같은 질문에도 답이 달라질 수 있습니다.</p>
+        <div class="concepts fill">
+          <div class="concept"><div class="no">1</div><div class="cbody"><div class="cn">학습 시점의 한계</div><p>학습 시점 이후 사건이나 우리 기관 내부 문서는 알지 못합니다.</p></div></div>
+          <div class="concept"><div class="no">2</div><div class="cbody"><div class="cn">환각</div><p>사실이 아닌 내용을 확신에 찬 말투로 만들 수 있습니다.</p></div></div>
+          <div class="concept"><div class="no">3</div><div class="cbody"><div class="cn">손발 없음</div><p>스스로 파일을 열거나 실행·검색하지 못하고, 글을 입력받아 글을 낼 뿐입니다.</p></div></div>
+        </div>
+      </div>
+      <div class="figwrap">
+        <div class="figcap">한계와 보완책</div>
+        <div class="layer2">
+          <div class="lay top"><div class="lt">보완 1</div><div class="lh">최신·기관 지식은 RAG로 연결</div><p>규정, 지침, FAQ, 내부 문서를 검색해 답변 근거로 함께 전달합니다.</p></div>
+          <div class="conn">검증 가능한 근거를 함께 사용</div>
+          <div class="lay bot"><div class="lt">보완 2</div><div class="lh">검색·실행·수정은 하네스로 연결</div><p>도구 호출, 파일 접근, 실행기 연결, 실패 처리를 운영 규칙으로 묶습니다.</p></div>
+        </div>
+      </div>
+    </div>
+    <div class="note"><div class="nl">활용 기준</div><p>최신·사실이 중요하면 출처를 요구하거나 검색을 켜고, 수치·날짜·기관명은 사람이 확인합니다.</p></div>
+  </div>
+  <div class="pageno">04</div>
+</section>
+
+<!-- ===== 프롬프트 ===== -->
+<section class="slide">
+  <div class="hdr"><div class="ht">AI 데이터 챔피언 양성교육<span>GEN AI · CODING AGENT</span></div><div class="hr">PART 1 · PROMPT</div></div>
+  <div class="stage">
+    <div class="crumb">Part 1 · 프롬프트</div>
+    <h2 class="atitle"><span class="lbl">[프롬프트]</span> 업무용 프롬프트 기본기 <span class="sub">— 5요소와 메타프롬프트</span></h2>
+    <div class="titlerule"></div>
+    <div class="body split" style="padding-top:16px;">
+      <div class="concepts fill">
+        <div class="concept"><div class="no">1</div><div class="cbody"><div class="cn">역할</div><p>예 — “보건복지 보도자료 편집자”처럼 답변 관점을 정합니다.</p></div></div>
+        <div class="concept"><div class="no">2</div><div class="cbody"><div class="cn">맥락</div><p>누구를 위한 어떤 상황인지, 업무 배경과 사용 목적을 설명합니다.</p></div></div>
+        <div class="concept"><div class="no">3</div><div class="cbody"><div class="cn">작업·형식·제약</div><p>요약, 비교, 표 작성 같은 작업과 출력 형식, 분량·말투·포함 사실을 함께 줍니다.</p></div></div>
+      </div>
+      <div class="figwrap">
+        <div class="figcap">점진적 정교화</div>
+        <div class="loop">
+          <div class="lp"><div class="lpn">1</div><div class="lpt"><b>메타프롬프트</b> — AI에게 먼저 목적·맥락·제약을 반영한 지시문을 설계하게 합니다.</div></div>
+          <div class="lp"><div class="lpn">2</div><div class="lpt"><b>1차 초안 생성</b> — 불완전해도 내 생각을 먼저 넣어 시작합니다.</div></div>
+          <div class="lp"><div class="lpn">3</div><div class="lpt"><b>누락 사실 보강</b> — 빠진 자료, 수치, 근거를 추가합니다.</div></div>
+          <div class="lp"><div class="lpn">4</div><div class="lpt"><b>형식 통일·검토</b> — 말투, 표, 목록, 오류·과장을 점검합니다.</div></div>
+          <div class="back">한 번에 끝내지 않고 대화로 다듬습니다</div>
+        </div>
+      </div>
+    </div>
+    <div class="note"><div class="nl">실습</div><p>본인 업무 상황 1건을 역할·맥락·작업·형식·제약이 들어간 프롬프트로 바꾸고, ChatGPT·Claude·Gemini 결과를 비교합니다.</p></div>
+  </div>
+  <div class="pageno">05</div>
+</section>
+
+<!-- ===== 문서 업무 ===== -->
+<section class="slide">
+  <div class="hdr"><div class="ht">AI 데이터 챔피언 양성교육<span>GEN AI · CODING AGENT</span></div><div class="hr">PART 1 · WORKFLOW</div></div>
+  <div class="stage">
+    <div class="crumb">Part 1 · 문서 워크플로우</div>
+    <h2 class="atitle"><span class="lbl">[업무 적용]</span> 문서 업무 5단계 <span class="sub">— 한 줄 요청이 아니라 워크플로우로</span></h2>
+    <div class="titlerule"></div>
+    <div class="body colflow" style="padding-top:18px;">
+      <p class="lead" style="margin-bottom:8px;">흩어진 메모와 자료를 바로 완성 문서로 요구하기보다 정리, 근거, 양식, 콘텐츠, 검토 순서로 나누면 결과 품질을 관리할 수 있습니다.</p>
+      <div style="flex:1;display:flex;flex-direction:column;justify-content:space-around;padding:8px 0;">
+        <div class="steps">
+          <div class="st"><div class="sn">① ORGANIZE</div><div class="sh">비정형 정리</div><p>메일, 보고서, 보도자료로 구조화합니다.</p></div>
+          <div class="st"><div class="sn">② ARGUE</div><div class="sh">근거 만들기</div><p>웹검색과 출처로 배경·현황을 보강합니다.</p></div>
+          <div class="st"><div class="sn">③ TRANSFORM</div><div class="sh">양식 변환</div><p>산발적 메모를 격식체 문서로 바꿉니다.</p></div>
+          <div class="st"><div class="sn">④ CREATE</div><div class="sh">콘텐츠 생성</div><p>카드뉴스, 홍보 문구, 도식화를 만듭니다.</p></div>
+          <div class="st"><div class="sn">⑤ REVIEW</div><div class="sh">검토·평가</div><p>맞춤법, 논리, KPI 기준을 점검합니다.</p></div>
+        </div>
+        <div>
+          <div class="figcap" style="margin-bottom:12px;">단계 사이로 넘어가는 산출물</div>
+          <div class="relay">
+            <div class="rc"><div class="rk">정리 후</div><div class="rv">초안 구조</div></div><div class="ra">›</div>
+            <div class="rc"><div class="rk">근거 후</div><div class="rv">출처 목록</div></div><div class="ra">›</div>
+            <div class="rc"><div class="rk">양식 후</div><div class="rv">공식 문안</div></div><div class="ra">›</div>
+            <div class="rc"><div class="rk">검토 후</div><div class="rv">수정본</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="note"><div class="nl">핵심</div><p>레퍼런스 양식과 문서를 함께 올리고, 한 번에 끝내지 말고 단계별로 다듬습니다.</p></div>
+    </div>
+  </div>
+  <div class="pageno">06</div>
+</section>
+
+<!-- ===== 트렌드 ===== -->
+<section class="slide">
+  <div class="hdr"><div class="ht">AI 데이터 챔피언 양성교육<span>GEN AI · CODING AGENT</span></div><div class="hr">PART 1 · TRENDS</div></div>
+  <div class="stage">
+    <div class="crumb">Part 1 · 2026 트렌드</div>
+    <h2 class="atitle"><span class="lbl">[이론]</span> 지금 알아야 할 네 가지 흐름 <span class="sub">— 추론·소형·멀티모달·서비스 선택</span></h2>
+    <div class="titlerule"></div>
+    <div class="body split" style="padding-top:16px;">
+      <div class="concepts fill">
+        <div class="concept"><div class="no">1</div><div class="cbody"><div class="cn">추론 모델<span class="en">REASONING</span></div><p>답 전에 단계적으로 생각해 수학, 코드, 복잡한 판단의 정확도를 높입니다.</p></div></div>
+        <div class="concept"><div class="no">2</div><div class="cbody"><div class="cn">오픈소스·소형 모델<span class="en">SLM</span></div><p>Llama, DeepSeek, Qwen 계열을 사내·노트북에서 실행해 폐쇄망과 민감정보에 대응합니다.</p></div></div>
+      </div>
+      <div class="concepts fill">
+        <div class="concept"><div class="no">3</div><div class="cbody"><div class="cn">멀티모달</div><p>텍스트뿐 아니라 표, 사진, 음성, 영상까지 함께 이해·생성합니다.</p></div></div>
+        <div class="concept"><div class="no">4</div><div class="cbody"><div class="cn">서비스 선택</div><p>조사·출처는 Perplexity, 정밀 문서·코드는 Claude, 장문·대용량 분석은 Gemini, 범용 실험은 ChatGPT처럼 목적에 따라 고릅니다.</p></div></div>
+      </div>
+    </div>
+    <div class="note"><div class="nl">선택 기준</div><p>작업 난이도, 정확도, 민감도, 비용을 함께 보고 빠른 일과 깊은 일에 모델을 나누어 씁니다.</p></div>
+  </div>
+  <div class="pageno">07</div>
+</section>
+
+<!-- ===== 기술 지형 ===== -->
+<section class="slide">
+  <div class="hdr"><div class="ht">AI 데이터 챔피언 양성교육<span>GEN AI · CODING AGENT</span></div><div class="hr">PART 1 · LANDSCAPE</div></div>
+  <div class="stage">
+    <div class="crumb">Part 1 · 기술 지형</div>
+    <h2 class="atitle"><span class="lbl">[이론]</span> AI 기술 지형 <span class="sub">— 7개 계층으로 읽기</span></h2>
+    <div class="titlerule"></div>
+    <div class="body colflow" style="padding-top:16px;">
+      <p class="lead" style="margin-bottom:13px;">기반모델부터 에이전트까지의 계층을 구분하면 도구가 바뀌어도 어디에 해당하는 기술인지 판단할 수 있습니다.</p>
+      <table class="grid tight">
+        <tr><th style="width:90px;">계층</th><th style="width:190px;">영역</th><th>대표 예시</th><th style="width:270px;">의미</th></tr>
+        <tr><td><b>L1</b></td><td>MODEL · 기반모델</td><td>GPT, Claude, Gemini, Llama</td><td>바꿔 끼울 수 있는 엔진</td></tr>
+        <tr><td><b>L2</b></td><td>MULTIMODAL</td><td>이미지, 영상, 음성 생성 모델</td><td>텍스트 밖의 입력과 출력</td></tr>
+        <tr><td><b>L3</b></td><td>META · 메타프롬프트</td><td>Skills, 프롬프트 설계</td><td>조직 노하우의 외부화</td></tr>
+        <tr><td><b>L4</b></td><td>INTEGRATION</td><td>Google, OpenAI, Anthropic, Microsoft</td><td>서비스와 플랫폼 통합</td></tr>
+        <tr><td><b>L5</b></td><td>PRODUCT</td><td>MS 365 Copilot, Workspace Gemini</td><td>쓰던 도구 안의 AI</td></tr>
+        <tr><td><b>L6</b></td><td>KNOWLEDGE</td><td>NotebookLM, Deep Research, Perplexity</td><td>읽는 노동의 보조</td></tr>
+        <tr><td><b>L7</b></td><td>AGENT</td><td>Claude Code, Codex, Antigravity, Manus</td><td>업무 처리 루프</td></tr>
+      </table>
+      <div class="note"><div class="nl">연결</div><p>에이전트는 기반모델 위에 파일, 웹, DB, 실행기 같은 도구와 운영 규칙을 결합한 계층입니다.</p></div>
+    </div>
+  </div>
+  <div class="pageno">08</div>
+</section>
+
+<!-- ===== RAG와 파인튜닝 ===== -->
+<section class="slide">
+  <div class="hdr"><div class="ht">AI 데이터 챔피언 양성교육<span>GEN AI · CODING AGENT</span></div><div class="hr">PART 1 · KNOWLEDGE</div></div>
+  <div class="stage">
+    <div class="crumb">Part 1 · 지식 연결</div>
+    <h2 class="atitle"><span class="lbl">[이론]</span> RAG와 파인튜닝 <span class="sub">— 지식을 잇는 두 가지 길</span></h2>
+    <div class="titlerule"></div>
+    <div class="body split-l" style="padding-top:18px;">
+      <div class="colflow">
+        <p class="lead" style="margin-bottom:14px;">대부분의 행정·복지 현업 과제는 모델을 다시 학습시키기보다 최신 문서와 근거를 검색해 함께 건네는 RAG로 먼저 해결합니다.</p>
+        <table class="grid tight">
+          <tr><th style="width:150px;">구분</th><th>적합한 경우</th><th style="width:220px;">운영 포인트</th></tr>
+          <tr><td><b>RAG</b></td><td>규정, 지침, FAQ처럼 바뀌는 지식을 최신·정확하게 연결하고 싶을 때</td><td>문서 교체, 출처 표기, 오답 사례 개선</td></tr>
+          <tr><td><b>파인튜닝</b></td><td>모델의 행동·문체 자체를 바꾸고 싶을 때</td><td>Q/A 데이터셋, 평가셋, 버전관리</td></tr>
+        </table>
+      </div>
+      <div class="figwrap">
+        <div class="figcap">RAG 운영 루프</div>
+        <div class="loop">
+          <div class="lp"><div class="lpn">1</div><div class="lpt"><b>문서 수집</b> — 최신 규정·지침·FAQ를 우선합니다.</div></div>
+          <div class="lp"><div class="lpn">2</div><div class="lpt"><b>청크 설계</b> — 문단과 제목 문맥을 함께 보존합니다.</div></div>
+          <div class="lp"><div class="lpn">3</div><div class="lpt"><b>검색 품질</b> — 임베딩 후 재순위로 보강합니다.</div></div>
+          <div class="lp"><div class="lpn">4</div><div class="lpt"><b>답변 정책</b> — 출처 표기와 근거 없는 추정 금지를 둡니다.</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="note"><div class="nl">과정 기준</div><p>이 과정의 실습은 RAG 중심으로 진행하고, 파인튜닝은 예외 적용 대상으로 다룹니다.</p></div>
+  </div>
+  <div class="pageno">09</div>
+</section>
+
+<!-- ===== 에이전트와 안전 ===== -->
+<section class="slide">
+  <div class="hdr"><div class="ht">AI 데이터 챔피언 양성교육<span>GEN AI · CODING AGENT</span></div><div class="hr">PART 1 · AGENT</div></div>
+  <div class="stage">
+    <div class="crumb">Part 1 · 에이전트</div>
+    <h2 class="atitle"><span class="lbl">[이론]</span> 에이전트와 안전한 활용 <span class="sub">— 모델·도구·연결 규칙</span></h2>
+    <div class="titlerule"></div>
+    <div class="body split-r" style="padding-top:18px;">
+      <div class="colflow">
+        <div class="concepts fill">
+          <div class="concept"><div class="no">1</div><div class="cbody"><div class="cn">에이전트</div><p>모델, 도구, 연결 규칙을 묶어 파일·웹·DB·실행기 연결과 실패 처리를 수행합니다.</p></div></div>
+          <div class="concept"><div class="no">2</div><div class="cbody"><div class="cn">하네스</div><p>도구를 호출하고 결과로 다음 행동을 정하는 반복 루프입니다.</p></div></div>
+          <div class="concept"><div class="no">3</div><div class="cbody"><div class="cn">권한 관리</div><p>성능은 어떤 도구를 붙이고 어떤 권한으로 호출하느냐에 좌우됩니다.</p></div></div>
+        </div>
+      </div>
+      <div class="figwrap">
+        <div class="figcap">어시스트와 에이전트</div>
+        <div class="layer2">
+          <div class="lay top"><div class="lt">ASSIST</div><div class="lh">어시스트</div><p>외부에는 구조·익명 샘플만 전달하고, 실행은 폐쇄망 내부에서 수행합니다.</p></div>
+          <div class="conn">데이터 민감도 · 실행 권한 · 검수 역량으로 전환 판단</div>
+          <div class="lay bot"><div class="lt">AGENT</div><div class="lh">에이전트</div><p>내부 환경에서 직접 실행합니다. 권한 범위와 감사 로그가 필요합니다.</p></div>
+        </div>
+      </div>
+    </div>
+    <div class="note"><div class="nl">원칙</div><p>코드와 문장은 AI가 만들고, 실제 데이터 처리와 최종 판단은 사람이 수행합니다.</p></div>
+  </div>
+  <div class="pageno">10</div>
+</section>
+
+<!-- ===== Python 자동화 ===== -->
+<section class="slide">
+  <div class="hdr"><div class="ht">AI 데이터 챔피언 양성교육<span>GEN AI · CODING AGENT</span></div><div class="hr">PART 2 · AUTOMATION</div></div>
+  <div class="stage">
+    <div class="crumb">Part 2 · Python 업무자동화</div>
+    <h2 class="atitle"><span class="lbl">[실습]</span> 코드를 외우지 않는 자동화 <span class="sub">— 설명·코드·실행·재질의</span></h2>
+    <div class="titlerule"></div>
+    <div class="body colflow" style="padding-top:18px;">
+      <p class="lead" style="margin-bottom:8px;">무엇을 하고 싶은지만 설명하면 LLM이 코드를 작성합니다. 코드를 이해 못 해도 오류를 전달하고 결과를 확인하는 것만으로 진행할 수 있습니다.</p>
+      <div style="flex:1;display:flex;flex-direction:column;justify-content:space-around;padding:8px 0;">
+        <div class="steps">
+          <div class="st"><div class="sn">① 구조 설명</div><div class="sh">업무와 파일 구조</div><p>“월간보고 폴더의 엑셀 A2:F50을 종합 시트로 합치고 싶다.”</p></div>
+          <div class="st"><div class="sn">② 코드 수신</div><div class="sh">오류 처리·주석 포함</div><p>작업을 수행하는 파이썬 코드를 받습니다.</p></div>
+          <div class="st"><div class="sn">③ 로컬 실행</div><div class="sh">내 PC에서 확인</div><p>민감 데이터는 외부로 보내지 않고 실행 결과를 확인합니다.</p></div>
+          <div class="st"><div class="sn">④ 오류 재질의</div><div class="sh">로그 전달</div><p>에러 메시지를 그대로 전달해 수정 코드를 받습니다.</p></div>
+        </div>
+        <div>
+          <div class="figcap" style="margin-bottom:12px;">엑셀·문서 자동화 레시피</div>
+          <div class="relay">
+            <div class="rc"><div class="rk">입력</div><div class="rv">파일 수집·병합</div></div><div class="ra">›</div>
+            <div class="rc"><div class="rk">점검</div><div class="rv">정합성 확인</div></div><div class="ra">›</div>
+            <div class="rc"><div class="rk">처리</div><div class="rv">집계·차트</div></div><div class="ra">›</div>
+            <div class="rc"><div class="rk">출력</div><div class="rv">보고서 생성</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="note"><div class="nl">평가</div><p>최종 산출물은 실행 스크립트, 시간 절감 근거, 실패 사례 1건입니다. 평가 포인트는 작동 여부와 재현성입니다.</p></div>
+    </div>
+  </div>
+  <div class="pageno">11</div>
+</section>
+
+<!-- ===== 데이터분석 ===== -->
+<section class="slide">
+  <div class="hdr"><div class="ht">AI 데이터 챔피언 양성교육<span>GEN AI · CODING AGENT</span></div><div class="hr">PART 3 · DATA ANALYSIS</div></div>
+  <div class="stage">
+    <div class="crumb">Part 3 · 데이터분석</div>
+    <h2 class="atitle"><span class="lbl">[실습]</span> 데이터분석 흐름 <span class="sub">— 질문에서 시각화와 보고까지</span></h2>
+    <div class="titlerule"></div>
+    <div class="body split-l" style="padding-top:18px;">
+      <div class="colflow">
+        <p class="lead" style="margin-bottom:14px;">데이터를 던지기 전에 무엇을 분석할지부터 설계합니다. 좋은 분석은 질문 설계에서 시작하고, 수치 정합성과 해석 타당성은 사람이 검증합니다.</p>
+        <div class="steps" style="margin-top:8px;">
+          <div class="st"><div class="sn">STEP 1</div><div class="sh">질문 설계</div><p>분석 질문 10개와 우선순위를 받습니다.</p></div>
+          <div class="st"><div class="sn">STEP 2</div><div class="sh">전처리</div><p>결측·이상치, 형식 통일을 점검합니다.</p></div>
+          <div class="st"><div class="sn">STEP 3</div><div class="sh">시각화</div><p>목적에 맞는 차트를 선택합니다.</p></div>
+          <div class="st"><div class="sn">STEP 4</div><div class="sh">보고</div><p>인사이트와 현업 적용 액션을 정리합니다.</p></div>
+        </div>
+      </div>
+      <div class="figwrap">
+        <div class="figcap">보고서 구성</div>
+        <div class="loop">
+          <div class="lp"><div class="lpn">1</div><div class="lpt">분석 질문과 선택 이유</div></div>
+          <div class="lp"><div class="lpn">2</div><div class="lpt">전처리 내역과 시각화 2종</div></div>
+          <div class="lp"><div class="lpn">3</div><div class="lpt">모델 결과와 한계</div></div>
+          <div class="lp"><div class="lpn">4</div><div class="lpt">현업 적용 액션 2가지</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="note"><div class="nl">해석</div><p>보고서는 문제, 근거, 해석, 행동으로 엮고, 핵심 메시지 하나당 그래프 하나를 둡니다.</p></div>
+  </div>
+  <div class="pageno">12</div>
+</section>
+
+<!-- ===== 코딩에이전트 ===== -->
+<section class="slide">
+  <div class="hdr"><div class="ht">AI 데이터 챔피언 양성교육<span>GEN AI · CODING AGENT</span></div><div class="hr">PART 4 · CODING AGENT</div></div>
+  <div class="stage">
+    <div class="crumb">Part 4 · AI 코딩에이전트</div>
+    <h2 class="atitle"><span class="lbl">[실습]</span> AI 코딩에이전트 활용 <span class="sub">— 파일을 읽고 고치고 실행하는 하네스</span></h2>
+    <div class="titlerule"></div>
+    <div class="body split" style="padding-top:16px;">
+      <div class="concepts fill">
+        <div class="concept"><div class="no">1</div><div class="cbody"><div class="cn">맥락 제공</div><p>작업할 폴더, 파일, 목표를 알려줍니다.</p></div></div>
+        <div class="concept"><div class="no">2</div><div class="cbody"><div class="cn">작업 지시</div><p>“이 폴더 CSV를 합쳐 요약표를 만들어줘”처럼 결과 중심으로 요청합니다.</p></div></div>
+        <div class="concept"><div class="no">3</div><div class="cbody"><div class="cn">실행·검토</div><p>결과 확인 후 “머리글 통일해줘”처럼 다듬습니다.</p></div></div>
+      </div>
+      <div class="concepts fill">
+        <div class="concept"><div class="no">4</div><div class="cbody"><div class="cn">작업 폴더·권한 한정</div><p>중요한 변경 전 백업을 두고, AI가 접근할 범위를 제한합니다.</p></div></div>
+        <div class="concept"><div class="no">5</div><div class="cbody"><div class="cn">민감 데이터 차단</div><p>외부 유출을 막고, 필요한 경우 구조와 익명화 샘플만 전달합니다.</p></div></div>
+        <div class="concept"><div class="no">6</div><div class="cbody"><div class="cn">사람의 확정</div><p>AI가 한 일은 사람이 검토하고 확정합니다.</p></div></div>
+      </div>
+    </div>
+    <div class="note"><div class="nl">실습</div><p>다중 파일 정리·변환·요약을 지시하고, 어시스트 방식과 에이전트 방식을 속도·정확도·통제 가능성·보안 리스크 기준으로 비교합니다.</p></div>
+  </div>
+  <div class="pageno">13</div>
+</section>
+
+<!-- ===== 바이브코딩 ===== -->
+<section class="slide">
+  <div class="hdr"><div class="ht">AI 데이터 챔피언 양성교육<span>GEN AI · CODING AGENT</span></div><div class="hr">PART 4 · VIBE CODING</div></div>
+  <div class="stage">
+    <div class="crumb">Part 4 · 바이브코딩</div>
+    <h2 class="atitle"><span class="lbl">[실습]</span> 바이브코딩과 업무 도구 제작 <span class="sub">— 정적 페이지에서 백엔드까지</span></h2>
+    <div class="titlerule"></div>
+    <div class="body colflow" style="padding-top:16px;">
+      <p class="lead" style="margin-bottom:6px;">코드를 직접 쓰기보다 결과 화면과 동작을 기준으로 소통합니다. 담당 업무 안내·홍보 페이지, 신청 폼, 대시보드, 조회 페이지를 자연어로 만들고 수정합니다.</p>
+      <div style="flex:1;display:flex;gap:18px;align-items:stretch;padding:10px 0;">
+        <div class="domain"><div class="dh">정적 페이지 <span>안내·홍보</span></div><ul class="dl"><li><b>내용</b> 제목·소개·문의처·이미지 자리</li><li><b>수정</b> 색·글꼴·배치 확인</li><li><b>활용</b> 행사 안내·캠페인 페이지</li></ul></div>
+        <div class="domain"><div class="dh">백엔드 맛보기 <span>입력·처리·출력</span></div><ul class="dl"><li><b>흐름</b> 양식 제출과 확인 메시지</li><li><b>구조</b> FastAPI·Node 개념</li><li><b>기준</b> 깊은 구현보다 구조 설명</li></ul></div>
+        <div class="domain"><div class="dh">노코드 빌더 <span>업무 도구</span></div><ul class="dl"><li><b>도구</b> Lovable·Bolt·v0·Replit Agent</li><li><b>예시</b> 민원 현황 대시보드</li><li><b>산출</b> 화면 캡처와 공유 URL</li></ul></div>
+      </div>
+      <div class="note"><div class="nl">실습</div><p>최소 1개 입력 처리 기능을 붙이고 모바일 가독성까지 확인합니다.</p></div>
+    </div>
+  </div>
+  <div class="pageno">14</div>
+</section>
+
+<!-- ===== RAG 구축과 폐쇄망 ===== -->
+<section class="slide">
+  <div class="hdr"><div class="ht">AI 데이터 챔피언 양성교육<span>GEN AI · CODING AGENT</span></div><div class="hr">PART 5 · RAG & LOCAL</div></div>
+  <div class="stage">
+    <div class="crumb">Part 5 · RAG 구축과 폐쇄망</div>
+    <h2 class="atitle"><span class="lbl">[실습]</span> 내부 문서로 답하는 챗봇 <span class="sub">— 임베딩·검색·출처 포함 답변</span></h2>
+    <div class="titlerule"></div>
+    <div class="body split-l" style="padding-top:18px;">
+      <div class="colflow">
+        <p class="lead" style="margin-bottom:14px;">답변의 근거가 될 규정, 지침, FAQ, 안내문을 모아 문단 단위로 나누고, 의미 좌표인 임베딩으로 바꿔 벡터DB에 저장합니다.</p>
+        <div class="steps">
+          <div class="st"><div class="sn">01</div><div class="sh">문서 준비</div><p>최신·정확한 샘플 문서부터 시작합니다.</p></div>
+          <div class="st"><div class="sn">02</div><div class="sh">적재</div><p>청크와 제목·소제목을 함께 담습니다.</p></div>
+          <div class="st"><div class="sn">03</div><div class="sh">검색·답변</div><p>근거 조각을 검색해 LLM에 함께 줍니다.</p></div>
+        </div>
+      </div>
+      <div class="figwrap">
+        <div class="figcap">폐쇄망에서도 작동하는 세 가지 축</div>
+        <div class="concepts fill">
+          <div class="concept"><div class="no">1</div><div class="cbody"><div class="cn">Ollama</div><p>내 PC에서 소형 언어모델을 직접 실행합니다.</p></div></div>
+          <div class="concept"><div class="no">2</div><div class="cbody"><div class="cn">Electron</div><p>자동화·챗봇을 데스크톱 앱으로 포장합니다.</p></div></div>
+          <div class="concept"><div class="no">3</div><div class="cbody"><div class="cn">MCP</div><p>부서 DB·문서 검색을 표준 방식으로 AI에 연결합니다.</p></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="note"><div class="nl">운영</div><p>검색 실패, 근거 선택 오류, 생성 왜곡을 나누어 보고 청크 크기, 메타데이터, 재순위, 답변 정책을 조정합니다.</p></div>
+  </div>
+  <div class="pageno">15</div>
+</section>
+
+<!-- ===== 종합 프로젝트 ===== -->
+<section class="slide">
+  <div class="hdr"><div class="ht">AI 데이터 챔피언 양성교육<span>GEN AI · CODING AGENT</span></div><div class="hr">PART 5 · PROJECT</div></div>
+  <div class="stage">
+    <div class="crumb">Part 5 · 종합</div>
+    <h2 class="atitle"><span class="lbl">[적용]</span> 우리 기관 전용 LLM 서비스 <span class="sub">— 구성 요소와 안전장치</span></h2>
+    <div class="titlerule"></div>
+    <div class="body split" style="padding-top:16px;">
+      <div class="colflow">
+        <p class="lead" style="margin-bottom:13px;">누적해 온 기술을 결합해 작동하는 서비스를 완성합니다. 작동하는 화면을 넘어 운영 가능한 설계까지 제시합니다.</p>
+        <table class="grid tight">
+          <tr><th style="width:150px;">구성 요소</th><th>역할</th></tr>
+          <tr><td><b>프론트</b></td><td>화면과 입력 폼</td></tr>
+          <tr><td><b>백엔드</b></td><td>FastAPI 또는 Node 기반 처리</td></tr>
+          <tr><td><b>DB · Supabase</b></td><td>RLS로 부서별 데이터 격리</td></tr>
+          <tr><td><b>RAG</b></td><td>내부 문서 근거 답변</td></tr>
+          <tr><td><b>MCP</b></td><td>부서 DB·문서 도구 연결</td></tr>
+        </table>
+      </div>
+      <div class="figwrap">
+        <div class="figcap">공공·복지 데이터 4대 안전장치</div>
+        <div class="concepts fill">
+          <div class="concept"><div class="no">1</div><div class="cbody"><div class="cn">데이터 경계</div><p>미공개·개인정보·내부자료는 외부 전송을 금지합니다.</p></div></div>
+          <div class="concept"><div class="no">2</div><div class="cbody"><div class="cn">출처와 근거</div><p>RAG로 근거 문서를 함께 제공하고 출처를 표시합니다.</p></div></div>
+          <div class="concept"><div class="no">3</div><div class="cbody"><div class="cn">사람의 최종 판단</div><p>수급 판정, 민원 회신, 대외 발표는 사람이 확정합니다.</p></div></div>
+          <div class="concept"><div class="no">4</div><div class="cbody"><div class="cn">기록과 투명성</div><p>AI 사용 이력을 남기고 저작권·라이선스를 확인합니다.</p></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="note"><div class="nl">발표 항목</div><p>문제 정의와 사용자, 아키텍처, 보안 경계와 권한 정책, 시연 결과, 30/60/90일 도입 로드맵을 제시합니다.</p></div>
+  </div>
+  <div class="pageno">16</div>
+</section>
+
+<!-- ===== 강의 요약 (다크) ===== -->
+<section class="slide dark">
+  <div class="hdr"><div class="ht">AI 데이터 챔피언 양성교육<span>GEN AI · CODING AGENT</span></div><div class="hr">강의 요약 · Q &amp; A</div></div>
+  <div class="recap">
+    <div class="eye">마무리</div>
+    <h1>강의 요약</h1>
+    <div class="ritems">
+      <div class="ri"><div class="rn">01</div><p>LLM은 단어 예측 모델이므로 <b>출처, 검색, 사람 검증</b>을 함께 설계해야 합니다.</p></div>
+      <div class="ri"><div class="rn">02</div><p>업무자동화와 데이터분석은 코드를 외우는 과정이 아니라 <b>업무 구조를 설명하고 결과를 검증하는 과정</b>입니다.</p></div>
+      <div class="ri"><div class="rn">03</div><p>코딩에이전트, RAG, 풀스택 웹서비스는 <b>권한, 데이터 경계, 운영 로그</b>를 포함할 때 현업 적용이 가능합니다.</p></div>
+    </div>
+  </div>
+  <div class="dmeta">
+    <div class="who">신성진 대표<span>한국데이터사이언티스트협회(CDSA)</span></div>
+    <div class="topic">질의응답<br><b>한국보건복지인재원 · AI 데이터 챔피언 양성교육(마라토너)</b></div>
+  </div>
+  <div class="pageno">17</div>
+</section>
+
+</div>
+<script>
+(function(){
+const deck=document.querySelector('.deck');
+const head='AI 데이터 챔피언 양성교육';
+const en='GEN AI · CODING AGENT';
+function hdr(hr){return `<div class="hdr"><div class="ht">${head}<span>${en}</span></div><div class="hr">${hr||'한국보건복지인재원'}</div></div>`;}
+function note(label,text){return `<div class="note"><div class="nl">${label}</div><p>${text}</p></div>`;}
+function page(n){return `<div class="pageno">${String(n).padStart(2,'0')}</div>`;}
+function title(s){return `<div class="crumb">${s.crumb}</div><h2 class="atitle"><span class="lbl">${s.label}</span> ${s.title} <span class="sub">— ${s.sub}</span></h2><div class="titlerule"></div>`;}
+function cover(s,n){return `<section class="slide dark">${hdr('한국보건복지인재원 · 2일 16시간')}<div class="dwrap"><div class="eye">교재 반영 확장 강의안</div><h1>AI 데이터 챔피언<br><span class="ac">양성교육(마라토너)</span></h1><div class="ds">원본 강의안 39장과 교재 68장 목차의 핵심 내용을 함께 반영한 lecture-deck 확장판입니다. 개념 설명, 실습 흐름, 보강 사례와 체크리스트를 별도 슬라이드로 펼쳐 담았습니다.</div><div class="den">Generative AI · Coding Agent Practice</div></div><div class="dmeta"><div class="who">신성진 대표<span>한국데이터사이언티스트협회(CDSA)</span></div><div class="topic">생성형 AI · 코딩에이전트 활용 실무<br><b>원본 PPTX + 교재 페이지뷰 기반 재작성</b></div></div>${page(n)}</section>`;}
+function divider(s,n){let items=s.items.map((x,i)=>`<div class="ri"><div class="rn">${String(i+1).padStart(2,'0')}</div><p>${x}</p></div>`).join('');return `<section class="slide dark">${hdr(s.hr)}<div class="recap"><div class="eye">${s.crumb}</div><h1>${s.title}</h1><div class="ritems">${items}</div></div><div class="dmeta"><div class="who">교재·원본 강의안 반영</div><div class="topic">${s.sub}<br><b>${s.hr}</b></div></div>${page(n)}</section>`;}
+function concept(s,n){let mid=Math.ceil(s.items.length/2);let col=(arr,off)=>`<div class="concepts fill ${s.big?'big':''}">${arr.map((it,i)=>`<div class="concept"><div class="no">${off+i+1}</div><div class="cbody"><div class="cn">${it.t}</div><p>${it.p}</p></div></div>`).join('')}</div>`;return `<section class="slide">${hdr(s.hr)}<div class="stage">${title(s)}<div class="body split" style="padding-top:16px;">${col(s.items.slice(0,mid),0)}${col(s.items.slice(mid),mid)}</div>${note(s.noteLabel||'정리',s.note)}</div>${page(n)}</section>`;}
+function table(s,n){let heads=s.headers.map(h=>`<th>${h}</th>`).join('');let rows=s.rows.map(r=>`<tr>${r.map(c=>`<td>${c}</td>`).join('')}</tr>`).join('');let cls=s.tight?'grid tight':'grid even roomy';let wrap=s.tight?`<table class="${cls}"><tr>${heads}</tr>${rows}</table>`:`<div class="tablefill"><table class="${cls}" style="--rows:${s.rows.length};"><tr>${heads}</tr>${rows}</table></div>`;return `<section class="slide">${hdr(s.hr)}<div class="stage">${title(s)}<div class="body colflow" style="padding-top:16px;"><p class="lead" style="margin-bottom:13px;">${s.lead}</p>${wrap}${note(s.noteLabel||'활용',s.note)}</div></div>${page(n)}</section>`;}
+function steps(s,n){let st=s.steps.map((it,i)=>`<div class="st"><div class="sn">${it.k||String(i+1).padStart(2,'0')}</div><div class="sh">${it.t}</div><p>${it.p}</p></div>`).join('');let relay=s.relay?`<div><div class="figcap" style="margin-bottom:12px;">${s.relayTitle||'산출물 흐름'}</div><div class="relay big">${s.relay.map((r,i)=>`<div class="rc"><div class="rk">${r.k}</div><div class="rv">${r.v}</div></div>${i<s.relay.length-1?'<div class="ra">›</div>':''}`).join('')}</div></div>`:'';return `<section class="slide">${hdr(s.hr)}<div class="stage">${title(s)}<div class="body colflow" style="padding-top:18px;"><p class="lead" style="margin-bottom:8px;">${s.lead}</p><div style="flex:1;display:flex;flex-direction:column;justify-content:space-around;padding:8px 0;"><div class="steps big">${st}</div>${relay}</div>${note(s.noteLabel||'실습',s.note)}</div></div>${page(n)}</section>`;}
+function domains(s,n){let cards=s.cards.map(c=>`<div class="domain big"><div class="dh">${c.t} <span>${c.s||''}</span></div><ul class="dl">${c.items.map(x=>`<li>${x}</li>`).join('')}</ul></div>`).join('');return `<section class="slide">${hdr(s.hr)}<div class="stage">${title(s)}<div class="body colflow" style="padding-top:16px;"><p class="lead" style="margin-bottom:6px;">${s.lead}</p><div style="flex:1;display:flex;gap:18px;align-items:stretch;padding:10px 0;">${cards}</div>${note(s.noteLabel||'공통점',s.note)}</div></div>${page(n)}</section>`;}
+function loop(s,n){let rows=s.items.map((it,i)=>`<div class="lp"><div class="lpn">${i+1}</div><div class="lpt"><b>${it.t}</b> — ${it.p}</div></div>`).join('');return `<section class="slide">${hdr(s.hr)}<div class="stage">${title(s)}<div class="body split-l" style="padding-top:18px;"><div class="colflow"><p class="lead" style="margin-bottom:16px;">${s.lead}</p><div class="pull">${s.pull}<span>${s.pullSub||''}</span></div></div><div class="loop big">${rows}</div></div>${note(s.noteLabel||'기준',s.note)}</div>${page(n)}</section>`;}
+function summary(s,n){let items=s.items.map((x,i)=>`<div class="ri"><div class="rn">${String(i+1).padStart(2,'0')}</div><p>${x}</p></div>`).join('');return `<section class="slide dark">${hdr('강의 요약 · Q & A')}<div class="recap"><div class="eye">마무리</div><h1>강의 요약</h1><div class="ritems">${items}</div></div><div class="dmeta"><div class="who">신성진 대표<span>한국데이터사이언티스트협회(CDSA)</span></div><div class="topic">한국보건복지인재원<br><b>AI 데이터 챔피언 양성교육(마라토너)</b></div></div>${page(n)}</section>`;}
+const slides=[
+{kind:'cover'},
+{kind:'table',hr:'SOURCE MAP',crumb:'자료 반영',label:'[자료 반영]',title:'원본 강의안과 교재 반영 구조',sub:'39장 PPTX와 68장 교재의 결합',lead:'이번 확장판은 원본 발표 흐름을 유지하되, 교재의 장문 설명·보강 사례·체크리스트를 별도 강의 슬라이드로 펼쳤습니다.',headers:['원자료','반영 방식','주요 반영 내용'],rows:[['<b>원본 강의안 39장</b>','발표 흐름과 실습 순서를 유지','과정 개요, Part 1~5, Python 자동화, 데이터분석, 코딩에이전트, RAG, 풀스택, 안전'],['<b>교재 68장</b>','보강 설명과 실습 체크리스트를 추가','회의·녹취, 민원 분석, 글 교정, 프롬프트 안티패턴, 로드맵, 도구 가이드, 용어집, FAQ'],['<b>lecture-deck</b>','표·개념·단계·영역 카드로 재배치','표는 균등 행 배분, 박스는 big 변형과 원문 세부 내용으로 밀도 보정']],note:'요약판이 아니라 강의 진행용 확장판으로 구성했습니다. 장수가 늘어나도 원본과 교재의 내용 축을 빠뜨리지 않는 것을 우선했습니다.'},
+{kind:'table',hr:'CURRICULUM',crumb:'과정 안내',label:'[과정 안내]',title:'2일 과정 한눈에',sub:'이해·자동화·분석에서 웹서비스까지',lead:'원본 강의안의 2일 16시간 구조를 유지합니다. Day 1은 이해·자동화·분석, Day 2는 에이전트·바이브코딩·RAG·웹서비스로 이어집니다.',headers:['일차','교과목','핵심 내용','도구'],rows:[['<b>Day 1</b>','에이전트·AI 트렌드','LLM 본질, 프롬프트, 2026 트렌드, RAG·파인튜닝, 에이전트·하네스','ChatGPT · Claude · Gemini · Perplexity'],['<b>Day 1</b>','Python 업무자동화','코드를 외우지 않고 업무 구조를 설명해 자동화 코드·수식·쿼리를 얻고 로컬에서 실행','Python · Excel · VBA · openpyxl'],['<b>Day 1</b>','데이터분석','문제 정의, 전처리, 정규화, 집계·시각화, 모델링·평가, 데이터 스토리텔링','Excel · SQL · Python · LLM'],['<b>Day 2</b>','AI 코딩에이전트·바이브코딩','파일을 읽고 고치고 실행하는 하네스 루프, 정적 페이지, 백엔드, 노코드 빌더','Antigravity · Claude Code · Codex · Lovable · v0'],['<b>Day 2</b>','RAG·폐쇄망·풀스택','내부 문서 챗봇, Ollama, MCP, Electron, FastAPI, Supabase, 종합 프로젝트','Chroma · pgvector · Ollama · MCP · FastAPI · Supabase']],tight:true,note:'실습 산출물은 프롬프트, 자동화 스크립트, 데이터분석 노트, 미니 RAG, 업무용 웹서비스, 적용 계획입니다.'},
+{kind:'divider',hr:'PART 1 · AI TRENDS',crumb:'Part 1',title:'에이전트와 AI 트렌드 이해',sub:'LLM 본질부터 하네스와 코딩에이전트 지형까지',items:['역량 증폭의 시대와 보건복지 업무 변화','LLM의 본질, 환각, 프롬프트, 2026 트렌드','RAG·파인튜닝, 에이전트·하네스, 어시스트와 폐쇄망 원칙']},
+{kind:'concept',hr:'PART 1 · WHY NOW',crumb:'Part 1 · 왜 지금인가',label:'[배경]',title:'역량 증폭의 시대',sub:'AI는 자격이 아니라 시도가 만든다',items:[{t:'범정부 오피스 사례',p:'간호직으로 시작한 남해군 주무관이 보고서 편집 반복 노동을 줄이려 800일 넘게 한글 자동화를 만들었고, 행정안전부 표준 도구로 확산됐습니다.'},{t:'과거와 지금의 차이',p:'과거에는 수년 학습과 긴 시간이 필요했지만, 지금은 코딩에이전트와 대화하며 자동화와 서비스 제작을 시도할 수 있습니다.'},{t:'보건복지 업무와 적합성',p:'보도자료, 안내문, 민원·상담 요약, 통계 분석, 사업 홍보물, 반복 문의 응대처럼 문서와 데이터를 다루는 일이 많습니다.'},{t:'사람의 역할 변화',p:'직접 작성하는 사람에서 방향을 정하고 결과를 검증하는 사람으로 이동합니다. 초안은 AI가, 확인과 판단은 사람이 맡습니다.'}],note:'원본 강의안의 “역량 증폭의 시대”와 교재 제02장의 범피스 사례를 함께 반영했습니다.',big:true},
+{kind:'concept',hr:'PART 1 · LLM',crumb:'Part 1 · 개념',label:'[이론]',title:'LLM의 본질',sub:'단어들의 조합으로 답한다',items:[{t:'단어 예측 모델',p:'LLM은 수많은 글을 학습해 다음에 올 단어를 확률적으로 이어 붙입니다. 정답 사전이 아니라 그럴듯한 다음 말을 생성하는 모델입니다.'},{t:'학습 시점의 한계',p:'훈련 이후의 최신 사건이나 우리 기관 내부 문서는 기본적으로 알지 못합니다. 최신·기관 지식은 RAG나 검색으로 보완합니다.'},{t:'환각',p:'확신에 찬 말투로 사실이 아닌 내용을 만들 수 있습니다. 출처 요구, 교차 확인, 사람 검증으로 관리합니다.'},{t:'손발 없음',p:'스스로 파일을 열거나 실행·검색하지 못합니다. 하네스와 에이전트가 파일·웹·실행 도구를 연결해 이 한계를 보완합니다.'}],note:'교재 제03장·제60장의 토큰, 컨텍스트 윈도우, 수치·사실 검증 습관까지 반영했습니다.',big:true},
+{kind:'loop',hr:'PART 1 · SAFETY',crumb:'Part 1 · 환각 관리',label:'[검증]',title:'환각을 줄이는 일곱 가지 습관',sub:'근거와 사람 검증을 설계한다',lead:'교재 보강 장은 환각을 완전히 없앨 수 없지만 줄이는 습관을 제시합니다. 공공·복지 업무에서는 이 습관이 신뢰를 지킵니다.',pull:'초안은 빠르게 AI로, 확인은 꼼꼼히 사람이.',pullSub:'수치·날짜·기관명·법령·인용은 원문으로 확인합니다.',items:[{t:'근거 요구',p:'출처를 함께 알려 달라고 하고 근거가 없으면 모른다고 답하게 합니다.'},{t:'RAG와 검색',p:'우리 문서에 묶거나 웹검색을 켜서 최신·사실 확인 질문을 처리합니다.'},{t:'교차 검증',p:'두 번 묻고, 다른 모델에도 물어 중요한 답을 비교합니다.'},{t:'사람 확정',p:'대외 문서와 책임 있는 결정은 사람이 읽고 확정합니다.'}],note:'원본 강의안의 안전 원칙과 교재 제61장 내용을 연결했습니다.'},
+{kind:'concept',hr:'PART 1 · PROMPT',crumb:'Part 1 · 프롬프트',label:'[프롬프트]',title:'업무용 프롬프트 기본기',sub:'역할·맥락·작업·형식·제약',items:[{t:'역할',p:'예 — “보건복지 정책 보도자료를 다듬는 편집자”처럼 모델의 관점을 정합니다.'},{t:'맥락',p:'누구를 위한, 어떤 상황의 일인지 배경을 줍니다. 맥락이 구체적일수록 일반론이 줄어듭니다.'},{t:'작업과 형식',p:'요약, 비교, 표 작성, 코드 생성처럼 작업을 동사로 분명히 하고 표·목록·문단·코드 형식을 지정합니다.'},{t:'제약',p:'분량, 말투, 금지 사항, 포함해야 할 사실을 명시합니다. 민감자료는 구조와 익명화 샘플만 공유합니다.'}],note:'메타프롬프트는 전문 지시문을 AI에게 먼저 설계하게 하는 방법입니다. 한 번에 끝내지 말고 대화로 정교화합니다.',big:true},
+{kind:'table',hr:'PART 1 · PROMPT EXAMPLES',crumb:'Part 1 · 실전 프롬프트',label:'[실습]',title:'바로 쓰는 업무지시 문장',sub:'업무 유형별 출발 문장',lead:'교재 제53장과 원본 강의안의 실전 프롬프트를 업무 유형별로 정리합니다. 그대로 입력하기보다 본인 업무 맥락으로 바꾸어 씁니다.',headers:['유형','프롬프트 골격','주의점'],rows:[['<b>문서·보고</b>','아래 내용을 공식 보도자료체, 시민친화체, SNS 카드뉴스용 세 가지로 작성해줘. 핵심 숫자는 강조하고 과장 표현은 빼줘.','수치와 기관명은 사람이 확인합니다.'],['<b>회의 정리</b>','녹취를 참석자별 발언, 안건별 결정사항, 후속 과제로 구분하고 상사 보고용 3줄 요약을 덧붙여줘.','민감 회의는 사내 도구나 로컬 전사를 우선합니다.'],['<b>자동화</b>','A열 접수일, B열 유형, C열 처리일이 있는 엑셀 여러 개를 합쳐 유형별 평균 처리일을 구하는 코드를 작성해줘.','데이터 구조와 익명화 샘플만 공유합니다.'],['<b>분석</b>','상담 데이터 구조로 분석할 주제와 핵심 질문 10개를 제안해줘. 민감정보는 올리지 않습니다.','먼저 질문을 고른 뒤 분석을 시작합니다.'],['<b>RAG·에이전트</b>','첨부한 규정·FAQ를 근거로만 답하고 답변 끝에 근거 문서명을 표시하는 RAG를 만들어줘.','근거 없는 단정 금지 정책을 둡니다.']],tight:true,note:'잘 통한 프롬프트는 업무지시 문장 모음으로 축적합니다.'},
+{kind:'table',hr:'PART 1 · CAPABILITY MAP',crumb:'Part 1 · 활용 지도',label:'[개념]',title:'LLM이 잘하는 8대 역량',sub:'내 업무를 역량의 언어로 분해한다',lead:'원본 강의안의 8대 역량 슬라이드와 교재 제29장을 결합했습니다. 하나의 실무 영역은 보통 여러 역량의 조합으로 작동합니다.',headers:['역량','업무 예시','보건복지 적용'],rows:[['<b>생성·이해</b>','초안, 이메일, 보고서, 긴 문서 요약, 키워드 추출','보도자료 초안, 정책 자료 요약, 안내문 정리'],['<b>추론·조사</b>','장단점 비교, 의사결정 지원, 딥리서치, 벤치마크','제도 비교, 유사사업 조사, 정책 대안 검토'],['<b>코드·변환</b>','VBA, 파이썬, SQL, 표↔텍스트, 형식 전환','엑셀 취합, 통계표 생성, 양식 변환'],['<b>창작·교육</b>','카드뉴스 기획, 이미지 프롬프트, 개념 설명, 질의응답','사업 홍보물, 내부 교육 자료, 업무 튜터링']],note:'역량을 알면 “이 업무에 AI를 어떻게 붙일까”가 구체적 작업 목록으로 바뀝니다.'},
+{kind:'steps',hr:'PART 1 · DOCUMENT WORKFLOW',crumb:'Part 1 · 문서작성',label:'[업무 적용]',title:'문서 업무 5단계',sub:'한 줄 요청이 아니라 워크플로우로',lead:'교재 제41장은 공공·복지 글쓰기를 다섯 단계의 워크플로우로 제시합니다. 완성 후 검토가 아니라 작성 과정 내내 AI와 다듬습니다.',steps:[{k:'① ORGANIZE',t:'정리',p:'흩어진 메모와 자료를 보고서 구조로 정리합니다.'},{k:'② ARGUE',t:'근거',p:'웹검색·출처·제공 자료로 배경과 현황을 보강합니다.'},{k:'③ TRANSFORM',t:'양식',p:'공식 보도자료체, 보고서체, 기관 표준 양식으로 바꿉니다.'},{k:'④ CREATE',t:'콘텐츠',p:'카드뉴스 문구, 도식, 표, 요약본을 만듭니다.'},{k:'⑤ REVIEW',t:'검토',p:'맞춤법, 논리 비약, 근거 없는 수치, 오해 소지를 점검합니다.'}],relay:[{k:'정리 후',v:'초안 구조'},{k:'근거 후',v:'출처 목록'},{k:'양식 후',v:'공식 문안'},{k:'검토 후',v:'수정본'}],note:'내용(What)과 양식(How)을 분리하면 문서 품질이 올라갑니다.'},
+{kind:'concept',hr:'PART 1 · ANTI PATTERN',crumb:'Part 1 · 프롬프트 안티패턴',label:'[교정]',title:'흔한 실수와 교정',sub:'막연함을 구조로 바꾼다',items:[{t:'너무 막연하다',p:'“이거 분석해줘”, “좋게 만들어줘” 대신 무엇을, 어떤 기준으로, 어떤 형식으로 받을지 지정합니다.'},{t:'한 번에 다 시킨다',p:'거대한 요청은 단계로 쪼개고, 각 단계 결과를 확인하며 다음 요청으로 넘어갑니다.'},{t:'맥락과 내 생각이 없다',p:'누구를 위한 어떤 상황인지, 불완전해도 내 생각과 초안을 먼저 넣습니다.'},{t:'검증을 안 한다',p:'수치·사실·민감정보를 그대로 믿거나 올리지 않습니다. 구조·샘플만 공유하고 결과는 사람이 검증합니다.'}],note:'교재 제27장의 안티패턴을 강의 중 실습 점검표로 사용할 수 있게 정리했습니다.',big:true},
+{kind:'concept',hr:'PART 1 · 2026 TRENDS',crumb:'Part 1 · 2026 트렌드',label:'[이론]',title:'지금 알아야 할 네 가지 흐름',sub:'추론·소형·멀티모달·서비스 선택',items:[{t:'추론 모델',p:'답을 곧바로 내놓기보다 단계적으로 생각하도록 설계되어 수학, 코드, 복잡한 판단에서 정확도가 올라갑니다.'},{t:'오픈소스·소형 모델',p:'Llama, DeepSeek, Qwen 계열과 1B~7B SLM은 사내·노트북 실행 가능성을 넓힙니다.'},{t:'멀티모달',p:'표, 차트, 사진, 스캔 문서, 음성, 영상, 웹페이지를 함께 이해하고 생성합니다.'},{t:'서비스 선택',p:'ChatGPT, Claude, Gemini, Perplexity의 강점이 다르므로 업무 목적과 민감도에 따라 나누어 씁니다.'}],note:'원본의 2026 트렌드·모델 지형과 교재 제05·33·37·44장을 결합했습니다.',big:true},
+{kind:'table',hr:'PART 1 · RAG',crumb:'Part 1 · 지식 연결',label:'[이론]',title:'RAG와 파인튜닝',sub:'지식을 잇는 두 가지 길',lead:'LLM의 학습 시점 한계를 보완하는 방식입니다. 교재는 “지식 연결은 RAG, 행동·문체 조정은 파인튜닝”으로 기준을 분명히 제시합니다.',headers:['구분','무엇을 하는가','언제 쓰나'],rows:[['<b>RAG</b>','외부 문서를 청크로 나누고 임베딩해 검색한 뒤, 질문과 관련된 조각을 LLM에 함께 건넵니다.','규정, 지침, FAQ처럼 최신·정확한 근거가 필요한 업무'],['<b>파인튜닝</b>','질문-답변 데이터셋으로 모델의 행동·문체를 추가 학습시킵니다. LoRA·QLoRA가 대표 기법입니다.','말투·응답 패턴을 반복적으로 일관되게 바꾸어야 할 때'],['<b>현업 판단</b>','대부분의 공공·복지 과제는 RAG로 먼저 해결합니다.','파인튜닝은 데이터 준비, 비용, 편향 위험을 검토한 뒤 예외적으로 적용']],note:'이 과정의 실습은 RAG 중심입니다. 파인튜닝은 개념과 시연 수준으로 다룹니다.'},
+{kind:'concept',hr:'PART 1 · AGENT',crumb:'Part 1 · 에이전트',label:'[이론]',title:'에이전트와 하네스',sub:'모델·도구·연결 규칙의 묶음',items:[{t:'에이전트',p:'하네스를 통해 파일, OS, 파이썬, 웹, 외부 프로그램, 메모리, 가이드 문서를 다루게 된 LLM입니다.'},{t:'하네스',p:'도구를 호출하고 그 결과를 보고 다음 행동을 결정하는 반복 루프의 메타 구조입니다.'},{t:'반복 루프',p:'무엇을 할지 판단하고, 도구를 호출하고, 결과를 확인한 뒤, 다음 행동을 정하는 과정을 목표까지 반복합니다.'},{t:'결과를 좌우하는 것',p:'모델 성능만큼이나 어떤 도구를 어떤 권한과 규칙으로 붙여 주느냐가 결과를 좌우합니다.'}],note:'원본 강의안의 에이전트 도식과 교재 제07장의 설명을 반영했습니다.',big:true},
+{kind:'concept',hr:'PART 1 · CLOSED NETWORK',crumb:'Part 1 · 안전한 활용',label:'[보안]',title:'어시스트 vs 에이전트',sub:'폐쇄망에서 안전하게 쓰기',items:[{t:'어시스트 방식',p:'외부 LLM에는 구조와 익명화 샘플만 주고 코드나 문장만 받아 폐쇄망 PC에서 실행합니다.'},{t:'에이전트 방식',p:'하네스를 갖춘 AI가 내 환경에서 검색·실행까지 직접 합니다. 강력하지만 권한 범위와 감사 로그가 필요합니다.'},{t:'전환 기준',p:'데이터 민감도, 실행 권한, 검수 역량을 기준으로 어시스트에서 에이전트로 단계 적용합니다.'},{t:'폐쇄망 먼저',p:'민감도 높은 일은 로컬 저장·로컬 추론·사내 실행을 우선하고, 클라우드는 마지막 선택으로 둡니다.'}],note:'코드와 문장은 AI가 만들고, 실제 데이터 처리와 최종 판단은 사람이 합니다.',big:true},
+{kind:'table',hr:'PART 1 · CODING AGENT MAP',crumb:'Part 1 · 도구 지형',label:'[비교]',title:'코딩에이전트 지형',sub:'CLI·GUI·노코드',lead:'원본 강의안과 교재 제09장은 화면은 달라도 모두 하네스 안의 LLM이라는 공통 원리를 강조합니다.',headers:['유형','대표 도구','특징'],rows:[['<b>CLI · 터미널형</b>','Claude Code · Codex · OpenCode · Gemini CLI','터미널에서 자연어로 지시하면 파일을 직접 읽고 편집·실행합니다. 강력하고 개발자 친화적입니다.'],['<b>GUI · IDE형</b>','Antigravity · Cursor · Windsurf · Trae','VS Code 기반 에디터가 에이전트처럼 작동합니다. 시각적 피드백이 있어 초보자에게 친근합니다.'],['<b>노코드 빌더</b>','Lovable · Bolt · v0 · Replit Agent','코드를 보지 않고 웹앱을 만듭니다. 비개발자에게 가장 진입장벽이 낮습니다.']],note:'하나를 익히면 다른 도구로 전이하기 쉽습니다. 대부분 MCP를 공통 연결 표준으로 채택하는 흐름입니다.'},
+{kind:'concept',hr:'PART 1 · MCP',crumb:'Part 1 · MCP',label:'[연결]',title:'AI에 우리 기관 전용 손발 달기',sub:'도구 연결 표준으로 이해하기',items:[{t:'표준 연결',p:'MCP는 LLM에 도구를 표준 방식으로 노출하는 규약입니다. 한 번 표준을 맞추면 여러 도구에서 같은 방식으로 연결합니다.'},{t:'기관 전용 도구',p:'부서 DB 조회, 사내 문서 검색, 내부 규정 질의 기능을 MCP 서버로 만들면 AI가 우리 자료에 근거해 일합니다.'},{t:'반복 적용 패턴',p:'같은 원리를 서로 다른 데이터 소스에 반복 적용할 수 있습니다. 필요가 분명해지면 코딩에이전트의 도움으로 단계적으로 시도합니다.'},{t:'보안 설계',p:'내부 자료 접근 권한, 감사 가능성, 필요한 범위만 허용하는 권한 설계가 필수입니다.'}],note:'교재 제48장의 MCP 보강 내용을 Part 1 도구 지형 뒤에 배치했습니다.',big:true},
+{kind:'divider',hr:'PART 2 · PYTHON AUTOMATION',crumb:'Part 2',title:'생성형 AI로 Python 업무자동화',sub:'코드를 외우지 않고 업무 구조를 설명한다',items:['LLM에게 기능·구조·익명화 샘플을 전달해 코드와 수식을 얻는다','받은 코드는 로컬에서 실행하고 오류 메시지를 다시 전달해 고친다','엑셀·문서·웹·OCR·openpyxl 파이프라인으로 반복 업무를 줄인다']},
+{kind:'steps',hr:'PART 2 · AUTOMATION LOOP',crumb:'Part 2 · 자동화',label:'[실습]',title:'코드를 외우지 않는 자동화',sub:'설명·코드·실행·재질의',lead:'교재 제10장은 자동화의 진입 장벽을 코드 문법이 아니라 업무 구조 설명 능력으로 바꿉니다. 코드는 AI가 만들고 실행은 내 PC에서 합니다.',steps:[{k:'① 구조 설명',t:'업무와 파일 구조',p:'월간보고 폴더의 엑셀, 시트 범위, 필요한 결과를 말로 설명합니다.'},{k:'② 코드 수신',t:'오류 처리·주석 포함',p:'파이썬, VBA, 수식, SQL 중 필요한 형태로 받습니다.'},{k:'③ 로컬 실행',t:'민감 데이터 보호',p:'실제 데이터는 외부로 보내지 않고 폐쇄망 또는 내 PC에서 처리합니다.'},{k:'④ 오류 재질의',t:'로그 그대로 전달',p:'에러 메시지를 붙여넣고 원인과 수정 코드를 받습니다.'}],relay:[{k:'입력',v:'파일 구조·샘플'},{k:'생성',v:'코드·수식'},{k:'실행',v:'결과 파일'},{k:'수정',v:'재현 가능한 스크립트'}],note:'평가 포인트는 작동 여부와 재현성입니다. 코드 암기가 아니라 설명과 검증이 핵심입니다.'},
+{kind:'concept',hr:'PART 2 · ASKING METHODS',crumb:'Part 2 · 자동화',label:'[방법]',title:'LLM에게 묻는 세 가지 방법',sub:'기능·구조·샘플',items:[{t:'기능만 묻기',p:'“여러 엑셀 파일을 하나로 합치는 방법?”처럼 개념과 절차를 익힐 때 씁니다.'},{t:'시트 구조 묘사',p:'“A열 접수일, B열 유형, C열 처리일”처럼 열 구조를 설명하면 더 정확한 답을 얻습니다.'},{t:'익명화 샘플',p:'실제 데이터 일부를 가공해 보여 주면 가장 정밀합니다. 개인정보 제거가 필수입니다.'},{t:'디버깅 재질의',p:'받은 코드가 한 번에 돌지 않으면 오류 메시지를 그대로 전달해 수정 코드를 받습니다.'}],note:'교재 제10장의 “오류는 다시 붙여넣어 고친다”를 실습 루프로 반영했습니다.',big:true},
+{kind:'table',hr:'PART 2 · EXCEL SQL',crumb:'Part 2 · 엑셀·SQL',label:'[실습]',title:'복잡한 함수·쿼리도 LLM에게 물어본다',sub:'헤더 구조와 샘플이 정확도를 만든다',lead:'원본 강의안의 엑셀·SQL 어시스트와 교재 제11·34·35장을 통합했습니다.',headers:['영역','요청 예시','실행·검증'],rows:[['<b>엑셀 함수</b>','A시트 이름으로 B시트 부서를 찾아오는 XLOOKUP 수식을 알려줘.','헤더 구조와 익명화 샘플을 함께 주고 오류를 다시 전달합니다.'],['<b>피벗·차트</b>','행·열·값·필터를 어떻게 잡아야 하는지, 적합한 차트 유형을 추천해줘.','피벗 결과와 차트 해석을 사람이 확인합니다.'],['<b>VBA·파워쿼리</b>','매월 폴더의 엑셀을 합치는 VBA를 오류 처리·주석 포함해 작성해줘.','엑셀 개발자 도구나 파워쿼리에서 실행합니다.'],['<b>SQL</b>','민원 표와 처리 표를 JOIN해 유형별 평균 처리일을 구하는 쿼리를 줘.','SQLite·DBeaver 등 로컬 도구에서 실행·검증합니다.']],note:'정확한 결과의 비결은 “표 이름·열 이름·샘플·원하는 결과”를 함께 주는 것입니다.'},
+{kind:'concept',hr:'PART 2 · VBA OPENPYXL',crumb:'Part 2 · 문서 자동화',label:'[레시피]',title:'VBA·openpyxl 자동화',sub:'엑셀과 문서 반복 작업을 줄인다',items:[{t:'여러 파일 합치기',p:'폴더의 모든 엑셀을 한 시트로 합치고, 머리글과 형식을 통일합니다.'},{t:'조건별 집계',p:'부서별·유형별 합계와 평균을 피벗 또는 파이썬으로 생성합니다.'},{t:'서식 일괄 적용',p:'모든 시트에 같은 머리글 서식, 테두리, 열 너비, 차트 서식을 적용합니다.'},{t:'보고서 생성',p:'집계표와 차트가 포함된 월간 보고서를 자동 생성하고 오류·누락을 검증합니다.'}],note:'교재 제62장의 엑셀·문서 자동화 레시피를 실습 후보로 반영했습니다.',big:true},
+{kind:'steps',hr:'PART 2 · PIPELINE',crumb:'Part 2 · 심화 자동화',label:'[파이프라인]',title:'흩어진 자료를 모아 가공하는 흐름',sub:'웹·OCR·이미지·엑셀을 연결한다',lead:'교재 제12장은 비개발자도 코딩에이전트의 도움으로 자료 수집과 가공 파이프라인을 만들 수 있다고 설명합니다.',steps:[{k:'① Playwright',t:'웹 자동화',p:'상급기관 공지 페이지에서 제목·날짜·링크를 수집합니다.'},{k:'② OCR',t:'문서·사진 텍스트화',p:'스캔 공문, 현장 사진, 손글씨 메모를 텍스트로 바꿉니다.'},{k:'③ LLM 정제',t:'항목별 구조화',p:'추출된 텍스트를 신청자, 날짜, 항목, 금액 등으로 정리합니다.'},{k:'④ openpyxl',t:'엑셀 적재·보고',p:'정리된 결과를 엑셀에 저장하고 누락·이상치를 보고합니다.'}],relay:[{k:'입력',v:'웹·PDF·사진'},{k:'추출',v:'OCR·파싱'},{k:'정제',v:'LLM 규칙화'},{k:'출력',v:'엑셀·보고서'}],note:'민감 정보가 있으면 로컬에서만 처리하고 결과는 사람이 검수합니다.'},
+{kind:'divider',hr:'PART 3 · DATA ANALYSIS',crumb:'Part 3',title:'생성형 AI를 활용한 데이터분석',sub:'질문 설계에서 보고서 스토리텔링까지',items:['데이터분석은 코드가 아니라 문제 정의와 태도에서 시작한다','전처리·정규화·집계·시각화·모델링을 한 흐름으로 익힌다','민원 데이터 분석 사례와 데이터 스토리텔링으로 현업 적용을 확인한다']},
+{kind:'concept',hr:'PART 3 · DATA MINDSET',crumb:'Part 3 · 데이터 사고',label:'[태도]',title:'직감의 함정과 문제 정의',sub:'데이터분석은 태도에서 시작한다',items:[{t:'가용성 휴리스틱',p:'쉽게 떠오르는 사례를 실제보다 흔하다고 착각합니다. 최근 크게 보도된 사건을 과대평가하는 식입니다.'},{t:'확증 편향',p:'내 생각을 뒷받침하는 정보만 받아들이고 반대 증거는 무시합니다.'},{t:'복잡성의 환상',p:'화려한 기술 용어와 AI 포장이 분석의 타당성을 보장하지 않습니다.'},{t:'See the Unseen',p:'데이터는 보이지 않던 적체 시기, 반복 민원 유형, 사고 다발 구간 같은 문제를 드러냅니다.'}],note:'교재 제13·31장의 인지편향과 데이터 리터러시 내용을 반영했습니다.',big:true},
+{kind:'table',hr:'PART 3 · FRAMEWORK',crumb:'Part 3 · 문제 정의',label:'[프레임워크]',title:'막막함을 구조로 바꾸기',sub:'SWOT·3C·4P·BMC',lead:'교재 제32장은 “분석해줘” 대신 사고의 틀을 지정하면 AI 답이 구조를 얻는다고 설명합니다.',headers:['프레임워크','쓰임','프롬프트 예시'],rows:[['<b>SWOT</b>','강점·약점·기회·위협으로 내부와 외부를 함께 봅니다.','우리 부서의 OO 사업을 SWOT로 분석해줘.'],['<b>3C</b>','기관·대상·유사사업을 비교해 시장·환경을 봅니다.','대상자, 기관 역량, 유사사업 관점으로 정리해줘.'],['<b>4P</b>','서비스·비용·채널·홍보 관점으로 캠페인 전략을 구체화합니다.','복지사업 홍보 전략을 4P로 제안해줘.'],['<b>BMC</b>','사업 모델 전체를 한 장으로 설계합니다.','이 서비스의 핵심 파트너, 가치제안, 채널을 표로 만들어줘.']],note:'프레임워크는 정답을 주는 도구가 아니라 AI의 사고를 구조화하는 틀입니다.'},
+{kind:'concept',hr:'PART 3 · DATA COLLECTION',crumb:'Part 3 · 데이터 수집',label:'[수집]',title:'공공데이터·파워쿼리·API',sub:'분석의 출발은 데이터 확보',items:[{t:'공공데이터 포털',p:'기관·주제 관련 데이터셋을 검색해 내려받고, 보건·복지·인구 통계를 분석 실습 재료로 사용합니다.'},{t:'파워쿼리',p:'여러 파일·시트를 연결해 자동 정리합니다. 폴더 단위 CSV 통합과 형식 일괄 변환에 강합니다.'},{t:'웹크롤링·RSS·API',p:'웹페이지에서 제목·날짜·링크를 수집하거나 공개 API를 호출해 데이터를 모읍니다.'},{t:'이용 조건',p:'대상 사이트 이용 약관, 저작권, 과도한 요청 제한을 확인하고 민감자료는 외부로 보내지 않습니다.'}],note:'교재 제14·45장의 데이터 확보와 파워쿼리·API 개념을 반영했습니다.',big:true},
+{kind:'steps',hr:'PART 3 · PREPROCESS',crumb:'Part 3 · 전처리',label:'[실습]',title:'수집·전처리와 정규화',sub:'분석의 8할을 차지한다',lead:'문제가 정해지면 데이터를 모으고 다듬습니다. LLM은 점검 항목과 처리 코드를 함께 제시할 수 있습니다.',steps:[{k:'① 품질 점검',t:'결측·이상치',p:'빈 값, 비정상적으로 큰 값, 날짜 역전 같은 오류를 확인합니다.'},{k:'② 형식 통일',t:'날짜·숫자·분류',p:'같은 의미의 값이 다른 표기로 섞여 있지 않은지 통일합니다.'},{k:'③ 정규화',t:'와이드↔롱',p:'월별 열이 늘어선 표를 한 행에 하나의 관측값으로 바꿉니다.'},{k:'④ 검증',t:'처리 이력 기록',p:'어떤 값을 왜 바꾸었는지 기록해 재현성을 남깁니다.'}],relay:[{k:'원자료',v:'CSV·엑셀'},{k:'점검',v:'품질 리포트'},{k:'변환',v:'분석용 테이블'},{k:'기록',v:'전처리 내역'}],note:'잘 정리된 데이터는 이후 모든 분석을 쉽게 만듭니다.'},
+{kind:'table',hr:'PART 3 · VISUAL SQL',crumb:'Part 3 · 분석 흐름',label:'[분석]',title:'집계·시각화와 SQL',sub:'큰 데이터를 묻는 법',lead:'교재 제15·35장은 엑셀과 SQL을 함께 다룹니다. 데이터가 크고 표가 여러 개로 나뉘면 SQL이 필요합니다.',headers:['작업','도구','LLM에게 묻는 법'],rows:[['<b>피벗 집계</b>','Excel · Power Query','행·열·값·필터를 어떻게 잡아야 하는지 알려줘.'],['<b>조건부서식</b>','Excel','중요한 값과 이상치를 강조하는 규칙을 추천해줘.'],['<b>차트 선택</b>','Excel · Python','시간 흐름, 구성 비율, 유형 비교에 적합한 차트를 추천해줘.'],['<b>SQL 질의</b>','SQLite · DBeaver','SELECT, WHERE, GROUP BY, JOIN 구조로 질문에 답하는 쿼리를 작성해줘.']],note:'SQL을 작성하는 능력보다 무엇을 묻고 싶은지 설명하고 결과를 검증하는 능력이 중요합니다.'},
+{kind:'concept',hr:'PART 3 · EDA MODEL',crumb:'Part 3 · 해석·전달',label:'[해석]',title:'EDA·통계와 모델링·평가',sub:'데이터를 읽고 모델을 검증한다',items:[{t:'기술통계',p:'평균과 중앙값의 차이로 치우침을, 분산·표준편차로 흩어짐을, 사분위범위로 중간 50% 폭을 봅니다.'},{t:'모델링',p:'간단한 분류·예측 모델을 코딩에이전트 도움으로 만들고, 학습·검증·테스트를 나누어 확인합니다.'},{t:'정확도의 함정',p:'위험 사례가 5%뿐이면 모두 위험 없음으로 찍어도 정확도는 95%입니다. 재현율·정밀도도 봅니다.'},{t:'편향 점검',p:'과거 데이터의 편향을 모델이 학습할 수 있으므로 특정 집단에 불리하게 작동하지 않는지 사람이 확인합니다.'}],note:'모델은 참고자료이고 책임 있는 결정은 사람의 몫입니다.',big:true},
+{kind:'steps',hr:'PART 3 · CIVIL DATA CASE',crumb:'Part 3 · 사례',label:'[사례]',title:'민원 데이터 분석',sub:'한 사례를 끝까지',lead:'교재 제24장은 가상의 복지 민원 3년치 데이터를 사용해 문제 정의부터 보고까지 이어지는 사례를 제시합니다.',steps:[{k:'① 문제 정의',t:'핵심 질문 선택',p:'어떤 유형이 처리가 늦고 만족도가 낮은지 질문으로 구체화합니다.'},{k:'② 전처리',t:'오류 점검',p:'처리일이 접수일보다 빠른 값, 결측, 유형 표기 불일치를 확인합니다.'},{k:'③ 집계·시각화',t:'패턴 확인',p:'유형별 평균 처리일, 만족도, 월별 적체를 피벗과 그래프로 봅니다.'},{k:'④ 보고',t:'개선 액션',p:'인력 재배치, 처리 절차 단축 같은 현업 액션을 제시합니다.'}],relay:[{k:'자료',v:'접수일·유형·처리일'},{k:'분석',v:'적체 유형'},{k:'해석',v:'만족도 저하 원인'},{k:'행동',v:'개선 방향'}],note:'데이터는 직감으로 보이지 않던 적체 지점을 드러냅니다.'},
+{kind:'concept',hr:'PART 3 · STORYTELLING',crumb:'Part 3 · 스토리텔링',label:'[보고]',title:'숫자를 이야기로',sub:'문제·원인·데이터·시사점',items:[{t:'문제',p:'보고의 출발점은 해결해야 할 문제가 무엇인지 명확히 하는 것입니다.'},{t:'원인',p:'가능한 원인을 가설로 세우고 데이터가 이를 지지하는지 확인합니다.'},{t:'데이터',p:'핵심 메시지 하나당 그래프 하나를 둡니다. 복잡한 표보다 메시지를 또렷이 보여 주는 그림이 중요합니다.'},{t:'시사점',p:'인력 보강, 절차 개선, 안내 강화처럼 실행 가능한 행동으로 연결합니다.'}],note:'AI가 보고서 초안을 만들 수 있지만 수치 정합성, 해석 타당성, 그래프 왜곡 여부는 사람이 검증합니다.',big:true},
+{kind:'divider',hr:'PART 4 · CODING AGENTS & VIBE CODING',crumb:'Part 4',title:'AI 코딩에이전트와 바이브코딩',sub:'지시·실행·검토 루프와 결과 중심 제작',items:['파일을 직접 읽고 고치고 실행하는 에이전틱 IDE를 이해한다','정적 페이지, 백엔드, API, 노코드 웹서비스를 자연어로 만든다','FastAPI와 Supabase까지 연결해 운영 가능한 구조를 그린다']},
+{kind:'steps',hr:'PART 4 · AGENTIC IDE',crumb:'Part 4 · 코딩에이전트',label:'[실습]',title:'AI 코딩에이전트 기본 사용 루프',sub:'작업 지시·실행·검토',lead:'교재 제17장은 어시스트 방식에서 한 걸음 더 나아가 파일을 직접 읽고 고치고 실행하는 코딩에이전트를 다룹니다.',steps:[{k:'① 맥락 제공',t:'폴더·파일·목표',p:'에이전트가 무엇을 다룰지 작업 범위를 분명히 합니다.'},{k:'② 작업 지시',t:'결과 중심 요청',p:'이 폴더의 보고서에서 표를 추출해 하나의 엑셀로 정리해줘처럼 요청합니다.'},{k:'③ 실행',t:'파일 읽기·코드 실행',p:'에이전트가 도구를 호출하고 결과를 만들어 냅니다.'},{k:'④ 검토',t:'후속 지시',p:'머리글 통일, 누락 보정, 형식 정리 같은 후속 요청으로 다듬습니다.'}],relay:[{k:'지시',v:'목표와 제약'},{k:'실행',v:'변경·산출물'},{k:'검토',v:'사람 확인'},{k:'확정',v:'업무 적용'}],note:'중요한 변경 전에는 백업을 두고, 에이전트가 한 일은 사람이 검토합니다.'},
+{kind:'loop',hr:'PART 4 · HARNESS PRACTICE',crumb:'Part 4 · 에이전틱 IDE',label:'[원리]',title:'하네스와 다중파일 워크플로',sub:'계획·도구 호출·결과 확인·재계획',lead:'원본 강의안은 경량 에이전트 루프를 직접 만들어 원리를 손으로 익히는 실습을 포함합니다.',pull:'에이전트는 한 번에 답하지 않고 반복 루프를 돈다.',pullSub:'단일 답변이 아니라 중간 검증과 재계획이 핵심입니다.',items:[{t:'계획',p:'무엇을 해야 하는지 작업 단위를 나눕니다.'},{t:'도구 호출',p:'파일, 웹, 실행기 같은 도구를 필요한 권한으로 호출합니다.'},{t:'결과 확인',p:'도구 결과를 읽고 의도와 맞는지 확인합니다.'},{t:'재계획',p:'부족하면 다시 읽고 수정하며 목표에 접근합니다.'}],note:'하네스를 이해하면 도구가 바뀌어도 결과가 이상할 때 무엇이 잘못됐는지 짚을 수 있습니다.'},
+{kind:'concept',hr:'PART 4 · VIBE CODING',crumb:'Part 4 · 바이브코딩',label:'[개념]',title:'코드를 짜는 게 아니라 지시하는 것',sub:'결과로 소통한다',items:[{t:'결과 중심 소통',p:'“이렇게 보이게”, “이 버튼을 누르면 이렇게 되게”처럼 화면과 동작을 기준으로 지시합니다.'},{t:'정적 페이지',p:'기관 안내, 사업 홍보, 캠페인 페이지처럼 저장된 내용을 보여 주는 단일 HTML부터 시작합니다.'},{t:'즉시 수정',p:'색, 글꼴, 배치, 문구를 화면으로 확인하며 자연어로 반복 수정합니다.'},{t:'첫 경험의 의미',p:'코드를 직접 쓰지 않고 요청·실행·수정만 하는 경험이 “나도 만들 수 있다”는 감각을 줍니다.'}],note:'교재 제18장과 원본 강의안의 정적 페이지 실습을 반영했습니다.',big:true},
+{kind:'concept',hr:'PART 4 · BACKEND API',crumb:'Part 4 · 백엔드',label:'[개념]',title:'백엔드와 API 맛보기',sub:'입력·처리·출력',items:[{t:'입력',p:'사용자가 신청 양식, 문의 내용, 조회 조건을 보냅니다.'},{t:'처리',p:'서버가 내용을 저장하고, 검증하고, 필요한 계산이나 LLM 호출을 수행합니다.'},{t:'출력',p:'접수되었습니다, 결과는 이렇습니다처럼 확인 메시지와 처리 결과를 보여 줍니다.'},{t:'도구',p:'FastAPI는 파이썬 백엔드와 스트리밍에, Node·Express는 REST API와 인증에 자주 사용됩니다.'}],note:'깊은 서버 지식보다 입력→처리→출력 구조를 말로 설명하는 감각이 우선입니다.',big:true},
+{kind:'table',hr:'PART 4 · NO CODE',crumb:'Part 4 · 실전 예시',label:'[실습]',title:'바이브코딩으로 만드는 업무 도구',sub:'노코드 빌더와 내부 도구',lead:'원본 강의안의 Lovable·v0 예시와 교재 제22장을 반영했습니다. 빠른 시도는 노코드로, 운영은 직접 코드로 옮깁니다.',headers:['도구·방식','예시 프롬프트','산출물'],rows:[['<b>Lovable · 대시보드</b>','지방자치단체 민원 접수 현황 대시보드를 만들어줘. 유형별 필터, 월별 추이, 최근 접수 목록 포함.','필터·그래프·목록이 있는 화면'],['<b>v0 · 신청 폼</b>','직원 출장 신청서를 입력하면 자동으로 결재 양식이 생성되는 폼을 만들어줘.','입력 폼과 결재 양식 미리보기'],['<b>Replit Agent</b>','신청 접수·목록·상태 변경이 되는 작은 웹서비스를 만들어줘.','프론트·백엔드·간단 DB'],['<b>수정 루프</b>','그래프 색을 바꿔줘, 모바일에서도 잘 보이게 해줘.','자연어 기반 반복 개선']],note:'코드 줄보다 결과 화면을 기준으로 소통합니다.'},
+{kind:'concept',hr:'PART 4 · FASTAPI FULLSTACK',crumb:'Part 4 · 풀스택',label:'[서비스]',title:'FastAPI·Supabase 풀스택',sub:'안전한 호출 계층과 데이터 격리',items:[{t:'FastAPI 게이트웨이',p:'요청 검증, 실패 재시도, 로깅, API 키 보호, 스트리밍 응답을 담당하는 안전한 호출 계층입니다.'},{t:'Supabase DB',p:'PostgreSQL 기반 저장소와 인증을 제공하며, 행 단위 보안(RLS)으로 부서별 데이터를 격리합니다.'},{t:'노코드에서 직접 코드로',p:'먼저 Lovable·v0로 빠르게 만들고, 필요가 분명해지면 FastAPI·Node·Supabase 구조로 옮깁니다.'},{t:'운영 기준',p:'요청ID, 지연시간, 실패 원인, 토큰 한도, 캐시 정책, 권한 정책을 함께 둡니다.'}],note:'교재 제49·51장과 원본 강의안의 백엔드·풀스택 장을 함께 반영했습니다.',big:true},
+{kind:'divider',hr:'PART 5 · RAG & CLOSED NETWORK',crumb:'Part 5',title:'RAG 구축과 폐쇄망·풀스택',sub:'내부 문서 챗봇에서 기관 전용 LLM 서비스까지',items:['내부 문서로 답하는 미니 RAG를 만들고 출처 정확도를 검증한다','NotebookLM, Ollama, Electron, MCP로 소스 기반·로컬·폐쇄망 활용을 이해한다','FastAPI·Supabase·RAG·MCP를 결합해 기관 전용 서비스를 설계한다']},
+{kind:'steps',hr:'PART 5 · RAG BUILD',crumb:'Part 5 · RAG',label:'[실습]',title:'내부 문서로 답하는 챗봇',sub:'임베딩·검색·출처 포함 답변',lead:'교재 제20장은 규정·지침·FAQ·안내문을 근거로 답하는 작은 지식 챗봇 구축 흐름을 설명합니다.',steps:[{k:'① 문서 준비',t:'규정·FAQ 수집',p:'먼저 샘플 문서로 시작하고 최신·정확한 문서를 고릅니다.'},{k:'② 적재',t:'청크·임베딩',p:'문서를 문단 단위로 나누고 의미 좌표인 임베딩으로 바꿔 벡터DB에 저장합니다.'},{k:'③ 검색',t:'관련 조각 찾기',p:'질문도 임베딩으로 바꾸고 의미가 가까운 문서 조각을 찾습니다.'},{k:'④ 답변',t:'출처 포함',p:'LLM은 검색된 근거 위에서 답하고 문서명을 함께 표시합니다.'}],relay:[{k:'문서',v:'규정·지침·FAQ'},{k:'저장',v:'Chroma·pgvector'},{k:'질문',v:'의미 검색'},{k:'답변',v:'출처 표시'}],note:'틀린 답을 일부러 찾아보고 검색 실패, 근거 선택 오류, 생성 왜곡을 나누어 봅니다.'},
+{kind:'concept',hr:'PART 5 · LOCAL STACK',crumb:'Part 5 · 폐쇄망',label:'[로컬]',title:'NotebookLM·Ollama·Electron·MCP',sub:'소스 기반과 로컬 실행',items:[{t:'NotebookLM',p:'소스를 올리면 그 범위 안에서 답하고 출처를 보여 주는 가벼운 RAG 체험 도구입니다.'},{t:'Ollama',p:'1B~7B 소형 모델을 내 PC에서 실행해 민감 자료를 외부 전송 없이 분류·요약합니다.'},{t:'Electron',p:'자동화나 챗봇을 더블클릭으로 실행되는 데스크톱 앱으로 포장합니다.'},{t:'MCP',p:'부서 DB 조회와 사내 문서 검색을 표준 방식으로 AI 도구에 연결합니다.'}],note:'교재 제21·43·46·47·48장의 폐쇄망 활용 축을 한 장으로 묶었습니다.',big:true},
+{kind:'table',hr:'PART 5 · SECURITY CHECKLIST',crumb:'Part 5 · 보안',label:'[체크리스트]',title:'폐쇄망·보안 체크리스트',sub:'공공·복지 AI 활용 전 점검',lead:'교재 제65장은 새 도구를 도입하거나 실습을 시작하기 전에 확인할 항목을 제시합니다.',headers:['항목','점검 질문','적용'],rows:[['<b>데이터 반출</b>','외부 클라우드로 보내는 데이터에 개인정보·미공개 자료가 없는가?','구조·샘플만 공유'],['<b>익명화</b>','이름, 주민번호, 연락처 등 식별정보를 제거했는가?','샘플 공유 전 확인'],['<b>로컬 실행</b>','실제 처리는 내 PC 또는 승인된 환경에서 하는가?','어시스트·Ollama 우선'],['<b>접근 권한</b>','내부 문서·DB 권한이 필요한 범위로 한정됐는가?','MCP·RAG 권한 설계'],['<b>기록·검수</b>','AI 사용 이력과 사람 검수 절차가 있는가?','대외 결과 확정 전 확인']],tight:true,note:'보안은 활용을 막는 장벽이 아니라 마음 놓고 시도하기 위한 안전장치입니다.'},
+{kind:'concept',hr:'PART 5 · ORG SERVICE',crumb:'Part 5 · 종합',label:'[적용]',title:'우리 기관 전용 LLM 서비스',sub:'구성 요소와 조직 도입',items:[{t:'프론트·백엔드',p:'화면과 입력 폼은 프론트가, 요청 검증·처리·LLM 호출은 FastAPI 또는 Node 백엔드가 맡습니다.'},{t:'DB·Supabase',p:'PostgreSQL 기반 저장소와 RLS로 부서별 데이터를 격리합니다.'},{t:'RAG·MCP',p:'내부 문서 근거 답변과 부서 DB·문서 도구 연결을 결합합니다.'},{t:'조직 도입',p:'사용자 결핍에서 출발하고 작은 성공 사례를 만들어 30·60·90일 단위로 확산합니다.'}],note:'교재 제51장과 원본 강의안의 종합 프로젝트 슬라이드를 반영했습니다.',big:true},
+{kind:'divider',hr:'SUPPLEMENT · APPLICATION',crumb:'보강편',title:'교재 보강 장과 현업 적용',sub:'회의·글 교정·멀티모달·사례은행·로드맵',items:['강의안 원본에는 압축돼 있던 교재 보강 장을 별도 슬라이드로 펼친다','회의·녹취, 글 교정, 멀티모달, 보건복지 12장면, 도구 선택, 프롬프트 부록을 다룬다','2주 실천안과 산출물 점검표로 현업 적용까지 연결한다']},
+{kind:'concept',hr:'SUPPLEMENT · MEETING REVIEW',crumb:'보강 · 회의와 글 교정',label:'[업무 적용]',title:'회의·녹취 자동화와 글 교정',sub:'말을 문서로, 초안을 검토본으로',items:[{t:'회의 전사',p:'회의 녹음 파일이나 영상을 텍스트화하고 참석자별 발언, 안건별 결정사항, 후속 과제로 구조화합니다.'},{t:'추가 가공',p:'상사 보고용 3줄 요약, 팀 공유용 이메일, 결정사항 표로 같은 내용을 여러 형태로 만듭니다.'},{t:'리스크 빨간펜',p:'보도자료 초안에서 과장 표현, 근거 없는 수치, 오해 소지 문장을 표시하고 대안을 제시합니다.'},{t:'문서 비교',p:'계획서와 실행보고서, 구 버전과 신 버전의 차이·누락·변경 사항을 표로 정리합니다.'}],note:'교재 제23·25장의 회의 자동화와 글 교정 내용을 반영했습니다.',big:true},
+{kind:'domains',hr:'SUPPLEMENT · MULTIMODAL',crumb:'보강 · 멀티모달',label:'[콘텐츠]',title:'이미지·카드뉴스·영상·음성',sub:'홍보 실무에 바로 적용',lead:'교재 제38·44장은 이미지와 영상을 공공 홍보·안내 업무에 적용하는 방법을 다룹니다.',cards:[{t:'이미지·카드뉴스',s:'보고서·홍보',items:['<b>표지</b> 보고서용 표지·배경 이미지','<b>카드뉴스</b> 정책 자료를 1:1 카드로 요약','<b>프롬프트</b> 시안 분석 후 피사체 교체']},{t:'영상·음성',s:'요약·홍보',items:['<b>영상</b> 정책 홍보 30초 소개 클립','<b>전사</b> 회의·교육 영상을 문서로 변환','<b>음성</b> 더빙·안내·실시간 대화']},{t:'공공 원칙',s:'저작권·표기',items:['<b>저작권</b> 상업적 사용 가능 도구 확인','<b>인물·로고</b> 무단 생성 금지','<b>표기</b> 필요 시 AI 생성 표기']}],note:'만드는 것과 되돌리는 것 모두가 멀티모달의 활용 영역입니다.'},
+{kind:'table',hr:'SUPPLEMENT · CASE BANK',crumb:'보강 · 사례은행',label:'[사례]',title:'보건복지 AI 활용 12장면',sub:'내 업무와 가까운 사례 찾기',lead:'교재 제57장의 사례은행은 기술을 보건복지 현업 장면으로 옮기기 위한 토론 자료입니다.',headers:['영역','사례','적용 포인트'],rows:[['<b>문서·홍보</b>','복지정책 보도자료, 사업 안내문·리플릿, 카드뉴스','공식체·시민친화체·SNS용 변주, 표준 양식 반영, 수치 검증'],['<b>민원·상담</b>','상담 요약, 반복 문의 RAG, 민원 분류','안건·결정·후속과제 구조화, 규정·FAQ 근거 답변, 담당 부서 배분'],['<b>데이터·분석</b>','복지 통계 분석, 시군별 실적 취합, 만족도 위험 예측','월별 추이, 자동 종합표·차트, 편향 점검'],['<b>현장·자동화</b>','현장 점검 정리, 스캔 신청서 적재, 내부 도구 제작','OCR·멀티모달, 엑셀 자동 입력, 신청·목록·상태 변경 웹서비스']],note:'공통점은 반복되고 규칙이 있으며 문서·데이터를 다룬다는 것입니다.'},
+{kind:'table',hr:'SUPPLEMENT · TOOL GUIDE',crumb:'보강 · 도구 가이드',label:'[선택]',title:'무엇을 언제 쓰나',sub:'용도별 도구 지도',lead:'교재 제58장은 빠르게 바뀌는 도구를 용도별로 정리합니다. 처음에는 한두 도구만 익히고 필요할 때 넓혀 갑니다.',headers:['용도','대표 도구','언제 쓰나'],rows:[['<b>범용 대화·문서</b>','ChatGPT · Claude · Gemini','초안 작성, 요약, 변환, 검토. 민감정보 없는 일.'],['<b>출처 기반 검색</b>','Perplexity · Deep Research','공개 자료 조사, 벤치마킹, 동향 파악.'],['<b>코딩에이전트</b>','Claude Code · Codex · Antigravity','파일을 직접 다루는 자동화와 다중 파일 작업.'],['<b>노코드 웹빌더</b>','Lovable · Bolt · v0 · Replit','코드 없이 웹앱·대시보드 빠른 제작.'],['<b>로컬·RAG·백엔드</b>','Ollama · Chroma · FastAPI · Supabase','폐쇄망, 내부 문서 챗봇, 견고한 LLM 서비스.']],tight:true,note:'민감도가 높을수록 로컬·폐쇄망 도구를 우선하고, 빠른 시도는 노코드, 운영은 직접 코드로 옮깁니다.'},
+{kind:'steps',hr:'SUPPLEMENT · ROADMAP',crumb:'보강 · 실행 계획',label:'[로드맵]',title:'30·60·90일 실행 로드맵',sub:'작게, 그러나 끝까지',lead:'교재 제40장은 교육 후 현업 변화로 이어지기 위한 90일 로드맵을 제안합니다.',steps:[{k:'D+30',t:'습관 만들기',p:'하루 한 번 반복 업무 하나를 AI에게 맡기고 잘 통한 프롬프트를 모읍니다.'},{k:'D+60',t:'자동화 하나 완성',p:'반복적이고 규칙이 분명한 업무 하나를 자동화하고 절감 효과를 기록합니다.'},{k:'D+90',t:'공유와 확산',p:'동료와 공유하고 데스크톱 앱이나 내부 도구 형태로 다듬습니다.'},{k:'다음 분기',t:'조금 더 큰 과제',p:'팀 단위 활용 후보를 정하고 보안·권한·운영 기준을 붙입니다.'}],relay:[{k:'습관',v:'프롬프트 모음'},{k:'완성',v:'자동화 도구'},{k:'공유',v:'팀 적용'},{k:'확산',v:'다음 과제'}],note:'마라토너처럼 일정한 속도로 꾸준히 적용하는 것이 데이터 챔피언으로 가는 길입니다.'},
+{kind:'concept',hr:'SUPPLEMENT · 2 WEEK PLAN',crumb:'보강 · 부서 적용',label:'[실천]',title:'우리 부서 적용',sub:'활용 후보 찾기와 2주 실천안',items:[{t:'반복성',p:'매주·매월 같은 형태로 되풀이되는 일인가를 점검합니다. 반복이 잦을수록 자동화 효과가 큽니다.'},{t:'규칙성',p:'처리 규칙이 비교적 분명한가를 봅니다. 규칙이 또렷할수록 AI가 돕기 쉽습니다.'},{t:'민감도',p:'정보 민감도가 낮은 일부터 시작합니다. 개별 수급자 판정처럼 민감한 일은 보조로만 씁니다.'},{t:'2주 실천',p:'후보 10개를 적고 2주 안에 실제로 시도할 1개를 고릅니다. 작은 성공담을 동료와 공유합니다.'}],note:'교재 제54장의 반복성·규칙성·민감도 기준을 현업 적용 슬라이드로 반영했습니다.',big:true},
+{kind:'table',hr:'SUPPLEMENT · OUTPUT CHECK',crumb:'부록 · 산출물 점검',label:'[점검표]',title:'2일 과정 실습 산출물',sub:'현업 적용의 출발점',lead:'교재 제68장의 점검표를 강의 마지막 확인용으로 배치합니다. 모든 항목을 한 번에 완성할 필요는 없지만 가까운 것부터 끝까지 만들어 봅니다.',headers:['구분','산출물','점검 기준'],rows:[['<b>프롬프트</b>','내 업무 상황을 5요소로 바꾼 프롬프트 1건','역할·맥락·작업·형식·제약 포함'],['<b>자동화</b>','반복 업무 1건 자동화 스크립트와 절감 효과 기록','로컬 실행, 실패 사례 1건 포함'],['<b>데이터분석</b>','전처리·시각화·간단 모델·평가 한 흐름','수치 검증과 한계 명시'],['<b>코딩에이전트</b>','지시→실행→검토 한 사이클 기록','작업 로그와 사람 검토 포함'],['<b>바이브코딩·RAG·웹서비스</b>','정적 페이지, 미니 RAG, 업무용 웹서비스 중 1종 이상','출처·권한·보안 점검 포함'],['<b>적용 계획</b>','2주 안에 시도할 업무 1건','반복성·규칙성·민감도 기준으로 선정']],tight:true,note:'완성한 산출물은 한곳에 모아 두고 동료와 공유하며 발전시킵니다.'},
+{kind:'summary',items:['AI 활용의 출발점은 <b>LLM의 본질과 한계</b>를 이해하는 것이다. 학습 시점 한계는 RAG, 손발 없음은 하네스, 환각은 출처와 사람 검증으로 보완한다.','업무자동화와 데이터분석은 코드를 외우는 일이 아니라 <b>업무 구조를 설명하고 결과를 검증하는 과정</b>이다. 민감 데이터는 로컬에서 처리한다.','코딩에이전트와 바이브코딩은 “지시→실행→검토” 루프를 만든다. 정적 페이지, 백엔드, RAG, 풀스택 서비스를 작게 만들어 볼 수 있다.','공공·복지 업무에서는 <b>데이터 경계, 출처와 근거, 사람의 최종 판단, 기록과 투명성</b>이 활용의 속도를 결정한다.']}
+];
+const phraseFix={
+  'AI는 자격이 아니라 시도가 만든다':'범정부 오피스 사례와 보건복지 업무 변화',
+  '단어들의 조합으로 답한다':'단어 예측 구조와 세 가지 한계',
+  '막연함을 구조로 바꾼다':'분석 질문 설계 프레임워크',
+  '코드를 외우지 않고 업무 구조를 설명한다':'업무 구조 설명과 로컬 실행',
+  '코드를 외우지 않는 자동화':'Python 자동화 작업 흐름',
+  '데이터분석은 태도에서 시작한다':'인지편향·문제정의·분석 질문',
+  '분석의 8할을 차지한다':'수집·정제·형식 통일 절차',
+  '숫자를 이야기로':'문제·원인·근거·행동 보고 구조',
+  '말을 문서로, 초안을 검토본으로':'회의록 구조화와 문서 검토 절차',
+  '작게, 그러나 끝까지':'30·60·90일 적용 일정',
+  '내 업무와 가까운 사례 찾기':'문서·민원·분석·자동화 사례 비교',
+  '홍보 실무에 바로 적용':'콘텐츠 유형별 제작·검토 절차'
+};
+const detail={
+  '공공데이터 포털':['검색어는 기관명·사업명·대상자·지역·연도를 함께 넣습니다. 내려받은 파일은 데이터명, 기준연도, 갱신일, 제공기관을 첫 줄에 기록합니다.','확인 — 컬럼 설명서, 단위, 결측 코드, 이용허락 조건을 먼저 봅니다.'],
+  '파워쿼리':['여러 CSV나 시군별 시트를 폴더 단위로 연결하고, 열 이름 통일·날짜 형식 변환·불필요 열 제거를 클릭 절차로 저장합니다.','예 — 매월 새 파일을 폴더에 넣으면 같은 변환 규칙이 자동으로 다시 적용됩니다.'],
+  '웹크롤링·RSS·API':['웹페이지는 제목·날짜·링크처럼 반복 구조가 있는 항목부터 수집합니다. API는 요청 URL, 인증키, 응답 필드, 호출 제한을 표로 정리합니다.','확인 — robots.txt, 이용 약관, 과도한 요청 제한, 저작권 표시 조건을 확인합니다.'],
+  '이용 조건':['공개 데이터라도 개인정보 재식별 가능성, 상업적 이용 제한, 출처 표시 의무가 있을 수 있습니다. 민감자료는 외부 LLM에 올리지 않습니다.','실행 — 구조와 익명화 샘플만 외부에 설명하고 실제 처리는 로컬·승인 환경에서 합니다.'],
+  '가용성 휴리스틱':['최근 크게 보도된 사례나 기억에 남는 민원 한두 건을 전체 경향으로 착각할 수 있습니다. 기간별·유형별 건수로 먼저 확인합니다.','질문 — 실제로 얼마나 자주 발생했는가, 전체 대비 비중은 얼마인가를 묻습니다.'],
+  '확증 편향':['처음 세운 가설에 맞는 사례만 모으면 분석이 보고서 장식으로 끝납니다. 반대 사례와 예외 유형을 별도로 찾아야 합니다.','확인 — 내 주장과 반대되는 데이터 절편을 하나 이상 확인합니다.'],
+  '복잡성의 환상':['AI, 예측모델, 대시보드라는 표현보다 데이터 출처·전처리 방식·검증 기준이 더 중요합니다. 화려한 용어가 근거를 대신하지 않습니다.','점검 — 어떤 데이터로 어떤 질문에 답했는지 한 문장으로 설명할 수 있어야 합니다.'],
+  'See the Unseen':['민원 적체 시기, 처리 지연 유형, 만족도 하락 구간처럼 담당자의 기억만으로 보기 어려운 패턴을 찾는 단계입니다.','출력 — 발견 내용을 월별 추이, 유형별 비교, 담당부서별 현황으로 나누어 봅니다.'],
+  '기능만 묻기':['업무 데이터를 설명하기 전, 가능한 처리 절차와 필요한 라이브러리를 알아보는 용도입니다. 결과물은 개념 학습용으로 보고 바로 실행하지 않습니다.','예 — 여러 엑셀 합치기, PDF 표 추출, 파일명 일괄 변경 절차를 먼저 묻습니다.'],
+  '시트 구조 묘사':['열 이름, 예시 값, 원하는 집계 기준을 함께 줍니다. 실제 개인정보 대신 홍길동·복지과·85처럼 익명 샘플을 씁니다.','포함 — 시트명, 시작 행, 머리글 위치, 결과 파일 형식을 명시합니다.'],
+  '익명화 샘플':['실제 데이터 일부를 보여 줄수록 정확도는 올라가지만, 이름·연락처·주민번호·주소 등 식별자는 제거해야 합니다.','확인 — 샘플만으로 개인을 다시 알아볼 수 없는지 점검합니다.'],
+  '디버깅 재질의':['에러 메시지, 실행 환경, 입력 파일명, 기대 결과를 함께 붙이면 수정 코드가 빨라집니다. “안 돼”보다 로그 원문이 중요합니다.','출력 — 원인, 수정 코드, 재실행 방법, 재발 방지 체크를 요구합니다.'],
+  '여러 파일 합치기':['파일 패턴, 시트명, 머리글 위치, 제외할 임시 파일 규칙을 먼저 정합니다. 원본은 읽기 전용으로 두고 결과 파일을 새로 만듭니다.','검증 — 파일 수, 합쳐진 행 수, 중복 행 수를 출력하게 합니다.'],
+  '조건별 집계':['부서·유형·월 같은 묶음 기준과 합계·평균·중앙값 같은 계산 기준을 분리해 요청합니다.','출력 — 피벗표와 원자료 대조용 검산 열을 함께 둡니다.'],
+  '서식 일괄 적용':['머리글 색, 열 너비, 숫자 형식, 틀 고정, 인쇄 방향처럼 반복 서식을 코드나 매크로로 고정합니다.','주의 — 서식 적용 전 데이터 값이 바뀌지 않았는지 샘플 행을 비교합니다.'],
+  '보고서 생성':['집계표, 차트, 해석 문장, 생성일, 원자료 경로를 함께 넣어 재현 가능한 보고서를 만듭니다.','검증 — 차트 수치와 표 합계가 일치하는지 자동 점검합니다.'],
+  '기술통계':['평균만 보지 않고 중앙값, 최솟값·최댓값, 사분위범위, 표준편차를 함께 봅니다. 극단값이 평균을 끌어올렸는지 확인합니다.','예 — 처리일 평균이 높으면 긴 꼬리 분포와 특정 유형 집중 여부를 봅니다.'],
+  '모델링':['분류·예측 모델은 학습/검증/테스트를 나누고, 입력 변수와 제외 변수를 문서화합니다.','출력 — 코드보다 데이터 분할 방식, 평가 지표, 한계 설명이 중요합니다.'],
+  '정확도의 함정':['불균형 데이터에서는 정확도만 높아도 위험 사례를 놓칠 수 있습니다. 재현율, 정밀도, 혼동행렬을 함께 봅니다.','확인 — 위험군을 얼마나 놓쳤는지 업무 피해 기준으로 해석합니다.'],
+  '편향 점검':['과거 처리 방식의 편향이 모델에 들어갈 수 있습니다. 특정 지역, 연령, 유형에 불리한 결과가 반복되는지 봅니다.','원칙 — 모델은 참고자료이며 판정과 대외 회신은 사람이 확정합니다.'],
+  '문제':['보고서 첫 문장은 “무엇이 문제인가”를 데이터 단위로 좁혀야 합니다. 막연한 불편이 아니라 기간·대상·지표를 포함합니다.','예 — 2026년 상반기 A유형 민원의 평균 처리일이 전체 평균보다 높다.'],
+  '원인':['원인은 가설로 둡니다. 인력 부족, 절차 지연, 특정 월 집중, 자료 누락처럼 데이터로 확인 가능한 후보를 나눕니다.','확인 — 원인 후보마다 확인할 표와 그래프를 지정합니다.'],
+  '데이터':['핵심 메시지 하나당 그래프 하나를 둡니다. 축 범위, 단위, 분모, 제외값을 표시해야 해석 오류를 줄입니다.','점검 — 그래프가 결론을 과장하지 않는지 원표와 비교합니다.'],
+  '시사점':['시사점은 행동으로 끝나야 합니다. 인력 재배치, 안내문 수정, 처리 단계 단축, 추가 조사처럼 다음 조치가 보여야 합니다.','출력 — 담당, 기한, 점검 지표를 함께 둡니다.'],
+  '입력':['양식 항목명, 필수 여부, 예시 값, 파일 첨부 가능 여부를 정의합니다. 입력 단계가 모호하면 뒤 처리도 불안정합니다.','예 — 이름·부서·출장지·일정·예산 항목과 검증 규칙을 함께 둡니다.'],
+  '처리':['저장, 검증, 계산, 알림, LLM 호출을 구분합니다. 어떤 처리를 서버에서 하고 어떤 처리를 브라우저에서 할지 나눕니다.','확인 — 실패 시 사용자에게 무엇을 보여 줄지 정합니다.'],
+  '출력':['확인 메시지, 결과표, PDF, 이메일, 관리자 목록처럼 사용자가 받는 결과물을 명확히 정합니다.','검증 — 입력값과 출력값이 일치하는지 샘플 케이스로 확인합니다.'],
+  '도구':['FastAPI는 파이썬 자동화·스트리밍 응답에 적합하고, Node·Express는 프론트엔드 생태계와 REST API 구성에 익숙합니다.','선택 — 팀의 운영 경험과 배포 환경을 기준으로 고릅니다.'],
+  'NotebookLM':['정책 문서·지침·회의록을 소스 단위로 묶어 질의응답합니다. 출처가 보이므로 교재 읽기와 회의록 확인에 유리합니다.','주의 — 민감자료 업로드 전 보안 정책을 확인합니다.'],
+  'Ollama':['소형 모델을 내 PC에서 실행해 외부 전송 없이 요약·분류·추출을 합니다. 작은 모델일수록 지시와 출력 형식을 단순하게 둡니다.','예 — 상담 기록을 로컬에서 유형 분류하고 요약합니다.'],
+  'Electron':['HTML·자바스크립트 기반 도구를 데스크톱 앱으로 포장합니다. 서버 없이 더블클릭 실행이 필요한 부서 확산에 맞습니다.','확인 — 설치 경로, 업데이트 방식, 로그 저장 위치를 정합니다.'],
+  'MCP':['부서 DB 조회, 내부 문서 검색 같은 기능을 표준 도구로 노출합니다. 여러 AI 클라이언트가 같은 방식으로 연결할 수 있습니다.','보안 — 도구별 권한 범위와 감사 로그를 설계합니다.'],
+  '반복성':['주기적으로 반복되는 업무일수록 효과 측정이 쉽습니다. 월간 취합, 주간 보고, 반복 문의, 파일명 정리부터 고릅니다.','점수 — 매주 이상 반복이면 우선 후보로 둡니다.'],
+  '규칙성':['입력과 출력 규칙이 분명하면 자동화가 쉽습니다. 예외가 많으면 먼저 예외 유형을 표로 분리합니다.','점수 — 규칙을 3문장 안에 설명할 수 있으면 우선 후보입니다.'],
+  '민감도':['개인정보·미공개 정책·내부 의사결정 자료는 외부 전송을 피합니다. 민감도가 낮은 공개자료 작업부터 시작합니다.','판단 — 민감도가 높으면 어시스트·로컬·폐쇄망 방식을 씁니다.'],
+  '2주 실천':['후보 10개 중 반복성 높고 규칙성 높고 민감도 낮은 1개를 고릅니다. 적용 전후 시간을 기록해야 공유가 쉽습니다.','산출 — 프롬프트, 결과 파일, 실패 사례, 절감 시간을 한 폴더에 모읍니다.']
+};
+function applyPhrases(value){return typeof value==='string' ? (phraseFix[value]||value) : value;}
+function fallbackDetail(section,itemTitle){
+  if(section.startsWith('PART 1')) return ['강의 포인트 — 개념 정의에서 멈추지 않고 보건복지 문서·민원·내부자료 상황으로 바꾸어 설명합니다.','확인 — 어떤 입력 자료, 어떤 보완 도구, 어떤 사람 검증이 필요한지 함께 짚습니다.'];
+  if(section.startsWith('PART 2')) return ['강의 포인트 — 업무 폴더, 파일 구조, 열 이름, 반복 규칙을 말로 설명하면 코드·수식·매크로로 바꿀 수 있습니다.','확인 — 원본 보존, 처리 건수, 오류 로그, 결과 파일 위치를 산출물로 남깁니다.'];
+  if(section.startsWith('PART 3')) return ['강의 포인트 — 분석 질문, 데이터 구조, 전처리 기준, 해석 한계를 한 묶음으로 설명합니다.','확인 — 기간·대상·단위·분모·결측 처리 기준을 확인하고 수치는 원자료와 대조합니다.'];
+  if(section.startsWith('PART 4')) return ['강의 포인트 — 화면·입력·처리·출력·검토 루프를 나누어 지시해야 코딩에이전트 결과가 안정됩니다.','확인 — 실행 로그, 변경 파일, 오류 처리, 모바일 화면, 사람 검토 코멘트를 남깁니다.'];
+  if(section.startsWith('PART 5')) return ['강의 포인트 — 내부 문서, 로컬 모델, 권한, 로그를 함께 설계해야 업무용 서비스로 확장됩니다.','확인 — 출처 표시, 접근 권한, 데이터 반출 여부, 운영 책임자를 함께 점검합니다.'];
+  return ['강의 포인트 — 원문 사례를 실제 업무 장면으로 바꾸어 설명하고, 바로 해 볼 입력값을 제시합니다.','확인 — 산출물, 검증 기준, 보안 주의사항을 한 줄씩 남깁니다.'];
+}
+slides.forEach(s=>{
+  s.title=applyPhrases(s.title); s.sub=applyPhrases(s.sub); s.lead=applyPhrases(s.lead);
+  if(Array.isArray(s.items)){
+    s.items=s.items.map(it=> typeof it==='string' ? applyPhrases(it) : it);
+    if(s.kind==='concept') s.items.forEach(it=>{ if(it && it.t && !String(it.p).includes('boxmore')) { const d=detail[it.t]||fallbackDetail(s.hr||'',it.t); it.p += `<span class="boxmore">${d[0]}</span><span class="boxcheck">${d[1]}</span>`; } });
+  }
+  if(Array.isArray(s.steps)) s.steps.forEach(it=>{ if(detail[it.t] && !String(it.p).includes('boxmore')) it.p += `<span class="boxmore">${detail[it.t][0]}</span>`; });
+});
+deck.innerHTML=slides.map((s,i)=>({cover,divider,concept,table,steps,domains,loop,summary}[s.kind])(s,i+1)).join('');
+document.currentScript.remove();
+})();
+</script>
+<script>
+(function(){
+  var slides=[].slice.call(document.querySelectorAll('.slide'));
+  var editing=false, pidx=0;
+  var bEdit=document.getElementById('btnEdit'), bSave=document.getElementById('btnSave'),
+      bPdf=document.getElementById('btnPdf'), bPlay=document.getElementById('btnPlay'),
+      nav=document.querySelector('.pnav');
+  function setEdit(v){editing=v;document.body.classList.toggle('editing',v);
+    slides.forEach(function(s){s.contentEditable=v;});bEdit.classList.toggle('on',v);bEdit.textContent=v?'편집 끝':'편집';}
+  bEdit.onclick=function(){setEdit(!editing);};
+  bPdf.onclick=function(){window.print();};
+  bSave.onclick=function(){
+    var wasEdit=editing; if(editing)setEdit(false);
+    var clone=document.documentElement.cloneNode(true);
+    clone.querySelectorAll('.slide').forEach(function(s){s.removeAttribute('contenteditable');s.classList.remove('present-current');});
+    clone.querySelector('body').classList.remove('editing','presenting');
+    var html='<!doctype html>\n'+clone.outerHTML;
+    var a=document.createElement('a');
+    a.href=URL.createObjectURL(new Blob([html],{type:'text/html;charset=utf-8'}));
+    a.download=(document.title.replace(/\s+/g,'_')||'lecture')+'_편집본.html';
+    document.body.appendChild(a);a.click();a.remove();
+    if(wasEdit)setEdit(true);
+  };
+  function fit(){var s=Math.min(window.innerWidth/1280,window.innerHeight/720);
+    var cur=document.querySelector('.slide.present-current');if(cur)cur.style.setProperty('--ps',s);}
+  function show(i){pidx=(i+slides.length)%slides.length;
+    slides.forEach(function(s){s.classList.remove('present-current');});
+    slides[pidx].classList.add('present-current');fit();
+    nav.textContent=(pidx+1)+' / '+slides.length+'   ·   ← →  이동,  Esc  종료';}
+  function enter(){if(editing)setEdit(false);document.body.classList.add('presenting');show(pidx);
+    if(document.documentElement.requestFullscreen)document.documentElement.requestFullscreen().catch(function(){});}
+  function exit(){document.body.classList.remove('presenting');
+    slides.forEach(function(s){s.classList.remove('present-current');s.style.removeProperty('--ps');});
+    if(document.fullscreenElement)document.exitFullscreen().catch(function(){});}
+  bPlay.onclick=enter;
+  window.addEventListener('resize',function(){if(document.body.classList.contains('presenting'))fit();});
+  document.addEventListener('keydown',function(e){
+    if(!document.body.classList.contains('presenting'))return;
+    if(e.key==='ArrowRight'||e.key==='PageDown'||e.key===' '){e.preventDefault();show(pidx+1);}
+    else if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();show(pidx-1);}
+    else if(e.key==='Escape'){exit();}
+  });
+  document.addEventListener('click',function(e){
+    if(document.body.classList.contains('presenting')&&!editing){
+      var cur=document.querySelector('.slide.present-current');
+      if(cur&&cur.contains(e.target))show(pidx+1);
+    }
+  });
+})();
+</script>
+<script>/* kg-preview: #<heading> \uc704\uce58\ub85c \uc774\ub3d9 */
+(function(){function norm(t){return (t||'').replace(/\s+/g,'').toLowerCase()}
+function go(){var h=decodeURIComponent(location.hash.slice(1));if(!h)return;var k=norm(h).slice(0,24);if(!k)return;
+var best=null,bl=1e9,els=document.body.querySelectorAll('h1,h2,h3,h4,h5,p,div,span,li,td,text,tspan,section,article');
+for(var i=0;i<els.length;i++){var e=els[i],t=norm(e.textContent);if(t.length<bl&&t.indexOf(k)>-1){best=e;bl=t.length}}
+if(!best)return;var box=best.closest('section,[class*=slide],[class*=page],article')||best;
+box.scrollIntoView({block:'start'});box.style.outline='3px solid #c0504d';box.style.outlineOffset='4px';
+setTimeout(function(){box.style.outline=''},2600)}
+window.addEventListener('load',function(){setTimeout(go,400)});window.addEventListener('hashchange',go)})();</script></body>
+</html>

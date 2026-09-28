@@ -1,0 +1,1045 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head><meta name="robots" content="noindex, nofollow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>제1차시 — AI 에이전트 시대의 개막과 공공 구현 지형도</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;500;600;700;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream-50:#FAF7F1; --cream-100:#F5F0E6; --cream-200:#EEE6D4; --cream-300:#E4D7BC;
+    --ink-900:#1A1511; --ink-800:#2B2018; --ink-700:#3D2E22; --ink-500:#6B5540; --ink-400:#8A7560;
+    --clay-50:#FBEFE4; --clay-100:#F4DBB9; --clay-300:#E3A872; --clay-500:#C17A3B; --clay-600:#A85F25; --clay-700:#8B4A18; --clay-800:#6E3710;
+    --moss-600:#52601E;
+    --rule:rgba(61,46,34,0.15);
+    --rule-strong:rgba(61,46,34,0.45);
+    --serif:'Noto Serif KR', Georgia, serif;
+    --sans:'Pretendard Variable', Pretendard, -apple-system, system-ui, sans-serif;
+    --mono:'JetBrains Mono', ui-monospace, SFMono-Regular, Consolas, monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:#2B2018;color:var(--ink-800);font-family:var(--sans);-webkit-font-smoothing:antialiased}
+  body{
+    background-image:
+      radial-gradient(ellipse at top, rgba(193,122,59,0.06) 0%, transparent 60%),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' seed='3'/%3E%3CfeColorMatrix values='0 0 0 0 0.16  0 0 0 0 0.12  0 0 0 0 0.08  0 0 0 0.035 0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-color:#1A1511;
+  }
+
+  /* ─── deck container ─── */
+  .deck{height:100vh;overflow-y:scroll;scroll-snap-type:y mandatory;scroll-behavior:smooth}
+  .stage{
+    width:100vw;min-height:100vh;
+    display:flex;align-items:center;justify-content:center;
+    scroll-snap-align:start;
+    padding:24px;
+  }
+  .slide{
+    width:1600px;height:900px;
+    background:var(--cream-50);
+    position:relative;overflow:hidden;
+    transform-origin:center center;
+    box-shadow:0 30px 80px -30px rgba(0,0,0,0.6);
+    background-image:
+      radial-gradient(ellipse at top, rgba(193,122,59,0.04) 0%, transparent 60%),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' seed='3'/%3E%3CfeColorMatrix values='0 0 0 0 0.16  0 0 0 0 0.12  0 0 0 0 0.08  0 0 0 0.035 0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  /* ─── header / footer common ─── */
+  .topbar{position:absolute;top:0;left:0;right:0;height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 80px;border-bottom:1px solid var(--rule)}
+  .topbar .mark{display:flex;align-items:center;gap:14px;font-family:var(--mono);font-size:11px;color:var(--clay-700);letter-spacing:0.22em;text-transform:uppercase;font-weight:500}
+  .topbar .mark::before{content:"";display:inline-block;width:18px;height:2px;background:var(--clay-700)}
+  .topbar .meta{font-family:var(--mono);font-size:11px;color:var(--ink-500);letter-spacing:0.18em;text-transform:uppercase}
+
+  .footbar{position:absolute;bottom:0;left:0;right:0;height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 80px;border-top:1px solid var(--rule);background:rgba(244,219,185,0.18)}
+  .footbar .left{font-family:var(--mono);font-size:11px;color:var(--ink-500);letter-spacing:0.18em;text-transform:uppercase}
+  .footbar .left strong{color:var(--ink-900);font-weight:600;margin-right:10px}
+  .footbar .right{font-family:var(--mono);font-size:11px;color:var(--ink-500);letter-spacing:0.18em;text-transform:uppercase;display:flex;align-items:center;gap:18px}
+  .footbar .pageno{color:var(--ink-900);font-weight:600;font-family:var(--serif);font-size:15px;letter-spacing:0}
+
+  /* ─── headline block (used most slides) ─── */
+  .head{position:absolute;left:80px;right:80px;top:96px}
+  .eyebrow{display:inline-flex;align-items:center;gap:14px;font-family:var(--mono);font-size:11px;color:var(--clay-700);letter-spacing:0.22em;text-transform:uppercase;font-weight:500;margin-bottom:18px}
+  .eyebrow::before{content:"";display:inline-block;width:36px;height:1px;background:var(--clay-700)}
+  h1.display{font-family:var(--serif);font-weight:600;font-size:54px;line-height:1.06;letter-spacing:-0.04em;color:var(--ink-900)}
+  h1.display em{font-style:normal;color:var(--clay-700)}
+  .lede{font-family:var(--sans);font-size:17px;color:var(--ink-500);margin-top:14px;max-width:900px;line-height:1.55}
+  .head-rule{position:absolute;left:80px;right:80px;top:268px;height:1px;background:var(--rule)}
+
+  /* body region */
+  .body{position:absolute;left:80px;right:80px;top:300px;bottom:80px}
+
+  /* section header inside body */
+  .sec{display:flex;align-items:center;gap:12px;font-family:var(--mono);font-size:11px;color:var(--ink-700);letter-spacing:0.22em;text-transform:uppercase;font-weight:600;margin-bottom:14px}
+  .sec::before{content:"";display:inline-block;width:4px;height:14px;background:var(--ink-900)}
+
+  /* utility */
+  .mono{font-family:var(--mono)}
+  .serif{font-family:var(--serif)}
+  .label{font-family:var(--mono);font-size:10.5px;color:var(--ink-500);letter-spacing:0.2em;text-transform:uppercase;font-weight:600}
+
+  /* callouts */
+  .callout-cream{background:var(--cream-100);border-left:3px solid var(--clay-700);padding:24px 28px}
+  .callout-cream .label{color:var(--clay-700);margin-bottom:10px;display:block}
+  .callout-cream .head{font-family:var(--serif);font-size:22px;line-height:1.3;color:var(--ink-900);font-weight:600;letter-spacing:-0.02em;position:static;left:auto;right:auto;top:auto}
+  .callout-cream p{font-size:14px;color:var(--ink-700);margin-top:8px;line-height:1.6}
+
+  .callout-dark{background:var(--ink-900);color:var(--cream-100);padding:28px 32px;position:relative;overflow:hidden}
+  .callout-dark::before{content:"";position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n2'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' seed='5'/%3E%3CfeColorMatrix values='0 0 0 0 1  0 0 0 0 0.92  0 0 0 0 0.78  0 0 0 0.06 0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n2)'/%3E%3C/svg%3E");pointer-events:none;opacity:0.7}
+  .callout-dark > *{position:relative}
+  .callout-dark .label{color:var(--clay-300);margin-bottom:12px;display:block}
+  .callout-dark .head{font-family:var(--serif);font-size:24px;line-height:1.3;color:var(--cream-50);font-weight:600;letter-spacing:-0.02em;position:static;left:auto;right:auto;top:auto}
+  .callout-dark p{font-size:14px;color:var(--cream-200);margin-top:10px;line-height:1.65;opacity:0.85}
+
+  /* nav dots */
+  .deck-nav{position:fixed;right:18px;top:50%;transform:translateY(-50%);z-index:50;display:flex;flex-direction:column;gap:8px}
+  .deck-nav a{width:8px;height:8px;border-radius:50%;background:rgba(250,247,241,0.25);transition:all .3s;display:block}
+  .deck-nav a:hover,.deck-nav a.active{background:var(--clay-300);transform:scale(1.3)}
+  .deck-controls{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:50;font-family:var(--mono);font-size:10px;color:rgba(250,247,241,0.5);letter-spacing:0.22em;text-transform:uppercase}
+
+  /* SLIDE 1 — COVER */
+  .cover{padding:80px}
+  .cover .corner-tl{position:absolute;top:80px;left:80px;display:flex;align-items:center;gap:14px;font-family:var(--mono);font-size:11px;color:var(--clay-700);letter-spacing:0.22em;text-transform:uppercase}
+  .cover .corner-tl::before{content:"";width:32px;height:1px;background:var(--clay-700)}
+  .cover .corner-tr{position:absolute;top:80px;right:80px;font-family:var(--mono);font-size:11px;color:var(--ink-500);letter-spacing:0.22em;text-transform:uppercase}
+  .cover .cover-grid{position:absolute;top:240px;left:80px;right:80px;bottom:160px;display:grid;grid-template-columns:1fr 480px;gap:80px}
+  .cover h1{font-family:var(--serif);font-weight:600;font-size:96px;line-height:1.0;letter-spacing:-0.045em;color:var(--ink-900)}
+  .cover h1 em{font-style:normal;color:var(--clay-700);display:block}
+  .cover .sub{margin-top:28px;font-family:var(--serif);font-size:24px;color:var(--ink-700);font-weight:500;letter-spacing:-0.02em;line-height:1.4}
+  .cover .body-p{margin-top:32px;font-size:16px;color:var(--ink-500);line-height:1.7;max-width:560px}
+  .cover .meta-card{align-self:end;border:1px solid var(--rule);background:var(--cream-50);padding:32px}
+  .cover .meta-card .row{padding:14px 0;border-bottom:1px solid var(--rule);display:flex;justify-content:space-between;align-items:baseline}
+  .cover .meta-card .row:last-child{border-bottom:0}
+  .cover .meta-card .k{font-family:var(--mono);font-size:10.5px;color:var(--ink-500);letter-spacing:0.2em;text-transform:uppercase}
+  .cover .meta-card .v{font-family:var(--serif);font-size:18px;color:var(--ink-900);font-weight:600}
+  .cover .corner-bl{position:absolute;bottom:80px;left:80px;font-family:var(--mono);font-size:11px;color:var(--ink-500);letter-spacing:0.22em;text-transform:uppercase}
+  .cover .corner-br{position:absolute;bottom:80px;right:80px;font-family:var(--serif);font-size:14px;color:var(--ink-700);font-style:italic}
+  .cover .vol-num{position:absolute;top:200px;right:80px;font-family:var(--serif);font-size:200px;line-height:1;color:var(--clay-700);font-weight:300;opacity:0.12;letter-spacing:-0.06em;pointer-events:none}
+
+  /* SLIDE: TOC / Learning Objectives */
+  .toc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--rule);border:1px solid var(--rule);height:100%}
+  .toc-cell{background:var(--cream-50);padding:36px 32px;display:flex;flex-direction:column;justify-content:space-between}
+  .toc-cell .num{font-family:var(--mono);font-size:11px;color:var(--clay-700);letter-spacing:0.22em;text-transform:uppercase;font-weight:600}
+  .toc-cell h3{font-family:var(--serif);font-size:30px;line-height:1.15;letter-spacing:-0.03em;color:var(--ink-900);font-weight:600;margin-top:18px}
+  .toc-cell p{font-size:14px;color:var(--ink-500);line-height:1.65;margin-top:14px}
+  .toc-cell .tag{font-family:var(--mono);font-size:10.5px;color:var(--ink-700);letter-spacing:0.2em;text-transform:uppercase;border-top:1px solid var(--rule);padding-top:14px}
+  .toc-cell.dark{background:var(--ink-900);color:var(--cream-100)}
+  .toc-cell.dark .num{color:var(--clay-300)}
+  .toc-cell.dark h3{color:var(--cream-50)}
+  .toc-cell.dark p{color:var(--cream-200);opacity:0.8}
+  .toc-cell.dark .tag{color:var(--clay-300);border-top-color:rgba(244,219,185,0.2)}
+
+  /* SLIDE: Hero stat */
+  .hero-grid{display:grid;grid-template-columns:1fr 1fr;height:100%;gap:0}
+  .hero-left{padding-right:60px;display:flex;flex-direction:column;justify-content:space-between;border-right:1px solid var(--rule);padding-right:60px}
+  .hero-num{font-family:var(--serif);font-size:200px;line-height:0.95;font-weight:600;color:var(--ink-900);letter-spacing:-0.06em}
+  .hero-num em{font-style:normal;color:var(--clay-700);font-size:140px}
+  .hero-num .unit{font-size:32px;color:var(--ink-500);font-weight:400;margin-left:8px;letter-spacing:0}
+  .hero-cap{font-size:14px;color:var(--ink-500);line-height:1.7;margin-top:24px;max-width:520px}
+  .hero-right{padding-left:60px;display:flex;flex-direction:column;gap:24px}
+  .hero-right .big-q{font-family:var(--serif);font-size:34px;line-height:1.25;color:var(--ink-900);font-weight:500;letter-spacing:-0.03em}
+  .hero-right .big-q em{font-style:italic;color:var(--clay-700)}
+  .stat-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--rule);border:1px solid var(--rule);margin-top:auto}
+  .stat-strip .cell{background:var(--cream-50);padding:20px}
+  .stat-strip .cell .l{font-family:var(--mono);font-size:10px;color:var(--clay-700);letter-spacing:0.2em;text-transform:uppercase;font-weight:600}
+  .stat-strip .cell .n{font-family:var(--serif);font-size:36px;line-height:1;color:var(--ink-900);margin-top:8px;font-weight:600;letter-spacing:-0.03em}
+  .stat-strip .cell .d{font-size:11px;color:var(--ink-500);margin-top:6px;line-height:1.5}
+
+  /* TABLE comparison */
+  table.compare{width:100%;border-collapse:collapse;font-size:14px}
+  table.compare th,table.compare td{text-align:left;padding:16px 18px;vertical-align:top;border-bottom:1px solid var(--rule)}
+  table.compare thead th{font-family:var(--mono);font-size:10.5px;color:var(--ink-500);letter-spacing:0.2em;text-transform:uppercase;font-weight:600;border-bottom:1px solid var(--ink-900);padding-bottom:12px;padding-top:0}
+  table.compare tbody td:first-child{font-family:var(--serif);font-weight:600;color:var(--ink-900);font-size:18px;letter-spacing:-0.02em;width:160px}
+  table.compare tbody td .pill{display:inline-block;font-family:var(--mono);font-size:10px;color:var(--clay-700);background:var(--clay-50);padding:3px 8px;letter-spacing:0.12em;text-transform:uppercase;font-weight:600;border-radius:2px;margin-right:4px;margin-top:4px}
+  table.compare tr.highlight{background:rgba(244,219,185,0.25)}
+
+  /* DIAGRAM container */
+  .diagram-wrap{display:grid;grid-template-columns:1fr 360px;gap:48px;height:100%}
+  .diagram-svg{background:var(--cream-100);border:1px solid var(--rule);padding:32px;display:flex;align-items:center;justify-content:center}
+  .diagram-side{display:flex;flex-direction:column;gap:20px}
+
+  /* 2-col comparison */
+  .twoc{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--rule);border:1px solid var(--rule);height:100%}
+  .twoc .col{padding:32px;display:flex;flex-direction:column;gap:18px;background:var(--cream-50)}
+  .twoc .col.dark{background:var(--ink-900);color:var(--cream-100)}
+  .twoc .col h3{font-family:var(--serif);font-size:32px;letter-spacing:-0.03em;color:var(--ink-900);font-weight:600}
+  .twoc .col.dark h3{color:var(--cream-50)}
+  .twoc .col .role{font-family:var(--mono);font-size:10.5px;color:var(--clay-700);letter-spacing:0.2em;text-transform:uppercase;font-weight:600}
+  .twoc .col.dark .role{color:var(--clay-300)}
+  .twoc .col p{font-size:14px;line-height:1.7;color:var(--ink-700)}
+  .twoc .col.dark p{color:var(--cream-200);opacity:0.85}
+  .twoc .col .specs{margin-top:auto;display:flex;flex-direction:column;gap:8px;border-top:1px solid var(--rule);padding-top:16px}
+  .twoc .col.dark .specs{border-top-color:rgba(244,219,185,0.2)}
+  .twoc .col .specs .row{display:flex;justify-content:space-between;font-size:12px;font-family:var(--mono)}
+  .twoc .col .specs .row .k{color:var(--ink-500);letter-spacing:0.1em;text-transform:uppercase}
+  .twoc .col .specs .row .v{color:var(--ink-900);font-weight:600}
+  .twoc .col.dark .specs .row .k{color:var(--clay-300)}
+  .twoc .col.dark .specs .row .v{color:var(--cream-50)}
+  .twoc .chip{display:inline-block;font-family:var(--mono);font-size:10.5px;padding:5px 9px;border:1px solid var(--rule-strong);color:var(--ink-700);letter-spacing:0.15em;text-transform:uppercase;border-radius:2px;margin:0 4px 4px 0}
+  .twoc .col.dark .chip{border-color:rgba(244,219,185,0.3);color:var(--cream-200)}
+
+  /* QUADRANT 2x2 */
+  .quad{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:1px;background:var(--rule);border:1px solid var(--rule);height:100%}
+  .quad .qcell{background:var(--cream-50);padding:30px;display:flex;flex-direction:column;justify-content:space-between;position:relative}
+  .quad .qcell.gray{background:var(--cream-100)}
+  .quad .qcell.dark{background:var(--ink-900);color:var(--cream-100)}
+  .quad .qnum{font-family:var(--mono);font-size:11px;letter-spacing:0.22em;color:var(--clay-700);font-weight:600;text-transform:uppercase}
+  .quad .dark .qnum{color:var(--clay-300)}
+  .quad h3{font-family:var(--serif);font-size:28px;letter-spacing:-0.03em;color:var(--ink-900);font-weight:600;margin-top:14px;line-height:1.2}
+  .quad .dark h3{color:var(--cream-50)}
+  .quad p{font-size:13.5px;line-height:1.65;color:var(--ink-700);margin-top:10px}
+  .quad .dark p{color:var(--cream-200);opacity:0.85}
+  .quad .qfoot{font-family:var(--mono);font-size:10.5px;color:var(--ink-500);letter-spacing:0.18em;text-transform:uppercase;border-top:1px solid var(--rule);padding-top:12px;margin-top:auto}
+  .quad .dark .qfoot{color:var(--clay-300);border-top-color:rgba(244,219,185,0.2)}
+  .quad .axis-x{position:absolute;left:80px;right:80px;bottom:36px;font-family:var(--mono);font-size:10.5px;color:var(--ink-400);letter-spacing:0.22em;text-transform:uppercase;display:flex;justify-content:space-between;pointer-events:none}
+  .quad-host{position:relative}
+  .quad-host .axis-y-l{position:absolute;left:36px;top:50%;transform:translateY(-50%) rotate(-90deg);font-family:var(--mono);font-size:10.5px;color:var(--ink-400);letter-spacing:0.22em;text-transform:uppercase}
+
+  /* TIMELINE */
+  .tl-wrap{height:100%;display:flex;flex-direction:column;justify-content:space-between;gap:30px}
+  .tl-row{display:grid;grid-template-columns:repeat(8,1fr);gap:0;position:relative}
+  .tl-row::before{content:"";position:absolute;left:6%;right:6%;top:13px;height:1px;background:var(--rule-strong);z-index:0}
+  .tl-node{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:8px;padding:0 6px}
+  .tl-node .dot{width:26px;height:26px;border-radius:50%;background:var(--cream-50);border:2px solid var(--ink-900);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:11px;font-weight:600;color:var(--ink-900)}
+  .tl-node.active .dot{background:var(--ink-900);color:var(--cream-50)}
+  .tl-node h4{font-family:var(--serif);font-size:15px;letter-spacing:-0.02em;color:var(--ink-900);font-weight:600;text-align:center;line-height:1.25;margin-top:6px;min-height:38px}
+  .tl-node .sub{font-family:var(--mono);font-size:9.5px;color:var(--ink-500);letter-spacing:0.15em;text-transform:uppercase;text-align:center;margin-top:4px}
+  .tl-principles{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:var(--rule);border:1px solid var(--rule)}
+  .tl-principles .p{padding:20px 22px;background:var(--cream-100)}
+  .tl-principles .p.dark{background:var(--ink-900);color:var(--cream-100)}
+  .tl-principles .p .l{font-family:var(--mono);font-size:10px;color:var(--clay-700);letter-spacing:0.22em;text-transform:uppercase;font-weight:600}
+  .tl-principles .p.dark .l{color:var(--clay-300)}
+  .tl-principles .p h5{font-family:var(--serif);font-size:18px;letter-spacing:-0.02em;color:var(--ink-900);font-weight:600;margin-top:8px;line-height:1.3}
+  .tl-principles .p.dark h5{color:var(--cream-50)}
+  .tl-principles .p p{font-size:12.5px;color:var(--ink-700);margin-top:6px;line-height:1.55}
+  .tl-principles .p.dark p{color:var(--cream-200);opacity:0.85}
+
+  /* CANVAS preview (6-cell) */
+  .canvas6{display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:1fr 1fr;gap:1px;background:var(--rule);border:1px solid var(--rule);height:100%}
+  .canvas6 .c{background:var(--cream-50);padding:24px 22px;display:flex;flex-direction:column;gap:8px;position:relative}
+  .canvas6 .c .num{font-family:var(--mono);font-size:11px;color:var(--clay-700);letter-spacing:0.22em;text-transform:uppercase;font-weight:600}
+  .canvas6 .c h4{font-family:var(--serif);font-size:22px;letter-spacing:-0.025em;color:var(--ink-900);font-weight:600;line-height:1.2}
+  .canvas6 .c p{font-size:13px;color:var(--ink-700);line-height:1.6}
+  .canvas6 .c .ex{font-family:var(--mono);font-size:11px;color:var(--ink-500);background:var(--cream-100);padding:8px 10px;margin-top:auto;letter-spacing:0.05em;line-height:1.5}
+
+  /* CHECKLIST */
+  .chk-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;height:100%}
+  .chk-col h4{font-family:var(--mono);font-size:11px;color:var(--clay-700);letter-spacing:0.22em;text-transform:uppercase;font-weight:600;margin-bottom:18px;padding-bottom:12px;border-bottom:1px solid var(--rule)}
+  .chk-item{display:grid;grid-template-columns:24px 1fr auto;gap:14px;padding:14px 0;border-bottom:1px solid var(--rule);align-items:start}
+  .chk-item .box{width:18px;height:18px;border:1.5px solid var(--ink-900);margin-top:2px}
+  .chk-item .name{font-family:var(--serif);font-size:16px;color:var(--ink-900);font-weight:600;letter-spacing:-0.01em}
+  .chk-item .desc{font-size:12.5px;color:var(--ink-500);margin-top:3px;line-height:1.55}
+  .chk-item .where{font-family:var(--mono);font-size:10px;color:var(--clay-700);letter-spacing:0.18em;text-transform:uppercase;font-weight:600;align-self:start;margin-top:4px}
+
+  /* HANDS-ON steps + code */
+  .hands-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;height:100%}
+  .step{display:grid;grid-template-columns:32px 1fr;gap:16px;margin-bottom:22px}
+  .step .sn{width:28px;height:28px;background:var(--ink-900);color:var(--cream-50);font-family:var(--mono);font-size:12px;font-weight:600;display:flex;align-items:center;justify-content:center}
+  .step .sb h5{font-family:var(--serif);font-size:18px;color:var(--ink-900);font-weight:600;letter-spacing:-0.02em;line-height:1.3}
+  .step .sb p{font-size:13px;color:var(--ink-700);margin-top:6px;line-height:1.6}
+  .codeblock{background:var(--ink-900);color:var(--cream-100);padding:24px 26px;font-family:var(--mono);font-size:13px;line-height:1.75;border-left:3px solid var(--clay-500);height:100%;overflow:hidden;position:relative}
+  .codeblock::before{content:"";position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n3'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' seed='7'/%3E%3CfeColorMatrix values='0 0 0 0 1  0 0 0 0 0.92  0 0 0 0 0.78  0 0 0 0.05 0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n3)'/%3E%3C/svg%3E");pointer-events:none;opacity:0.7}
+  .codeblock > *{position:relative}
+  .codeblock .clabel{font-size:10px;letter-spacing:0.22em;color:var(--clay-300);text-transform:uppercase;font-weight:600;margin-bottom:14px;display:block}
+  .codeblock .com{color:var(--clay-300);opacity:0.7}
+  .codeblock .kw{color:var(--clay-300);font-weight:600}
+  .codeblock .str{color:#c8a878}
+  .codeblock pre{white-space:pre-wrap;font-family:inherit}
+
+  /* Pitfall */
+  .pit-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;height:100%}
+  .pit{background:var(--cream-100);border-left:3px solid var(--ink-900);padding:24px 28px;margin-bottom:18px}
+  .pit .l{font-family:var(--mono);font-size:10.5px;color:var(--ink-900);letter-spacing:0.22em;text-transform:uppercase;font-weight:700;display:flex;align-items:center;gap:8px}
+  .pit .l::before{content:"";display:inline-block;width:14px;height:14px;background:var(--ink-900)}
+  .pit h5{font-family:var(--serif);font-size:19px;color:var(--ink-900);font-weight:600;letter-spacing:-0.02em;margin-top:10px;line-height:1.3}
+  .pit p{font-size:13px;color:var(--ink-700);margin-top:8px;line-height:1.65}
+  .pit .fix{font-family:var(--mono);font-size:11px;color:var(--clay-700);letter-spacing:0.15em;text-transform:uppercase;font-weight:600;margin-top:10px;display:block}
+
+  /* TAKEAWAYS final */
+  .take{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:var(--rule);border:1px solid var(--rule);height:65%}
+  .take .t{background:var(--cream-50);padding:30px;display:flex;flex-direction:column;gap:14px}
+  .take .t .num{font-family:var(--serif);font-size:60px;line-height:1;color:var(--clay-700);font-weight:600;letter-spacing:-0.04em;opacity:0.5}
+  .take .t h4{font-family:var(--serif);font-size:24px;color:var(--ink-900);font-weight:600;letter-spacing:-0.03em;line-height:1.25}
+  .take .t p{font-size:13.5px;color:var(--ink-700);line-height:1.65;margin-top:auto}
+  .next-bar{margin-top:32px;background:var(--ink-900);padding:24px 32px;color:var(--cream-100);display:grid;grid-template-columns:auto 1fr auto;gap:32px;align-items:center;position:relative;overflow:hidden}
+  .next-bar::before{content:"";position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n4'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' seed='9'/%3E%3CfeColorMatrix values='0 0 0 0 1  0 0 0 0 0.92  0 0 0 0 0.78  0 0 0 0.05 0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n4)'/%3E%3C/svg%3E");opacity:0.6;pointer-events:none}
+  .next-bar > *{position:relative}
+  .next-bar .l{font-family:var(--mono);font-size:11px;color:var(--clay-300);letter-spacing:0.22em;text-transform:uppercase;font-weight:600}
+  .next-bar h5{font-family:var(--serif);font-size:22px;color:var(--cream-50);font-weight:500;letter-spacing:-0.02em;line-height:1.3}
+  .next-bar h5 em{font-style:normal;color:var(--clay-300)}
+  .next-bar .arrow{font-family:var(--serif);font-size:42px;color:var(--clay-300);line-height:1}
+
+  @media print{
+    body{background:white}
+    .deck{height:auto;overflow:visible;scroll-snap-type:none}
+    .stage{page-break-after:always;min-height:auto;padding:0}
+    .slide{box-shadow:none}
+    .deck-nav,.deck-controls{display:none}
+  }
+</style>
+</head>
+<body>
+<div class="deck" id="deck">
+
+<!-- ═══════════════════ SLIDE 1 — COVER ═══════════════════ -->
+<div class="stage"><div class="slide cover" data-title="Cover">
+  <div class="corner-tl">전문인재 양성과정 · 공공 AI 거점리더</div>
+  <div class="corner-tr">Module 01 / Session 01</div>
+  <div class="vol-num">01</div>
+  <div class="cover-grid">
+    <div>
+      <h1>AI 에이전트 시대의<br>개막과 <em>공공 구현 지형도</em></h1>
+      <div class="sub">공공 AI 거점리더의<br>기술 지형과 환경 세팅</div>
+      <p class="body-p">소버린 AI·공공 공통기반·내부망 결합이라는 거시 전략의 시대에, 거점리더는 단순한 사용자가 아니라 ‘비판적으로 함께 설계하는 주체’로 출발한다. 첫 시간은 우리가 서 있는 자리를 정확히 측량하는 것에서 시작한다.</p>
+    </div>
+    <div class="meta-card">
+      <div class="row"><span class="k">Course</span><span class="v">공공 AI 거점리더</span></div>
+      <div class="row"><span class="k">Module</span><span class="v">01 — Orientation</span></div>
+      <div class="row"><span class="k">Session</span><span class="v">01 / 08</span></div>
+      <div class="row"><span class="k">Duration</span><span class="v">3 hours</span></div>
+      <div class="row"><span class="k">Format</span><span class="v">강의 · 실습 · 토론</span></div>
+      <div class="row"><span class="k">Edition</span><span class="v">2026 · v1.0</span></div>
+    </div>
+  </div>
+  <div class="corner-bl">— Editorial Warm Edition</div>
+  <div class="corner-br">“기술을 많이 써본 사람만이, 무엇이 가능한지 판단할 수 있다.”</div>
+</div></div>
+
+<!-- ═══════════════════ SLIDE 2 — 학습 목표 ═══════════════════ -->
+<div class="stage"><div class="slide" data-title="Objectives">
+  <div class="topbar"><div class="mark">Module 01 · Orientation</div><div class="meta">전문인재 양성과정 · 공공 AI 거점리더</div></div>
+  <div class="head" style="top:96px">
+    <div class="eyebrow">Session 01 · Learning Objectives</div>
+    <h1 class="display">이 시간에 우리가 도달해야 할 <em>세 개의 좌표</em>.</h1>
+    <p class="lede">‘AI를 잘 쓰는 사람’과 ‘AI를 잘 확산시키는 사람’ 사이에는 분명한 거리가 있다. 1차시는 그 거리를 측정하는 자(尺)를 손에 쥐는 시간이다.</p>
+  </div>
+  <div class="head-rule"></div>
+  <div class="body">
+    <div class="toc-grid">
+      <div class="toc-cell">
+        <div>
+          <div class="num">01 — Orient</div>
+          <h3>지형을 읽는다</h3>
+          <p>프론티어 모델 3강(ChatGPT·Claude·Gemini)의 강점과 한계를 직접 비교하고, 소버린 AI·공공 공통기반이 놓일 자리를 가늠한다.</p>
+        </div>
+        <div class="tag">Outcome — 비교 감식안</div>
+      </div>
+      <div class="toc-cell">
+        <div>
+          <div class="num">02 — Position</div>
+          <h3>나의 자리를 정의한다</h3>
+          <p>‘일반 사용자’와 ‘거점리더’의 행동 스펙트럼을 구분하고, 부서로 돌아갔을 때 작동시킬 수 있는 역할을 그려본다.</p>
+        </div>
+        <div class="tag">Outcome — 역할 정의서</div>
+      </div>
+      <div class="toc-cell dark">
+        <div>
+          <div class="num">03 — Equip</div>
+          <h3>장비를 갖춘다</h3>
+          <p>외부망/내부망 분리 환경에서도 학습이 끊기지 않도록 계정·도구·전송 동선을 1차시 안에 모두 정렬한다.</p>
+        </div>
+        <div class="tag">Outcome — 환경 세팅 완료</div>
+      </div>
+    </div>
+  </div>
+  <div class="footbar">
+    <div class="left"><strong>Module 01</strong>오리엔테이션 — AI 에이전트 시대의 개막과 공공 구현 지형도</div>
+    <div class="right"><span>Session 01</span><span class="pageno">02 / 14</span></div>
+  </div>
+</div></div>
+
+<!-- ═══════════════════ SLIDE 3 — Hero stat (왜 지금인가) ═══════════════════ -->
+<div class="stage"><div class="slide" data-title="Why Now">
+  <div class="topbar"><div class="mark">Module 01 · Orientation</div><div class="meta">Why Now — 시장 신호</div></div>
+  <div class="head" style="top:96px">
+    <div class="eyebrow">Unit 01 · 우리는 어디에 서 있는가</div>
+    <h1 class="display">2026년의 한 분기 동안, 공공이 더 이상<br><em>“관망”할 수 없게 만든 숫자들.</em></h1>
+    <p class="lede">에이전트는 더 이상 데모가 아니다. 모델 수·실사용 비중·정부 투자가 모두 같은 방향을 가리킨다.</p>
+  </div>
+  <div class="head-rule"></div>
+  <div class="body">
+    <div class="hero-grid">
+      <div class="hero-left">
+        <div>
+          <div class="hero-num">1.6<em>M</em></div>
+          <div class="label" style="margin-top:14px">Hugging Face Models · 누적</div>
+          <p class="hero-cap">2025년 5월 기준 누적 등록 모델 수. 2024년 동기 대비 약 2배. ‘모델은 더 이상 희소 자원이 아니다’라는 사실이 생태계의 새 출발점이다.</p>
+        </div>
+        <div>
+          <div class="hero-num" style="font-size:120px"><em>78%</em></div>
+          <div class="label" style="margin-top:10px">Frontier 모델 · 멀티모달 지원 비율</div>
+          <p class="hero-cap" style="max-width:460px">텍스트 단일 입력 시대의 종료. 이미지·문서·음성·코드가 한 모델 안에서 흐르고, ‘에이전트’는 그 위에 얹힌 자연스러운 다음 층위다.</p>
+        </div>
+      </div>
+      <div class="hero-right">
+        <div class="callout-dark">
+          <span class="label">Field Note · 2026 Q1</span>
+          <h3 class="head">“이제 사람은 ‘무엇을 할지’만 정하면, ‘어떻게 할지는’ AI가 해결한다.”</h3>
+          <p>도구를 익히는 데 시간을 들이던 시대가 닫히고, 도구가 사용자의 아이디어를 따라오는 시대가 열렸다. 공공도 예외가 아니다 — 다만, 망 분리·결재선·감사 추적이라는 추가 좌표가 있을 뿐이다.</p>
+        </div>
+        <div class="stat-strip">
+          <div class="cell"><div class="l">Sovereign AI</div><div class="n">8조+</div><div class="d">2025–27 정부 투자 누적 (예정)</div></div>
+          <div class="cell"><div class="l">공공 챗봇</div><div class="n">230+</div><div class="d">전국 운영 중 LLM 기반 행정봇</div></div>
+          <div class="cell"><div class="l">에이전트화</div><div class="n">~3년</div><div class="d">대다수 행정업무 자동화 도래 시점</div></div>
+        </div>
+        <div class="label" style="margin-top:8px">Source · NIA, MOIS 2025 백서 종합</div>
+      </div>
+    </div>
+  </div>
+  <div class="footbar">
+    <div class="left"><strong>Module 01</strong>Unit 01 · 우리는 어디에 서 있는가</div>
+    <div class="right"><span>Session 01</span><span class="pageno">03 / 14</span></div>
+  </div>
+</div></div>
+
+<!-- ═══════════════════ SLIDE 4 — 프론티어 모델 비교 표 ═══════════════════ -->
+<div class="stage"><div class="slide" data-title="Frontier Models">
+  <div class="topbar"><div class="mark">Module 01 · Orientation</div><div class="meta">Frontier Models · 비교 지형도</div></div>
+  <div class="head" style="top:96px">
+    <div class="eyebrow">Unit 01 · 모델 지형도</div>
+    <h1 class="display">세 개의 프론티어. 한 줄로 정리할 수 있어야<br><em>국가 전략을 비판할 수 있다.</em></h1>
+    <p class="lede">모델의 ‘성격’을 손끝으로 알아야, 공공 공통기반이 어디를 포기하고 어디를 지켜야 하는지 말할 수 있다.</p>
+  </div>
+  <div class="head-rule"></div>
+  <div class="body">
+    <div class="sec">Comparative Atlas — 2026.04 기준</div>
+    <table class="compare">
+      <thead>
+        <tr>
+          <th></th>
+          <th>대표 강점</th>
+          <th>약점 / 환각 패턴</th>
+          <th>데이터 흐름 · 프라이버시</th>
+          <th>공공 적합 영역</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>ChatGPT<div class="label" style="margin-top:4px;color:var(--ink-500)">OpenAI · GPT-5</div></td>
+          <td>가장 넓은 사용자 기반·생태계, 도구·플러그인 풍부, 일반 업무 적응 속도 1위<span class="pill">생태계</span></td>
+          <td>장문 일관성 약함. 사실 단정형 답변에 환각 빈도 높음.</td>
+          <td>미국 서버 기본. Enterprise 플랜에서 학습 비활용·SOC2 준수.</td>
+          <td>일반 문서 초안, 회의록, 시민 응대 톤 변환</td>
+        </tr>
+        <tr class="highlight">
+          <td>Claude<div class="label" style="margin-top:4px;color:var(--ink-500)">Anthropic · Opus 4.6</div></td>
+          <td>긴 문서·법령 처리, 추론 정합성, 코드 품질, 안전성 정렬<span class="pill">긴 문서</span><span class="pill">코드</span></td>
+          <td>창의적 일탈에 보수적. 일부 한국어 관용표현 약함.</td>
+          <td>미국 서버. Zero-Data-Retention 계약 가능. API 단에서 비학습 보장.</td>
+          <td>법령 검토, 기술 보고서, 에이전트·자동화 설계</td>
+        </tr>
+        <tr>
+          <td>Gemini<div class="label" style="margin-top:4px;color:var(--ink-500)">Google · 2.5 Pro</div></td>
+          <td>워크스페이스 통합, 멀티모달 처리량, 1M+ 컨텍스트 윈도우<span class="pill">멀티모달</span></td>
+          <td>응답 일관성 변동. 복잡 추론은 단계별 분해 필요.</td>
+          <td>Google Cloud 정책. Workspace Enterprise 시 학습 비활용.</td>
+          <td>대용량 자료 요약, 영상·이미지 결합 분석</td>
+        </tr>
+        <tr>
+          <td>국내·소버린<div class="label" style="margin-top:4px;color:var(--ink-500)">HyperCLOVA X · K-AI 등</div></td>
+          <td>한국어 자연도, 국내 데이터 거버넌스 친화, 행정 도메인 파인튜닝 여지<span class="pill">한국어</span><span class="pill">국내망</span></td>
+          <td>최신성·도구 호출·코드 능력은 프론티어 대비 보수적.</td>
+          <td>국내 데이터센터, 공공 공통기반 결합 전제로 설계.</td>
+          <td>온나라 결합, 민원 분류, 내부 문서 RAG</td>
+        </tr>
+      </tbody>
+    </table>
+    <p style="font-family:var(--mono);font-size:11px;color:var(--ink-500);letter-spacing:0.15em;text-transform:uppercase;margin-top:18px">Source · 각 사 공식 모델 카드 · 2026.04 종합. 강의장에서 직접 비교 실습 진행.</p>
+  </div>
+  <div class="footbar">
+    <div class="left"><strong>Module 01</strong>Unit 01 · 모델 지형도 — 프론티어 3강 + 소버린</div>
+    <div class="right"><span>Session 01</span><span class="pageno">04 / 14</span></div>
+  </div>
+</div></div>
+
+<!-- ═══════════════════ SLIDE 5 — 공공 구현 지형도 다이어그램 ═══════════════════ -->
+<div class="stage"><div class="slide" data-title="Public Map">
+  <div class="topbar"><div class="mark">Module 01 · Orientation</div><div class="meta">공공 구현 지형도 · System Map</div></div>
+  <div class="head" style="top:96px">
+    <div class="eyebrow">Unit 02 · 공공 구현 지형도</div>
+    <h1 class="display">민간이 ‘속도’라면, 공공은 <em>‘경로’의 문제다.</em></h1>
+    <p class="lede">같은 모델이라도 외부망에서 만들어 내부망으로 가져오는 동선이 모든 것을 결정한다 — 학습 동선, 산출물 동선, 책임 동선.</p>
+  </div>
+  <div class="head-rule"></div>
+  <div class="body">
+    <div class="diagram-wrap">
+      <div class="diagram-svg">
+        <svg viewBox="0 0 760 480" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+              <path d="M0,0 L10,5 L0,10 z" fill="#3D2E22"/>
+            </marker>
+            <marker id="arrLight" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+              <path d="M0,0 L10,5 L0,10 z" fill="#A85F25"/>
+            </marker>
+          </defs>
+          <!-- Outer net frame -->
+          <rect x="20" y="40" width="340" height="400" fill="none" stroke="#3D2E22" stroke-width="1.2" stroke-dasharray="4 3"/>
+          <text x="36" y="62" font-family="JetBrains Mono,monospace" font-size="10" fill="#A85F25" letter-spacing="2" font-weight="600">EXTERNAL NET — 외부망</text>
+          <!-- Internal net frame -->
+          <rect x="400" y="40" width="340" height="400" fill="none" stroke="#1A1511" stroke-width="1.2"/>
+          <text x="416" y="62" font-family="JetBrains Mono,monospace" font-size="10" fill="#1A1511" letter-spacing="2" font-weight="600">INTERNAL NET — 내부망 (온나라/업무망)</text>
+
+          <!-- External nodes -->
+          <rect x="50" y="100" width="130" height="58" fill="#FAF7F1" stroke="#1A1511" stroke-width="1.2"/>
+          <text x="115" y="124" text-anchor="middle" font-family="Noto Serif KR,serif" font-size="14" fill="#1A1511" font-weight="600">ChatGPT</text>
+          <text x="115" y="142" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="9" fill="#6B5540" letter-spacing="1">FRONTIER · MULTI</text>
+
+          <rect x="200" y="100" width="130" height="58" fill="#1A1511" stroke="#1A1511"/>
+          <text x="265" y="124" text-anchor="middle" font-family="Noto Serif KR,serif" font-size="14" fill="#FAF7F1" font-weight="600">Claude</text>
+          <text x="265" y="142" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="9" fill="#E3A872" letter-spacing="1">REASON · CODE</text>
+
+          <rect x="50" y="180" width="130" height="58" fill="#FAF7F1" stroke="#1A1511" stroke-width="1.2"/>
+          <text x="115" y="204" text-anchor="middle" font-family="Noto Serif KR,serif" font-size="14" fill="#1A1511" font-weight="600">Gemini</text>
+          <text x="115" y="222" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="9" fill="#6B5540" letter-spacing="1">WORKSPACE</text>
+
+          <rect x="200" y="180" width="130" height="58" fill="#F5F0E6" stroke="#1A1511" stroke-width="1.2"/>
+          <text x="265" y="204" text-anchor="middle" font-family="Noto Serif KR,serif" font-size="14" fill="#1A1511" font-weight="600">에이전트 도구</text>
+          <text x="265" y="222" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="9" fill="#6B5540" letter-spacing="1">CC · CURSOR · 등</text>
+
+          <rect x="50" y="270" width="280" height="62" fill="#FBEFE4" stroke="#A85F25" stroke-width="1.2"/>
+          <text x="190" y="294" text-anchor="middle" font-family="Noto Serif KR,serif" font-size="14" fill="#1A1511" font-weight="600">산출물 · 코드 · 프롬프트</text>
+          <text x="190" y="312" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="9" fill="#A85F25" letter-spacing="1.5">PROMPTS · SCRIPTS · DOCS</text>
+
+          <text x="50" y="370" font-family="JetBrains Mono,monospace" font-size="9" fill="#6B5540" letter-spacing="2">학습 · 실험 · 산출 영역</text>
+          <text x="50" y="386" font-family="Noto Serif KR,serif" font-size="11" fill="#3D2E22">개인 노트북 · 외부 클라우드 · 시민 대상 챗봇</text>
+
+          <!-- Bridge -->
+          <path d="M340 320 L 400 320" stroke="#A85F25" stroke-width="1.5" fill="none" marker-end="url(#arrLight)"/>
+          <text x="370" y="312" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="9" fill="#A85F25" letter-spacing="1.5" font-weight="600">전송</text>
+          <text x="370" y="338" text-anchor="middle" font-family="Noto Serif KR,serif" font-size="10" fill="#A85F25" font-style="italic">(승인 · 검토 · 마스킹)</text>
+
+          <!-- Internal nodes -->
+          <rect x="430" y="100" width="280" height="58" fill="#FAF7F1" stroke="#1A1511" stroke-width="1.2"/>
+          <text x="570" y="124" text-anchor="middle" font-family="Noto Serif KR,serif" font-size="14" fill="#1A1511" font-weight="600">온나라 · 업무관리시스템</text>
+          <text x="570" y="142" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="9" fill="#6B5540" letter-spacing="1">결재 · 문서 · 보고</text>
+
+          <rect x="430" y="180" width="280" height="58" fill="#F5F0E6" stroke="#1A1511" stroke-width="1.2"/>
+          <text x="570" y="204" text-anchor="middle" font-family="Noto Serif KR,serif" font-size="14" fill="#1A1511" font-weight="600">소버린 · 공공 공통기반 LLM</text>
+          <text x="570" y="222" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="9" fill="#6B5540" letter-spacing="1">K-AI · HCX · GAUSS</text>
+
+          <rect x="430" y="270" width="280" height="62" fill="#1A1511" stroke="#1A1511"/>
+          <text x="570" y="294" text-anchor="middle" font-family="Noto Serif KR,serif" font-size="14" fill="#FAF7F1" font-weight="600">기관 RAG · 자동화 · 매크로</text>
+          <text x="570" y="312" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="9" fill="#E3A872" letter-spacing="1">VBA · 매크로 · 사내 챗봇</text>
+
+          <text x="430" y="370" font-family="JetBrains Mono,monospace" font-size="9" fill="#6B5540" letter-spacing="2">실행 · 결재 · 책임 영역</text>
+          <text x="430" y="386" font-family="Noto Serif KR,serif" font-size="11" fill="#3D2E22">실제 행정행위가 발생하는 폐쇄망 영역</text>
+
+          <!-- caption -->
+          <text x="380" y="470" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="9" fill="#6B5540" letter-spacing="2">FIGURE 01 — 외부망/내부망 분리 환경에서의 학습 · 산출 · 결재 동선</text>
+        </svg>
+      </div>
+      <div class="diagram-side">
+        <div class="callout-cream">
+          <span class="label">Key Takeaway</span>
+          <div class="head">학습은 외부망에서, 결재는 내부망에서.</div>
+          <p>두 영역의 ‘이음새’를 설계하는 것이 거점리더의 첫 번째 기술적 책임이다. 산출물의 형식·전송 동선·마스킹 규칙을 미리 정해야 한다.</p>
+        </div>
+        <div class="callout-dark">
+          <span class="label">Field Case · 2025</span>
+          <div class="head">의성군 농업 AI 챗봇</div>
+          <p>외부 LLM으로 프롬프트·시나리오를 설계하고, 내부 폐쇄망에서는 소버린 모델로 응답을 생성. 거점리더가 두 동선의 ‘번역자’ 역할을 수행했다.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="footbar">
+    <div class="left"><strong>Module 01</strong>Unit 02 · 공공 구현 지형도 — 외부/내부 동선 설계</div>
+    <div class="right"><span>Session 01</span><span class="pageno">05 / 14</span></div>
+  </div>
+</div></div>
+
+<!-- ═══════════════════ SLIDE 6 — 외부망 vs 내부망 2-Col ═══════════════════ -->
+<div class="stage"><div class="slide" data-title="Net Compare">
+  <div class="topbar"><div class="mark">Module 01 · Orientation</div><div class="meta">외부망 vs 내부망 · 두 개의 운영 원리</div></div>
+  <div class="head" style="top:96px">
+    <div class="eyebrow">Unit 02 · 두 개의 운영 원리</div>
+    <h1 class="display">외부망에서 자라는 학습, <em>내부망에서 자라는 책임.</em></h1>
+    <p class="lede">두 환경은 다른 시계로 흐른다. 거점리더는 이 두 시계 사이에서 산출물을 ‘번역’하는 사람이다.</p>
+  </div>
+  <div class="head-rule"></div>
+  <div class="body">
+    <div class="twoc">
+      <div class="col">
+        <div class="role">External Network · 외부망</div>
+        <h3>실험과 학습의 영역</h3>
+        <p>프론티어 모델, 에이전트 도구, 오픈소스가 모두 살아 있는 공간. 빠르게 시도하고 빠르게 폐기할 수 있는 곳. 거점리더의 ‘감식안’은 이곳에서 만들어진다.</p>
+        <div>
+          <span class="chip">ChatGPT</span><span class="chip">Claude</span><span class="chip">Gemini</span><span class="chip">Cursor</span><span class="chip">Antigravity</span><span class="chip">v0 · Lovable</span>
+        </div>
+        <div class="specs">
+          <div class="row"><span class="k">Speed</span><span class="v">실시간 · 즉시 반영</span></div>
+          <div class="row"><span class="k">Risk</span><span class="v">데이터 유출 · 환각</span></div>
+          <div class="row"><span class="k">Output</span><span class="v">프롬프트 · 코드 · 시안</span></div>
+          <div class="row"><span class="k">Mindset</span><span class="v">실험 · 폐기 자유</span></div>
+        </div>
+      </div>
+      <div class="col dark">
+        <div class="role">Internal Network · 내부망</div>
+        <h3>책임과 결재의 영역</h3>
+        <p>실제 행정행위가 발생하고 감사가 이루어지는 공간. 검증된 형식·결재선·기록 의무가 모든 것을 규정한다. 외부에서 만든 산출물은 이 문턱을 넘기 위해 ‘다듬어져야’ 한다.</p>
+        <div>
+          <span class="chip">온나라</span><span class="chip">소버린 LLM</span><span class="chip">HWPX</span><span class="chip">기관 RAG</span><span class="chip">사내 챗봇</span><span class="chip">VBA · 매크로</span>
+        </div>
+        <div class="specs">
+          <div class="row"><span class="k">Speed</span><span class="v">검증 · 결재 단계</span></div>
+          <div class="row"><span class="k">Risk</span><span class="v">감사 · 민원 · 책임</span></div>
+          <div class="row"><span class="k">Output</span><span class="v">결재 문서 · 자동화</span></div>
+          <div class="row"><span class="k">Mindset</span><span class="v">검증 · 추적 가능</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="footbar">
+    <div class="left"><strong>Module 01</strong>Unit 02 · 외부망 vs 내부망 — 두 개의 운영 원리</div>
+    <div class="right"><span>Session 01</span><span class="pageno">06 / 14</span></div>
+  </div>
+</div></div>
+
+<!-- ═══════════════════ SLIDE 7 — 거점리더의 정의 (인용 헤비) ═══════════════════ -->
+<div class="stage"><div class="slide" data-title="Hub Leader">
+  <div class="topbar"><div class="mark">Module 01 · Orientation</div><div class="meta">Hub Leader · 거점리더의 정의</div></div>
+  <div class="head" style="top:96px">
+    <div class="eyebrow">Unit 03 · 우리는 누구인가</div>
+    <h1 class="display">‘많이 쓰는 사람’이 아니라,<br><em>‘되게 만드는 사람’이다.</em></h1>
+    <p class="lede">거점리더는 부서로 돌아갔을 때 동료의 시도를 가능하게 하고, 작은 산출물을 조직의 자산으로 환류시키는 사람이다.</p>
+  </div>
+  <div class="head-rule"></div>
+  <div class="body">
+    <div style="display:grid;grid-template-columns:1.15fr 1fr;gap:40px;height:100%">
+      <div style="display:flex;flex-direction:column;gap:24px">
+        <div style="border-left:3px solid var(--ink-900);padding:18px 28px">
+          <div class="label" style="color:var(--ink-500)">Definition · 거점리더란</div>
+          <p style="font-family:var(--serif);font-size:30px;line-height:1.35;letter-spacing:-0.025em;color:var(--ink-900);font-weight:500;margin-top:12px">
+            거점리더는 자신의 부서·팀에서 <em style="font-style:normal;color:var(--clay-700)">작은 자동화의 씨앗</em>을 심고, 동료의 시도를 코칭하며, 산출물을 조직 자산으로 <em style="font-style:normal;color:var(--clay-700)">순환</em>시키는 공무원을 말한다.
+          </p>
+        </div>
+
+        <div class="callout-cream">
+          <span class="label">Key Takeaway</span>
+          <div class="head">‘기획자·설계자’이지 ‘개발자’가 아니다</div>
+          <p>거점리더는 솔루션을 직접 코딩하지 않는다. 문제를 정의하고, 청사진을 그리고, 에이전트 도구에게 위임할 줄 안다. 손으로 만드는 사람이 아니라, 만들게 하는 사람이다.</p>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:14px">
+        <div class="label" style="color:var(--ink-500)">Five Roles · 거점리더의 5가지 역할</div>
+        <div style="display:flex;flex-direction:column;gap:1px;background:var(--rule);border:1px solid var(--rule)">
+          <div style="background:var(--cream-50);padding:16px 20px"><span class="mono" style="font-size:11px;color:var(--clay-700);letter-spacing:0.18em;font-weight:600">01 — TRANSLATE</span><div class="serif" style="font-size:17px;color:var(--ink-900);font-weight:600;margin-top:4px">기술 ↔ 행정 언어 번역</div></div>
+          <div style="background:var(--cream-50);padding:16px 20px"><span class="mono" style="font-size:11px;color:var(--clay-700);letter-spacing:0.18em;font-weight:600">02 — DEFINE</span><div class="serif" style="font-size:17px;color:var(--ink-900);font-weight:600;margin-top:4px">‘골목길 문제’ 발굴·정의</div></div>
+          <div style="background:var(--cream-50);padding:16px 20px"><span class="mono" style="font-size:11px;color:var(--clay-700);letter-spacing:0.18em;font-weight:600">03 — DESIGN</span><div class="serif" style="font-size:17px;color:var(--ink-900);font-weight:600;margin-top:4px">AI 솔루션 청사진 설계</div></div>
+          <div style="background:var(--cream-50);padding:16px 20px"><span class="mono" style="font-size:11px;color:var(--clay-700);letter-spacing:0.18em;font-weight:600">04 — COACH</span><div class="serif" style="font-size:17px;color:var(--ink-900);font-weight:600;margin-top:4px">동료 1차 코칭 · 시도 보호</div></div>
+          <div style="background:var(--ink-900);padding:16px 20px"><span class="mono" style="font-size:11px;color:var(--clay-300);letter-spacing:0.18em;font-weight:600">05 — CIRCULATE</span><div class="serif" style="font-size:17px;color:var(--cream-50);font-weight:600;margin-top:4px">산출물 공유·축적의 매개</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="footbar">
+    <div class="left"><strong>Module 01</strong>Unit 03 · 우리는 누구인가 — 거점리더의 정의</div>
+    <div class="right"><span>Session 01</span><span class="pageno">07 / 14</span></div>
+  </div>
+</div></div>
+
+<!-- ═══════════════════ SLIDE 8 — 2x2 quadrant ═══════════════════ -->
+<div class="stage"><div class="slide" data-title="Quadrant">
+  <div class="topbar"><div class="mark">Module 01 · Orientation</div><div class="meta">Stance Map · 거점리더 좌표 진단</div></div>
+  <div class="head" style="top:96px">
+    <div class="eyebrow">Unit 03 · 자기 진단</div>
+    <h1 class="display">두 축 위에서 나의 좌표를 찍어보자 ─<br><em>실험의 깊이</em>와 <em>확산의 의지</em>.</h1>
+    <p class="lede">대부분은 ① 또는 ②에 머무른다. 1차시의 출발점은 ④로 향하는 길을 한 칸 옮기는 일이다.</p>
+  </div>
+  <div class="head-rule"></div>
+  <div class="body quad-host">
+    <div class="quad">
+      <div class="qcell gray">
+        <div>
+          <div class="qnum">01 — 관찰자</div>
+          <h3>Observer</h3>
+          <p>‘ChatGPT 한 번 써봤다’ 수준. 도구는 알지만 업무에 들이지는 못함. 출발선이지만 부끄러운 자리는 아니다.</p>
+        </div>
+        <div class="qfoot">실험 ↓ · 확산 ↓</div>
+      </div>
+      <div class="qcell">
+        <div>
+          <div class="qnum">02 — 코치</div>
+          <h3>Coach</h3>
+          <p>스스로는 깊지 않지만 동료의 시도를 잘 도와준다. ‘답’보다 ‘질문’을 잘 던지는 사람. 의외로 가장 부족한 자원.</p>
+        </div>
+        <div class="qfoot">실험 ↓ · 확산 ↑</div>
+      </div>
+      <div class="qcell">
+        <div>
+          <div class="qnum">03 — 장인</div>
+          <h3>Maker</h3>
+          <p>혼자서는 매우 잘 쓴다. 자동화 한두 개는 만들어 놓았다. 다만 그 산출물이 자기 PC에 갇혀 있다.</p>
+        </div>
+        <div class="qfoot">실험 ↑ · 확산 ↓</div>
+      </div>
+      <div class="qcell dark">
+        <div>
+          <div class="qnum">04 — 거점리더</div>
+          <h3>Hub Leader</h3>
+          <p>스스로 깊게 실험하면서, 동료의 시도를 코칭하고, 산출물을 조직 자산으로 순환시킨다. <strong style="color:var(--clay-300)">우리가 8주 동안 도달할 좌표.</strong></p>
+        </div>
+        <div class="qfoot">실험 ↑ · 확산 ↑</div>
+      </div>
+    </div>
+    <div class="axis-x"><span>← 확산 의지 약함</span><span>확산 의지 강함 →</span></div>
+  </div>
+  <div class="footbar">
+    <div class="left"><strong>Module 01</strong>Unit 03 · 자기 진단 — 두 축의 좌표</div>
+    <div class="right"><span>Session 01</span><span class="pageno">08 / 14</span></div>
+  </div>
+</div></div>
+
+<!-- ═══════════════════ SLIDE 9 — 8차시 학습 로드맵 (timeline) ═══════════════════ -->
+<div class="stage"><div class="slide" data-title="Roadmap">
+  <div class="topbar"><div class="mark">Module 01 · Orientation</div><div class="meta">Curriculum Roadmap · 8 Sessions</div></div>
+  <div class="head" style="top:96px">
+    <div class="eyebrow">Unit 04 · 8주의 여정</div>
+    <h1 class="display">프론티어 감각 → 메타 프롬프트 → 워크플로우 →<br>바이브 코딩 → 에이전트 → <em>아키텍처 설계.</em></h1>
+    <p class="lede">개념의 사다리는 아래에서 위로 올라간다. 8차시는 1차시에서 정의한 ‘거점리더 좌표’를 도구·역량으로 채워가는 과정이다.</p>
+  </div>
+  <div class="head-rule"></div>
+  <div class="body">
+    <div class="tl-wrap">
+      <div class="tl-row">
+        <div class="tl-node active"><div class="dot">01</div><h4>AI 에이전트<br>지형도</h4><div class="sub">오늘</div></div>
+        <div class="tl-node"><div class="dot">02</div><h4>프론티어 모델<br>마스터리</h4><div class="sub">Mastery</div></div>
+        <div class="tl-node"><div class="dot">03</div><h4>메타 프롬프트<br>오케스트레이션</h4><div class="sub">Meta</div></div>
+        <div class="tl-node"><div class="dot">04</div><h4>문서 · 콘텐츠<br>워크플로우</h4><div class="sub">Workflow</div></div>
+        <div class="tl-node"><div class="dot">05</div><h4>바이브 코딩 ①<br>데이터 시각화</h4><div class="sub">Vibe-Viz</div></div>
+        <div class="tl-node"><div class="dot">06</div><h4>바이브 코딩 ②<br>업무 자동화</h4><div class="sub">Vibe-Auto</div></div>
+        <div class="tl-node"><div class="dot">07</div><h4>에이전트 도구<br>+ RAG</h4><div class="sub">Agent · RAG</div></div>
+        <div class="tl-node"><div class="dot">08</div><h4>API · MCP<br>아키텍처 캔버스</h4><div class="sub">Capstone</div></div>
+      </div>
+
+      <div class="tl-principles">
+        <div class="p">
+          <div class="l">Sequencing Principle</div>
+          <h5>‘assist’를 충분히 겪은 뒤에 ‘agent’로 간다</h5>
+          <p>에이전트 도구(Claude Code · Antigravity · Cursor)는 어시스트 모드의 한계를 체감한 뒤 비로소 가치가 보인다. 그래서 6차시 이후에 등장한다.</p>
+        </div>
+        <div class="p">
+          <div class="l">Pedagogical Principle</div>
+          <h5>‘설계자·기획자’의 언어로 가르친다</h5>
+          <p>API는 ‘남이 만든 함수를 부르는 창구’, MCP는 ‘에이전트가 도구를 꽂는 표준 콘센트’ — 인문학자도 따라올 수 있는 비유로 푼다.</p>
+        </div>
+        <div class="p dark">
+          <div class="l">Capstone</div>
+          <h5>AI 아키텍처 캔버스 워크숍</h5>
+          <p>8차시는 ‘트리거 · 재료 · 처리 · 시스템 프롬프트 · 산출 · 배포’ 6필드 캔버스로, 각자 부서로 가져갈 1개 솔루션을 설계한다.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="footbar">
+    <div class="left"><strong>Module 01</strong>Unit 04 · 8주의 여정 — 학습 로드맵</div>
+    <div class="right"><span>Session 01</span><span class="pageno">09 / 14</span></div>
+  </div>
+</div></div>
+
+<!-- ═══════════════════ SLIDE 10 — Architecture Canvas Preview ═══════════════════ -->
+<div class="stage"><div class="slide" data-title="Canvas Preview">
+  <div class="topbar"><div class="mark">Module 01 · Orientation</div><div class="meta">Architecture Canvas · 6 Fields Preview</div></div>
+  <div class="head" style="top:96px">
+    <div class="eyebrow">Unit 04 · 캡스톤 미리보기</div>
+    <h1 class="display">8주 뒤, 우리는 이 6개의 칸을 채워서<br><em>한 장의 청사진</em>을 들고 부서로 돌아간다.</h1>
+    <p class="lede">‘만들 수 있는 것’을 그리는 캔버스가 아니라, ‘위임할 수 있는 것’을 정의하는 캔버스다. 거점리더의 결과물은 코드가 아닌 청사진이다.</p>
+  </div>
+  <div class="head-rule"></div>
+  <div class="body">
+    <div class="canvas6">
+      <div class="c">
+        <div class="num">01 — Trigger</div>
+        <h4>트리거</h4>
+        <p>이 솔루션은 언제·무엇을 신호로 작동하는가? (시간·이벤트·요청)</p>
+        <div class="ex">예 · 매주 월 09시 / 민원 접수 / 보고서 업로드</div>
+      </div>
+      <div class="c">
+        <div class="num">02 — Material</div>
+        <h4>재료</h4>
+        <p>어떤 자료가 입력으로 들어오는가? 어디에 있는가?</p>
+        <div class="ex">예 · 민원 엑셀 · 부서 보고서 · 법령 DB · 이미지</div>
+      </div>
+      <div class="c">
+        <div class="num">03 — Processing</div>
+        <h4>처리</h4>
+        <p>어떤 모델·도구가 어떤 순서로 일을 처리하는가?</p>
+        <div class="ex">예 · 분류 → 요약 → 검토 → 초안 생성</div>
+      </div>
+      <div class="c">
+        <div class="num">04 — System Prompt</div>
+        <h4>시스템 프롬프트</h4>
+        <p>AI에게 부여할 역할·규칙·금지사항은 무엇인가?</p>
+        <div class="ex">예 · “법령 인용 시 출처 필수, 단정 금지”</div>
+      </div>
+      <div class="c">
+        <div class="num">05 — Output</div>
+        <h4>산출</h4>
+        <p>최종 결과물의 형식·검토 동선·책임자는?</p>
+        <div class="ex">예 · HWPX 보고서 → 팀장 검토 → 결재 상신</div>
+      </div>
+      <div class="c">
+        <div class="num">06 — Deployment</div>
+        <h4>배포</h4>
+        <p>어디서 누가 사용하는가? 9가지 구현 유형 중 어디?</p>
+        <div class="ex">예 · 부서 챗봇 · 매크로 · 사내 RAG · 자동 스크립트</div>
+      </div>
+    </div>
+  </div>
+  <div class="footbar">
+    <div class="left"><strong>Module 01</strong>Unit 04 · 캡스톤 미리보기 — 6필드 아키텍처 캔버스</div>
+    <div class="right"><span>Session 01</span><span class="pageno">10 / 14</span></div>
+  </div>
+</div></div>
+
+<!-- ═══════════════════ SLIDE 11 — 환경 세팅 체크리스트 ═══════════════════ -->
+<div class="stage"><div class="slide" data-title="Setup">
+  <div class="topbar"><div class="mark">Module 01 · Orientation</div><div class="meta">Environment Setup · 1차시 마감 전 완료</div></div>
+  <div class="head" style="top:96px">
+    <div class="eyebrow">Unit 05 · 환경 세팅</div>
+    <h1 class="display">오늘 강의장을 떠나기 전에,<br><em>이 8개의 박스</em>가 모두 체크되어야 한다.</h1>
+    <p class="lede">계정과 도구가 한 번에 정렬되어야 2차시부터 ‘기다리는 시간’이 사라진다. 각자 개인 노트북에서 진행, 공공망 PC는 보지 않는다.</p>
+  </div>
+  <div class="head-rule"></div>
+  <div class="body">
+    <div class="chk-grid">
+      <div class="chk-col">
+        <h4>① Accounts — 계정</h4>
+        <div class="chk-item"><div class="box"></div><div><div class="name">ChatGPT (Plus)</div><div class="desc">GPT-5 · 음성 · 이미지 · 캔버스 모두 활성화. 결제 후 모델 선택 메뉴 노출 확인.</div></div><div class="where">openai.com</div></div>
+        <div class="chk-item"><div class="box"></div><div><div class="name">Claude (Pro)</div><div class="desc">Opus 4.6 모델 선택 가능 여부 확인. Projects 기능 1개 생성해 두기.</div></div><div class="where">claude.ai</div></div>
+        <div class="chk-item"><div class="box"></div><div><div class="name">Gemini (AI Pro)</div><div class="desc">Gmail 계정 활용. 2.5 Pro · Deep Research 기능 노출 여부 확인.</div></div><div class="where">gemini.google.com</div></div>
+        <div class="chk-item"><div class="box"></div><div><div class="name">GitHub 계정</div><div class="desc">5·6차시 바이브 코딩에서 사용. 레포지토리 1개 미리 생성.</div></div><div class="where">github.com</div></div>
+      </div>
+      <div class="chk-col">
+        <h4>② Tools — 설치 도구</h4>
+        <div class="chk-item"><div class="box"></div><div><div class="name">Cursor</div><div class="desc">에이전트 형 IDE. macOS · Windows 모두 지원. 본인 LLM 키 연결.</div></div><div class="where">cursor.sh</div></div>
+        <div class="chk-item"><div class="box"></div><div><div class="name">Claude Code (CLI)</div><div class="desc">7차시 에이전트 마스터리에서 사용. Node.js 18+ 필요.</div></div><div class="where">npm i -g</div></div>
+        <div class="chk-item"><div class="box"></div><div><div class="name">VS Code</div><div class="desc">Antigravity 사용 시에도 함께 활용. 한국어 팩 설치 권장.</div></div><div class="where">code.vs</div></div>
+        <div class="chk-item"><div class="box"></div><div><div class="name">Notion / 메모 도구</div><div class="desc">8주간 산출물·프롬프트를 한 공간에 축적. 거점리더 ‘아카이브’의 시작.</div></div><div class="where">notion.so</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="footbar">
+    <div class="left"><strong>Module 01</strong>Unit 05 · 환경 세팅 — 마감 전 체크리스트</div>
+    <div class="right"><span>Session 01</span><span class="pageno">11 / 14</span></div>
+  </div>
+</div></div>
+
+<!-- ═══════════════════ SLIDE 12 — HANDS-ON ═══════════════════ -->
+<div class="stage"><div class="slide" data-title="Hands-On">
+  <div class="topbar"><div class="mark">Module 01 · Orientation</div><div class="meta">Hands-On · Frontier Model Triage</div></div>
+  <div class="head" style="top:96px">
+    <div class="eyebrow">Unit 06 · HANDS-ON 워크스루</div>
+    <h1 class="display">같은 프롬프트, 세 모델. <em>10분 안에</em><br>당신만의 ‘감식안’이 시작된다.</h1>
+    <p class="lede">프론티어 3강에 동일한 ‘공공 시나리오’ 프롬프트를 던져 응답을 비교한다. 옳고 그름이 아니라, ‘성격’의 차이를 본다.</p>
+  </div>
+  <div class="head-rule"></div>
+  <div class="body">
+    <div class="hands-grid">
+      <div>
+        <div class="sec">5 Steps · 10 minutes</div>
+        <div class="step"><div class="sn">01</div><div class="sb"><h5>3개 탭을 동시에 연다</h5><p>ChatGPT · Claude · Gemini를 각각 새 채팅으로 연다. 메모지 또는 Notion에 결과를 옮길 자리를 만들어둔다.</p></div></div>
+        <div class="step"><div class="sn">02</div><div class="sb"><h5>오른쪽 코드의 프롬프트를 그대로 복사</h5><p>가공하지 말 것. 동일 입력에 대한 차이를 봐야 한다. 한국어 그대로 붙여넣는다.</p></div></div>
+        <div class="step"><div class="sn">03</div><div class="sb"><h5>각 모델의 응답을 한 줄로 요약</h5><p>‘무슨 톤?’, ‘어디까지 단정?’, ‘출처/면책 어떻게?’ 세 질문에 답하는 한 줄.</p></div></div>
+        <div class="step"><div class="sn">04</div><div class="sb"><h5>‘이 업무에 누구를 시킬까?’ 자문</h5><p>법령 검토 · 시민 응대 · 시각화 · 코드 — 4가지 가상의 업무에 모델을 매칭해본다.</p></div></div>
+        <div class="step"><div class="sn">05</div><div class="sb"><h5>아카이브에 기록</h5><p>오늘의 비교 결과를 Notion ‘거점리더 아카이브’에 첫 항목으로 저장. 이게 8주의 첫 자산이다.</p></div></div>
+      </div>
+      <div class="codeblock">
+        <span class="clabel">▍ Prompt · 동일 입력</span>
+<pre><span class="com"># 역할</span>
+당신은 <span class="kw">시청 민원응대팀 팀장</span>입니다.
+
+<span class="com"># 상황</span>
+주민이 다음과 같이 항의 민원을 제기했습니다:
+<span class="str">"우리 동네 가로등이 3주째 꺼져 있는데
+민원 넣어도 응답이 없습니다.
+시는 도대체 뭘 하는 겁니까?"</span>
+
+<span class="com"># 요청</span>
+1. 민원 응대 답변을 작성하세요.
+2. 다음 조건을 지켜주세요:
+   - 책임 있는 어조 (변명 금지)
+   - 구체적 후속조치 일정 포함
+   - 5문장 이내
+   - 끝에는 담당부서·연락처 안내
+
+<span class="com"># 추가 지시</span>
+답변 후, <span class="kw">"이 답변에서 위험한 점"</span>을
+2가지로 자기 비평해 주세요.</pre>
+        <div style="border-top:1px solid rgba(244,219,185,0.2);padding-top:12px;margin-top:18px;font-size:11px;color:var(--clay-300);letter-spacing:0.18em;text-transform:uppercase">▍ 관찰 포인트 · 톤 / 단정 / 자기비평</div>
+      </div>
+    </div>
+  </div>
+  <div class="footbar">
+    <div class="left"><strong>Module 01</strong>Unit 06 · HANDS-ON — 프론티어 3강 트리아지</div>
+    <div class="right"><span>Session 01</span><span class="pageno">12 / 14</span></div>
+  </div>
+</div></div>
+
+<!-- ═══════════════════ SLIDE 13 — PITFALL ═══════════════════ -->
+<div class="stage"><div class="slide" data-title="Pitfalls">
+  <div class="topbar"><div class="mark">Module 01 · Orientation</div><div class="meta">Pitfalls · 거점리더가 첫 해 가장 자주 빠지는 함정</div></div>
+  <div class="head" style="top:96px">
+    <div class="eyebrow">Unit 07 · 자주 발생하는 오류</div>
+    <h1 class="display">기술의 함정이 아니라,<br><em>역할 정의의 함정</em>에서 무너진다.</h1>
+    <p class="lede">8주 뒤에 가장 자주 듣게 될 후회들을 미리 정리해 둔다. ‘하지 말아야 할 것’을 아는 것이 ‘잘하는 것’보다 빠르다.</p>
+  </div>
+  <div class="head-rule"></div>
+  <div class="body">
+    <div class="pit-grid">
+      <div>
+        <div class="pit">
+          <div class="l">PITFALL · 01</div>
+          <h5>“내가 다 만들어줘야 한다”고 믿어버림</h5>
+          <p>거점리더가 IT 헬프데스크가 되는 순간, 동료의 학습은 멈춘다. 손이 빠른 사람일수록 위험한 함정이다.</p>
+          <span class="fix">→ 코칭 우선 · 구현은 위임</span>
+        </div>
+        <div class="pit">
+          <div class="l">PITFALL · 02</div>
+          <h5>외부 모델로 내부 자료를 ‘그냥’ 입력함</h5>
+          <p>주민등록번호 · 결재 문서 · 미공개 통계는 절대 외부망 모델에 그대로 들어가서는 안 된다. 마스킹·요약 후 입력이 원칙.</p>
+          <span class="fix">→ 보안 동선 ‘번역’ 책임</span>
+        </div>
+      </div>
+      <div>
+        <div class="pit">
+          <div class="l">PITFALL · 03</div>
+          <h5>‘완성된 솔루션’을 만들려다 시작도 못함</h5>
+          <p>전사 시스템부터 그리기 시작하면 절대 끝나지 않는다. 거점리더의 첫 산출물은 ‘내 옆자리 한 명을 돕는 작은 프롬프트’여야 한다.</p>
+          <span class="fix">→ 골목길 문제부터</span>
+        </div>
+        <div class="pit">
+          <div class="l">PITFALL · 04</div>
+          <h5>산출물을 자기 PC에만 저장</h5>
+          <p>가장 많은 손실이 일어나는 지점. 만든 것을 동료가 다시 만들고 있는 일이 매주 일어난다. 만든 즉시 공유 동선을 정해두자.</p>
+          <span class="fix">→ 아카이브 우선 설계</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="footbar">
+    <div class="left"><strong>Module 01</strong>Unit 07 · PITFALLS — 자주 발생하는 함정</div>
+    <div class="right"><span>Session 01</span><span class="pageno">13 / 14</span></div>
+  </div>
+</div></div>
+
+<!-- ═══════════════════ SLIDE 14 — TAKEAWAYS + NEXT ═══════════════════ -->
+<div class="stage"><div class="slide" data-title="Closing">
+  <div class="topbar"><div class="mark">Module 01 · Orientation</div><div class="meta">Closing · Key Takeaways & Next Session</div></div>
+  <div class="head" style="top:96px">
+    <div class="eyebrow">Closing · 1차시 정리</div>
+    <h1 class="display">우리는 ‘쓰는 사람’으로 들어와<br><em>‘되게 만드는 사람’으로 나간다.</em></h1>
+    <p class="lede">1차시는 시작이 아니라 ‘좌표 측정’이다. 다음 7주는 이 좌표를 도구·역량·문화로 채워가는 일이다.</p>
+  </div>
+  <div class="head-rule"></div>
+  <div class="body">
+    <div class="take">
+      <div class="t">
+        <div class="num">01</div>
+        <h4>지형을 안다는 것은,<br>비판할 수 있다는 것.</h4>
+        <p>프론티어 3강을 직접 써본 사람만이 소버린·공통기반의 타당성을 말할 수 있다. 1차시는 그 ‘말할 권리’의 출발점이다.</p>
+      </div>
+      <div class="t">
+        <div class="num">02</div>
+        <h4>외부망 학습,<br>내부망 책임.</h4>
+        <p>두 영역의 시계는 다르다. 거점리더는 그 사이에서 산출물을 ‘번역’하는 사람이다. 동선 설계가 모든 것을 결정한다.</p>
+      </div>
+      <div class="t">
+        <div class="num">03</div>
+        <h4>거점리더는<br>설계자이지 개발자가 아니다.</h4>
+        <p>코드를 손으로 쓰지 않는다. 청사진을 그리고, 에이전트에게 위임하고, 동료의 시도를 보호한다. 결과물은 코드가 아니라 청사진이다.</p>
+      </div>
+    </div>
+    <div class="next-bar">
+      <div>
+        <div class="l">Next · Session 02</div>
+        <h5>프론티어 모델 마스터리 ─ <em>나의 손에 든 칼날을 갈다</em></h5>
+      </div>
+      <div></div>
+      <div class="arrow">→</div>
+    </div>
+  </div>
+  <div class="footbar">
+    <div class="left"><strong>Module 01</strong>Closing · Key Takeaways & Next Session</div>
+    <div class="right"><span>Session 01</span><span class="pageno">14 / 14</span></div>
+  </div>
+</div></div>
+
+</div>
+
+<nav class="deck-nav" id="dots"></nav>
+<div class="deck-controls">↑ ↓ keys · scroll · click dots</div>
+
+<script>
+  // Scale slides to viewport while keeping 1600x900 design
+  function scaleSlides(){
+    const slides = document.querySelectorAll('.slide');
+    const vw = window.innerWidth - 48;
+    const vh = window.innerHeight - 48;
+    const scale = Math.min(vw / 1600, vh / 900);
+    slides.forEach(s => s.style.transform = `scale(${scale})`);
+  }
+  window.addEventListener('resize', scaleSlides);
+  scaleSlides();
+
+  // Build nav dots
+  const stages = document.querySelectorAll('.stage');
+  const dots = document.getElementById('dots');
+  stages.forEach((s,i) => {
+    const a = document.createElement('a');
+    a.href = '#';
+    a.title = s.querySelector('.slide').dataset.title || ('Slide ' + (i+1));
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      s.scrollIntoView({behavior:'smooth'});
+    });
+    dots.appendChild(a);
+  });
+
+  // Active dot tracking
+  const deck = document.getElementById('deck');
+  const navDots = dots.querySelectorAll('a');
+  function updateDots(){
+    let activeIdx = 0;
+    let minDist = Infinity;
+    stages.forEach((s,i) => {
+      const r = s.getBoundingClientRect();
+      const d = Math.abs(r.top + r.height/2 - window.innerHeight/2);
+      if(d < minDist){ minDist = d; activeIdx = i; }
+    });
+    navDots.forEach((d,i) => d.classList.toggle('active', i===activeIdx));
+  }
+  deck.addEventListener('scroll', updateDots);
+  updateDots();
+
+  // Arrow keys
+  document.addEventListener('keydown', e => {
+    let activeIdx = 0, minDist = Infinity;
+    stages.forEach((s,i) => {
+      const r = s.getBoundingClientRect();
+      const d = Math.abs(r.top + r.height/2 - window.innerHeight/2);
+      if(d < minDist){ minDist = d; activeIdx = i; }
+    });
+    if(['ArrowDown','PageDown',' '].includes(e.key) && activeIdx < stages.length-1){
+      e.preventDefault();
+      stages[activeIdx+1].scrollIntoView({behavior:'smooth'});
+    } else if(['ArrowUp','PageUp'].includes(e.key) && activeIdx > 0){
+      e.preventDefault();
+      stages[activeIdx-1].scrollIntoView({behavior:'smooth'});
+    }
+  });
+</script>
+<script>/* kg-preview: #<heading> \uc704\uce58\ub85c \uc774\ub3d9 */
+(function(){function norm(t){return (t||'').replace(/\s+/g,'').toLowerCase()}
+function go(){var h=decodeURIComponent(location.hash.slice(1));if(!h)return;var k=norm(h).slice(0,24);if(!k)return;
+var best=null,bl=1e9,els=document.body.querySelectorAll('h1,h2,h3,h4,h5,p,div,span,li,td,text,tspan,section,article');
+for(var i=0;i<els.length;i++){var e=els[i],t=norm(e.textContent);if(t.length<bl&&t.indexOf(k)>-1){best=e;bl=t.length}}
+if(!best)return;var box=best.closest('section,[class*=slide],[class*=page],article')||best;
+box.scrollIntoView({block:'start'});box.style.outline='3px solid #c0504d';box.style.outlineOffset='4px';
+setTimeout(function(){box.style.outline=''},2600)}
+window.addEventListener('load',function(){setTimeout(go,400)});window.addEventListener('hashchange',go)})();</script></body>
+</html>

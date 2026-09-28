@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head><meta name="robots" content="noindex, nofollow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>제1차시 — AI 에이전트 시대의 개막과 공공 구현 지형도</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Noto+Serif+KR:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f5efe4; --bg-soft:#ede4d3; --bg-deep:#e3d6bb;
+    --ink:#2b2015; --ink-soft:#5a4a38; --ink-mute:#8a7659; --ink-faint:#b3a17f;
+    --accent:#b8532a; --accent-deep:#8b3e1f; --accent-soft:#d49575;
+    --line:#d8c8ae; --line-soft:#e6d9bf;
+    --dark:#1a1612; --dark-soft:#241e17; --on-dark:#ede4d3; --on-dark-mute:#a89172;
+    --code-bg:#241e17;
+    --serif:'Fraunces','Noto Serif KR',Georgia,serif;
+    --sans:'Inter','Pretendard Variable',Pretendard,-apple-system,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,Consolas,monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:#0e0a06;color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased}
+  body{
+    background-image:
+      radial-gradient(ellipse at 20% 0%, rgba(184,83,42,0.08) 0%, transparent 50%),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' seed='3'/%3E%3CfeColorMatrix values='0 0 0 0 0.16  0 0 0 0 0.12  0 0 0 0 0.08  0 0 0 0.04 0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  /* ── deck ── */
+  .deck{height:100vh;overflow-y:scroll;scroll-snap-type:y mandatory;scroll-behavior:smooth}
+  .stage{width:100vw;min-height:100vh;display:flex;align-items:center;justify-content:center;scroll-snap-align:start;padding:20px}
+  .slide{
+    width:1600px;height:900px;background:var(--bg);position:relative;overflow:hidden;
+    transform-origin:center;
+    box-shadow:0 40px 90px -30px rgba(0,0,0,0.7);
+    background-image:
+      radial-gradient(ellipse at top, rgba(184,83,42,0.025) 0%, transparent 55%),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n2'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' seed='3'/%3E%3CfeColorMatrix values='0 0 0 0 0.16  0 0 0 0 0.12  0 0 0 0 0.08  0 0 0 0.03 0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n2)'/%3E%3C/svg%3E");
+  }
+
+  /* ── topbar / footbar ── */
+  .topbar{position:absolute;top:0;left:0;right:0;height:44px;display:flex;align-items:center;justify-content:space-between;padding:0 56px;border-bottom:1px solid var(--line)}
+  .topbar .l{display:flex;align-items:center;gap:12px;font-family:var(--mono);font-size:10px;color:var(--accent);letter-spacing:0.22em;text-transform:uppercase;font-weight:600}
+  .topbar .l::before{content:"";display:inline-block;width:14px;height:2px;background:var(--accent)}
+  .topbar .r{font-family:var(--mono);font-size:10px;color:var(--ink-mute);letter-spacing:0.18em;text-transform:uppercase}
+
+  .footbar{position:absolute;bottom:0;left:0;right:0;height:42px;display:flex;align-items:center;justify-content:space-between;padding:0 56px;border-top:1px solid var(--line);background:rgba(216,200,174,0.18)}
+  .footbar .l,.footbar .r{font-family:var(--mono);font-size:10px;color:var(--ink-mute);letter-spacing:0.18em;text-transform:uppercase;display:flex;align-items:center;gap:14px}
+  .footbar .l strong{color:var(--ink);font-weight:700}
+  .footbar .pn{color:var(--ink);font-weight:700;font-family:var(--serif);font-size:13px;letter-spacing:0}
+
+  /* ── headline block ── */
+  .head{position:absolute;left:56px;right:56px;top:78px}
+  .eyebrow{display:inline-flex;align-items:center;gap:12px;font-family:var(--mono);font-size:10.5px;color:var(--accent);letter-spacing:0.22em;text-transform:uppercase;font-weight:600;margin-bottom:14px}
+  .eyebrow::before{content:"";width:28px;height:1px;background:var(--accent)}
+  h1.display{font-family:var(--serif);font-weight:600;font-size:36px;line-height:1.18;letter-spacing:-0.025em;color:var(--ink)}
+  h1.display em{font-style:italic;color:var(--accent);font-weight:500}
+  .lede{font-family:var(--serif);font-style:italic;font-size:16px;color:var(--ink-soft);margin-top:12px;max-width:1100px;line-height:1.55;font-weight:400}
+  .head-rule{position:absolute;left:56px;right:56px;top:218px;height:1px;background:var(--line)}
+  .body{position:absolute;left:56px;right:56px;top:240px;bottom:62px}
+
+  /* ── small bits ── */
+  .sec{display:inline-flex;align-items:center;gap:10px;font-family:var(--mono);font-size:10px;color:var(--ink);letter-spacing:0.22em;text-transform:uppercase;font-weight:700;padding-bottom:8px;border-bottom:1.5px solid var(--ink);margin-bottom:14px}
+  .sec span.n{color:var(--accent)}
+  .label{font-family:var(--mono);font-size:9.5px;color:var(--ink-mute);letter-spacing:0.2em;text-transform:uppercase;font-weight:600}
+  p.body-text{font-size:13.5px;line-height:1.72;color:var(--ink-soft)}
+  p.body-text strong{color:var(--ink);font-weight:600}
+  p.body-text em{font-style:italic;color:var(--accent-deep)}
+  .mono{font-family:var(--mono)}
+  .serif{font-family:var(--serif)}
+  code{font-family:var(--mono);font-size:0.86em;background:var(--bg-deep);padding:1px 5px;border-radius:2px;color:var(--ink)}
+
+  /* nav / control */
+  .deck-nav{position:fixed;right:14px;top:50%;transform:translateY(-50%);z-index:50;display:flex;flex-direction:column;gap:7px}
+  .deck-nav a{width:7px;height:7px;border-radius:50%;background:rgba(245,239,228,0.22);transition:all .25s}
+  .deck-nav a:hover,.deck-nav a.active{background:var(--accent-soft);transform:scale(1.4)}
+  .deck-controls{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);z-index:50;font-family:var(--mono);font-size:9.5px;color:rgba(245,239,228,0.45);letter-spacing:0.22em;text-transform:uppercase}
+
+  /* ═══════════ SLIDE 1 — COVER ═══════════ */
+  .cover .ctop{position:absolute;top:56px;left:56px;display:flex;align-items:center;gap:14px;font-family:var(--mono);font-size:10px;color:var(--accent);letter-spacing:0.28em;text-transform:uppercase;font-weight:600}
+  .cover .ctop::before{content:"";display:inline-block;width:22px;height:8px;background:var(--accent)}
+  .cover .ctr{position:absolute;top:56px;right:56px;font-family:var(--mono);font-size:10px;color:var(--ink-mute);letter-spacing:0.22em;text-transform:uppercase;text-align:right;line-height:1.6}
+  .cover .cgrid{position:absolute;top:200px;left:56px;right:56px;bottom:140px;display:grid;grid-template-columns:1fr 380px;gap:60px}
+  .cover .num-mark{font-family:var(--serif);font-weight:500;font-size:14px;color:var(--accent);letter-spacing:0.4em;margin-bottom:14px}
+  .cover h1{font-family:var(--serif);font-weight:600;font-size:72px;line-height:1.02;letter-spacing:-0.04em;color:var(--ink)}
+  .cover h1 em{font-style:italic;color:var(--accent);font-weight:500;display:block;margin-top:6px}
+  .cover .divider{width:64px;height:2px;background:var(--accent);margin:24px 0 18px}
+  .cover .sub{font-family:var(--serif);font-size:18px;color:var(--ink);font-weight:600;letter-spacing:-0.015em;line-height:1.45}
+  .cover .lede2{margin-top:14px;font-family:var(--serif);font-style:italic;font-size:15px;color:var(--ink-soft);max-width:560px;line-height:1.65}
+  .cover .meta{align-self:end;border-top:1px solid var(--ink);padding-top:18px}
+  .cover .meta .row{display:grid;grid-template-columns:90px 1fr;gap:14px;padding:9px 0;border-bottom:1px solid var(--line);font-size:12.5px;font-family:var(--serif);color:var(--ink);align-items:baseline}
+  .cover .meta .row:last-child{border-bottom:none}
+  .cover .meta .k{font-family:var(--mono);font-size:9.5px;letter-spacing:0.22em;text-transform:uppercase;color:var(--ink-mute);font-weight:600}
+  .cover .meta .v{font-weight:600}
+  .cover .cbl{position:absolute;bottom:56px;left:56px;font-family:var(--mono);font-size:10px;color:var(--ink-mute);letter-spacing:0.22em;text-transform:uppercase}
+  .cover .cbr{position:absolute;bottom:56px;right:56px;font-family:var(--serif);font-style:italic;font-size:13px;color:var(--ink-soft);max-width:520px;text-align:right;line-height:1.5}
+  .cover .vol{position:absolute;top:160px;right:56px;font-family:var(--serif);font-size:280px;line-height:1;color:var(--accent);font-weight:300;opacity:0.07;letter-spacing:-0.06em;pointer-events:none;font-style:italic}
+
+  /* ═══════════ SLIDE 2 — Two Questions ═══════════ */
+  .q-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px;height:100%}
+  .q-card{display:flex;flex-direction:column;gap:14px}
+  .q-card .qnum{font-family:var(--serif);font-size:48px;line-height:1;color:var(--accent);font-weight:500;font-style:italic;letter-spacing:-0.03em}
+  .q-card h3{font-family:var(--serif);font-size:24px;color:var(--ink);font-weight:600;letter-spacing:-0.02em;line-height:1.2}
+  .q-card .qrule{width:36px;height:1px;background:var(--ink);margin:4px 0 6px}
+  .q-card p.body-text{font-size:13.5px;line-height:1.7}
+  .q-card .micro{margin-top:auto;background:var(--bg-soft);border:1px solid var(--line);padding:14px 16px;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .q-card .micro .m{font-size:11.5px;color:var(--ink-soft);line-height:1.5}
+  .q-card .micro .m strong{display:block;font-family:var(--mono);font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--accent);margin-bottom:3px;font-weight:600}
+
+  /* ═══════════ SLIDE 3 — Evolution timeline + Prompt evolution ═══════════ */
+  .evo{height:100%;display:grid;grid-template-rows:auto 1fr auto;gap:18px}
+  .evo-tl{position:relative;padding:32px 0 8px}
+  .evo-tl .axis{position:absolute;left:0;right:0;top:46px;height:1px;background:var(--ink)}
+  .evo-row{display:grid;grid-template-columns:1fr 1.2fr 1.4fr;gap:0;position:relative}
+  .evo-node{padding:0 18px;position:relative}
+  .evo-node:not(:last-child)::after{content:"→";position:absolute;right:-8px;top:38px;font-family:var(--serif);font-size:18px;color:var(--accent);font-weight:500}
+  .evo-node .yr{font-family:var(--mono);font-size:10px;letter-spacing:0.22em;text-transform:uppercase;color:var(--ink-mute);font-weight:600}
+  .evo-node .dot{width:14px;height:14px;border-radius:50%;background:var(--bg);border:2px solid var(--ink);margin:8px 0 14px;position:relative;z-index:1}
+  .evo-node.act .dot{background:var(--accent);border-color:var(--accent)}
+  .evo-node h4{font-family:var(--serif);font-size:18px;color:var(--ink);font-weight:600;letter-spacing:-0.02em;line-height:1.25}
+  .evo-node h4 em{font-style:italic;color:var(--accent);font-weight:500}
+  .evo-node p{font-size:12.5px;color:var(--ink-soft);line-height:1.65;margin-top:8px}
+  .evo-node ul{font-size:11.5px;color:var(--ink-soft);line-height:1.65;margin-top:8px;padding-left:14px}
+  .evo-node ul li{margin:2px 0}
+  .evo-node ul li strong{color:var(--ink);font-weight:600}
+
+  .prompt-evo{display:grid;grid-template-columns:160px 1fr 1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line)}
+  .prompt-evo .cell{background:var(--bg);padding:14px 16px}
+  .prompt-evo .cell.head{background:var(--bg-soft);font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--ink);font-weight:700;display:flex;align-items:center}
+  .prompt-evo .cell.dark{background:var(--dark);color:var(--on-dark)}
+  .prompt-evo .cell h5{font-family:var(--serif);font-size:16px;color:var(--ink);font-weight:600;letter-spacing:-0.02em;margin-bottom:5px}
+  .prompt-evo .cell.dark h5{color:var(--on-dark)}
+  .prompt-evo .cell p{font-size:11.5px;color:var(--ink-soft);line-height:1.6}
+  .prompt-evo .cell.dark p{color:var(--on-dark-mute)}
+
+  /* ═══════════ SLIDE 4 — Transformer ═══════════ */
+  .tx-grid{display:grid;grid-template-columns:1.3fr 1fr;gap:40px;height:100%}
+  .tx-svg{background:var(--bg-soft);border:1px solid var(--line);padding:20px;display:flex;align-items:center;justify-content:center}
+  .tx-side{display:flex;flex-direction:column;gap:14px}
+  .tx-side h3{font-family:var(--serif);font-size:20px;color:var(--ink);font-weight:600;letter-spacing:-0.02em;line-height:1.25}
+  .tx-callout{background:var(--bg-soft);border-left:3px solid var(--accent);padding:14px 18px}
+  .tx-callout .label{color:var(--accent);margin-bottom:5px;display:block}
+  .tx-callout p{font-size:12.5px;color:var(--ink);line-height:1.65;font-weight:500}
+  .tx-side .tip{font-size:12px;color:var(--ink-soft);line-height:1.7}
+  .tx-side .code{background:var(--code-bg);color:var(--on-dark);padding:14px 16px;font-family:var(--mono);font-size:11.5px;line-height:1.7;border-left:2px solid var(--accent)}
+  .tx-side .code .com{color:var(--accent-soft);opacity:0.8}
+  .tx-side .code .kw{color:var(--accent-soft);font-weight:600}
+
+  /* ═══════════ SLIDE 5 — Frontier table ═══════════ */
+  table.fm{width:100%;border-collapse:collapse;font-size:12.5px}
+  table.fm thead th{font-family:var(--mono);font-size:9.5px;color:var(--ink-mute);letter-spacing:0.2em;text-transform:uppercase;font-weight:700;text-align:left;padding:10px 14px;border-bottom:1.5px solid var(--ink);background:var(--bg-soft)}
+  table.fm tbody td{padding:14px;vertical-align:top;border-bottom:1px solid var(--line);line-height:1.6;color:var(--ink-soft)}
+  table.fm tbody td:first-child{font-family:var(--serif);font-weight:600;color:var(--ink);font-size:15px;letter-spacing:-0.015em;width:140px}
+  table.fm tbody td:first-child .sub{font-family:var(--mono);font-size:9.5px;color:var(--ink-mute);letter-spacing:0.15em;text-transform:uppercase;display:block;margin-top:3px;font-weight:600}
+  table.fm tbody tr.h{background:rgba(184,83,42,0.06)}
+  .pill{display:inline-block;font-family:var(--mono);font-size:9.5px;color:var(--accent);background:rgba(184,83,42,0.1);padding:2px 7px;letter-spacing:0.1em;text-transform:uppercase;font-weight:600;border-radius:2px;margin:2px 3px 0 0}
+  .pill.dark{color:var(--ink);background:var(--bg-deep)}
+
+  /* ═══════════ SLIDE 6 — 9 implementation types ═══════════ */
+  .types{display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);height:100%}
+  .ty{background:var(--bg);padding:16px 18px;display:flex;flex-direction:column;gap:6px;position:relative}
+  .ty .ix{font-family:var(--serif);font-size:36px;line-height:1;color:var(--accent);font-weight:500;font-style:italic;letter-spacing:-0.04em;position:absolute;top:14px;right:18px;opacity:0.65}
+  .ty .lb{font-family:var(--mono);font-size:9px;color:var(--ink-mute);letter-spacing:0.22em;text-transform:uppercase;font-weight:600}
+  .ty h4{font-family:var(--serif);font-size:16px;color:var(--ink);font-weight:600;letter-spacing:-0.02em;line-height:1.2;margin-top:2px;padding-right:36px}
+  .ty p{font-size:11.5px;color:var(--ink-soft);line-height:1.6;margin-top:4px}
+  .ty .when{margin-top:auto;font-family:var(--mono);font-size:9.5px;color:var(--accent);letter-spacing:0.18em;text-transform:uppercase;font-weight:600;padding-top:8px;border-top:1px dashed var(--line)}
+  .ty.dark{background:var(--dark);color:var(--on-dark)}
+  .ty.dark .lb{color:var(--accent-soft)}
+  .ty.dark h4{color:var(--on-dark)}
+  .ty.dark p{color:var(--on-dark-mute)}
+  .ty.dark .ix{color:var(--accent-soft);opacity:0.5}
+  .ty.dark .when{color:var(--accent-soft);border-top-color:rgba(255,255,255,0.1)}
+
+  /* ═══════════ SLIDE 7 — internal/external ═══════════ */
+  .ie-wrap{display:grid;grid-template-columns:1fr 80px 1fr;gap:0;height:100%;align-items:stretch}
+  .ie-col{padding:24px 26px;display:flex;flex-direction:column;gap:12px;background:var(--bg);border:1px solid var(--line)}
+  .ie-col.dark{background:var(--dark);color:var(--on-dark);border-color:var(--dark)}
+  .ie-col .role{font-family:var(--mono);font-size:10px;color:var(--accent);letter-spacing:0.22em;text-transform:uppercase;font-weight:700}
+  .ie-col.dark .role{color:var(--accent-soft)}
+  .ie-col h3{font-family:var(--serif);font-size:24px;color:var(--ink);font-weight:600;letter-spacing:-0.025em;line-height:1.2}
+  .ie-col.dark h3{color:var(--on-dark)}
+  .ie-col p{font-size:13px;color:var(--ink-soft);line-height:1.7}
+  .ie-col.dark p{color:var(--on-dark-mute)}
+  .ie-col p strong{color:var(--ink);font-weight:600}
+  .ie-col.dark p strong{color:var(--on-dark)}
+  .ie-col .stack{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}
+  .ie-col .specs{margin-top:auto;border-top:1px solid var(--line);padding-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .ie-col.dark .specs{border-top-color:rgba(255,255,255,0.12)}
+  .ie-col .specs .row{font-size:11.5px}
+  .ie-col .specs .row .k{font-family:var(--mono);font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:var(--ink-mute);font-weight:600;display:block;margin-bottom:2px}
+  .ie-col.dark .specs .row .k{color:var(--accent-soft)}
+  .ie-col .specs .row .v{font-family:var(--serif);font-weight:600;color:var(--ink);font-size:13px}
+  .ie-col.dark .specs .row .v{color:var(--on-dark)}
+  .ie-bridge{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px 0;position:relative}
+  .ie-bridge .arrow{font-family:var(--serif);font-size:42px;color:var(--accent);line-height:1;font-weight:300}
+  .ie-bridge .blbl{font-family:var(--mono);font-size:9.5px;color:var(--accent);letter-spacing:0.22em;text-transform:uppercase;font-weight:700;writing-mode:vertical-rl;text-orientation:mixed;margin:14px 0}
+  .chip{display:inline-block;font-family:var(--mono);font-size:10px;padding:3px 8px;border:1px solid var(--line);color:var(--ink-soft);letter-spacing:0.1em;text-transform:uppercase;border-radius:2px;font-weight:500}
+  .ie-col.dark .chip{border-color:rgba(255,255,255,0.18);color:var(--on-dark-mute)}
+
+  /* ═══════════ SLIDE 8 — Setup checklist ═══════════ */
+  .setup{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line);height:100%}
+  .setup .col{background:var(--bg);padding:18px 22px;display:flex;flex-direction:column}
+  .setup .col h4{font-family:var(--mono);font-size:10.5px;color:var(--accent);letter-spacing:0.22em;text-transform:uppercase;font-weight:700;padding-bottom:10px;border-bottom:1.5px solid var(--ink);margin-bottom:6px}
+  .setup .item{display:grid;grid-template-columns:18px 1fr 80px;gap:12px;padding:10px 0;border-bottom:1px solid var(--line);align-items:start}
+  .setup .item:last-child{border-bottom:none}
+  .setup .item .box{width:14px;height:14px;border:1.5px solid var(--ink);margin-top:3px}
+  .setup .item .name{font-family:var(--serif);font-size:14px;color:var(--ink);font-weight:600;letter-spacing:-0.01em;line-height:1.25}
+  .setup .item .desc{font-size:11px;color:var(--ink-soft);margin-top:2px;line-height:1.5}
+  .setup .item .where{font-family:var(--mono);font-size:9px;color:var(--accent);letter-spacing:0.16em;text-transform:uppercase;font-weight:600;text-align:right;padding-top:4px}
+
+  /* ═══════════ SLIDE 9 — archive + mission ═══════════ */
+  .am-grid{display:grid;grid-template-columns:1.1fr 1fr;gap:32px;height:100%}
+  .am-l{display:flex;flex-direction:column;gap:16px}
+  .am-l h3{font-family:var(--serif);font-size:22px;color:var(--ink);font-weight:600;letter-spacing:-0.025em;line-height:1.2}
+  .am-l p{font-size:13px;line-height:1.7;color:var(--ink-soft)}
+  .am-l p strong{color:var(--ink);font-weight:600}
+  .am-l .arch{background:var(--bg-soft);border:1px solid var(--line);padding:16px 18px;display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+  .am-l .arch .a{font-size:11px;color:var(--ink-soft);line-height:1.55}
+  .am-l .arch .a strong{display:block;font-family:var(--mono);font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--accent);margin-bottom:4px;font-weight:700}
+  .am-r{background:var(--dark);color:var(--on-dark);padding:24px 26px;display:flex;flex-direction:column;gap:12px;position:relative;overflow:hidden}
+  .am-r::before{content:"";position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='nd'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' seed='5'/%3E%3CfeColorMatrix values='0 0 0 0 1  0 0 0 0 0.92  0 0 0 0 0.78  0 0 0 0.05 0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23nd)'/%3E%3C/svg%3E");opacity:0.7;pointer-events:none}
+  .am-r > *{position:relative}
+  .am-r .lb{font-family:var(--mono);font-size:10px;color:var(--accent-soft);letter-spacing:0.22em;text-transform:uppercase;font-weight:700}
+  .am-r h3{font-family:var(--serif);font-size:22px;color:var(--on-dark);font-weight:600;letter-spacing:-0.025em;line-height:1.25}
+  .am-r p{font-size:12.5px;color:var(--on-dark-mute);line-height:1.7}
+  .am-r .form{background:rgba(255,255,255,0.04);border:1px dashed rgba(255,255,255,0.18);padding:14px 16px;display:flex;flex-direction:column;gap:10px}
+  .am-r .form .row{display:grid;grid-template-columns:90px 1fr;gap:12px;font-size:11.5px;align-items:baseline;border-bottom:1px solid rgba(255,255,255,0.08);padding-bottom:6px}
+  .am-r .form .row:last-child{border-bottom:none;padding-bottom:0}
+  .am-r .form .row .k{font-family:var(--mono);font-size:9px;color:var(--accent-soft);letter-spacing:0.2em;text-transform:uppercase;font-weight:700}
+  .am-r .form .row .v{font-family:var(--serif);color:var(--on-dark);font-style:italic;font-weight:500}
+  .am-r .form .row .v.placeholder{color:rgba(237,228,211,0.45)}
+
+  /* ═══════════ SLIDE 10 — 8주 로드맵 ═══════════ */
+  .rm{height:100%;display:grid;grid-template-rows:auto auto 1fr auto;gap:14px}
+  .rm-tl{display:grid;grid-template-columns:repeat(8,1fr);position:relative;padding-top:8px}
+  .rm-tl::before{content:"";position:absolute;left:6%;right:6%;top:22px;height:1px;background:var(--line)}
+  .rm-n{display:flex;flex-direction:column;align-items:center;gap:6px;padding:0 6px;position:relative;z-index:1}
+  .rm-n .d{width:28px;height:28px;border-radius:50%;background:var(--bg);border:2px solid var(--ink);font-family:var(--mono);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;color:var(--ink)}
+  .rm-n.act .d{background:var(--accent);border-color:var(--accent);color:var(--on-dark)}
+  .rm-n h5{font-family:var(--serif);font-size:13px;color:var(--ink);font-weight:600;letter-spacing:-0.015em;text-align:center;line-height:1.25;margin-top:4px;min-height:34px}
+  .rm-n .tag{font-family:var(--mono);font-size:8.5px;color:var(--ink-mute);letter-spacing:0.16em;text-transform:uppercase;text-align:center;font-weight:600}
+  .rm-mat{margin-top:6px;display:grid;grid-template-columns:repeat(8,1fr);gap:6px;font-size:10px;font-family:var(--mono);text-align:center}
+  .rm-mat .m{padding:5px 4px;background:var(--bg-soft);color:var(--accent);font-weight:600;letter-spacing:0.05em;border-radius:2px}
+  .rm-mat .m.dark{background:var(--dark);color:var(--accent-soft)}
+  .rm-mat .m.empty{background:transparent;color:var(--ink-faint)}
+  .rm-stage{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line)}
+  .rm-stage .s{background:var(--bg);padding:14px 18px}
+  .rm-stage .s.dark{background:var(--dark);color:var(--on-dark)}
+  .rm-stage .s .lb{font-family:var(--mono);font-size:9.5px;color:var(--accent);letter-spacing:0.22em;text-transform:uppercase;font-weight:700;margin-bottom:6px}
+  .rm-stage .s.dark .lb{color:var(--accent-soft)}
+  .rm-stage .s h6{font-family:var(--serif);font-size:15px;color:var(--ink);font-weight:600;letter-spacing:-0.015em;line-height:1.25;margin-bottom:4px}
+  .rm-stage .s.dark h6{color:var(--on-dark)}
+  .rm-stage .s p{font-size:11.5px;color:var(--ink-soft);line-height:1.6}
+  .rm-stage .s.dark p{color:var(--on-dark-mute)}
+
+  /* ═══════════ SLIDE 11 — Closing ═══════════ */
+  .take{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line)}
+  .take .t{background:var(--bg);padding:20px 22px;display:flex;flex-direction:column;gap:10px}
+  .take .t .num{font-family:var(--serif);font-size:42px;line-height:1;color:var(--accent);font-weight:500;font-style:italic;letter-spacing:-0.04em;opacity:0.7}
+  .take .t h4{font-family:var(--serif);font-size:18px;color:var(--ink);font-weight:600;letter-spacing:-0.02em;line-height:1.25}
+  .take .t p{font-size:12px;color:var(--ink-soft);line-height:1.7}
+  .next-bar{margin-top:18px;background:var(--dark);padding:18px 26px;color:var(--on-dark);display:grid;grid-template-columns:auto 1fr auto;gap:24px;align-items:center;position:relative;overflow:hidden}
+  .next-bar::before{content:"";position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='nb'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' seed='9'/%3E%3CfeColorMatrix values='0 0 0 0 1  0 0 0 0 0.92  0 0 0 0 0.78  0 0 0 0.04 0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23nb)'/%3E%3C/svg%3E");opacity:0.65;pointer-events:none}
+  .next-bar > *{position:relative}
+  .next-bar .lb{font-family:var(--mono);font-size:10px;color:var(--accent-soft);letter-spacing:0.22em;text-transform:uppercase;font-weight:700;margin-bottom:4px}
+  .next-bar h5{font-family:var(--serif);font-size:18px;color:var(--on-dark);font-weight:500;letter-spacing:-0.02em;line-height:1.3}
+  .next-bar h5 em{font-style:italic;color:var(--accent-soft)}
+  .next-bar .arrow{font-family:var(--serif);font-size:34px;color:var(--accent-soft);line-height:1;font-weight:300}
+
+  @media print{body{background:white}.deck{height:auto;overflow:visible;scroll-snap-type:none}.stage{page-break-after:always;min-height:auto;padding:0}.slide{box-shadow:none}.deck-nav,.deck-controls{display:none}}
+</style>
+</head>
+<body>
+<div class="deck" id="deck">
+
+<!-- ════════════════ 1. COVER ════════════════ -->
+<div class="stage"><div class="slide cover" data-title="Cover">
+  <div class="ctop">PUBLIC AI EXPERT PROGRAM · 2026</div>
+  <div class="ctr">Module 01 / Session 01<br>Hub Leader Track</div>
+  <div class="vol">01</div>
+  <div class="cgrid">
+    <div>
+      <div class="num-mark">SESSION 01</div>
+      <h1>AI 에이전트 시대의 개막과<br>공공 구현 지형도<em>.</em></h1>
+      <div class="divider"></div>
+      <div class="sub">공공 AI 거점리더의 기술 지형과 환경 세팅</div>
+      <div class="lede2">Before the agent can build, the planner must imagine. — 이 시간에 우리가 할 일은 두 가지다. 지금 우리가 서 있는 기술적 위치를 측정하는 것, 그리고 8주 뒤 만들 수 있게 될 것의 지도를 손에 쥐는 것.</div>
+    </div>
+    <div class="meta">
+      <div class="row"><span class="k">Program</span><span class="v">공공 AI 전문인재 양성과정</span></div>
+      <div class="row"><span class="k">Module</span><span class="v">01 — Orientation</span></div>
+      <div class="row"><span class="k">Session</span><span class="v">01 / 08</span></div>
+      <div class="row"><span class="k">Format</span><span class="v">강의 · 실습 · 거점 미션 워크숍</span></div>
+      <div class="row"><span class="k">Duration</span><span class="v">3 hours</span></div>
+      <div class="row"><span class="k">Edition</span><span class="v">2026.04 · v1.0</span></div>
+    </div>
+  </div>
+  <div class="cbl">— Editorial Warm Edition</div>
+  <div class="cbr">"이 과정은 기술자를 키우는 과정이 아니다.<br>현장의 거점리더 — 동료에게 AI를 코칭·확산하는 사람을 키운다."</div>
+</div></div>
+
+<!-- ════════════════ 2. 두 가지 질문 ════════════════ -->
+<div class="stage"><div class="slide" data-title="Two Questions">
+  <div class="topbar"><div class="l">Module 01 · Session 01</div><div class="r">Two Questions · 출발점</div></div>
+  <div class="head">
+    <div class="eyebrow">Session Opening · 두 개의 질문</div>
+    <h1 class="display">이 시간이 끝날 때, 수강생은 두 개의 질문에 자기 언어로 답할 수 있어야 한다.</h1>
+    <p class="lede">하나는 ‘지금 우리는 어디에 서 있는가’ 라는 위치 감각이고, 다른 하나는 ‘8주 뒤 우리는 무엇을 만들 수 있게 되는가’ 라는 도착지의 그림이다. 이 두 좌표 사이에 8회차의 모든 실습이 놓인다.</p>
+  </div>
+  <div class="head-rule"></div>
+  <div class="body">
+    <div class="q-grid">
+      <div class="q-card">
+        <div class="qnum">01.</div>
+        <h3>지금 우리가 서 있는 기술적 위치는 어디인가</h3>
+        <div class="qrule"></div>
+        <p class="body-text">Bard와 PaLM에서 시작해 GPT 시대를 거쳐 <strong>에이전트 시대</strong>로 넘어온 짧지만 격렬한 진화사를 한 호흡에 정리한다. <strong>MicroGPT</strong>를 간단히 뜯어 트랜스포머의 Q·K·V와 멀티헤드를 시각적으로 체감하고, <em>프롬프트 → 컨텍스트 → 하네스</em>로 이어지는 입력 양식의 진화도 같은 맥락에서 짚는다. 깊이 파지는 않는다. 이 과정이 ‘왜 지금’ 필요한지 납득시키는 것이 목적이다.</p>
+        <div class="micro">
+          <div class="m"><strong>다루는 것</strong>NLP 트렌드, 트랜스포머 개념, 프롬프트 진화, 모델 지형도</div>
+          <div class="m"><strong>다루지 않는 것</strong>수식, 미분, 모델 학습, 파인튜닝 디테일</div>
+        </div>
+      </div>
+      <div class="q-card">
+        <div class="qnum">02.</div>
+        <h3>8주 뒤 우리는 무엇을 만들 수 있게 되는가</h3>
+        <div class="qrule"></div>
+        <p class="body-text">공공 현장에서 실제로 도입 가능한 <strong>‘민첩한 AI’ 9가지 구현 유형</strong>을 개괄로 본다. AI가 준 파이썬을 내부망에서 실행하는 가장 단순한 1유형에서부터 <em>API·MCP 기반 풀스택 멀티 에이전트 서비스</em>인 9유형까지, 각 유형이 어느 회차에 어떤 모드(어시스트 / 에이전트)로 등장하는지 머릿속 지도를 미리 그린다. 그 지도 위에서 자신이 가져갈 거점 미션 1개를 1차시 안에 선언한다.</p>
+        <div class="micro">
+          <div class="m"><strong>이번 회차 산출물</strong>현업 과제 1개 + 목표 유형 1개 = 거점 미션 카드</div>
+          <div class="m"><strong>최종 도착지</strong>8회차 AI 아키텍처 캔버스 1장으로 구현·발표</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="footbar">
+    <div class="l"><strong>Module 01</strong>Session Opening · 두 개의 질문</div>
+    <div class="r"><span>Session 01</span><span class="pn">02 / 11</span></div>
+  </div>
+</div></div>
+
+<!-- ════════════════ 3. AI/NLP 진화사 + 프롬프트 진화 ════════════════ -->
+<div class="stage"><div class="slide" data-title="Evolution">
+  <div class="topbar"><div class="l">Module 01 · Session 01</div><div class="r">Unit 01 · NLP & Prompting Evolution</div></div>
+  <div class="head">
+    <div class="eyebrow">Unit 01 · 어디에서 와서 어디로 가는가</div>
+    <h1 class="display">언어모델은 <em>‘답하는 도구’</em>에서 <em>‘일하는 동료’</em>로,<br>프롬프트는 <em>‘질문’</em>에서 <em>‘업무 환경’</em>으로 진화했다.</h1>
+    <p class="lede">왼쪽은 모델의 진화, 오른쪽은 우리가 모델에게 일을 시키는 방식의 진화다. 두 진화는 같은 곡선을 그린다 — 한 번에 한 마디씩 묻던 것에서, 환경 전체를 설계해 맡기는 쪽으로.</p>
+  </div>
+  <div class="head-rule"></div>
+  <div class="body">
+    <div class="evo">
+      <div class="evo-tl">
+        <div class="evo-row">
+          <div class="evo-node">
+            <div class="yr">2017 — 2022</div><div class="dot"></div>
+            <h4>Pre-LLM · BERT / Bard / PaLM</h4>
+            <p>트랜스포머가 등장하고, 인코더 계열(BERT)·디코더 계열(GPT) 두 갈래가 갈렸다. 모델은 ‘완성품’이 아닌 ‘부품’이었고, 도메인마다 파인튜닝이 필수였다.</p>
+            <ul>
+              <li><strong>분류·추출</strong>이 주된 사용처</li>
+              <li>일반 사용자에게는 거의 보이지 않음</li>
+            </ul>
+          </div>
+          <div class="evo-node">
+            <div class="yr">2022.11 — 2024</div><div class="dot"></div>
+            <h4>LLM 시대 · <em>ChatGPT 충격</em></h4>
+            <p>GPT-3.5 → GPT-4, Claude, Gemini가 연달아 등장. 한 모델 안에서 글쓰기·요약·번역·코드·추론이 모두 처리되며, ‘AI를 쓴다’는 행위가 일상에 들어왔다.</p>
+            <ul>
+              <li>RLHF, 멀티모달, 긴 컨텍스트</li>
+              <li><strong>프롬프트 엔지니어링</strong>이라는 새 직무</li>
+            </ul>
+          </div>
+          <div class="evo-node act">
+            <div class="yr">2024 — 현재</div><div class="dot"></div>
+            <h4>Agent 시대 · <em>일을 통째로 맡긴다</em></h4>
+            <p>모델이 도구를 호출하고 (function calling, MCP), 스스로 루프를 돌며 (reasoning), 다른 에이전트와 협업한다 (A2A, MoA). Claude Code·Cursor·Antigravity 같은 도구는 ‘대답’이 아닌 ‘완성된 결과물’을 돌려준다. 사용자의 역할은 작업자에서 <strong>기획자·설계자</strong>로 이동한다.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="prompt-evo">
+        <div class="cell head">PROMPTING EVOLUTION</div>
+        <div class="cell head">① Prompt</div>
+        <div class="cell head">② Context</div>
+        <div class="cell head dark" style="background:var(--dark);color:var(--accent-soft)">③ Harness</div>
+
+        <div class="cell head">한 줄 정의</div>
+        <div class="cell"><h5>한 번의 질문</h5><p>“요약해줘” “번역해줘” 한 마디로 입력과 출력을 끝낸다. 가장 단순한 형태.</p></div>
+        <div class="cell"><h5>업무 맥락의 묶음</h5><p>역할 + 자료 + 제약 + 예시를 한 패키지로 던진다. Custom GPT, Projects, Skills, 시스템 프롬프트가 모두 이 층위.</p></div>
+        <div class="cell dark"><h5>일하는 환경 자체</h5><p>도구·파일 시스템·메모리·서브 에이전트가 결합된 <em style="color:var(--accent-soft)">‘작업 환경’</em>. 에이전트는 이 환경 안에서 스스로 일한다.</p></div>
+
+        <div class="cell head">대표 도구</div>
+        <div class="cell"><p><code>chat.openai.com</code> 첫 화면</p></div>
+        <div class="cell"><p>Projects, Custom GPTs, Claude Skills, Gemini Gems</p></div>
+        <div class="cell dark"><p style="color:var(--on-dark-mute)">Claude Code, Cursor, Antigravity, Codex CLI</p></div>
+      </div>
+    </div>
+  </div>
+  <div class="footbar">
+    <div class="l"><strong>Module 01</strong>Unit 01 · NLP 진화사 + 프롬프트 진화</div>
+    <div class="r"><span>Session 01</span><span class="pn">03 / 11</span></div>
+  </div>
+</div></div>
+
+<!-- ════════════════ 4. MicroGPT / Transformer ════════════════ -->
+<div class="stage"><div class="slide" data-title="Transformer">
+  <div class="topbar"><div class="l">Module 01 · Session 01</div><div class="r">Unit 02 · MicroGPT · Transformer Touch</div></div>
+  <div class="head">
+    <div class="eyebrow">Unit 02 · 트랜스포머를 ‘체감’ 한다</div>
+    <h1 class="display">왜 이 모델은 글의 다음 단어를 <em>이렇게</em> 잘 맞히는가 ─ 그 메커니즘을 손가락으로 짚어본다.</h1>
+    <p class="lede">우리는 모델을 만들 사람이 아니다. 그러나 거점리더는 ‘왜 그런 답이 나오는가’를 말로 설명할 수 있어야 한다. 수식 대신 <em>주의(Attention)</em> 라는 한 단어와, Q·K·V 라는 세 글자, 그리고 ‘여러 개의 시선(Multi-head)’ 이라는 비유. 이 세 가지면 충분하다.</p>
+  </div>
+  <div class="head-rule"></div>
+  <div class="body">
+    <div class="tx-grid">
+      <div class="tx-svg">
+        <svg viewBox="0 0 720 460" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+              <path d="M0,0 L10,5 L0,10 z" fill="#5a4a38"/>
+            </marker>
+            <marker id="arr2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+              <path d="M0,0 L10,5 L0,10 z" fill="#b8532a"/>
+            </marker>
+          </defs>
+
+          <!-- Input tokens -->
+          <text x="60" y="36" font-family="JetBrains Mono,monospace" font-size="9" fill="#8a7659" letter-spacing="2" font-weight="700">INPUT TOKENS</text>
+          <g font-family="Noto Serif KR,serif" font-size="13" font-weight="600">
+            <rect x="50" y="50" width="80" height="36" fill="#ede4d3" stroke="#2b2015" stroke-width="1"/>
+            <text x="90" y="73" text-anchor="middle" fill="#2b2015">민원이</text>
+            <rect x="140" y="50" width="80" height="36" fill="#ede4d3" stroke="#2b2015" stroke-width="1"/>
+            <text x="180" y="73" text-anchor="middle" fill="#2b2015">접수</text>
+            <rect x="230" y="50" width="80" height="36" fill="#ede4d3" stroke="#2b2015" stroke-width="1"/>
+            <text x="270" y="73" text-anchor="middle" fill="#2b2015">되</text>
+            <rect x="320" y="50" width="80" height="36" fill="#b8532a" stroke="#b8532a"/>
+            <text x="360" y="73" text-anchor="middle" fill="#ede4d3">었</text>
+            <rect x="410" y="50" width="80" height="36" fill="#ede4d3" stroke="#2b2015" stroke-width="1" stroke-dasharray="3 2"/>
+            <text x="450" y="73" text-anchor="middle" fill="#8a7659">?</text>
+          </g>
+          <text x="450" y="103" text-anchor="middle" font-family="Fraunces,serif" font-style="italic" font-size="11" fill="#8a7659">다음 토큰을 예측</text>
+
+          <!-- Q K V box -->
+          <text x="60" y="148" font-family="JetBrains Mono,monospace" font-size="9" fill="#8a7659" letter-spacing="2" font-weight="700">SELF-ATTENTION · Q · K · V</text>
+          <rect x="50" y="160" width="600" height="138" fill="#f5efe4" stroke="#2b2015" stroke-width="1"/>
+
+          <g font-family="Fraunces,serif" font-size="14" font-weight="600">
+            <rect x="80" y="186" width="100" height="40" fill="#fff8eb" stroke="#b8532a" stroke-width="1.5"/>
+            <text x="130" y="211" text-anchor="middle" fill="#b8532a">Q · Query</text>
+            <text x="130" y="244" text-anchor="middle" font-family="Inter,sans" font-size="10" fill="#5a4a38">"내가 궁금한 것"</text>
+
+            <rect x="220" y="186" width="100" height="40" fill="#fff8eb" stroke="#b8532a" stroke-width="1.5"/>
+            <text x="270" y="211" text-anchor="middle" fill="#b8532a">K · Key</text>
+            <text x="270" y="244" text-anchor="middle" font-family="Inter,sans" font-size="10" fill="#5a4a38">"각 단어의 색인표"</text>
+
+            <rect x="360" y="186" width="100" height="40" fill="#fff8eb" stroke="#b8532a" stroke-width="1.5"/>
+            <text x="410" y="211" text-anchor="middle" fill="#b8532a">V · Value</text>
+            <text x="410" y="244" text-anchor="middle" font-family="Inter,sans" font-size="10" fill="#5a4a38">"실제 의미 내용물"</text>
+
+            <rect x="500" y="186" width="120" height="40" fill="#2b2015" stroke="#2b2015"/>
+            <text x="560" y="211" text-anchor="middle" fill="#ede4d3">Score · Softmax</text>
+            <text x="560" y="244" text-anchor="middle" font-family="Inter,sans" font-size="10" fill="#8a7659">"누구를 얼마나 볼지"</text>
+          </g>
+          <line x1="180" y1="206" x2="220" y2="206" stroke="#5a4a38" stroke-width="1" marker-end="url(#ar)"/>
+          <line x1="320" y1="206" x2="360" y2="206" stroke="#5a4a38" stroke-width="1" marker-end="url(#ar)"/>
+          <line x1="460" y1="206" x2="500" y2="206" stroke="#5a4a38" stroke-width="1" marker-end="url(#ar)"/>
+
+          <text x="350" y="290" text-anchor="middle" font-family="Fraunces,serif" font-style="italic" font-size="11" fill="#5a4a38">"민원이 접수되" 라는 맥락에서, 다음에 올 단어가 "었"일 가능성을 가장 강하게 가리킨다.</text>
+
+          <!-- Multi-head -->
+          <text x="60" y="338" font-family="JetBrains Mono,monospace" font-size="9" fill="#8a7659" letter-spacing="2" font-weight="700">MULTI-HEAD ATTENTION · 여러 개의 시선</text>
+          <g font-family="Fraunces,serif" font-size="11">
+            <rect x="50" y="350" width="115" height="56" fill="#ede4d3" stroke="#2b2015" stroke-width="1"/>
+            <text x="107" y="372" text-anchor="middle" font-weight="600" fill="#2b2015">Head 1</text>
+            <text x="107" y="390" text-anchor="middle" font-size="9.5" fill="#5a4a38" font-family="Inter,sans">문법 관계</text>
+
+            <rect x="175" y="350" width="115" height="56" fill="#ede4d3" stroke="#2b2015" stroke-width="1"/>
+            <text x="232" y="372" text-anchor="middle" font-weight="600" fill="#2b2015">Head 2</text>
+            <text x="232" y="390" text-anchor="middle" font-size="9.5" fill="#5a4a38" font-family="Inter,sans">의미·주제</text>
+
+            <rect x="300" y="350" width="115" height="56" fill="#ede4d3" stroke="#2b2015" stroke-width="1"/>
+            <text x="357" y="372" text-anchor="middle" font-weight="600" fill="#2b2015">Head 3</text>
+            <text x="357" y="390" text-anchor="middle" font-size="9.5" fill="#5a4a38" font-family="Inter,sans">시제·종결</text>
+
+            <rect x="425" y="350" width="115" height="56" fill="#ede4d3" stroke="#2b2015" stroke-width="1"/>
+            <text x="482" y="372" text-anchor="middle" font-weight="600" fill="#2b2015">Head N…</text>
+            <text x="482" y="390" text-anchor="middle" font-size="9.5" fill="#5a4a38" font-family="Inter,sans">12 / 32 / 96 …</text>
+
+            <rect x="555" y="350" width="115" height="56" fill="#b8532a" stroke="#b8532a"/>
+            <text x="612" y="372" text-anchor="middle" font-weight="600" fill="#ede4d3">Concat → 출력</text>
+            <text x="612" y="390" text-anchor="middle" font-size="9.5" fill="#fff8eb" font-family="Inter,sans">다층의 결합</text>
+          </g>
+          <line x1="540" y1="378" x2="555" y2="378" stroke="#b8532a" stroke-width="1.5" marker-end="url(#arr2)"/>
+
+          <text x="360" y="442" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="9" fill="#8a7659" letter-spacing="2">FIGURE 01 — Q·K·V Self-Attention + Multi-Head · MicroGPT 강의 시연</text>
+        </svg>
+      </div>
+
+      <div class="tx-side">
+        <h3>‘여러 명의 독자가 한 문장을 동시에 읽는다’ — 그게 멀티헤드다.</h3>
+        <p class="tip">한 명은 문법을, 한 명은 주제를, 한 명은 시제를 본다. 이들의 관점을 모아 다음 단어를 결정한다. 우리가 ‘LLM은 통계적 앵무새’라는 말에 한 발 거리를 두는 이유다.</p>
+
+        <div class="tx-callout">
+          <span class="label">Why we touch this</span>
+          <p>거점리더가 동료에게 “왜 이 답이 나왔어?”라는 질문을 받았을 때, 환각·문맥 길이·온도 같은 개념을 비유로 풀 수 있는 최소한의 직관을 갖기 위해서다. 절대 트랜스포머를 ‘구현’ 하기 위해서가 아니다.</p>
+        </div>
+
+        <div class="code">
+<span class="com"># MicroGPT — 200줄짜리 GPT 시연</span>
+<span class="kw">class</span> Head(nn.Module):
+  <span class="kw">def</span> forward(self, x):
+    q = self.query(x)  <span class="com"># 내 궁금증</span>
+    k = self.key(x)    <span class="com"># 색인표</span>
+    v = self.value(x)  <span class="com"># 의미 내용</span>
+    w = q @ k.T / sqrt(d)
+    w = softmax(w)     <span class="com"># 누구를 볼까</span>
+    <span class="kw">return</span> w @ v        <span class="com"># 모아서 출력</span>
+        </div>
+        <p style="font-size:11px;color:var(--ink-mute);font-family:var(--mono);letter-spacing:0.1em">개념용 의사코드 · 실제 시연은 Karpathy nanoGPT 기반</p>
+      </div>
+    </div>
+  </div>
+  <div class="footbar">
+    <div class="l"><strong>Module 01</strong>Unit 02 · MicroGPT로 트랜스포머 체감</div>
+    <div class="r"><span>Session 01</span><span class="pn">04 / 11</span></div>
+  </div>
+</div></div>
+
+<!-- ════════════════ 5. 프론티어 모델 지형도 ════════════════ -->
+<div class="stage"><div class="slide" data-title="Frontier Map">
+  <div class="topbar"><div class="l">Module 01 · Session 01</div><div class="r">Unit 03 · Frontier Model Atlas</div></div>
+  <div class="head">
+    <div class="eyebrow">Unit 03 · 모델 지형도</div>
+    <h1 class="display">‘다 비슷하다’ 라는 인상은, 직접 써보지 않아서 생긴 것이다 ─ <em>각 모델의 ‘성격’을 손에 쥐는 시간.</em></h1>
+    <p class="lede">2회차에서 본격적으로 50선 투어를 하기 전, 1차시에서는 다섯 갈래(GPT · Claude · Gemini · Grok / Z.AI · 오픈소스)의 ‘성격 카드’를 받아둔다. 어떤 업무에 어떤 모델이 손에 익을지를 가늠하는 첫 좌표다.</p>
+  </div>
+  <div class="head-rule"></div>
+  <div class="body">
+    <div class="sec"><span class="n">▍</span> Comparative Atlas · 2026.04 기준</div>
+    <table class="fm">
+      <thead>
+        <tr>
+          <th></th>
+          <th style="width:16%">대표 강점 · 시그니처 기능</th>
+          <th style="width:16%">조심해야 할 약점</th>
+          <th style="width:18%">데이터 흐름 · 공공 적합성</th>
+          <th style="width:18%">우리 과정에서 가장 빛나는 자리</th>
+          <th style="width:14%">관련 회차</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>ChatGPT<span class="sub">OpenAI · GPT-5 / o3</span></td>
+          <td>가장 넓은 생태계. <strong>Projects · Custom GPTs · Canvas · Agent 모드</strong>가 한 곳에. <span class="pill">Custom GPT</span><span class="pill">Canvas</span></td>
+          <td>장문 일관성 약함. 사실 단정형에 환각 빈도 높음. 도구 연동 시 비용 누적.</td>
+          <td>美 서버 기본. <strong>Enterprise/Team</strong> 플랜에서 학습 비활용·SOC2.</td>
+          <td>3회차 메타 프롬프트 시드, 6회차 에이전트 모드 비교 군</td>
+          <td><span class="pill dark">S2 · S3 · S6</span></td>
+        </tr>
+        <tr class="h">
+          <td>Claude<span class="sub">Anthropic · Opus 4.6</span></td>
+          <td>긴 문서·법령 처리, 추론 정합성, 코드 품질, 안전 정렬. <strong>Skills · Computer Use · Artifacts.</strong> <span class="pill">긴 컨텍스트</span><span class="pill">Skills</span></td>
+          <td>창의적 일탈에 보수적. 일부 한국어 관용 표현 약함.</td>
+          <td>美 서버. <strong>ZDR 계약 가능</strong>. API 단 비학습 보장.</td>
+          <td>법령 검토, 기술 보고서, 6·7회차 <strong>Claude Code</strong> 핵심 도구</td>
+          <td><span class="pill dark">S2 · S6 · S7</span></td>
+        </tr>
+        <tr>
+          <td>Gemini<span class="sub">Google · 2.5 Pro</span></td>
+          <td>워크스페이스 통합, <strong>Deep Research, Gem, 1M+ 컨텍스트</strong>, 멀티모달 처리량. <span class="pill">Workspace</span><span class="pill">Deep Research</span></td>
+          <td>응답 일관성 변동. 복잡 추론은 단계별 분해 필요.</td>
+          <td>Google Cloud 정책. Workspace Enterprise 시 학습 비활용.</td>
+          <td>대용량 자료 요약, 2회차 리서치 워크플로우 시연</td>
+          <td><span class="pill dark">S2 · S3</span></td>
+        </tr>
+        <tr>
+          <td>Grok · Z.AI<span class="sub">xAI · Zhipu</span></td>
+          <td>실시간 검색·소셜 데이터 (Grok), GLM 계열 한자어 강점 (Z.AI). 대안 옵션. <span class="pill">실시간</span></td>
+          <td>거버넌스 미정. 공공 업로드 신중. 한국어 미세 톤 변동.</td>
+          <td>국외 서버. <strong>공공 데이터 업로드 비권장</strong>.</td>
+          <td>2회차 ‘대안 모델’ 카테고리에서 1회 체험</td>
+          <td><span class="pill dark">S2</span></td>
+        </tr>
+        <tr>
+          <td>오픈소스 · 로컬<span class="sub">Llama · Qwen · Gemma</span></td>
+          <td>완전 내부망 동작. <strong>Ollama · LM Studio · MSTY · AnythingLLM</strong> 으로 5분 설치. <span class="pill">로컬</span><span class="pill">RAG</span></td>
+          <td>최신성·복합 추론·도구 호출은 프론티어 대비 보수적.</td>
+          <td><strong>국내 PC·서버 100%</strong>. 공공망에서도 활용 가능.</td>
+          <td>5회차 VBA+sLLM 엑셀 함수, 7회차 로컬 RAG 의 척추</td>
+          <td><span class="pill dark">S2 · S5 · S7</span></td>
+        </tr>
+      </tbody>
+    </table>
+    <p style="font-family:var(--mono);font-size:10px;color:var(--ink-mute);letter-spacing:0.15em;text-transform:uppercase;margin-top:14px">Source · 각 사 공식 모델 카드 · 2026.04. 본 슬라이드는 1차시 ‘지형도’ 용 요약. 2회차에서 ‘남들이 잘 모르는 킥’ 중심으로 심층 탐구.</p>
+  </div>
+  <div class="footbar">
+    <div class="l"><strong>Module 01</strong>Unit 03 · 프론티어 모델 지형도 — 다섯 갈래</div>
+    <div class="r"><span>Session 01</span><span class="pn">05 / 11</span></div>
+  </div>
+</div></div>
+
+<!-- ════════════════ 6. 9가지 공공 구현 유형 ★★★ 핵심 ════════════════ -->
+<div class="stage"><div class="slide" data-title="9 Types">
+  <div class="topbar"><div class="l">Module 01 · Session 01</div><div class="r">Unit 04 · 9 Implementation Types · 본 과정의 척추</div></div>
+  <div class="head">
+    <div class="eyebrow">Unit 04 · 8주 뒤 만들 수 있게 될 것 — 9가지 공공 구현 유형</div>
+    <h1 class="display">이 9개의 카드가 본 과정의 <em>모든 실습</em>이 들어맞는 좌표 격자다 ─ 어시스트로 한 번, 에이전트로 한 번 더.</h1>
+    <p class="lede">민첩한 AI는 거대한 시스템 구축이 아니라 <em>‘조립 가능한 작은 도구’</em>의 연속이다. 9개 유형은 난이도 순이 아니라 ‘배포 형태’ 순이다. 같은 문제도 어떤 유형으로 배포하느냐에 따라 만드는 방식이 달라진다.</p>
+  </div>
+  <div class="head-rule"></div>
+  <div class="body">
+    <div class="types">
+      <div class="ty">
+        <div class="lb">Type 01 · 가장 단순</div>
+        <div class="ix">01</div>
+        <h4>AI가 준 파이썬 코드를 내부망에서 실행</h4>
+        <p>외부망에서 Claude·GPT에게 코드를 받아 .py 파일로 들고 들어와 IDLE/터미널에서 실행. 모든 공공 구현의 기본형.</p>
+        <div class="when">Session 04 · 어시스트 바이브 ①</div>
+      </div>
+      <div class="ty">
+        <div class="lb">Type 02 · 엑셀 안의 AI</div>
+        <div class="ix">02</div>
+        <h4>VBA 업무 자동화 + 로컬 sLLM</h4>
+        <p><code>=AI_SUMMARIZE()</code> 같은 함수를 VBA + Ollama로 직접 만든다. 외부 API 없이 셀 단위 AI 호출.</p>
+        <div class="when">Session 05 · 어시스트 바이브 ②</div>
+      </div>
+      <div class="ty">
+        <div class="lb">Type 03 · 독립 실행파일</div>
+        <div class="ix">03</div>
+        <h4>파이썬 + PyInstaller 독립 프로그램</h4>
+        <p>tkinter/PyQt 로 GUI를 만들고 .exe 로 패키징. 망분리 PC에서도 더블클릭 실행 가능.</p>
+        <div class="when">Session 06 · 에이전트 입문</div>
+      </div>
+      <div class="ty">
+        <div class="lb">Type 04 · 데스크톱 앱</div>
+        <div class="ix">04</div>
+        <h4>Electron 기반 데스크톱 앱</h4>
+        <p>웹 기술로 데스크톱 앱을 만든다. 부서 내부 배포에 적합한 고급 GUI 옵션.</p>
+        <div class="when">Session 06 · 에이전트 입문</div>
+      </div>
+      <div class="ty dark">
+        <div class="lb">Type 05 · 단일 파일 앱 ★</div>
+        <div class="ix">05</div>
+        <h4>HTML+CSS+JS · CDN 로컬화 단일 파일</h4>
+        <p>한 개의 .html 파일로 모든 의존성을 담는다. <em style="color:var(--accent-soft)">공공망에서 가장 사랑받는 형태</em> — 메일로 보내고 더블클릭으로 연다.</p>
+        <div class="when">Session 04 · 06 · 두 번 등장</div>
+      </div>
+      <div class="ty">
+        <div class="lb">Type 06 · 로컬 도구</div>
+        <div class="ix">06</div>
+        <h4>Node.js 기반 로컬 툴</h4>
+        <p>커맨드라인·간단 서버를 갖춘 도구. 5회차 맛보기 → 6회차 본격 개발.</p>
+        <div class="when">Session 05 · 06</div>
+      </div>
+      <div class="ty">
+        <div class="lb">Type 07 · 부서 지식 챗봇</div>
+        <div class="ix">07</div>
+        <h4>Ollama 기반 로컬 RAG</h4>
+        <p>‘우리 부서 PDF·법령·매뉴얼’ 위에서 답하는 AI. 완전 내부망. <strong>법령·민원·회의록 RAG</strong>의 원형.</p>
+        <div class="when">Session 07 · RAG 파이프라인</div>
+      </div>
+      <div class="ty">
+        <div class="lb">Type 08 · 웹서비스</div>
+        <div class="ix">08</div>
+        <h4>백엔드 결합 웹서비스</h4>
+        <p>프론트 + 백엔드 + 저장소의 3덩어리. 외부망에서 개발 → 내부망 이관 체크리스트 동반.</p>
+        <div class="when">Session 07 · 웹서비스 구축</div>
+      </div>
+      <div class="ty dark">
+        <div class="lb">Type 09 · 끝판 ★</div>
+        <div class="ix">09</div>
+        <h4>API · MCP 기반 풀스택 멀티 에이전트 서비스</h4>
+        <p>여러 API와 MCP 서버를 조합해 <em style="color:var(--accent-soft)">자율적으로 일하는 서비스</em>를 만든다. 8회차 캡스톤 — 거점 미션이 도달할 자리.</p>
+        <div class="when">Session 08 · 캡스톤 워크숍</div>
+      </div>
+    </div>
+  </div>
+  <div class="footbar">
+    <div class="l"><strong>Module 01</strong>Unit 04 · 9가지 공공 구현 유형 — 본 과정의 척추</div>
+    <div class="r"><span>Session 01</span><span class="pn">06 / 11</span></div>
+  </div>
+</div></div>
+
+<!-- ════════════════ 7. 외부망/내부망 학습 전략 ════════════════ -->
+<div class="stage"><div class="slide" data-title="Net Strategy">
+  <div class="topbar"><div class="l">Module 01 · Session 01</div><div class="r">Unit 05 · External / Internal Strategy</div></div>
+  <div class="head">
+    <div class="eyebrow">Unit 05 · 외부망 / 내부망 현실과 학습 전략</div>
+    <h1 class="display">민간이 ‘속도’ 라면 공공은 ‘<em>경로</em>’ 의 문제다 ─ 두 망 사이의 <em>이관 동선</em>이 본 과정 전체의 골격이다.</h1>
+    <p class="lede">Claude Code·Cursor를 내부망에서 자유롭게 쓸 수 있는 공공기관은 거의 없다. 이 현실은 4·5회차 ‘어시스트 바이브 코딩’ 의 구조 자체를 결정한다 — <em>외부망에서 코드를 받고, 비식별화 후 내부망에서 실행</em>한다. 1차시는 이 동선을 머리에 새기는 시간이다.</p>
+  </div>
+  <div class="head-rule"></div>
+  <div class="body">
+    <div class="ie-wrap">
+      <div class="ie-col">
+        <div class="role">External Network · 외부망</div>
+        <h3>학습 · 실험 · 코드 수령의 영역</h3>
+        <p><strong>왜 여기서 배우는가:</strong> 프론티어 모델·에이전트 도구·오픈소스가 모두 살아 있다. 빠르게 시도하고 빠르게 폐기할 수 있다. 거점리더의 <strong>감식안</strong>은 이곳에서 만들어진다.</p>
+        <p><strong>어떻게 쓰는가:</strong> 요구사항을 자연어로 전달하고, 코드·시안·문서를 받는다. 에러가 나면 로그를 다시 가져와 수정 요청. 이 사이클을 4·5회차에서 체질화한다.</p>
+        <div class="stack">
+          <span class="chip">ChatGPT</span><span class="chip">Claude</span><span class="chip">Gemini</span><span class="chip">Cursor</span><span class="chip">Antigravity</span><span class="chip">v0</span><span class="chip">Lovable</span>
+        </div>
+        <div class="specs">
+          <div class="row"><span class="k">Output</span><span class="v">.py · .html · 프롬프트</span></div>
+          <div class="row"><span class="k">Risk</span><span class="v">데이터 유출 · 환각</span></div>
+          <div class="row"><span class="k">Mindset</span><span class="v">실험 · 폐기 자유</span></div>
+          <div class="row"><span class="k">Speed</span><span class="v">즉시 · 무제한</span></div>
+        </div>
+      </div>
+
+      <div class="ie-bridge">
+        <div class="arrow">→</div>
+        <div class="blbl">비식별화 · 검증 · 이관</div>
+        <div class="arrow" style="transform:scaleX(-1);opacity:0.4">→</div>
+      </div>
+
+      <div class="ie-col dark">
+        <div class="role">Internal Network · 내부망 · 업무망</div>
+        <h3>실행 · 결재 · 책임의 영역</h3>
+        <p><strong>왜 여기서 실행하는가:</strong> 실제 행정행위가 발생하고 감사가 이루어지는 공간. 결재선·기록 의무·보안 규정이 모든 것을 규정한다. 외부에서 만든 코드는 이 문턱을 넘기 위해 검증되어야 한다.</p>
+        <p><strong>무엇으로 채우는가:</strong> 어시스트로 받은 코드는 .py 파일로 들고 들어와 실행, sLLM은 Ollama로 부서 PC에서 직접 구동, 산출물은 HWPX·엑셀·내부 결재로 흘러간다.</p>
+        <div class="stack">
+          <span class="chip">온나라</span><span class="chip">HWPX</span><span class="chip">Ollama (Llama·Qwen)</span><span class="chip">VBA</span><span class="chip">로컬 RAG</span><span class="chip">사내 챗봇</span>
+        </div>
+        <div class="specs">
+          <div class="row"><span class="k">Output</span><span class="v">결재 문서 · 자동화</span></div>
+          <div class="row"><span class="k">Risk</span><span class="v">감사 · 민원 · 책임</span></div>
+          <div class="row"><span class="k">Mindset</span><span class="v">검증 · 추적 가능</span></div>
+          <div class="row"><span class="k">Speed</span><span class="v">검증 단계 거침</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="footbar">
+    <div class="l"><strong>Module 01</strong>Unit 05 · 외부망 / 내부망 학습 전략</div>
+    <div class="r"><span>Session 01</span><span class="pn">07 / 11</span></div>
+  </div>
+</div></div>
+
+<!-- ════════════════ 8. 환경 세팅 ════════════════ -->
+<div class="stage"><div class="slide" data-title="Setup">
+  <div class="topbar"><div class="l">Module 01 · Session 01</div><div class="r">Unit 06 · Environment Setup</div></div>
+  <div class="head">
+    <div class="eyebrow">Unit 06 · 환경 세팅 — 1차시 마감 전 완료</div>
+    <h1 class="display">2차시에 ‘<em>기다리는 시간</em>’이 없도록, 오늘 강의장에서 모든 도구를 한 번에 손에 익힌다.</h1>
+    <p class="lede">개인 노트북에서 진행한다 — 공공망 PC가 아니다. 네 종의 LLM 계정과 다섯 종의 개발 도구가 정렬되어야 4회차 어시스트 바이브 코딩이 매끄럽게 시작된다. Power BI Desktop은 4회차 데이터 시각화 모듈에서 선택적으로 쓰인다.</p>
+  </div>
+  <div class="head-rule"></div>
+  <div class="body">
+    <div class="setup">
+      <div class="col">
+        <h4>① LLM 계정 · 외부망 학습용</h4>
+        <div class="item"><div class="box"></div><div><div class="name">ChatGPT (Plus 또는 Team)</div><div class="desc">GPT-5 / o3 추론 모델, Custom GPTs, Projects, Canvas 활성화 확인</div></div><div class="where">openai.com</div></div>
+        <div class="item"><div class="box"></div><div><div class="name">Claude (Pro)</div><div class="desc">Opus 4.6 모델 노출. Projects 1개 생성, Skills 메뉴 확인</div></div><div class="where">claude.ai</div></div>
+        <div class="item"><div class="box"></div><div><div class="name">Gemini (AI Pro)</div><div class="desc">2.5 Pro · Deep Research · Gem 노출 확인. Gmail 계정 활용</div></div><div class="where">gemini.google.com</div></div>
+        <div class="item"><div class="box"></div><div><div class="name">Perplexity (Pro)</div><div class="desc">Spaces · Pages · Focus 모드 노출. 2회차 리서치 카테고리에서 사용</div></div><div class="where">perplexity.ai</div></div>
+      </div>
+      <div class="col">
+        <h4>② 개발 · 배포 · 분석 도구</h4>
+        <div class="item"><div class="box"></div><div><div class="name">Git · GitHub 계정</div><div class="desc">버전 관리 + 산출물 공용 저장소. 5·6회차 핵심 인프라</div></div><div class="where">git-scm · github</div></div>
+        <div class="item"><div class="box"></div><div><div class="name">Node.js (LTS) + WSL</div><div class="desc">Windows: WSL2 위에서 Node 설치 권장. 5·6회차 Node 도구의 토대</div></div><div class="where">nodejs.org</div></div>
+        <div class="item"><div class="box"></div><div><div class="name">Python (3.11+) + 가상환경</div><div class="desc">venv 또는 uv. 4·5회차 데이터 분석·HWP 자동화 전반</div></div><div class="where">python.org</div></div>
+        <div class="item"><div class="box"></div><div><div class="name">VS Code (한국어 팩)</div><div class="desc">전 회차 공통 IDE. Python·Jupyter 확장 함께 설치</div></div><div class="where">code.visualstudio</div></div>
+        <div class="item"><div class="box"></div><div><div class="name">Vercel · Netlify 계정</div><div class="desc">7회차 웹서비스 무료 배포 플랫폼. 미리 GitHub 연결</div></div><div class="where">vercel · netlify</div></div>
+        <div class="item"><div class="box"></div><div><div class="name">Power BI Desktop</div><div class="desc">4회차 ‘Power BI + DAX’ 모듈 선택 시 필수. Windows 전용</div></div><div class="where">powerbi.microsoft</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="footbar">
+    <div class="l"><strong>Module 01</strong>Unit 06 · 환경 세팅 — 마감 전 체크리스트</div>
+    <div class="r"><span>Session 01</span><span class="pn">08 / 11</span></div>
+  </div>
+</div></div>
+
+<!-- ════════════════ 9. 아카이브 + 거점 미션 선언 ════════════════ -->
+<div class="stage"><div class="slide" data-title="Archive & Mission">
+  <div class="topbar"><div class="l">Module 01 · Session 01</div><div class="r">Unit 07 · Archive · Hub Mission Declaration</div></div>
+  <div class="head">
+    <div class="eyebrow">Unit 07 · 공용 아카이브 · 거점 미션 선언</div>
+    <h1 class="display">개인 PC에 갇힌 산출물은 자산이 아니다 ─ 1차시의 마지막 행위는 <em>‘함께 쌓는 자리’</em>를 여는 것이다.</h1>
+    <p class="lede">공용 발굴 노트와 아카이브 저장소를 1차시에 함께 개설한다. 그리고 각자 <em>거점 미션 카드 1장</em>을 작성한다 — 부서로 돌아가 풀고 싶은 현업 과제 1개와, 9가지 유형 중 도달할 목표 유형 1개. 이 카드는 8회차 캡스톤 발표에서 다시 펼쳐진다.</p>
+  </div>
+  <div class="head-rule"></div>
+  <div class="body">
+    <div class="am-grid">
+      <div class="am-l">
+        <h3>공용 발굴 노트 · 아카이브 저장소</h3>
+        <p class="body-text">강사·수강생이 8주 동안 <strong>발견한 도구·실패한 프롬프트·성공한 워크플로우·완성한 코드</strong>를 한 자리에 모은다. 3회차 ‘프롬프트 공유 활동’ 의 80개 시드 라이브러리, 5회차 자동화 스크립트, 7회차 RAG 파이프라인이 모두 이 저장소에 누적된다. 거점리더가 부서로 돌아갔을 때 첫 번째로 들고 가는 자산이다.</p>
+        <div class="arch">
+          <div class="a"><strong>Notion / GitHub</strong>저장소 본체. 권한 분리.</div>
+          <div class="a"><strong>Discord / Slack</strong>실시간 발굴·질문 채널.</div>
+          <div class="a"><strong>Prompt Library</strong>3회차 80개 시드 누적.</div>
+          <div class="a"><strong>Code & Architecture</strong>4~8회차 산출물 정리.</div>
+        </div>
+        <p class="body-text" style="margin-top:6px"><strong>운영 원칙 한 줄:</strong> ‘만든 즉시 올린다, 실패도 올린다, 동료 것을 자기 부서 맥락으로 변형한다.’ — 이게 <em>거점리더 문화</em>의 시작이다.</p>
+      </div>
+
+      <div class="am-r">
+        <span class="lb">▍ Hub Mission Card · 거점 미션 카드</span>
+        <h3>오늘, 1장 작성한다.</h3>
+        <p>현업으로 돌아가 풀고 싶은 작은 문제 1개와, 8주 뒤 도달할 목표 유형 1개를 선언한다. 8회차에 같은 카드를 들고 캡스톤 무대에 선다.</p>
+        <div class="form">
+          <div class="row"><span class="k">No.</span><span class="v">001</span></div>
+          <div class="row"><span class="k">Hub Leader</span><span class="v placeholder">__________ 주무관 · ___과</span></div>
+          <div class="row"><span class="k">Pain Point</span><span class="v placeholder">우리 부서가 매주 반복하는 그 일은…</span></div>
+          <div class="row"><span class="k">Target Type</span><span class="v">9유형 中 1 — 예: ⑦ 로컬 RAG</span></div>
+          <div class="row"><span class="k">Why It Matters</span><span class="v placeholder">동료 N명이 시간을 아낄 수 있다</span></div>
+          <div class="row"><span class="k">Diffusion Plan</span><span class="v placeholder">완성 후 누구에게 어떻게 전파할지</span></div>
+        </div>
+        <p style="font-family:var(--mono);font-size:9.5px;color:var(--accent-soft);letter-spacing:0.18em;text-transform:uppercase;font-weight:600;margin-top:auto">→ Session 08 캡스톤 무대에서 다시 만남</p>
+      </div>
+    </div>
+  </div>
+  <div class="footbar">
+    <div class="l"><strong>Module 01</strong>Unit 07 · 공용 아카이브 + 거점 미션 선언</div>
+    <div class="r"><span>Session 01</span><span class="pn">09 / 11</span></div>
+  </div>
+</div></div>
+
+<!-- ════════════════ 10. 8주 로드맵 + 9유형 매핑 ════════════════ -->
+<div class="stage"><div class="slide" data-title="Roadmap">
+  <div class="topbar"><div class="l">Module 01 · Session 01</div><div class="r">Roadmap · 8 Sessions × 9 Types</div></div>
+  <div class="head">
+    <div class="eyebrow">Closing Map · 8주 로드맵 — 9유형은 어디에 등장하는가</div>
+    <h1 class="display">개념의 사다리는 아래에서 위로 ─ <em>재료 → 조립 → 어시스트 바이브 → 에이전트 → 풀스택.</em></h1>
+    <p class="lede">8회차는 세 구간으로 나뉜다. 1~3회차 ‘기획·재료’ 구간, 4~5회차 ‘어시스트 바이브 코딩’ 구간, 6~8회차 ‘에이전트로 풀스택’ 구간. 각 회차에 9유형 중 어떤 것이 등장하는지 미리 본다.</p>
+  </div>
+  <div class="head-rule"></div>
+  <div class="body">
+    <div class="rm">
+      <div class="rm-tl">
+        <div class="rm-n act"><div class="d">01</div><h5>AI 에이전트 시대 ·<br>공공 구현 지형도</h5><div class="tag">오늘</div></div>
+        <div class="rm-n"><div class="d">02</div><h5>프론티어 + AI 도구<br>생태계 50선</h5><div class="tag">Atlas</div></div>
+        <div class="rm-n"><div class="d">03</div><h5>메타 프롬프트 ·<br>워크플로우 6타입</h5><div class="tag">Orchestrate</div></div>
+        <div class="rm-n"><div class="d">04</div><h5>어시스트 바이브 ①<br>시각화 · 분석</h5><div class="tag">Assist · Viz</div></div>
+        <div class="rm-n"><div class="d">05</div><h5>어시스트 바이브 ②<br>자동화 · 로컬 AI</h5><div class="tag">Assist · Auto</div></div>
+        <div class="rm-n"><div class="d">06</div><h5>에이전트 도구<br>마스터리</h5><div class="tag">Agent</div></div>
+        <div class="rm-n"><div class="d">07</div><h5>RAG 파이프라인 ·<br>웹서비스</h5><div class="tag">RAG · Web</div></div>
+        <div class="rm-n"><div class="d">08</div><h5>API · MCP ·<br>아키텍처 캔버스</h5><div class="tag">Capstone</div></div>
+      </div>
+
+      <div class="rm-mat">
+        <div class="m empty">— 지형도 —</div>
+        <div class="m empty">— 재료 창고 —</div>
+        <div class="m empty">— 워크플로우 —</div>
+        <div class="m">유형 ① · ⑤</div>
+        <div class="m">유형 ② · ⑥</div>
+        <div class="m">유형 ③ · ④ · ⑤</div>
+        <div class="m">유형 ⑦ · ⑧</div>
+        <div class="m dark">유형 ⑨ — 캡스톤</div>
+      </div>
+
+      <div class="rm-stage">
+        <div class="s">
+          <div class="lb">Stage A · Sessions 1–3</div>
+          <h6>기획 · 재료 창고 · 워크플로우</h6>
+          <p>AI 서비스 생태계를 ‘재료 창고’ 로 삼고, 메타 프롬프트와 워크플로우 오케스트레이션으로 작은 문제를 푼다. 아직 코드는 쓰지 않는다.</p>
+        </div>
+        <div class="s">
+          <div class="lb">Stage B · Sessions 4–5</div>
+          <h6>어시스트 바이브 코딩</h6>
+          <p>외부망 AI 어시스트로 코드를 받고, 비식별화 후 내부망에서 실행. <strong>공공 현실 기반</strong>의 바이브 코딩. 9유형 중 ①·②·⑤가 여기서 처음 등장.</p>
+        </div>
+        <div class="s dark">
+          <div class="lb">Stage C · Sessions 6–8</div>
+          <h6>에이전트로 풀스택까지</h6>
+          <p>에이전트 도구로 본격 개발. RAG·웹서비스·API·MCP를 조합해 풀스택 서비스를 기획·구축. 8회차 <strong>아키텍처 캔버스</strong>로 거점 미션 1장에 응결.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="footbar">
+    <div class="l"><strong>Module 01</strong>Closing Map · 8주 로드맵</div>
+    <div class="r"><span>Session 01</span><span class="pn">10 / 11</span></div>
+  </div>
+</div></div>
+
+<!-- ════════════════ 11. Closing ════════════════ -->
+<div class="stage"><div class="slide" data-title="Closing">
+  <div class="topbar"><div class="l">Module 01 · Session 01</div><div class="r">Closing · Key Takeaways</div></div>
+  <div class="head">
+    <div class="eyebrow">Closing · 1차시 정리</div>
+    <h1 class="display">우리는 ‘쓰는 사람’으로 들어와 ‘<em>되게 만드는 사람</em>’으로 나간다 ─ 1차시는 좌표 측정의 시간이었다.</h1>
+    <p class="lede">기술적 위치를 짚었고, 도착지의 9유형 지도를 받았고, 외부/내부 동선을 머리에 넣었고, 도구를 정렬했고, 거점 미션 1장을 선언했다. 다음 7주는 이 좌표를 도구·역량·문화로 채워가는 일이다.</p>
+  </div>
+  <div class="head-rule"></div>
+  <div class="body">
+    <div class="take">
+      <div class="t">
+        <div class="num">01.</div>
+        <h4>지형을 안다는 것은 비판할 수 있다는 것</h4>
+        <p>프론티어 5갈래를 직접 써본 사람만이 소버린·공통기반의 타당성을 말할 수 있다. 1차시는 그 ‘말할 권리’의 출발점이다. 2회차에서 50선 투어로 적응력을 체질화한다.</p>
+      </div>
+      <div class="t">
+        <div class="num">02.</div>
+        <h4>9유형은 본 과정의 좌표 격자다</h4>
+        <p>모든 실습은 9유형 중 어딘가에 떨어진다. 같은 문제도 어떤 유형으로 배포하느냐에 따라 만드는 방식이 달라진다. 8회차 캡스톤은 9번 유형까지 도달하는 자리다.</p>
+      </div>
+      <div class="t">
+        <div class="num">03.</div>
+        <h4>거점리더는 설계자이지 개발자가 아니다</h4>
+        <p>코드를 손으로 쓰지 않는다. 청사진을 그리고 에이전트에게 위임한다. 산출물은 코드가 아닌 <em>아키텍처 1장</em>이다. 그 시작이 오늘의 거점 미션 카드다.</p>
+      </div>
+    </div>
+    <div class="next-bar">
+      <div>
+        <div class="lb">Next · Session 02</div>
+        <h5>프론티어 모델 심층 탐구와 <em>AI 도구 생태계 50선</em> ─ 재료 창고를 가득 채우는 시간</h5>
+      </div>
+      <div></div>
+      <div class="arrow">→</div>
+    </div>
+  </div>
+  <div class="footbar">
+    <div class="l"><strong>Module 01</strong>Closing · Key Takeaways & Next Session</div>
+    <div class="r"><span>Session 01</span><span class="pn">11 / 11</span></div>
+  </div>
+</div></div>
+
+</div>
+
+<nav class="deck-nav" id="dots"></nav>
+<div class="deck-controls">↑ ↓ keys · scroll · click dots</div>
+
+<script>
+  function scaleSlides(){
+    const slides = document.querySelectorAll('.slide');
+    const vw = window.innerWidth - 40, vh = window.innerHeight - 40;
+    const scale = Math.min(vw / 1600, vh / 900);
+    slides.forEach(s => s.style.transform = `scale(${scale})`);
+  }
+  window.addEventListener('resize', scaleSlides); scaleSlides();
+
+  const stages = document.querySelectorAll('.stage');
+  const dots = document.getElementById('dots');
+  stages.forEach(s => {
+    const a = document.createElement('a');
+    a.href = '#'; a.title = s.querySelector('.slide').dataset.title || 'Slide';
+    a.addEventListener('click', e => { e.preventDefault(); s.scrollIntoView({behavior:'smooth'}); });
+    dots.appendChild(a);
+  });
+  const navDots = dots.querySelectorAll('a');
+  const deck = document.getElementById('deck');
+  function updateDots(){
+    let i=0,m=Infinity;
+    stages.forEach((s,idx)=>{const r=s.getBoundingClientRect();const d=Math.abs(r.top+r.height/2-window.innerHeight/2);if(d<m){m=d;i=idx}});
+    navDots.forEach((d,idx)=>d.classList.toggle('active',idx===i));
+  }
+  deck.addEventListener('scroll', updateDots); updateDots();
+  document.addEventListener('keydown', e => {
+    let i=0,m=Infinity;
+    stages.forEach((s,idx)=>{const r=s.getBoundingClientRect();const d=Math.abs(r.top+r.height/2-window.innerHeight/2);if(d<m){m=d;i=idx}});
+    if(['ArrowDown','PageDown',' '].includes(e.key) && i < stages.length-1){e.preventDefault();stages[i+1].scrollIntoView({behavior:'smooth'})}
+    else if(['ArrowUp','PageUp'].includes(e.key) && i>0){e.preventDefault();stages[i-1].scrollIntoView({behavior:'smooth'})}
+  });
+</script>
+<script>/* kg-preview: #<heading> \uc704\uce58\ub85c \uc774\ub3d9 */
+(function(){function norm(t){return (t||'').replace(/\s+/g,'').toLowerCase()}
+function go(){var h=decodeURIComponent(location.hash.slice(1));if(!h)return;var k=norm(h).slice(0,24);if(!k)return;
+var best=null,bl=1e9,els=document.body.querySelectorAll('h1,h2,h3,h4,h5,p,div,span,li,td,text,tspan,section,article');
+for(var i=0;i<els.length;i++){var e=els[i],t=norm(e.textContent);if(t.length<bl&&t.indexOf(k)>-1){best=e;bl=t.length}}
+if(!best)return;var box=best.closest('section,[class*=slide],[class*=page],article')||best;
+box.scrollIntoView({block:'start'});box.style.outline='3px solid #c0504d';box.style.outlineOffset='4px';
+setTimeout(function(){box.style.outline=''},2600)}
+window.addEventListener('load',function(){setTimeout(go,400)});window.addEventListener('hashchange',go)})();</script></body>
+</html>

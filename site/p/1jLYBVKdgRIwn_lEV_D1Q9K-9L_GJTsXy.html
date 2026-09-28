@@ -1,0 +1,1139 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head><meta name="robots" content="noindex, nofollow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HTML로 파이썬을 한다 — Pyodide 실험실</title>
+<style>
+  :root{
+    --ink:#0d1321;        /* 바탕: 깊은 잉크 */
+    --panel:#151d2e;      /* 패널 */
+    --panel2:#1b2438;     /* 패널 강조 */
+    --line:#2a3550;       /* 경계선 */
+    --text:#dde4f0;       /* 본문 */
+    --dim:#8b97b0;        /* 보조 텍스트 */
+    --py-yellow:#ffd43b;  /* 파이썬 노랑 */
+    --py-blue:#4b8bbe;    /* 파이썬 블루 */
+    --ok:#5dd39e;
+    --err:#ff7a7a;
+    --mono:'Consolas','D2Coding','Nanum Gothic Coding',ui-monospace,monospace;
+    --sans:'Pretendard','Malgun Gothic','Apple SD Gothic Neo',system-ui,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    background:var(--ink);color:var(--text);font-family:var(--sans);
+    font-size:15px;line-height:1.6;
+  }
+  /* ── 상단: 부팅 로그 스트립 (이 페이지의 시그니처) ───────────── */
+  header{
+    border-bottom:1px solid var(--line);
+    background:linear-gradient(180deg,#101828,#0d1321);
+    padding:18px 22px 0;
+  }
+  .masthead{display:flex;flex-wrap:wrap;align-items:baseline;gap:12px}
+  .masthead h1{font-size:20px;font-weight:800;letter-spacing:-.3px}
+  .masthead h1 .py{color:var(--py-yellow)}
+  .masthead .sub{color:var(--dim);font-size:13px}
+  .statuspill{
+    margin-left:auto;font-family:var(--mono);font-size:12.5px;
+    border:1px solid var(--line);border-radius:20px;padding:4px 14px;
+    display:flex;align-items:center;gap:8px;background:var(--panel);
+  }
+  .dot{width:8px;height:8px;border-radius:50%;background:var(--py-yellow);animation:blink 1s infinite}
+  .dot.ready{background:var(--ok);animation:none}
+  .dot.fail{background:var(--err);animation:none}
+  @keyframes blink{50%{opacity:.25}}
+  #bootlog{
+    font-family:var(--mono);font-size:12px;color:var(--dim);
+    padding:10px 2px 12px;white-space:pre-wrap;min-height:52px;
+  }
+  #bootlog .ok{color:var(--ok)} #bootlog .hi{color:var(--py-yellow)}
+
+  /* ── 레이아웃 ───────────────────────────────────────────── */
+  .wrap{display:flex;min-height:calc(100vh - 120px)}
+  nav{
+    width:190px;flex-shrink:0;border-right:1px solid var(--line);
+    padding:16px 10px;display:flex;flex-direction:column;gap:4px;
+  }
+  nav button{
+    all:unset;cursor:pointer;padding:9px 14px;border-radius:8px;
+    font-size:14px;color:var(--dim);display:flex;gap:9px;align-items:center;
+  }
+  nav button .k{font-family:var(--mono);font-size:11px;color:var(--py-blue);width:18px}
+  nav button:hover{background:var(--panel);color:var(--text)}
+  nav button.on{background:var(--panel2);color:var(--py-yellow);font-weight:700}
+  nav button:focus-visible{outline:2px solid var(--py-yellow)}
+  main{flex:1;padding:22px 26px;max-width:1020px}
+  section{display:none}
+  section.on{display:block;animation:fade .18s ease}
+  @keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1}}
+  h2{font-size:17px;margin-bottom:4px}
+  .lede{color:var(--dim);font-size:13.5px;margin-bottom:16px}
+  .lede code{color:var(--py-yellow);font-family:var(--mono);font-size:12.5px}
+
+  /* ── 공통 부품 ─────────────────────────────────────────── */
+  textarea,input[type=text]{
+    width:100%;background:#0a0f1c;color:var(--text);border:1px solid var(--line);
+    border-radius:10px;padding:12px 14px;font-family:var(--mono);font-size:13.5px;
+    resize:vertical;
+  }
+  textarea:focus,input:focus{outline:1.5px solid var(--py-blue)}
+  .btn{
+    all:unset;cursor:pointer;background:var(--py-yellow);color:#1a1a05;
+    font-weight:800;font-size:13.5px;padding:9px 20px;border-radius:9px;
+  }
+  .btn:hover{filter:brightness(1.08)}
+  .btn:disabled{opacity:.4;cursor:wait}
+  .btn.ghost{background:transparent;color:var(--py-blue);border:1px solid var(--line)}
+  .btn:focus-visible{outline:2px solid #fff}
+  .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:12px 0}
+  .out{
+    background:#0a0f1c;border:1px solid var(--line);border-radius:10px;
+    padding:14px 16px;font-family:var(--mono);font-size:13px;
+    white-space:pre-wrap;overflow-x:auto;min-height:48px;max-height:420px;overflow-y:auto;
+  }
+  .out .in{color:var(--py-blue)}
+  .out .err{color:var(--err)}
+  .out .res{color:var(--py-yellow)}
+  .out:empty::before{content:"실행 결과가 여기에 표시됩니다";color:#3d4a66}
+  .hint{font-size:12.5px;color:var(--dim);margin-top:8px}
+  .hint b{color:var(--py-yellow)}
+  select{
+    background:var(--panel);color:var(--text);border:1px solid var(--line);
+    border-radius:8px;padding:8px 10px;font-size:13px;font-family:var(--sans);
+  }
+  table.df{border-collapse:collapse;font-family:var(--mono);font-size:12.5px;margin-top:6px}
+  table.df th,table.df td{border:1px solid var(--line);padding:5px 10px;text-align:right}
+  table.df th{background:var(--panel2);color:var(--py-yellow)}
+  .imgbox{margin-top:12px}
+  .imgbox img{max-width:100%;border-radius:10px;border:1px solid var(--line);background:#fff}
+  .trio{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+  .trio figure{flex:1;min-width:170px;text-align:center}
+  .trio img{width:100%;border-radius:10px;border:1px solid var(--line);background:#fff}
+  .trio figcaption{font-size:12px;color:var(--dim);margin-top:6px;font-family:var(--mono)}
+  .drop{
+    border:2px dashed var(--line);border-radius:12px;padding:34px;text-align:center;
+    color:var(--dim);cursor:pointer;transition:.15s;
+  }
+  .drop:hover,.drop.over{border-color:var(--py-yellow);color:var(--py-yellow);background:var(--panel)}
+  footer{
+    border-top:1px solid var(--line);color:var(--dim);font-size:12.5px;
+    padding:16px 24px;line-height:1.8;
+  }
+  footer code{color:var(--py-blue);font-family:var(--mono)}
+  #jstarget{
+    border:1px solid var(--line);border-radius:12px;padding:22px;text-align:center;
+    font-size:15px;transition:.3s;background:var(--panel);
+  }
+  @media (max-width:760px){
+    .wrap{flex-direction:column}
+    nav{width:100%;flex-direction:row;flex-wrap:wrap;border-right:none;border-bottom:1px solid var(--line)}
+    main{padding:16px}
+  }
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="masthead">
+    <h1>HTML로 <span class="py">파이썬</span>을 한다</h1>
+    <span class="sub">Pyodide 실험실 · 설치 0, 서버 0 · 폐쇄망 대응</span>
+    <div class="statuspill"><span class="dot" id="dot"></span><span id="statustext">엔진 부팅 중…</span></div>
+  </div>
+  <div id="bootlog"></div>
+</header>
+
+<div class="wrap">
+<nav id="nav">
+  <button data-t="console" class="on"><span class="k">1</span>파이썬 콘솔</button>
+  <button data-t="pandas"><span class="k">2</span>NumPy·pandas</button>
+  <button data-t="plot"><span class="k">3</span>Matplotlib 차트</button>
+  <button data-t="csv"><span class="k">4</span>CSV 분석기</button>
+  <button data-t="pip"><span class="k">5</span>패키지 설치</button>
+  <button data-t="interop"><span class="k">6</span>JS ↔ Python</button>
+  <button data-t="fs"><span class="k">7</span>가상 파일시스템</button>
+  <button data-t="excel"><span class="k">8</span>엑셀 (openpyxl)</button>
+  <button data-t="ml"><span class="k">9</span>통계·머신러닝</button>
+  <button data-t="sym"><span class="k">10</span>수식 (SymPy)</button>
+  <button data-t="img"><span class="k">11</span>이미지 (Pillow)</button>
+  <button data-t="soup"><span class="k">12</span>HTML·XML 파싱</button>
+  <button data-t="cat"><span class="k">13</span>오프라인 카탈로그</button>
+  <button data-t="doc"><span class="k">14</span>문서 (HWPX·Word)</button>
+</nav>
+
+<main>
+
+<!-- 1. 콘솔 -->
+<section id="console" class="on">
+  <h2>파이썬 콘솔 (REPL)</h2>
+  <p class="lede">아무 파이썬 코드나 실행해 보세요. 마지막 줄의 값은 자동으로 출력됩니다. <code>Ctrl+Enter</code>로 실행.</p>
+  <div class="row">
+    <select id="examples">
+      <option value="">예제 고르기…</option>
+      <option value="ex1">피보나치 수열</option>
+      <option value="ex2">리스트 컴프리헨션</option>
+      <option value="ex3">날짜 계산 (D-day)</option>
+      <option value="ex4">정규식으로 전화번호 추출</option>
+      <option value="ex5">100만 번 반복 속도 측정</option>
+      <option value="ex6">한글 텍스트 단어 빈도</option>
+    </select>
+  </div>
+  <textarea id="code" rows="7" spellcheck="false">print("안녕, 파이썬!")
+sum(range(1, 101))</textarea>
+  <div class="row">
+    <button class="btn" id="run">▶ 실행</button>
+    <button class="btn ghost" id="clear">지우기</button>
+    <span class="hint" id="contime"></span>
+  </div>
+  <div class="out" id="conout"></div>
+</section>
+
+<!-- 2. pandas -->
+<section id="pandas">
+  <h2>NumPy · pandas</h2>
+  <p class="lede">설치에 몇 분 걸리던 데이터 분석 스택이 버튼 하나로 로드됩니다. <code>import pandas</code>가 성공하는 순간을 보세요.</p>
+  <div class="row">
+    <button class="btn" id="pdrun">▶ DataFrame 데모 실행</button>
+    <span class="hint" id="pdstat"></span>
+  </div>
+  <div class="out" id="pdout"></div>
+  <div id="pdtable"></div>
+</section>
+
+<!-- 3. matplotlib -->
+<section id="plot">
+  <h2>Matplotlib 차트</h2>
+  <p class="lede">파이썬으로 그린 그래프가 PNG 이미지로 즉석 렌더링됩니다. (브라우저 환경엔 한글 폰트가 없어 라벨은 영문)</p>
+  <div class="row">
+    <button class="btn" id="pltrun">▶ 사인파 + 히스토그램 그리기</button>
+    <button class="btn ghost" id="pltrand">🎲 랜덤 데이터로 다시</button>
+    <span class="hint" id="pltstat"></span>
+  </div>
+  <div class="imgbox" id="pltbox"></div>
+</section>
+
+<!-- 4. CSV -->
+<section id="csv">
+  <h2>CSV 분석기</h2>
+  <p class="lede">CSV를 던지면 pandas가 구조를 파악하고 기술통계를 냅니다. 엑셀이 저장한 한글 CSV(EUC-KR)도 인코딩을 자동 감지합니다. 파일은 서버로 가지 않습니다 — 전부 이 탭 안에서 끝.</p>
+  <div class="drop" id="drop">CSV 파일을 여기로 드래그하거나 클릭해서 선택
+    <input type="file" id="csvfile" accept=".csv,text/csv" hidden>
+  </div>
+  <div class="row">
+    <button class="btn ghost" id="csvsample">샘플 데이터로 체험 (부서별 급여 20행)</button>
+    <span class="hint" id="csvstat"></span>
+  </div>
+  <div class="out" id="csvout" style="display:none"></div>
+  <div id="csvtable"></div>
+</section>
+
+<!-- 5. micropip -->
+<section id="pip">
+  <h2>패키지 설치 (micropip)</h2>
+  <p class="lede">pip의 브라우저 버전. 순수 파이썬 패키지를 PyPI에서 즉석 설치합니다.</p>
+  <div class="row">
+    <input type="text" id="pipname" value="cowsay" style="max-width:260px" spellcheck="false">
+    <button class="btn" id="pipgo">▶ 설치 + 테스트</button>
+  </div>
+  <p class="hint">추천 체험: <b>cowsay</b>(소가 말함) · <b>emoji</b> · <b>python-dateutil</b> — C 확장이 필요한 패키지는 Pyodide가 미리 빌드한 목록에 있어야 합니다. <b>주의:</b> 이 탭만은 PyPI 인터넷 접속이 필요해서 폐쇄망에서는 동작하지 않습니다 (numpy·pandas·matplotlib은 로컬 배포본에 포함이라 오프라인 OK).</p>
+  <div class="out" id="pipout"></div>
+</section>
+
+<!-- 6. interop -->
+<section id="interop">
+  <h2>JS ↔ Python 상호운용</h2>
+  <p class="lede">두 언어가 한 메모리 안에 삽니다. 파이썬이 웹페이지를 직접 만지고, JS 데이터가 파이썬으로 넘어갑니다.</p>
+  <div id="jstarget">← 이 상자를 파이썬이 조작합니다</div>
+  <div class="row">
+    <button class="btn" id="py2js">▶ Python → 웹페이지 조작</button>
+    <button class="btn ghost" id="js2py">▶ JS 데이터 → pandas 분석</button>
+  </div>
+  <div class="out" id="ioout"></div>
+</section>
+
+<!-- 7. FS -->
+<section id="fs">
+  <h2>가상 파일시스템</h2>
+  <p class="lede">Pyodide 안에는 메모리로 만든 리눅스식 파일시스템이 있습니다. 파이썬이 쓴 파일을 진짜 PC로 다운로드할 수도 있어요.</p>
+  <div class="row">
+    <button class="btn" id="fswrite">▶ 파이썬으로 보고서 파일 생성</button>
+    <button class="btn ghost" id="fsdown" disabled>💾 내 PC로 다운로드</button>
+  </div>
+  <div class="out" id="fsout"></div>
+</section>
+
+<!-- 8. 엑셀 -->
+<section id="excel">
+  <h2>엑셀 (openpyxl)</h2>
+  <p class="lede">한글 다음으로 흔한 공공 파일 포맷. 엑셀 프로그램 없이 <code>.xlsx</code>를 만들고 읽습니다 — openpyxl은 full 배포본 포함이라 폐쇄망 OK.</p>
+  <div class="row">
+    <button class="btn" id="xlmake">▶ 서식 있는 .xlsx 생성 + 다운로드</button>
+    <label class="btn ghost" for="xlfile">📂 내 엑셀 파일 읽어보기</label>
+    <input type="file" id="xlfile" accept=".xlsx" hidden>
+    <span class="hint" id="xlstat"></span>
+  </div>
+  <div class="out" id="xlout"></div>
+</section>
+
+<!-- 9. 통계·ML -->
+<section id="ml">
+  <h2>통계 검정 · 머신러닝</h2>
+  <p class="lede">scipy와 scikit-learn — 논문에서 쓰는 그 라이브러리가 브라우저에서 돕니다. "민원 처리 개편이 정말 효과가 있었나?"를 숫자로 답하기.</p>
+  <div class="row">
+    <button class="btn" id="mlttest">▶ t-검정: 개편 전후 처리시간 비교</button>
+    <button class="btn" id="mlreg">▶ 회귀 예측 + KMeans 군집</button>
+    <span class="hint" id="mlstat"></span>
+  </div>
+  <div class="out" id="mlout"></div>
+</section>
+
+<!-- 10. SymPy -->
+<section id="sym">
+  <h2>수식 계산 (SymPy)</h2>
+  <p class="lede">숫자가 아니라 수식 자체를 다루는 기호 계산. 방정식 풀이·인수분해·미분·적분을 한 번에.</p>
+  <div class="row">
+    <input type="text" id="symexpr" value="x**2 - 5*x + 6" style="max-width:280px" spellcheck="false">
+    <button class="btn" id="symgo">▶ 풀기 · 미분 · 적분</button>
+    <span class="hint" id="symstat"></span>
+  </div>
+  <p class="hint">x가 들어간 식이면 뭐든 됩니다. 예: <b>sin(x)*x</b>, <b>x**3 - 1</b>, <b>exp(x)/x</b></p>
+  <div class="out" id="symout"></div>
+</section>
+
+<!-- 11. Pillow -->
+<section id="img">
+  <h2>이미지 처리 (Pillow)</h2>
+  <p class="lede">포토샵 없이 파이썬으로 픽셀을 만집니다. 사진을 고르면 흑백·윤곽선 변환을 즉석에서 — 이미지는 밖으로 안 나갑니다.</p>
+  <div class="row">
+    <label class="btn" for="imgfile">📂 이미지 선택</label>
+    <input type="file" id="imgfile" accept="image/*" hidden>
+    <span class="hint" id="imgstat"></span>
+  </div>
+  <div class="out" id="imgout" style="display:none"></div>
+  <div id="imgbox"></div>
+</section>
+
+<!-- 12. BeautifulSoup -->
+<section id="soup">
+  <h2>HTML·XML 파싱 (BeautifulSoup + lxml)</h2>
+  <p class="lede">문서 덩어리에서 원하는 것만 뽑아내는 도구. 게시판 HTML에서 표를 긁어 DataFrame으로 — 축 F의 HWPX(=XML) 해부로 가는 징검다리.</p>
+  <textarea id="souphtml" rows="9" spellcheck="false"><html><head><title>민원 게시판</title></head>
+<body>
+<h1>이번 주 접수 현황</h1>
+<a href="/notice/1">청사 주차장 공사 안내</a>
+<a href="/notice/2">민원실 운영시간 변경</a>
+<table>
+<tr><th>번호</th><th>제목</th><th>담당</th><th>상태</th></tr>
+<tr><td>101</td><td>도로 보수 요청</td><td>건설과</td><td>처리중</td></tr>
+<tr><td>102</td><td>가로등 고장</td><td>도시과</td><td>완료</td></tr>
+<tr><td>103</td><td>공원 소음 민원</td><td>환경과</td><td>접수</td></tr>
+</table>
+</body></html></textarea>
+  <div class="row">
+    <button class="btn" id="soupgo">▶ 제목 · 링크 · 표 추출</button>
+    <span class="hint" id="soupstat"></span>
+  </div>
+  <div class="out" id="soupout"></div>
+</section>
+
+<!-- 13. 카탈로그 -->
+<section id="cat">
+  <h2>오프라인 패키지 카탈로그</h2>
+  <p class="lede">full 배포본에 미리 빌드돼 들어있는 대표 패키지들 — <b>전부 폐쇄망에서 <code>loadPackage</code> 한 줄로 로드됩니다.</b> 골라서 즉석 로드 테스트를 해보세요.</p>
+  <div class="row">
+    <select id="catsel"></select>
+    <button class="btn" id="cattest">▶ 로드 + import 테스트</button>
+    <span class="hint" id="catstat"></span>
+  </div>
+  <div class="out" id="catout"></div>
+  <div id="cattable"></div>
+</section>
+
+<!-- 14. 문서 -->
+<section id="doc">
+  <h2>문서: HWPX 해부 · Word 생성</h2>
+  <p class="lede">한글 파일(HWPX)과 워드 파일(DOCX)의 정체는 <b>ZIP + XML</b>. 해부에는 파이썬 표준 내장(<code>zipfile</code>·<code>re</code>)만 쓰므로 <b>추가 라이브러리 0, 폐쇄망 무조건 OK</b>입니다.</p>
+  <div class="row">
+    <label class="btn" for="docfile">📂 .hwpx / .docx 해부하기</label>
+    <input type="file" id="docfile" accept=".hwpx,.docx" hidden>
+    <button class="btn ghost" id="docxmake">▶ Word .docx 생성 (python-docx)</button>
+    <span class="hint" id="docstat"></span>
+  </div>
+  <p class="hint">해부기: 파일을 넣으면 내부 ZIP 목록과 본문 텍스트(<b>&lt;hp:t&gt;</b> / <b>&lt;w:t&gt;</b>)를 추출합니다 — 한글·워드 프로그램 없이. Word 생성: python-docx는 순수 파이썬이라 온라인은 micropip으로, 폐쇄망은 휠 파일을 <b>./libs/wheels/</b>에 반입해 설치합니다.</p>
+  <div class="out" id="docout"></div>
+
+  <hr style="border:none;border-top:1px solid var(--line);margin:24px 0">
+  <h2 style="font-size:15px">템플릿 보존 방식 — HWPX 찾아바꾸기 생성기</h2>
+  <p class="lede">해부의 다음 단계는 생성입니다. 원본 .hwpx를 통째로 품고 본문 텍스트만 치환한 뒤 ZIP으로 재조립 — cdsahwpx의 원리를 파이썬 20줄로. 표준 내장만 사용, 폐쇄망 OK.</p>
+  <div class="row">
+    <label class="btn ghost" for="tplfile">📂 템플릿 .hwpx 선택</label>
+    <input type="file" id="tplfile" accept=".hwpx" hidden>
+    <span class="hint" id="tplname">템플릿 없음</span>
+  </div>
+  <textarea id="pairs" rows="3" spellcheck="false">{{이름}} => 김철수
+{{날짜}} => 2026-07-04</textarea>
+  <div class="row">
+    <button class="btn" id="tplgo" disabled>▶ 찾아바꾸기 → .hwpx 재조립 + 다운로드</button>
+  </div>
+  <p class="hint">규칙: 자리표(<b>{{이름}}</b> 등)는 한글에서 <b>한 번에 이어서 타이핑</b>해 두세요. 중간에 서식을 바꾸면 텍스트가 여러 &lt;hp:t&gt; 조각으로 쪼개져서 찾기가 실패합니다 (치환 0곳이 나오면 대부분 이 원인).</p>
+  <div class="out" id="tplout"></div>
+</section>
+
+</main>
+</div>
+
+<footer>
+  <b>폐쇄망 체크리스트</b> — 이 파일은 <code>./libs/pyodide/</code> 폴더를 먼저 찾고, 없을 때만 CDN으로 갑니다. 폴더만 갖추면 인터넷 0%.<br>
+  ① 인터넷 되는 PC에서 Pyodide 배포본(GitHub pyodide Releases → <code>pyodide-0.26.4.tar.bz2</code>, full 버전)을 다운로드<br>
+  ② 압축을 풀어 나온 파일 전체를 이 HTML 옆 <code>libs/pyodide/</code> 폴더에 복사 → USB로 업무망 반입 (numpy·pandas·matplotlib 휠 포함돼 있음)<br>
+  ③ 실행은 더블클릭(<code>file://</code>)이 아니라 <b>VS Code Live Server</b>로 — 브라우저 보안 규칙상 file://에서는 엔진 조각(.wasm)을 fetch로 못 읽습니다 (스택리스트의 CORS 항목 그대로)<br>
+  ④ 인터넷 모드일 땐 첫 로딩만 느리고(엔진 약 10MB+) 이후엔 브라우저 캐시로 빨라집니다
+</footer>
+
+<script>
+"use strict";
+/* ───────────────────── 공통 유틸 ───────────────────── */
+const $ = s => document.querySelector(s);
+let py = null;                 // pyodide 인스턴스
+const loaded = new Set();      // 로드된 패키지 캐시
+
+function boot(msg, cls){
+  const el = $('#bootlog');
+  el.innerHTML += (cls ? `<span class="${cls}">` : '') + msg + (cls ? '</span>' : '') + '\n';
+}
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;'); }
+function print(box, txt, cls){
+  box.innerHTML += cls ? `<span class="${cls}">${esc(txt)}</span>\n` : esc(txt) + '\n';
+  box.scrollTop = box.scrollHeight;
+}
+async function ensure(pkgs, statEl){
+  const need = pkgs.filter(p => !loaded.has(p));
+  if (!need.length) return;
+  if (statEl) statEl.textContent = need.join(', ') + ' 로드 중… (첫 1회만)';
+  await py.loadPackage(need);
+  need.forEach(p => loaded.add(p));
+  if (statEl) statEl.textContent = '';
+}
+
+/* ───────────────────── 부팅 시퀀스 ───────────────────── */
+function loadScript(src){
+  return new Promise((res, rej) => {
+    const s = document.createElement('script');
+    s.src = src; s.onload = res;
+    s.onerror = () => { s.remove(); rej(new Error(src)); };
+    document.head.appendChild(s);
+  });
+}
+(async () => {
+  const t0 = performance.now();
+  try {
+    let indexURL;
+    // 1순위: 이 HTML 옆의 로컬 배포본 → 폐쇄망(인터넷 0%) 모드
+    try {
+      await loadScript('./libs/pyodide/pyodide.js');
+      indexURL = './libs/pyodide/';
+      boot('[boot] ./libs/pyodide/ 폴더 발견 — 폐쇄망 모드로 기동 (인터넷 사용 안 함)', 'hi');
+    } catch {
+      boot('[boot] 로컬 /libs/pyodide/ 없음 → jsdelivr CDN에서 엔진 다운로드 (인터넷 모드)');
+      await loadScript('https://cdn.jsdelivr.net/pyodide/v0.26.4/full/pyodide.js');
+      indexURL = 'https://cdn.jsdelivr.net/pyodide/v0.26.4/full/';
+    }
+    py = await loadPyodide({ indexURL });
+    const ver = py.runPython('import sys; sys.version.split()[0]');
+    const sec = ((performance.now()-t0)/1000).toFixed(1);
+    boot(`[boot] Python ${ver} 기동 완료 (${sec}초)`, 'ok');
+    boot('[boot] 지금 이 순간, 당신의 크롬은 파이썬 인터프리터입니다.', 'hi');
+    $('#dot').classList.add('ready');
+    $('#statustext').textContent = `Python ${ver} 준비됨`;
+    // 표준출력을 각 탭의 출력창으로 흘려보내기 위한 훅
+    py.setStdout({ batched: s => { if (window.__sink) print(window.__sink, s); } });
+    py.setStderr({ batched: s => { if (window.__sink) print(window.__sink, s, 'err'); } });
+  } catch (e) {
+    boot('[fail] 엔진 로드 실패: ' + e.message, 'err');
+    boot('       인터넷 모드라면: 연결 확인. 폐쇄망이라면: 더블클릭(file://)으로는 .wasm을 못 읽습니다');
+    boot('       → VS Code Live Server로 이 파일을 여세요. 자세한 건 하단 폐쇄망 체크리스트.');
+    $('#dot').classList.add('fail');
+    $('#statustext').textContent = '로드 실패';
+  }
+})();
+
+async function runPy(code, sinkBox){
+  if (!py) throw new Error('엔진이 아직 준비되지 않았습니다. 상단 상태를 확인하세요.');
+  window.__sink = sinkBox || null;
+  try {
+    const r = await py.runPythonAsync(code);
+    return r;
+  } finally { window.__sink = null; }
+}
+
+/* ───────────────────── 탭 전환 ───────────────────── */
+$('#nav').addEventListener('click', e => {
+  const b = e.target.closest('button'); if (!b) return;
+  document.querySelectorAll('nav button').forEach(x => x.classList.remove('on'));
+  document.querySelectorAll('main section').forEach(x => x.classList.remove('on'));
+  b.classList.add('on');
+  $('#' + b.dataset.t).classList.add('on');
+});
+
+/* ───────────────────── 1. 콘솔 ───────────────────── */
+const EX = {
+  ex1:`# 피보나치 — 반복문 기본기
+a, b = 0, 1
+seq = []
+for _ in range(12):
+    seq.append(a)
+    a, b = b, a + b
+print(seq)`,
+  ex2:`# 리스트 컴프리헨션 — 파이썬다운 한 줄
+squares = [n**2 for n in range(1, 11) if n % 2 == 0]
+print("짝수의 제곱:", squares)
+sum(squares)`,
+  ex3:`# 날짜 계산 — datetime은 표준 내장
+from datetime import date
+target = date(2026, 12, 31)
+dday = (target - date.today()).days
+print(f"2026년 마지막 날까지 D-{dday}")`,
+  ex4:`# 정규식 — 문서에서 전화번호만 뽑기
+import re
+text = "문의: 02-1234-5678, 담당 김주무관 010-9876-5432 (팩스 031-777-8888)"
+print(re.findall(r"\\d{2,3}-\\d{3,4}-\\d{4}", text))`,
+  ex5:`# 속도 체감 — 100만 번 루프
+import time
+t = time.time()
+total = 0
+for i in range(1_000_000):
+    total += i
+print(f"합계 {total:,}  /  {time.time()-t:.3f}초 소요")`,
+  ex6:`# 한글 텍스트 단어 빈도 — Counter 내장
+from collections import Counter
+text = "브라우저 파이썬 브라우저 설치 없는 파이썬 브라우저 재발견"
+print(Counter(text.split()).most_common(3))`
+};
+$('#examples').addEventListener('change', e => {
+  if (EX[e.target.value]) $('#code').value = EX[e.target.value];
+});
+async function doRun(){
+  const box = $('#conout'), code = $('#code').value;
+  print(box, '>>> ' + code.split('\n').join('\n... '), 'in');
+  const t0 = performance.now();
+  try {
+    const r = await runPy(code, box);
+    if (r !== undefined && r !== null) {
+      print(box, String(r), 'res');
+      if (r instanceof py.ffi.PyProxy) r.destroy();
+    }
+    $('#contime').textContent = (performance.now()-t0).toFixed(0) + 'ms';
+  } catch (e) { print(box, e.message, 'err'); }
+}
+$('#run').addEventListener('click', doRun);
+$('#code').addEventListener('keydown', e => {
+  if (e.ctrlKey && e.key === 'Enter') { e.preventDefault(); doRun(); }
+});
+$('#clear').addEventListener('click', () => { $('#conout').innerHTML = ''; $('#contime').textContent=''; });
+
+/* ───────────────────── 2. pandas ───────────────────── */
+$('#pdrun').addEventListener('click', async () => {
+  const box = $('#pdout'); box.innerHTML = ''; $('#pdtable').innerHTML = '';
+  try {
+    await ensure(['numpy','pandas'], $('#pdstat'));
+    const html = await runPy(`
+import numpy as np, pandas as pd
+print("numpy", np.__version__, "/ pandas", pd.__version__, "— 설치 0으로 임포트 성공\\n")
+
+rng = np.random.default_rng(42)
+df = pd.DataFrame({
+    "부서": ["기획","기획","재정","재정","민원","민원","전산","전산"],
+    "분기": ["1Q","2Q"]*4,
+    "예산집행률": np.round(rng.uniform(62, 98, 8), 1),
+    "처리건수": rng.integers(120, 900, 8),
+})
+print("── 원본 8행 ──"); print(df.to_string(index=False))
+print("\\n── 부서별 평균 (groupby) ──")
+g = df.groupby("부서").agg(평균집행률=("예산집행률","mean"), 총건수=("처리건수","sum"))
+print(g.to_string())
+print("\\n── 피벗 테이블 ──")
+print(pd.pivot_table(df, values="예산집행률", index="부서", columns="분기").to_string())
+g.reset_index().to_html(index=False, classes="df", border=0)
+`, box);
+    $('#pdtable').innerHTML = '<p class="hint">↓ DataFrame을 HTML 표로 직접 변환한 결과 (df.to_html)</p>' + html;
+  } catch (e) { print(box, e.message, 'err'); }
+});
+
+/* ───────────────────── 3. matplotlib ───────────────────── */
+async function drawPlot(seed){
+  const stat = $('#pltstat'), boxImg = $('#pltbox');
+  try {
+    await ensure(['numpy','matplotlib'], stat);
+    stat.textContent = '렌더링 중…';
+    const b64 = await runPy(`
+import matplotlib
+matplotlib.use("AGG")
+import matplotlib.pyplot as plt
+import numpy as np, io, base64
+
+rng = np.random.default_rng(${seed})
+x = np.linspace(0, 4*np.pi, 300)
+fig, (a1, a2) = plt.subplots(1, 2, figsize=(9.6, 3.6), dpi=110)
+a1.plot(x, np.sin(x), lw=2, color="#4b8bbe", label="sin(x)")
+a1.plot(x, np.sin(x)*np.exp(-x/8), lw=2, color="#ffb000", label="damped")
+a1.legend(); a1.set_title("Waveform"); a1.grid(alpha=.3)
+data = rng.normal(70, 12, 1000)
+a2.hist(data, bins=28, color="#4b8bbe", edgecolor="white")
+a2.axvline(data.mean(), color="#d62728", ls="--", lw=2)
+a2.set_title(f"Histogram (mean={data.mean():.1f})")
+fig.tight_layout()
+buf = io.BytesIO(); fig.savefig(buf, format="png"); plt.close(fig)
+base64.b64encode(buf.getvalue()).decode()
+`);
+    boxImg.innerHTML = `<img alt="matplotlib 렌더링 결과" src="data:image/png;base64,${b64}">`;
+    stat.textContent = '완료 — 이 PNG는 파이썬이 브라우저 안에서 그렸습니다';
+  } catch (e) { stat.textContent = ''; boxImg.innerHTML = `<div class="out err">${esc(e.message)}</div>`; }
+}
+$('#pltrun').addEventListener('click', () => drawPlot(7));
+$('#pltrand').addEventListener('click', () => drawPlot(Date.now() % 10000));
+
+/* ───────────────────── 4. CSV ───────────────────── */
+const drop = $('#drop');
+drop.addEventListener('click', () => $('#csvfile').click());
+drop.addEventListener('dragover', e => { e.preventDefault(); drop.classList.add('over'); });
+drop.addEventListener('dragleave', () => drop.classList.remove('over'));
+drop.addEventListener('drop', e => {
+  e.preventDefault(); drop.classList.remove('over');
+  if (e.dataTransfer.files[0]) analyzeCSV(e.dataTransfer.files[0]);
+});
+$('#csvfile').addEventListener('change', e => { if (e.target.files[0]) analyzeCSV(e.target.files[0]); });
+$('#csvsample').addEventListener('click', () => {
+  const rows = ['이름,부서,연차,연봉'];
+  const dept = ['기획','재정','민원','전산'], base = {기획:4200,재정:4500,민원:3900,전산:4800};
+  for (let i = 0; i < 20; i++) {
+    const d = dept[i % 4], y = 1 + (i * 7) % 15;
+    rows.push(`직원${String(i+1).padStart(2,'0')},${d},${y},${base[d] + y*130 + (i*37)%250}`);
+  }
+  analyzeCSV(new File([rows.join('\n')], 'sample.csv'));
+});
+function decodeSmart(buf){
+  // 엑셀이 저장한 한글 CSV는 대부분 CP949(EUC-KR)라서 UTF-8로 읽으면 깨진다.
+  // 전략: UTF-8로 엄격 해석 시도 → 실패하면 EUC-KR로 재해석.
+  try {
+    return { text: new TextDecoder('utf-8', { fatal: true }).decode(buf), enc: 'UTF-8' };
+  } catch {
+    return { text: new TextDecoder('euc-kr').decode(buf), enc: 'EUC-KR/CP949 (엑셀 저장 CSV)' };
+  }
+}
+async function analyzeCSV(file){
+  const box = $('#csvout'); box.style.display = 'block'; box.innerHTML = ''; $('#csvtable').innerHTML = '';
+  print(box, `파일: ${file.name} (${(file.size/1024).toFixed(1)} KB) — 서버 전송 없음, 브라우저 메모리로만 읽음`, 'in');
+  try {
+    await ensure(['numpy','pandas'], $('#csvstat'));
+    const { text, enc } = decodeSmart(await file.arrayBuffer());
+    print(box, `인코딩 자동 감지: ${enc}`, 'res');
+    py.globals.set('csv_text', text);
+    const html = await runPy(`
+import pandas as pd, io
+df = pd.read_csv(io.StringIO(csv_text))
+print(f"{len(df)}행 × {len(df.columns)}열  |  컬럼: {list(df.columns)}")
+num = df.select_dtypes("number")
+if len(num.columns):
+    print("\\n── 수치형 기술통계 (describe) ──")
+    print(num.describe().round(2).to_string())
+cat = df.select_dtypes("object")
+if len(cat.columns):
+    c = cat.columns[0]
+    print(f"\\n── '{c}' 값 분포 ──")
+    print(df[c].value_counts().to_string())
+df.head(8).to_html(index=False, classes="df", border=0)
+`, box);
+    $('#csvtable').innerHTML = '<p class="hint">↓ 미리보기 상위 8행</p>' + html;
+  } catch (e) { print(box, e.message, 'err'); }
+}
+
+/* ───────────────────── 5. micropip ───────────────────── */
+$('#pipgo').addEventListener('click', async () => {
+  const box = $('#pipout'); box.innerHTML = '';
+  const name = $('#pipname').value.trim();
+  if (!name) return;
+  $('#pipgo').disabled = true;
+  try {
+    await ensure(['micropip']);
+    print(box, `micropip install ${name} …`, 'in');
+    py.globals.set('pkg_name', name);
+    await runPy(`
+import micropip
+await micropip.install(pkg_name)
+print(f"'{pkg_name}' 설치 완료 — PyPI에서 브라우저로 직행")
+if pkg_name == "cowsay":
+    import cowsay; cowsay.cow("설치? 그런 거 없었는데요")
+elif pkg_name == "emoji":
+    import emoji; print(emoji.emojize("파이썬 :snake: 이 브라우저 :globe_showing_asia-australia: 안에!"))
+else:
+    import importlib
+    m = importlib.import_module(pkg_name.replace("-", "_").replace("python_", ""))
+    print("import 성공:", m.__name__, getattr(m, "__version__", ""))
+`, box);
+  } catch (e) { print(box, e.message, 'err'); }
+  $('#pipgo').disabled = false;
+});
+
+/* ───────────────────── 6. JS ↔ Python ───────────────────── */
+$('#py2js').addEventListener('click', async () => {
+  const box = $('#ioout'); box.innerHTML = '';
+  try {
+    await runPy(`
+from js import document
+from datetime import datetime
+el = document.getElementById("jstarget")
+el.style.background = "#243b1f"
+el.style.borderColor = "#5dd39e"
+el.style.color = "#c9f2d9"
+el.textContent = f"이 문장과 색상은 파이썬 코드가 바꿨습니다 — {datetime.now().strftime('%H:%M:%S')}"
+print("from js import document — 파이썬이 DOM을 직접 만졌습니다.")
+print("웹페이지가 파이썬의 출력 장치가 된다는 뜻입니다.")
+`, box);
+  } catch (e) { print(box, e.message, 'err'); }
+});
+$('#js2py').addEventListener('click', async () => {
+  const box = $('#ioout'); box.innerHTML = '';
+  try {
+    await ensure(['numpy','pandas'], null);
+    // JS 세계의 데이터 (예: fetch로 받아온 API 응답이라고 상상)
+    const jsData = [
+      {지역:'수도권', 방문자:15234}, {지역:'영남', 방문자:8120},
+      {지역:'호남', 방문자:5233},   {지역:'충청', 방문자:4890}, {지역:'강원', 방문자:2377}
+    ];
+    py.globals.set('js_data', py.toPy(jsData));
+    await runPy(`
+import pandas as pd
+df = pd.DataFrame(js_data)
+df["비중(%)"] = (df["방문자"] / df["방문자"].sum() * 100).round(1)
+print("JS 배열 → py.toPy() → pandas DataFrame\\n")
+print(df.to_string(index=False))
+print(f"\\n총 방문자 {df['방문자'].sum():,}명 — JS가 수집하고 파이썬이 분석했습니다.")
+`, box);
+  } catch (e) { print(box, e.message, 'err'); }
+});
+
+/* ───────────────────── 7. 가상 FS ───────────────────── */
+let reportBytes = null;
+$('#fswrite').addEventListener('click', async () => {
+  const box = $('#fsout'); box.innerHTML = '';
+  try {
+    await runPy(`
+import os
+from datetime import datetime
+report = f"""주간 업무 보고 (자동 생성)
+생성 시각: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+생성 위치: 브라우저 내부 가상 파일시스템 (MEMFS)
+--------------------------------
+1. 이 파일은 서버 없이 파이썬 open()으로 작성되었습니다.
+2. 새로고침하면 사라지는 메모리 파일이지만,
+3. 아래 다운로드 버튼으로 진짜 PC 파일이 됩니다.
+"""
+with open("/home/pyodide/report.txt", "w", encoding="utf-8") as f:
+    f.write(report)
+print("open('/home/pyodide/report.txt','w') — 쓰기 완료\\n")
+print("── 현재 디렉터리 목록 (os.listdir) ──")
+for name in os.listdir("/home/pyodide"):
+    print("  ", name, f"({os.path.getsize('/home/pyodide/'+name)} bytes)")
+`, box);
+    reportBytes = py.FS.readFile('/home/pyodide/report.txt');   // FS에서 바이트로 꺼내기
+    $('#fsdown').disabled = false;
+    print(box, '\n가상 FS의 파일을 JS로 꺼냈습니다 (pyodide.FS.readFile). 다운로드 버튼이 활성화됐어요.', 'res');
+  } catch (e) { print(box, e.message, 'err'); }
+});
+$('#fsdown').addEventListener('click', () => {
+  const blob = new Blob([reportBytes], { type: 'text/plain;charset=utf-8' });
+  const a = Object.assign(document.createElement('a'), {
+    href: URL.createObjectURL(blob), download: 'report.txt'
+  });
+  a.click(); URL.revokeObjectURL(a.href);
+});
+
+/* ───────────────────── 8. 엑셀 (openpyxl) ───────────────────── */
+$('#xlmake').addEventListener('click', async () => {
+  const box = $('#xlout'); box.innerHTML = '';
+  try {
+    await ensure(['openpyxl'], $('#xlstat'));
+    await runPy(`
+from openpyxl import Workbook
+from openpyxl.styles import Font, PatternFill, Alignment
+
+wb = Workbook(); ws = wb.active; ws.title = "집행현황"
+ws.append(["부서", "예산(백만)", "집행(백만)", "집행률(%)"])
+for c in ws[1]:
+    c.font = Font(bold=True, color="FFFFFF")
+    c.fill = PatternFill("solid", fgColor="4B8BBE")
+    c.alignment = Alignment(horizontal="center")
+for name, budget, spent in [("기획",1200,1044),("재정",2400,1992),("민원",800,712),("전산",1500,1275)]:
+    ws.append([name, budget, spent, round(spent/budget*100, 1)])
+ws.column_dimensions["A"].width = 12
+wb.save("/tmp/집행현황.xlsx")
+print("생성 완료 — 굵은 글씨, 파란 헤더, 가운데 정렬까지 들어간 진짜 xlsx입니다.")
+print("엑셀 프로그램은 이 과정에 관여하지 않았습니다.")
+`, box);
+    const bytes = py.FS.readFile('/tmp/집행현황.xlsx');
+    const blob = new Blob([bytes], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    const a = Object.assign(document.createElement('a'), { href: URL.createObjectURL(blob), download: '집행현황.xlsx' });
+    a.click(); URL.revokeObjectURL(a.href);
+    print(box, '\n다운로드 폴더를 확인하세요 → 엑셀에서 열립니다.', 'res');
+  } catch (e) { print(box, e.message, 'err'); }
+});
+$('#xlfile').addEventListener('change', async e => {
+  const f = e.target.files[0]; if (!f) return;
+  const box = $('#xlout'); box.innerHTML = '';
+  print(box, `파일: ${f.name} — 브라우저 메모리로만 읽음`, 'in');
+  try {
+    await ensure(['openpyxl'], $('#xlstat'));
+    py.FS.writeFile('/tmp/upload.xlsx', new Uint8Array(await f.arrayBuffer()));
+    await runPy(`
+from openpyxl import load_workbook
+wb = load_workbook("/tmp/upload.xlsx", data_only=True)
+print("시트 목록:", wb.sheetnames)
+ws = wb.active
+print(f"활성 시트 '{ws.title}' — {ws.max_row}행 × {ws.max_column}열\\n")
+print("── 상위 8행 미리보기 ──")
+for row in ws.iter_rows(min_row=1, max_row=min(8, ws.max_row), max_col=min(6, ws.max_column), values_only=True):
+    print("  " + " | ".join("" if v is None else str(v) for v in row))
+`, box);
+  } catch (err) { print(box, err.message, 'err'); }
+  e.target.value = '';
+});
+
+/* ───────────────────── 9. 통계·머신러닝 ───────────────────── */
+$('#mlttest').addEventListener('click', async () => {
+  const box = $('#mlout'); box.innerHTML = '';
+  try {
+    await ensure(['numpy','scipy'], $('#mlstat'));
+    await runPy(`
+import numpy as np
+from scipy import stats
+rng = np.random.default_rng(3)
+before = rng.normal(12.1, 2.0, 40)   # 개편 전 민원 처리시간(분), 40건 표본
+after  = rng.normal(10.8, 2.1, 40)   # 개편 후
+t, p = stats.ttest_ind(before, after)
+print(f"개편 전 평균 {before.mean():.2f}분  /  개편 후 평균 {after.mean():.2f}분")
+print(f"t = {t:.3f},  p-value = {p:.4f}")
+print()
+if p < 0.05:
+    print("판정: p < 0.05 → 우연이라 보기 어렵습니다. 개편 효과가 통계적으로 유의합니다.")
+else:
+    print("판정: p ≥ 0.05 → 이 표본만으로는 효과가 있다고 말할 수 없습니다.")
+print("\\n'평균이 줄었다'와 '유의하게 줄었다'의 차이를 브라우저가 계산해 줍니다.")
+`, box);
+  } catch (e) { print(box, e.message, 'err'); }
+});
+$('#mlreg').addEventListener('click', async () => {
+  const box = $('#mlout'); box.innerHTML = '';
+  try {
+    await ensure(['numpy','scikit-learn'], $('#mlstat'));
+    await runPy(`
+import numpy as np
+from sklearn.linear_model import LinearRegression
+from sklearn.cluster import KMeans
+rng = np.random.default_rng(7)
+
+# 회귀: 담당 인력 수 → 월 처리 건수 예측
+staff = rng.integers(2, 15, 30).reshape(-1, 1)
+cases = staff.ravel() * 48 + rng.normal(0, 40, 30) + 100
+model = LinearRegression().fit(staff, cases)
+print("── 선형회귀 ──")
+print(f"인력 1명당 월 처리량 약 {model.coef_[0]:.0f}건 증가 (R² = {model.score(staff, cases):.3f})")
+print(f"만약 인력이 10명이라면? 예측 {model.predict([[10]])[0]:.0f}건")
+
+# 군집: 민원 유형을 좌표로 뿌리고 3개 그룹 자동 분류
+pts = np.vstack([rng.normal(m, 0.8, (40, 2)) for m in ([2,2], [7,6], [3,8])])
+labels = KMeans(n_clusters=3, n_init=10, random_state=0).fit_predict(pts)
+print("\\n── KMeans 군집 ──")
+for k in range(3):
+    print(f"그룹 {k}: {np.sum(labels==k)}건  (중심 근처 좌표 {pts[labels==k].mean(axis=0).round(1)})")
+print("\\n머신러닝 라이브러리가 설치 없이 브라우저에서 학습을 마쳤습니다.")
+`, box);
+  } catch (e) { print(box, e.message, 'err'); }
+});
+
+/* ───────────────────── 10. SymPy ───────────────────── */
+$('#symgo').addEventListener('click', async () => {
+  const box = $('#symout'); box.innerHTML = '';
+  try {
+    await ensure(['sympy'], $('#symstat'));
+    py.globals.set('user_expr', $('#symexpr').value.trim());
+    await runPy(`
+import sympy as sp
+x = sp.symbols('x')
+expr = sp.sympify(user_expr)
+print("입력한 식 :", expr)
+try:
+    print("풀이(=0)  :", sp.solve(sp.Eq(expr, 0), x))
+except Exception:
+    print("풀이(=0)  : (이 식은 대수적으로 풀리지 않습니다)")
+print("인수분해  :", sp.factor(expr))
+print("미분 d/dx :", sp.diff(expr, x))
+print("적분 ∫dx  :", sp.integrate(expr, x), "+ C")
+`, box);
+  } catch (e) { print(box, e.message, 'err'); }
+});
+
+/* ───────────────────── 11. Pillow ───────────────────── */
+$('#imgfile').addEventListener('change', async e => {
+  const f = e.target.files[0]; if (!f) return;
+  const box = $('#imgout'); box.style.display = 'block'; box.innerHTML = ''; $('#imgbox').innerHTML = '';
+  try {
+    await ensure(['Pillow'], $('#imgstat'));
+    py.FS.writeFile('/tmp/in_img', new Uint8Array(await f.arrayBuffer()));
+    const proxy = await runPy(`
+from PIL import Image, ImageOps, ImageFilter
+import io, base64
+im = Image.open("/tmp/in_img").convert("RGB")
+orig = im.size
+im.thumbnail((480, 480))
+def b64(img):
+    buf = io.BytesIO(); img.save(buf, format="PNG")
+    return base64.b64encode(buf.getvalue()).decode()
+gray = ImageOps.grayscale(im)
+edge = im.convert("L").filter(ImageFilter.FIND_EDGES)
+print(f"원본 {orig[0]}×{orig[1]} → 처리용 {im.size[0]}×{im.size[1]}")
+print("픽셀이 파이썬 손에 들어왔습니다 — 회전, 자르기, 워터마크, 일괄 리사이즈 전부 이 방식으로 됩니다.")
+[b64(im), b64(gray), b64(edge)]
+`, box);
+    const [o, g, ed] = proxy.toJs(); proxy.destroy();
+    $('#imgbox').innerHTML = `<div class="trio">
+      <figure><img src="data:image/png;base64,${o}" alt="원본"><figcaption>원본</figcaption></figure>
+      <figure><img src="data:image/png;base64,${g}" alt="흑백"><figcaption>grayscale()</figcaption></figure>
+      <figure><img src="data:image/png;base64,${ed}" alt="윤곽선"><figcaption>FIND_EDGES</figcaption></figure>
+    </div>`;
+  } catch (err) { print(box, err.message, 'err'); }
+  e.target.value = '';
+});
+
+/* ───────────────────── 12. BeautifulSoup ───────────────────── */
+$('#soupgo').addEventListener('click', async () => {
+  const box = $('#soupout'); box.innerHTML = '';
+  try {
+    await ensure(['beautifulsoup4','lxml','numpy','pandas'], $('#soupstat'));
+    py.globals.set('html_src', $('#souphtml').value);
+    await runPy(`
+from bs4 import BeautifulSoup
+import pandas as pd
+soup = BeautifulSoup(html_src, "lxml")
+print("문서 제목 :", soup.title.string if soup.title else "(없음)")
+links = soup.select("a")
+print(f"링크 {len(links)}개:")
+for a in links:
+    print("   -", a.get_text(strip=True), "→", a.get("href"))
+rows = [[c.get_text(strip=True) for c in tr.select("th,td")] for tr in soup.select("table tr")]
+if rows:
+    df = pd.DataFrame(rows[1:], columns=rows[0])
+    print("\\n표 → DataFrame 변환:")
+    print(df.to_string(index=False))
+    print("\\n같은 원리가 XML에도 통합니다. HWPX의 <hp:t>를 뽑는 것도 결국 이 동작입니다.")
+`, box);
+  } catch (e) { print(box, e.message, 'err'); }
+});
+
+/* ───────────────────── 13. 오프라인 카탈로그 ───────────────────── */
+const CAT = [
+  ['numpy',           'numpy',       '수치 배열 — 데이터 계산의 기반'],
+  ['pandas',          'pandas',      '표 데이터 분석 (엑셀의 상위호환)'],
+  ['matplotlib',      'matplotlib',  '차트·그래프'],
+  ['scipy',           'scipy',       '과학 계산 · 통계 검정(t-test 등)'],
+  ['scikit-learn',    'sklearn',     '머신러닝 (회귀·분류·군집)'],
+  ['statsmodels',     'statsmodels', '회귀분석 · 시계열'],
+  ['sympy',           'sympy',       '기호 수학 (방정식·미적분)'],
+  ['openpyxl',        'openpyxl',    '엑셀 .xlsx 읽기/쓰기'],
+  ['xlsxwriter',      'xlsxwriter',  '엑셀 생성 특화 (차트 삽입 가능)'],
+  ['Pillow',          'PIL',         '이미지 처리'],
+  ['opencv-python',   'cv2',         '컴퓨터 비전 (영상 분석)'],
+  ['beautifulsoup4',  'bs4',         'HTML 파싱 · 스크래핑'],
+  ['lxml',            'lxml',        '고속 XML 파서 (HWPX 해부 소재)'],
+  ['networkx',        'networkx',    '관계망 · 조직도 그래프 분석'],
+  ['regex',           'regex',       '고급 정규식'],
+  ['pyyaml',          'yaml',        'YAML 설정 파일'],
+  ['python-dateutil', 'dateutil',    '자연스러운 날짜 파싱'],
+  ['pytz',            'pytz',        '시간대 처리'],
+  ['jinja2',          'jinja2',      '문서 템플릿 (공문 자동생성)'],
+  ['nltk',            'nltk',        '자연어 처리 툴킷'],
+  ['shapely',         'shapely',     '지리 도형 연산 (GIS)'],
+  ['(내장) sqlite3',  'sqlite3',     '파일 DB — 표준 내장이라 로드조차 불필요'],
+];
+(function buildCatalog(){
+  const sel = $('#catsel');
+  CAT.forEach((c, i) => {
+    const o = document.createElement('option');
+    o.value = i; o.textContent = `${c[0]} — ${c[2]}`;
+    sel.appendChild(o);
+  });
+  $('#cattable').innerHTML = '<p class="hint">↓ 위 목록 전부가 폐쇄망 /libs/pyodide/ 안에 휠(.whl)로 들어있는 것들입니다</p>' +
+    '<table class="df"><tr><th>패키지</th><th>import 이름</th><th>용도</th></tr>' +
+    CAT.map(c => `<tr><td style="text-align:left">${c[0]}</td><td style="text-align:left">${c[1]}</td><td style="text-align:left">${c[2]}</td></tr>`).join('') +
+    '</table>';
+})();
+$('#cattest').addEventListener('click', async () => {
+  const box = $('#catout'); box.innerHTML = '';
+  const [pkg, imp, desc] = CAT[$('#catsel').value];
+  $('#cattest').disabled = true;
+  try {
+    print(box, `${pkg} 로드 테스트 — ${desc}`, 'in');
+    if (!pkg.startsWith('(내장)')) {
+      $('#catstat').textContent = '로드 중… (첫 1회만, 큰 패키지는 수십 초)';
+      await py.loadPackage(pkg);
+      loaded.add(pkg);
+      $('#catstat').textContent = '';
+    }
+    py.globals.set('imp_name', imp);
+    await runPy(`
+import importlib
+m = importlib.import_module(imp_name)
+print("import", m.__name__, "성공 ✓", getattr(m, "__version__", ""))
+`, box);
+    print(box, '이 패키지가 방금 당신의 브라우저 안에서 살아났습니다.', 'res');
+  } catch (e) { print(box, e.message, 'err'); }
+  $('#cattest').disabled = false;
+});
+
+/* ───────────────────── 14. 문서: HWPX 해부 · Word 생성 ───────────────────── */
+$('#docfile').addEventListener('change', async e => {
+  const f = e.target.files[0]; if (!f) return;
+  const box = $('#docout'); box.innerHTML = '';
+  print(box, `파일: ${f.name} (${(f.size/1024).toFixed(1)} KB) — 표준 내장 zipfile로 해부합니다. 추가 라이브러리 없음.`, 'in');
+  try {
+    py.FS.writeFile('/tmp/doc_upload', new Uint8Array(await f.arrayBuffer()));
+    await runPy(`
+import zipfile, re
+z = zipfile.ZipFile("/tmp/doc_upload")
+print("정체 확인: 확장자만 다를 뿐 ZIP 압축파일이 맞습니다. 내부 목록 ↓\\n")
+for info in z.infolist()[:20]:
+    print(f"  {info.filename:<42} {info.file_size:>8} bytes")
+if len(z.infolist()) > 20:
+    print(f"  … 외 {len(z.infolist())-20}개")
+
+# 본문 XML 찾기: HWPX는 section0.xml, DOCX는 document.xml
+name = next((n for n in z.namelist() if n.endswith("section0.xml")), None) \\
+    or next((n for n in z.namelist() if n.endswith("word/document.xml")), None)
+if name:
+    xml = z.read(name).decode("utf-8", "ignore")
+    texts = re.findall(r"<hp:t[^>]*>([^<]*)</hp:t>", xml) \\
+         or re.findall(r"<w:t[^>]*>([^<]*)</w:t>", xml)
+    body = " ".join(t for t in texts if t.strip())
+    print(f"\\n── {name} 본문 추출 (텍스트 태그만 긁음) ──")
+    if body:
+        print(body[:700] + (" …(생략)" if len(body) > 700 else ""))
+        print(f"\\n총 {len(body):,}자 — 한글/워드 프로그램은 이 과정에 없었습니다.")
+    else:
+        print("(텍스트 태그가 비어 있습니다)")
+else:
+    print("\\n본문 XML(section0.xml/document.xml)을 찾지 못했습니다 — 표준 구조가 아닐 수 있어요.")
+`, box);
+  } catch (err) { print(box, 'ZIP 해석 실패: ' + err.message + ' (구형 .hwp는 ZIP이 아니라 별도 바이너리 포맷이라 이 방식이 안 통합니다 — .hwpx로 다시 저장해 보세요)', 'err'); }
+  e.target.value = '';
+});
+$('#docxmake').addEventListener('click', async () => {
+  const box = $('#docout'); box.innerHTML = '';
+  try {
+    await ensure(['micropip','lxml'], $('#docstat'));
+    $('#docstat').textContent = 'python-docx 설치 시도 중…';
+    await runPy(`
+import micropip
+try:
+    await micropip.install("python-docx")   # 온라인: PyPI에서 / 로컬 휠이 있으면 그걸로도 가능
+    installed = True
+except Exception as e:
+    installed = False
+    print("python-docx 설치 실패:", e)
+    print("\\n[폐쇄망 안내] python-docx는 순수 파이썬이라 휠 반입으로 해결됩니다:")
+    print("  ① 인터넷 PC에서 PyPI의 python_docx-*.whl, typing_extensions-*.whl 다운로드")
+    print("  ② 이 HTML 옆 ./libs/wheels/ 폴더에 복사")
+    print('  ③ 코드에서 micropip.install("./libs/wheels/python_docx-1.1.2-py3-none-any.whl") 처럼 경로 지정')
+if installed:
+    from docx import Document
+    doc = Document()
+    doc.add_heading("주간 업무 보고", 0)
+    doc.add_paragraph("이 워드 문서는 MS Word 없이, 브라우저 안의 파이썬(python-docx)이 생성했습니다.")
+    doc.add_heading("부서별 현황", level=1)
+    table = doc.add_table(rows=1, cols=3)
+    table.style = "Light Grid Accent 1"
+    hdr = table.rows[0].cells
+    hdr[0].text, hdr[1].text, hdr[2].text = "부서", "처리건수", "비고"
+    for row in [("기획", "312", "정상"), ("민원", "845", "증가 추세"), ("전산", "127", "-")]:
+        c = table.add_row().cells
+        c[0].text, c[1].text, c[2].text = row
+    doc.save("/tmp/보고서.docx")
+    print("생성 완료 — 제목, 본문, 표 스타일까지 들어간 진짜 .docx")
+`, box);
+    $('#docstat').textContent = '';
+    try {
+      const bytes = py.FS.readFile('/tmp/보고서.docx');
+      const blob = new Blob([bytes], { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' });
+      const a = Object.assign(document.createElement('a'), { href: URL.createObjectURL(blob), download: '보고서.docx' });
+      a.click(); URL.revokeObjectURL(a.href);
+      print(box, '\n다운로드 폴더 확인 → 워드/한글에서 열립니다.', 'res');
+    } catch { /* 설치 실패 시 파일 없음 — 안내문이 이미 출력됨 */ }
+  } catch (e) { $('#docstat').textContent = ''; print(box, e.message, 'err'); }
+});
+
+/* ── 템플릿 보존 방식: HWPX 찾아바꾸기 → 재조립 ── */
+$('#tplfile').addEventListener('change', async e => {
+  const f = e.target.files[0]; if (!f) return;
+  py.FS.writeFile('/tmp/tpl.hwpx', new Uint8Array(await f.arrayBuffer()));
+  $('#tplname').textContent = '템플릿: ' + f.name;
+  $('#tplgo').disabled = false;
+  e.target.value = '';
+});
+$('#tplgo').addEventListener('click', async () => {
+  const box = $('#tplout'); box.innerHTML = '';
+  const pairs = $('#pairs').value.split('\n')
+    .map(l => l.split('=>').map(s => s.trim()))
+    .filter(p => p.length === 2 && p[0]);
+  if (!pairs.length) { print(box, '치환 규칙이 없습니다. "찾을말 => 바꿀말" 형식으로 한 줄씩 적어주세요.', 'err'); return; }
+  try {
+    py.globals.set('pairs_js', py.toPy(pairs));
+    await runPy(`
+import zipfile, io
+from xml.sax.saxutils import escape
+
+src = zipfile.ZipFile("/tmp/tpl.hwpx")
+pairs = [(f, escape(r)) for f, r in pairs_js]   # 바꿀말의 &, <, > 는 XML 규칙대로 이스케이프
+
+buf = io.BytesIO()
+total = 0
+with zipfile.ZipFile(buf, "w") as zout:
+    for item in src.infolist():                        # 규칙②: 원본 파일 순서 그대로
+        data = src.read(item.filename)
+        if item.filename.startswith("Contents/section") and item.filename.endswith(".xml"):
+            xml = data.decode("utf-8")
+            for find, repl in pairs:
+                n = xml.count(find)
+                if n:
+                    print(f"  '{find}' → '{repl}'  ({item.filename}에서 {n}곳)")
+                    total += n
+                xml = xml.replace(find, repl)
+            data = xml.encode("utf-8")
+        comp = zipfile.ZIP_STORED if item.filename == "mimetype" else zipfile.ZIP_DEFLATED
+        zout.writestr(item, data, compress_type=comp)  # 규칙①: mimetype은 무압축(STORED)
+
+with open("/tmp/out.hwpx", "wb") as fp:
+    fp.write(buf.getvalue())
+
+print(f"\\n총 {total}곳 치환 → 재조립 완료")
+print("적용된 안전규칙: ① mimetype 무압축 유지  ② 원본 순서 보존  ③ 스타일·표 구조는 손대지 않음")
+if total == 0:
+    print("\\n⚠ 치환 0곳 — 자리표가 문서에 없거나, 서식 변경 탓에 <hp:t>가 쪼개져 있을 가능성이 큽니다.")
+`, box);
+    const bytes = py.FS.readFile('/tmp/out.hwpx');
+    const blob = new Blob([bytes], { type: 'application/hwp+zip' });
+    const a = Object.assign(document.createElement('a'), { href: URL.createObjectURL(blob), download: '생성문서.hwpx' });
+    a.click(); URL.revokeObjectURL(a.href);
+    print(box, '\n다운로드된 .hwpx를 한글에서 열어 확인하세요. 원본 구조를 안 건드렸으니 100% 열립니다.', 'res');
+  } catch (e) { print(box, e.message, 'err'); }
+});
+</script>
+<script>/* kg-preview: #<heading> \uc704\uce58\ub85c \uc774\ub3d9 */
+(function(){function norm(t){return (t||'').replace(/\s+/g,'').toLowerCase()}
+function go(){var h=decodeURIComponent(location.hash.slice(1));if(!h)return;var k=norm(h).slice(0,24);if(!k)return;
+var best=null,bl=1e9,els=document.body.querySelectorAll('h1,h2,h3,h4,h5,p,div,span,li,td,text,tspan,section,article');
+for(var i=0;i<els.length;i++){var e=els[i],t=norm(e.textContent);if(t.length<bl&&t.indexOf(k)>-1){best=e;bl=t.length}}
+if(!best)return;var box=best.closest('section,[class*=slide],[class*=page],article')||best;
+box.scrollIntoView({block:'start'});box.style.outline='3px solid #c0504d';box.style.outlineOffset='4px';
+setTimeout(function(){box.style.outline=''},2600)}
+window.addEventListener('load',function(){setTimeout(go,400)});window.addEventListener('hashchange',go)})();</script></body>
+</html>

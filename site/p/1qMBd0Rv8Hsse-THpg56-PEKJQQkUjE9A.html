@@ -1,0 +1,1395 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head><meta name="robots" content="noindex, nofollow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Session 06 · AI 에이전트 도구 마스터리</title>
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700;9..144,800&family=Noto+Serif+KR:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f5efe4;--bg2:#ede4d3;--ink:#2b2015;--ink2:#5a4a38;--ink3:#8a7659;--acc:#b8532a;--acc3:#d49575;--ln:#d8c8ae;--ln2:#e6d9bf;--dk:#1a1612;--dk2:#241e17;--on:#ede4d3;--on2:#a89172;--serif:'Fraunces','Noto Serif KR',Georgia,serif;--sans:'Pretendard Variable',Pretendard,sans-serif;--mono:'JetBrains Mono',ui-monospace,Consolas,monospace}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{margin:0;padding:0;overflow:hidden;height:100vh;width:100vw;background:#0e0a06;font-family:var(--sans);-webkit-font-smoothing:antialiased}
+.deck{height:100vh;overflow-y:scroll;scroll-snap-type:y mandatory;scroll-behavior:smooth;scrollbar-width:none;-ms-overflow-style:none;background:#0e0a06}
+.deck::-webkit-scrollbar{display:none}
+.stage{width:100vw;min-height:100vh;display:flex;align-items:center;justify-content:center;scroll-snap-align:start;padding:0;background:#0e0a06}
+.slide{width:1600px;height:900px;background:var(--bg);position:relative;overflow:hidden;transform-origin:center;box-shadow:0 40px 90px -30px rgba(0,0,0,0.7);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' seed='3'/%3E%3CfeColorMatrix values='0 0 0 0 0.16  0 0 0 0 0.12  0 0 0 0 0.08  0 0 0 0.025 0'/%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E")}
+
+.hbar{position:absolute;top:0;left:0;right:0;height:52px;background:var(--dk);display:flex;align-items:center;justify-content:space-between;padding:0 80px}
+.hbar-l{display:flex;align-items:center;gap:12px;font-family:var(--mono);font-size:10.5px;color:#fff;letter-spacing:2.5px;font-weight:600}
+.hbar-l::before{content:"";width:22px;height:8px;background:var(--acc)}
+.hbar-r{font-family:var(--mono);font-size:10.5px;color:#bbb;letter-spacing:1.5px}
+.hl{position:absolute;left:80px;right:80px;top:86px}
+.hl-kicker{font-family:var(--mono);font-size:12px;color:var(--ink3);letter-spacing:2.5px;font-weight:700;margin-bottom:14px}
+.hl-title{font-family:var(--serif);font-weight:700;font-size:36px;line-height:1.22;letter-spacing:-0.5px;color:var(--ink)}
+.hl-sub{font-size:15.5px;color:var(--ink2);margin-top:12px;line-height:1.6}
+.hl-bar{width:60px;height:3px;background:var(--ink);margin-top:16px}
+.hl-rule{position:absolute;left:80px;right:80px;top:248px;height:1px;background:var(--ln2)}
+.fbar{position:absolute;bottom:0;left:0;right:0;height:52px;background:#f0e8d8;border-top:3px solid var(--ln);display:flex;align-items:center;justify-content:space-between;padding:0 80px}
+.fbar-l,.fbar-r{display:flex;flex-direction:column;gap:2px}.fbar-r{align-items:flex-end}
+.fbar-label{font-family:var(--mono);font-size:10px;color:var(--ink3);letter-spacing:2.5px;font-weight:700}
+.fbar-title{font-size:13px;color:var(--ink)}
+
+.bd{position:absolute;left:80px;right:80px;top:264px;bottom:72px;display:grid;gap:1px;background:var(--ln2)}
+.bd.col3{grid-template-columns:1fr 1fr 1fr}
+.bd.col2{grid-template-columns:1fr 1fr}
+.bd.col2w{grid-template-columns:1.25fr 1fr}
+.bd.col2n{grid-template-columns:1fr 1.3fr}
+.col{background:var(--bg);padding:30px 34px;display:flex;flex-direction:column;overflow:hidden;min-width:0;gap:14px}
+.col > .grow{flex:1;min-height:0;display:flex;flex-direction:column;justify-content:flex-end;gap:10px}
+
+.card{background:var(--bg);padding:34px 36px;display:flex;flex-direction:column;gap:16px;overflow:hidden;min-width:0}
+.card.dk{background:var(--dk);color:var(--on)}
+.card-k{font-family:var(--mono);font-size:11px;color:var(--acc);letter-spacing:2.5px;font-weight:700}
+.card.dk .card-k{color:var(--acc3)}
+.card-anchor{font-family:var(--serif);font-size:26px;font-weight:700;line-height:1.22;color:var(--ink);letter-spacing:-0.4px}
+.card.dk .card-anchor{color:var(--on)}
+.card-anchor em{color:var(--acc);font-style:normal}
+.card.dk .card-anchor em{color:var(--acc3)}
+.card-body{font-size:14px;line-height:1.75;color:var(--ink2)}
+.card.dk .card-body{color:var(--on2)}
+.card-body strong{color:var(--ink);font-weight:700}
+.card.dk .card-body strong{color:var(--on)}
+.card-spacer{flex:1;min-height:8px}
+.card-note{font-size:12.5px;color:var(--ink3);font-style:italic;line-height:1.6}
+.card.dk .card-note{color:var(--on2)}
+
+.sh{display:flex;align-items:baseline;gap:12px;margin-bottom:3px}
+.sh-n{font-family:var(--mono);font-size:11px;color:var(--ink3);letter-spacing:2.5px;font-weight:700;white-space:nowrap}
+.sh-t{font-size:12.5px;color:var(--ink2)}
+.sh-line{height:1px;background:var(--ln2);margin-bottom:10px}
+
+.mtbl{width:100%;border-collapse:collapse;font-size:12.5px}
+.mtbl thead th{font-family:var(--mono);font-size:10px;color:var(--ink3);letter-spacing:1.5px;font-weight:700;text-align:left;padding:9px 9px;border-bottom:1.5px solid var(--ink);background:var(--bg2)}
+.mtbl tbody td{padding:10px 9px;border-bottom:1px solid var(--ln2);color:var(--ink2);vertical-align:top;line-height:1.6}
+.mtbl tbody tr:last-child td{border-bottom:0}
+.mtbl tbody td:first-child{color:var(--ink);font-weight:700;font-family:var(--mono);font-size:10.5px;letter-spacing:1px;white-space:nowrap}
+.mtbl tbody td.q{color:var(--ink);font-weight:600;font-family:var(--sans);font-size:12.5px;letter-spacing:0}
+
+.co{background:var(--bg2);border-left:3px solid var(--acc);padding:14px 18px}
+.co-lb{font-family:var(--mono);font-size:10.5px;color:var(--acc);letter-spacing:2px;font-weight:700;margin-bottom:5px}
+.co-main{font-size:14.5px;color:var(--ink);font-weight:700;line-height:1.5}
+.co p{font-size:12.5px;color:var(--ink2);line-height:1.7;margin-top:5px}
+
+.next{background:var(--dk);padding:16px 20px;color:var(--on)}
+.next-k{font-family:var(--mono);font-size:10.5px;color:var(--acc3);letter-spacing:2px;font-weight:700;margin-bottom:5px}
+.next-t{font-size:13.5px;line-height:1.65;color:var(--on2)}
+.next-t strong{color:var(--on);font-weight:700}
+
+.pit{border-left:3px solid var(--ink);padding:11px 15px;background:var(--bg2)}
+.pit-lb{font-family:var(--mono);font-size:10px;color:var(--ink3);letter-spacing:2px;font-weight:700;margin-bottom:5px}
+.pit-h{font-size:13px;color:var(--ink);font-weight:700;line-height:1.45}
+.pit-d{font-size:12px;color:var(--ink2);line-height:1.65;margin-top:4px}
+
+.smap{display:flex;flex-direction:column;gap:7px}
+.smap-i{display:grid;grid-template-columns:50px 1fr;gap:12px;align-items:start;padding:9px 13px;background:var(--bg2);border-left:2px solid var(--ln)}
+.smap-i.on{border-left-color:var(--acc);background:#f0e7d6}
+.smap-n{font-family:var(--mono);font-size:11px;color:var(--acc);letter-spacing:1.5px;font-weight:700;padding-top:2px}
+.smap-t{font-size:13px;color:var(--ink);font-weight:600;line-height:1.5}
+
+.qex{background:var(--bg2);border-left:3px solid var(--ink);padding:20px 26px;font-family:var(--serif);font-size:19px;line-height:1.75;color:var(--ink)}
+.qex .hot{background:var(--ink);color:var(--on);padding:2px 7px;border-radius:2px;font-weight:700;font-family:var(--sans);font-size:16px;letter-spacing:-0.2px}
+.qex .dim{color:var(--ink3);font-style:italic;font-size:16px}
+
+.draft{padding:14px 18px}
+.draft.weak{background:var(--bg2);border-left:3px solid var(--ln)}
+.draft.strong{background:var(--dk);color:var(--on);border-left:3px solid var(--acc3)}
+.draft-k{font-family:var(--mono);font-size:10px;letter-spacing:1.8px;font-weight:700;color:var(--ink3);margin-bottom:5px}
+.draft.strong .draft-k{color:var(--acc3)}
+.draft-t{font-size:13.5px;line-height:1.7;color:var(--ink)}
+.draft.strong .draft-t{color:var(--on)}
+.draft-note{font-size:11px;color:var(--ink3);margin-top:7px;line-height:1.55;font-style:italic}
+.draft.strong .draft-note{color:var(--on2)}
+
+.cmp2{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--ln2)}
+.cmp2c{padding:18px 22px;display:flex;flex-direction:column;gap:9px;background:var(--bg2)}
+.cmp2c.dk{background:var(--dk);color:var(--on)}
+.cmp2c-k{font-family:var(--mono);font-size:10.5px;color:var(--acc);letter-spacing:2px;font-weight:700}
+.cmp2c.dk .cmp2c-k{color:var(--acc3)}
+.cmp2c-h{font-family:var(--serif);font-size:19px;font-weight:700;color:var(--ink);line-height:1.3;letter-spacing:-0.3px}
+.cmp2c.dk .cmp2c-h{color:var(--on)}
+.cmp2c-d{font-size:12.5px;color:var(--ink2);line-height:1.7}
+.cmp2c.dk .cmp2c-d{color:var(--on2)}
+.cmp2c-list{display:flex;flex-direction:column;gap:4px;font-size:12px;line-height:1.65;color:var(--ink2)}
+.cmp2c.dk .cmp2c-list{color:var(--on2)}
+.cmp2c-list li{list-style:none;padding-left:14px;position:relative}
+.cmp2c-list li::before{content:"—";position:absolute;left:0;color:var(--ink3);font-family:var(--mono)}
+.cmp2c.dk .cmp2c-list li::before{color:var(--on2)}
+.cmp2c-fig{font-family:var(--mono);font-size:10px;color:var(--ink3);letter-spacing:1.5px;font-weight:700;padding-top:7px;border-top:1px solid var(--ln);margin-top:auto}
+.cmp2c.dk .cmp2c-fig{color:var(--acc3);border-top-color:#3a2f24}
+
+.hybrid{background:#f0e7d6;border-left:4px solid var(--acc);padding:18px 24px;display:flex;flex-direction:column;gap:8px}
+.hybrid-k{font-family:var(--mono);font-size:11px;color:var(--acc);letter-spacing:2.5px;font-weight:700}
+.hybrid-h{font-family:var(--serif);font-size:21px;font-weight:700;color:var(--ink);line-height:1.3;letter-spacing:-0.3px}
+.hybrid-d{font-size:13px;color:var(--ink2);line-height:1.7}
+.hybrid-d strong{color:var(--ink);font-weight:700}
+
+.tline{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--ln2);width:100%}
+.tblock{background:var(--bg2);padding:18px 20px;display:flex;flex-direction:column;gap:8px;position:relative}
+.tblock.dk{background:var(--dk);color:var(--on)}
+.tblock-w{font-family:var(--mono);font-size:11px;color:var(--acc);letter-spacing:2px;font-weight:700}
+.tblock.dk .tblock-w{color:var(--acc3)}
+.tblock-h{font-family:var(--serif);font-size:21px;font-weight:700;line-height:1.25;color:var(--ink);letter-spacing:-0.3px}
+.tblock.dk .tblock-h{color:var(--on)}
+.tblock-sess{font-size:11.5px;color:var(--ink2);line-height:1.6;font-family:var(--mono);letter-spacing:0.3px}
+.tblock.dk .tblock-sess{color:var(--on2)}
+.tblock-d{font-size:12px;color:var(--ink2);line-height:1.7}
+.tblock.dk .tblock-d{color:var(--on2)}
+
+/* 추가 컴포넌트 */
+.flow{display:grid;gap:10px;align-items:center}
+.flow.h4{grid-template-columns:1fr auto 1fr auto 1fr auto 1fr}
+.flow.h3{grid-template-columns:1fr auto 1fr auto 1fr}
+.flow-box{background:var(--bg2);border:1px solid var(--ln);padding:12px 14px;text-align:center;display:flex;flex-direction:column;gap:4px}
+.flow-box.dk{background:var(--dk);color:var(--on);border-color:var(--dk)}
+.flow-box.on{background:#f0e7d6;border-color:var(--acc);border-width:2px}
+.flow-box-k{font-family:var(--mono);font-size:9.5px;color:var(--ink3);letter-spacing:1.5px;font-weight:700}
+.flow-box.dk .flow-box-k{color:var(--acc3)}
+.flow-box.on .flow-box-k{color:var(--acc)}
+.flow-box-t{font-size:12.5px;color:var(--ink);font-weight:700;line-height:1.4}
+.flow-box.dk .flow-box-t{color:var(--on)}
+.flow-arrow{font-family:var(--mono);font-size:22px;color:var(--acc);font-weight:700;text-align:center}
+
+.grid2x2{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:1px;background:var(--ln2)}
+.qd{background:var(--bg2);padding:16px 20px;display:flex;flex-direction:column;gap:6px}
+.qd.dk{background:var(--dk);color:var(--on)}
+.qd-k{font-family:var(--mono);font-size:10px;color:var(--ink3);letter-spacing:2px;font-weight:700}
+.qd.dk .qd-k{color:var(--acc3)}
+.qd-h{font-size:14px;color:var(--ink);font-weight:700;line-height:1.35;font-family:var(--serif)}
+.qd.dk .qd-h{color:var(--on)}
+.qd-d{font-size:12px;color:var(--ink2);line-height:1.65}
+.qd.dk .qd-d{color:var(--on2)}
+.qd-d strong{color:var(--ink);font-weight:700}
+.qd.dk .qd-d strong{color:var(--on)}
+
+.ladder{display:flex;flex-direction:column;gap:1px;background:var(--ln2)}
+.ladder-step{background:var(--bg);padding:14px 18px;display:grid;grid-template-columns:56px 1fr auto;gap:16px;align-items:center}
+.ladder-step.dk{background:var(--dk);color:var(--on)}
+.ladder-step.on{background:#f0e7d6}
+.ladder-n{font-family:var(--serif);font-size:28px;color:var(--acc);font-weight:700;letter-spacing:-0.03em}
+.ladder-step.dk .ladder-n{color:var(--acc3)}
+.ladder-b{display:flex;flex-direction:column;gap:3px;min-width:0}
+.ladder-h{font-size:14px;color:var(--ink);font-weight:700;line-height:1.4}
+.ladder-step.dk .ladder-h{color:var(--on)}
+.ladder-d{font-size:12px;color:var(--ink2);line-height:1.6}
+.ladder-step.dk .ladder-d{color:var(--on2)}
+.ladder-tag{font-family:var(--mono);font-size:9.5px;color:var(--ink3);letter-spacing:1.5px;font-weight:700;text-align:right;white-space:nowrap}
+.ladder-step.dk .ladder-tag{color:var(--acc3)}
+
+.code{background:var(--dk2);padding:14px 18px;font-family:var(--mono);font-size:11.5px;line-height:1.75;color:var(--on);white-space:pre-wrap;border-left:3px solid var(--acc3)}
+.code .cm{color:var(--on2)}
+.code .kw{color:var(--acc3);font-weight:600}
+
+.typelist{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--ln2);flex:1}
+.type{background:var(--bg2);padding:16px 18px;display:flex;flex-direction:column;gap:6px}
+.type.dk{background:var(--dk);color:var(--on)}
+.type-n{font-family:var(--serif);font-size:32px;color:var(--acc);font-weight:700;line-height:1;letter-spacing:-0.03em}
+.type.dk .type-n{color:var(--acc3)}
+.type-h{font-size:13px;color:var(--ink);font-weight:700;line-height:1.35}
+.type.dk .type-h{color:var(--on)}
+.type-d{font-size:11.5px;color:var(--ink2);line-height:1.6}
+.type.dk .type-d{color:var(--on2)}
+.type-tag{font-family:var(--mono);font-size:9.5px;color:var(--ink3);letter-spacing:1.5px;font-weight:700;margin-top:auto;padding-top:6px;border-top:1px solid var(--ln)}
+.type.dk .type-tag{color:var(--acc3);border-top-color:#3a2f24}
+
+.toolbar{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:center;justify-content:center;gap:6px;padding:6px 20px;background:rgba(14,10,6,0.92);backdrop-filter:blur(10px);border-bottom:1px solid rgba(255,255,255,0.08)}
+.toolbar button{background:rgba(255,255,255,0.08);color:#ccc;border:1px solid rgba(255,255,255,0.12);padding:5px 14px;font-family:var(--mono);font-size:10px;letter-spacing:1.5px;cursor:pointer;border-radius:3px;text-transform:uppercase;font-weight:600}
+.toolbar button:hover{background:var(--acc);color:#fff;border-color:var(--acc)}
+.toolbar .pg{color:rgba(255,255,255,0.55);font-size:11px;padding:5px 10px;min-width:80px;text-align:center;font-family:var(--mono);letter-spacing:1px}
+@media print{@page{size:423.33mm 237.5mm;margin:0}*{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}html,body{overflow:visible!important;height:auto!important;background:#fff!important}.deck{overflow:visible!important;height:auto!important;scroll-snap-type:none!important;background:#fff!important}.stage{min-height:0!important;height:auto!important;page-break-after:always;page-break-inside:avoid;padding:0!important;margin:0!important;background:#fff!important;display:block!important}.stage:last-child{page-break-after:avoid}.slide{transform:none!important;box-shadow:none!important;width:1600px!important;height:900px!important}.toolbar{display:none!important}}
+
+.sm{font-size:12px;color:var(--ink2);line-height:1.6}
+.st{font-size:11px;color:var(--ink3);margin-top:4px}
+/* === S04 ORIGINAL COMPONENTS === */
+.bd.col1{grid-template-columns:1fr;background:transparent;gap:0}
+.bth{font-size:15px;color:var(--ink);font-weight:600;margin-bottom:7px;line-height:1.4}
+.bt{font-size:13.5px;line-height:1.78;color:var(--ink2);margin-bottom:8px}
+.bt strong{color:var(--ink);font-weight:600}
+.cod{background:var(--dk);padding:12px 15px;margin:8px 0;position:relative;overflow:hidden}
+.cod::before{content:"";position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='nd'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' seed='5'/%3E%3CfeColorMatrix values='0 0 0 0 1  0 0 0 0 0.92  0 0 0 0 0.78  0 0 0 0.04 0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23nd)'/%3E%3C/svg%3E");opacity:0.6;pointer-events:none}
+.cod>*{position:relative}
+.cod-lb{font-family:var(--mono);font-size:10px;color:var(--on2);letter-spacing:2px;font-weight:700;margin-bottom:6px}
+.cod-main{font-size:15.5px;color:var(--on);font-weight:700;line-height:1.35;margin-bottom:6px}
+.cod p{font-size:12.5px;color:var(--on2);line-height:1.7}
+.dstrip{background:var(--dk);padding:9px 16px;margin:8px 0;display:grid;grid-template-columns:repeat(3,1fr);position:relative;overflow:hidden}
+.dstrip::before{content:"";position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='ns'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' seed='7'/%3E%3CfeColorMatrix values='0 0 0 0 1  0 0 0 0 0.92  0 0 0 0 0.78  0 0 0 0.04 0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23ns)'/%3E%3C/svg%3E");opacity:0.6;pointer-events:none}
+.dstrip>*{position:relative}
+.ds-c:not(:first-child){border-left:1px solid rgba(255,255,255,0.12);padding-left:16px}
+.ds-a{font-family:var(--mono);font-size:9.5px;color:var(--on2);letter-spacing:1.5px;font-weight:700}
+.ds-n{font-size:22px;color:var(--on);font-weight:800;margin-top:3px}
+.ds-d{font-size:10px;color:var(--on2);margin-top:2px}
+.quote{border-left:3px solid var(--ink);padding:11px 15px;margin:8px 0}
+.quote-src{font-family:var(--mono);font-size:10px;color:var(--ink3);letter-spacing:2px;font-weight:700;margin-bottom:5px}
+.quote-q{font-family:var(--serif);font-size:14px;color:var(--ink);font-weight:700;font-style:italic;line-height:1.45}
+.quote-a{font-size:11.5px;color:var(--ink2);margin-top:3px}
+.cblk{background:var(--dk);color:var(--on);padding:11px 14px;font-family:var(--mono);font-size:11.5px;line-height:1.7;border-left:2px solid var(--acc);margin:8px 0;white-space:pre-wrap}
+.cblk .cm{color:var(--acc3);opacity:0.8}.cblk .kw{color:var(--acc3);font-weight:600}
+.cblk .cap{font-size:10px;color:var(--on2);margin-top:5px;letter-spacing:0.1em;white-space:normal}
+.icard{background:var(--bg2);border:1px solid var(--ln);padding:11px 14px;margin-bottom:7px}
+.icard-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:5px}
+.icard-lb{font-family:var(--mono);font-size:9.5px;color:var(--acc);letter-spacing:2px;font-weight:700}
+.icard-sess{font-family:var(--mono);font-size:9.5px;color:var(--ink3);letter-spacing:1.5px;font-weight:600}
+.icard.dark{background:var(--dk);border-color:var(--dk)}
+.icard.dark .icard-lb{color:var(--acc3)}.icard.dark .icard-sess{color:var(--on2)}
+.icard.dark .bth{color:var(--on)}.icard.dark .bt{color:var(--on2)}.icard.dark .bt strong{color:var(--on)}
+.fig{font-family:var(--mono);font-size:10.5px;color:var(--ink3);letter-spacing:1.5px;font-weight:700;margin:8px 0 5px}
+.hero{display:flex;flex-direction:column;justify-content:center;padding:56px 90px}
+.hero-k{font-family:var(--mono);font-size:11.5px;color:var(--acc3);letter-spacing:3px;font-weight:700;margin-bottom:18px}
+.hero-t{font-family:var(--serif);font-size:52px;line-height:1.18;font-weight:700;color:var(--on);letter-spacing:-0.02em}
+.hero-s{font-size:17px;color:var(--on2);line-height:1.7;margin-top:22px;max-width:1100px;font-style:italic}
+.hero-q{border-left:3px solid var(--acc3);padding:16px 24px;margin-top:26px;max-width:1000px}
+.hero-q-q{font-family:var(--serif);font-size:21px;color:var(--on);font-weight:700;font-style:italic;line-height:1.5}
+.hero-q-a{font-size:12px;color:var(--on2);letter-spacing:2px;margin-top:10px;font-family:var(--mono);font-weight:700}
+
+</style>
+</head>
+<body>
+<div class="deck" id="deck">
+<div class="stage"><div class="slide" data-title="Cover">
+  <div class="hbar"><div class="hbar-l">SESSION 06 · AGENT TOOLING</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 06
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">06 · AI 에이전트 도구 마스터리</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">001 / 032</span></div></div></div></div>
+  <div style="position:absolute;top:56px;left:80px;display:flex;align-items:center;gap:14px;font-family:var(--mono);font-size:10px;color:var(--acc);letter-spacing:2.5px;font-weight:600"><div style="width:22px;height:8px;background:var(--acc)"></div>PUBLIC AI EXPERT PROGRAM · 2026</div>
+  <div style="position:absolute;top:56px;right:80px;font-family:var(--mono);font-size:10px;color:var(--ink3);letter-spacing:2px;text-align:right;line-height:1.6">Module 06 / Session 06<br>Hub Leader Track</div>
+  <div style="position:absolute;top:140px;right:80px;font-family:var(--serif);font-size:260px;line-height:1;color:var(--acc);font-weight:300;opacity:0.07;letter-spacing:-0.06em;pointer-events:none;font-style:italic">06</div>
+  <div style="position:absolute;top:180px;left:80px;right:80px;bottom:140px;display:grid;grid-template-columns:1fr 380px;gap:60px">
+    <div>
+      <div style="font-family:var(--mono);font-size:10px;color:var(--acc);letter-spacing:3px;font-weight:700;margin-bottom:14px">SESSION 06 · LECTURE COVER</div>
+      <div style="font-family:var(--serif);font-weight:700;font-size:56px;line-height:1.08;letter-spacing:-0.03em;color:var(--ink)">AI 에이전트 툴 마스터리와<br>에이전트 기반 개발 입문</div>
+      <div style="width:60px;height:2px;background:var(--acc);margin:22px 0 16px"></div>
+      <div style="font-family:var(--serif);font-size:19px;color:var(--ink);font-weight:600;line-height:1.5">사람은 설계하고, 구현은 AI가 맡는다</div>
+      <p style="margin-top:18px;font-size:14px;color:var(--ink2);line-height:1.8;max-width:640px"><strong style="color:var(--ink)">Unit 01.</strong> 어시스트 vs 에이전트 7축 — 동선의 차이 체감. <strong style="color:var(--ink)">Unit 02.</strong> Claude Code·Cursor·Antigravity·Codex·OpenCode 4종 투어. <strong style="color:var(--ink)">Unit 03.</strong> Rules·Skills·Sub-agents로 반복을 자산화. <strong style="color:var(--ink)">Unit 04.</strong> 아키텍처로 말하기 — 설계서 입력. <strong style="color:var(--ink)">Unit 05.</strong> 검수 12항목 + 9유형 Replay.</p>
+    </div>
+    <div style="align-self:end;border-top:1px solid var(--ink);padding-top:16px">
+      <div style="display:grid;grid-template-columns:90px 1fr;gap:12px;padding:8px 0;border-bottom:1px solid var(--ln);font-size:13px"><span style="font-family:var(--mono);font-size:9.5px;letter-spacing:2px;color:var(--ink3);font-weight:700">PROGRAM</span><span style="font-family:var(--serif);color:var(--ink);font-weight:600">공공 AI 전문인재 양성과정</span></div>
+      <div style="display:grid;grid-template-columns:90px 1fr;gap:12px;padding:8px 0;border-bottom:1px solid var(--ln);font-size:13px"><span style="font-family:var(--mono);font-size:9.5px;letter-spacing:2px;color:var(--ink3);font-weight:700">SESSION</span><span style="font-family:var(--serif);color:var(--ink);font-weight:600">06 / 08</span></div>
+      <div style="display:grid;grid-template-columns:90px 1fr;gap:12px;padding:8px 0;border-bottom:1px solid var(--ln);font-size:13px"><span style="font-family:var(--mono);font-size:9.5px;letter-spacing:2px;color:var(--ink3);font-weight:700">GOAL</span><span style="font-family:var(--serif);color:var(--ink);font-weight:600">설계·검수 중심의 에이전트 체질</span></div>
+      <div style="display:grid;grid-template-columns:90px 1fr;gap:12px;padding:8px 0;border-bottom:1px solid var(--ln);font-size:13px"><span style="font-family:var(--mono);font-size:9.5px;letter-spacing:2px;color:var(--ink3);font-weight:700">FORMAT</span><span style="font-family:var(--serif);color:var(--ink);font-weight:600">강의 120m + 실습 150m</span></div>
+      <div style="display:grid;grid-template-columns:90px 1fr;gap:12px;padding:8px 0;border-bottom:1px solid var(--ln);font-size:13px"><span style="font-family:var(--mono);font-size:9.5px;letter-spacing:2px;color:var(--ink3);font-weight:700">SLIDES</span><span style="font-family:var(--serif);color:var(--ink);font-weight:600">32 pages</span></div>
+      <div style="display:grid;grid-template-columns:90px 1fr;gap:12px;padding:8px 0;font-size:13px"><span style="font-family:var(--mono);font-size:9.5px;letter-spacing:2px;color:var(--ink3);font-weight:700">PREREQ</span><span style="font-family:var(--serif);color:var(--ink);font-weight:600">4·5차시 어시스트 바이브 완료</span></div>
+    </div>
+  </div>
+  <div style="position:absolute;bottom:64px;left:80px;font-family:var(--mono);font-size:10px;color:var(--ink3);letter-spacing:2px">— Editorial Warm Edition · Roomy Lecture Format</div>
+  <div style="position:absolute;bottom:64px;right:80px;font-size:13px;color:var(--ink2);text-align:right;line-height:1.7;max-width:520px">이제 코드는 에이전트가 쓴다.<br>거점리더가 쓰는 것은 설계서·규칙·검수 체크리스트다.</div>
+</div></div>
+
+<!-- 02 HERO · 대화 안에서 대화 밖으로 -->
+<div class="stage"><div class="slide" data-title="Hero Outside">
+  <div class="hbar"><div class="hbar-l">MODULE 06 · SESSION KEY MESSAGE</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 06</div></div>
+  <div class="bd col1"><div class="col hero" style="background:var(--dk);color:var(--on)">
+    <div class="hero-k">SESSION 06 · ONE SENTENCE</div>
+    <div class="hero-t">대화 <span style="color:var(--acc3)">안</span>에서<br>대화 <span style="color:var(--acc3)">밖</span>으로,<br>이것이 에이전트다.</div>
+    <div class="hero-s">어시스트는 대화창 안에서 "답을 준다". 에이전트는 대화창 밖으로 나가 파일을 읽고, 수정하고, 터미널을 실행하고, 에러를 스스로 고친다. 이 차시는 그 경계를 넘는다.</div>
+    <div class="hero-q"><div class="hero-q-q">"에이전트는 시간에 투자한다. 한 번의 긴 대화보다 여러 라운드의 도구 호출이 더 정확하다."</div><div class="hero-q-a">— ANTHROPIC · CLAUDE 에이전트 설계 원칙</div></div>
+  </div></div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">06 · AI 에이전트 툴 마스터리와 에이전트 기반 개발 입문</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">002 / 032</span></div></div>
+</div></div>
+
+<!-- 03 UNIT 01 · 어시스트 vs 에이전트 7축 -->
+<div class="stage"><div class="slide" data-title="Assist vs Agent 7">
+  <div class="hbar"><div class="hbar-l">MODULE 06 · UNIT 01 · SEVEN AXES</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 06</div></div>
+  <div class="hl"><div class="hl-kicker">UNIT 01 · 어시스트 vs 에이전트 7축 · 10MIN</div><div class="hl-title">어시스트와 에이전트의 구분 7축</div><div class="hl-sub">개념적 차이가 아니라 업무 동선의 차이다. 같은 과제도 도구 선택에 따라 소요 시간, 검수 지점, 책임 소재가 달라진다.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col3">
+    <div class="col">
+      <div class="sh"><span class="sh-n">01 · 7 AXES</span><span class="sh-t">두 모드 비교표</span></div><div class="sh-line"></div>
+      <table class="mtbl"><thead><tr><th>축</th><th>ASSIST</th><th>AGENT</th></tr></thead><tbody>
+        <tr><td>파일 수정</td><td>코드 제시</td><td>직접 편집</td></tr>
+        <tr><td>실행</td><td>사람이</td><td>터미널 자체</td></tr>
+        <tr><td>에러 대응</td><td>복사 재질문</td><td>읽고 재시도</td></tr>
+        <tr><td>다파일 작업</td><td>한 덩어리씩</td><td>트리 전체 이해</td></tr>
+        <tr><td>장기 기억</td><td>세션 초기화</td><td>메모리·파일</td></tr>
+        <tr><td>반복 지시</td><td>매번 전달</td><td>Rules 자산화</td></tr>
+        <tr><td>입력 단위</td><td>프롬프트</td><td>설계서</td></tr>
+      </tbody></table>
+      <div class="co"><div class="co-lb">KEY TAKEAWAY</div><div class="co-main">입력이 "한 문단 프롬프트"에서 "한 장 설계서"로 바뀐다</div><p>문장력보다 <strong>구조화 능력</strong>이 품질을 결정한다.</p></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">02 · WHY NOW</span><span class="sh-t">4·5차시의 피로를 풀기</span></div><div class="sh-line"></div>
+      <div class="bth">어시스트는 "빠른 초안"에서 여전히 최고다</div>
+      <p class="bt">개념 학습, 한 페이지 스크립트, 실험 프로토타입에서는 어시스트가 더 빠르고 피드백 루프도 짧다. <strong>에이전트가 빛나는 순간</strong>은 프로젝트가 여러 파일·여러 세션에 걸치고, 같은 규칙을 반복 적용해야 할 때다.</p>
+      <div class="dstrip"><div class="ds-c"><div class="ds-a">ASSIST</div><div class="ds-n">1~200</div><div class="ds-d">줄 규모 스크립트</div></div><div class="ds-c"><div class="ds-a">AGENT</div><div class="ds-n">1k+</div><div class="ds-d">줄·멀티파일</div></div><div class="ds-c"><div class="ds-a">BOTH</div><div class="ds-n">혼용</div><div class="ds-d">실무 표준</div></div></div>
+      <div class="quote"><div class="quote-src">SOURCE · ANTHROPIC ENGINEERING BLOG</div><div class="quote-q">"한 에이전트가 모든 것을 하면 아무것도 잘하지 못한다. 시간은 투자의 도구다."</div><div class="quote-a">— Claude 에이전트 설계 원칙</div></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">03 · ROLE SHIFT</span><span class="sh-t">거점리더의 이동</span></div><div class="sh-line"></div>
+      <div class="bth">"잘 시키는 사람"에서 "잘 그리는 사람"으로</div>
+      <p class="bt">어시스트 시대의 무기는 좋은 프롬프트를 쓰는 문장력. 에이전트 시대의 핵심은 <strong>작업 범위를 정의하고, 성공 기준을 쪼개고, 검수 체크리스트를 제시하는 구조화 능력</strong>이다.</p>
+      <div class="icard dark"><div class="icard-top"><span class="icard-lb">BEFORE · ASSIST</span></div><div class="bth">"이 엑셀 분류해줘"</div><p class="bt">한 문장 프롬프트. 결과가 애매하면 다시 시도.</p></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">AFTER · AGENT</span></div><div class="bth">입력 명세 + 처리 규칙 + 출력 형식 + 검수 조건</div><p class="bt">네 섹션 설계서. 에이전트가 스스로 반복·검증.</p></div>
+      <div class="pit"><div class="pit-lb">PITFALL</div><div class="pit-h">▸ 에이전트에게 "한 문장"만 주기</div><div class="pit-d">가장 흔한 실수. 어시스트 습관이 남은 것. 최소 4섹션 설계서를 쓴다.</div></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">06 · AI 에이전트 툴 마스터리와 에이전트 기반 개발 입문</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">003 / 032</span></div></div>
+</div></div>
+
+<!-- 04 7축 각 축 상세 해설 -->
+<div class="stage"><div class="slide" data-title="7 Axes Detail">
+  <div class="hbar"><div class="hbar-l">MODULE 06 · UNIT 01 · AXIS DETAIL</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 06</div></div>
+  <div class="hl"><div class="hl-kicker">UNIT 01 · 7축 상세 해설 · 8MIN</div><div class="hl-title">일곱 축의 부서별 적용</div><div class="hl-sub">비교표의 한 줄 한 줄을 실무 상황으로 풀면, 왜 에이전트로 넘어가야 하는지가 보인다.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col3">
+    <div class="col">
+      <div class="sh"><span class="sh-n">AXIS 1·2·3</span><span class="sh-t">수정·실행·에러</span></div><div class="sh-line"></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">AXIS 01 · 파일 수정</span></div><div class="bth">"여기에 이렇게 붙여" → 직접 편집</div><p class="bt">어시스트는 코드 블록을 보여주고 사용자가 복사/저장. 에이전트는 <strong>diff를 보여주고 승인만 받아서 파일에 직접 반영</strong>. 공공 환경에서는 diff 단계가 곧 감사로그.</p></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">AXIS 02 · 실행</span></div><div class="bth">터미널이 에이전트의 손이 된다</div><p class="bt">pytest·python main.py·npm run 을 에이전트가 직접 실행 → 결과를 읽고 다음 판단. 사람은 <strong>결과와 로그만 본다</strong>.</p></div>
+      <div class="icard dark"><div class="icard-top"><span class="icard-lb">AXIS 03 · 에러 대응</span></div><div class="bth">트레이스백을 읽고 스스로 재시도</div><p class="bt">어시스트: 사람이 에러를 복사해 다시 질문. 에이전트: <strong>에러 → 원인 가설 → 재수정 → 재실행</strong>을 한 루프 안에서 처리.</p></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">AXIS 4·5·6</span><span class="sh-t">다파일·기억·반복</span></div><div class="sh-line"></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">AXIS 04 · 다파일</span></div><div class="bth">프로젝트 트리 전체를 맥락으로</div><p class="bt">10개 파일에 걸친 리팩토링은 어시스트로 불가능. 에이전트는 <strong>ls·grep·read를 내장</strong>해 트리를 읽고 관련 파일을 스스로 연다.</p></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">AXIS 05 · 장기 기억</span></div><div class="bth">메모리·파일로 컨텍스트 유지</div><p class="bt">세션이 바뀌어도 <strong>CLAUDE.md·AGENTS.md·메모리 파일</strong>이 남아 있으면 "이 프로젝트의 규칙"을 다시 설명하지 않아도 된다.</p></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">AXIS 06 · 반복 지시</span></div><div class="bth">Rules에 박아놓고 잊는다</div><p class="bt">"한국어로", "파일명은 {날짜}_{용도}" — 이런 반복 지시를 매 세션마다 타이핑하지 않는다.</p></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">AXIS 7</span><span class="sh-t">입력 단위</span></div><div class="sh-line"></div>
+      <div class="icard dark"><div class="icard-top"><span class="icard-lb">AXIS 07 · 입력 단위</span><span class="icard-sess">KEY SHIFT</span></div><div class="bth">프롬프트 → 설계서 (4섹션)</div><p class="bt">이 한 축이 나머지 여섯 축을 결정한다. 한 문장을 주면 어시스트처럼 답하고, <strong>4섹션 설계서를 주면 에이전트처럼 행동</strong>한다.</p></div>
+      <div class="co"><div class="co-lb">PUBLIC CASE · 민원 분류</div><div class="co-main">7축이 동시에 바뀌는 전형 예시</div><p>1,000건 분류 과제: 어시스트는 코드 조각만 → 사람이 복붙·실행·에러 대응. 에이전트는 설계서 1장 → 스스로 읽고 분류하고 시트 추가하고 검수까지.</p></div>
+      <div class="dstrip"><div class="ds-c"><div class="ds-a">AXES</div><div class="ds-n">7</div><div class="ds-d">동선이 다른 축</div></div><div class="ds-c"><div class="ds-a">KEY</div><div class="ds-n">07</div><div class="ds-d">입력 단위</div></div><div class="ds-c"><div class="ds-a">SHIFT</div><div class="ds-n">설계</div><div class="ds-d">프롬프트 X</div></div></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">06 · AI 에이전트 툴 마스터리와 에이전트 기반 개발 입문</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">004 / 032</span></div></div>
+</div></div>
+
+<!-- 05 전환 신호 -->
+<div class="stage"><div class="slide" data-title="Switching Signals">
+  <div class="hbar"><div class="hbar-l">MODULE 06 · UNIT 01 · SWITCH SIGNALS</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 06</div></div>
+  <div class="hl"><div class="hl-kicker">UNIT 01 · 전환 신호 — 언제 에이전트로 넘어가는가 · 6MIN</div><div class="hl-title">에이전트 전환 시점 판단 기준</div><div class="hl-sub">모든 업무를 에이전트로 옮기는 것이 목적이 아니다. 전환 신호를 기준으로 분기한다.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col2">
+    <div class="col">
+      <div class="sh"><span class="sh-n">5 SIGNALS</span><span class="sh-t">에이전트 전환 신호</span></div><div class="sh-line"></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">SIGNAL 01</span></div><div class="bth">같은 지시를 3번 이상 반복하고 있다</div><p class="bt">"한국어로", "주석은 쉽게", "파일명 규칙" — 반복이 있으면 <strong>Rules 자산화</strong> 시점.</p></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">SIGNAL 02</span></div><div class="bth">파일이 5개 이상 엮여 있다</div><p class="bt">어시스트는 한 파일 한 덩어리. 파일 간 의존성이 있으면 에이전트가 트리 전체를 읽어야 한다.</p></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">SIGNAL 03</span></div><div class="bth">실행·에러 루프가 5번 이상 돈다</div><p class="bt">"코드 복사 → 실행 → 에러 → 재질문"을 다섯 번 이상 하고 있다면 에이전트로 자동화할 신호.</p></div>
+      <div class="icard dark"><div class="icard-top"><span class="icard-lb">SIGNAL 04·05</span></div><div class="bth">④ 다음 사람이 재현해야 한다 / ⑤ 감사·검수가 필요하다</div><p class="bt">재현성·감사로그가 필요한 공공 업무는 <strong>에이전트 + AGENTS.md + 로그 파일</strong>의 조합이 가장 깔끔하다.</p></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">STAY ASSIST</span><span class="sh-t">여전히 어시스트가 맞는 순간</span></div><div class="sh-line"></div>
+      <div class="bth">에이전트가 과잉 투자가 되는 경우</div>
+      <p class="bt">설계서를 쓰는 데 드는 시간이 과제 소요 시간보다 길면 배보다 배꼽. 아래 경우는 <strong>어시스트(ChatGPT·Claude·Gemini 채팅)</strong>로 가는 게 낫다.</p>
+      <table class="mtbl"><thead><tr><th>상황</th><th>이유</th></tr></thead><tbody>
+        <tr><td>1회성 아이디어 검증</td><td>설계서 쓸 시간 &gt; 구현 시간</td></tr>
+        <tr><td>개념·문법 질문</td><td>에이전트 루프 불필요</td></tr>
+        <tr><td>한 함수 10~30줄</td><td>Canvas/Artifacts가 더 빠름</td></tr>
+        <tr><td>문서 요약·번역</td><td>순수 텍스트 처리</td></tr>
+        <tr><td>첫 학습·튜토리얼</td><td>단계별 설명 필요</td></tr>
+      </tbody></table>
+      <div class="pit"><div class="pit-lb">PITFALL · 전환 신호</div><div class="pit-h">▸ "모든 업무를 에이전트로"</div><div class="pit-d">도구는 수단이다. 설계서 시간 &gt; 작업 시간이면 어시스트.</div><div class="pit-h">▸ "설계서 쓰기 귀찮다"</div><div class="pit-d">그 귀찮음이 재작업·책임 소재 불명을 예약한다.</div></div>
+      <div class="co"><div class="co-lb">HUB LEADER JUDGMENT</div><div class="co-main">"3번·5개·5번·재현·감사" — 다섯 신호 기억</div><p>신호 2개 이상 → 설계서 + 에이전트. 1개 이하 → 어시스트 그대로.</p></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">06 · AI 에이전트 툴 마스터리와 에이전트 기반 개발 입문</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">005 / 032</span></div></div>
+</div></div>
+
+<!-- 06 HERO · 계약 -->
+<div class="stage"><div class="slide" data-title="Hero Contract">
+  <div class="hbar"><div class="hbar-l">MODULE 06 · KEY INSIGHT</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 06</div></div>
+  <div class="bd col1"><div class="col hero" style="background:var(--bg2);padding:60px 90px;justify-content:center">
+    <div style="font-family:var(--mono);font-size:11.5px;color:var(--acc);letter-spacing:3px;font-weight:700;margin-bottom:18px">UNIT 01 · ONE LINE</div>
+    <div style="font-family:var(--serif);font-weight:700;font-size:52px;line-height:1.18;letter-spacing:-0.02em;color:var(--ink)">에이전트는 <span style="color:var(--acc)">지시</span>가 아니라<br><span style="color:var(--acc)">계약</span>이다.</div>
+    <div style="width:60px;height:3px;background:var(--acc);margin:22px 0 18px"></div>
+    <p style="font-size:18px;color:var(--ink2);line-height:1.7;max-width:1200px;font-style:italic">"이거 해줘"가 아니라 <strong style="color:var(--ink)">입력·처리·출력·검수를 명시한 한 장 계약서</strong>를 건넨다. 계약이 명확할수록 에이전트의 속도와 품질이 동시에 올라간다. 공공 업무에서 재현성·감사로그를 만드는 유일한 방법이기도 하다.</p>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:30px">
+      <div style="border:1px solid var(--ln);padding:14px;background:var(--bg)"><div style="font-family:var(--mono);font-size:10px;color:var(--acc);letter-spacing:2px;font-weight:700">① INPUT</div><div style="font-size:13px;color:var(--ink);font-weight:600;margin-top:6px">파일·포맷·필드·샘플</div></div>
+      <div style="border:1px solid var(--ln);padding:14px;background:var(--bg)"><div style="font-family:var(--mono);font-size:10px;color:var(--acc);letter-spacing:2px;font-weight:700">② PROCESS</div><div style="font-size:13px;color:var(--ink);font-weight:600;margin-top:6px">변환·필터·예외</div></div>
+      <div style="border:1px solid var(--ln);padding:14px;background:var(--bg)"><div style="font-family:var(--mono);font-size:10px;color:var(--acc);letter-spacing:2px;font-weight:700">③ OUTPUT</div><div style="font-size:13px;color:var(--ink);font-weight:600;margin-top:6px">파일명·컬럼·인코딩</div></div>
+      <div style="border:1px solid var(--ln);padding:14px;background:var(--bg)"><div style="font-family:var(--mono);font-size:10px;color:var(--acc);letter-spacing:2px;font-weight:700">④ VERIFY</div><div style="font-size:13px;color:var(--ink);font-weight:600;margin-top:6px">수치 판정·샘플 검수</div></div>
+    </div>
+  </div></div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">06 · AI 에이전트 툴 마스터리와 에이전트 기반 개발 입문</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">006 / 032</span></div></div>
+</div></div>
+
+<!-- 07 UNIT 02 · Claude Code 개관 -->
+<div class="stage"><div class="slide" data-title="Claude Code Overview">
+  <div class="hbar"><div class="hbar-l">MODULE 06 · UNIT 02 · CLAUDE CODE ①</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 06</div></div>
+  <div class="hl"><div class="hl-kicker">UNIT 02 · 도구 투어 ① · CLAUDE CODE 개관 · 9MIN</div><div class="hl-title">Claude Code 개관과 특징</div><div class="hl-sub">Anthropic 공식 CLI 에이전트. 파일 읽기·수정·실행·커밋·테스트 전 과정을 스스로 수행. 거점리더의 주력 도구.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col3">
+    <div class="col">
+      <div class="sh"><span class="sh-n">WHAT IT IS</span><span class="sh-t">npm 한 줄로 시작</span></div><div class="sh-line"></div>
+      <div class="bth">터미널에서 대화하는 IDE-리스 에이전트</div>
+      <p class="bt">GUI 편집기 없이 터미널만 있으면 된다. 현재 폴더를 루트로 삼아 <strong>파일 구조를 읽고·탐색하고·편집하고·실행</strong>한다. 공공 내부망에서 IDE 설치 허가가 까다로울 때 <strong>가장 장벽이 낮은 옵션</strong>.</p>
+      <div class="cblk"><span class="cm"># 설치 (외부망 1회)</span>
+<span class="kw">npm</span> install -g @anthropic-ai/claude-code
+
+<span class="cm"># 프로젝트 폴더에서 실행</span>
+<span class="kw">cd</span> ~/work/민원분류
+<span class="kw">claude</span>
+
+<span class="cm"># 대화창 열리면 바로 지시</span>
+&gt; 이 폴더의 민원.xlsx를 읽고
+  부서별 자동 분류 시트를 추가해줘.</div>
+      <div class="co"><div class="co-lb">PICK WHEN</div><div class="co-main">CLI 친숙 · 파이썬·자동화·데이터 파이프</div><p>단발 스크립트, 정례 자동화, 서버 작업에 최적.</p></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">CORE LOOP</span><span class="sh-t">Plan → Edit → Run → Review</span></div><div class="sh-line"></div>
+      <div class="bth">에이전트 루프 4단계</div>
+      <table class="mtbl"><thead><tr><th>STEP</th><th>액션</th><th>체크</th></tr></thead><tbody>
+        <tr><td>01 Plan</td><td>/plan — 실행 전 계획</td><td>설계서와 대조</td></tr>
+        <tr><td>02 Edit</td><td>diff 보여주고 y/n</td><td>헝크 단위 승인</td></tr>
+        <tr><td>03 Run</td><td>pytest·python 실행</td><td>로그 기록</td></tr>
+        <tr><td>04 Review</td><td>에러 읽고 재시도</td><td>3회 실패시 중단</td></tr>
+      </tbody></table>
+      <div class="cod"><div class="cod-lb">TYPICAL SESSION</div><div class="cod-main">1턴 지시 → 8턴 자가 루프 → 1턴 검수</div><p>사람이 10분 투자하면 에이전트가 30~90분치 구현을 수행. 검수는 diff와 로그로.</p></div>
+      <div class="bth" style="margin-top:4px">주요 명령</div>
+      <p class="bt"><strong>/plan</strong> 계획만 · <strong>/clear</strong> 대화 초기화 · <strong>/memory</strong> 장기 메모리 편집 · <strong>/compact</strong> 컨텍스트 축약</p>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">SAFETY · PERM</span><span class="sh-t">권한 모델</span></div><div class="sh-line"></div>
+      <div class="bth">위험 동작은 항상 "묻고 실행"</div>
+      <p class="bt">파일 생성·수정·삭제, 쉘 명령 실행은 <strong>매번 사용자 승인</strong>. 공공 환경에서는 이 명시적 승인 모델이 가장 큰 안도감의 원천.</p>
+      <table class="mtbl"><thead><tr><th>ACTION</th><th>DEFAULT</th></tr></thead><tbody>
+        <tr><td>파일 읽기</td><td>자동 허용</td></tr>
+        <tr><td>파일 수정</td><td>diff 확인</td></tr>
+        <tr><td>파일 삭제</td><td>명시 승인</td></tr>
+        <tr><td>쉘 명령</td><td>명시 승인</td></tr>
+        <tr><td>네트워크</td><td>명시 승인</td></tr>
+      </tbody></table>
+      <div class="pit"><div class="pit-lb">PITFALL</div><div class="pit-h">▸ --dangerously-skip-permissions 습관화</div><div class="pit-d">테스트 머신 전용. 업무 폴더·기관 PC 금지.</div><div class="pit-h">▸ 20step 한 번에 y 누르기</div><div class="pit-d">단계별로 확인. 승인 속도가 검수 품질이다.</div></div>
+      <div class="dstrip"><div class="ds-c"><div class="ds-a">SESSION</div><div class="ds-n">10~40m</div><div class="ds-d">평균</div></div><div class="ds-c"><div class="ds-a">TURNS</div><div class="ds-n">8~25</div><div class="ds-d">루프 수</div></div><div class="ds-c"><div class="ds-a">YIELD</div><div class="ds-n">4~8×</div><div class="ds-d">시간 대비</div></div></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">06 · AI 에이전트 툴 마스터리와 에이전트 기반 개발 입문</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">007 / 032</span></div></div>
+</div></div>
+
+<!-- 08 Claude Code 5계층 -->
+<div class="stage"><div class="slide" data-title="Claude Code 5 Layers">
+  <div class="hbar"><div class="hbar-l">MODULE 06 · UNIT 02 · CLAUDE CODE ②</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 06</div></div>
+  <div class="hl"><div class="hl-kicker">UNIT 02 · CLAUDE CODE 5계층 · 8MIN</div><div class="hl-title">Claude Code의 다섯 계층</div><div class="hl-sub">Claude Code는 단순 CLI가 아니다. 다섯 계층의 확장 지점이 있다. 이 구조를 외우면 다른 도구(Cursor·Codex·OpenCode)도 같은 지도로 읽힌다.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col2">
+    <div class="col">
+      <div class="sh"><span class="sh-n">5 LAYERS</span><span class="sh-t">확장 지점</span></div><div class="sh-line"></div>
+      <table class="mtbl"><thead><tr><th>LAYER</th><th>역할</th><th>저장 위치</th></tr></thead><tbody>
+        <tr><td>① Rules</td><td>항상 적용되는 규칙</td><td>CLAUDE.md · AGENTS.md</td></tr>
+        <tr><td>② Skills</td><td>상황별 전문 모듈</td><td>~/.claude/skills/*/SKILL.md</td></tr>
+        <tr><td>③ Sub-agents</td><td>역할 분담·병렬</td><td>.claude/agents/*.md</td></tr>
+        <tr><td>④ Hooks</td><td>이벤트 자동 트리거</td><td>.claude/hooks.json</td></tr>
+        <tr><td>⑤ MCP</td><td>외부 도구 연결</td><td>.claude/mcp.json</td></tr>
+      </tbody></table>
+      <div class="co"><div class="co-lb">LAYER RELATION</div><div class="co-main">Rules(상시) ⊂ Skills(상황) ⊂ Sub-agents(역할) ⊂ Hooks(이벤트) ⊂ MCP(외부)</div><p>하위로 갈수록 <strong>구체적이고 동적</strong>이다. 거점리더는 1~3계층이면 충분.</p></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">MAPPING</span><span class="sh-t">타 도구에서의 대응</span></div><div class="sh-line"></div>
+      <table class="mtbl"><thead><tr><th>LAYER</th><th>Cursor</th><th>Codex</th><th>OpenCode</th></tr></thead><tbody>
+        <tr><td>Rules</td><td>.cursor/rules/</td><td>AGENTS.md</td><td>AGENTS.md</td></tr>
+        <tr><td>Skills</td><td>Notepads</td><td>(일부)</td><td>Custom Cmd</td></tr>
+        <tr><td>Sub-agents</td><td>Composer</td><td>(제한적)</td><td>(제한적)</td></tr>
+        <tr><td>Hooks</td><td>Tasks</td><td>—</td><td>Scripts</td></tr>
+        <tr><td>MCP</td><td>MCP 지원</td><td>Tool Use</td><td>MCP 지원</td></tr>
+      </tbody></table>
+      <div class="cod"><div class="cod-lb">KEY INSIGHT</div><div class="cod-main">"이름은 달라도 계층은 같다"</div><p>8차시에서 MCP를 다시 다룬다. 6차시는 1·2·3계층에 집중.</p></div>
+      <div class="pit"><div class="pit-lb">PITFALL</div><div class="pit-h">▸ 처음부터 5계층 모두 세팅</div><div class="pit-d">Rules 1장부터. Skills는 반복이 3번 생긴 뒤. Hooks·MCP는 7·8차시에서.</div></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">06 · AI 에이전트 툴 마스터리와 에이전트 기반 개발 입문</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">008 / 032</span></div></div>
+</div></div>
+
+<!-- 09 Claude Code CLAUDE.md 예시 + 실행 루틴 -->
+<div class="stage"><div class="slide" data-title="CLAUDE.md Sample">
+  <div class="hbar"><div class="hbar-l">MODULE 06 · UNIT 02 · CLAUDE CODE ③</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 06</div></div>
+  <div class="hl"><div class="hl-kicker">UNIT 02 · CLAUDE.md 예시 + 하루 실행 루틴 · 7MIN</div><div class="hl-title">CLAUDE.md 규칙과 실행 루틴</div><div class="hl-sub">규칙 파일 예시와 실제 세션 흐름을 나란히 본다. 세션 시작·종료에 하는 짧은 루틴이 품질 차이를 만든다.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col2w">
+    <div class="col">
+      <div class="sh"><span class="sh-n">CLAUDE.md</span><span class="sh-t">공공 실무 샘플</span></div><div class="sh-line"></div>
+      <div class="cblk"><span class="cm"># CLAUDE.md · 민원분류 프로젝트</span>
+
+## 역할 &amp; 톤
+<span class="kw">-</span> 한국어 존댓말. 기술용어는 영문 병기.
+<span class="kw">-</span> 주석은 담당자 이해 가능한 쉬운 문장.
+
+## 코드 스타일
+<span class="kw">-</span> 파이썬 3.11, 함수 snake_case
+<span class="kw">-</span> 파일명: <span class="st">{YYYYMMDD}_{용도}.py</span>
+<span class="kw">-</span> 외부 라이브러리는 requirements.txt 기록
+
+## 보안
+<span class="kw">-</span> 주민번호·이름·연락처 <span class="st">로그 출력 금지</span>
+<span class="kw">-</span> API 키는 <span class="st">.env</span>, 코드 하드코딩 금지
+<span class="kw">-</span> 외부망 호출은 별도 파일로 분리
+
+## 검증
+<span class="kw">-</span> 모든 스크립트 pytest 5건 이상
+<span class="kw">-</span> 실행 전 <span class="st">/plan</span> 필수
+
+## 금지
+<span class="kw">-</span> <span class="st">rm -rf</span> 계열
+<span class="kw">-</span> 원본 덮어쓰기 (.bak 백업 후 수정)
+<span class="kw">-</span> 네트워크 호출은 승인 후에만</div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">DAILY ROUTINE</span><span class="sh-t">세션 흐름</span></div><div class="sh-line"></div>
+      <div class="bth">에이전트 세션 3단계 루틴</div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">① 시작</span></div><div class="bth">폴더·규칙·계획 확인 (5분)</div><p class="bt">cd 프로젝트 → <strong>/plan으로 먼저 계획</strong> → CLAUDE.md 최신인지 확인 → 오늘 할 과제 설계서 한 장 준비.</p></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">② 실행</span></div><div class="bth">승인 기반 자가 루프 (20~60분)</div><p class="bt">에이전트 자가 루프 중 <strong>사용자는 diff·쉘 명령만 본다</strong>. 한 번에 5개 이상 step이 쌓이면 중단시켜 검수.</p></div>
+      <div class="icard dark"><div class="icard-top"><span class="icard-lb">③ 종료</span></div><div class="bth">커밋 · 로그 · 메모리 정리</div><p class="bt">git commit → log.txt에 세션 요약 → /memory로 이후 세션에 남길 학습 한 줄 기록 → /clear.</p></div>
+      <div class="co"><div class="co-lb">HUB LEADER TIP</div><div class="co-main">"세션 시작 5분 + 종료 3분" — 이것이 재현성의 원천</div><p>다음 사람·다음 자신이 재현 가능하게 만드는 것은 코드가 아니라 <strong>이 8분의 루틴</strong>이다.</p></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">06 · AI 에이전트 툴 마스터리와 에이전트 기반 개발 입문</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">009 / 032</span></div></div>
+</div></div>
+
+<!-- 10 Cursor · Antigravity IDE 통합형 -->
+<div class="stage"><div class="slide" data-title="Cursor Antigravity">
+  <div class="hbar"><div class="hbar-l">MODULE 06 · UNIT 02 · IDE AGENTS</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 06</div></div>
+  <div class="hl"><div class="hl-kicker">UNIT 02 · 도구 투어 ② · CURSOR · ANTIGRAVITY 개관 · 8MIN</div><div class="hl-title">IDE 통합형 에이전트 개관</div><div class="hl-sub">VS Code 포크 기반 에이전트 IDE. 시각적 diff·탭·파일 트리 — 익숙한 환경 위에서 에이전트를 호출한다.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col3">
+    <div class="col">
+      <div class="sh"><span class="sh-n">CURSOR</span><span class="sh-t">VS Code + 에이전트</span></div><div class="sh-line"></div>
+      <div class="bth">"VS Code를 쓰던 사람이 그대로 옮겨오는" 진입 경로</div>
+      <p class="bt">기존 VS Code 확장·단축키·폰트 그대로. 우측 패널에 에이전트 채팅이 상주한다. <strong>Ctrl+K</strong>로 선택 영역 리팩토링, <strong>Ctrl+L</strong>로 채팅·에이전트 호출, <strong>Ctrl+I</strong>로 Composer.</p>
+      <table class="mtbl"><thead><tr><th>MODE</th><th>범위</th><th>용도</th></tr></thead><tbody>
+        <tr><td>Ask</td><td>현재 파일</td><td>질의응답</td></tr>
+        <tr><td>Edit</td><td>선택 영역</td><td>인라인 수정</td></tr>
+        <tr><td>Agent</td><td>프로젝트 전체</td><td>멀티파일</td></tr>
+        <tr><td>Composer</td><td>다중 탭</td><td>아키텍처 작업</td></tr>
+      </tbody></table>
+      <div class="co"><div class="co-lb">STRENGTH</div><div class="co-main">diff를 한 블록씩 Accept/Reject</div><p>헝크 단위 선별 수용 — 검수 품질이 높다.</p></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">ANTIGRAVITY</span><span class="sh-t">Google의 에이전트 IDE</span></div><div class="sh-line"></div>
+      <div class="bth">Windsurf 계보를 잇는 Google 에이전트 IDE</div>
+      <p class="bt">Cursor와 유사한 VS Code 포크 구조지만 <strong>에이전트 자율도 기본값이 높다</strong>. 한 지시에 여러 파일·여러 커맨드를 연쇄 실행하는 <strong>Cascade</strong> 흐름.</p>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">CASCADE</span></div><div class="bth">연쇄 실행 흐름</div><p class="bt">파일 스캔 → 수정 → 실행 → 수정을 한 번의 연쇄로 묶어 타임라인에 기록.</p></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">TIMELINE</span></div><div class="bth">변경 이력 시각화</div><p class="bt">각 단계를 체크포인트로 저장. 특정 시점으로 되돌리기 가능.</p></div>
+      <div class="icard dark"><div class="icard-top"><span class="icard-lb">MEMORIES</span></div><div class="bth">프로젝트별 자동 기억</div><p class="bt">파일 스타일·선호 패턴을 학습해 다음 세션 반영.</p></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">CHOICE</span><span class="sh-t">둘 중 어느 쪽?</span></div><div class="sh-line"></div>
+      <div class="bth">세밀한 통제 vs 빠른 자율</div>
+      <table class="mtbl"><thead><tr><th>상황</th><th>추천</th></tr></thead><tbody>
+        <tr><td>세밀한 통제</td><td>Cursor</td></tr>
+        <tr><td>빠른 프로토타입</td><td>Antigravity</td></tr>
+        <tr><td>VS Code 이식</td><td>Cursor</td></tr>
+        <tr><td>초기 설계 탐색</td><td>Antigravity</td></tr>
+        <tr><td>감사·검수 중심</td><td>Cursor</td></tr>
+        <tr><td>데모·시연</td><td>Antigravity</td></tr>
+      </tbody></table>
+      <div class="pit"><div class="pit-lb">PITFALL · IDE 에이전트 공통</div><div class="pit-h">▸ 기관 PC 설치 승인 허들</div><div class="pit-d">VS Code 포크는 정보화 부서 별도 승인 필요. Claude Code(CLI)가 허들 가장 낮음.</div><div class="pit-h">▸ 텔레메트리·코드 전송</div><div class="pit-d">Settings → Privacy Mode 확인. 민감 프로젝트는 비활성.</div></div>
+      <div class="co"><div class="co-lb">START POINT</div><div class="co-main">VS Code 사용자는 Cursor로 시작</div><p>기존 확장·단축키 그대로이므로 전환 비용이 가장 낮다.</p></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">06 · AI 에이전트 툴 마스터리와 에이전트 기반 개발 입문</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">010 / 032</span></div></div>
+</div></div>
+
+<!-- 11 Cursor .cursorrules + Composer -->
+<div class="stage"><div class="slide" data-title="Cursor Rules Composer">
+  <div class="hbar"><div class="hbar-l">MODULE 06 · UNIT 02 · CURSOR DEEP</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 06</div></div>
+  <div class="hl"><div class="hl-kicker">UNIT 02 · CURSOR 심층 — RULES + COMPOSER 흐름 · 7MIN</div><div class="hl-title">Cursor의 Rules·Composer 활용</div><div class="hl-sub">Cursor의 핵심은 규칙과 Composer다. 두 기능을 함께 쓰면 IDE 에이전트의 장점이 완성된다.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col2w">
+    <div class="col">
+      <div class="sh"><span class="sh-n">.CURSOR/RULES</span><span class="sh-t">규칙 파일</span></div><div class="sh-line"></div>
+      <div class="bth">규칙은 주제별 .md 파일로 분리</div>
+      <p class="bt">CLAUDE.md가 한 장이라면 Cursor는 <strong>.cursor/rules/ 폴더 안 여러 파일</strong>. 파일마다 "언제 적용할지"를 frontmatter로 지정한다.</p>
+      <div class="cblk"><span class="cm">// .cursor/rules/style-korean.md</span>
+---
+<span class="kw">description:</span> 한국어 공공기관 스타일
+<span class="kw">globs:</span> ["**/*.py", "**/*.md"]
+<span class="kw">alwaysApply:</span> true
+---
+
+당신은 공공기관 실무 개발자입니다.
+<span class="kw">-</span> 주석은 한국어로 작성
+<span class="kw">-</span> 파일명: <span class="st">{YYYYMMDD}_{용도}.py</span>
+<span class="kw">-</span> 민감 정보는 로그에 남기지 않음
+
+<span class="cm">// .cursor/rules/security-public.md</span>
+---
+<span class="kw">description:</span> 공공 보안 가이드
+<span class="kw">globs:</span> ["**/*.py"]
+---
+<span class="kw">-</span> API 키는 .env, 하드코딩 금지
+<span class="kw">-</span> 외부망 호출은 별도 모듈
+<span class="kw">-</span> 주민번호·이름·연락처 로그 출력 금지</div>
+      <div class="co"><div class="co-lb">TIP</div><div class="co-main">Rules는 주제별 3~5장으로 쪼갠다</div><p>한 파일에 몰아넣지 말고 스타일·보안·검증·프로젝트 규칙을 분리.</p></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">COMPOSER</span><span class="sh-t">다중 탭 작업</span></div><div class="sh-line"></div>
+      <div class="bth">Ctrl+I — 여러 파일을 한 번에 여는 "설계서 모드"</div>
+      <p class="bt">Composer는 에이전트에게 <strong>여러 파일 동시 수정</strong>을 시킨다. 새 기능 추가 시 model.py·views.py·tests/*.py를 한꺼번에 업데이트.</p>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">USE CASE</span></div><div class="bth">리팩토링 · 아키텍처 변경</div><p class="bt">클래스 이름 변경·API 시그니처 변경 — 여러 파일 일관성 유지.</p></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">CHECKPOINT</span></div><div class="bth">변경 전 스냅샷 자동 생성</div><p class="bt">실수했을 때 한 번에 되돌리기 가능. 공공 업무에서 안심 장치.</p></div>
+      <div class="pit"><div class="pit-lb">PITFALL</div><div class="pit-h">▸ Composer로 너무 큰 범위 한 번에</div><div class="pit-d">20개 파일 동시 수정은 검수 불가. 5~8개 이내.</div></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">06 · AI 에이전트 툴 마스터리와 에이전트 기반 개발 입문</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">011 / 032</span></div></div>
+</div></div>
+
+<!-- 12 Antigravity 심층 + Torvalds -->
+<div class="stage"><div class="slide" data-title="Antigravity Torvalds">
+  <div class="hbar"><div class="hbar-l">MODULE 06 · UNIT 02 · ANTIGRAVITY DEEP</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 06</div></div>
+  <div class="hl"><div class="hl-kicker">UNIT 02 · ANTIGRAVITY 심층 + 개발자 커뮤니티 관점 · 7MIN</div><div class="hl-title">Antigravity의 자율 에이전트 철학</div><div class="hl-sub">Windsurf에서 넘어온 자율형 에이전트 IDE. 오픈소스 생태계의 거인들도 조심스럽게 AI 코딩을 테스트하기 시작했다.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col2w">
+    <div class="col">
+      <div class="sh"><span class="sh-n">CASCADE</span><span class="sh-t">자율 연쇄 실행</span></div><div class="sh-line"></div>
+      <div class="bth">Cascade — 한 지시로 여러 단계 연쇄</div>
+      <p class="bt">사용자가 "기능 X를 추가해줘"라고 하면 Antigravity는 <strong>스캔 → 설계 → 파일 수정 → 테스트 → 수정 보완</strong>을 한 번의 연쇄 흐름으로 수행한다. 각 단계는 타임라인에 기록되고 체크포인트로 되돌릴 수 있다.</p>
+      <div class="cod"><div class="cod-lb">FLOW CHART</div><div class="cod-main">Scan → Plan → Edit(N) → Run → Self-review → Loop</div><p>Cursor의 Composer가 "동시 수정"이라면, Antigravity의 Cascade는 "연쇄 실행". <strong>자율도가 더 높다.</strong></p></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">MEMORIES</span></div><div class="bth">프로젝트별 자동 학습</div><p class="bt">스타일·선호 패턴·자주 쓰는 라이브러리를 기억. 다음 세션부터 반영.</p></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">WHEN</span></div><div class="bth">초기 탐색·빠른 데모</div><p class="bt">아키텍처가 확정되지 않은 <strong>탐색 단계</strong>에 가장 유리.</p></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">COMMUNITY</span><span class="sh-t">개발자 관점</span></div><div class="sh-line"></div>
+      <div class="quote"><div class="quote-src">CASE · LINUS TORVALDS · 2025</div><div class="quote-q">"AI 코딩 도구를 써봤다. 기대만큼은 아니지만, 반복 업무에서는 명백히 시간을 아꼈다. 단, 커밋 메시지까지 맡기지는 않는다."</div><div class="quote-a">— 오픈소스 리더의 신중한 태도 (보도 요지 재구성)</div></div>
+      <p class="bt">Linux 커널 메인테이너인 Torvalds조차도 에이전트 IDE를 테스트한다. 하지만 <strong>"커밋 메시지는 직접 쓴다"</strong>는 태도는 공공 업무에도 그대로 이식 가능하다. 코드는 생성 가능, 의도·책임 기록은 사람이 남긴다.</p>
+      <div class="pit"><div class="pit-lb">PITFALL · 자율형 에이전트</div><div class="pit-h">▸ Cascade 전체 승인</div><div class="pit-d">10단계를 한 번에 OK 누르면 2~3단계에서 방향이 틀려도 발견 못 한다.</div><div class="pit-h">▸ Memories의 누적 편향</div><div class="pit-d">잘못 학습된 패턴이 누적되면 다음 세션에 오염. 주기적 정리.</div></div>
+      <div class="co"><div class="co-lb">HUB LEADER TAKEAWAY</div><div class="co-main">"생성은 에이전트, 의미는 사람"</div><p>코드·diff·로그 생성은 맡기되, 커밋 메시지·README·결정 기록은 손으로.</p></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">06 · AI 에이전트 툴 마스터리와 에이전트 기반 개발 입문</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">012 / 032</span></div></div>
+</div></div>
+
+<!-- 13 Codex · OpenCode -->
+<div class="stage"><div class="slide" data-title="Codex OpenCode">
+  <div class="hbar"><div class="hbar-l">MODULE 06 · UNIT 02 · CODEX · OPENCODE</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 06</div></div>
+  <div class="hl"><div class="hl-kicker">UNIT 02 · 도구 투어 ③ · CODEX · OPENCODE · 8MIN</div><div class="hl-title">클라우드형·오픈소스형 에이전트 지도</div><div class="hl-sub">OpenAI 계열과 벤더 독립 오픈소스. 두 대안을 추가해야 "기관 보안 정책에 맞는 에이전트"를 항상 가질 수 있다.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col3">
+    <div class="col">
+      <div class="sh"><span class="sh-n">CODEX</span><span class="sh-t">OpenAI 공식</span></div><div class="sh-line"></div>
+      <div class="bth">터미널·IDE·웹까지 지원하는 OpenAI 풀라인</div>
+      <p class="bt"><strong>Codex CLI</strong>(터미널) + <strong>Codex Cloud</strong>(웹) + VS Code 확장이 축. ChatGPT 구독이 있다면 별도 가입 없이 접근 가능 — <strong>행정 허들이 낮다</strong>.</p>
+      <div class="cblk"><span class="cm"># Codex CLI 설치</span>
+<span class="kw">npm</span> install -g @openai/codex
+
+<span class="cm"># 실행</span>
+<span class="kw">codex</span>
+
+<span class="cm"># 인수로 바로 지시</span>
+<span class="kw">codex</span> <span class="st">"민원.xlsx 부서별 분류"</span></div>
+      <table class="mtbl"><thead><tr><th>VARIANT</th><th>특징</th></tr></thead><tbody>
+        <tr><td>CLI</td><td>로컬 터미널·파일</td></tr>
+        <tr><td>Cloud</td><td>웹 브라우저·원격 실행</td></tr>
+        <tr><td>IDE</td><td>VS Code 확장</td></tr>
+      </tbody></table>
+      <div class="co"><div class="co-lb">KEY</div><div class="co-main">환경이 제한된 공공 PC에서도 최소 한 경로는 열려 있다</div><p>IDE 설치 불가 시 웹(Cloud)으로 대체 가능.</p></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">OPENCODE</span><span class="sh-t">오픈소스 · 멀티모델</span></div><div class="sh-line"></div>
+      <div class="bth">특정 벤더에 묶이지 않는 CLI 에이전트</div>
+      <p class="bt">OpenCode는 Claude·OpenAI·Gemini·로컬 모델(Ollama)을 <strong>하나의 CLI에서 교체</strong> 가능. 보안 정책상 특정 벤더 제한·로컬 전용 운영 시 유일한 선택.</p>
+      <div class="cblk"><span class="cm"># 설치</span>
+<span class="kw">npm</span> install -g opencode-ai
+
+<span class="cm"># 모델 교체</span>
+<span class="kw">opencode</span> --model claude-sonnet-4
+<span class="kw">opencode</span> --model gpt-5
+<span class="kw">opencode</span> --model ollama/llama3.2 <span class="cm">#로컬</span></div>
+      <div class="cod"><div class="cod-lb">USE CASE</div><div class="cod-main">기관 보안 정책이 특정 벤더를 제한할 때</div><p>모델 선택권을 확보하면 정책 변경에 유연하게 대응.</p></div>
+      <div class="pit"><div class="pit-lb">주의</div><div class="pit-h">▸ 로컬 모델 사용 시 속도·품질 감수</div><div class="pit-d">7B급은 간단 작업만. 복잡 로직은 외부 API + 비식별화.</div></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">COMPARE</span><span class="sh-t">4종 한눈에</span></div><div class="sh-line"></div>
+      <div class="bth">도구 4종 핵심 비교</div>
+      <table class="mtbl"><thead><tr><th>TOOL</th><th>ENV</th><th>FIRST PICK</th></tr></thead><tbody>
+        <tr><td>Claude Code</td><td>CLI</td><td>공공 기본</td></tr>
+        <tr><td>Cursor</td><td>IDE</td><td>VS Code 이식</td></tr>
+        <tr><td>Antigravity</td><td>IDE</td><td>빠른 프로토</td></tr>
+        <tr><td>Codex</td><td>다양</td><td>ChatGPT 기존</td></tr>
+        <tr><td>OpenCode</td><td>CLI</td><td>로컬·멀티</td></tr>
+      </tbody></table>
+      <div class="dstrip"><div class="ds-c"><div class="ds-a">LEARN</div><div class="ds-n">1개</div><div class="ds-d">먼저 숙달</div></div><div class="ds-c"><div class="ds-a">KNOW</div><div class="ds-n">3개</div><div class="ds-d">개념 이해</div></div><div class="ds-c"><div class="ds-a">SWITCH</div><div class="ds-n">상황</div><div class="ds-d">교체 가능</div></div></div>
+      <div class="co"><div class="co-lb">JUDGMENT</div><div class="co-main">"한 도구 깊게, 나머지는 개념만"</div><p>핵심 개념(Rules·Skills·Plan)이 같으므로 이동 비용이 낮다.</p></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">06 · AI 에이전트 툴 마스터리와 에이전트 기반 개발 입문</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">013 / 032</span></div></div>
+</div></div>
+
+<!-- 14 4종 에이전트 선택 가이드 -->
+<div class="stage"><div class="slide" data-title="Agent Selection Guide">
+  <div class="hbar"><div class="hbar-l">MODULE 06 · UNIT 02 · SELECTION GUIDE</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 06</div></div>
+  <div class="hl"><div class="hl-kicker">UNIT 02 · 환경·업무별 에이전트 선택 가이드 · 7MIN</div><div class="hl-title">환경·업무 기반 도구 선택 기준</div><div class="hl-sub">도구 선택은 취향이 아니다. 내부망·승인·데이터·언어·팀 크기로 결정된다.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col2">
+    <div class="col">
+      <div class="sh"><span class="sh-n">ENV × TASK</span><span class="sh-t">환경·업무별 추천</span></div><div class="sh-line"></div>
+      <table class="mtbl"><thead><tr><th>환경 / 업무</th><th>1순위</th><th>2순위</th></tr></thead><tbody>
+        <tr><td>외부망 · 단발 스크립트</td><td>Claude Code</td><td>Codex CLI</td></tr>
+        <tr><td>외부망 · 멀티파일 리팩토링</td><td>Cursor</td><td>Claude Code</td></tr>
+        <tr><td>외부망 · 프로토타입 탐색</td><td>Antigravity</td><td>Cursor</td></tr>
+        <tr><td>외부망 · 기존 ChatGPT 계정</td><td>Codex</td><td>Claude Code</td></tr>
+        <tr><td>내부망 · 로컬 모델 필수</td><td>OpenCode+Ollama</td><td>Claude Code(비식별)</td></tr>
+        <tr><td>내부망 · 하이브리드 허용</td><td>Claude Code</td><td>Cursor</td></tr>
+      </tbody></table>
+      <div class="co"><div class="co-lb">RULE OF THUMB</div><div class="co-main">"외부망 기본 = Claude Code · 내부망 보수 = OpenCode"</div><p>팀 전체가 한 도구를 쓰는 게 Rules·Skills 공유에 유리.</p></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">DECISION TREE</span><span class="sh-t">4개 질문</span></div><div class="sh-line"></div>
+      <div class="bth">질문 4개로 도구가 결정된다</div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">Q1</span></div><div class="bth">IDE 설치가 승인되는가?</div><p class="bt">NO → Claude Code · OpenCode (CLI). YES → 다음 질문.</p></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">Q2</span></div><div class="bth">VS Code를 이미 쓰고 있는가?</div><p class="bt">YES → Cursor (전환 비용 낮음). NO → 다음 질문.</p></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">Q3</span></div><div class="bth">ChatGPT 유료 계정이 있는가?</div><p class="bt">YES → Codex (추가 비용 없음). NO → 다음 질문.</p></div>
+      <div class="icard dark"><div class="icard-top"><span class="icard-lb">Q4</span></div><div class="bth">보안이 특정 벤더를 제한하는가?</div><p class="bt">YES → OpenCode + 로컬 모델. NO → Claude Code (기본 추천).</p></div>
+      <div class="pit"><div class="pit-lb">PITFALL</div><div class="pit-h">▸ 4종 모두 설치</div><div class="pit-d">Rules 파일이 충돌. 프로젝트당 하나.</div></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">06 · AI 에이전트 툴 마스터리와 에이전트 기반 개발 입문</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">014 / 032</span></div></div>
+</div></div>
+
+<!-- 15 UNIT 03 · Rules AGENTS.md 작성 가이드 -->
+<div class="stage"><div class="slide" data-title="Rules Guide">
+  <div class="hbar"><div class="hbar-l">MODULE 06 · UNIT 03 · RULES · AGENTS.MD</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 06</div></div>
+  <div class="hl"><div class="hl-kicker">UNIT 03 · Rules · AGENTS.md 작성 가이드 · 8MIN</div><div class="hl-title">반복 지시의 파일 자산화 원칙</div><div class="hl-sub">AGENTS.md · CLAUDE.md · .cursor/rules. 이름은 달라도 원리는 같다. 에이전트가 자동으로 읽는 프로젝트 헌법이다.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col2">
+    <div class="col">
+      <div class="sh"><span class="sh-n">3-LAYER</span><span class="sh-t">개인·부서·프로젝트</span></div><div class="sh-line"></div>
+      <div class="bth">Rules는 3계층으로 운영한다</div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">LAYER 01 · 개인</span></div><div class="bth">~/.claude/CLAUDE.md</div><p class="bt">항상 쓰는 톤·언어·파일명 규칙. <strong>한 번 쓰고 1년 쓴다.</strong></p></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">LAYER 02 · 부서</span></div><div class="bth">\\DEPT\AGENTS.md (공유 드라이브)</div><p class="bt">부서 표준: 보고 양식·파일명·감사 규정. <strong>거점리더가 작성해 배포.</strong></p></div>
+      <div class="icard dark"><div class="icard-top"><span class="icard-lb">LAYER 03 · 프로젝트</span></div><div class="bth">./AGENTS.md</div><p class="bt">특정 업무의 세부: 데이터 스키마·API 키·외부 의존성. 각 프로젝트별 1장.</p></div>
+      <div class="co"><div class="co-lb">PRIORITY</div><div class="co-main">프로젝트 &gt; 부서 &gt; 전역</div><p>상충 시 좁은 범위가 이긴다. 상위가 일반 원칙, 하위가 예외.</p></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">SECTIONS</span><span class="sh-t">권장 5섹션</span></div><div class="sh-line"></div>
+      <div class="bth">공공 AGENTS.md 5섹션 — 60줄 이내</div>
+      <table class="mtbl"><thead><tr><th>SECTION</th><th>예시</th></tr></thead><tbody>
+        <tr><td>① 역할·톤</td><td>한국어 존댓말·쉬운 주석</td></tr>
+        <tr><td>② 코드 스타일</td><td>파일명·함수명·버전</td></tr>
+        <tr><td>③ 보안</td><td>민감정보·.env·로그</td></tr>
+        <tr><td>④ 검증</td><td>pytest·샘플·Plan 모드</td></tr>
+        <tr><td>⑤ 금지</td><td>rm -rf·원본 덮어쓰기</td></tr>
+      </tbody></table>
+      <div class="pit"><div class="pit-lb">PITFALL</div><div class="pit-h">▸ Rules를 200줄 이상 쓰기</div><div class="pit-d">에이전트가 주요 규칙을 놓친다. 60줄 이내, 핵심만.</div><div class="pit-h">▸ 상충 규칙 방치</div><div class="pit-d">부서·프로젝트 규칙 충돌은 "예외" 표기로 명시.</div><div class="pit-h">▸ 복사본만 두고 유지 안 함</div><div class="pit-d">매 분기 리뷰 필요. 낡은 규칙이 에이전트를 혼란시킨다.</div></div>
+      <div class="cod"><div class="cod-lb">FIELD CASE</div><div class="cod-main">"보고서는 한글(.hwp)만, 표는 4열 이내"</div><p>부서 AGENTS.md 한 줄로 산출물 일관성 확보.</p></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">06 · AI 에이전트 툴 마스터리와 에이전트 기반 개발 입문</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">015 / 032</span></div></div>
+</div></div>
+
+<!-- 16 공공 Rules 템플릿 -->
+<div class="stage"><div class="slide" data-title="Public Rules Template">
+  <div class="hbar"><div class="hbar-l">MODULE 06 · UNIT 03 · RULES TEMPLATE</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 06</div></div>
+  <div class="hl"><div class="hl-kicker">UNIT 03 · 공공 프로젝트용 Rules 템플릿 · 8MIN</div><div class="hl-title">공공 실무용 AGENTS.md 템플릿</div><div class="hl-sub">공공 실무에 필요한 요소만 추려 60줄 이내로 구성. 복사 후 프로젝트 맥락만 바꿔서 사용한다.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col2w">
+    <div class="col">
+      <div class="sh"><span class="sh-n">TEMPLATE</span><span class="sh-t">복붙용 60줄</span></div><div class="sh-line"></div>
+      <div class="cblk"><span class="cm"># AGENTS.md · [프로젝트명]</span>
+
+## 역할 &amp; 톤
+- 한국어 존댓말. 기술용어 영문 병기 가능.
+- 주석·커밋 메시지는 담당자 이해 가능한 쉬운 문장.
+
+## 코드 스타일
+- 파이썬 3.11 / Node 20 기준
+- 파일명: <span class="st">{YYYYMMDD}_{용도}.py</span>
+- snake_case 함수 · PascalCase 클래스
+- 외부 라이브러리는 requirements.txt 기록
+
+## 보안
+- 주민번호·이름·연락처 <span class="st">로그 출력 금지</span>
+- API 키는 <span class="st">.env</span>, 코드 하드코딩 금지
+- 외부망 호출은 <span class="st">api/external.py</span> 한 파일로 분리
+- 결과물 공유 전 .env·*.key 포함 여부 자동 점검
+
+## 검증
+- 모든 스크립트 pytest 샘플 5건 이상 통과
+- 실행 전 <span class="kw">/plan</span> 으로 계획 확인
+- 대량 처리(100건+)는 샘플 5~10건 먼저 테스트
+
+## 금지
+- <span class="st">rm -rf</span>, <span class="st">git push --force</span> 등 파괴적 명령
+- 원본 파일 덮어쓰기 (.bak 자동 백업 후 수정)
+- 승인 없이 외부 네트워크 호출
+- 민감 데이터를 클라우드 모델에 업로드
+
+## 출력 규칙
+- 파일명·컬럼·인코딩(UTF-8) 고정
+- 로그는 <span class="st">logs/{YYYYMMDD}.log</span>
+- README.md 3줄 이내 실행법 포함</div>
+      <div class="co"><div class="co-lb">USAGE</div><div class="co-main">프로젝트 루트에 복사 후 [프로젝트명]·필드만 교체</div><p>섹션 구성은 유지하고 세부 규칙만 업무 맥락에 맞게 수정한다.</p></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">VARIANTS</span><span class="sh-t">업무별 추가 섹션</span></div><div class="sh-line"></div>
+      <div class="bth">업무 유형별로 1~2줄 추가</div>
+      <table class="mtbl"><thead><tr><th>업무</th><th>추가 규칙</th></tr></thead><tbody>
+        <tr><td>엑셀 자동화</td><td>원본 .bak, 시트 추가 방식</td></tr>
+        <tr><td>HWP 작성</td><td>누름틀 + 기관 템플릿</td></tr>
+        <tr><td>민원 분류</td><td>라벨 정의·미분류 규칙</td></tr>
+        <tr><td>RAG 구축</td><td>임베딩 모델·청크 크기</td></tr>
+        <tr><td>웹 대시보드</td><td>포트·배포 경로</td></tr>
+      </tbody></table>
+      <div class="co"><div class="co-lb">DEPLOY</div><div class="co-main">공용 드라이브에 "부서 AGENTS.md 원본" 1장 유지</div><p>거점리더가 분기별 리뷰. 동료는 프로젝트 시작 시 복사.</p></div>
+      <div class="dstrip"><div class="ds-c"><div class="ds-a">LINES</div><div class="ds-n">60↓</div><div class="ds-d">권장 길이</div></div><div class="ds-c"><div class="ds-a">REVIEW</div><div class="ds-n">분기</div><div class="ds-d">주기 리뷰</div></div><div class="ds-c"><div class="ds-a">SHARE</div><div class="ds-n">1장</div><div class="ds-d">부서 원본</div></div></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">06 · AI 에이전트 툴 마스터리와 에이전트 기반 개발 입문</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">016 / 032</span></div></div>
+</div></div>
+
+<!-- 17 Rules가 품질을 결정하는 이유 -->
+<div class="stage"><div class="slide" data-title="Why Rules Matter">
+  <div class="hbar"><div class="hbar-l">MODULE 06 · UNIT 03 · WHY RULES</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 06</div></div>
+  <div class="hl"><div class="hl-kicker">UNIT 03 · Rules가 품질을 결정하는 이유 · 6MIN</div><div class="hl-title">Rules의 품질 결정력 3대 근거</div><div class="hl-sub">Rules를 쓰는 사람과 안 쓰는 사람의 산출물은 3개월 뒤 벌어진다. 개별 결과가 아니라 재현성·감사·이관 비용이 차이 낸다.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col3">
+    <div class="col">
+      <div class="sh"><span class="sh-n">REASON 01</span><span class="sh-t">재현성</span></div><div class="sh-line"></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">WHY</span></div><div class="bth">다음 사람·다음 자신이 재현 가능</div><p class="bt">Rules 없이 얻은 결과는 한 번만 나온다. <strong>같은 설계서 + 같은 Rules = 비슷한 결과.</strong> 공공의 핵심 가치.</p></div>
+      <div class="co"><div class="co-lb">CASE</div><div class="co-main">후임자 이관 2시간 → 20분</div><p>Rules·설계서·README 3종이 있으면 이관 비용이 크게 줄어든다.</p></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">REASON 02</span><span class="sh-t">감사·책임</span></div><div class="sh-line"></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">WHY</span></div><div class="bth">"왜 이 결과가 나왔나"의 증빙</div><p class="bt">감사·분쟁 시 "에이전트가 이렇게 했다"가 아니라 <strong>"이 Rules를 이 에이전트에 이 설계서로 실행했다"</strong>가 근거가 된다.</p></div>
+      <div class="pit"><div class="pit-lb">PITFALL · 감사 관점</div><div class="pit-h">▸ Rules 없이 "AI가 했어요"</div><div class="pit-d">책임 소재 불명. 사람이 Rules를 설계했다는 기록이 있어야 한다.</div></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">REASON 03</span><span class="sh-t">누적 학습</span></div><div class="sh-line"></div>
+      <div class="icard dark"><div class="icard-top"><span class="icard-lb">WHY</span></div><div class="bth">한 번 쓰고 1년 쓴다 — 자산화</div><p class="bt">좋은 Rules는 시간이 지나도 가치가 유지된다. <strong>부서의 에이전트 숙련도가 누적</strong>된다. 한 사람이 떠나도 규칙은 남는다.</p></div>
+      <div class="quote"><div class="quote-src">SOURCE · CURSOR DOCS</div><div class="quote-q">"에이전트를 설치하는 것보다, 에이전트에게 규칙을 주는 것이 더 중요하다."</div><div class="quote-a">— Cursor Rules 가이드</div></div>
+      <div class="dstrip"><div class="ds-c"><div class="ds-a">TIME</div><div class="ds-n">30m</div><div class="ds-d">첫 작성</div></div><div class="ds-c"><div class="ds-a">ROI</div><div class="ds-n">1yr</div><div class="ds-d">사용 기간</div></div><div class="ds-c"><div class="ds-a">GAIN</div><div class="ds-n">품질</div><div class="ds-d">재현·감사</div></div></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">06 · AI 에이전트 툴 마스터리와 에이전트 기반 개발 입문</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">017 / 032</span></div></div>
+</div></div>
+
+<!-- 18 Skills 설계 -->
+<div class="stage"><div class="slide" data-title="Skills Design">
+  <div class="hbar"><div class="hbar-l">MODULE 06 · UNIT 03 · SKILLS</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 06</div></div>
+  <div class="hl"><div class="hl-kicker">UNIT 03 · Skills 설계 — 반복 패턴 모듈화 · 7MIN</div><div class="hl-title">Skills의 모듈화 설계 원칙</div><div class="hl-sub">Rules가 상시 규칙이라면, Skills는 특정 작업에서만 활성화되는 서랍장. 한 번 잘 만들어 부서가 공유한다.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col2">
+    <div class="col">
+      <div class="sh"><span class="sh-n">RULES vs SKILLS</span><span class="sh-t">차이와 관계</span></div><div class="sh-line"></div>
+      <table class="mtbl"><thead><tr><th>CRITERION</th><th>RULES</th><th>SKILLS</th></tr></thead><tbody>
+        <tr><td>범위</td><td>전역 상시</td><td>상황별</td></tr>
+        <tr><td>형식</td><td>마크다운 1장</td><td>폴더+SKILL.md</td></tr>
+        <tr><td>호출</td><td>자동</td><td>키워드 매칭</td></tr>
+        <tr><td>파일</td><td>규칙만</td><td>예시·템플릿 포함</td></tr>
+        <tr><td>업데이트</td><td>분기</td><td>수시</td></tr>
+      </tbody></table>
+      <div class="cblk"><span class="cm"># Skill 디렉토리 구조</span>
+~/.claude/skills/
+  hwp-공문/
+    SKILL.md         <span class="cm"># 설명+트리거</span>
+    template.hwp     <span class="cm"># 양식 샘플</span>
+    fields.md        <span class="cm"># 누름틀 목록</span>
+    example.py       <span class="cm"># 작성 샘플</span>
+  민원-분류/
+    SKILL.md
+    라벨정의.md
+    예시50건.csv
+  엑셀-피벗/
+    SKILL.md
+    템플릿.xlsx</div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">SKILL.md</span><span class="sh-t">최소 구성</span></div><div class="sh-line"></div>
+      <div class="bth">Skill 폴더 안 SKILL.md — 3가지만 적으면 된다</div>
+      <div class="cblk"><span class="cm"># SKILL.md · hwp-공문</span>
+---
+<span class="kw">name:</span> hwp-공문
+<span class="kw">description:</span> 기관 표준 공문 HWP 양식으로
+  문서를 생성할 때 사용. "공문 써줘",
+  "기안문 만들어줘" 같은 요청에 활성화.
+---
+
+## 사용 방법
+1. <span class="st">template.hwp</span> 복사
+2. pyhwpx로 필드 채우기:
+   - 문서번호, 제목, 수신자, 본문
+3. 파일명: <span class="st">{YYYYMMDD}_{제목10자}.hwp</span>
+
+## 참고
+- <span class="st">fields.md</span> — 누름틀 전체 목록
+- <span class="st">example.py</span> — 작성 샘플</div>
+      <div class="co"><div class="co-lb">KEY</div><div class="co-main">frontmatter의 description이 가장 중요</div><p>에이전트가 이 설명을 읽고 "지금 이 Skill 써야 하나"를 판단. 트리거 문구 예시까지 명시.</p></div>
+      <div class="pit"><div class="pit-lb">PITFALL</div><div class="pit-h">▸ description이 모호</div><div class="pit-d">"HWP 관련" → 엉뚱할 때도 호출. 구체적 트리거 문구 나열.</div></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">06 · AI 에이전트 툴 마스터리와 에이전트 기반 개발 입문</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">018 / 032</span></div></div>
+</div></div>
+
+<!-- 19 Sub-agents 파이프라인 -->
+<div class="stage"><div class="slide" data-title="Sub-agents EPE">
+  <div class="hbar"><div class="hbar-l">MODULE 06 · UNIT 03 · SUB-AGENTS</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 06</div></div>
+  <div class="hl"><div class="hl-kicker">UNIT 03 · SUB-AGENTS — EXPLORE · PLAN · EXECUTE · 7MIN</div><div class="hl-title">Sub-agents의 역할 분담 파이프라인</div><div class="hl-sub">복잡한 과제는 한 에이전트로 처리하면 맥락이 오염된다. 역할을 쪼개 Explore → Plan → Execute 파이프라인으로.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col3">
+    <div class="col">
+      <div class="sh"><span class="sh-n">EXPLORE</span><span class="sh-t">① 탐색 담당</span></div><div class="sh-line"></div>
+      <div class="bth">파일·문서·이력 조사만 담당</div>
+      <p class="bt">"이 프로젝트의 구조는?", "관련 파일은?" — <strong>읽기 전용</strong>. 쓰기 권한 없음. 조사 결과를 컨텍스트로 돌려준다.</p>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">INPUT</span></div><div class="bth">조사 범위 명시</div><p class="bt">"data/ 폴더의 CSV 스키마를 파악" — 범위를 좁힐수록 정확.</p></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">OUTPUT</span></div><div class="bth">마크다운 요약</div><p class="bt">다른 Sub-agent가 재사용하도록 구조화된 요약 반환.</p></div>
+      <div class="co"><div class="co-lb">RULE</div><div class="co-main">파일 쓰기·실행 권한 없음</div><p>Explore는 안전한 조사에만 집중.</p></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">PLAN</span><span class="sh-t">② 계획 담당</span></div><div class="sh-line"></div>
+      <div class="bth">Explore 결과를 받아 실행 계획 수립</div>
+      <p class="bt">구현 단계·파일 변경 목록·예상 리스크를 정리. <strong>"실행 없이 계획만"</strong>. 사람이 검수하고 승인.</p>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">STEPS</span></div><div class="bth">단계별 액션 목록</div><p class="bt">1) fileA 수정 → 2) fileB 추가 → 3) 테스트 실행.</p></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">RISK</span></div><div class="bth">위험 체크포인트 표시</div><p class="bt">"파일 삭제 단계 있음 — 확인 필요" 같은 경고.</p></div>
+      <div class="cod"><div class="cod-lb">APPROVAL GATE</div><div class="cod-main">사람이 읽고 Execute에 넘긴다</div><p>이 지점이 공공 업무의 감사 기록이 된다.</p></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">EXECUTE</span><span class="sh-t">③ 실행 담당</span></div><div class="sh-line"></div>
+      <div class="bth">승인된 계획만 실행 — 계획 외 액션 금지</div>
+      <p class="bt">쓰기·실행 권한 보유. 단, <strong>Plan 범위를 벗어나면 중단 후 재승인 요청</strong>. 실행 후 로그 반환.</p>
+      <div class="icard dark"><div class="icard-top"><span class="icard-lb">MAIN</span></div><div class="bth">오케스트레이터 = 사람 + 메인 에이전트</div><p class="bt">3단계 사이 승인 게이트 유지. Sub-agent 간 직접 통신 금지.</p></div>
+      <div class="pit"><div class="pit-lb">PITFALL</div><div class="pit-h">▸ Execute가 Plan을 넘어 "알아서"</div><div class="pit-d">재승인 절차 없이 추가 액션 금지. Rules에 명시.</div></div>
+      <div class="dstrip"><div class="ds-c"><div class="ds-a">SUBS</div><div class="ds-n">3</div><div class="ds-d">EPE 파이프</div></div><div class="ds-c"><div class="ds-a">GATES</div><div class="ds-n">2</div><div class="ds-d">Plan·Exec</div></div><div class="ds-c"><div class="ds-a">SCOPE</div><div class="ds-n">좁게</div><div class="ds-d">역할 분리</div></div></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">06 · AI 에이전트 툴 마스터리와 에이전트 기반 개발 입문</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">019 / 032</span></div></div>
+</div></div>
+
+<!-- 20 Skills vs Sub-agents -->
+<div class="stage"><div class="slide" data-title="Skills vs Subagents">
+  <div class="hbar"><div class="hbar-l">MODULE 06 · UNIT 03 · SKILLS vs SUB-AGENTS</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 06</div></div>
+  <div class="hl"><div class="hl-kicker">UNIT 03 · SKILLS vs SUB-AGENTS — 언제 무엇을 · 6MIN</div><div class="hl-title">Skills와 Sub-agents의 선택 기준</div><div class="hl-sub">둘은 같이 쓰지만, 혼동하면 둘 다 흉내만 내게 된다. 명확한 분기 기준을 익힌다.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col2">
+    <div class="col">
+      <div class="sh"><span class="sh-n">COMPARE</span><span class="sh-t">차이표</span></div><div class="sh-line"></div>
+      <table class="mtbl"><thead><tr><th>축</th><th>SKILLS</th><th>SUB-AGENTS</th></tr></thead><tbody>
+        <tr><td>본질</td><td>참조 매뉴얼</td><td>독립 실행자</td></tr>
+        <tr><td>호출</td><td>메인 에이전트가 읽음</td><td>메인이 위임</td></tr>
+        <tr><td>컨텍스트</td><td>메인 세션에 병합</td><td>별도 세션</td></tr>
+        <tr><td>산출</td><td>지침·템플릿</td><td>구조화된 결과</td></tr>
+        <tr><td>권한</td><td>규칙 제공</td><td>직접 쓰기·실행</td></tr>
+        <tr><td>비용</td><td>낮음</td><td>높음(병렬 토큰)</td></tr>
+      </tbody></table>
+      <div class="co"><div class="co-lb">RULE</div><div class="co-main">"반복되는 매뉴얼" = Skill · "분리되는 역할" = Sub-agent</div><p>Skill은 메인의 손을 잡아주는 매뉴얼. Sub-agent는 맥락을 분리하는 동료.</p></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">WHEN</span><span class="sh-t">선택 가이드</span></div><div class="sh-line"></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">USE SKILL IF</span></div><div class="bth">작업 패턴이 반복적이고 절차가 정형</div><p class="bt">"HWP 공문 작성", "엑셀 피벗 생성", "민원 라벨 정의" — <strong>문서·양식 기반 반복 작업</strong>에 적합.</p></div>
+      <div class="icard dark"><div class="icard-top"><span class="icard-lb">USE SUB-AGENT IF</span></div><div class="bth">맥락이 오염되거나 병렬이 필요</div><p class="bt">조사와 작성을 한 세션에 섞으면 혼선. <strong>Explore/Plan/Execute로 분리</strong>하거나 큰 작업을 <strong>병렬화</strong>할 때.</p></div>
+      <div class="pit"><div class="pit-lb">PITFALL</div><div class="pit-h">▸ 간단한 반복에 Sub-agent</div><div class="pit-d">오버엔지니어링. Skill로 충분.</div><div class="pit-h">▸ 맥락 오염이 이미 있는데 Skill만</div><div class="pit-d">Sub-agent로 맥락 분리 필요.</div></div>
+      <div class="cod"><div class="cod-lb">PROGRESSION</div><div class="cod-main">Rules(1) → Skills(3) → Sub-agents(5) → Hooks/MCP(7·8)</div><p>거점리더는 Skills 단계까지 숙달이 목표.</p></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">06 · AI 에이전트 툴 마스터리와 에이전트 기반 개발 입문</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">020 / 032</span></div></div>
+</div></div>
+
+<!-- 21 HERO · 설계 종속 -->
+<div class="stage"><div class="slide" data-title="Hero Design Bound">
+  <div class="hbar"><div class="hbar-l">MODULE 06 · UNIT 04 · KEY MESSAGE</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 06</div></div>
+  <div class="bd col1"><div class="col hero" style="background:var(--dk);color:var(--on)">
+    <div class="hero-k">UNIT 04 · ONE LINE</div>
+    <div class="hero-t">에이전트는 <span style="color:var(--acc3)">도구 종속</span>이 아니라<br><span style="color:var(--acc3)">설계 종속</span>이다.</div>
+    <div class="hero-s">Claude Code가 오든 Cursor가 오든 Codex가 오든 — 설계서·Rules·검수 체크리스트가 있으면 모든 도구가 비슷한 품질을 낸다. 도구를 바꾸는 비용보다 설계를 바꾸는 비용이 훨씬 크다.</div>
+    <div class="hero-q"><div class="hero-q-q">"도구는 매년 바뀐다. 좋은 설계서는 10년 쓴다. 거점리더가 남기는 것은 도구가 아니라 설계다."</div><div class="hero-q-a">— 커리큘럼 설계 원칙</div></div>
+  </div></div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">06 · AI 에이전트 툴 마스터리와 에이전트 기반 개발 입문</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">021 / 032</span></div></div>
+</div></div>
+
+<!-- 22 UNIT 04 · 아키텍처로 말하기 -->
+<div class="stage"><div class="slide" data-title="Speak Architecture">
+  <div class="hbar"><div class="hbar-l">MODULE 06 · UNIT 04 · SPEAK ARCHITECTURE</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 06</div></div>
+  <div class="hl"><div class="hl-kicker">UNIT 04 · 아키텍처로 말하기 — 설계서 4섹션 · 8MIN</div><div class="hl-title">아키텍처 기반 설계서 4섹션 구조</div><div class="hl-sub">한 문장 프롬프트가 아니라 네 섹션 설계서. 에이전트는 문장력보다 구조를 잘 받아낸다.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col3">
+    <div class="col">
+      <div class="sh"><span class="sh-n">4 SECTIONS</span><span class="sh-t">입력·처리·출력·검수</span></div><div class="sh-line"></div>
+      <div class="bth">에이전트 지시서의 표준 4섹션</div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">① INPUT</span></div><div class="bth">입력 명세</div><p class="bt">파일 경로·포맷·샘플 데이터·필수 필드 명시</p></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">② PROCESS</span></div><div class="bth">처리 규칙</div><p class="bt">변환·필터·분류 로직을 단계별로 · 예외 케이스 포함</p></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">③ OUTPUT</span></div><div class="bth">출력 규격</div><p class="bt">파일명·시트명·컬럼 순서·인코딩 고정</p></div>
+      <div class="icard dark"><div class="icard-top"><span class="icard-lb">④ VERIFY</span></div><div class="bth">검수 조건</div><p class="bt">"행 수 = 입력", "합계 일치" 등 수치 판정</p></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">TEMPLATE</span><span class="sh-t">민원 분류 샘플</span></div><div class="sh-line"></div>
+      <div class="cblk"><span class="cm"># 과제: 민원 1,000건 자동 분류</span>
+
+## ① INPUT
+- 파일: <span class="st">./data/민원_2025Q4.xlsx</span>
+- 시트: <span class="st">접수</span>
+- 필드: 접수번호, 내용, 접수일
+- 1,083행 · A~C열
+
+## ② PROCESS
+- C열 "내용"을 Ollama classify에 전달
+- 라벨: 환경/교통/복지/세무/안전/기타
+- 빈 셀은 "미분류"
+
+## ③ OUTPUT
+- 같은 엑셀, 신규 시트 <span class="st">분류결과</span>
+- 컬럼: 접수번호, 원문, 분류, 신뢰도
+- 파일명: <span class="st">민원_2025Q4_분류.xlsx</span>
+
+## ④ VERIFY
+- 행 수 1,083 일치
+- "미분류" 비율 &lt; 5%
+- 라벨 6종 모두 최소 1건
+- 샘플 10건 사람 확인</div>
+      <div class="co"><div class="co-lb">STRUCTURE</div><div class="co-main">네 섹션의 경계가 설계서 품질을 결정</div><p>입력·처리·출력·검수 경계가 겹치면 에이전트가 재시도 기준을 잃는다.</p></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">PATTERNS</span><span class="sh-t">잘 통하는 숙어</span></div><div class="sh-line"></div>
+      <div class="bth">에이전트 지시문 4대 숙어</div>
+      <table class="mtbl"><thead><tr><th>숙어</th><th>효과</th></tr></thead><tbody>
+        <tr><td>"먼저 계획만 보여줘"</td><td>Plan 모드 유도</td></tr>
+        <tr><td>"샘플 5건 먼저 테스트"</td><td>스케일 전 검증</td></tr>
+        <tr><td>"각 파일 변경 전 .bak"</td><td>원본 훼손 방지</td></tr>
+        <tr><td>"완료 후 log.txt 요약"</td><td>감사로그 확보</td></tr>
+      </tbody></table>
+      <div class="co"><div class="co-lb">NUMERIC VERIFY</div><div class="co-main">숫자로 쓸 수 있는 검수는 반드시 숫자로</div><p>"많이 있어야 함" → "최소 100건". <strong>판정 가능성이 품질을 결정</strong>한다.</p></div>
+      <div class="quote"><div class="quote-src">SOURCE · 과정 지도 원칙</div><div class="quote-q">"좋은 에이전트는 질문을 유도하고, 좋은 사용자는 구조로 답한다."</div><div class="quote-a">— 거점리더의 언어</div></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">06 · AI 에이전트 툴 마스터리와 에이전트 기반 개발 입문</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">022 / 032</span></div></div>
+</div></div>
+
+<!-- 23 좋은 지시문 vs 나쁜 지시문 -->
+<div class="stage"><div class="slide" data-title="Good vs Bad Prompt">
+  <div class="hbar"><div class="hbar-l">MODULE 06 · UNIT 04 · PROMPT COMPARE</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 06</div></div>
+  <div class="hl"><div class="hl-kicker">UNIT 04 · 좋은 지시문 vs 나쁜 지시문 · 6MIN</div><div class="hl-title">좋은 지시문과 나쁜 지시문의 구조 비교</div><div class="hl-sub">동일한 민원 분류 과제에 대해 두 가지 지시문을 나란히 본다. 짧아서 나쁜 게 아니다 — 구조가 없어서 나쁘다.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col2">
+    <div class="col">
+      <div class="sh"><span class="sh-n">BAD</span><span class="sh-t">나쁜 지시문</span></div><div class="sh-line"></div>
+      <div class="cblk"><span class="cm">// BAD — 3개 중 하나 이상 결여</span>
+&gt; 이 엑셀 민원 분류 좀 해줘.
+  알아서 잘 처리하고 끝나면 알려줘.</div>
+      <div class="bth">무엇이 문제인가</div>
+      <p class="bt"><strong>입력 모호</strong>: 어느 시트·어느 컬럼인지 모름. <strong>처리 규칙 없음</strong>: 라벨 체계·예외 케이스 없음. <strong>출력 미정</strong>: 파일명·컬럼 구조 없음. <strong>검수 없음</strong>: "잘 처리"의 기준 없음.</p>
+      <div class="pit"><div class="pit-lb">결과</div><div class="pit-h">▸ 에이전트가 추측</div><div class="pit-d">시트·라벨을 에이전트가 임의로 결정. 결과물이 팀 표준과 맞지 않을 확률 높음.</div><div class="pit-h">▸ 재현 불가</div><div class="pit-d">다음 세션·다른 사람이 같은 결과 내지 못함.</div><div class="pit-h">▸ 감사 근거 부재</div><div class="pit-d">"AI가 이렇게 했다"만 남음.</div></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">GOOD</span><span class="sh-t">좋은 지시문</span></div><div class="sh-line"></div>
+      <div class="cblk"><span class="cm">// GOOD — 4섹션 명시 + 숫자 검수</span>
+&gt; AGENTS.md 참고.
+  <span class="kw">① 입력:</span> data/민원_2025Q4.xlsx · 시트 "접수" ·
+    A=접수번호 B=내용 C=접수일 · 총 1,083행
+  <span class="kw">② 처리:</span> B열을 classify()에 전달 ·
+    라벨 [환경/교통/복지/세무/안전/기타] ·
+    빈 셀은 "미분류"
+  <span class="kw">③ 출력:</span> 같은 엑셀에 신규 시트 "분류결과" 추가 ·
+    컬럼 [접수번호, 원문, 분류, 신뢰도] ·
+    파일명 민원_2025Q4_분류.xlsx
+  <span class="kw">④ 검수:</span> 행 수 1,083 일치 · 미분류 &lt;5% ·
+    라벨 6종 모두 출현 · 샘플 10건 사람 확인
+  먼저 /plan으로 계획만 보여줘.
+  샘플 10건으로 시범 실행 후 승인 기다려.</div>
+      <div class="co"><div class="co-lb">결과 비교</div><div class="co-main">같은 에이전트, 소요 시간 동일 — 품질·재현성은 몇 배 차이</div><p>에이전트는 명확한 설계서를 받으면 <strong>추측을 멈추고 이행</strong>한다. 품질의 90%는 입력에서 결정된다.</p></div>
+      <div class="dstrip"><div class="ds-c"><div class="ds-a">BAD</div><div class="ds-n">??</div><div class="ds-d">재현 불가</div></div><div class="ds-c"><div class="ds-a">GOOD</div><div class="ds-n">재현</div><div class="ds-d">동료도 동일 결과</div></div><div class="ds-c"><div class="ds-a">TIME</div><div class="ds-n">+5m</div><div class="ds-d">설계서 추가 시간</div></div></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">06 · AI 에이전트 툴 마스터리와 에이전트 기반 개발 입문</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">023 / 032</span></div></div>
+</div></div>
+
+<!-- 24 입력/출력/검증 분리 원칙 -->
+<div class="stage"><div class="slide" data-title="IO Verify Separation">
+  <div class="hbar"><div class="hbar-l">MODULE 06 · UNIT 04 · I·O·V SEPARATION</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 06</div></div>
+  <div class="hl"><div class="hl-kicker">UNIT 04 · 입력·출력·검증 기준 분리 원칙 · 6MIN</div><div class="hl-title">입력·출력·검증의 분리 원칙</div><div class="hl-sub">대부분의 실패는 세 개를 섞어서 쓴 설계서에서 온다. 분리하면 검수가 쉬워지고 재실행이 가능해진다.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col3">
+    <div class="col">
+      <div class="sh"><span class="sh-n">INPUT</span><span class="sh-t">입력의 독립성</span></div><div class="sh-line"></div>
+      <div class="bth">"무엇을 받는가"만 담는다</div>
+      <p class="bt">파일 경로·포맷·샘플 데이터·필수 필드. <strong>처리 방법은 쓰지 않는다</strong>. 입력 섹션을 읽은 사람이 "데이터만 보고" 상태를 이해할 수 있어야 한다.</p>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">CHECKLIST</span></div><div class="bth">입력 섹션 5개 필수</div><p class="bt">① 경로 · ② 포맷·인코딩 · ③ 샘플 3행 · ④ 필드 스키마 · ⑤ 총량(행·건수)</p></div>
+      <div class="pit"><div class="pit-lb">혼동 지점</div><div class="pit-h">▸ "민원 내용을 분류해서..."</div><div class="pit-d">이미 처리가 들어감. "민원 내용 필드(C열)"까지만.</div></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">OUTPUT</span><span class="sh-t">출력의 독립성</span></div><div class="sh-line"></div>
+      <div class="bth">"무엇이 나오는가"만 담는다</div>
+      <p class="bt">파일명·시트명·컬럼 순서·인코딩·로그 경로. <strong>내용이 어떻게 만들어지는지는 쓰지 않는다</strong>. 출력 섹션을 읽으면 "완성본 폴더 구조"가 그려져야 한다.</p>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">CHECKLIST</span></div><div class="bth">출력 섹션 5개 필수</div><p class="bt">① 파일명 규칙 · ② 컬럼 순서 · ③ 인코딩 · ④ 로그 경로 · ⑤ README 포함 여부</p></div>
+      <div class="co"><div class="co-lb">TIP</div><div class="co-main">출력을 먼저 설계하고 나서 처리를 쓴다</div><p>"무엇이 필요한가"를 먼저 정하면 처리 로직이 자연스럽게 정해진다.</p></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">VERIFY</span><span class="sh-t">검증의 독립성</span></div><div class="sh-line"></div>
+      <div class="bth">"성공을 어떻게 확인하는가"만 담는다</div>
+      <p class="bt">행 수·합계·비율·샘플 검수. <strong>숫자로 표현 가능한 기준만</strong>. 주관적 형용사("잘된", "충분한")는 금지.</p>
+      <div class="icard dark"><div class="icard-top"><span class="icard-lb">CHECKLIST</span></div><div class="bth">검증 섹션 4개 필수</div><p class="bt">① 수치 동등성(행 수·합계) · ② 비율 제한(미분류 &lt;5%) · ③ 카테고리 커버리지 · ④ 샘플 N건 사람 검수</p></div>
+      <div class="cod"><div class="cod-lb">PRINCIPLE</div><div class="cod-main">검증이 판정 가능해야 에이전트가 반복할 수 있다</div><p>검증 = 에이전트가 자기 결과를 평가하는 기준. 모호하면 루프를 멈추지 못한다.</p></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">06 · AI 에이전트 툴 마스터리와 에이전트 기반 개발 입문</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">024 / 032</span></div></div>
+</div></div>
+
+<!-- 25 사람 승인 게이트 -->
+<div class="stage"><div class="slide" data-title="Approval Gates">
+  <div class="hbar"><div class="hbar-l">MODULE 06 · UNIT 04 · APPROVAL GATES</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 06</div></div>
+  <div class="hl"><div class="hl-kicker">UNIT 04 · 사람 승인 게이트 설계 · 7MIN</div><div class="hl-title">사람 승인 게이트 5단계 설계</div><div class="hl-sub">자동화는 "사람이 빠지는 것"이 아니라 "사람이 중요한 지점에만 남는 것". 게이트를 설계하는 능력이 거점리더의 안전판.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col2w">
+    <div class="col">
+      <div class="sh"><span class="sh-n">5 GATES</span><span class="sh-t">승인 포인트</span></div><div class="sh-line"></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">GATE 01 · 계획 승인</span></div><div class="bth">/plan 결과를 사람이 읽고 OK</div><p class="bt">에이전트의 실행 계획에 누락·오류가 없는지 확인. <strong>가장 싼 검수 지점.</strong></p></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">GATE 02 · 샘플 실행</span></div><div class="bth">5~10건 샘플로 시범 실행</div><p class="bt">전체 1,000건 직행 금지. 샘플 결과 품질 확인 후 스케일.</p></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">GATE 03 · 파괴 액션</span></div><div class="bth">파일 삭제·덮어쓰기·네트워크 전송</div><p class="bt">모든 파괴·외부 영향 액션은 <strong>개별 승인</strong>. Rules에서 기본 금지 명시.</p></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">GATE 04 · 검수 통과</span></div><div class="bth">12항목 체크리스트 통과</div><p class="bt">완료 후 산출물이 검수 12항목을 통과하는지 사람이 확인.</p></div>
+      <div class="icard dark"><div class="icard-top"><span class="icard-lb">GATE 05 · 배포 결정</span></div><div class="bth">공유·제출·커밋</div><p class="bt">커밋 메시지·README는 사람 손. 최종 배포 책임은 사람이 진다.</p></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">DESIGN</span><span class="sh-t">게이트 설계 원칙</span></div><div class="sh-line"></div>
+      <div class="bth">게이트를 언제 많이·언제 적게</div>
+      <table class="mtbl"><thead><tr><th>상황</th><th>게이트 수</th></tr></thead><tbody>
+        <tr><td>1회성 개인 업무</td><td>2~3개</td></tr>
+        <tr><td>부서 공용 자동화</td><td>4~5개</td></tr>
+        <tr><td>민감 데이터 처리</td><td>5개 + 샘플링</td></tr>
+        <tr><td>외부 공개 산출물</td><td>5개 + 동료 리뷰</td></tr>
+      </tbody></table>
+      <div class="co"><div class="co-lb">KEY</div><div class="co-main">게이트는 "사람이 읽을 만큼"만 만든다</div><p>과도한 게이트는 승인 피로를 유발 → 눈뜬 상태로 전부 승인. <strong>중요한 5곳에만</strong>.</p></div>
+      <div class="pit"><div class="pit-lb">PITFALL</div><div class="pit-h">▸ Gate 2(샘플) 생략</div><div class="pit-d">1,000건 직행 후 에러 발견 시 비용 극대화.</div><div class="pit-h">▸ Gate 5(배포) 자동화</div><div class="pit-d">에이전트가 커밋 메시지까지 쓰게 두면 책임 소재 불명.</div></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">06 · AI 에이전트 툴 마스터리와 에이전트 기반 개발 입문</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">025 / 032</span></div></div>
+</div></div>
+
+<!-- 26 UNIT 05 · 검수 체크리스트 -->
+<div class="stage"><div class="slide" data-title="Review Checklist">
+  <div class="hbar"><div class="hbar-l">MODULE 06 · UNIT 05 · REVIEW CHECKLIST</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 06</div></div>
+  <div class="hl"><div class="hl-kicker">UNIT 05 · 검수 체크리스트 — 산출물 품질 관리 · 7MIN</div><div class="hl-title">산출물 검수 12항목 체크리스트</div><div class="hl-sub">에이전트가 만든 코드는 "빠르게 많이"가 강점. 사람은 "맞는가·안전한가·재현 가능한가"를 점검한다.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col3">
+    <div class="col">
+      <div class="sh"><span class="sh-n">정합성 4</span><span class="sh-t">입력·출력 일치</span></div><div class="sh-line"></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">CHECK 01~04</span></div><div class="bth">수치로 검증하는 정합성</div>
+        <p class="bt"><strong>01.</strong> 입력 명세와 실제 파일이 일치<br><strong>02.</strong> 출력 행 수·합계 수치 일치<br><strong>03.</strong> 예외 처리 최소 3건 (빈값·타입·중복)<br><strong>04.</strong> 카테고리 커버리지 100% (라벨 전체 출현)</p>
+      </div>
+      <div class="co"><div class="co-lb">FOCUS</div><div class="co-main">"숫자로 말할 수 있는가"</div><p>형용사 대신 숫자. 판정 가능해야 에이전트가 재시도할 수 있다.</p></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">보안·재현 4</span><span class="sh-t">공공 필수</span></div><div class="sh-line"></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">CHECK 05~08</span></div><div class="bth">보안·버전·원본 보호</div>
+        <p class="bt"><strong>05.</strong> 하드코딩된 경로·비밀키 없음<br><strong>06.</strong> 파이썬 버전·의존성 requirements.txt 기록<br><strong>07.</strong> 민감 정보 로그 미출력<br><strong>08.</strong> 원본 파일 덮어쓰기 없음 (.bak 자동)</p>
+      </div>
+      <div class="pit"><div class="pit-lb">공공 PITFALL</div><div class="pit-h">▸ .env가 커밋에 포함</div><div class="pit-d">.gitignore 점검. 실수 시 Rules로 자동 체크.</div></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">이관·운영 4</span><span class="sh-t">다음 사람 기준</span></div><div class="sh-line"></div>
+      <div class="icard dark"><div class="icard-top"><span class="icard-lb">CHECK 09~12</span></div><div class="bth">재현성·이관 가능성</div>
+        <p class="bt"><strong>09.</strong> README.md에 실행 방법 3줄 이내<br><strong>10.</strong> 10회 연속 실행에 결과 동일<br><strong>11.</strong> 에러 시 log.txt에 원인·시각 기록<br><strong>12.</strong> 동료 1명이 README만 보고 재실행 성공</p>
+      </div>
+      <div class="dstrip"><div class="ds-c"><div class="ds-a">ITEMS</div><div class="ds-n">12</div><div class="ds-d">항목</div></div><div class="ds-c"><div class="ds-a">TIME</div><div class="ds-n">10m</div><div class="ds-d">검수 소요</div></div><div class="ds-c"><div class="ds-a">BAR</div><div class="ds-n">12/12</div><div class="ds-d">통과 기준</div></div></div>
+      <div class="cod"><div class="cod-lb">META</div><div class="cod-main">이 12항목을 AGENTS.md에 박아 놓는다</div><p>에이전트가 체크리스트로 스스로 검수 → 통과하지 못하면 루프 중단.</p></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">06 · AI 에이전트 툴 마스터리와 에이전트 기반 개발 입문</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">026 / 032</span></div></div>
+</div></div>
+
+<!-- 27 9유형 Replay -->
+<div class="stage"><div class="slide" data-title="9 Types Replay">
+  <div class="hbar"><div class="hbar-l">MODULE 06 · UNIT 05 · 9 TYPES REPLAY</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 06</div></div>
+  <div class="hl"><div class="hl-kicker">UNIT 05 · 1차시 9유형을 에이전트로 다시 구현하면? · 8MIN</div><div class="hl-title">1차시 9유형의 에이전트 재구현</div><div class="hl-sub">같은 과제를 두 번째 수행한다. 속도·품질·유지보수성 세 축에서 어느 쪽이 맞는지를 경험한다.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col2">
+    <div class="col">
+      <div class="sh"><span class="sh-n">9 TYPES</span><span class="sh-t">유형별 추천 도구</span></div><div class="sh-line"></div>
+      <table class="mtbl"><thead><tr><th>유형</th><th>과제</th><th>에이전트</th></tr></thead><tbody>
+        <tr><td>①</td><td>개념 학습·Q&amp;A</td><td>어시스트 유지</td></tr>
+        <tr><td>②</td><td>단문 번역·요약</td><td>어시스트 유지</td></tr>
+        <tr><td>③</td><td>엑셀 자동화 스크립트</td><td>Claude Code</td></tr>
+        <tr><td>④</td><td>HWP 일괄 양식</td><td>Cursor/Claude</td></tr>
+        <tr><td>⑤</td><td>VBA+Ollama 함수</td><td>Claude Code</td></tr>
+        <tr><td>⑥</td><td>대시보드 초안</td><td>Cursor/Antigravity</td></tr>
+        <tr><td>⑦</td><td>PDF/회의록 파이프</td><td>Claude Code</td></tr>
+        <tr><td>⑧</td><td>API 래퍼·CLI</td><td>Codex/Claude</td></tr>
+        <tr><td>⑨</td><td>RAG·MCP 연결</td><td>Claude+OpenCode</td></tr>
+      </tbody></table>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">METHOD</span><span class="sh-t">공정 비교 조건</span></div><div class="sh-line"></div>
+      <div class="bth">속도·품질·유지보수성 3축 측정</div>
+      <div class="cod"><div class="cod-lb">COMPARE CONDITIONS</div><div class="cod-main">같은 설계서 · 같은 데이터 · 같은 검수 12항목</div><p>도구 비교가 아니라 <strong>역할 비교</strong>다. 속도만 보지 않고 재현성·오류 처리도 측정.</p></div>
+      <div class="dstrip"><div class="ds-c"><div class="ds-a">ASSIST</div><div class="ds-n">45m</div><div class="ds-d">평균 유형 ③</div></div><div class="ds-c"><div class="ds-a">AGENT</div><div class="ds-n">18m</div><div class="ds-d">같은 유형</div></div><div class="ds-c"><div class="ds-a">CHECK</div><div class="ds-n">12항목</div><div class="ds-d">동일</div></div></div>
+      <div class="co"><div class="co-lb">OBSERVATION</div><div class="co-main">①②는 에이전트가 느리다 · ③~⑨는 2~4배 빠르다</div><p>1차시 유형 분류가 그대로 <strong>도구 선택 지도</strong>가 된다.</p></div>
+      <div class="pit"><div class="pit-lb">PITFALL · 재현 단계</div><div class="pit-h">▸ 설계서 없이 "지난번과 같은 거"</div><div class="pit-d">기억 맥락이 다르면 결과 달라진다. 설계서는 매번 다시.</div><div class="pit-h">▸ 12항목 중 일부만 점검</div><div class="pit-d">"일단 되는데"에서 멈추면 다음 사람 재실행 불가.</div></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">06 · AI 에이전트 툴 마스터리와 에이전트 기반 개발 입문</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">027 / 032</span></div></div>
+</div></div>
+
+<!-- 28 에이전트 도입 성숙도 Phase 1~4 -->
+<div class="stage"><div class="slide" data-title="Maturity Phases">
+  <div class="hbar"><div class="hbar-l">MODULE 06 · UNIT 05 · MATURITY</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 06</div></div>
+  <div class="hl"><div class="hl-kicker">UNIT 05 · 에이전트 도입 단계별 성숙도 · 6MIN</div><div class="hl-title">에이전트 도입 성숙도 4단계</div><div class="hl-sub">개인·팀·부서·기관으로 범위가 넓어지는 4단계. 지금 위치를 알아야 다음 단계의 과제가 보인다.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col2">
+    <div class="col">
+      <div class="sh"><span class="sh-n">PHASES</span><span class="sh-t">4단계 성숙 경로</span></div><div class="sh-line"></div>
+      <table class="mtbl"><thead><tr><th>PHASE</th><th>범위</th><th>주요 산출</th></tr></thead><tbody>
+        <tr><td>P1 · 개인</td><td>내 업무</td><td>CLAUDE.md · 설계서</td></tr>
+        <tr><td>P2 · 팀</td><td>소그룹 3~5명</td><td>공유 Skill 1~2개</td></tr>
+        <tr><td>P3 · 부서</td><td>10~50명</td><td>부서 AGENTS.md 표준</td></tr>
+        <tr><td>P4 · 기관</td><td>전체</td><td>도구 선정·보안 가이드</td></tr>
+      </tbody></table>
+      <div class="co"><div class="co-lb">FOCUS BY PHASE</div><div class="co-main">P1→P2 핵심은 "공유" · P3→P4 핵심은 "거버넌스"</div><p>거점리더는 <strong>P2~P3</strong>의 주체다. 기관 차원 정책은 추후.</p></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">DIAGNOSTIC</span><span class="sh-t">자가 진단 신호</span></div><div class="sh-line"></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">P1 SIGNAL</span></div><div class="bth">내 업무에 설계서 1장이 있다</div><p class="bt">CLAUDE.md + 설계서 + 검수 12항목을 혼자 쓰고 있다.</p></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">P2 SIGNAL</span></div><div class="bth">동료 1~2명이 내 Skill을 쓴다</div><p class="bt">HWP 공문·민원 분류 Skill을 팀이 공유하기 시작.</p></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">P3 SIGNAL</span></div><div class="bth">부서 AGENTS.md가 공유 드라이브에 있다</div><p class="bt">분기별 리뷰 사이클 가동. 신규 직원 온보딩에 포함.</p></div>
+      <div class="icard dark"><div class="icard-top"><span class="icard-lb">P4 SIGNAL</span></div><div class="bth">기관 차원 도구·보안 가이드 제정</div><p class="bt">정보화 부서와 함께 도구 허용 목록·데이터 분류 체계 수립.</p></div>
+      <div class="dstrip"><div class="ds-c"><div class="ds-a">NOW</div><div class="ds-n">P?</div><div class="ds-d">자가 진단</div></div><div class="ds-c"><div class="ds-a">GOAL</div><div class="ds-n">P2→P3</div><div class="ds-d">이번 과정</div></div><div class="ds-c"><div class="ds-a">YEAR</div><div class="ds-n">P4</div><div class="ds-d">1년 후</div></div></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">06 · AI 에이전트 툴 마스터리와 에이전트 기반 개발 입문</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">028 / 032</span></div></div>
+</div></div>
+
+<!-- 29 HERO · 같은 문제를 두 번 푼다 (56px) -->
+<div class="stage"><div class="slide" data-title="Hero Solve Twice">
+  <div class="hbar"><div class="hbar-l">MODULE 06 · KEY INSIGHT</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 06</div></div>
+  <div class="bd col1"><div class="col hero" style="background:var(--bg2);padding:60px 90px;justify-content:center">
+    <div style="font-family:var(--mono);font-size:11.5px;color:var(--acc);letter-spacing:3px;font-weight:700;margin-bottom:18px">UNIT 05 · CORE PRACTICE</div>
+    <div style="font-family:var(--serif);font-weight:700;font-size:56px;line-height:1.15;letter-spacing:-0.02em;color:var(--ink)">같은 문제를 <span style="color:var(--acc)">두 번</span> 푼다.<br>어시스트로, 그리고 <span style="color:var(--acc)">에이전트</span>로.</div>
+    <div style="width:60px;height:3px;background:var(--acc);margin:22px 0 18px"></div>
+    <p style="font-size:18px;color:var(--ink2);line-height:1.7;max-width:1200px;font-style:italic">이 과정이 남기는 가장 큰 체험. 같은 엑셀·같은 HWP·같은 VBA 과제를 두 번 푼다. 4·5차시에 어시스트로 한 번, 6차시에 에이전트로 한 번. <strong style="color:var(--ink)">두 결과를 나란히 놓고 보는 순간</strong> 도구 선택의 감각이 몸에 남는다. 이것이 거점리더가 동료에게 줄 수 있는 가장 구체적인 경험이다.</p>
+  </div></div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">06 · AI 에이전트 툴 마스터리와 에이전트 기반 개발 입문</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">029 / 032</span></div></div>
+</div></div>
+
+<!-- 30 CLOSING · 5 Unit 요약 -->
+<div class="stage"><div class="slide" data-title="Closing Summary">
+  <div class="hbar"><div class="hbar-l">MODULE 06 · CLOSING ①</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 06</div></div>
+  <div class="hl"><div class="hl-kicker">CLOSING ① · 6차시 정리 — 오늘 다룬 5개 UNIT · 5MIN</div><div class="hl-title">6차시 5개 Unit 정리</div><div class="hl-sub">어시스트 vs 에이전트 7축에서 시작해 도구 4종·Rules·Skills·Sub-agents·설계서·검수까지. 이제 코드는 에이전트가 친다.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col2">
+    <div class="col">
+      <div class="sh"><span class="sh-n">5 UNITS</span><span class="sh-t">오늘 다룬 축</span></div><div class="sh-line"></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">UNIT 01</span></div><div class="bth">어시스트 vs 에이전트 7축</div><p class="bt">입력·수정·실행·에러·다파일·기억·반복. <strong>입력이 프롬프트에서 설계서로</strong>. 5가지 전환 신호.</p></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">UNIT 02</span></div><div class="bth">도구 4종 투어</div><p class="bt">Claude Code(CLI 기본)·Cursor(IDE)·Antigravity(자율)·Codex(OpenAI)·OpenCode(오픈소스). <strong>환경 × 업무 매트릭스</strong>.</p></div>
+      <div class="icard dark"><div class="icard-top"><span class="icard-lb">UNIT 03</span></div><div class="bth">Rules · Skills · Sub-agents</div><p class="bt">CLAUDE.md 3계층 · Skill 폴더 · EPE 파이프라인. <strong>반복의 자산화</strong>.</p></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">UNIT 04</span></div><div class="bth">아키텍처로 말하기</div><p class="bt">4섹션 설계서 · 좋은/나쁜 지시문 · I·O·V 분리 · 5단계 승인 게이트.</p></div>
+      <div class="icard"><div class="icard-top"><span class="icard-lb">UNIT 05</span></div><div class="bth">검수 12항목 + 9유형 Replay</div><p class="bt">정합성·보안·이관 3×4 = 12항목. 1차시 9유형을 에이전트로 재현. <strong>Phase 1~4 자가 진단</strong>.</p></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">CORE</span><span class="sh-t">거점리더 체크리스트</span></div><div class="sh-line"></div>
+      <div class="bth">차시 종료 전 완료할 8개</div>
+      <table class="mtbl"><thead><tr><th>항목</th><th>상태</th></tr></thead><tbody>
+        <tr><td>주력 에이전트 1종 설치·인증</td><td>□</td></tr>
+        <tr><td>개인 CLAUDE.md 1장 작성</td><td>□</td></tr>
+        <tr><td>프로젝트 AGENTS.md 1장 작성</td><td>□</td></tr>
+        <tr><td>Skill 폴더 1개 구성 (부서 표준)</td><td>□</td></tr>
+        <tr><td>4섹션 설계서 템플릿 보유</td><td>□</td></tr>
+        <tr><td>유형 ③④⑤ 중 하나를 에이전트로 재현</td><td>□</td></tr>
+        <tr><td>검수 12항목 체크리스트 보유</td><td>□</td></tr>
+        <tr><td>어시스트 vs 에이전트 시간 비교 로그</td><td>□</td></tr>
+      </tbody></table>
+      <div class="co"><div class="co-lb">HUB LEADER NOTE</div><div class="co-main">"설계하는 사람"의 산출물은 코드가 아니라 문서다</div><p>AGENTS.md · 설계서 · 체크리스트가 거점리더의 새 포트폴리오.</p></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">06 · AI 에이전트 툴 마스터리와 에이전트 기반 개발 입문</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">030 / 032</span></div></div>
+</div></div>
+
+<!-- 31 NEXT SESSION -->
+<div class="stage"><div class="slide" data-title="Next Session">
+  <div class="hbar"><div class="hbar-l">MODULE 06 · CLOSING ②</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 06</div></div>
+  <div class="hl"><div class="hl-kicker">CLOSING ② · 7차시 안내 · 4MIN</div><div class="hl-title">7차시 RAG·웹서비스 예고</div><div class="hl-sub">에이전트로 찍어낸 스크립트를 넘어, 부서 문서를 "에이전트가 읽고 답하는" 구조로 옮긴다.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col2w">
+    <div class="col">
+      <div class="sh"><span class="sh-n">NEXT</span><span class="sh-t">7차시 미리보기</span></div><div class="sh-line"></div>
+      <div class="icard dark"><div class="icard-top"><span class="icard-lb">SESSION 07</span></div><div class="bth">RAG 파이프라인과 웹서비스 구축</div><p class="bt"><strong>Part A.</strong> RAG 4단계(넣기·쪼개기·찾기·답하기). 벡터DB 없이 80% 구현. 에이전트로 로컬 RAG 구성. <strong>Part B.</strong> 웹서비스 3덩어리(프론트·API·저장). 내부망 이관 · Remotion 영상 연계. <strong>오늘 만든 AGENTS.md·Skill이 그대로 재료가 된다.</strong></p></div>
+      <div class="co"><div class="co-lb">BRING</div><div class="co-main">업무용 PDF·HWP 20~50건 + 개인 CLAUDE.md</div><p>내 부서 실제 문서로 RAG 구축해야 효과 있다. 외부망 1회 Ollama pull 필요.</p></div>
+      <div class="pit"><div class="pit-lb">BEFORE NEXT SESSION</div><div class="pit-h">▸ Ollama에 임베딩 모델 1개 pull</div><div class="pit-d">nomic-embed-text 또는 bge-m3. 7차시 RAG에서 사용.</div><div class="pit-h">▸ 업무 문서 20~50건 준비 (비식별)</div><div class="pit-d">주민번호·이름·연락처는 마스킹.</div></div>
+    </div>
+    <div class="col" style="background:var(--dk);color:var(--on)">
+      <div class="sh"><span class="sh-n" style="color:var(--acc3)">QUOTE</span><span class="sh-t" style="color:var(--on2)">7차시 핵심 메시지</span></div><div class="sh-line" style="background:rgba(255,255,255,0.15)"></div>
+      <div style="border-left:3px solid var(--acc3);padding:18px 20px;margin:12px 0">
+        <div style="font-family:var(--mono);font-size:10px;color:var(--on2);letter-spacing:2px;font-weight:700;margin-bottom:10px">7차시 커리큘럼 메시지</div>
+        <div style="font-family:var(--serif);font-size:22px;color:var(--on);font-weight:700;font-style:italic;line-height:1.5">"부서 문서가 에이전트의 기억이 된다. RAG는 벤더 없이도 80%는 만들 수 있다. 나머지 20%는 도메인이 결정한다."</div>
+        <div style="font-size:12px;color:var(--on2);margin-top:12px">— 7차시 핵심 메시지</div>
+      </div>
+      <div style="font-family:var(--serif);font-size:34px;color:var(--acc3);font-style:italic;margin-top:20px;text-align:right">— 수고하셨습니다</div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">06 · AI 에이전트 툴 마스터리와 에이전트 기반 개발 입문</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">031 / 032</span></div></div>
+</div></div>
+
+<!-- 32 STAGE MAP -->
+<div class="stage"><div class="slide" data-title="Stage Map">
+  <div class="hbar"><div class="hbar-l">MODULE 06 · 8-WEEK STAGE MAP</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 06</div></div>
+  <div class="hl"><div class="hl-kicker">8주 로드맵 · 현재 위치 · STAGE C 시작 · 3MIN</div><div class="hl-title">Stage C 진입과 8주 로드맵</div><div class="hl-sub">Stage A(재료)·B(어시스트 바이브)가 끝났다. 6차시부터는 Stage C — 에이전트 기반 개발의 궤도.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col2w">
+    <div class="col">
+      <div class="sh"><span class="sh-n">ROADMAP</span><span class="sh-t">8주 로드맵</span></div><div class="sh-line"></div>
+      <table class="mtbl"><thead><tr><th>회차</th><th>주제</th><th>상태</th></tr></thead><tbody>
+        <tr><td>S01</td><td>AI 에이전트 시대 · 지형도</td><td>완료</td></tr>
+        <tr><td>S02</td><td>프론티어 + 도구 50선</td><td>완료</td></tr>
+        <tr><td>S03</td><td>메타 프롬프트 · 워크플로우</td><td>완료</td></tr>
+        <tr><td>S04</td><td>어시스트 바이브 ① 시각화</td><td>완료</td></tr>
+        <tr><td>S05</td><td>어시스트 바이브 ② 자동화</td><td>완료</td></tr>
+        <tr><td><strong>S06</strong></td><td><strong>에이전트 툴 마스터리</strong></td><td><strong>오늘</strong></td></tr>
+        <tr><td>S07</td><td>RAG 파이프라인 · 웹서비스</td><td>다음</td></tr>
+        <tr><td>S08</td><td>API·MCP · 아키텍처 캔버스</td><td>—</td></tr>
+      </tbody></table>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">STAGE C</span><span class="sh-t">에이전트 궤도</span></div><div class="sh-line"></div>
+      <div class="cod"><div class="cod-lb">STAGE C · 시작</div><div class="cod-main">6~8차시 "에이전트 기반 개발" — 코드는 AI가, 설계는 사람이</div><p>Stage A(1~3차): 재료 창고. <strong>Stage B(4~5차): 어시스트 바이브.</strong> Stage C(6~8차): 에이전트 + RAG + MCP로 확장. 6차시는 그 궤도의 시작점.</p></div>
+      <div class="dstrip"><div class="ds-c"><div class="ds-a">DONE</div><div class="ds-n">5/8</div><div class="ds-d">완료 차시</div></div><div class="ds-c"><div class="ds-a">NOW</div><div class="ds-n">C-1</div><div class="ds-d">Stage C 시작</div></div><div class="ds-c"><div class="ds-a">TO</div><div class="ds-n">S08</div><div class="ds-d">3차시 남음</div></div></div>
+      <div class="co"><div class="co-lb">HUB LEADER CLOSING</div><div class="co-main">"설계서·Rules·검수"의 3종 세트가 남는다</div><p>이 세 가지를 가진 거점리더는 도구가 바뀌어도 품질이 유지된다.</p></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">06 · AI 에이전트 툴 마스터리와 에이전트 기반 개발 입문</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">032 / 032</span></div></div>
+</div></div>
+</div>
+
+<script>
+(function(){
+  document.querySelectorAll('.toolbar,.deck-nav').forEach(e=>e.remove());
+  const tb = document.createElement('div');
+  tb.className = 'toolbar';
+  tb.innerHTML = `<button onclick="pNav(-1)">◀</button><span class="pg" id="pgInd">1 / 1</span><button onclick="pNav(1)">▶</button><button onclick="window.print()">⬇ PDF</button><button onclick="tFull()">⛶ FULL</button><button id="editBtn" onclick="tEdit()">✎ EDIT</button>`;
+  document.body.appendChild(tb);
+})();
+
+const allSlides = document.querySelectorAll('.slide');
+const allStages = document.querySelectorAll('.stage');
+const deck = document.getElementById('deck');
+
+function fitSlides(){const vw=innerWidth,vh=innerHeight;const r=Math.min(vw/1600,vh/900);allSlides.forEach(s=>{s.style.transform=`scale(${r})`;s.style.transformOrigin='center center'})}
+addEventListener('resize',fitSlides);fitSlides();
+
+function curIdx(){let i=0,m=1e9;allStages.forEach((s,x)=>{const d=Math.abs(s.getBoundingClientRect().top+s.getBoundingClientRect().height/2-innerHeight/2);if(d<m){m=d;i=x}});return i}
+function pNav(dir){const i=curIdx()+dir;if(i>=0&&i<allStages.length)allStages[i].scrollIntoView({behavior:'smooth'})}
+function updPg(){document.getElementById('pgInd').textContent=`${curIdx()+1} / ${allStages.length}`}
+deck.addEventListener('scroll',updPg);updPg();
+function tFull(){if(document.fullscreenElement)document.exitFullscreen();else document.documentElement.requestFullscreen().catch(()=>{})}
+
+let editMode=false;
+function tEdit(){
+  editMode=!editMode;
+  const btn=document.getElementById('editBtn'),tb=document.querySelector('.toolbar');
+  const SEL='.bth,.bt,.cod-lb,.cod-main,.cod p,.ds-n,.ds-d,.hero-k,.hero-t,.hero-s,.hero-q-q,.hero-q-a,.icard-lb,.icard-sess,.quote-q,.quote-a,.quote-src,.fig,.hl-kicker,.hl-title,.hl-sub,.card-k,.card-anchor,.card-body,.card-note,.co-lb,.co-main,.co p,.next-k,.next-t,.pit-lb,.pit-h,.pit-d,.sh-n,.sh-t,.hybrid-k,.hybrid-h,.hybrid-d,.draft-k,.draft-t,.draft-note,.cmp2c-k,.cmp2c-h,.cmp2c-d,.cmp2c-fig,.qd-k,.qd-h,.qd-d,.ladder-h,.ladder-d,.ladder-tag,.tblock-w,.tblock-h,.tblock-d,.tblock-sess,.type-h,.type-d,.type-tag,.flow-box-t,.hbar-l,.hbar-r,.fbar-title,.mtbl td,.mtbl th,h1,p';
+  if(editMode){
+    btn.textContent='✎ EDITING';btn.style.background='#b8532a';btn.style.color='#fff';tb.style.borderBottom='2px solid #b8532a';
+    document.querySelectorAll(SEL).forEach(el=>{el.contentEditable='true';el.style.outline='1px dashed rgba(184,83,42,0.3)';el.style.cursor='text'});
+    deck.style.scrollSnapType='none';
+    sToast('EDIT ON — 텍스트 클릭 수정 · Ctrl+S 저장 · E 또는 ESC로 종료');
+  }else{
+    btn.textContent='✎ EDIT';btn.style.background='';btn.style.color='';tb.style.borderBottom='';
+    document.querySelectorAll('[contenteditable="true"]').forEach(el=>{el.contentEditable='false';el.style.outline='';el.style.cursor=''});
+    deck.style.scrollSnapType='y mandatory';
+    sToast('EDIT OFF — 프레젠테이션 모드');
+  }
+}
+function sToast(m){let t=document.getElementById('toast');if(!t){t=document.createElement('div');t.id='toast';t.style.cssText='position:fixed;bottom:60px;left:50%;transform:translateX(-50%);background:rgba(14,10,6,0.92);color:#ede4d3;font-family:var(--mono,monospace);font-size:11px;letter-spacing:1.5px;padding:10px 24px;border-radius:4px;z-index:300;pointer-events:none;opacity:0;transition:opacity 0.4s';document.body.appendChild(t)}t.textContent=m;t.style.opacity='1';clearTimeout(t._tid);t._tid=setTimeout(()=>{t.style.opacity='0'},3000)}
+
+document.addEventListener('keydown',e=>{
+  if(editMode){
+    if(e.key==='s'&&(e.ctrlKey||e.metaKey)){e.preventDefault();const b=new Blob(['<!DOCTYPE html>\n'+document.documentElement.outerHTML],{type:'text/html'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=document.title.replace(/[^a-zA-Z0-9가-힣\s·_-]/g,'')+'.html';a.click();URL.revokeObjectURL(a.href);sToast('HTML 파일 저장 완료')}
+    if(e.key==='Escape'||e.key==='e'||e.key==='E'){if(!document.activeElement||document.activeElement===document.body)tEdit()}
+    return;
+  }
+  if(e.key==='ArrowRight'||e.key==='ArrowDown'||e.key===' '||e.key==='PageDown'){e.preventDefault();pNav(1)}
+  else if(e.key==='ArrowLeft'||e.key==='ArrowUp'||e.key==='PageUp'){e.preventDefault();pNav(-1)}
+  else if(e.key==='Home'){e.preventDefault();allStages[0].scrollIntoView({behavior:'smooth'})}
+  else if(e.key==='End'){e.preventDefault();allStages[allStages.length-1].scrollIntoView({behavior:'smooth'})}
+  else if(e.key==='f'||e.key==='F11'){e.preventDefault();tFull()}
+  else if(e.key==='Escape'){if(document.fullscreenElement)document.exitFullscreen()}
+  else if(e.key==='e'||e.key==='E'){tEdit()}
+});
+</script>
+<script>/* kg-preview: #<heading> \uc704\uce58\ub85c \uc774\ub3d9 */
+(function(){function norm(t){return (t||'').replace(/\s+/g,'').toLowerCase()}
+function go(){var h=decodeURIComponent(location.hash.slice(1));if(!h)return;var k=norm(h).slice(0,24);if(!k)return;
+var best=null,bl=1e9,els=document.body.querySelectorAll('h1,h2,h3,h4,h5,p,div,span,li,td,text,tspan,section,article');
+for(var i=0;i<els.length;i++){var e=els[i],t=norm(e.textContent);if(t.length<bl&&t.indexOf(k)>-1){best=e;bl=t.length}}
+if(!best)return;var box=best.closest('section,[class*=slide],[class*=page],article')||best;
+box.scrollIntoView({block:'start'});box.style.outline='3px solid #c0504d';box.style.outlineOffset='4px';
+setTimeout(function(){box.style.outline=''},2600)}
+window.addEventListener('load',function(){setTimeout(go,400)});window.addEventListener('hashchange',go)})();</script></body>
+</html>

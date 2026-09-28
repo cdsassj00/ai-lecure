@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head><meta name="robots" content="noindex, nofollow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AURA ONE — 손끝이 카메라가 되다</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200;300&family=Noto+Sans+KR:wght@300;400;500&family=Space+Grotesk:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0b0c10; --bg2:#0e1015; --ink:#eceae3; --dim:#8e9099;
+    --brass:#dfb45a; --line:rgba(236,234,227,.14); --hair:rgba(236,234,227,.09);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:auto}
+  body{background:var(--bg);color:var(--ink);font-family:'Noto Sans KR',sans-serif;overflow-x:hidden}
+  ::selection{background:var(--brass);color:#12100a}
+
+  /* ════════ PART 1 · 스크롤 필름 ════════ */
+  #film{position:fixed;inset:0;width:100%;height:100%;z-index:0}
+  #vignette{position:fixed;inset:0;z-index:1;pointer-events:none;
+    background:
+      radial-gradient(ellipse at center, transparent 42%, rgba(11,12,16,.72) 100%),
+      linear-gradient(rgba(11,12,16,.5), transparent 22%, transparent 78%, rgba(11,12,16,.6));}
+  #track{height:480vh;position:relative;z-index:2;pointer-events:none}
+
+  .layer{position:fixed;inset:0;z-index:3;pointer-events:none;
+    display:flex;flex-direction:column;justify-content:center;
+    padding:0 clamp(24px,6vw,96px);opacity:0;will-change:opacity,transform}
+  .eyebrow{font-family:'Space Grotesk',monospace;font-weight:300;
+    font-size:clamp(11px,1.2vw,13px);letter-spacing:.34em;color:var(--brass);
+    text-transform:uppercase;margin-bottom:20px}
+  h1{font-family:'Noto Serif KR',serif;font-weight:200;
+    font-size:clamp(42px,8vw,108px);line-height:1.14;letter-spacing:-.01em}
+  h1 em,h2 em{font-style:normal;color:var(--brass)}
+  h2{font-family:'Noto Serif KR',serif;font-weight:300;
+    font-size:clamp(28px,4.4vw,54px);line-height:1.3}
+  .sub{margin-top:20px;max-width:30em;color:var(--dim);font-weight:300;
+    font-size:clamp(14px,1.5vw,17px);line-height:1.85;
+    text-shadow:0 2px 24px rgba(11,12,16,.9)}
+  .right{align-items:flex-end;text-align:right}
+  .hint{position:absolute;bottom:40px;left:50%;transform:translateX(-50%);
+    font-family:'Space Grotesk',monospace;font-size:11px;letter-spacing:.3em;
+    color:var(--dim);display:flex;flex-direction:column;align-items:center;gap:12px}
+  .hint::after{content:"";width:1px;height:44px;
+    background:linear-gradient(var(--brass),transparent);
+    animation:drop 1.8s ease-in-out infinite}
+  @keyframes drop{0%{transform:scaleY(0);transform-origin:top}
+    50%{transform:scaleY(1);transform-origin:top}
+    51%{transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+
+  #timecode{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);
+    z-index:4;display:flex;align-items:center;gap:16px;
+    font-family:'Space Grotesk',monospace;font-size:11px;letter-spacing:.18em;color:var(--dim)}
+  #timecode .tc{color:var(--ink)}
+  #timecode .reel{width:min(320px,42vw);height:1px;background:var(--line);position:relative}
+  #timecode .reel i{position:absolute;top:-2px;width:1px;height:5px;background:var(--line)}
+  #timecode .head{position:absolute;top:50%;left:0;width:9px;height:9px;
+    border-radius:50%;background:var(--brass);transform:translate(-50%,-50%);
+    box-shadow:0 0 14px var(--brass)}
+
+  #topnav{position:fixed;top:0;left:0;right:0;z-index:8;
+    display:flex;justify-content:space-between;align-items:center;
+    padding:22px clamp(24px,6vw,96px);
+    font-family:'Space Grotesk',monospace;font-size:12px;letter-spacing:.3em;
+    color:var(--ink);mix-blend-mode:difference}
+
+  #loading{position:fixed;inset:0;z-index:99;background:var(--bg);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;
+    font-family:'Space Grotesk',monospace;font-size:11px;letter-spacing:.3em;color:var(--dim);
+    transition:opacity .6s ease}
+  #loading .bar{width:180px;height:1px;background:var(--line);position:relative}
+  #loading .bar div{position:absolute;left:0;top:0;height:100%;width:0;background:var(--brass)}
+
+  /* ════════ PART 2 · 본문 (필름 위로 스크롤되어 올라오는 정적 콘텐츠) ════════ */
+  #content{position:relative;z-index:6;background:var(--bg);
+    border-top:1px solid var(--hair)}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 clamp(24px,6vw,64px)}
+  section.block{padding:clamp(90px,11vw,150px) 0}
+
+  /* 스펙 스트립 — 큰 숫자 4개 */
+  #stats .grid{display:grid;grid-template-columns:repeat(4,1fr)}
+  #stats .cell{padding:34px clamp(16px,2.4vw,36px);border-left:1px solid var(--hair)}
+  #stats .cell:first-child{border-left:none;padding-left:0}
+  #stats .num{font-family:'Space Grotesk',monospace;font-weight:300;
+    font-size:clamp(34px,4.6vw,60px);letter-spacing:-.02em}
+  #stats .num small{font-size:.45em;color:var(--brass);margin-left:2px;letter-spacing:0}
+  #stats .lbl{margin-top:10px;color:var(--dim);font-weight:300;
+    font-size:clamp(12px,1.3vw,14px);line-height:1.6}
+
+  /* 피처 — 스틸컷 + 텍스트 2단 */
+  .feature{display:grid;grid-template-columns:1fr 1fr;gap:clamp(36px,6vw,90px);
+    align-items:center;padding:clamp(60px,7vw,100px) 0;border-top:1px solid var(--hair)}
+  .feature:first-of-type{border-top:none}
+  .feature img{width:100%;display:block;border:1px solid var(--hair)}
+  .feature figure{margin:0}
+  .feature figcaption{margin-top:12px;font-family:'Space Grotesk',monospace;
+    font-size:11px;letter-spacing:.22em;color:var(--dim)}
+  .feature.rev .txt{order:-1}
+  .feature h3{font-family:'Noto Serif KR',serif;font-weight:300;
+    font-size:clamp(24px,3.2vw,38px);line-height:1.35;margin-bottom:18px}
+  .feature p{color:var(--dim);font-weight:300;line-height:1.9;
+    font-size:clamp(14px,1.45vw,16px)}
+  .feature .fno{font-family:'Space Grotesk',monospace;font-size:12px;
+    letter-spacing:.3em;color:var(--brass);display:block;margin-bottom:14px}
+
+  /* 인용 밴드 */
+  #quote{background:var(--bg2);border-top:1px solid var(--hair);border-bottom:1px solid var(--hair)}
+  #quote .wrap{padding-top:clamp(90px,11vw,140px);padding-bottom:clamp(90px,11vw,140px);
+    text-align:center}
+  #quote p{font-family:'Noto Serif KR',serif;font-weight:200;
+    font-size:clamp(26px,4.4vw,52px);line-height:1.5}
+
+  /* 사양 표 — 가는 괘선 */
+  #specs h2{margin-bottom:clamp(36px,5vw,60px)}
+  table{width:100%;border-collapse:collapse}
+  #specs .cols{display:grid;grid-template-columns:1fr 1fr;gap:clamp(24px,5vw,72px)}
+  th,td{text-align:left;font-weight:300;padding:16px 8px 16px 0;
+    border-top:1px solid var(--hair);vertical-align:top;
+    font-size:clamp(13px,1.4vw,15px);line-height:1.7}
+  th{color:var(--dim);width:38%;font-family:'Noto Sans KR',sans-serif;white-space:nowrap}
+  td{color:var(--ink)}
+  tr:last-child th,tr:last-child td{border-bottom:1px solid var(--hair)}
+
+  /* 예약 CTA */
+  #order{text-align:center;background:
+    radial-gradient(60% 70% at 50% 100%, rgba(223,180,90,.07), transparent 70%)}
+  .cta-row{margin-top:38px;display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+  .btn{font-family:'Noto Sans KR',sans-serif;font-size:14px;font-weight:500;
+    letter-spacing:.06em;padding:16px 40px;cursor:pointer;
+    border:1px solid var(--brass);background:var(--brass);color:#12100a;
+    transition:transform .25s ease,box-shadow .25s ease}
+  .btn.ghost{background:transparent;color:var(--ink);border-color:var(--line)}
+  .btn:hover{transform:translateY(-2px);box-shadow:0 10px 30px rgba(223,180,90,.25)}
+  .price{font-family:'Space Grotesk',monospace;color:var(--dim);
+    font-size:13px;letter-spacing:.14em;margin-top:20px}
+
+  /* 푸터 */
+  footer{border-top:1px solid var(--hair);background:var(--bg2)}
+  footer .top{display:grid;grid-template-columns:2fr 1fr 1fr 1.4fr;
+    gap:clamp(28px,4vw,56px);padding:clamp(60px,8vw,90px) 0}
+  footer .mark{font-family:'Space Grotesk',monospace;font-size:18px;
+    letter-spacing:.3em}
+  footer .tag{margin-top:14px;color:var(--dim);font-weight:300;
+    font-size:13px;line-height:1.8;max-width:22em}
+  footer h4{font-family:'Space Grotesk',monospace;font-weight:400;font-size:11px;
+    letter-spacing:.28em;color:var(--dim);text-transform:uppercase;margin-bottom:18px}
+  footer ul{list-style:none}
+  footer li{margin-bottom:11px}
+  footer a{color:var(--ink);text-decoration:none;font-weight:300;font-size:14px;
+    border-bottom:1px solid transparent;transition:border-color .2s,color .2s}
+  footer a:hover{color:var(--brass);border-color:var(--brass)}
+  .news p{color:var(--dim);font-weight:300;font-size:13px;line-height:1.8;margin-bottom:16px}
+  .news form{display:flex;border-bottom:1px solid var(--line)}
+  .news input{flex:1;background:none;border:none;outline:none;color:var(--ink);
+    font-family:'Noto Sans KR',sans-serif;font-size:14px;font-weight:300;padding:12px 0}
+  .news input::placeholder{color:var(--dim)}
+  .news button{background:none;border:none;color:var(--brass);cursor:pointer;
+    font-family:'Space Grotesk',monospace;font-size:12px;letter-spacing:.2em;padding:0 4px}
+  footer .bottom{display:flex;justify-content:space-between;align-items:center;
+    flex-wrap:wrap;gap:14px;padding:26px 0 34px;border-top:1px solid var(--hair);
+    font-size:12px;color:var(--dim);font-weight:300}
+  footer .bottom .legal{display:flex;gap:22px}
+  footer .bottom a{font-size:12px;color:var(--dim)}
+  footer .demo{margin-top:6px;font-size:11px;color:rgba(142,144,153,.6)}
+
+  @media (max-width:880px){
+    #stats .grid{grid-template-columns:1fr 1fr}
+    #stats .cell:nth-child(3){border-left:none;padding-left:0}
+    .feature{grid-template-columns:1fr}
+    .feature.rev .txt{order:0}
+    #specs .cols{grid-template-columns:1fr}
+    footer .top{grid-template-columns:1fr 1fr}
+  }
+  @media (prefers-reduced-motion:reduce){.hint::after{animation:none}}
+</style>
+</head>
+<body>
+
+<nav id="topnav"><span>AURA®</span><span>ONE</span></nav>
+
+<!-- ════ PART 1 · 스크롤 필름 ════ -->
+<canvas id="film"></canvas>
+<div id="vignette"></div>
+<div id="track"></div>
+
+<section class="layer" id="ly1">
+  <div class="eyebrow">Scroll-Driven Film</div>
+  <h1>손끝이<br><em>카메라</em>가 되다</h1>
+  <p class="sub">이 화면은 스스로 움직이지 않습니다. 당신이 스크롤하는 만큼만 시간이 흐릅니다 — 내리면 앞으로, 올리면 거꾸로.</p>
+  <div class="hint">SCROLL</div>
+</section>
+
+<section class="layer right" id="ly2">
+  <div class="eyebrow">01 — Orbit</div>
+  <h2>모든 각도에서,<br>완벽하게</h2>
+  <p class="sub">스크롤을 멈추면 카메라도 멈춥니다. 마음에 드는 각도에서 원하는 만큼 머무르세요.</p>
+</section>
+
+<section class="layer" id="ly3">
+  <div class="eyebrow">02 — Detail</div>
+  <h2>빛이 머무는<br>방향까지 설계했다</h2>
+  <p class="sub">브래스 링을 스치는 림 라이트, 매트 블랙 하우징의 미세한 반사 — 천천히 스크롤하며 빛의 흐름을 따라가 보세요.</p>
+</section>
+
+<section class="layer right" id="ly4">
+  <div class="eyebrow">03 — Return</div>
+  <h2>한 바퀴의 궤도가<br>끝났습니다</h2>
+  <p class="sub">이제 아래에서, 이 헤드폰을 이루는 숫자들을 만나보세요.</p>
+</section>
+
+<div id="timecode">
+  <span>FRAME</span>
+  <div class="reel">
+    <i style="left:25%"></i><i style="left:50%"></i><i style="left:75%"></i>
+    <div class="head"></div>
+  </div>
+  <span class="tc">001 / 121</span>
+</div>
+
+<div id="loading">LOADING FILM<div class="bar"><div></div></div></div>
+
+<!-- ════ PART 2 · 본문 ════ -->
+<main id="content">
+
+  <!-- 스펙 스트립 -->
+  <section class="block" id="stats">
+    <div class="wrap">
+      <div class="eyebrow">By the Numbers</div>
+      <div class="grid">
+        <div class="cell"><div class="num">40<small>mm</small></div><div class="lbl">베릴륨 다이내믹 드라이버</div></div>
+        <div class="cell"><div class="num">60<small>h</small></div><div class="lbl">1회 충전 최대 재생시간</div></div>
+        <div class="cell"><div class="num">−42<small>dB</small></div><div class="lbl">하이브리드 액티브 노이즈캔슬링</div></div>
+        <div class="cell"><div class="num">289<small>g</small></div><div class="lbl">하루 종일 잊게 되는 무게</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 피처 3단 -->
+  <section class="block" id="features" style="padding-top:0">
+    <div class="wrap">
+
+      <div class="feature">
+        <figure><img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="AURA ONE 측면 — 베릴륨 드라이버 하우징">
+          <figcaption>FIG.01 — BERYLLIUM DRIVER HOUSING</figcaption></figure>
+        <div class="txt">
+          <span class="fno">01 / SOUND</span>
+          <h3>베릴륨이라는 선택</h3>
+          <p>베릴륨 진동판은 알루미늄보다 2.5배 단단하고 절반만큼 가볍습니다. 20Hz의 깊은 저역에서도 진동판이 휘지 않아, 전 대역에서 왜곡률 0.1% 이하를 유지합니다. 소재 하나를 바꾸는 데 3년이 걸렸습니다 — 그만한 가치가 있었습니다.</p>
+        </div>
+      </div>
+
+      <div class="feature rev">
+        <figure><img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="AURA ONE 3/4 각도 — 이어컵과 브래스 링">
+          <figcaption>FIG.02 — HYBRID ANC ARRAY</figcaption></figure>
+        <div class="txt">
+          <span class="fno">02 / SILENCE</span>
+          <h3>소음이 사라진 자리에<br>음악만 남는다</h3>
+          <p>이어컵 안팎의 마이크 8개가 초당 4만 번 주변 소음을 읽고 역위상 신호로 지웁니다. 지하철의 저역 소음부터 사무실의 말소리까지, 최대 −42dB. 침묵은 이 헤드폰의 첫 번째 음질입니다.</p>
+        </div>
+      </div>
+
+      <div class="feature">
+        <figure><img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="AURA ONE 정면 — 매트 블랙 마감">
+          <figcaption>FIG.03 — 60-HOUR ENDURANCE</figcaption></figure>
+        <div class="txt">
+          <span class="fno">03 / ENDURANCE</span>
+          <h3>충전을 잊게 되는<br>하루, 그리고 일주일</h3>
+          <p>한 번의 충전으로 60시간. 출퇴근 왕복 2시간 기준 한 달을 버팁니다. 급할 땐 USB-C 10분 충전으로 5시간 — 배터리 걱정은 이 제품의 사양표에서 지웠습니다.</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 인용 밴드 -->
+  <section id="quote">
+    <div class="wrap">
+      <p>좋은 설계란,<br>아무것도 <em>드러나지 않는</em> 것.</p>
+    </div>
+  </section>
+
+  <!-- 사양 표 -->
+  <section class="block" id="specs">
+    <div class="wrap">
+      <div class="eyebrow">Technical Specifications</div>
+      <h2>사양</h2>
+      <div class="cols">
+        <table>
+          <tr><th>드라이버</th><td>40mm 베릴륨 다이내믹</td></tr>
+          <tr><th>주파수 응답</th><td>10Hz – 40kHz</td></tr>
+          <tr><th>임피던스</th><td>32Ω</td></tr>
+          <tr><th>전고조파왜곡</th><td>0.1% 이하 (1kHz)</td></tr>
+          <tr><th>노이즈캔슬링</th><td>하이브리드 ANC, 최대 −42dB</td></tr>
+          <tr><th>마이크</th><td>8-mic 어레이 (통화용 빔포밍 4)</td></tr>
+        </table>
+        <table>
+          <tr><th>배터리</th><td>60시간 (ANC off) · 40시간 (ANC on)</td></tr>
+          <tr><th>충전</th><td>USB-C · 10분 충전 5시간 재생</td></tr>
+          <tr><th>블루투스</th><td>5.4 · LDAC, aptX Lossless, AAC</td></tr>
+          <tr><th>멀티포인트</th><td>2대 동시 연결</td></tr>
+          <tr><th>무게</th><td>289g</td></tr>
+          <tr><th>마감</th><td>CNC 알루미늄 · 단백질 레더</td></tr>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- 예약 CTA -->
+  <section class="block" id="order">
+    <div class="wrap">
+      <div class="eyebrow" style="text-align:center">AURA ONE</div>
+      <h2>들을 준비, 되셨나요</h2>
+      <div class="cta-row">
+        <button class="btn">사전 예약하기</button>
+        <button class="btn ghost">매장에서 들어보기</button>
+      </div>
+      <div class="price">₩ 589,000 — 2026.08 출시 · 사전 예약 시 전용 하드케이스 증정</div>
+    </div>
+  </section>
+
+  <!-- 푸터 -->
+  <footer>
+    <div class="wrap">
+      <div class="top">
+        <div>
+          <div class="mark">AURA®</div>
+          <p class="tag">소리를 다루는 가장 정직한 방법을 찾습니다. 서울에서 설계하고, 백 번의 시청으로 조율합니다.</p>
+        </div>
+        <div>
+          <h4>제품</h4>
+          <ul>
+            <li><a href="#">AURA ONE</a></li>
+            <li><a href="#">AURA BUD</a></li>
+            <li><a href="#">액세서리</a></li>
+            <li><a href="#">정품 등록</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>지원</h4>
+          <ul>
+            <li><a href="#">고객센터</a></li>
+            <li><a href="#">펌웨어 다운로드</a></li>
+            <li><a href="#">보증 정책</a></li>
+            <li><a href="#">문의하기</a></li>
+          </ul>
+        </div>
+        <div class="news">
+          <h4>뉴스레터</h4>
+          <p>출시 소식과 청음회 초대를 가장 먼저 받아보세요.</p>
+          <form onsubmit="event.preventDefault();this.querySelector('button').textContent='DONE ✓'">
+            <input type="email" placeholder="이메일 주소" aria-label="이메일 주소">
+            <button type="submit">SUBSCRIBE</button>
+          </form>
+        </div>
+      </div>
+      <div class="bottom">
+        <div>
+          © 2026 AURA Acoustics Inc. All rights reserved.
+          <div class="demo">본 페이지는 AI 생성 영상(Higgsfield)을 활용한 스크롤 인터랙션 데모입니다.</div>
+        </div>
+        <div class="legal">
+          <a href="#">개인정보처리방침</a>
+          <a href="#">이용약관</a>
+          <a href="#">쿠키 설정</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+</main>
+
+<script>
+/* ============================================================
+   프레임 시퀀스 스크러빙 — 필름 구간(#track)에서만 동작하고,
+   그 아래로는 일반 콘텐츠가 필름 위를 덮으며 스크롤된다.
+============================================================ */
+const FRAME_SRC = ["data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="];
+const N = FRAME_SRC.length;
+
+const canvas = document.getElementById('film');
+const ctx = canvas.getContext('2d');
+const trackEl = document.getElementById('track');
+const lerp  = (a,b,t)=>a+(b-a)*t;
+const clamp = (v,a,b)=>Math.max(a,Math.min(b,v));
+const seg   = (p,a,b)=>clamp((p-a)/(b-a),0,1);
+
+/* 프레임 프리로드 */
+const imgs = new Array(N);
+let loaded = 0;
+const loadBar = document.querySelector('#loading .bar div');
+const loadEl  = document.getElementById('loading');
+FRAME_SRC.forEach((src,i)=>{
+  const im = new Image();
+  im.onload = ()=>{
+    loaded++;
+    loadBar.style.width = (loaded/N*100)+'%';
+    if(loaded===N){ loadEl.style.opacity=0; setTimeout(()=>loadEl.remove(),700); draw(0,true); }
+  };
+  im.src = src;
+  imgs[i] = im;
+});
+
+function resize(){
+  canvas.width  = innerWidth  * Math.min(devicePixelRatio,2);
+  canvas.height = innerHeight * Math.min(devicePixelRatio,2);
+  draw(lastFrame<0?0:lastFrame, true);
+}
+let lastFrame = -1;
+function draw(idx, force){
+  if(idx===lastFrame && !force) return;
+  const im = imgs[idx];
+  if(!im || !im.complete) return;
+  lastFrame = idx;
+  const cw=canvas.width, ch=canvas.height, iw=im.naturalWidth, ih=im.naturalHeight;
+  const s = Math.max(cw/iw, ch/ih);
+  const w=iw*s, h=ih*s;
+  ctx.drawImage(im, (cw-w)/2, (ch-h)/2, w, h);
+}
+addEventListener('resize', resize);
+
+/* ── 진행률: 전체 문서가 아니라 필름 트랙 기준 ── */
+let target=0, progress=0;
+function readScroll(){
+  const filmEnd = trackEl.offsetHeight - innerHeight;   // 필름 구간 길이
+  target = filmEnd>0 ? clamp(scrollY/filmEnd, 0, 1) : 0;
+}
+addEventListener('scroll', readScroll, {passive:true});
+
+const layers = [
+  {el:ly1, w:[0,0,.09,.18]},
+  {el:ly2, w:[.22,.30,.42,.52]},
+  {el:ly3, w:[.54,.62,.72,.80]},
+  {el:ly4, w:[.82,.88,.955,1.0]},
+];
+const fade = (p,[a,b,c,d]) => p<a?0 : p<b?seg(p,a,b) : p<c?1 : 1-seg(p,c,d);
+
+const timecodeEl = document.getElementById('timecode');
+const head = document.querySelector('#timecode .head');
+const tcEl = document.querySelector('#timecode .tc');
+const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+function tick(){
+  requestAnimationFrame(tick);
+  progress = lerp(progress, target, reduced ? 1 : .1);
+  const p = progress;
+
+  draw(Math.round(p*(N-1)));
+
+  for(const L of layers){
+    const o = fade(p, L.w);
+    L.el.style.opacity = o;
+    L.el.style.transform = `translateY(${(1-o)*26}px)`;
+  }
+
+  /* 필름이 끝나면 타임코드도 함께 퇴장 */
+  timecodeEl.style.opacity = 1 - seg(p,.965,1);
+  head.style.left = (p*100)+'%';
+  tcEl.textContent = String(Math.round(p*(N-1))+1).padStart(3,'0')+' / '+N;
+}
+readScroll();
+resize();
+requestAnimationFrame(tick);
+</script>
+<script>/* kg-preview: #<heading> \uc704\uce58\ub85c \uc774\ub3d9 */
+(function(){function norm(t){return (t||'').replace(/\s+/g,'').toLowerCase()}
+function go(){var h=decodeURIComponent(location.hash.slice(1));if(!h)return;var k=norm(h).slice(0,24);if(!k)return;
+var best=null,bl=1e9,els=document.body.querySelectorAll('h1,h2,h3,h4,h5,p,div,span,li,td,text,tspan,section,article');
+for(var i=0;i<els.length;i++){var e=els[i],t=norm(e.textContent);if(t.length<bl&&t.indexOf(k)>-1){best=e;bl=t.length}}
+if(!best)return;var box=best.closest('section,[class*=slide],[class*=page],article')||best;
+box.scrollIntoView({block:'start'});box.style.outline='3px solid #c0504d';box.style.outlineOffset='4px';
+setTimeout(function(){box.style.outline=''},2600)}
+window.addEventListener('load',function(){setTimeout(go,400)});window.addEventListener('hashchange',go)})();</script></body>
+</html>

@@ -1,0 +1,875 @@
+<!doctype html>
+<html lang="ko">
+<head><meta name="robots" content="noindex, nofollow">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>LLM · Agent · Bridge · PC Automation Hyperframe</title>
+<style>
+  :root {
+    --red:#c84a44;
+    --red-soft:#fff0ed;
+    --blue:#3f6fbf;
+    --blue-soft:#edf5ff;
+    --yellow:#fff0a8;
+    --yellow-2:#fff5c7;
+    --ink:#1f2937;
+    --muted:#6b7280;
+    --bg:#f8fafc;
+    --panel:#ffffff;
+    --line:#d9e2ef;
+    --shadow:0 20px 60px rgba(15,23,42,.12);
+    --radius:24px;
+  }
+
+  * { box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body {
+    margin:0;
+    font-family: "Pretendard", "Apple SD Gothic Neo", "Malgun Gothic", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    background:linear-gradient(180deg,#fff 0%,#f6f9ff 48%,#fff 100%);
+    color:var(--ink);
+    overflow-x:hidden;
+  }
+
+  .topbar {
+    position:fixed;
+    top:0;
+    left:0;
+    right:0;
+    height:64px;
+    z-index:50;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 28px;
+    background:rgba(255,255,255,.82);
+    backdrop-filter: blur(16px);
+    border-bottom:1px solid rgba(148,163,184,.25);
+  }
+  .brand {
+    font-weight:900;
+    letter-spacing:-.04em;
+    font-size:18px;
+  }
+  .brand span { color:var(--blue); }
+  .stage-chip {
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    padding:8px 12px;
+    border:1px solid var(--line);
+    border-radius:999px;
+    font-size:13px;
+    color:#475569;
+    background:white;
+  }
+  .dot {
+    width:9px;
+    height:9px;
+    border-radius:99px;
+    background:var(--red);
+    box-shadow:0 0 0 5px rgba(200,74,68,.12);
+  }
+
+  .hero {
+    min-height:100vh;
+    display:grid;
+    grid-template-columns:1.03fr .97fr;
+    gap:36px;
+    padding:110px 6vw 50px;
+    align-items:center;
+  }
+  .hero-copy h1 {
+    font-size:clamp(44px,6vw,86px);
+    line-height:.96;
+    letter-spacing:-.08em;
+    margin:0 0 24px;
+  }
+  .hero-copy p {
+    font-size:clamp(18px,2vw,25px);
+    line-height:1.62;
+    color:#475569;
+    max-width:700px;
+    margin:0 0 34px;
+    word-break:keep-all;
+  }
+  .hero-actions {
+    display:flex;
+    gap:12px;
+    flex-wrap:wrap;
+  }
+  .btn {
+    border:0;
+    border-radius:16px;
+    padding:15px 20px;
+    font-weight:800;
+    font-size:16px;
+    cursor:pointer;
+    text-decoration:none;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .btn.primary { background:#111827; color:white; }
+  .btn.secondary { background:white; color:#1f2937; border:1px solid #dbe4f0; }
+
+  .sketch-card {
+    position:relative;
+    border-radius:30px;
+    background:white;
+    box-shadow:var(--shadow);
+    border:1px solid rgba(148,163,184,.22);
+    overflow:hidden;
+    min-height:410px;
+  }
+  .sketch-card img {
+    width:100%;
+    display:block;
+  }
+  .sketch-label {
+    position:absolute;
+    top:18px;
+    left:18px;
+    padding:9px 13px;
+    border-radius:999px;
+    background:rgba(255,255,255,.88);
+    border:1px solid rgba(148,163,184,.35);
+    font-weight:800;
+    font-size:13px;
+  }
+
+  .hyperwrap {
+    position:relative;
+  }
+  .sticky {
+    position:sticky;
+    top:64px;
+    height:calc(100vh - 64px);
+    display:grid;
+    grid-template-columns:minmax(760px,1.55fr) minmax(310px,.45fr);
+    gap:24px;
+    padding:28px 4vw;
+    align-items:center;
+  }
+
+  .canvas {
+    position:relative;
+    height:min(78vh,760px);
+    min-height:560px;
+    border-radius:34px;
+    background:
+      radial-gradient(circle at 22% 36%, rgba(255,241,179,.56), transparent 26%),
+      radial-gradient(circle at 80% 38%, rgba(219,234,254,.74), transparent 34%),
+      white;
+    box-shadow:var(--shadow);
+    border:1px solid rgba(148,163,184,.22);
+    overflow:hidden;
+  }
+
+  svg {
+    width:100%;
+    height:100%;
+    display:block;
+  }
+
+  .panel {
+    background:white;
+    border:1px solid rgba(148,163,184,.26);
+    box-shadow:var(--shadow);
+    border-radius:28px;
+    padding:26px;
+    align-self:stretch;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+  }
+  .panel h2 {
+    margin:0 0 12px;
+    font-size:clamp(28px,3vw,42px);
+    letter-spacing:-.06em;
+    line-height:1.1;
+  }
+  .panel p {
+    margin:0;
+    color:#475569;
+    font-size:17px;
+    line-height:1.65;
+    word-break:keep-all;
+  }
+  .panel .key {
+    margin-top:22px;
+    padding:16px;
+    border-radius:18px;
+    background:#f8fafc;
+    border:1px solid #e5edf7;
+    font-size:15px;
+    line-height:1.55;
+    color:#334155;
+  }
+  .progress {
+    margin-top:26px;
+  }
+  .bar {
+    height:9px;
+    background:#eef2f7;
+    border-radius:999px;
+    overflow:hidden;
+  }
+  .bar span {
+    display:block;
+    height:100%;
+    width:0%;
+    border-radius:999px;
+    background:linear-gradient(90deg,var(--red),var(--blue));
+    transition:width .55s cubic-bezier(.2,.8,.2,1);
+  }
+  .steps-mini {
+    display:flex;
+    justify-content:space-between;
+    gap:5px;
+    margin-top:12px;
+    font-size:11px;
+    color:#94a3b8;
+  }
+
+  .frame {
+    height:88vh;
+    display:grid;
+    place-items:center;
+    padding:0 6vw;
+  }
+  .frame-card {
+    width:min(720px,100%);
+    margin-left:auto;
+    border-radius:28px;
+    background:rgba(255,255,255,.84);
+    backdrop-filter:blur(20px);
+    border:1px solid rgba(148,163,184,.25);
+    box-shadow:0 16px 40px rgba(15,23,42,.08);
+    padding:28px;
+  }
+  .frame-card strong {
+    display:inline-flex;
+    margin-bottom:8px;
+    color:var(--blue);
+    font-size:14px;
+  }
+  .frame-card h3 {
+    margin:0 0 10px;
+    font-size:34px;
+    letter-spacing:-.05em;
+  }
+  .frame-card p {
+    margin:0;
+    font-size:18px;
+    line-height:1.68;
+    color:#475569;
+    word-break:keep-all;
+  }
+
+  .caption-pill {
+    position:absolute;
+    left:24px;
+    bottom:22px;
+    z-index:3;
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+  }
+  .caption-pill span {
+    padding:8px 12px;
+    border-radius:999px;
+    background:rgba(255,255,255,.82);
+    border:1px solid rgba(148,163,184,.28);
+    font-size:13px;
+    font-weight:800;
+  }
+
+  .original {
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    object-fit:contain;
+    background:white;
+    opacity:0;
+    pointer-events:none;
+    transition:opacity .45s;
+    z-index:9;
+  }
+  .show-original .original { opacity:1; }
+  .toggle {
+    position:absolute;
+    right:22px;
+    bottom:22px;
+    z-index:12;
+    background:#111827;
+    color:white;
+    border:0;
+    border-radius:999px;
+    padding:11px 14px;
+    font-weight:800;
+    cursor:pointer;
+  }
+
+  .end {
+    padding:90px 6vw 110px;
+    text-align:center;
+  }
+  .end h2 {
+    font-size:clamp(36px,5vw,64px);
+    margin:0 0 18px;
+    letter-spacing:-.07em;
+  }
+  .end p {
+    max-width:800px;
+    margin:0 auto 28px;
+    font-size:20px;
+    line-height:1.7;
+    color:#475569;
+    word-break:keep-all;
+  }
+
+  .dim { opacity:.16; filter:grayscale(.35); }
+  .soft { opacity:.36; }
+  .focus { opacity:1; filter:none; }
+  .hide { opacity:0; transform:scale(.96); }
+  .show { opacity:1; transform:scale(1); }
+  .draw {
+    stroke-dasharray:1000;
+    stroke-dashoffset:1000;
+    animation:draw 1.4s ease forwards;
+  }
+  @keyframes draw { to { stroke-dashoffset:0; } }
+  .pulse {
+    animation:pulse 1.4s ease-in-out infinite;
+    transform-origin:center;
+  }
+  @keyframes pulse {
+    0%,100% { transform:scale(1); opacity:1; }
+    50% { transform:scale(1.035); opacity:.82; }
+  }
+  .floaty { animation:floaty 3.4s ease-in-out infinite; }
+  @keyframes floaty {
+    0%,100% { transform:translateY(0); }
+    50% { transform:translateY(-10px); }
+  }
+  .blink { animation:blink .9s ease-in-out infinite; }
+  @keyframes blink {
+    0%,100% { opacity:.18; }
+    50% { opacity:1; }
+  }
+
+  .svg-text {
+    font-family:"Pretendard","Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+    font-weight:800;
+    letter-spacing:-.04em;
+  }
+  .hand {
+    font-family:"Comic Sans MS","Nanum Pen Script","Malgun Gothic",cursive;
+    font-weight:800;
+  }
+
+  [data-part] {
+    transition:opacity .55s ease, transform .55s ease, filter .55s ease;
+    transform-box:fill-box;
+    transform-origin:center;
+  }
+
+  body[data-stage="0"] [data-part]:not(.always) { opacity:.18; }
+  body[data-stage="0"] #part-intro { opacity:1; }
+
+  body[data-stage="1"] [data-part] { opacity:.12; }
+  body[data-stage="1"] #cloudBox,
+  body[data-stage="1"] #llmCore,
+  body[data-stage="1"] #userText,
+  body[data-stage="1"] #cloudTitle,
+  body[data-stage="1"] #stageBadgeCloud { opacity:1; }
+
+  body[data-stage="2"] [data-part] { opacity:.13; }
+  body[data-stage="2"] #llmCore,
+  body[data-stage="2"] #agentText,
+  body[data-stage="2"] #toolsGroup,
+  body[data-stage="2"] #dataMemory,
+  body[data-stage="2"] #cloudBox,
+  body[data-stage="2"] #stageBadgeAgent { opacity:1; }
+
+  body[data-stage="3"] [data-part] { opacity:.12; }
+  body[data-stage="3"] #denyMarks,
+  body[data-stage="3"] #cloudCircle,
+  body[data-stage="3"] #agentText,
+  body[data-stage="3"] #llmCore,
+  body[data-stage="3"] #stageBadgeLimit { opacity:1; }
+
+  body[data-stage="4"] [data-part] { opacity:.12; }
+  body[data-stage="4"] #bridgeBox,
+  body[data-stage="4"] #bridgeTitle,
+  body[data-stage="4"] #bridgeWall,
+  body[data-stage="4"] #arrowsToBridge,
+  body[data-stage="4"] #hanesText,
+  body[data-stage="4"] #stageBadgeBridge { opacity:1; }
+
+  body[data-stage="5"] [data-part] { opacity:.12; }
+  body[data-stage="5"] #pcCircle,
+  body[data-stage="5"] #automationBox,
+  body[data-stage="5"] #pcApps,
+  body[data-stage="5"] #autoText,
+  body[data-stage="5"] #stageBadgePc { opacity:1; }
+
+  body[data-stage="6"] [data-part] { opacity:.12; }
+  body[data-stage="6"] #rightTools,
+  body[data-stage="6"] #automationBox,
+  body[data-stage="6"] #pcCircle,
+  body[data-stage="6"] #arrowsPc,
+  body[data-stage="6"] #stageBadgeAction { opacity:1; }
+
+  body[data-stage="7"] [data-part] { opacity:1; }
+  body[data-stage="7"] #fullFlow,
+  body[data-stage="7"] #stageBadgeSummary { opacity:1; }
+
+  @media (max-width:1100px) {
+    .hero { grid-template-columns:1fr; padding-top:96px; }
+    .sticky {
+      position:relative;
+      top:auto;
+      height:auto;
+      grid-template-columns:1fr;
+    }
+    .canvas { height:650px; min-height:650px; }
+    .frame { height:auto; padding:38px 6vw; }
+  }
+  @media (max-width:720px) {
+    .topbar { padding:0 16px; }
+    .stage-chip { display:none; }
+    .hero { padding:92px 18px 36px; }
+    .sticky { padding:18px; }
+    .canvas { min-height:560px; height:560px; border-radius:24px; }
+    .panel { padding:20px; }
+    .frame-card h3 { font-size:27px; }
+  }
+</style>
+</head>
+<body data-stage="0">
+  <header class="topbar">
+    <div class="brand">Hyperframe <span>LLM Automation</span></div>
+    <div class="stage-chip"><span class="dot"></span><span id="stageLabel">0. 전체 구조</span></div>
+  </header>
+
+  <section class="hero" id="top">
+    <div class="hero-copy">
+      <h1>클라우드 LLM에서<br>내 PC 자동화까지</h1>
+      <p>
+        스케치 이미지를 바탕으로, LLM이 가진 한계와 에이전트의 역할,
+        브릿지 구조, 그리고 로컬 PC 자동화까지 이어지는 흐름을 순차적으로 설명하는
+        스크롤 기반 하이퍼프레임 애니메이션입니다.
+      </p>
+      <div class="hero-actions">
+        <a class="btn primary" href="#story">애니메이션 시작</a>
+        <button class="btn secondary" onclick="document.querySelector('.canvas')?.classList.toggle('show-original')">원본 스케치 토글</button>
+      </div>
+    </div>
+    <div class="sketch-card">
+      <span class="sketch-label">원본 스케치 기반</span>
+      <img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="LLM agent bridge PC automation sketch" />
+    </div>
+  </section>
+
+  <main class="hyperwrap" id="story">
+    <section class="sticky">
+      <div class="canvas">
+        <img class="original" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="original sketch overlay" />
+        <button class="toggle" onclick="this.closest('.canvas').classList.toggle('show-original')">원본 보기</button>
+
+        <svg viewBox="0 0 1600 900" role="img" aria-label="LLM Agent Bridge PC Automation Hyperframe Diagram">
+          <defs>
+            <marker id="arrowRed" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+              <path d="M0,0 L10,5 L0,10 z" fill="#c84a44"></path>
+            </marker>
+            <marker id="arrowBlue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+              <path d="M0,0 L10,5 L0,10 z" fill="#3f6fbf"></path>
+            </marker>
+            <pattern id="diagRed" width="12" height="12" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+              <line x1="0" y1="0" x2="0" y2="12" stroke="#c84a44" stroke-width="3" opacity=".22"/>
+            </pattern>
+            <pattern id="diagBlue" width="12" height="12" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+              <line x1="0" y1="0" x2="0" y2="12" stroke="#3f6fbf" stroke-width="3" opacity=".22"/>
+            </pattern>
+            <filter id="glowRed" x="-40%" y="-40%" width="180%" height="180%">
+              <feGaussianBlur stdDeviation="8" result="blur"/>
+              <feColorMatrix in="blur" type="matrix" values="1 0 0 0 .75 0 1 0 0 .2 0 0 1 0 .16 0 0 0 .5 0"/>
+              <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+            <filter id="glowBlue" x="-40%" y="-40%" width="180%" height="180%">
+              <feGaussianBlur stdDeviation="8" result="blur"/>
+              <feColorMatrix in="blur" type="matrix" values="0 0 1 0 .16 0 0 1 0 .36 0 0 1 0 .85 0 0 0 .5 0"/>
+              <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+          </defs>
+
+          <g id="part-intro" data-part class="always">
+            <text x="800" y="56" text-anchor="middle" class="svg-text" font-size="34" fill="#1f2937">LLM · Agent · Bridge · PC Automation</text>
+            <text x="800" y="88" text-anchor="middle" font-size="17" fill="#64748b">스크롤하면 단계별로 구조가 강조됩니다</text>
+          </g>
+
+          <g id="cloudBox" data-part>
+            <rect x="48" y="194" width="640" height="470" rx="16" fill="#fffafa" stroke="#c84a44" stroke-width="2"/>
+            <text id="cloudTitle" x="66" y="710" class="svg-text" font-size="50" fill="#c84a44" data-part>클라우드</text>
+          </g>
+
+          <g id="toolsGroup" data-part>
+            <rect x="80" y="214" width="140" height="76" rx="10" fill="#cfe5ff" stroke="#c84a44" stroke-width="1.5"/>
+            <text x="150" y="246" text-anchor="middle" class="svg-text" font-size="15" fill="#c84a44">외부문서</text>
+            <text x="150" y="270" text-anchor="middle" font-size="12" fill="#c84a44">좌표·보안 문서</text>
+
+            <rect x="76" y="306" width="144" height="68" rx="10" fill="#fff1a8" stroke="#c84a44" stroke-width="1.5"/>
+            <text x="148" y="348" text-anchor="middle" class="hand" font-size="20" fill="#c84a44">WEB</text>
+
+            <rect x="76" y="392" width="144" height="72" rx="10" fill="#fff1a8" stroke="#c84a44" stroke-width="1.5"/>
+            <text x="148" y="422" text-anchor="middle" class="svg-text" font-size="15" fill="#c84a44">외부프로그램</text>
+            <text x="148" y="448" text-anchor="middle" font-size="13" fill="#c84a44">외부 사이트</text>
+
+            <circle id="cloudCircle" cx="160" cy="536" r="104" fill="url(#diagRed)" stroke="#c84a44" stroke-width="2" data-part/>
+            <rect x="91" y="476" width="138" height="62" rx="11" fill="#ffdada" stroke="#c84a44" stroke-width="1.3"/>
+            <text x="160" y="512" text-anchor="middle" class="svg-text" font-size="15" fill="#c84a44">PC명령체계</text>
+            <rect x="91" y="556" width="138" height="62" rx="11" fill="#ffdada" stroke="#c84a44" stroke-width="1.3"/>
+            <text x="160" y="594" text-anchor="middle" class="svg-text" font-size="16" fill="#c84a44">파이썬</text>
+          </g>
+
+          <g id="llmCore" data-part filter="url(#glowRed)">
+            <circle cx="440" cy="430" r="115" fill="#fff1a8" stroke="#c84a44" stroke-width="2"/>
+            <text x="440" y="450" text-anchor="middle" class="hand" font-size="62" fill="#c84a44">LLM</text>
+            <circle cx="350" cy="340" r="24" fill="#fff1a8" stroke="#c84a44" stroke-width="1.8"/>
+            <circle cx="515" cy="336" r="24" fill="#fff1a8" stroke="#c84a44" stroke-width="1.8"/>
+            <circle cx="330" cy="424" r="24" fill="#fff1a8" stroke="#c84a44" stroke-width="1.8"/>
+            <circle cx="532" cy="420" r="24" fill="#fff1a8" stroke="#c84a44" stroke-width="1.8"/>
+            <circle cx="365" cy="512" r="24" fill="#fff1a8" stroke="#c84a44" stroke-width="1.8"/>
+            <circle cx="504" cy="510" r="24" fill="#fff1a8" stroke="#c84a44" stroke-width="1.8"/>
+            <text x="350" y="346" text-anchor="middle" class="hand" font-size="14" fill="#c84a44">LLM</text>
+            <text x="515" y="342" text-anchor="middle" class="hand" font-size="14" fill="#c84a44">LLM</text>
+            <text x="330" y="430" text-anchor="middle" class="hand" font-size="14" fill="#c84a44">LLM</text>
+            <text x="532" y="426" text-anchor="middle" class="hand" font-size="14" fill="#c84a44">LLM</text>
+            <text x="365" y="518" text-anchor="middle" class="hand" font-size="14" fill="#c84a44">LLM</text>
+            <text x="504" y="516" text-anchor="middle" class="hand" font-size="14" fill="#c84a44">LLM</text>
+          </g>
+
+          <g id="agentText" data-part>
+            <text x="286" y="258" class="hand" font-size="62" fill="#c84a44">agent</text>
+            <line x1="388" y1="282" x2="388" y2="322" stroke="#d28b25" stroke-width="3" marker-end="url(#arrowRed)"/>
+            <line x1="418" y1="284" x2="418" y2="326" stroke="#d28b25" stroke-width="3" marker-end="url(#arrowRed)"/>
+            <line x1="448" y1="282" x2="448" y2="324" stroke="#d28b25" stroke-width="3" marker-end="url(#arrowRed)"/>
+          </g>
+
+          <g id="dataMemory" data-part>
+            <rect x="287" y="566" width="142" height="62" rx="9" fill="#cfe5ff" stroke="#c84a44" stroke-width="1.3"/>
+            <text x="358" y="604" text-anchor="middle" class="svg-text" font-size="15" fill="#c84a44">메모리</text>
+            <text x="390" y="604" text-anchor="middle" font-size="13" fill="#c84a44">(대화기록)</text>
+            <rect x="442" y="566" width="144" height="62" rx="9" fill="#fff1a8" stroke="#c84a44" stroke-width="1.3"/>
+            <text x="514" y="604" text-anchor="middle" class="svg-text" font-size="15" fill="#c84a44">외부문서</text>
+            <text x="558" y="604" text-anchor="middle" font-size="13" fill="#c84a44">(가이드)</text>
+          </g>
+
+          <g id="denyMarks" data-part>
+            <text x="385" y="306" class="hand blink" font-size="38" fill="#c84a44">× × ×</text>
+            <text x="352" y="556" class="hand blink" font-size="38" fill="#c84a44">× × × ×</text>
+            <text x="276" y="116" class="svg-text" font-size="17" fill="#c84a44">LLM은 단어 조합으로 답하지만,</text>
+            <text x="276" y="141" class="svg-text" font-size="17" fill="#c84a44">학습 시점 이후의 데이터와 내 PC에는</text>
+            <text x="276" y="166" class="svg-text" font-size="17" fill="#c84a44">직접 손이 닿지 않는다.</text>
+          </g>
+
+          <g id="userText" data-part>
+            <text x="592" y="452" class="hand" font-size="58" fill="#c84a44">user</text>
+          </g>
+
+          <g id="arrowsToBridge" data-part>
+            <path d="M560,372 C642,350 670,338 718,322" fill="none" stroke="#3f6fbf" stroke-width="3" marker-end="url(#arrowBlue)" class="draw"/>
+            <path d="M486,452 C606,474 675,500 718,506" fill="none" stroke="#3f6fbf" stroke-width="3" marker-end="url(#arrowBlue)" class="draw"/>
+            <line x1="220" y1="250" x2="330" y2="334" stroke="#c84a44" stroke-width="2" marker-end="url(#arrowRed)"/>
+            <line x1="218" y1="428" x2="330" y2="423" stroke="#c84a44" stroke-width="2" marker-end="url(#arrowRed)"/>
+            <line x1="228" y1="508" x2="330" y2="466" stroke="#c84a44" stroke-width="2" marker-end="url(#arrowRed)"/>
+          </g>
+
+          <g id="bridgeBox" data-part filter="url(#glowBlue)">
+            <text id="bridgeTitle" x="820" y="74" text-anchor="middle" class="svg-text" font-size="36" fill="#3f6fbf" data-part>브릿지</text>
+            <rect x="720" y="102" width="350" height="560" rx="10" fill="#ffffff" stroke="#3f6fbf" stroke-width="2"/>
+            <text id="hanesText" x="895" y="162" text-anchor="middle" class="svg-text" font-size="48" fill="#3f6fbf" data-part>하네스</text>
+            <rect id="bridgeWall" x="748" y="190" width="80" height="462" rx="9" fill="url(#diagBlue)" stroke="#3f6fbf" stroke-width="2" data-part/>
+          </g>
+
+          <g id="pcCircle" data-part filter="url(#glowBlue)">
+            <circle cx="1248" cy="188" r="110" fill="url(#diagBlue)" stroke="#3f6fbf" stroke-width="2"/>
+            <text x="1248" y="208" text-anchor="middle" class="hand" font-size="56" fill="#3f6fbf">내 PC</text>
+          </g>
+
+          <g id="automationBox" data-part>
+            <rect x="914" y="238" width="612" height="352" rx="10" fill="#ffffff" stroke="#3f6fbf" stroke-width="2"/>
+            <text id="autoText" x="1230" y="430" text-anchor="middle" class="svg-text" font-size="58" fill="#3f6fbf" data-part>자동화</text>
+            <g id="pcApps" data-part>
+              <rect x="976" y="314" width="176" height="80" rx="10" fill="#b9d7f9" stroke="#3f6fbf" stroke-width="1.4"/>
+              <text x="1064" y="350" text-anchor="middle" class="svg-text" font-size="15" fill="#3f6fbf">PC명령체계</text>
+              <text x="1064" y="372" text-anchor="middle" font-size="14" fill="#3f6fbf">(OS)</text>
+              <rect x="972" y="420" width="170" height="82" rx="10" fill="#b9d7f9" stroke="#3f6fbf" stroke-width="1.4"/>
+              <text x="1057" y="467" text-anchor="middle" class="svg-text" font-size="17" fill="#3f6fbf">파이썬</text>
+            </g>
+          </g>
+
+          <g id="rightTools" data-part>
+            <rect x="1426" y="316" width="140" height="76" rx="10" fill="#cfe5ff" stroke="#c84a44" stroke-width="1.5"/>
+            <text x="1496" y="348" text-anchor="middle" class="svg-text" font-size="15" fill="#c84a44">외부문서</text>
+            <text x="1496" y="372" text-anchor="middle" font-size="12" fill="#c84a44">좌표·보안 문서</text>
+
+            <rect x="1424" y="414" width="144" height="68" rx="10" fill="#fff1a8" stroke="#c84a44" stroke-width="1.5"/>
+            <text x="1496" y="456" text-anchor="middle" class="hand" font-size="20" fill="#c84a44">WEB</text>
+
+            <rect x="1424" y="492" width="144" height="72" rx="10" fill="#fff1a8" stroke="#c84a44" stroke-width="1.5"/>
+            <text x="1496" y="522" text-anchor="middle" class="svg-text" font-size="15" fill="#c84a44">외부프로그램</text>
+            <text x="1496" y="548" text-anchor="middle" font-size="13" fill="#c84a44">외부 사이트</text>
+          </g>
+
+          <g id="arrowsPc" data-part>
+            <path d="M1248,298 C1248,332 1248,364 1248,400" fill="none" stroke="#3f6fbf" stroke-width="3" marker-end="url(#arrowBlue)" class="draw"/>
+            <path d="M1424,450 C1355,456 1320,458 1275,450" fill="none" stroke="#c84a44" stroke-width="2.5" marker-end="url(#arrowRed)" class="draw"/>
+            <path d="M1424,532 C1332,518 1268,495 1148,464" fill="none" stroke="#c84a44" stroke-width="2.5" marker-end="url(#arrowRed)" class="draw"/>
+          </g>
+
+          <g id="fullFlow" data-part>
+            <path d="M590,420 C740,320 820,292 970,352" fill="none" stroke="#3f6fbf" stroke-width="4" stroke-dasharray="10 10" marker-end="url(#arrowBlue)"/>
+            <path d="M1070,502 C1184,575 1338,578 1475,528" fill="none" stroke="#3f6fbf" stroke-width="4" stroke-dasharray="10 10" marker-end="url(#arrowBlue)"/>
+          </g>
+
+          <g id="stageBadgeCloud" data-part>
+            <rect x="70" y="720" width="300" height="54" rx="27" fill="#fff0ed" stroke="#c84a44"/>
+            <text x="220" y="754" text-anchor="middle" class="svg-text" font-size="20" fill="#c84a44">① 클라우드 LLM의 답변 영역</text>
+          </g>
+          <g id="stageBadgeAgent" data-part>
+            <rect x="286" y="672" width="330" height="54" rx="27" fill="#fff0ed" stroke="#c84a44"/>
+            <text x="451" y="706" text-anchor="middle" class="svg-text" font-size="20" fill="#c84a44">② 에이전트가 도구를 호출</text>
+          </g>
+          <g id="stageBadgeLimit" data-part>
+            <rect x="278" y="672" width="380" height="54" rx="27" fill="#fff0ed" stroke="#c84a44"/>
+            <text x="468" y="706" text-anchor="middle" class="svg-text" font-size="20" fill="#c84a44">③ 직접 제어 불가라는 경계</text>
+          </g>
+          <g id="stageBadgeBridge" data-part>
+            <rect x="738" y="680" width="318" height="54" rx="27" fill="#edf5ff" stroke="#3f6fbf"/>
+            <text x="897" y="714" text-anchor="middle" class="svg-text" font-size="20" fill="#3f6fbf">④ 브릿지/하네스가 연결</text>
+          </g>
+          <g id="stageBadgePc" data-part>
+            <rect x="972" y="618" width="372" height="54" rx="27" fill="#edf5ff" stroke="#3f6fbf"/>
+            <text x="1158" y="652" text-anchor="middle" class="svg-text" font-size="20" fill="#3f6fbf">⑤ 내 PC에서 실제 명령 수행</text>
+          </g>
+          <g id="stageBadgeAction" data-part>
+            <rect x="1115" y="680" width="410" height="54" rx="27" fill="#edf5ff" stroke="#3f6fbf"/>
+            <text x="1320" y="714" text-anchor="middle" class="svg-text" font-size="20" fill="#3f6fbf">⑥ 문서·웹·프로그램 자동 조작</text>
+          </g>
+          <g id="stageBadgeSummary" data-part>
+            <rect x="578" y="795" width="480" height="58" rx="29" fill="#111827"/>
+            <text x="818" y="832" text-anchor="middle" class="svg-text" font-size="22" fill="#fff">LLM은 판단, 브릿지는 연결, PC는 실행</text>
+          </g>
+        </svg>
+
+        <div class="caption-pill">
+          <span>Cloud LLM</span>
+          <span>Agent Tool Use</span>
+          <span>Bridge / Harness</span>
+          <span>Local Automation</span>
+        </div>
+      </div>
+
+      <aside class="panel">
+        <div>
+          <h2 id="panelTitle">전체 구조 보기</h2>
+          <p id="panelDesc">
+            왼쪽은 클라우드의 LLM과 에이전트 영역, 가운데는 브릿지/하네스, 오른쪽은 내 PC 자동화 영역입니다.
+            핵심은 “말로 답하는 AI”를 “실제 업무를 수행하는 자동화”로 연결하는 것입니다.
+          </p>
+          <div class="key" id="panelKey">
+            핵심 문장: LLM은 판단과 계획을 맡고, 브릿지는 권한과 통신을 연결하며, 내 PC는 실제 파일·웹·프로그램 조작을 수행합니다.
+          </div>
+        </div>
+        <div class="progress">
+          <div class="bar"><span id="barFill"></span></div>
+          <div class="steps-mini">
+            <span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span>
+          </div>
+        </div>
+      </aside>
+    </section>
+
+    <section class="frame" data-frame="0">
+      <div class="frame-card">
+        <strong>FRAME 0</strong>
+        <h3>전체 그림</h3>
+        <p>LLM, 에이전트, 브릿지, 내 PC 자동화가 하나의 흐름으로 이어집니다. 이 구조는 단순 챗봇을 넘어 실제 업무 자동화로 가는 구조입니다.</p>
+      </div>
+    </section>
+
+    <section class="frame" data-frame="1">
+      <div class="frame-card">
+        <strong>FRAME 1</strong>
+        <h3>클라우드 LLM</h3>
+        <p>LLM은 기본적으로 학습한 텍스트 패턴과 현재 대화 맥락을 바탕으로 답변합니다. 외부문서, 웹, 프로그램 정보는 직접 가지고 있는 것이 아니라 연결되어야 읽고 사용할 수 있습니다.</p>
+      </div>
+    </section>
+
+    <section class="frame" data-frame="2">
+      <div class="frame-card">
+        <strong>FRAME 2</strong>
+        <h3>에이전트의 역할</h3>
+        <p>에이전트는 LLM이 스스로 “무엇을 확인해야 하는지, 어떤 도구를 써야 하는지, 다음 행동은 무엇인지”를 계획하도록 만든 실행 패턴입니다.</p>
+      </div>
+    </section>
+
+    <section class="frame" data-frame="3">
+      <div class="frame-card">
+        <strong>FRAME 3</strong>
+        <h3>LLM의 한계</h3>
+        <p>클라우드 LLM은 내 PC의 운영체제, 로컬 파일, 파이썬 실행환경, 브라우저 내부 조작 권한을 기본적으로 갖고 있지 않습니다. 그래서 연결 계층이 필요합니다.</p>
+      </div>
+    </section>
+
+    <section class="frame" data-frame="4">
+      <div class="frame-card">
+        <strong>FRAME 4</strong>
+        <h3>브릿지와 하네스</h3>
+        <p>브릿지/하네스는 클라우드의 판단을 로컬 실행환경으로 안전하게 전달하는 중간 계층입니다. 명령을 번역하고, 권한을 제한하고, 결과를 다시 LLM에게 돌려줍니다.</p>
+      </div>
+    </section>
+
+    <section class="frame" data-frame="5">
+      <div class="frame-card">
+        <strong>FRAME 5</strong>
+        <h3>내 PC 자동화</h3>
+        <p>실제 실행은 내 PC에서 일어납니다. 운영체제 명령, 파이썬, 로컬 파일 접근, 엑셀·PDF·브라우저 자동화는 PC 쪽 실행환경이 담당합니다.</p>
+      </div>
+    </section>
+
+    <section class="frame" data-frame="6">
+      <div class="frame-card">
+        <strong>FRAME 6</strong>
+        <h3>코딩 에이전트</h3>
+        <p>Codex, Claude Code, Antigravity, Cursor 같은 코딩 에이전트는 이 구조를 개발 업무에 특화한 형태입니다. 파일을 읽고, 코드를 수정하고, 명령을 실행하며 결과를 다시 해석합니다.</p>
+      </div>
+    </section>
+
+    <section class="frame" data-frame="7">
+      <div class="frame-card">
+        <strong>FRAME 7</strong>
+        <h3>결론</h3>
+        <p>요약하면 LLM은 머리, 에이전트는 작업관리자, 브릿지는 연결장치, 내 PC는 손발입니다. 이 네 요소가 연결될 때 “답변 생성”이 “업무 수행”으로 바뀝니다.</p>
+      </div>
+    </section>
+  </main>
+
+  <section class="end">
+    <h2>설명 흐름 완료</h2>
+    <p>
+      이 HTML은 단일 파일로 동작합니다. 강의 중에는 스크롤을 내리면서 각 프레임을 설명하거나,
+      원본 스케치 토글 버튼으로 손그림과 정리된 구조를 비교해 보여줄 수 있습니다.
+    </p>
+    <a class="btn primary" href="#top">처음으로 돌아가기</a>
+  </section>
+
+<script>
+  const copy = [
+    {
+      label:"0. 전체 구조",
+      title:"전체 구조 보기",
+      desc:"왼쪽은 클라우드의 LLM과 에이전트 영역, 가운데는 브릿지/하네스, 오른쪽은 내 PC 자동화 영역입니다. 핵심은 말로 답하는 AI를 실제 업무를 수행하는 자동화로 연결하는 것입니다.",
+      key:"핵심 문장: LLM은 판단과 계획을 맡고, 브릿지는 권한과 통신을 연결하며, 내 PC는 실제 파일·웹·프로그램 조작을 수행합니다."
+    },
+    {
+      label:"1. 클라우드 LLM",
+      title:"LLM은 답변을 생성한다",
+      desc:"LLM은 학습된 언어 패턴과 현재 대화 맥락을 바탕으로 답합니다. 하지만 현재 시점의 웹, 내부 문서, 로컬 파일, 프로그램 상태를 자동으로 알고 있는 것은 아닙니다.",
+      key:"강의 포인트: LLM은 지식 데이터베이스가 아니라 언어 기반 추론·생성 엔진으로 이해시키는 것이 좋습니다."
+    },
+    {
+      label:"2. 에이전트",
+      title:"에이전트는 도구 사용을 계획한다",
+      desc:"에이전트는 LLM이 필요한 도구를 고르고, 실행 순서를 정하고, 결과를 다시 해석하도록 만드는 패턴입니다. 단순 답변에서 작업 수행으로 넘어가는 첫 단계입니다.",
+      key:"강의 포인트: 에이전트는 ‘AI가 알아서 한다’가 아니라 계획-호출-검증-수정 루프입니다."
+    },
+    {
+      label:"3. 한계와 경계",
+      title:"클라우드는 내 PC에 직접 손이 닿지 않는다",
+      desc:"클라우드 LLM은 기본적으로 사용자의 로컬 운영체제, 파일, 파이썬, 브라우저 내부를 직접 조작하지 못합니다. 보안과 권한 때문에 명확한 경계가 있습니다.",
+      key:"강의 포인트: 자동화가 안 되는 것이 아니라, 안전한 연결 통로가 따로 필요하다는 뜻입니다."
+    },
+    {
+      label:"4. 브릿지/하네스",
+      title:"브릿지가 명령을 전달한다",
+      desc:"브릿지 또는 하네스는 클라우드의 판단과 로컬 실행환경 사이를 연결합니다. 명령을 전달하고, 권한을 통제하고, 실행 결과를 다시 되돌려주는 중간 계층입니다.",
+      key:"예시: MCP, 로컬 서버, CLI, IDE 에이전트, 브라우저 확장, 커넥터가 이 역할을 수행할 수 있습니다."
+    },
+    {
+      label:"5. 내 PC 자동화",
+      title:"실행은 내 PC에서 일어난다",
+      desc:"파일 생성, 엑셀 처리, PDF 분리, 웹 자동화, 파이썬 실행, OS 명령 호출은 로컬 PC의 실행환경에서 수행됩니다. LLM은 지시하고 PC가 행동합니다.",
+      key:"강의 포인트: ‘AI 업무자동화’의 본질은 LLM 답변이 아니라 로컬 실행권한과 업무도구 연결입니다."
+    },
+    {
+      label:"6. 코딩 에이전트",
+      title:"코딩 에이전트는 이 구조의 실전형이다",
+      desc:"Codex, Claude Code, Antigravity, Cursor 같은 도구는 LLM이 프로젝트 파일을 읽고 코드를 수정하며 터미널 명령을 실행하는 형태입니다.",
+      key:"강의 포인트: 코딩 에이전트는 클라우드 모델 + 로컬 작업공간 + 실행권한 + 검증 루프가 결합된 사례입니다."
+    },
+    {
+      label:"7. 결론",
+      title:"답변 생성에서 업무 수행으로",
+      desc:"LLM은 머리, 에이전트는 작업관리자, 브릿지는 연결장치, PC는 손발입니다. 이 네 요소가 연결될 때 생성형 AI는 실제 업무 수행 시스템이 됩니다.",
+      key:"한 줄 요약: LLM은 판단하고, 에이전트는 계획하고, 브릿지는 연결하고, PC는 실행합니다."
+    }
+  ];
+
+  const frames = [...document.querySelectorAll("[data-frame]")];
+  const body = document.body;
+  const title = document.getElementById("panelTitle");
+  const desc = document.getElementById("panelDesc");
+  const key = document.getElementById("panelKey");
+  const label = document.getElementById("stageLabel");
+  const bar = document.getElementById("barFill");
+
+  function setStage(n) {
+    body.dataset.stage = String(n);
+    const c = copy[n] || copy[0];
+    title.textContent = c.title;
+    desc.textContent = c.desc;
+    key.textContent = c.key;
+    label.textContent = c.label;
+    bar.style.width = ((n / 7) * 100) + "%";
+  }
+
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const n = Number(entry.target.dataset.frame);
+        setStage(n);
+      }
+    });
+  }, { threshold: .56 });
+
+  frames.forEach(f => io.observe(f));
+
+  window.addEventListener("keydown", (e) => {
+    const current = Number(body.dataset.stage || 0);
+    if (e.key === "ArrowDown" || e.key === "PageDown") {
+      const next = Math.min(7, current + 1);
+      document.querySelector(`[data-frame="${next}"]`)?.scrollIntoView({behavior:"smooth", block:"center"});
+    }
+    if (e.key === "ArrowUp" || e.key === "PageUp") {
+      const prev = Math.max(0, current - 1);
+      document.querySelector(`[data-frame="${prev}"]`)?.scrollIntoView({behavior:"smooth", block:"center"});
+    }
+  });
+
+  setStage(0);
+</script>
+<script>/* kg-preview: #<heading> \uc704\uce58\ub85c \uc774\ub3d9 */
+(function(){function norm(t){return (t||'').replace(/\s+/g,'').toLowerCase()}
+function go(){var h=decodeURIComponent(location.hash.slice(1));if(!h)return;var k=norm(h).slice(0,24);if(!k)return;
+var best=null,bl=1e9,els=document.body.querySelectorAll('h1,h2,h3,h4,h5,p,div,span,li,td,text,tspan,section,article');
+for(var i=0;i<els.length;i++){var e=els[i],t=norm(e.textContent);if(t.length<bl&&t.indexOf(k)>-1){best=e;bl=t.length}}
+if(!best)return;var box=best.closest('section,[class*=slide],[class*=page],article')||best;
+box.scrollIntoView({block:'start'});box.style.outline='3px solid #c0504d';box.style.outlineOffset='4px';
+setTimeout(function(){box.style.outline=''},2600)}
+window.addEventListener('load',function(){setTimeout(go,400)});window.addEventListener('hashchange',go)})();</script></body>
+</html>

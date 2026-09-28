@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta name="robots" content="noindex, nofollow"><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>2026 ASTIS 거점기관 맞춤형 교육 · 바이브코딩 실무 교재 — 스켈레톤</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css">
+<style>
+:root{
+ --ink:#1a2432; --muted:#66748a; --faint:#94a1b3;
+ --navy:#17365c; --clay:#c0663f; --green:#2a7050;
+ --line:#d9e0e9; --hair:#e9eef4;
+ --paper:#ffffff; --desk:#e6eaf0; --soft:#f7f9fc;
+ --blue:#eef5fd; --mint:#eef8f2; --warn:#fdf6e8; --rose:#fdf0eb;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--desk);color:var(--ink);
+ font-family:Pretendard,'Pretendard Variable',sans-serif;
+ line-height:1.75;letter-spacing:-.024em;-webkit-font-smoothing:antialiased}
+
+/* ---------- toolbar ---------- */
+.bar{position:sticky;top:0;z-index:60;height:54px;background:#111c2e;color:#fff;
+ display:flex;align-items:center;gap:10px;padding:0 16px;box-shadow:0 3px 14px #00000033}
+.bar .bk{font-weight:800;font-size:13px;letter-spacing:-.02em;white-space:nowrap;
+ overflow:hidden;text-overflow:ellipsis;max-width:40vw}
+.bar .sp{margin-left:auto}
+.bar button,.bar select{height:32px;border:0;border-radius:7px;padding:0 10px;
+ font-family:inherit;font-weight:700;font-size:12.5px;cursor:pointer;background:#2b3c57;color:#fff}
+.bar button:hover{background:#3a4f70}
+.bar select{max-width:230px}
+.bar .pg{font-variant-numeric:tabular-nums;font-size:12.5px;color:#c3cddb;min-width:74px;text-align:center}
+.bar .go{background:var(--clay)}
+.bar .go:hover{background:#d0764e}
+
+/* ---------- page ---------- */
+.book{padding:26px 0 70px}
+.page{width:210mm;min-height:297mm;height:297mm;margin:0 auto 24px;background:var(--paper);
+ box-shadow:0 12px 34px #16243a24;position:relative;padding:16mm 17mm 14mm;overflow:hidden}
+.ph,.pf{position:absolute;left:17mm;right:17mm;display:flex;justify-content:space-between;
+ align-items:baseline;color:var(--faint);font-size:9.5px;letter-spacing:0}
+.ph{top:8mm;border-bottom:1px solid var(--hair);padding-bottom:4px}
+.ph b{color:var(--navy);font-weight:800;letter-spacing:-.01em}
+.pf{bottom:7mm;border-top:1px solid var(--hair);padding-top:4px}
+.pf b{color:var(--navy);font-size:11px;font-variant-numeric:tabular-nums}
+.body{height:100%;padding-top:7mm}
+
+h1{font-size:25px;line-height:1.3;margin:0 0 9px;color:#12263f;letter-spacing:-.045em;font-weight:800}
+.lead{font-size:13.6px;line-height:1.7;color:var(--muted);margin:0 0 16px;
+ border-bottom:1px solid var(--hair);padding-bottom:12px}
+.kicker{font-size:10.5px;font-weight:800;color:var(--clay);letter-spacing:.06em;margin:0 0 7px}
+
+/* ---------- skeleton placeholder ---------- */
+.slot{border:1.4px dashed #c2cedd;border-radius:12px;background:
+ repeating-linear-gradient(135deg,#fbfcfe 0 9px,#f4f7fb 9px 18px);padding:15px 17px;margin:0}
+.slot .st{font-size:10.5px;font-weight:800;color:#7c8ca1;letter-spacing:.05em;margin-bottom:9px}
+.slot ul{margin:0;padding-left:0;list-style:none}
+.slot li{font-size:13px;line-height:1.62;margin:0 0 8px;padding-left:19px;position:relative;color:#2f3d51}
+.slot li:last-child{margin-bottom:0}
+.slot li:before{content:"";position:absolute;left:4px;top:8px;width:6px;height:6px;
+ border-radius:50%;background:var(--clay);opacity:.55}
+
+.note{margin-top:13px;background:var(--warn);border-left:4px solid #c9942f;border-radius:9px;
+ padding:10px 13px;font-size:12.6px;line-height:1.62;color:#6a5324}
+
+.prac .slot{border-color:#a8cfba;background:repeating-linear-gradient(135deg,#f6fcf8 0 9px,#eef8f2 9px 18px)}
+.prac .slot li:before{background:var(--green);opacity:.6}
+.prac h1{color:#1c5740}
+.prac .kicker{color:var(--green)}
+.badge{display:inline-block;background:var(--green);color:#fff;font-size:10px;font-weight:800;
+ letter-spacing:.05em;padding:3px 9px;border-radius:20px;vertical-align:3px;margin-left:8px}
+
+/* ---------- cover ---------- */
+.cover{display:flex;flex-direction:column;background:
+ linear-gradient(168deg,#12263f 0%,#17365c 46%,#1d4370 100%);color:#fff}
+.cover .body{display:flex;flex-direction:column;height:100%;padding-top:0}
+.cv-top{font-size:11.5px;letter-spacing:.14em;font-weight:700;color:#93b2d6;margin-top:14mm}
+.cv-rule{width:62px;height:3px;background:var(--clay);margin:18px 0 26px}
+.cover h1{font-size:44px;line-height:1.24;color:#fff;letter-spacing:-.05em;margin:0;font-weight:800}
+.cover .cv-sub{font-size:17px;color:#b9cde6;margin:18px 0 0;line-height:1.6;letter-spacing:-.03em;font-weight:500}
+.cv-fill{flex:1}
+.cv-meta{border-top:1px solid #ffffff2e;padding-top:16px;display:grid;
+ grid-template-columns:1fr 1fr;gap:11px 26px;font-size:12.5px;color:#c6d6e8}
+.cv-meta b{display:block;font-size:10px;letter-spacing:.1em;color:#7e9dc4;font-weight:800;margin-bottom:3px}
+.cv-draft{margin-top:20px;font-size:11.5px;color:#f0b596;letter-spacing:-.01em}
+
+/* ---------- part divider ---------- */
+.divi{display:flex;flex-direction:column;background:#fbfcfe}
+.divi .body{display:flex;flex-direction:column;height:100%}
+.dv-no{font-size:88px;font-weight:800;color:var(--clay);line-height:1;letter-spacing:-.06em;
+ opacity:.9;margin-top:24mm;font-style:italic}
+.divi h1{font-size:38px;margin:14px 0 0;color:#12263f;letter-spacing:-.05em}
+.divi .dv-sub{font-size:16px;color:var(--muted);margin:13px 0 0;line-height:1.6;letter-spacing:-.03em}
+.dv-rule{width:56px;height:3px;background:var(--navy);margin:22px 0 16px}
+.dv-list{margin:0;padding:0;list-style:none;border-top:1px solid var(--hair)}
+.dv-list li{font-size:12.8px;color:#3c4a5e;padding:7px 0;border-bottom:1px solid var(--hair);
+ display:flex;gap:12px;align-items:baseline}
+.dv-list li i{font-style:normal;color:var(--faint);font-size:11px;font-variant-numeric:tabular-nums;
+ min-width:26px;font-weight:700}
+.dv-list li em{font-style:normal;color:var(--clay);font-size:10.5px;font-weight:800;margin-left:auto}
+.dv-fill{flex:1}
+.dv-list.c2{columns:2;column-gap:26px;border-top:none}
+.dv-list.c2 li{padding:5.5px 0;font-size:11.8px;break-inside:avoid;border-top:1px solid var(--hair);border-bottom:none}
+.dv-list.c2 li i{min-width:22px;font-size:10px}
+.dv-list.c2 li em{font-size:9.5px}
+.dv-list.c2 li span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+@media print{
+ body{background:#fff}
+ .bar{display:none}
+ .book{padding:0}
+ .page{box-shadow:none;margin:0;break-after:page;page-break-after:always}
+ @page{size:A4;margin:0}
+}
+@media (max-width:840px){
+ .page{width:100%;min-height:auto;height:auto;padding:22px 20px 26px}
+ .ph,.pf{position:static;left:auto;right:auto}
+ .body{height:auto;padding-top:14px}
+ .cover h1{font-size:32px}
+ .dv-no{font-size:62px;margin-top:8px}
+ .divi h1{font-size:28px}
+ .bar .bk{max-width:30vw}
+}
+</style></head>
+<body>
+<div class="bar">
+ <span class="bk">ASTIS 바이브코딩 실무 교재 · 스켈레톤</span>
+ <select id="jump"><option value="">목차로 이동…</option><option value="1" style="font-weight:800">0부 오리엔테이션</option><option value="2">　　1. 이 교재는 읽는 책이 아니라 따라 만드는 책입니다</option><option value="3">　　2. 이틀 동안 이렇게 움직입니다</option><option value="4">　　3. 가져오실 것과 미리 해두실 것</option><option value="5">　　4. 이틀 뒤 여러분 손에 남는 것</option><option value="6">　　5. 평가는 100점, 그러나 잘 만든 코드를 보지 않습니다</option><option value="7" style="font-weight:800">1부 바이브코딩의 기본</option><option value="8">　　6. 에이전트가 내놓는 것은 결국 다섯 가지 중 하나입니다</option><option value="9">　　7. 코드를 못 짜도 됩니다. 재료를 고를 줄만 알면 됩니다</option><option value="10">　　8. 모든 작업은 폴더 세 개에서 시작합니다</option><option value="11">　　9. 파이썬은 &#x27;많고 반복될 때&#x27; 쓰는 재료입니다</option><option value="12">　　10. 무엇이 설치되고 어디에서 실행되는 걸까요</option><option value="13">　　11. 흩어진 엑셀 열두 개를 한 장으로 만듭니다</option><option value="14">　　12. 합친 다음에는 집계와 그림입니다</option><option value="15">　　13. 같은 숫자로 보고서까지 만들어 둡니다</option><option value="16">　　14. 한글 문서는 사실 압축파일입니다</option><option value="17">　　15. 결과를 의심하는 세 가지를 몸에 붙입니다</option><option value="18">　　16. 실습 · 월별 엑셀 12개를 통합하고 보고서까지</option><option value="19">　　17. 파워셸은 윈도우에 이미 들어 있습니다</option><option value="20">　　18. 파일 수백 개를 규칙대로 정리합니다</option><option value="21">　　19. 먼저 목록만 보고, 그 다음에 실행합니다</option><option value="22">　　20. 매주 월요일 아침에 혼자 돌게 만듭니다</option><option value="23">　　21. 실습 · 현장 사진과 문서 500개를 규칙대로 정리하기</option><option value="24">　　22. 브라우저는 이미 설치되어 있는 실행 환경입니다</option><option value="25">　　23. 화면 하나는 네 구역으로 되어 있습니다</option><option value="26">　　24. 입력 폼과 점검 체크리스트를 만듭니다</option><option value="27">　　25. 데이터를 얹으면 뷰어와 대시보드가 됩니다</option><option value="28">　　26. 혼자 쓰면 파일 하나, 여럿이 쓰면 러버블입니다</option><option value="29">　　27. 실습 · 현장점검 입력 폼 한 장 만들기</option><option value="30">　　28. 엑셀 밖으로 안 나가도 되는 일이 있습니다</option><option value="31">　　29. 수식으로 끝나는 일과 매크로가 필요한 일</option><option value="32">　　30. 매크로 파일은 저장 방식과 보안 설정이 다릅니다</option><option value="33">　　31. 여기서부터는 파이썬으로 넘어가는 편이 빠릅니다</option><option value="34">　　32. 실습 · 반복 취합을 버튼 하나로</option><option value="35">　　33. 내 PC 밖에도 쓸 데이터가 있습니다</option><option value="36">　　34. API는 정해진 주소로 물어보면 정해진 모양으로 답이 오는 것</option><option value="37">　　35. 공공데이터포털에서 열쇠를 받는 데까지가 절반입니다</option><option value="38">　　36. 농촌지도 업무에 바로 쓰는 네 가지</option><option value="39">　　37. RSS는 새 글이 올라오면 알려 주는 목록입니다</option><option value="40">　　38. 모은 것을 한 장으로 묶어 둡니다</option><option value="41">　　39. 바깥 데이터를 ASTIS 데이터와 붙입니다</option><option value="42">　　40. 실습 · 관할지역 아침 브리핑 한 장 만들기</option><option value="43">　　41. 질문 네 개로 고릅니다</option><option value="44">　　42. 실제 업무는 대개 섞입니다</option><option value="45">　　43. 막혔을 때는 세 가지만 하시면 됩니다</option><option value="46" style="font-weight:800">2부 재료별 심화</option><option value="47">　　44. 표가 아닌 것들도 결국 표로 바꾸는 일입니다</option><option value="48">　　45. PDF는 세 종류이고 꺼내는 방법이 다릅니다</option><option value="49">　　46. 공문에서 필요한 항목만 뽑아냅니다</option><option value="50">　　47. 표가 들어 있는 PDF는 따로 다룹니다</option><option value="51">　　48. 꺼낸 것이 맞는지 확인하는 법</option><option value="52">　　49. 실습 · 공문 10건을 엑셀 목록으로</option><option value="53">　　50. 현장의 말은 가장 많이 버려지는 데이터입니다</option><option value="54">　　51. 녹음을 텍스트로 바꿉니다 — 인터넷 없이도</option><option value="55">　　52. 받아쓴 것을 정해진 서식으로 정리합니다</option><option value="56">　　53. 안내문을 음성으로 만듭니다</option><option value="57">　　54. 개인정보가 섞인 녹음을 다룰 때</option><option value="58">　　55. 실습 · 현장 녹음을 상담일지로</option><option value="59">　　56. 현장 사진과 손글씨도 데이터입니다</option><option value="60">　　57. 사진에서 글자를 꺼냅니다</option><option value="61">　　58. 정해진 서식의 사진은 훨씬 정확합니다</option><option value="62">　　59. 사진 자체를 정리하는 일도 있습니다</option><option value="63">　　60. 실습 · 현장 서식 사진 20장을 표로</option><option value="64" style="font-weight:800">3부 프로젝트</option><option value="65">　　61. 지금부터는 배우지 않고 만듭니다</option><option value="66">　　62. 무엇이 불편한지부터 한 문장으로 적습니다</option><option value="67">　　63. 무엇으로 만들지 고릅니다</option><option value="68">　　64. 요청문을 먼저 씁니다. 그 다음에 시킵니다</option><option value="69">　　65. 구현 진행표 · 1시간째</option><option value="70">　　66. 구현 진행표 · 2시간째</option><option value="71">　　67. 구현 진행표 · 3시간째</option><option value="72">　　68. 검증 체크리스트 — 이것을 통과해야 완성입니다</option><option value="73">　　69. 다음 사람이 다시 돌릴 수 있게 한 장을 씁니다</option><option value="74">　　70. 3분 발표 양식</option><option value="75">　　71. 평가 100점 세부 기준</option><option value="76">　　72. 상반기 우수사례 6선 — 무엇을 가져다 쓸 수 있는가</option><option value="77" style="font-weight:800">4부 돌아가서</option><option value="78">　　73. 복귀 후 7일 작업표</option><option value="79">　　74. 도구가 고장 났을 때</option><option value="80">　　75. 업무망과 개인정보 취급 기준</option><option value="81">　　76. 옆자리에 넘기는 법</option><option value="82">　　77. 다음에 만들 것</option><option value="83">　　78. 맺음</option><option value="84" style="font-weight:800">부록 부록</option><option value="85">　　79. 부록 A · 에이전트가 만드는 파일들</option><option value="86">　　80. 부록 B · 오류 사전</option><option value="87">　　81. 부록 C · 용어집</option><option value="88">　　82. 부록 D · 별책 실습카드 안내</option></select>
+ <span class="sp"></span>
+ <button id="prev">◀</button>
+ <span class="pg" id="pg">표지</span>
+ <button id="next">▶</button>
+ <button id="print" class="go">인쇄 · PDF</button>
+</div>
+<div class="book">
+<section class="page cover" data-no="-">
+<div class="body">
+<div class="cv-top">농촌진흥청 · 2026</div>
+<div class="cv-rule"></div>
+<h1>바이브코딩<br>실무 교재</h1>
+<p class="cv-sub">내 업무 도구 하나를 완성해서 돌아가는 1박 2일</p>
+<div class="cv-fill"></div>
+<div class="cv-meta">
+<div><b>과정</b>2026 ASTIS 거점기관 맞춤형 교육 및 컨설팅</div>
+<div><b>일시</b>2026. 9. 29.(화) ~ 9. 30.(수)</div>
+<div><b>장소</b>인적자원개발센터 206호</div>
+<div><b>진행</b>한국데이터사이언티스트협회 · 신성진 · 이중균</div>
+</div>
+<div class="cv-draft">※ 스켈레톤(설계본) — 표지 제목은 가제이며 본문은 구성안입니다.</div>
+</div></section><section class="page divi" data-no="0부">
+<div class="body">
+<div class="dv-no">0부</div>
+<h1>오리엔테이션</h1>
+<p class="dv-sub">무엇을 만들고 무엇으로 평가받는가</p>
+<div class="dv-rule"></div>
+<ul class="dv-list"><li><i>1</i><span>이 교재는 읽는 책이 아니라 따라 만드는 책입니다</span></li><li><i>2</i><span>이틀 동안 이렇게 움직입니다</span></li><li><i>3</i><span>가져오실 것과 미리 해두실 것</span></li><li><i>4</i><span>이틀 뒤 여러분 손에 남는 것</span></li><li><i>5</i><span>평가는 100점, 그러나 잘 만든 코드를 보지 않습니다</span></li></ul>
+<div class="dv-fill"></div>
+</div></section><section class="page" data-no="1">
+<div class="ph"><b>0부 오리엔테이션</b><span>2026 ASTIS 거점기관 맞춤형 교육 · 바이브코딩 실무 교재</span></div><div class="pf"><span>농촌진흥청 · 2026. 9. 29.(화) ~ 9. 30.(수)</span><b>1</b></div>
+<div class="body">
+<p class="kicker">0부 오리엔테이션</p>
+<h1>이 교재는 읽는 책이 아니라 따라 만드는 책입니다</h1>
+<p class="lead">왼쪽 페이지에서 무엇인지 이해하고, 오른쪽 페이지에서 바로 시킵니다. 이틀 뒤 손에 남는 것은 지식이 아니라 파일입니다.</p>
+<div class="slot"><div class="st">이 페이지에 들어갈 것</div><ul><li>교재 구성 — 0부 준비 / 1부 다섯 가지 기본기 / 2부 재료별 심화 / 3부 내 도구 완성 / 4부 복귀</li><li>페이지 표시 규칙 — 요청문 박스, 확인 박스, 주의 박스, 실습 박스 네 종류</li><li>별책 실습카드를 언제 펴는지</li><li>혼자 막혔을 때 부록 B 오류 사전으로 가는 길</li></ul></div>
+
+</div></section><section class="page" data-no="2">
+<div class="ph"><b>0부 오리엔테이션</b><span>2026 ASTIS 거점기관 맞춤형 교육 · 바이브코딩 실무 교재</span></div><div class="pf"><span>농촌진흥청 · 2026. 9. 29.(화) ~ 9. 30.(수)</span><b>2</b></div>
+<div class="body">
+<p class="kicker">0부 오리엔테이션</p>
+<h1>이틀 동안 이렇게 움직입니다</h1>
+<p class="lead">첫날은 다섯 가지 기본기를 각각 한 번씩 돌려봅니다. 둘째 날은 그중 골라서 내 업무 도구를 완성합니다.</p>
+<div class="slot"><div class="st">이 페이지에 들어갈 것</div><ul><li>9.29(화) 10:00 오리엔테이션 · 10:30 1부 기본기 5종 · 14:00 이어서 · 16:00 2부 재료 심화 택1</li><li>9.30(수) 09:00 3부 프로젝트 구현 · 13:00 검증과 마무리 · 14:00 발표</li><li>쉬는 시간과 점심 표기</li><li>강사 2인 배치 — 순회 코칭 구간 표시</li></ul></div>
+
+</div></section><section class="page" data-no="3">
+<div class="ph"><b>0부 오리엔테이션</b><span>2026 ASTIS 거점기관 맞춤형 교육 · 바이브코딩 실무 교재</span></div><div class="pf"><span>농촌진흥청 · 2026. 9. 29.(화) ~ 9. 30.(수)</span><b>3</b></div>
+<div class="body">
+<p class="kicker">0부 오리엔테이션</p>
+<h1>가져오실 것과 미리 해두실 것</h1>
+<p class="lead">자기 데이터가 있으면 이틀의 결과물이 달라집니다. 없으면 제공 데이터로 진행합니다.</p>
+<div class="slot"><div class="st">이 페이지에 들어갈 것</div><ul><li>필수 — 노트북(업무망 또는 인터넷), 마우스</li><li>있으면 좋은 것 — 손이 제일 많이 가는 엑셀 3개, 최근 공문 PDF 5개, 현장 녹음 파일</li><li>제공 데이터 — ASTIS 실습 데이터셋 1,500행(2024.1~2025.4, 20개 항목) XLSX·CSV</li><li>미리 확인 — 관리자 권한 설치 가능 여부, 인터넷 접속 가능 여부</li></ul></div>
+
+</div></section><section class="page" data-no="4">
+<div class="ph"><b>0부 오리엔테이션</b><span>2026 ASTIS 거점기관 맞춤형 교육 · 바이브코딩 실무 교재</span></div><div class="pf"><span>농촌진흥청 · 2026. 9. 29.(화) ~ 9. 30.(수)</span><b>4</b></div>
+<div class="body">
+<p class="kicker">0부 오리엔테이션</p>
+<h1>이틀 뒤 여러분 손에 남는 것</h1>
+<p class="lead">산출물의 정의를 먼저 못 박습니다. 무엇을 만들면 완성인지 알아야 시간을 배분할 수 있습니다.</p>
+<div class="slot"><div class="st">이 페이지에 들어갈 것</div><ul><li>완성의 정의 — 내 실제 데이터로 돌아가고, 내일 다시 돌릴 수 있고, 옆자리에 넘길 수 있는 것</li><li>산출물 4종 중 택1 — 정제된 표 / 자동 보고서 / 화면 도구 / 자동 수집 브리핑</li><li>제출물 — 실행 파일, 사용 설명 1장, 3분 발표</li><li>상반기 6개 기관 산출물 사진과 링크 (safety-public · hham-farm-vision · expert-control · supercharge · sunny-public · hampyeong)</li></ul></div>
+
+</div></section><section class="page" data-no="5">
+<div class="ph"><b>0부 오리엔테이션</b><span>2026 ASTIS 거점기관 맞춤형 교육 · 바이브코딩 실무 교재</span></div><div class="pf"><span>농촌진흥청 · 2026. 9. 29.(화) ~ 9. 30.(수)</span><b>5</b></div>
+<div class="body">
+<p class="kicker">0부 오리엔테이션</p>
+<h1>평가는 100점, 그러나 잘 만든 코드를 보지 않습니다</h1>
+<p class="lead">코드의 품질이 아니라 업무가 실제로 줄었는지, 다시 돌아가는지, 남에게 넘어가는지를 봅니다.</p>
+<div class="slot"><div class="st">이 페이지에 들어갈 것</div><ul><li>실효성 30 — 실제 업무 시간이 줄었는가</li><li>재현성 25 — 내일 다시 돌려도 같은 결과가 나오는가</li><li>검증 20 — 결과가 맞다는 것을 무엇으로 확인했는가</li><li>인수인계 15 — 다른 사람이 설명서만 보고 돌릴 수 있는가</li><li>확장성 10 — 옆 업무에도 응용할 여지가 있는가</li></ul></div>
+
+</div></section><section class="page divi" data-no="1부">
+<div class="body">
+<div class="dv-no" style="margin-top:14mm">1부</div>
+<h1>바이브코딩의 기본</h1>
+<p class="dv-sub">에이전트가 만들어 주는 것은 무엇으로 만들어지는가</p>
+<div class="dv-rule"></div>
+<ul class="dv-list c2"><li><i>6</i><span>에이전트가 내놓는 것은 결국 다섯 가지 중 하나입니다</span></li><li><i>7</i><span>코드를 못 짜도 됩니다. 재료를 고를 줄만 알면 됩니다</span></li><li><i>8</i><span>모든 작업은 폴더 세 개에서 시작합니다</span></li><li><i>9</i><span>파이썬은 &#x27;많고 반복될 때&#x27; 쓰는 재료입니다</span></li><li><i>10</i><span>무엇이 설치되고 어디에서 실행되는 걸까요</span></li><li><i>11</i><span>흩어진 엑셀 열두 개를 한 장으로 만듭니다</span></li><li><i>12</i><span>합친 다음에는 집계와 그림입니다</span></li><li><i>13</i><span>같은 숫자로 보고서까지 만들어 둡니다</span></li><li><i>14</i><span>한글 문서는 사실 압축파일입니다</span></li><li><i>15</i><span>결과를 의심하는 세 가지를 몸에 붙입니다</span></li><li><i>16</i><span>실습 · 월별 엑셀 12개를 통합하고 보고서까지</span><em>실습</em></li><li><i>17</i><span>파워셸은 윈도우에 이미 들어 있습니다</span></li><li><i>18</i><span>파일 수백 개를 규칙대로 정리합니다</span></li><li><i>19</i><span>먼저 목록만 보고, 그 다음에 실행합니다</span></li><li><i>20</i><span>매주 월요일 아침에 혼자 돌게 만듭니다</span></li><li><i>21</i><span>실습 · 현장 사진과 문서 500개를 규칙대로 정리하기</span><em>실습</em></li><li><i>22</i><span>브라우저는 이미 설치되어 있는 실행 환경입니다</span></li><li><i>23</i><span>화면 하나는 네 구역으로 되어 있습니다</span></li><li><i>24</i><span>입력 폼과 점검 체크리스트를 만듭니다</span></li><li><i>25</i><span>데이터를 얹으면 뷰어와 대시보드가 됩니다</span></li><li><i>26</i><span>혼자 쓰면 파일 하나, 여럿이 쓰면 러버블입니다</span></li><li><i>27</i><span>실습 · 현장점검 입력 폼 한 장 만들기</span><em>실습</em></li><li><i>28</i><span>엑셀 밖으로 안 나가도 되는 일이 있습니다</span></li><li><i>29</i><span>수식으로 끝나는 일과 매크로가 필요한 일</span></li><li><i>30</i><span>매크로 파일은 저장 방식과 보안 설정이 다릅니다</span></li><li><i>31</i><span>여기서부터는 파이썬으로 넘어가는 편이 빠릅니다</span></li><li><i>32</i><span>실습 · 반복 취합을 버튼 하나로</span><em>실습</em></li><li><i>33</i><span>내 PC 밖에도 쓸 데이터가 있습니다</span></li><li><i>34</i><span>API는 정해진 주소로 물어보면 정해진 모양으로 답이 오는 것입니다</span></li><li><i>35</i><span>공공데이터포털에서 열쇠를 받는 데까지가 절반입니다</span></li><li><i>36</i><span>농촌지도 업무에 바로 쓰는 네 가지</span></li><li><i>37</i><span>RSS는 새 글이 올라오면 알려 주는 목록입니다</span></li><li><i>38</i><span>모은 것을 한 장으로 묶어 둡니다</span></li><li><i>39</i><span>바깥 데이터를 ASTIS 데이터와 붙입니다</span></li><li><i>40</i><span>실습 · 관할지역 아침 브리핑 한 장 만들기</span><em>실습</em></li><li><i>41</i><span>질문 네 개로 고릅니다</span></li><li><i>42</i><span>실제 업무는 대개 섞입니다</span></li><li><i>43</i><span>막혔을 때는 세 가지만 하시면 됩니다</span></li></ul>
+<div class="dv-fill"></div>
+</div></section><section class="page" data-no="6">
+<div class="ph"><b>1부 바이브코딩의 기본</b><span>2026 ASTIS 거점기관 맞춤형 교육 · 바이브코딩 실무 교재</span></div><div class="pf"><span>농촌진흥청 · 2026. 9. 29.(화) ~ 9. 30.(수)</span><b>6</b></div>
+<div class="body">
+<p class="kicker">1부 바이브코딩의 기본</p>
+<h1>에이전트가 내놓는 것은 결국 다섯 가지 중 하나입니다</h1>
+<p class="lead">자연어로 시키면 코드가 나옵니다. 그런데 그 코드는 아무 코드가 아니라 다섯 갈래 중 하나입니다. 이 다섯을 구분할 줄 알면 요청이 정확해집니다.</p>
+<div class="slot"><div class="st">이 페이지에 들어갈 것</div><ul><li>도식 — 파이썬 / 파워셸 / HTML / VBA / 바깥 데이터(API·RSS) 다섯 갈래 한 장</li><li>각각 무엇을 잘하고 무엇을 못하는가 대조표</li><li>문법을 배우는 것이 아니라 &#x27;무엇으로 만들지&#x27;를 고르는 법을 배웁니다</li><li>이 다섯이 2부·3부 내내 반복해서 돌아옵니다</li></ul></div>
+
+</div></section><section class="page" data-no="7">
+<div class="ph"><b>1부 바이브코딩의 기본</b><span>2026 ASTIS 거점기관 맞춤형 교육 · 바이브코딩 실무 교재</span></div><div class="pf"><span>농촌진흥청 · 2026. 9. 29.(화) ~ 9. 30.(수)</span><b>7</b></div>
+<div class="body">
+<p class="kicker">1부 바이브코딩의 기본</p>
+<h1>코드를 못 짜도 됩니다. 재료를 고를 줄만 알면 됩니다</h1>
+<p class="lead">목수에게 일을 시키려면 목재인지 철재인지는 알아야 합니다. 대패질을 할 줄 알 필요는 없습니다.</p>
+<div class="slot"><div class="st">이 페이지에 들어갈 것</div><ul><li>비유 — 한글 문서가 압축파일인 것을 알면 공문 자동 생성이 보인다</li><li>&#x27;무엇으로 만들어지는가&#x27;를 아는 사람이 정확하게 시킨다</li><li>상반기 6명이 산출물을 낸 이유 / 나머지가 못 낸 이유</li><li>오늘 배우는 것은 코딩이 아니라 판단</li></ul></div>
+
+</div></section><section class="page" data-no="8">
+<div class="ph"><b>1부 바이브코딩의 기본</b><span>2026 ASTIS 거점기관 맞춤형 교육 · 바이브코딩 실무 교재</span></div><div class="pf"><span>농촌진흥청 · 2026. 9. 29.(화) ~ 9. 30.(수)</span><b>8</b></div>
+<div class="body">
+<p class="kicker">1부 바이브코딩의 기본</p>
+<h1>모든 작업은 폴더 세 개에서 시작합니다</h1>
+<p class="lead">에이전트에게 준 폴더 밖은 존재하지 않습니다. 원본·작업·결과를 나누는 습관 하나가 사고를 막습니다.</p>
+<div class="slot"><div class="st">이 페이지에 들어갈 것</div><ul><li>폴더 구조 그림 — 00_원본 / 10_작업 / 20_결과</li><li>원본은 절대 건드리지 않는다 — 읽기 전용 설정</li><li>오늘 만들 폴더 이름 정하기 (실습 준비)</li><li>주의 — 바탕화면과 다운로드 폴더에서 바로 작업하지 않는 이유</li></ul></div>
+
+</div></section><section class="page" data-no="9">
+<div class="ph"><b>1부 바이브코딩의 기본</b><span>2026 ASTIS 거점기관 맞춤형 교육 · 바이브코딩 실무 교재</span></div><div class="pf"><span>농촌진흥청 · 2026. 9. 29.(화) ~ 9. 30.(수)</span><b>9</b></div>
+<div class="body">
+<p class="kicker">1.1 파이썬</p>
+<h1>파이썬은 &#x27;많고 반복될 때&#x27; 쓰는 재료입니다</h1>
+<p class="lead">파일이 열 개를 넘어가고, 그 일을 다음 달에도 또 해야 한다면 파이썬입니다.</p>
+<div class="slot"><div class="st">이 페이지에 들어갈 것</div><ul><li>언제 파이썬인가 — 판단 기준 3줄</li><li>할 수 있는 일 목록 — 표·문서·이미지·음성·통계·차트·보고서</li><li>약점 하나 — 설치가 필요하다</li><li>설치가 막혔을 때 어디로 가는지 미리 표시 (→ 1.2 파워셸, 1.3 HTML)</li></ul></div>
+
+</div></section><section class="page" data-no="10">
+<div class="ph"><b>1부 바이브코딩의 기본</b><span>2026 ASTIS 거점기관 맞춤형 교육 · 바이브코딩 실무 교재</span></div><div class="pf"><span>농촌진흥청 · 2026. 9. 29.(화) ~ 9. 30.(수)</span><b>10</b></div>
+<div class="body">
+<p class="kicker">1.1 파이썬</p>
+<h1>무엇이 설치되고 어디에서 실행되는 걸까요</h1>
+<p class="lead">내 PC 어딘가에 파이썬이 깔리고, 에이전트가 쓴 .py 파일이 그 위에서 돕니다. 이 그림만 잡으면 오류가 무섭지 않습니다.</p>
+<div class="slot"><div class="st">이 페이지에 들어갈 것</div><ul><li>도식 — 파이썬 본체 / 라이브러리 / 내가 만든 .py 파일 / 실행 결과</li><li>라이브러리는 &#x27;남이 만들어 둔 도구 상자&#x27; — pandas, openpyxl, python-docx</li><li>설치 명령 한 줄과 그것이 하는 일</li><li>업무망에서 설치가 막힐 때 나타나는 화면과 대처</li></ul></div>
+
+</div></section><section class="page" data-no="11">
+<div class="ph"><b>1부 바이브코딩의 기본</b><span>2026 ASTIS 거점기관 맞춤형 교육 · 바이브코딩 실무 교재</span></div><div class="pf"><span>농촌진흥청 · 2026. 9. 29.(화) ~ 9. 30.(수)</span><b>11</b></div>
+<div class="body">
+<p class="kicker">1.1 파이썬</p>
+<h1>흩어진 엑셀 열두 개를 한 장으로 만듭니다</h1>
+<p class="lead">월별로 따로 쌓인 파일을 하나로 합치는 일. 손으로 하면 반나절, 시켜서 하면 몇 분입니다.</p>
+<div class="slot"><div class="st">이 페이지에 들어갈 것</div><ul><li>요청문 전문 — 입력 폴더 / 규칙 / 출력 파일과 형식</li><li>나쁜 요청과 좋은 요청 대조</li><li>원본 파일명을 열 하나로 남겨 두는 이유</li><li>결과 화면과 만들어진 파일</li></ul></div>
+
+</div></section><section class="page" data-no="12">
+<div class="ph"><b>1부 바이브코딩의 기본</b><span>2026 ASTIS 거점기관 맞춤형 교육 · 바이브코딩 실무 교재</span></div><div class="pf"><span>농촌진흥청 · 2026. 9. 29.(화) ~ 9. 30.(수)</span><b>12</b></div>
+<div class="body">
+<p class="kicker">1.1 파이썬</p>
+<h1>합친 다음에는 집계와 그림입니다</h1>
+<p class="lead">숫자를 지역별·작목별·월별로 묶고, 물어보려는 질문에 맞는 그림을 고릅니다.</p>
+<div class="slot"><div class="st">이 페이지에 들어갈 것</div><ul><li>집계 요청문 — 무엇을 기준으로 무엇을 세는가</li><li>질문 유형별 차트 선택표 (비교는 막대 / 추이는 선 / 구성은 누적)</li><li>한글이 깨질 때 — 윈도우 폰트 설정 한 줄</li><li>차트를 해석할 때 사실과 추측을 나누는 법</li></ul></div>
+
+</div></section><section class="page" data-no="13">
+<div class="ph"><b>1부 바이브코딩의 기본</b><span>2026 ASTIS 거점기관 맞춤형 교육 · 바이브코딩 실무 교재</span></div><div class="pf"><span>농촌진흥청 · 2026. 9. 29.(화) ~ 9. 30.(수)</span><b>13</b></div>
+<div class="body">
+<p class="kicker">1.1 파이썬</p>
+<h1>같은 숫자로 보고서까지 만들어 둡니다</h1>
+<p class="lead">집계한 숫자를 Word 한 쪽과 PPT 다섯 장으로 자동 생성합니다. 숫자가 바뀌면 다시 돌리면 됩니다.</p>
+<div class="slot"><div class="st">이 페이지에 들어갈 것</div><ul><li>요청문 — 표·그래프가 들어간 Word 1쪽</li><li>요청문 — 브리핑용 PPT 5장 구성</li><li>보고서 문장을 사람이 고쳐야 하는 자리 표시</li><li>다음 달에 다시 돌리는 법</li></ul></div>
+
+</div></section><section class="page" data-no="14">
+<div class="ph"><b>1부 바이브코딩의 기본</b><span>2026 ASTIS 거점기관 맞춤형 교육 · 바이브코딩 실무 교재</span></div><div class="pf"><span>농촌진흥청 · 2026. 9. 29.(화) ~ 9. 30.(수)</span><b>14</b></div>
+<div class="body">
+<p class="kicker">1.1 파이썬</p>
+<h1>한글 문서는 사실 압축파일입니다</h1>
+<p class="lead">HWPX의 확장자를 zip으로 바꿔 풀면 XML이 나옵니다. 구조를 알면 공문도 자동으로 만들 수 있습니다.</p>
+<div class="slot"><div class="st">이 페이지에 들어갈 것</div><ul><li>실제로 풀어 보기 — 안에 무엇이 들어 있는가</li><li>공문 서식을 틀로 두고 내용만 갈아 끼우는 방식</li><li>쓸 수 있는 자리 — 반복 공문, 통지문, 증명서</li><li>주의 — 서식이 복잡하면 손으로 마무리하는 편이 빠릅니다</li></ul></div>
+
+</div></section><section class="page" data-no="15">
+<div class="ph"><b>1부 바이브코딩의 기본</b><span>2026 ASTIS 거점기관 맞춤형 교육 · 바이브코딩 실무 교재</span></div><div class="pf"><span>농촌진흥청 · 2026. 9. 29.(화) ~ 9. 30.(수)</span><b>15</b></div>
+<div class="body">
+<p class="kicker">1.1 파이썬</p>
+<h1>결과를 의심하는 세 가지를 몸에 붙입니다</h1>
+<p class="lead">에이전트는 그럴듯하게 틀립니다. 이 세 가지는 오늘부터 이틀 내내 모든 결과에 적용합니다.</p>
+<div class="slot"><div class="st">이 페이지에 들어갈 것</div><ul><li>하나 — 행 수를 센다 (원본 합계와 결과가 맞는가)</li><li>둘 — 숫자 총합을 대조한다</li><li>셋 — 표본 열 건을 눈으로 본다</li><li>틀렸을 때 다시 시키는 말투 — 무엇이 어떻게 달랐는지를 그대로</li></ul></div>
+<div class="note">이 세 가지를 통과하지 못한 결과물은 3부 프로젝트에서 점수를 받지 못합니다.</div>
+</div></section><section class="page prac" data-no="16">
+<div class="ph"><b>1부 바이브코딩의 기본</b><span>2026 ASTIS 거점기관 맞춤형 교육 · 바이브코딩 실무 교재</span></div><div class="pf"><span>농촌진흥청 · 2026. 9. 29.(화) ~ 9. 30.(수)</span><b>16</b></div>
+<div class="body">
+<p class="kicker">1.1 파이썬</p>
+<h1>실습 · 월별 엑셀 12개를 통합하고 보고서까지<span class="badge">실습</span></h1>
+<p class="lead">40분. 제공 데이터 또는 가져오신 파일로 진행합니다.</p>
+<div class="slot"><div class="st">실습 진행</div><ul><li>1단계 폴더 세 개 만들기 (5분)</li><li>2단계 통합 요청문 작성과 실행 (10분)</li><li>3단계 검증 3종 세트 (5분)</li><li>4단계 집계와 차트 (10분)</li><li>5단계 Word 보고서 생성 (10분)</li><li>완료 확인 — 20_결과 폴더에 파일 세 개</li></ul></div>
+
+</div></section><section class="page" data-no="17">
+<div class="ph"><b>1부 바이브코딩의 기본</b><span>2026 ASTIS 거점기관 맞춤형 교육 · 바이브코딩 실무 교재</span></div><div class="pf"><span>농촌진흥청 · 2026. 9. 29.(화) ~ 9. 30.(수)</span><b>17</b></div>
+<div class="body">
+<p class="kicker">1.2 파워셸</p>
+<h1>파워셸은 윈도우에 이미 들어 있습니다</h1>
+<p class="lead">설치가 필요 없습니다. 검색창에 이름만 치면 열립니다. 업무망에서 파이썬이 막혀도 이것은 거의 항상 됩니다.</p>
+<div class="slot"><div class="st">이 페이지에 들어갈 것</div><ul><li>여는 법과 첫 화면</li><li>파이썬과의 역할 분담 — 파일을 &#x27;다루는&#x27; 일 대 내용을 &#x27;처리하는&#x27; 일</li><li>언제 파워셸인가 — 판단 기준 3줄</li><li>설치 권한이 없는 기관에서 이것이 답이 되는 이유</li></ul></div>
+
+</div></section><section class="page" data-no="18">
+<div class="ph"><b>1부 바이브코딩의 기본</b><span>2026 ASTIS 거점기관 맞춤형 교육 · 바이브코딩 실무 교재</span></div><div class="pf"><span>농촌진흥청 · 2026. 9. 29.(화) ~ 9. 30.(수)</span><b>18</b></div>
+<div class="body">
+<p class="kicker">1.2 파워셸</p>
+<h1>파일 수백 개를 규칙대로 정리합니다</h1>
+<p class="lead">이름 바꾸기, 날짜별 폴더로 나누기, 확장자별로 모으기, 오래된 것 골라내기.</p>
+<div class="slot"><div class="st">이 페이지에 들어갈 것</div><ul><li>요청문 — 파일명 규칙을 말로 설명하기</li><li>날짜·기관명·사업명으로 폴더 자동 분류</li><li>중복 파일 찾기</li><li>결과 목록을 엑셀로 남기기</li></ul></div>
+
+</div></section><section class="page" data-no="19">
+<div class="ph"><b>1부 바이브코딩의 기본</b><span>2026 ASTIS 거점기관 맞춤형 교육 · 바이브코딩 실무 교재</span></div><div class="pf"><span>농촌진흥청 · 2026. 9. 29.(화) ~ 9. 30.(수)</span><b>19</b></div>
+<div class="body">
+<p class="kicker">1.2 파워셸</p>
+<h1>먼저 목록만 보고, 그 다음에 실행합니다</h1>
+<p class="lead">파일을 옮기거나 지우는 일은 되돌리기가 어렵습니다. 반드시 미리보기를 먼저 돌립니다.</p>
+<div class="slot"><div class="st">이 페이지에 들어갈 것</div><ul><li>-WhatIf — 실제로 하지 않고 무엇을 할지만 보여 달라</li><li>요청문에 &#x27;먼저 목록만 출력해 줘&#x27;를 넣는 습관</li><li>백업 복사본을 먼저 만드는 순서</li><li>주의 — 삭제는 휴지통을 거치지 않을 수 있습니다</li></ul></div>
+
+</div></section><section class="page" data-no="20">
+<div class="ph"><b>1부 바이브코딩의 기본</b><span>2026 ASTIS 거점기관 맞춤형 교육 · 바이브코딩 실무 교재</span></div><div class="pf"><span>농촌진흥청 · 2026. 9. 29.(화) ~ 9. 30.(수)</span><b>20</b></div>
+<div class="body">
+<p class="kicker">1.2 파워셸</p>
+<h1>매주 월요일 아침에 혼자 돌게 만듭니다</h1>
+<p class="lead">작업 스케줄러에 걸어 두면 내가 출근하기 전에 정리가 끝나 있습니다.</p>
+<div class="slot"><div class="st">이 페이지에 들어갈 것</div><ul><li>작업 스케줄러 등록 절차 화면</li><li>돌았는지 확인하는 기록 파일 남기기</li><li>실패했을 때 알림 받기</li><li>쓸 수 있는 자리 — 주간 취합, 월말 정리, 백업</li></ul></div>
+
+</div></section><section class="page prac" data-no="21">
+<div class="ph"><b>1부 바이브코딩의 기본</b><span>2026 ASTIS 거점기관 맞춤형 교육 · 바이브코딩 실무 교재</span></div><div class="pf"><span>농촌진흥청 · 2026. 9. 29.(화) ~ 9. 30.(수)</span><b>21</b></div>
+<div class="body">
+<p class="kicker">1.2 파워셸</p>
+<h1>실습 · 현장 사진과 문서 500개를 규칙대로 정리하기<span class="badge">실습</span></h1>
+<p class="lead">30분. 파이썬 설치가 막힌 분도 이 실습은 그대로 됩니다.</p>
+<div class="slot"><div class="st">실습 진행</div><ul><li>1단계 미리보기로 무엇이 바뀔지 확인 (10분)</li><li>2단계 날짜·기관별 폴더 분류 실행 (10분)</li><li>3단계 결과 목록 엑셀로 저장 (5분)</li><li>4단계 매주 실행 예약 걸기 (5분)</li></ul></div>
+
+</div></section><section class="page" data-no="22">
+<div class="ph"><b>1부 바이브코딩의 기본</b><span>2026 ASTIS 거점기관 맞춤형 교육 · 바이브코딩 실무 교재</span></div><div class="pf"><span>농촌진흥청 · 2026. 9. 29.(화) ~ 9. 30.(수)</span><b>22</b></div>
+<div class="body">
+<p class="kicker">1.3 HTML</p>
+<h1>브라우저는 이미 설치되어 있는 실행 환경입니다</h1>
+<p class="lead">설치도 배포도 필요 없습니다. 파일 하나를 더블클릭하면 프로그램이 뜹니다.</p>
+<div class="slot"><div class="st">이 페이지에 들어갈 것</div><ul><li>브라우저를 &#x27;문서 보는 것&#x27;이 아니라 &#x27;프로그램 돌리는 곳&#x27;으로 보기</li><li>파일 하나 안에 다 들어간다 — 구조·모양·동작</li><li>언제 HTML인가 — 판단 기준 3줄</li><li>업무망에서 가장 제약이 적은 선택지</li></ul></div>
+
+</div></section><section class="page" data-no="23">
+<div class="ph"><b>1부 바이브코딩의 기본</b><span>2026 ASTIS 거점기관 맞춤형 교육 · 바이브코딩 실무 교재</span></div><div class="pf"><span>농촌진흥청 · 2026. 9. 29.(화) ~ 9. 30.(수)</span><b>23</b></div>
+<div class="body">
+<p class="kicker">1.3 HTML</p>
+<h1>화면 하나는 네 구역으로 되어 있습니다</h1>
+<p class="lead">무엇이 보이는가(구조), 어떻게 보이는가(모양), 무엇을 하는가(동작), 무엇을 기억하는가(저장).</p>
+<div class="slot"><div class="st">이 페이지에 들어갈 것</div><ul><li>도식 — HTML / CSS / JavaScript / 브라우저 저장소</li><li>고치고 싶은 곳이 어느 구역인지 말하는 법</li><li>에이전트에게 &#x27;가운데 표를 넓혀 줘&#x27;라고 말할 수 있는 이유</li><li>저장소 — 새로고침해도 입력한 내용이 남게 하기</li></ul></div>
+
+</div></section><section class="page" data-no="24">
+<div class="ph"><b>1부 바이브코딩의 기본</b><span>2026 ASTIS 거점기관 맞춤형 교육 · 바이브코딩 실무 교재</span></div><div class="pf"><span>농촌진흥청 · 2026. 9. 29.(화) ~ 9. 30.(수)</span><b>24</b></div>
+<div class="body">
+<p class="kicker">1.3 HTML</p>
+<h1>입력 폼과 점검 체크리스트를 만듭니다</h1>
+<p class="lead">종이로 받던 것, 엑셀로 돌리던 것을 화면 한 장으로 바꿉니다.</p>
+<div class="slot"><div class="st">이 페이지에 들어갈 것</div><ul><li>요청문 — 항목·필수 여부·저장 형식</li><li>입력한 내용을 엑셀로 내려받게 하기</li><li>모바일에서도 열리게 하기</li><li>현장에서 태블릿으로 쓰는 경우 고려사항</li></ul></div>
+
+</div></section><section class="page" data-no="25">
+<div class="ph"><b>1부 바이브코딩의 기본</b><span>2026 ASTIS 거점기관 맞춤형 교육 · 바이브코딩 실무 교재</span></div><div class="pf"><span>농촌진흥청 · 2026. 9. 29.(화) ~ 9. 30.(수)</span><b>25</b></div>
+<div class="body">
+<p class="kicker">1.3 HTML</p>
+<h1>데이터를 얹으면 뷰어와 대시보드가 됩니다</h1>
+<p class="lead">1.1에서 만든 통합 엑셀을 화면으로 올려 검색·정렬·필터가 되게 합니다.</p>
+<div class="slot"><div class="st">이 페이지에 들어갈 것</div><ul><li>CSV를 읽어 표로 뿌리기</li><li>검색·정렬·필터 붙이기</li><li>간단한 차트 얹기</li><li>숫자가 바뀌면 파일만 갈아 끼우는 구조로</li></ul></div>
+
+</div></section><section class="page" data-no="26">
+<div class="ph"><b>1부 바이브코딩의 기본</b><span>2026 ASTIS 거점기관 맞춤형 교육 · 바이브코딩 실무 교재</span></div><div class="pf"><span>농촌진흥청 · 2026. 9. 29.(화) ~ 9. 30.(수)</span><b>26</b></div>
+<div class="body">
+<p class="kicker">1.3 HTML</p>
+<h1>혼자 쓰면 파일 하나, 여럿이 쓰면 러버블입니다</h1>
+<p class="lead">갈림길은 하나뿐입니다. 내 PC에서 나만 쓰는가, 여러 사람이 각자 접속하는가.</p>
+<div class="slot"><div class="st">이 페이지에 들어갈 것</div><ul><li>판단 기준 한 줄과 예시 다섯 개</li><li>러버블(Lovable)로 넘어갈 때 달라지는 것 — 주소·접속·데이터 보관</li><li>업무망에서 외부 서비스를 쓸 때 확인할 것</li><li>상반기 6개 기관 사례가 모두 이 경로로 만들어졌습니다</li></ul></div>
+
+</div></section><section class="page prac" data-no="27">
+<div class="ph"><b>1부 바이브코딩의 기본</b><span>2026 ASTIS 거점기관 맞춤형 교육 · 바이브코딩 실무 교재</span></div><div class="pf"><span>농촌진흥청 · 2026. 9. 29.(화) ~ 9. 30.(수)</span><b>27</b></div>
+<div class="body">
+<p class="kicker">1.3 HTML</p>
+<h1>실습 · 현장점검 입력 폼 한 장 만들기<span class="badge">실습</span></h1>
+<p class="lead">35분. 결과물은 파일 하나이고 바로 옆자리에 건넬 수 있습니다.</p>
+<div class="slot"><div class="st">실습 진행</div><ul><li>1단계 항목 정하기 — 무엇을 받을 것인가 (5분)</li><li>2단계 요청문 작성과 첫 화면 확인 (10분)</li><li>3단계 고치기 — 어느 구역을 고칠지 말로 지시 (10분)</li><li>4단계 엑셀 내려받기 붙이기 (5분)</li><li>5단계 옆자리에 보내서 열리는지 확인 (5분)</li></ul></div>
+
+</div></section><section class="page" data-no="28">
+<div class="ph"><b>1부 바이브코딩의 기본</b><span>2026 ASTIS 거점기관 맞춤형 교육 · 바이브코딩 실무 교재</span></div><div class="pf"><span>농촌진흥청 · 2026. 9. 29.(화) ~ 9. 30.(수)</span><b>28</b></div>
+<div class="body">
+<p class="kicker">1.4 VBA·엑셀</p>
+<h1>엑셀 밖으로 안 나가도 되는 일이 있습니다</h1>
+<p class="lead">데이터가 엑셀 안에 있고 결과도 엑셀이면, 굳이 다른 도구를 부를 필요가 없습니다.</p>
+<div class="slot"><div class="st">이 페이지에 들어갈 것</div><ul><li>언제 VBA인가 — 판단 기준 3줄</li><li>설치가 전혀 필요 없다는 장점</li><li>상반기 교육 복습 — 무엇까지 다뤘는가</li><li>한계가 시작되는 지점 미리 보기</li></ul></div>
+
+</div></section><section class="page" data-no="29">
+<div class="ph"><b>1부 바이브코딩의 기본</b><span>2026 ASTIS 거점기관 맞춤형 교육 · 바이브코딩 실무 교재</span></div><div class="pf"><span>농촌진흥청 · 2026. 9. 29.(화) ~ 9. 30.(수)</span><b>29</b></div>
+<div class="body">
+<p class="kicker">1.4 VBA·엑셀</p>
+<h1>수식으로 끝나는 일과 매크로가 필요한 일</h1>
+<p class="lead">한 번 계산하면 되는 일은 수식, 여러 단계를 순서대로 반복하는 일은 매크로입니다.</p>
+<div class="slot"><div class="st">이 페이지에 들어갈 것</div><ul><li>수식으로 충분한 경우 예시 다섯</li><li>매크로가 필요해지는 신호</li><li>에이전트에게 시킬 때 어느 쪽으로 요청할지 말하기</li><li>만든 매크로를 버튼에 붙이기</li></ul></div>
+
+</div></section><section class="page" data-no="30">
+<div class="ph"><b>1부 바이브코딩의 기본</b><span>2026 ASTIS 거점기관 맞춤형 교육 · 바이브코딩 실무 교재</span></div><div class="pf"><span>농촌진흥청 · 2026. 9. 29.(화) ~ 9. 30.(수)</span><b>30</b></div>
+<div class="body">
+<p class="kicker">1.4 VBA·엑셀</p>
+<h1>매크로 파일은 저장 방식과 보안 설정이 다릅니다</h1>
+<p class="lead">여기서 막히는 분이 가장 많습니다. .xlsm으로 저장하고 매크로를 허용해야 돕니다.</p>
+<div class="slot"><div class="st">이 페이지에 들어갈 것</div><ul><li>xlsx와 xlsm의 차이</li><li>매크로 보안 경고 화면과 허용 절차</li><li>기관 보안 정책으로 막히는 경우 대안</li><li>남에게 보낼 때 안내할 것</li></ul></div>
+
+</div></section><section class="page" data-no="31">
+<div class="ph"><b>1부 바이브코딩의 기본</b><span>2026 ASTIS 거점기관 맞춤형 교육 · 바이브코딩 실무 교재</span></div><div class="pf"><span>농촌진흥청 · 2026. 9. 29.(화) ~ 9. 30.(수)</span><b>31</b></div>
+<div class="body">
+<p class="kicker">1.4 VBA·엑셀</p>
+<h1>여기서부터는 파이썬으로 넘어가는 편이 빠릅니다</h1>
+<p class="lead">파일이 여러 개이거나, 엑셀이 아닌 것을 다루거나, PDF·이미지가 섞이면 VBA의 자리가 아닙니다.</p>
+<div class="slot"><div class="st">이 페이지에 들어갈 것</div><ul><li>넘어가는 신호 네 가지</li><li>같은 일을 VBA와 파이썬으로 했을 때 비교</li><li>이미 만든 VBA를 파이썬으로 옮겨 달라고 시키기</li><li>둘을 같이 쓰는 경우</li></ul></div>
+
+</div></section><section class="page prac" data-no="32">
+<div class="ph"><b>1부 바이브코딩의 기본</b><span>2026 ASTIS 거점기관 맞춤형 교육 · 바이브코딩 실무 교재</span></div><div class="pf"><span>농촌진흥청 · 2026. 9. 29.(화) ~ 9. 30.(수)</span><b>32</b></div>
+<div class="body">
+<p class="kicker">1.4 VBA·엑셀</p>
+<h1>실습 · 반복 취합을 버튼 하나로<span class="badge">실습</span></h1>
+<p class="lead">25분. 상반기에 하신 분은 심화로, 처음이신 분은 기본으로 진행합니다.</p>
+<div class="slot"><div class="st">실습 진행</div><ul><li>1단계 반복하는 손동작을 말로 적기 (5분)</li><li>2단계 매크로 생성 요청과 삽입 (10분)</li><li>3단계 버튼 붙이고 xlsm 저장 (5분)</li><li>4단계 다른 파일에서도 되는지 확인 (5분)</li></ul></div>
+
+</div></section><section class="page" data-no="33">
+<div class="ph"><b>1부 바이브코딩의 기본</b><span>2026 ASTIS 거점기관 맞춤형 교육 · 바이브코딩 실무 교재</span></div><div class="pf"><span>농촌진흥청 · 2026. 9. 29.(화) ~ 9. 30.(수)</span><b>33</b></div>
+<div class="body">
+<p class="kicker">1.5 API·RSS</p>
+<h1>내 PC 밖에도 쓸 데이터가 있습니다</h1>
+<p class="lead">날씨, 농산물 가격, 병해충 경보, 보도자료. 매일 누군가 갱신해 주는 데이터를 내 도구가 알아서 가져오게 합니다.</p>
+<div class="slot"><div class="st">이 페이지에 들어갈 것</div><ul><li>여기서 도구가 &#x27;한 번 쓰는 것&#x27;에서 &#x27;매일 도는 것&#x27;으로 바뀝니다</li><li>가져오는 두 가지 방식 — API와 RSS</li><li>ASTIS에 쌓인 데이터와 바깥 데이터를 붙였을 때 생기는 것</li><li>이 장의 결과물 — 아침 브리핑 한 장</li></ul></div>
+
+</div></section><section class="page" data-no="34">
+<div class="ph"><b>1부 바이브코딩의 기본</b><span>2026 ASTIS 거점기관 맞춤형 교육 · 바이브코딩 실무 교재</span></div><div class="pf"><span>농촌진흥청 · 2026. 9. 29.(화) ~ 9. 30.(수)</span><b>34</b></div>
+<div class="body">
+<p class="kicker">1.5 API·RSS</p>
+<h1>API는 정해진 주소로 물어보면 정해진 모양으로 답이 오는 것입니다</h1>
+<p class="lead">어렵게 생각할 것 없습니다. 주소 하나, 열쇠 하나, 그리고 돌아오는 답의 모양. 이 셋이 전부입니다.</p>
+<div class="slot"><div class="st">이 페이지에 들어갈 것</div><ul><li>도식 — 요청 주소 / 인증 키 / 응답(JSON·XML)</li><li>JSON이 무엇인지 한 장 — 이름과 값의 묶음</li><li>돌아온 답에서 필요한 항목만 골라내기</li><li>실패했을 때 나오는 숫자들 (401 · 403 · 429)의 뜻</li></ul></div>
+
+</div></section><section class="page" data-no="35">
+<div class="ph"><b>1부 바이브코딩의 기본</b><span>2026 ASTIS 거점기관 맞춤형 교육 · 바이브코딩 실무 교재</span></div><div class="pf"><span>농촌진흥청 · 2026. 9. 29.(화) ~ 9. 30.(수)</span><b>35</b></div>
+<div class="body">
+<p class="kicker">1.5 API·RSS</p>
+<h1>공공데이터포털에서 열쇠를 받는 데까지가 절반입니다</h1>
+<p class="lead">가입하고 활용 신청하고 키를 받습니다. 여기가 실제로 가장 많이 막히는 구간이라 화면째로 싣습니다.</p>
+<div class="slot"><div class="st">이 페이지에 들어갈 것</div><ul><li>data.go.kr 가입과 활용 신청 절차 화면</li><li>일반 인증키와 승인 대기 시간</li><li>키를 파일에 적어 두는 법과 적으면 안 되는 자리</li><li>첫 호출 성공 화면 — 여기까지 오면 나머지는 쉽습니다</li></ul></div>
+<div class="note">주의 — 인증키는 비밀번호입니다. 남에게 파일을 넘길 때 키가 딸려 가지 않게 하는 법을 함께 다룹니다.</div>
+</div></section><section class="page" data-no="36">
+<div class="ph"><b>1부 바이브코딩의 기본</b><span>2026 ASTIS 거점기관 맞춤형 교육 · 바이브코딩 실무 교재</span></div><div class="pf"><span>농촌진흥청 · 2026. 9. 29.(화) ~ 9. 30.(수)</span><b>36</b></div>
+<div class="body">
+<p class="kicker">1.5 API·RSS</p>
+<h1>농촌지도 업무에 바로 쓰는 네 가지</h1>
+<p class="lead">쓸 만한 것만 골랐습니다. 각각 무엇을 돌려주고 어디에 쓰는지 한 쪽씩입니다.</p>
+<div class="slot"><div class="st">이 페이지에 들어갈 것</div><ul><li>기상청 단기예보 — 관할 지역 내일 날씨, 영농 지도에 직결</li><li>KAMIS 농산물 유통정보 — 품목별 도매·소매 가격 추이</li><li>농사로 — 작목별 영농 기술 정보</li><li>병해충 발생 정보 — 경보 자동 수집</li><li>각 항목: 무엇을 돌려주는가 / 요청문 / 결과 예시</li></ul></div>
+
+</div></section><section class="page" data-no="37">
+<div class="ph"><b>1부 바이브코딩의 기본</b><span>2026 ASTIS 거점기관 맞춤형 교육 · 바이브코딩 실무 교재</span></div><div class="pf"><span>농촌진흥청 · 2026. 9. 29.(화) ~ 9. 30.(수)</span><b>37</b></div>
+<div class="body">
+<p class="kicker">1.5 API·RSS</p>
+<h1>RSS는 새 글이 올라오면 알려 주는 목록입니다</h1>
+<p class="lead">인증키도 신청도 필요 없습니다. 주소 하나만 있으면 됩니다. 가장 쉬운 자동 수집입니다.</p>
+<div class="slot"><div class="st">이 페이지에 들어갈 것</div><ul><li>RSS 주소를 찾는 법</li><li>농촌진흥청·농림축산식품부 보도자료 주소</li><li>관심 단어가 들어간 글만 골라내기</li><li>새 글이 있을 때만 알려 주게 하기</li></ul></div>
+
+</div></section><section class="page" data-no="38">
+<div class="ph"><b>1부 바이브코딩의 기본</b><span>2026 ASTIS 거점기관 맞춤형 교육 · 바이브코딩 실무 교재</span></div><div class="pf"><span>농촌진흥청 · 2026. 9. 29.(화) ~ 9. 30.(수)</span><b>38</b></div>
+<div class="body">
+<p class="kicker">1.5 API·RSS</p>
+<h1>모은 것을 한 장으로 묶어 둡니다</h1>
+<p class="lead">따로따로 가져오면 쓸모가 적습니다. 아침에 한 화면에서 다 보이게 합쳐야 도구가 됩니다.</p>
+<div class="slot"><div class="st">이 페이지에 들어갈 것</div><ul><li>파이썬으로 모으고 → HTML로 보여주는 조합</li><li>전날 것과 비교해 달라진 것만 표시하기</li><li>매일 아침 자동 실행 걸기 (1.2에서 배운 것)</li><li>실패해도 어제 것이 남아 있게 하기</li></ul></div>
+
+</div></section><section class="page" data-no="39">
+<div class="ph"><b>1부 바이브코딩의 기본</b><span>2026 ASTIS 거점기관 맞춤형 교육 · 바이브코딩 실무 교재</span></div><div class="pf"><span>농촌진흥청 · 2026. 9. 29.(화) ~ 9. 30.(수)</span><b>39</b></div>
+<div class="body">
+<p class="kicker">1.5 API·RSS</p>
+<h1>바깥 데이터를 ASTIS 데이터와 붙입니다</h1>
+<p class="lead">여기가 이 장의 핵심입니다. 우리 실적 데이터 옆에 날씨와 가격을 붙이면 설명이 생깁니다.</p>
+<div class="slot"><div class="st">이 페이지에 들어갈 것</div><ul><li>기준 열을 맞추는 일 — 날짜와 지역</li><li>붙인 뒤 반드시 확인할 것 — 행 수가 늘거나 줄지 않았는가</li><li>예시 — 월별 실적 옆에 기상 이력을 놓고 본 경우</li><li>주의 — 상관이 보인다고 원인은 아닙니다</li></ul></div>
+
+</div></section><section class="page prac" data-no="40">
+<div class="ph"><b>1부 바이브코딩의 기본</b><span>2026 ASTIS 거점기관 맞춤형 교육 · 바이브코딩 실무 교재</span></div><div class="pf"><span>농촌진흥청 · 2026. 9. 29.(화) ~ 9. 30.(수)</span><b>40</b></div>
+<div class="body">
+<p class="kicker">1.5 API·RSS</p>
+<h1>실습 · 관할지역 아침 브리핑 한 장 만들기<span class="badge">실습</span></h1>
+<p class="lead">40분. 이 실습의 결과물을 3부 프로젝트로 그대로 발전시키셔도 됩니다.</p>
+<div class="slot"><div class="st">실습 진행</div><ul><li>1단계 공공데이터포털 키 발급 (10분)</li><li>2단계 날씨 한 건 불러와 화면에 찍기 (10분)</li><li>3단계 가격과 보도자료 추가 (10분)</li><li>4단계 HTML 한 장으로 묶기 (5분)</li><li>5단계 매일 아침 자동 실행 걸기 (5분)</li></ul></div>
+
+</div></section><section class="page" data-no="41">
+<div class="ph"><b>1부 바이브코딩의 기본</b><span>2026 ASTIS 거점기관 맞춤형 교육 · 바이브코딩 실무 교재</span></div><div class="pf"><span>농촌진흥청 · 2026. 9. 29.(화) ~ 9. 30.(수)</span><b>41</b></div>
+<div class="body">
+<p class="kicker">1.6 고르고 섞기</p>
+<h1>질문 네 개로 고릅니다</h1>
+<p class="lead">이 페이지 한 장을 책상에 붙여 두시면 됩니다. 앞으로 모든 판단이 여기서 갈립니다.</p>
+<div class="slot"><div class="st">이 페이지에 들어갈 것</div><ul><li>하나 — 설치가 되는 환경인가 (아니면 파워셸·HTML)</li><li>둘 — 데이터가 어디 있나 (엑셀 안이면 VBA, 밖이면 파이썬, 웹이면 API)</li><li>셋 — 나 혼자 쓰나 여럿이 쓰나 (혼자면 파일, 여럿이면 러버블)</li><li>넷 — 한 번인가 반복인가 (반복이면 파일로 저장하고 예약)</li><li>판단표 한 장 — 상황 12가지와 답</li></ul></div>
+
+</div></section><section class="page" data-no="42">
+<div class="ph"><b>1부 바이브코딩의 기본</b><span>2026 ASTIS 거점기관 맞춤형 교육 · 바이브코딩 실무 교재</span></div><div class="pf"><span>농촌진흥청 · 2026. 9. 29.(화) ~ 9. 30.(수)</span><b>42</b></div>
+<div class="body">
+<p class="kicker">1.6 고르고 섞기</p>
+<h1>실제 업무는 대개 섞입니다</h1>
+<p class="lead">모으고 · 처리하고 · 보여준다. 이 세 단계에 각각 다른 재료가 붙습니다.</p>
+<div class="slot"><div class="st">이 페이지에 들어갈 것</div><ul><li>대표 조합 — 파워셸로 모으고 → 파이썬으로 처리하고 → HTML로 보여준다</li><li>대표 조합 — API로 가져와 → 파이썬으로 붙이고 → 러버블로 공유한다</li><li>대표 조합 — VBA로 정리하고 → 파이썬으로 보고서 만든다</li><li>상반기 6개 기관 산출물을 이 틀로 다시 읽어 보기</li></ul></div>
+
+</div></section><section class="page" data-no="43">
+<div class="ph"><b>1부 바이브코딩의 기본</b><span>2026 ASTIS 거점기관 맞춤형 교육 · 바이브코딩 실무 교재</span></div><div class="pf"><span>농촌진흥청 · 2026. 9. 29.(화) ~ 9. 30.(수)</span><b>43</b></div>
+<div class="body">
+<p class="kicker">1.6 고르고 섞기</p>
+<h1>막혔을 때는 세 가지만 하시면 됩니다</h1>
+<p class="lead">이틀 동안 반드시 막힙니다. 막히는 것이 정상이고, 빠져나오는 길은 늘 같습니다.</p>
+<div class="slot"><div class="st">이 페이지에 들어갈 것</div><ul><li>하나 — 오류 메시지를 읽지 말고 통째로 붙여넣기</li><li>둘 — 같은 방법으로 세 번 실패하면 &#x27;다른 방법으로 해 줘&#x27;</li><li>셋 — 되돌리기 (00_원본은 그대로 있습니다)</li><li>그래도 안 되면 — 부록 B 오류 사전, 그리고 손 들기</li></ul></div>
+
+</div></section><section class="page divi" data-no="2부">
+<div class="body">
+<div class="dv-no" style="margin-top:14mm">2부</div>
+<h1>재료별 심화</h1>
+<p class="dv-sub">표 밖의 것들 — 문서 · 말 · 사진</p>
+<div class="dv-rule"></div>
+<ul class="dv-list c2"><li><i>44</i><span>표가 아닌 것들도 결국 표로 바꾸는 일입니다</span></li><li><i>45</i><span>PDF는 세 종류이고 꺼내는 방법이 다릅니다</span></li><li><i>46</i><span>공문에서 필요한 항목만 뽑아냅니다</span></li><li><i>47</i><span>표가 들어 있는 PDF는 따로 다룹니다</span></li><li><i>48</i><span>꺼낸 것이 맞는지 확인하는 법</span></li><li><i>49</i><span>실습 · 공문 10건을 엑셀 목록으로</span><em>실습</em></li><li><i>50</i><span>현장의 말은 가장 많이 버려지는 데이터입니다</span></li><li><i>51</i><span>녹음을 텍스트로 바꿉니다 — 인터넷 없이도</span></li><li><i>52</i><span>받아쓴 것을 정해진 서식으로 정리합니다</span></li><li><i>53</i><span>안내문을 음성으로 만듭니다</span></li><li><i>54</i><span>개인정보가 섞인 녹음을 다룰 때</span></li><li><i>55</i><span>실습 · 현장 녹음을 상담일지로</span><em>실습</em></li><li><i>56</i><span>현장 사진과 손글씨도 데이터입니다</span></li><li><i>57</i><span>사진에서 글자를 꺼냅니다</span></li><li><i>58</i><span>정해진 서식의 사진은 훨씬 정확합니다</span></li><li><i>59</i><span>사진 자체를 정리하는 일도 있습니다</span></li><li><i>60</i><span>실습 · 현장 서식 사진 20장을 표로</span><em>실습</em></li></ul>
+<div class="dv-fill"></div>
+</div></section><section class="page" data-no="44">
+<div class="ph"><b>2부 재료별 심화</b><span>2026 ASTIS 거점기관 맞춤형 교육 · 바이브코딩 실무 교재</span></div><div class="pf"><span>농촌진흥청 · 2026. 9. 29.(화) ~ 9. 30.(수)</span><b>44</b></div>
+<div class="body">
+<p class="kicker">2부 재료별 심화</p>
+<h1>표가 아닌 것들도 결국 표로 바꾸는 일입니다</h1>
+<p class="lead">공문도 녹음도 사진도, 마지막에는 엑셀 한 줄이 됩니다. 어떻게 꺼내느냐만 다릅니다.</p>
+<div class="slot"><div class="st">이 페이지에 들어갈 것</div><ul><li>세 가지 모두 파이썬 계열입니다 — 1.1에서 배운 것의 연장</li><li>택1 안내 — 자기 업무에 해당하는 것 하나를 고릅니다</li><li>공통 원칙 — 꺼낸 것은 반드시 사람이 표본 검수합니다</li><li>세 모듈 공통 구조 — 구조 이해 / 꺼내기 / 검증 / 실습</li></ul></div>
+
+</div></section><section class="page" data-no="45">
+<div class="ph"><b>2부 재료별 심화</b><span>2026 ASTIS 거점기관 맞춤형 교육 · 바이브코딩 실무 교재</span></div><div class="pf"><span>농촌진흥청 · 2026. 9. 29.(화) ~ 9. 30.(수)</span><b>45</b></div>
+<div class="body">
+<p class="kicker">2.A 문서</p>
+<h1>PDF는 세 종류이고 꺼내는 방법이 다릅니다</h1>
+<p class="lead">글자가 들어 있는 것, 표가 들어 있는 것, 그냥 사진인 것. 먼저 어느 것인지 확인해야 합니다.</p>
+<div class="slot"><div class="st">이 페이지에 들어갈 것</div><ul><li>세 종류 구분하는 법 — 글자를 긁어 보면 압니다</li><li>글자 PDF · 표 PDF · 스캔 PDF 각각의 처리 경로</li><li>한글 문서(HWP·HWPX)는 또 다른 길 (→ 1.1 참조)</li><li>판단 흐름도 한 장</li></ul></div>
+
+</div></section><section class="page" data-no="46">
+<div class="ph"><b>2부 재료별 심화</b><span>2026 ASTIS 거점기관 맞춤형 교육 · 바이브코딩 실무 교재</span></div><div class="pf"><span>농촌진흥청 · 2026. 9. 29.(화) ~ 9. 30.(수)</span><b>46</b></div>
+<div class="body">
+<p class="kicker">2.A 문서</p>
+<h1>공문에서 필요한 항목만 뽑아냅니다</h1>
+<p class="lead">문서 번호, 시행일, 제목, 담당자, 금액. 매번 눈으로 찾아 옮기던 것을 목록으로 만듭니다.</p>
+<div class="slot"><div class="st">이 페이지에 들어갈 것</div><ul><li>뽑을 항목을 미리 정의하기 — 항목 이름과 형식</li><li>요청문 전문</li><li>근거 문장과 쪽 번호를 같이 남기는 이유</li><li>못 찾은 항목을 빈칸이 아니라 &#x27;확인필요&#x27;로 남기기</li></ul></div>
+
+</div></section><section class="page" data-no="47">
+<div class="ph"><b>2부 재료별 심화</b><span>2026 ASTIS 거점기관 맞춤형 교육 · 바이브코딩 실무 교재</span></div><div class="pf"><span>농촌진흥청 · 2026. 9. 29.(화) ~ 9. 30.(수)</span><b>47</b></div>
+<div class="body">
+<p class="kicker">2.A 문서</p>
+<h1>표가 들어 있는 PDF는 따로 다룹니다</h1>
+<p class="lead">표는 글자보다 까다롭습니다. 칸이 합쳐져 있거나 쪽을 넘어가면 어긋납니다.</p>
+<div class="slot"><div class="st">이 페이지에 들어갈 것</div><ul><li>표 추출이 잘 되는 경우와 깨지는 경우</li><li>쪽을 넘어가는 표 이어 붙이기</li><li>합쳐진 칸 처리</li><li>깨졌을 때 — 사람이 고치는 편이 빠른 지점 판단</li></ul></div>
+
+</div></section><section class="page" data-no="48">
+<div class="ph"><b>2부 재료별 심화</b><span>2026 ASTIS 거점기관 맞춤형 교육 · 바이브코딩 실무 교재</span></div><div class="pf"><span>농촌진흥청 · 2026. 9. 29.(화) ~ 9. 30.(수)</span><b>48</b></div>
+<div class="body">
+<p class="kicker">2.A 문서</p>
+<h1>꺼낸 것이 맞는지 확인하는 법</h1>
+<p class="lead">문서 추출은 틀려도 티가 안 납니다. 그래서 검증 방식이 따로 있습니다.</p>
+<div class="slot"><div class="st">이 페이지에 들어갈 것</div><ul><li>문서 수와 결과 행 수가 맞는가</li><li>무작위 다섯 건을 원본과 나란히 놓고 대조</li><li>금액·날짜처럼 형식이 정해진 항목 자동 점검</li><li>&#x27;확인필요&#x27; 항목 목록 따로 뽑기</li></ul></div>
+
+</div></section><section class="page prac" data-no="49">
+<div class="ph"><b>2부 재료별 심화</b><span>2026 ASTIS 거점기관 맞춤형 교육 · 바이브코딩 실무 교재</span></div><div class="pf"><span>농촌진흥청 · 2026. 9. 29.(화) ~ 9. 30.(수)</span><b>49</b></div>
+<div class="body">
+<p class="kicker">2.A 문서</p>
+<h1>실습 · 공문 10건을 엑셀 목록으로<span class="badge">실습</span></h1>
+<p class="lead">60분.</p>
+<div class="slot"><div class="st">실습 진행</div><ul><li>1단계 PDF 종류 확인 (10분)</li><li>2단계 항목 정의 (10분)</li><li>3단계 추출 실행 (20분)</li><li>4단계 검증과 보정 (15분)</li><li>5단계 결과 저장 (5분)</li></ul></div>
+
+</div></section><section class="page" data-no="50">
+<div class="ph"><b>2부 재료별 심화</b><span>2026 ASTIS 거점기관 맞춤형 교육 · 바이브코딩 실무 교재</span></div><div class="pf"><span>농촌진흥청 · 2026. 9. 29.(화) ~ 9. 30.(수)</span><b>50</b></div>
+<div class="body">
+<p class="kicker">2.B 말</p>
+<h1>현장의 말은 가장 많이 버려지는 데이터입니다</h1>
+<p class="lead">상담하고, 전화 받고, 회의하고. 그 자리에서 메모하지 못한 것은 사라집니다.</p>
+<div class="slot"><div class="st">이 페이지에 들어갈 것</div><ul><li>농촌지도 업무에서 음성이 발생하는 자리 목록</li><li>받아쓰기(STT)와 읽어주기(TTS) 두 방향</li><li>고령 농업인 접근성 — 8개 기관 공통 요구사항이었습니다</li><li>이 모듈의 결과물 두 가지</li></ul></div>
+
+</div></section><section class="page" data-no="51">
+<div class="ph"><b>2부 재료별 심화</b><span>2026 ASTIS 거점기관 맞춤형 교육 · 바이브코딩 실무 교재</span></div><div class="pf"><span>농촌진흥청 · 2026. 9. 29.(화) ~ 9. 30.(수)</span><b>51</b></div>
+<div class="body">
+<p class="kicker">2.B 말</p>
+<h1>녹음을 텍스트로 바꿉니다 — 인터넷 없이도</h1>
+<p class="lead">Whisper를 내 PC에 올려 두면 파일을 밖으로 보내지 않고 받아쓸 수 있습니다. 업무망에서 중요한 대목입니다.</p>
+<div class="slot"><div class="st">이 페이지에 들어갈 것</div><ul><li>왜 로컬인가 — 녹음 파일을 외부로 올릴 수 없는 경우</li><li>설치와 첫 실행 (설치 막히면 대안 표기)</li><li>폴더 안의 녹음 파일을 한 번에 처리하기</li><li>정확도를 올리는 요령 — 잡음, 사투리, 전문용어</li></ul></div>
+
+</div></section><section class="page" data-no="52">
+<div class="ph"><b>2부 재료별 심화</b><span>2026 ASTIS 거점기관 맞춤형 교육 · 바이브코딩 실무 교재</span></div><div class="pf"><span>농촌진흥청 · 2026. 9. 29.(화) ~ 9. 30.(수)</span><b>52</b></div>
+<div class="body">
+<p class="kicker">2.B 말</p>
+<h1>받아쓴 것을 정해진 서식으로 정리합니다</h1>
+<p class="lead">통으로 받아쓴 글은 그대로는 못 씁니다. 상담일지 서식에 맞춰 항목으로 나눠야 업무가 됩니다.</p>
+<div class="slot"><div class="st">이 페이지에 들어갈 것</div><ul><li>상담일지·회의록 서식 항목 정의</li><li>요청문 — 받아쓴 글에서 항목별로 채우기</li><li>말한 사람 구분이 필요한 경우</li><li>원문을 반드시 함께 보관하는 이유</li></ul></div>
+
+</div></section><section class="page" data-no="53">
+<div class="ph"><b>2부 재료별 심화</b><span>2026 ASTIS 거점기관 맞춤형 교육 · 바이브코딩 실무 교재</span></div><div class="pf"><span>농촌진흥청 · 2026. 9. 29.(화) ~ 9. 30.(수)</span><b>53</b></div>
+<div class="body">
+<p class="kicker">2.B 말</p>
+<h1>안내문을 음성으로 만듭니다</h1>
+<p class="lead">글로 된 안내를 읽기 어려운 분들께 음성으로 드립니다. 마을 방송, 문자 첨부, 전화 안내에 씁니다.</p>
+<div class="slot"><div class="st">이 페이지에 들어갈 것</div><ul><li>TTS로 음성 파일 만들기</li><li>속도와 목소리 조절 — 고령자 대상 설정</li><li>쓸 수 있는 자리 — 영농 정보, 신청 안내, 병해충 경보</li><li>1.5의 자동 수집과 붙이면 — 매일 아침 음성 브리핑</li></ul></div>
+
+</div></section><section class="page" data-no="54">
+<div class="ph"><b>2부 재료별 심화</b><span>2026 ASTIS 거점기관 맞춤형 교육 · 바이브코딩 실무 교재</span></div><div class="pf"><span>농촌진흥청 · 2026. 9. 29.(화) ~ 9. 30.(수)</span><b>54</b></div>
+<div class="body">
+<p class="kicker">2.B 말</p>
+<h1>개인정보가 섞인 녹음을 다룰 때</h1>
+<p class="lead">농가 이름, 연락처, 주소가 들어갑니다. 이 모듈은 다른 어느 모듈보다 취급 기준이 엄격합니다.</p>
+<div class="slot"><div class="st">이 페이지에 들어갈 것</div><ul><li>녹음 동의 — 언제 받아야 하는가</li><li>이름·연락처 자동 가리기</li><li>보관 기간과 파기</li><li>외부 서비스에 올리면 안 되는 경우 판단</li></ul></div>
+
+</div></section><section class="page prac" data-no="55">
+<div class="ph"><b>2부 재료별 심화</b><span>2026 ASTIS 거점기관 맞춤형 교육 · 바이브코딩 실무 교재</span></div><div class="pf"><span>농촌진흥청 · 2026. 9. 29.(화) ~ 9. 30.(수)</span><b>55</b></div>
+<div class="body">
+<p class="kicker">2.B 말</p>
+<h1>실습 · 현장 녹음을 상담일지로<span class="badge">실습</span></h1>
+<p class="lead">60분. 녹음 파일이 없으신 분께는 샘플을 제공합니다.</p>
+<div class="slot"><div class="st">실습 진행</div><ul><li>1단계 로컬 받아쓰기 환경 확인 (15분)</li><li>2단계 파일 일괄 처리 (15분)</li><li>3단계 서식으로 정리 (15분)</li><li>4단계 개인정보 가리기 (10분)</li><li>5단계 검수 (5분)</li></ul></div>
+
+</div></section><section class="page" data-no="56">
+<div class="ph"><b>2부 재료별 심화</b><span>2026 ASTIS 거점기관 맞춤형 교육 · 바이브코딩 실무 교재</span></div><div class="pf"><span>농촌진흥청 · 2026. 9. 29.(화) ~ 9. 30.(수)</span><b>56</b></div>
+<div class="body">
+<p class="kicker">2.C 사진</p>
+<h1>현장 사진과 손글씨도 데이터입니다</h1>
+<p class="lead">현장에서 찍은 서식, 계량 기록, 영수증. 돌아와서 다시 타이핑하던 것을 줄입니다.</p>
+<div class="slot"><div class="st">이 페이지에 들어갈 것</div><ul><li>OCR이 잘 되는 것과 안 되는 것</li><li>손글씨는 어디까지 되는가 — 솔직한 기대치</li><li>사진 찍을 때 정확도를 올리는 요령</li><li>이미 만들어 둔 데모 — OCR-엑셀 변환 (cdsaastis.netlify.app)</li></ul></div>
+
+</div></section><section class="page" data-no="57">
+<div class="ph"><b>2부 재료별 심화</b><span>2026 ASTIS 거점기관 맞춤형 교육 · 바이브코딩 실무 교재</span></div><div class="pf"><span>농촌진흥청 · 2026. 9. 29.(화) ~ 9. 30.(수)</span><b>57</b></div>
+<div class="body">
+<p class="kicker">2.C 사진</p>
+<h1>사진에서 글자를 꺼냅니다</h1>
+<p class="lead">여러 장을 한 번에 돌리고, 결과를 표로 모읍니다.</p>
+<div class="slot"><div class="st">이 페이지에 들어갈 것</div><ul><li>로컬 OCR 도구 선택과 설치</li><li>한글 인식 설정</li><li>폴더 일괄 처리 요청문</li><li>원본 파일명을 결과에 남기기</li></ul></div>
+
+</div></section><section class="page" data-no="58">
+<div class="ph"><b>2부 재료별 심화</b><span>2026 ASTIS 거점기관 맞춤형 교육 · 바이브코딩 실무 교재</span></div><div class="pf"><span>농촌진흥청 · 2026. 9. 29.(화) ~ 9. 30.(수)</span><b>58</b></div>
+<div class="body">
+<p class="kicker">2.C 사진</p>
+<h1>정해진 서식의 사진은 훨씬 정확합니다</h1>
+<p class="lead">같은 서식을 반복해서 찍는 경우, 어느 위치에 무엇이 있는지 알려 주면 정확도가 올라갑니다.</p>
+<div class="slot"><div class="st">이 페이지에 들어갈 것</div><ul><li>서식 위치 지정 방식</li><li>반복 서식 예시 — 점검표, 계량 기록지</li><li>숫자 항목 형식 점검</li><li>서식이 바뀌었을 때 대응</li></ul></div>
+
+</div></section><section class="page" data-no="59">
+<div class="ph"><b>2부 재료별 심화</b><span>2026 ASTIS 거점기관 맞춤형 교육 · 바이브코딩 실무 교재</span></div><div class="pf"><span>농촌진흥청 · 2026. 9. 29.(화) ~ 9. 30.(수)</span><b>59</b></div>
+<div class="body">
+<p class="kicker">2.C 사진</p>
+<h1>사진 자체를 정리하는 일도 있습니다</h1>
+<p class="lead">글자를 꺼내지 않고 파일만 정리하면 되는 경우가 많습니다. 그러면 파워셸이 빠릅니다.</p>
+<div class="slot"><div class="st">이 페이지에 들어갈 것</div><ul><li>촬영 날짜·위치 정보로 자동 분류</li><li>크기 줄이기와 이름 붙이기</li><li>1.2 파워셸과 연결</li><li>보고서에 사진 자동 삽입</li></ul></div>
+
+</div></section><section class="page prac" data-no="60">
+<div class="ph"><b>2부 재료별 심화</b><span>2026 ASTIS 거점기관 맞춤형 교육 · 바이브코딩 실무 교재</span></div><div class="pf"><span>농촌진흥청 · 2026. 9. 29.(화) ~ 9. 30.(수)</span><b>60</b></div>
+<div class="body">
+<p class="kicker">2.C 사진</p>
+<h1>실습 · 현장 서식 사진 20장을 표로<span class="badge">실습</span></h1>
+<p class="lead">60분.</p>
+<div class="slot"><div class="st">실습 진행</div><ul><li>1단계 OCR 환경 확인 (15분)</li><li>2단계 일괄 인식 (15분)</li><li>3단계 표로 정리 (15분)</li><li>4단계 표본 검수와 보정 (15분)</li></ul></div>
+
+</div></section><section class="page divi" data-no="3부">
+<div class="body">
+<div class="dv-no">3부</div>
+<h1>프로젝트</h1>
+<p class="dv-sub">내 업무 도구 하나를 완성해서 가져갑니다</p>
+<div class="dv-rule"></div>
+<ul class="dv-list"><li><i>61</i><span>지금부터는 배우지 않고 만듭니다</span></li><li><i>62</i><span>무엇이 불편한지부터 한 문장으로 적습니다</span></li><li><i>63</i><span>무엇으로 만들지 고릅니다</span></li><li><i>64</i><span>요청문을 먼저 씁니다. 그 다음에 시킵니다</span></li><li><i>65</i><span>구현 진행표 · 1시간째</span></li><li><i>66</i><span>구현 진행표 · 2시간째</span></li><li><i>67</i><span>구현 진행표 · 3시간째</span></li><li><i>68</i><span>검증 체크리스트 — 이것을 통과해야 완성입니다</span></li><li><i>69</i><span>다음 사람이 다시 돌릴 수 있게 한 장을 씁니다</span></li><li><i>70</i><span>3분 발표 양식</span></li><li><i>71</i><span>평가 100점 세부 기준</span></li><li><i>72</i><span>상반기 우수사례 6선 — 무엇을 가져다 쓸 수 있는가</span></li></ul>
+<div class="dv-fill"></div>
+</div></section><section class="page" data-no="61">
+<div class="ph"><b>3부 프로젝트</b><span>2026 ASTIS 거점기관 맞춤형 교육 · 바이브코딩 실무 교재</span></div><div class="pf"><span>농촌진흥청 · 2026. 9. 29.(화) ~ 9. 30.(수)</span><b>61</b></div>
+<div class="body">
+<p class="kicker">3부 프로젝트</p>
+<h1>지금부터는 배우지 않고 만듭니다</h1>
+<p class="lead">남은 시간은 네 시간입니다. 완성의 기준은 이미 0부에서 정했습니다.</p>
+<div class="slot"><div class="st">이 페이지에 들어갈 것</div><ul><li>진행 방식 — 각자 구현, 강사 2인 순회 코칭</li><li>시간 배분 — 정의 30분 / 구현 3시간 / 검증 30분</li><li>막히면 손 드는 규칙</li><li>완성하지 못했을 때의 기준 — 돌아가는 데까지가 산출물</li></ul></div>
+
+</div></section><section class="page" data-no="62">
+<div class="ph"><b>3부 프로젝트</b><span>2026 ASTIS 거점기관 맞춤형 교육 · 바이브코딩 실무 교재</span></div><div class="pf"><span>농촌진흥청 · 2026. 9. 29.(화) ~ 9. 30.(수)</span><b>62</b></div>
+<div class="body">
+<p class="kicker">3부 프로젝트</p>
+<h1>무엇이 불편한지부터 한 문장으로 적습니다</h1>
+<p class="lead">도구를 먼저 고르지 않습니다. 불편한 장면을 먼저 적습니다.</p>
+<div class="slot"><div class="st">이 페이지에 들어갈 것</div><ul><li>페인포인트 정의서 양식 (작성란)</li><li>언제 / 얼마나 자주 / 몇 분 걸리는가</li><li>지금 손으로 하는 순서를 번호로 쪼개기</li><li>예시 3건 — 상반기 사례에서</li></ul></div>
+
+</div></section><section class="page" data-no="63">
+<div class="ph"><b>3부 프로젝트</b><span>2026 ASTIS 거점기관 맞춤형 교육 · 바이브코딩 실무 교재</span></div><div class="pf"><span>농촌진흥청 · 2026. 9. 29.(화) ~ 9. 30.(수)</span><b>63</b></div>
+<div class="body">
+<p class="kicker">3부 프로젝트</p>
+<h1>무엇으로 만들지 고릅니다</h1>
+<p class="lead">1.6의 질문 네 개를 여기에 적용합니다. 고민이 길어지면 강사를 부르십시오.</p>
+<div class="slot"><div class="st">이 페이지에 들어갈 것</div><ul><li>질문 네 개 체크란 (작성란)</li><li>선택 결과 — 파이썬 / 파워셸 / HTML / VBA / API 조합</li><li>산출물 4종 중 무엇인가</li><li>강사 확인란</li></ul></div>
+
+</div></section><section class="page" data-no="64">
+<div class="ph"><b>3부 프로젝트</b><span>2026 ASTIS 거점기관 맞춤형 교육 · 바이브코딩 실무 교재</span></div><div class="pf"><span>농촌진흥청 · 2026. 9. 29.(화) ~ 9. 30.(수)</span><b>64</b></div>
+<div class="body">
+<p class="kicker">3부 프로젝트</p>
+<h1>요청문을 먼저 씁니다. 그 다음에 시킵니다</h1>
+<p class="lead">입력이 무엇이고, 규칙이 무엇이고, 무엇으로 내놓을지. 이 세 줄을 적고 시작합니다.</p>
+<div class="slot"><div class="st">이 페이지에 들어갈 것</div><ul><li>요청문 작성란 — 입력 / 규칙 / 출력</li><li>좋은 요청문 예시 3건</li><li>한 번에 다 시키지 않고 쪼개는 법</li><li>첫 결과가 나오면 바로 검증 3종 세트</li></ul></div>
+
+</div></section><section class="page" data-no="65">
+<div class="ph"><b>3부 프로젝트</b><span>2026 ASTIS 거점기관 맞춤형 교육 · 바이브코딩 실무 교재</span></div><div class="pf"><span>농촌진흥청 · 2026. 9. 29.(화) ~ 9. 30.(수)</span><b>65</b></div>
+<div class="body">
+<p class="kicker">3부 프로젝트</p>
+<h1>구현 진행표 · 1시간째</h1>
+<p class="lead">여기까지 왔는지 스스로 점검합니다. 늦어졌으면 범위를 줄이십시오.</p>
+<div class="slot"><div class="st">이 페이지에 들어갈 것</div><ul><li>체크 — 첫 결과가 한 번은 나왔는가</li><li>체크 — 내 실제 데이터로 돌렸는가</li><li>막힌 지점 기록란</li><li>범위 줄이기 판단 기준</li></ul></div>
+
+</div></section><section class="page" data-no="66">
+<div class="ph"><b>3부 프로젝트</b><span>2026 ASTIS 거점기관 맞춤형 교육 · 바이브코딩 실무 교재</span></div><div class="pf"><span>농촌진흥청 · 2026. 9. 29.(화) ~ 9. 30.(수)</span><b>66</b></div>
+<div class="body">
+<p class="kicker">3부 프로젝트</p>
+<h1>구현 진행표 · 2시간째</h1>
+<div style="height:10px"></div>
+<div class="slot"><div class="st">이 페이지에 들어갈 것</div><ul><li>체크 — 검증 3종 세트를 통과했는가</li><li>체크 — 다시 돌렸을 때 같은 결과가 나오는가</li><li>추가하고 싶은 것 목록 (오늘 할 것 / 나중에 할 것 구분)</li><li>막힌 지점 기록란</li></ul></div>
+
+</div></section><section class="page" data-no="67">
+<div class="ph"><b>3부 프로젝트</b><span>2026 ASTIS 거점기관 맞춤형 교육 · 바이브코딩 실무 교재</span></div><div class="pf"><span>농촌진흥청 · 2026. 9. 29.(화) ~ 9. 30.(수)</span><b>67</b></div>
+<div class="body">
+<p class="kicker">3부 프로젝트</p>
+<h1>구현 진행표 · 3시간째</h1>
+<p class="lead">새 기능을 붙이지 않습니다. 지금 있는 것을 돌아가게 만듭니다.</p>
+<div class="slot"><div class="st">이 페이지에 들어갈 것</div><ul><li>체크 — 파일이 정해진 자리에 저장되는가</li><li>체크 — 오류가 났을 때 무슨 일이 생기는가</li><li>마무리 우선순위</li><li>발표 준비 시작</li></ul></div>
+
+</div></section><section class="page" data-no="68">
+<div class="ph"><b>3부 프로젝트</b><span>2026 ASTIS 거점기관 맞춤형 교육 · 바이브코딩 실무 교재</span></div><div class="pf"><span>농촌진흥청 · 2026. 9. 29.(화) ~ 9. 30.(수)</span><b>68</b></div>
+<div class="body">
+<p class="kicker">3부 프로젝트</p>
+<h1>검증 체크리스트 — 이것을 통과해야 완성입니다</h1>
+<div style="height:10px"></div>
+<div class="slot"><div class="st">이 페이지에 들어갈 것</div><ul><li>구조 — 입력과 출력 파일이 정해진 자리에 있는가</li><li>값 — 행 수·합계·표본 10건</li><li>재현 — 지우고 다시 돌려도 같은가</li><li>예외 — 빈 파일, 형식이 다른 파일을 넣으면 어떻게 되는가</li><li>인수인계 — 설명서만 보고 남이 돌릴 수 있는가</li><li>체크란</li></ul></div>
+
+</div></section><section class="page" data-no="69">
+<div class="ph"><b>3부 프로젝트</b><span>2026 ASTIS 거점기관 맞춤형 교육 · 바이브코딩 실무 교재</span></div><div class="pf"><span>농촌진흥청 · 2026. 9. 29.(화) ~ 9. 30.(수)</span><b>69</b></div>
+<div class="body">
+<p class="kicker">3부 프로젝트</p>
+<h1>다음 사람이 다시 돌릴 수 있게 한 장을 씁니다</h1>
+<p class="lead">이 한 장이 없으면 담당자가 바뀌는 순간 도구가 죽습니다. 8개 기관 공통 문제였습니다.</p>
+<div class="slot"><div class="st">이 페이지에 들어갈 것</div><ul><li>사용 설명 1장 양식 (작성란)</li><li>무엇이 필요한가 / 어디에 넣는가 / 어떻게 돌리는가 / 어디에 나오는가</li><li>고장 났을 때 누구에게</li><li>파일 묶어서 보관하는 자리</li></ul></div>
+
+</div></section><section class="page" data-no="70">
+<div class="ph"><b>3부 프로젝트</b><span>2026 ASTIS 거점기관 맞춤형 교육 · 바이브코딩 실무 교재</span></div><div class="pf"><span>농촌진흥청 · 2026. 9. 29.(화) ~ 9. 30.(수)</span><b>70</b></div>
+<div class="body">
+<p class="kicker">3부 프로젝트</p>
+<h1>3분 발표 양식</h1>
+<p class="lead">잘 만든 것을 자랑하는 자리가 아니라, 다른 기관이 가져다 쓸 수 있게 보여주는 자리입니다.</p>
+<div class="slot"><div class="st">이 페이지에 들어갈 것</div><ul><li>1분 — 무엇이 불편했는가</li><li>1분 — 무엇으로 어떻게 만들었는가 (화면 시연)</li><li>1분 — 얼마나 줄었고 다음에 무엇을 붙일 것인가</li><li>발표 순서표</li></ul></div>
+
+</div></section><section class="page" data-no="71">
+<div class="ph"><b>3부 프로젝트</b><span>2026 ASTIS 거점기관 맞춤형 교육 · 바이브코딩 실무 교재</span></div><div class="pf"><span>농촌진흥청 · 2026. 9. 29.(화) ~ 9. 30.(수)</span><b>71</b></div>
+<div class="body">
+<p class="kicker">3부 프로젝트</p>
+<h1>평가 100점 세부 기준</h1>
+<p class="lead">0부에서 예고한 다섯 항목의 세부 배점입니다.</p>
+<div class="slot"><div class="st">이 페이지에 들어갈 것</div><ul><li>실효성 30 · 재현성 25 · 검증 20 · 인수인계 15 · 확장성 10</li><li>항목별 채점 기준 상세</li><li>자기 점검란</li><li>상호 평가란</li></ul></div>
+
+</div></section><section class="page" data-no="72">
+<div class="ph"><b>3부 프로젝트</b><span>2026 ASTIS 거점기관 맞춤형 교육 · 바이브코딩 실무 교재</span></div><div class="pf"><span>농촌진흥청 · 2026. 9. 29.(화) ~ 9. 30.(수)</span><b>72</b></div>
+<div class="body">
+<p class="kicker">3부 프로젝트</p>
+<h1>상반기 우수사례 6선 — 무엇을 가져다 쓸 수 있는가</h1>
+<p class="lead">상반기에 6개 기관에서 직접 만든 것들입니다. 화면과 구조를 그대로 싣습니다.</p>
+<div class="slot"><div class="st">이 페이지에 들어갈 것</div><ul><li>safety-public — 안전 점검 데이터 통합 모니터링</li><li>hham-farm-vision — 지역 농가 지표 시각화</li><li>expert-control — 전문가 인력풀·일정 관리</li><li>supercharge — 목표·실적 트래킹</li><li>sunny-public — 반복 업무 스케줄러와 리포트</li><li>hampyeong — 함평 거점 특화 사업 관리 뷰어</li><li>각 사례: 무엇이 불편했나 / 무엇으로 만들었나 / 우리 기관에 어떻게 옮기나</li></ul></div>
+
+</div></section><section class="page divi" data-no="4부">
+<div class="body">
+<div class="dv-no">4부</div>
+<h1>돌아가서</h1>
+<p class="dv-sub">교육장을 나선 다음 7일</p>
+<div class="dv-rule"></div>
+<ul class="dv-list"><li><i>73</i><span>복귀 후 7일 작업표</span></li><li><i>74</i><span>도구가 고장 났을 때</span></li><li><i>75</i><span>업무망과 개인정보 취급 기준</span></li><li><i>76</i><span>옆자리에 넘기는 법</span></li><li><i>77</i><span>다음에 만들 것</span></li><li><i>78</i><span>맺음</span></li></ul>
+<div class="dv-fill"></div>
+</div></section><section class="page" data-no="73">
+<div class="ph"><b>4부 돌아가서</b><span>2026 ASTIS 거점기관 맞춤형 교육 · 바이브코딩 실무 교재</span></div><div class="pf"><span>농촌진흥청 · 2026. 9. 29.(화) ~ 9. 30.(수)</span><b>73</b></div>
+<div class="body">
+<p class="kicker">4부 돌아가서</p>
+<h1>복귀 후 7일 작업표</h1>
+<p class="lead">교육 직후 일주일이 고비입니다. 날짜별로 할 일을 정해 두면 도구가 살아남습니다.</p>
+<div class="slot"><div class="st">이 페이지에 들어갈 것</div><ul><li>1일차 — 만든 것을 실제 자리에 놓고 한 번 돌리기</li><li>2~3일차 — 이번 주 실제 업무에 써 보고 어긋나는 곳 적기</li><li>4~5일차 — 어긋난 곳 한 가지만 고치기</li><li>6일차 — 옆자리에 설명해 보기</li><li>7일차 — 다음에 만들 것 하나 정하기</li><li>작성란</li></ul></div>
+
+</div></section><section class="page" data-no="74">
+<div class="ph"><b>4부 돌아가서</b><span>2026 ASTIS 거점기관 맞춤형 교육 · 바이브코딩 실무 교재</span></div><div class="pf"><span>농촌진흥청 · 2026. 9. 29.(화) ~ 9. 30.(수)</span><b>74</b></div>
+<div class="body">
+<p class="kicker">4부 돌아가서</p>
+<h1>도구가 고장 났을 때</h1>
+<p class="lead">반드시 고장 납니다. 파일 위치가 바뀌거나, 서식이 달라지거나, 키가 만료됩니다.</p>
+<div class="slot"><div class="st">이 페이지에 들어갈 것</div><ul><li>자주 나는 고장 다섯 가지와 대처</li><li>에이전트에게 다시 고쳐 달라고 하는 법 — 무엇을 알려 줘야 하는가</li><li>되돌릴 수 있게 사본을 남겨 두는 습관</li><li>부록 B 오류 사전</li></ul></div>
+
+</div></section><section class="page" data-no="75">
+<div class="ph"><b>4부 돌아가서</b><span>2026 ASTIS 거점기관 맞춤형 교육 · 바이브코딩 실무 교재</span></div><div class="pf"><span>농촌진흥청 · 2026. 9. 29.(화) ~ 9. 30.(수)</span><b>75</b></div>
+<div class="body">
+<p class="kicker">4부 돌아가서</p>
+<h1>업무망과 개인정보 취급 기준</h1>
+<p class="lead">기관 규정이 우선입니다. 이 페이지는 판단이 필요할 때 보는 기준선입니다.</p>
+<div class="slot"><div class="st">이 페이지에 들어갈 것</div><ul><li>외부 서비스에 올려도 되는 것과 안 되는 것</li><li>개인정보가 들어간 파일 다루는 순서</li><li>인증키·비밀번호를 파일에 적지 않는 법</li><li>판단이 서지 않으면 정보보안 담당자에게</li></ul></div>
+
+</div></section><section class="page" data-no="76">
+<div class="ph"><b>4부 돌아가서</b><span>2026 ASTIS 거점기관 맞춤형 교육 · 바이브코딩 실무 교재</span></div><div class="pf"><span>농촌진흥청 · 2026. 9. 29.(화) ~ 9. 30.(수)</span><b>76</b></div>
+<div class="body">
+<p class="kicker">4부 돌아가서</p>
+<h1>옆자리에 넘기는 법</h1>
+<p class="lead">혼자 쓰는 도구는 담당자가 바뀌면 사라집니다. 기관 안에서 퍼져야 자산이 됩니다.</p>
+<div class="slot"><div class="st">이 페이지에 들어갈 것</div><ul><li>설명서 1장 + 파일 묶음을 어디에 두는가</li><li>30분 안에 가르치는 순서</li><li>기관 내 공유 폴더 구성 제안</li><li>거점기관 간 사례 공유 경로</li></ul></div>
+
+</div></section><section class="page" data-no="77">
+<div class="ph"><b>4부 돌아가서</b><span>2026 ASTIS 거점기관 맞춤형 교육 · 바이브코딩 실무 교재</span></div><div class="pf"><span>농촌진흥청 · 2026. 9. 29.(화) ~ 9. 30.(수)</span><b>77</b></div>
+<div class="body">
+<p class="kicker">4부 돌아가서</p>
+<h1>다음에 만들 것</h1>
+<p class="lead">오늘 만든 것 하나로 끝내지 않습니다. 이미 머릿속에 떠오른 것들을 적어 두십시오.</p>
+<div class="slot"><div class="st">이 페이지에 들어갈 것</div><ul><li>아이디어 기록란 10칸</li><li>난이도와 효과로 우선순위 매기기</li><li>혼자 할 수 있는 것과 도움이 필요한 것 구분</li><li>다음 교육·상담 신청 경로</li></ul></div>
+
+</div></section><section class="page" data-no="78">
+<div class="ph"><b>4부 돌아가서</b><span>2026 ASTIS 거점기관 맞춤형 교육 · 바이브코딩 실무 교재</span></div><div class="pf"><span>농촌진흥청 · 2026. 9. 29.(화) ~ 9. 30.(수)</span><b>78</b></div>
+<div class="body">
+<p class="kicker">4부 돌아가서</p>
+<h1>맺음</h1>
+<p class="lead">이틀 동안 배운 것은 다섯 가지 재료를 구분하는 눈과, 결과를 의심하는 습관입니다. 도구는 낡지만 이 둘은 남습니다.</p>
+<div class="slot"><div class="st">이 페이지에 들어갈 것</div><ul><li>다섯 재료 요약 한 장 (잘라서 책상에 붙이는 판)</li><li>검증 3종 세트 요약</li><li>질문 네 개 판단표</li><li>문의처</li></ul></div>
+
+</div></section><section class="page divi" data-no="부록">
+<div class="body">
+<div class="dv-no">부록</div>
+<h1>부록</h1>
+
+<div class="dv-rule"></div>
+<ul class="dv-list"><li><i>79</i><span>부록 A · 에이전트가 만드는 파일들</span></li><li><i>80</i><span>부록 B · 오류 사전</span></li><li><i>81</i><span>부록 C · 용어집</span></li><li><i>82</i><span>부록 D · 별책 실습카드 안내</span></li></ul>
+<div class="dv-fill"></div>
+</div></section><section class="page" data-no="79">
+<div class="ph"><b>부록 부록</b><span>2026 ASTIS 거점기관 맞춤형 교육 · 바이브코딩 실무 교재</span></div><div class="pf"><span>농촌진흥청 · 2026. 9. 29.(화) ~ 9. 30.(수)</span><b>79</b></div>
+<div class="body">
+<p class="kicker">부록 부록</p>
+<h1>부록 A · 에이전트가 만드는 파일들</h1>
+<p class="lead">작업하다 보면 시키지 않은 파일이 생깁니다. 무엇인지만 알아 두시면 됩니다. 직접 쓰실 필요는 없습니다.</p>
+<div class="slot"><div class="st">이 페이지에 들어갈 것</div><ul><li>SPEC.md — 무엇을 만들지 적어 둔 메모</li><li>AGENTS.md · CLAUDE.md — 작업 규칙 메모</li><li>requirements.txt — 필요한 도구 목록</li><li>README.md — 설명서</li><li>지워도 되는 것과 남겨 둘 것</li></ul></div>
+
+</div></section><section class="page" data-no="80">
+<div class="ph"><b>부록 부록</b><span>2026 ASTIS 거점기관 맞춤형 교육 · 바이브코딩 실무 교재</span></div><div class="pf"><span>농촌진흥청 · 2026. 9. 29.(화) ~ 9. 30.(수)</span><b>80</b></div>
+<div class="body">
+<p class="kicker">부록 부록</p>
+<h1>부록 B · 오류 사전</h1>
+<p class="lead">자주 나오는 오류 화면과 그대로 복사해서 쓰실 대처문입니다.</p>
+<div class="slot"><div class="st">이 페이지에 들어갈 것</div><ul><li>설치·권한 오류 6건</li><li>파일 경로·한글 이름 오류 5건</li><li>엑셀·CSV 형식 오류 6건</li><li>API 인증·호출 오류 5건</li><li>브라우저·매크로 보안 오류 4건</li></ul></div>
+
+</div></section><section class="page" data-no="81">
+<div class="ph"><b>부록 부록</b><span>2026 ASTIS 거점기관 맞춤형 교육 · 바이브코딩 실무 교재</span></div><div class="pf"><span>농촌진흥청 · 2026. 9. 29.(화) ~ 9. 30.(수)</span><b>81</b></div>
+<div class="body">
+<p class="kicker">부록 부록</p>
+<h1>부록 C · 용어집</h1>
+<p class="lead">이틀 동안 나오는 말들입니다. 몰라도 진행에 지장은 없지만 알면 편합니다.</p>
+<div class="slot"><div class="st">이 페이지에 들어갈 것</div><ul><li>재료 관련 — 라이브러리, 스크립트, 실행, 경로</li><li>데이터 관련 — CSV, JSON, XML, 인코딩</li><li>웹 관련 — API, 키, 응답코드, RSS, 배포</li><li>총 40개 내외</li></ul></div>
+
+</div></section><section class="page" data-no="82">
+<div class="ph"><b>부록 부록</b><span>2026 ASTIS 거점기관 맞춤형 교육 · 바이브코딩 실무 교재</span></div><div class="pf"><span>농촌진흥청 · 2026. 9. 29.(화) ~ 9. 30.(수)</span><b>82</b></div>
+<div class="body">
+<p class="kicker">부록 부록</p>
+<h1>부록 D · 별책 실습카드 안내</h1>
+<p class="lead">본책과 별도로 드리는 카드 묶음입니다. 자리로 돌아가서 쓰시는 용도입니다.</p>
+<div class="slot"><div class="st">이 페이지에 들어갈 것</div><ul><li>재료별 요청문 카드 — 파이썬 25 / 파워셸 15 / HTML 15 / VBA 10 / API 15</li><li>상황별 카드 — 표·문서·말·사진</li><li>검증 카드</li><li>쓰는 법 — 카드 문장에서 대괄호만 내 것으로 바꾸기</li></ul></div>
+
+</div></section>
+</div>
+<script>
+const pages=[...document.querySelectorAll('.page')];
+const cnt=document.getElementById('pg');
+const sel=document.getElementById('jump');
+function label(i){const p=pages[i];return p.dataset.no==='-'?'표지':p.dataset.no;}
+function cur(){let best=0,bd=1e9;pages.forEach((p,i)=>{const d=Math.abs(p.getBoundingClientRect().top-70);
+ if(d<bd){bd=d;best=i}});return best;}
+function upd(){const i=cur();cnt.textContent=label(i)+' / '+(pages.length-1);}
+function go(i){i=Math.max(0,Math.min(pages.length-1,i));
+ window.scrollTo({top:pages[i].offsetTop-60,behavior:'smooth'});}
+document.getElementById('prev').onclick=()=>go(cur()-1);
+document.getElementById('next').onclick=()=>go(cur()+1);
+document.getElementById('print').onclick=()=>window.print();
+sel.onchange=e=>{if(e.target.value!=='')go(+e.target.value);e.target.selectedIndex=0;};
+addEventListener('scroll',upd,{passive:true});
+addEventListener('keydown',e=>{if(e.target.tagName==='SELECT')return;
+ if(e.key==='ArrowRight'||e.key==='PageDown'){e.preventDefault();go(cur()+1)}
+ if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();go(cur()-1)}});
+upd();
+</script>
+<script>/* kg-preview: #<heading> \uc704\uce58\ub85c \uc774\ub3d9 */
+(function(){function norm(t){return (t||'').replace(/\s+/g,'').toLowerCase()}
+function go(){var h=decodeURIComponent(location.hash.slice(1));if(!h)return;var k=norm(h).slice(0,24);if(!k)return;
+var best=null,bl=1e9,els=document.body.querySelectorAll('h1,h2,h3,h4,h5,p,div,span,li,td,text,tspan,section,article');
+for(var i=0;i<els.length;i++){var e=els[i],t=norm(e.textContent);if(t.length<bl&&t.indexOf(k)>-1){best=e;bl=t.length}}
+if(!best)return;var box=best.closest('section,[class*=slide],[class*=page],article')||best;
+box.scrollIntoView({block:'start'});box.style.outline='3px solid #c0504d';box.style.outlineOffset='4px';
+setTimeout(function(){box.style.outline=''},2600)}
+window.addEventListener('load',function(){setTimeout(go,400)});window.addEventListener('hashchange',go)})();</script></body></html>

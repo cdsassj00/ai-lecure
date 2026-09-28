@@ -1,0 +1,445 @@
+<!doctype html>
+<html lang="ko">
+<head><meta name="robots" content="noindex, nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>전북교육청 전산직 공무원을 위한 생성형 AI 실무역량 강화</title>
+<!--
+  사용법: 이 파일을 결과 경로로 복사한 뒤, <section class="slide"> 들을 주제에 맞게 채운다.
+  CSS는 손대지 말고 그대로 둔다(디자인 일관성). 아래 슬라이드들은 레이아웃 예시이며,
+  필요한 것만 골라 복제·편집하고 나머지는 지운다. 캔버스는 1280x720(16:9) 고정.
+  팔레트는 <body data-palette="..."> 값으로 고른다. 색상 버튼은 미리보기용이며 저장 시 유지된다.
+-->
+<style>
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css");
+@import url("https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500;600;700;900&family=JetBrains+Mono:wght@400;600&display=swap");
+:root{
+  --pagebg:#cfc8ba; --presentbg:#0c0907;
+  --paper:#f8f4ed; --paper2:#fbf8f1; --band:#efe8d7; --band2:#e7dcc6;
+  --dark:#1a130f; --ink:#211913; --ink2:#473d33; --muted:#8c8275;
+  --rust:#bf571d; --rust2:#9c440f; --gold:#c98a3a; --line:#ddd1ba; --line2:#cabb9c;
+  --soft-bg:#eef1e9; --soft-fg:#3a5240; --force-bg:#34190f; --force-fg:#ffcfa8;
+  --stack1:#9c440f; --stack2:#b35a26; --stack3:#c47a45; --stack4:#caa06e; --stack4fg:#2a1d12;
+  --fail-bg:#2a1812; --fail-title:#ffd9bb; --fail-text:#d3c6b8;
+}
+body[data-palette="slate-teal"]{
+  --pagebg:#c6d0ce; --presentbg:#071819;
+  --paper:#f4f7f4; --paper2:#fbfcf9; --band:#e4ece8; --band2:#d5e1dd;
+  --dark:#102425; --ink:#172223; --ink2:#3d4b4c; --muted:#738181;
+  --rust:#00756f; --rust2:#005f5a; --gold:#b97923; --line:#cedbd8; --line2:#b8c9c5;
+  --soft-bg:#e8f0e6; --soft-fg:#34533b; --force-bg:#123331; --force-fg:#aee7df;
+  --stack1:#005f5a; --stack2:#087c75; --stack3:#39978e; --stack4:#9fc9bd; --stack4fg:#123331;
+  --fail-bg:#182a2c; --fail-title:#bceee7; --fail-text:#d0dddc;
+}
+body[data-palette="forest-gold"]{
+  --pagebg:#c9c8b8; --presentbg:#0b160d;
+  --paper:#f6f5ec; --paper2:#fbfaf4; --band:#e6ead9; --band2:#d7ddc3;
+  --dark:#172719; --ink:#1f271f; --ink2:#454c42; --muted:#7b8173;
+  --rust:#5d7c2f; --rust2:#46651f; --gold:#b98222; --line:#d7dcc9; --line2:#bdc7a8;
+  --soft-bg:#edf0df; --soft-fg:#405225; --force-bg:#263317; --force-fg:#d6e89a;
+  --stack1:#46651f; --stack2:#5d7c2f; --stack3:#819b4b; --stack4:#c6c983; --stack4fg:#263317;
+  --fail-bg:#1f2b18; --fail-title:#e3efad; --fail-text:#d4dbc8;
+}
+body[data-palette="navy-coral"]{
+  --pagebg:#c8ccd3; --presentbg:#070d18;
+  --paper:#f5f6f8; --paper2:#fbfbfd; --band:#e5e9ef; --band2:#d7dde6;
+  --dark:#101827; --ink:#171d2a; --ink2:#424a59; --muted:#767f90;
+  --rust:#b94a48; --rust2:#943539; --gold:#c38424; --line:#d6dce5; --line2:#bdc7d4;
+  --soft-bg:#e8edf3; --soft-fg:#314760; --force-bg:#241d2c; --force-fg:#ffc9c5;
+  --stack1:#943539; --stack2:#b94a48; --stack3:#c96c63; --stack4:#dba89d; --stack4fg:#2b1e24;
+  --fail-bg:#241d2c; --fail-title:#ffc9c5; --fail-text:#d8d3dc;
+}
+body[data-palette="graphite-rose"]{
+  --pagebg:#cbc7c8; --presentbg:#101011;
+  --paper:#f7f5f4; --paper2:#fcfaf9; --band:#e9e3e2; --band2:#ddd4d2;
+  --dark:#202022; --ink:#222122; --ink2:#4c4849; --muted:#807879;
+  --rust:#a8485c; --rust2:#873447; --gold:#b47a2f; --line:#ded6d3; --line2:#c8bdb9;
+  --soft-bg:#eee8e6; --soft-fg:#4c4748; --force-bg:#332026; --force-fg:#ffd2dc;
+  --stack1:#873447; --stack2:#a8485c; --stack3:#bd6c79; --stack4:#d4a7ad; --stack4fg:#332026;
+  --fail-bg:#332026; --fail-title:#ffd2dc; --fail-text:#ded1d4;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;background:var(--pagebg);font-family:Pretendard,"Apple SD Gothic Neo","Noto Sans KR",sans-serif;color:var(--ink);-webkit-font-smoothing:antialiased;}
+.deck{display:flex;flex-direction:column;align-items:center;gap:22px;padding:22px 0 40px;}
+.slide{position:relative;width:1280px;height:720px;background:var(--paper);overflow:hidden;box-shadow:0 10px 34px rgba(0,0,0,.22);}
+h1,h2,h3,h4,p,ul,ol,li{margin:0;padding:0;}
+
+/* 머리글: 솔리드 다크 마스트헤드 (그림자/그라데이션 금지) */
+.hdr{position:absolute;top:0;left:0;right:0;height:44px;display:flex;align-items:center;justify-content:space-between;padding:0 46px;background:var(--dark);z-index:3;}
+.hdr .ht{font-size:12.5px;font-weight:700;color:#f3ede2;letter-spacing:.2px;}
+.hdr .ht span{color:rgba(243,237,226,.42);font-weight:600;letter-spacing:1px;font-size:10px;margin-left:7px;}
+.hdr .hr{font-size:10.5px;font-weight:600;letter-spacing:1.2px;color:rgba(243,237,226,.55);}
+
+.stage{position:absolute;top:44px;left:0;right:0;bottom:0;padding:26px 50px 38px;display:flex;flex-direction:column;}
+.crumb{font-size:14px;font-weight:600;color:var(--rust);letter-spacing:.3px;margin-bottom:6px;}
+.atitle{font-family:"Noto Serif KR",serif;font-weight:700;font-size:28px;line-height:1.28;color:#13100c;letter-spacing:-.4px;}
+.atitle .lbl{color:var(--rust2);}
+.atitle .sub{font-weight:500;color:#3a322a;}
+.titlerule{height:0;border-bottom:1.5px solid var(--line2);margin:14px 0 0;}
+
+.body{flex:1;min-height:0;display:grid;gap:26px;padding-top:18px;}
+.split{grid-template-columns:1fr 1fr;}
+.split-l{grid-template-columns:1.08fr .92fr;}
+.split-r{grid-template-columns:.9fr 1.1fr;}
+.colflow{display:flex;flex-direction:column;min-height:0;}
+
+/* 인트로 설명문(합니다체) */
+.lead{font-size:16.5px;line-height:1.82;color:var(--ink);font-weight:400;}
+.lead b{font-weight:700;color:#13100c;}
+.lead .hl{color:var(--rust2);font-weight:700;}
+
+/* 번호 개념 정의 — 박스 그리드 대신 이것을 쓴다 */
+.concepts{display:flex;flex-direction:column;}
+.concepts.fill{flex:1;justify-content:flex-start;}          /* 칼럼 높이를 균등 분배해 채움 */
+.concepts.fill .concept{flex:1;align-items:center;}
+.concept{padding:16px 0 17px;border-bottom:1px solid var(--line);display:flex;gap:16px;}
+.concept:first-child{padding-top:5px;}
+.concept .no{flex:0 0 auto;font-family:"Noto Serif KR",serif;font-size:22px;font-weight:700;color:var(--rust);line-height:1.25;width:30px;}
+.concept .cbody{flex:1;}
+.concept .cbody .cn{font-size:17.5px;font-weight:700;color:#15100c;line-height:1.3;}
+.concept .cbody .cn .en{font-size:12px;font-weight:600;color:var(--muted);letter-spacing:.6px;margin-left:8px;}
+.concept .cbody p{font-size:15px;line-height:1.7;color:var(--ink2);margin-top:6px;font-weight:400;}
+.concept .cbody p b{color:#2a231c;font-weight:700;}
+.concepts.big .concept .cbody .cn{font-size:19px;}
+.concepts.big .concept .cbody p{font-size:16px;line-height:1.74;}
+.boxmore{display:block;margin-top:6px;color:var(--rust2);font-weight:650;}
+.boxcheck{display:block;margin-top:3px;color:#5d5044;font-weight:500;}
+
+/* 하단 정리/캡션 바 — 슬로건 금지, 사실 설명만 */
+.note{margin-top:auto;display:flex;gap:16px;align-items:flex-start;padding:16px 20px;background:var(--band);border-left:3px solid var(--rust);border-radius:0 3px 3px 0;}
+.body.colflow[style*="justify-content"] > .note{margin-top:0;}
+.note .nl{flex:0 0 auto;font-size:12px;font-weight:700;letter-spacing:1px;color:var(--rust2);padding-top:2px;}
+.note p{font-size:15px;line-height:1.66;color:var(--ink);font-weight:400;}
+.note p b{font-weight:700;color:var(--rust2);}
+.srcline{position:absolute;left:50px;bottom:15px;font-size:11px;color:var(--muted);font-weight:400;}
+.pageno{position:absolute;right:30px;bottom:13px;font-size:13.5px;font-weight:700;color:var(--rust);}
+
+/* 표 */
+.tablefill{flex:1;min-height:0;display:flex;align-items:stretch;}
+.tablefill table.grid{height:100%;}
+table.grid{width:100%;border-collapse:collapse;font-size:14.2px;}
+table.grid th{background:var(--dark);color:#f1ebe0;font-weight:700;font-size:13.4px;padding:9.5px 12px;text-align:left;}
+table.grid td{padding:10px 12px;border-bottom:1px solid var(--line);color:var(--ink2);vertical-align:top;line-height:1.52;}
+table.grid tr:nth-child(even) td{background:rgba(231,220,198,.36);}
+table.grid td b{color:#1c1610;font-weight:700;}
+.grp td{background:var(--band2)!important;color:var(--rust2);font-weight:700;font-size:13px;letter-spacing:.5px;}
+table.grid.even{--rows:3;--head-h:44px;height:100%;table-layout:fixed;}
+table.grid.even th,table.grid.even td{vertical-align:middle;}
+table.grid.even tr:first-child{height:var(--head-h);}
+table.grid.even .grp{height:34px;}
+table.grid.even tr:not(:first-child):not(.grp){height:calc((100% - var(--head-h)) / var(--rows));}
+table.grid.roomy{font-size:14.7px;}
+table.grid.roomy th{font-size:13.8px;padding:11px 13px;}
+table.grid.roomy td{padding:12px 13px;line-height:1.58;}
+table.grid.tight{font-size:13px;}
+table.grid.tight th,table.grid.tight td{padding:6.5px 12px;}
+table.grid.tight td{line-height:1.45;}
+.pill{display:inline-block;font-size:11px;font-weight:700;padding:2px 8px;border-radius:3px;white-space:nowrap;}
+.pill.soft{background:var(--soft-bg);color:var(--soft-fg);}
+.pill.force{background:var(--force-bg);color:var(--force-fg);}
+
+/* === 도식 === */
+.figcap{font-size:12px;font-weight:700;letter-spacing:1px;color:var(--muted);margin-bottom:16px;text-transform:uppercase;}
+.figwrap{display:flex;flex-direction:column;justify-content:center;min-height:0;height:100%;}
+.figwrap.flow .veri{flex:1;justify-content:space-between;}  /* 5단 이상 흐름만 채우기. 항목 3개 이하면 .flow 빼기 */
+
+/* 가로 타임라인 */
+.lineage{display:flex;align-items:stretch;}
+.lineage .ln{flex:1;text-align:center;padding:0 10px;position:relative;}
+.lineage .ln .dot{width:17px;height:17px;border-radius:50%;background:var(--paper);border:4px solid var(--rust);margin:0 auto 16px;position:relative;z-index:2;}
+.lineage .ln.hot .dot{background:var(--rust);}
+.lineage .ln::before{content:"";position:absolute;top:8px;left:0;right:0;height:2px;background:var(--line2);z-index:1;}
+.lineage .ln:first-child::before{left:50%;}.lineage .ln:last-child::before{right:50%;}
+.lineage .ln .yr{font-size:12px;font-weight:700;color:var(--muted);margin-bottom:5px;}
+.lineage .ln .tm{font-size:16px;font-weight:700;color:#15100c;line-height:1.25;margin-bottom:8px;}
+.lineage .ln p{font-size:13.5px;line-height:1.5;color:var(--ink2);}
+
+/* 2계층 스택(대비) */
+.layer2{display:flex;flex-direction:column;gap:15px;}
+.layer2 .lay{border-radius:6px;padding:21px 24px;}
+.layer2 .lay.top{background:var(--band);border:1.5px solid var(--line2);}
+.layer2 .lay.bot{background:var(--dark);color:#efe7da;}
+.layer2 .lay .lh{font-size:17.5px;font-weight:700;margin-bottom:6px;}
+.layer2 .lay.top .lh{color:#15100c;}
+.layer2 .lay .lt{font-size:12.5px;font-weight:600;color:var(--rust);letter-spacing:.5px;margin-bottom:9px;}
+.layer2 .lay.bot .lt{color:var(--gold);}
+.layer2 .lay p{font-size:14px;line-height:1.6;}
+.layer2 .lay.top p{color:var(--ink2);}.layer2 .lay.bot p{color:#cabfb0;}
+.layer2 .conn{text-align:center;color:var(--muted);font-size:13px;font-weight:600;}
+.layer2.big .lay{padding:25px 28px;}
+.layer2.big .lay .lh{font-size:20px;}
+.layer2.big .lay p{font-size:15.5px;line-height:1.68;}
+
+/* 순서 흐름 도식(반복 포함) */
+.loop{display:flex;flex-direction:column;gap:13px;}
+.loop .lp{display:flex;align-items:center;gap:14px;background:var(--paper2);border:1px solid var(--line);border-radius:5px;padding:15px 18px;}
+.loop .lp .lpn{flex:0 0 auto;width:27px;height:27px;border-radius:50%;background:var(--dark);color:#f1ebe0;font-size:12.5px;font-weight:700;display:flex;align-items:center;justify-content:center;}
+.loop .lp .lpt{font-size:15px;color:var(--ink);line-height:1.4;}
+.loop .lp .lpt b{font-weight:700;color:#15100c;}
+.loop .back{font-size:13px;color:var(--rust2);font-weight:700;text-align:center;align-self:center;margin-top:5px;background:var(--band);border:1px dashed var(--line2);border-radius:20px;padding:7px 18px;}
+.loop.big .lp{padding:18px 20px;}
+.loop.big .lp .lpt{font-size:16.5px;line-height:1.55;}
+
+/* 폭 증가 계층 스택 */
+.stack{display:flex;flex-direction:column;gap:12px;align-items:center;}
+.stack .sb{border-radius:5px;padding:16px 22px;color:#fff;text-align:left;}
+.stack .sb .sh{font-size:16px;font-weight:700;}
+.stack .sb .sd{font-size:13px;opacity:.92;margin-top:3px;line-height:1.45;}
+.stack .s1{width:56%;background:var(--stack1);}.stack .s2{width:70%;background:var(--stack2);}
+.stack .s3{width:84%;background:var(--stack3);}.stack .s4{width:98%;background:var(--stack4);color:var(--stack4fg);}
+
+/* 분기 흐름(검증/판정) */
+.veri{display:flex;flex-direction:column;gap:11px;}
+.veri .vrow{display:flex;align-items:center;gap:13px;}
+.veri .vbox{flex:1;background:var(--paper2);border:1px solid var(--line);border-radius:5px;padding:15px 18px;}
+.veri .vbox .vt{font-size:15px;font-weight:700;color:#15100c;}
+.veri .vbox p{font-size:13.5px;color:var(--ink2);line-height:1.5;margin-top:3px;}
+.veri .vbox.fail{background:var(--fail-bg);border-color:var(--fail-bg);}
+.veri .vbox.fail .vt{color:var(--fail-title);}.veri .vbox.fail p{color:var(--fail-text);}
+.veri .arr{color:var(--rust);font-size:18px;font-weight:700;flex:0 0 auto;}
+.veri.big .vbox{padding:18px 21px;}
+.veri.big .vbox .vt{font-size:16.5px;}
+.veri.big .vbox p{font-size:14.8px;line-height:1.58;}
+
+/* 가로 단계(좌→우) */
+.steps{display:flex;align-items:stretch;}
+.steps .st{flex:1;padding:0 18px;position:relative;}
+.steps .st:not(:last-child)::after{content:"›";position:absolute;right:-7px;top:15px;color:var(--rust);font-size:24px;font-weight:700;}
+.steps .st .sn{font-size:12px;font-weight:700;color:var(--rust);letter-spacing:.5px;margin-bottom:7px;}
+.steps .st .sh{font-size:16.5px;font-weight:700;color:#15100c;margin-bottom:7px;}
+.steps .st p{font-size:14.5px;line-height:1.58;color:var(--ink2);}
+.steps.big .st .sh{font-size:18.2px;}
+.steps.big .st p{font-size:15.6px;line-height:1.64;}
+.body.colflow[style*="justify-content"] > .steps.big{flex:1;min-height:0;padding:18px 12px;background:var(--band);border:1px solid var(--line2);border-radius:5px;}
+.body.colflow[style*="justify-content"] > .steps.big .st{display:flex;flex-direction:column;justify-content:center;}
+
+/* 단계 사이 데이터 릴레이 바 */
+.relay{display:flex;align-items:stretch;gap:9px;}
+.relay .rc{flex:1;background:var(--band);border:1px solid var(--line2);border-radius:5px;padding:13px 12px;text-align:center;display:flex;flex-direction:column;justify-content:center;}
+.relay .rc .rk{font-size:11px;font-weight:700;color:var(--rust2);letter-spacing:.5px;margin-bottom:5px;}
+.relay .rc .rv{font-size:14.5px;font-weight:700;color:#15100c;}
+.relay .ra{display:flex;align-items:center;color:var(--rust);font-size:17px;font-weight:700;}
+.relay.big .rc{padding:16px 14px;}
+.relay.big .rc .rk{font-size:12px;margin-bottom:7px;}
+.relay.big .rc .rv{font-size:16.6px;line-height:1.35;}
+
+/* 영역 카드(3열) */
+.domain{flex:1;background:var(--paper2);border:1px solid var(--line);border-top:3px solid var(--rust);border-radius:5px;padding:18px 19px;display:flex;flex-direction:column;}
+.domain .dh{font-size:17.5px;font-weight:700;color:#15100c;margin-bottom:6px;}
+.domain .dh span{font-size:12px;font-weight:600;color:var(--muted);margin-left:7px;}
+.dl{list-style:none;display:flex;flex-direction:column;flex:1;justify-content:space-around;padding-top:4px;}
+.dl li{position:relative;padding-left:16px;font-size:14.5px;line-height:1.55;color:var(--ink2);}
+.dl li::before{content:"";position:absolute;left:0;top:9px;width:6px;height:6px;background:var(--rust);border-radius:1px;}
+.dl li b{color:var(--rust2);font-weight:700;margin-right:5px;}
+.domain.big{padding:21px 22px;}
+.domain.big .dh{font-size:20px;margin-bottom:8px;}
+.domain.big .dl li{font-size:15.8px;line-height:1.64;}
+
+/* 인용(좌측 빈 중단 채울 때) */
+.pull{border-left:3px solid var(--rust);padding:6px 0 6px 20px;font-family:"Noto Serif KR",serif;font-size:19.5px;font-weight:600;color:#15100c;line-height:1.5;}
+.pull span{display:block;font-family:Pretendard,sans-serif;font-size:14px;font-weight:400;color:var(--ink2);line-height:1.65;margin-top:11px;}
+
+/* 수치 강조 */
+.stats{display:flex;gap:16px;margin-top:8px;}
+.stat{flex:1;text-align:center;background:var(--paper2);border:1px solid var(--line);border-radius:5px;padding:16px 12px;}
+.stat .sv{font-family:"Noto Serif KR",serif;font-size:28px;font-weight:700;color:var(--rust2);line-height:1;}
+.stat .sl{font-size:13px;color:var(--ink2);margin-top:7px;line-height:1.4;}
+
+/* 다크 표지/마무리 */
+.slide.dark{background:var(--dark);color:#f1ebe0;}
+.slide.dark .hdr{background:transparent;border-bottom:1px solid rgba(255,255,255,.1);}
+.dwrap{position:absolute;inset:44px 0 0;display:flex;flex-direction:column;justify-content:center;padding:0 80px;}
+.dwrap .eye{font-size:13px;font-weight:600;letter-spacing:3px;color:var(--gold);margin-bottom:20px;text-transform:uppercase;}
+.dwrap h1{font-family:"Noto Serif KR",serif;font-weight:700;font-size:56px;line-height:1.16;color:#fdfbf6;letter-spacing:-1px;}
+.dwrap h1 .ac{color:var(--rust);}
+.dwrap .ds{font-size:19px;color:#c6bbac;font-weight:400;margin-top:20px;line-height:1.65;max-width:900px;}
+.dwrap .den{font-family:"Noto Serif KR",serif;font-size:17px;font-weight:500;letter-spacing:5px;color:rgba(255,255,255,.14);margin-top:16px;text-transform:uppercase;}
+.dmeta{position:absolute;left:80px;right:80px;bottom:52px;display:flex;justify-content:space-between;align-items:flex-end;border-top:1px solid rgba(255,255,255,.14);padding-top:18px;}
+.dmeta .who{font-size:14.5px;color:#e6ddd0;font-weight:600;}
+.dmeta .who span{display:block;font-size:12px;color:var(--muted);font-weight:400;margin-top:3px;}
+.dmeta .topic{font-size:13px;color:#c6bbac;text-align:right;line-height:1.55;max-width:520px;}
+.dmeta .topic b{color:var(--gold);font-weight:600;}
+.recap{position:absolute;inset:44px 0 0;display:flex;flex-direction:column;justify-content:center;padding:0 80px;}
+.recap .eye{font-size:13px;font-weight:600;letter-spacing:3px;color:var(--gold);margin-bottom:16px;}
+.recap h1{font-family:"Noto Serif KR",serif;font-size:40px;font-weight:700;color:#fdfbf6;line-height:1.3;margin-bottom:30px;}
+.recap .ritems{display:flex;flex-direction:column;gap:18px;max-width:960px;}
+.recap .ri{display:flex;gap:16px;align-items:baseline;}
+.recap .ri .rn{font-family:"Noto Serif KR",serif;color:var(--rust);font-size:19px;font-weight:700;flex:0 0 auto;}
+.recap .ri p{font-size:16.5px;color:#d8cdbe;line-height:1.62;}
+.recap .ri p b{color:#fdfbf6;font-weight:700;}
+
+/* === 강의 도구: 편집 · PDF · 발표 (인쇄/발표 시 자동 숨김) === */
+.tool{position:fixed;top:12px;right:12px;z-index:9999;display:flex;gap:6px;font-family:Pretendard,sans-serif;}
+.tool button{font-size:12px;font-weight:700;padding:7px 12px;border-radius:6px;border:1px solid var(--line2);background:#fffdf8;color:#3a322a;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.18);}
+.tool button:hover{background:var(--band);}
+.tool button.on{background:var(--rust);color:#fff;border-color:var(--rust);}
+body.editing .slide{outline:2px dashed rgba(191,87,29,.45);outline-offset:-2px;}
+body.presenting{overflow:hidden;background:var(--presentbg);}
+body.presenting .deck{display:block;padding:0;gap:0;margin:0;}
+body.presenting .slide{display:none!important;}
+body.presenting .slide.present-current{display:block!important;position:fixed;left:50%;top:50%;transform:translate(-50%,-50%) scale(var(--ps,1));box-shadow:0 0 70px rgba(0,0,0,.6);}
+.pnav{position:fixed;bottom:14px;left:0;right:0;text-align:center;color:rgba(255,255,255,.55);font-size:13px;font-family:Pretendard,sans-serif;z-index:9999;display:none;}
+body.presenting .pnav{display:block;}
+@page{size:1280px 720px;margin:0;}
+@media print{
+  html,body{margin:0;padding:0;background:#fff;width:1280px;}
+  .tool,.pnav{display:none!important;}
+  .deck{display:block;gap:0;padding:0;margin:0;}
+  .slide{margin:0;box-shadow:none;page-break-after:always;break-after:page;}
+  .slide:last-child{page-break-after:auto;break-after:auto;}
+  *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}
+}
+</style>
+</head>
+<body data-palette="slate-teal">
+<div class="tool">
+  <button id="btnPalette">색상</button>
+  <button id="btnEdit">편집</button>
+  <button id="btnSave">저장(HTML)</button>
+  <button id="btnPdf">PDF</button>
+  <button id="btnPlay">발표</button>
+</div>
+<div class="pnav"></div>
+<div class="deck">
+
+<section class="slide dark"><div class="hdr"><div class="ht">전산직 공무원을 위한 생성형 AI 실무역량 강화<span>GENERATIVE AI PRACTICAL COMPETENCY</span></div><div class="hr">전북교육청 · 2026.10.08.</div></div><div class="dwrap"><div class="eye">전북교육청 전산직 공무원 · 강의·시연·실습 · 7시간</div><h1>전산직 공무원을 위한<br><span class="ac">생성형 AI 실무역량 강화</span></h1><div class="ds">프롬프트와 컨텍스트가 에이전트의 작업이 되고, 하네스를 통해 파일·코드·브라우저·DB 실행으로 이어지는 구조를 이해합니다.</div><div class="den">PROMPT · CONTEXT · AGENT · HARNESS · RAG · LOCAL AI</div></div><div class="dmeta"><div class="who">신성진 대표<span>CDSA · AI 업무자동화</span></div><div class="topic">2026. 10. 8.(목)<br><b>총 7시간 직무연수</b></div></div><div class="pageno">01</div></section>
+
+<section class="slide"><div class="hdr"><div class="ht">생성형 AI 실무역량 강화<span>SOURCE MAP</span></div><div class="hr">과정 안내</div></div><div class="stage"><div class="crumb">과정 안내</div><h2 class="atitle"><span class="lbl">[원자료 반영]</span> 강의 구성 <span class="sub">— 도식·커리큘럼·실습 산출물</span></h2><div class="titlerule"></div><div class="body colflow" style="justify-content:space-between;"><p class="lead">강의의 시작은 인터랙티브 도식의 <b>LLM → 컨텍스트 → 도구·RAG → 에이전트 → 하네스 → 코딩에이전트</b> 관계를 따릅니다. 이후 커리큘럼의 모델 원리, 업무 병목, 바이브코딩, Ollama, RAG, 직원 제작 도구 운영을 연결합니다.</p><div class="relay big"><div class="rc"><div class="rk">개념 원자료</div><div class="rv">AI개념 도식 애니메이션</div></div><div class="ra">›</div><div class="rc"><div class="rk">교육 원자료</div><div class="rv">7시간 커리큘럼·강사카드</div></div><div class="ra">›</div><div class="rc"><div class="rk">실습 원자료</div><div class="rv">명령·코드·로컬 AI·RAG</div></div><div class="ra">›</div><div class="rc"><div class="rk">운영 산출물</div><div class="rv">설계표·검증표·도구 점검표</div></div></div><div class="note"><div class="nl">변경 기준</div><p>고정된 문장 공식을 외우는 방식은 사용하지 않습니다. <b>작업 상태와 사용 가능한 컨텍스트, 도구, 실행 결과가 어떻게 이어지는지</b>를 중심으로 설명합니다.</p></div></div></div><div class="pageno">02</div></section>
+
+<section class="slide"><div class="hdr"><div class="ht">생성형 AI 실무역량 강화<span>CURRICULUM</span></div><div class="hr">7시간 운영안</div></div><div class="stage"><div class="crumb">과정 안내</div><h2 class="atitle"><span class="lbl">[과정 안내]</span> 7시간 커리큘럼 <span class="sub">— 개념 이해에서 RAG 설계까지</span></h2><div class="titlerule"></div><div class="body colflow" style="padding-top:12px;"><table class="grid tight" style="height:100%;"><tr><th style="width:80px;">교시</th><th style="width:210px;">단원</th><th>핵심 내용</th><th style="width:220px;">실습·산출물</th></tr><tr><td>1</td><td><b>프롬프트·컨텍스트·에이전트·하네스</b></td><td>현재 요청, 지침·문서·대화기록, 도구 실행, 하네스 연결 구조</td><td>업무 실행 흐름도</td></tr><tr><td>2</td><td><b>LLM·SLM 원리</b></td><td>토큰, 파라미터, KV 캐시, MoE, 임베딩, 모델 카드</td><td>모델 사양 판독표</td></tr><tr><td>3</td><td><b>오케스트레이션</b></td><td>파일·DB·코드·브라우저 연결, 승인·검증·로그</td><td>하네스 설계표</td></tr><tr><td>4</td><td><b>AI 도입 지점</b></td><td>검색·추출·분석·초안 병목, 기존 시스템 연결</td><td>적용 후보 매트릭스</td></tr><tr><td>5</td><td><b>바이브코딩</b></td><td>PowerShell·Python·Node.js·Rust와 코딩에이전트</td><td>자동화 도구 시제품</td></tr><tr><td>6</td><td><b>Ollama 로컬 AI</b></td><td>모델·API·화면·파일·로그를 갖춘 로컬 서비스</td><td>로컬 챗봇 구조도</td></tr><tr><td>7</td><td><b>RAG·민첩한 AI</b></td><td>문서 검색 챗봇 구현과 py·html·exe 운영 전환</td><td>RAG 설계안·점검표</td></tr></table></div></div><div class="pageno">03</div></section>
+
+<section class="slide"><div class="hdr"><div class="ht">프롬프트·컨텍스트·에이전트·하네스<span>FOUNDATION</span></div><div class="hr">1부 · 출발점</div></div><div class="stage"><div class="crumb">1부 · 출발점</div><h2 class="atitle"><span class="lbl">[이론]</span> LLM의 기본 상태 <span class="sub">— 답변 생성과 실행 능력의 구분</span></h2><div class="titlerule"></div><div class="body split-l"><div class="colflow"><p class="lead">LLM은 학습된 가중치와 현재 입력을 이용해 다음 토큰을 생성합니다. 문장을 작성하고 코드를 제안할 수 있지만, <b>도구가 연결되지 않은 LLM은 파일을 열거나 프로그램을 실행하지 못합니다.</b></p><div class="concepts fill big"><div class="concept"><div class="no">1</div><div class="cbody"><div class="cn">학습 지식</div><p>학습 시점에 형성된 언어 패턴과 지식을 사용합니다.<span class="boxmore">입력 — 사용자가 지금 보낸 텍스트·이미지·표.</span><span class="boxcheck">한계 — 최신 내부 문서와 PC 상태를 자동으로 알지 못합니다.</span></p></div></div><div class="concept"><div class="no">2</div><div class="cbody"><div class="cn">추론 결과</div><p>현재 입력에 이어질 가능성이 높은 출력을 만듭니다.<span class="boxmore">출력 — 답변·요약·코드·분류·초안.</span><span class="boxcheck">한계 — 출력이 실제 실행 결과와 같다는 보장은 없습니다.</span></p></div></div></div></div><div class="figwrap"><div class="figcap">언어모델의 입력과 출력</div><div class="layer2 big"><div class="lay top"><div class="lt">INPUT</div><div class="lh">프롬프트 + 현재 컨텍스트</div><p>질문, 지침, 문서 조각, 대화기록이 입력 범위에 들어옵니다.</p></div><div class="conn">▼ 토큰 확률 계산</div><div class="lay bot"><div class="lt">OUTPUT</div><div class="lh">텍스트·코드·도구 요청</div><p>도구 연결이 없으면 제안으로 끝나고, 연결이 있으면 실행 요청으로 이어집니다.</p></div></div></div></div><div class="note"><div class="nl">구분</div><p>LLM이 답을 생성하는 능력과 컴퓨터에서 작업을 실행하는 능력은 서로 다른 계층입니다.</p></div></div><div class="pageno">04</div></section>
+
+<section class="slide"><div class="hdr"><div class="ht">프롬프트·컨텍스트·에이전트·하네스<span>PROMPT</span></div><div class="hr">1부 · 현재 요청</div></div><div class="stage"><div class="crumb">1부 · 현재 요청</div><h2 class="atitle"><span class="lbl">[이론]</span> 프롬프트의 역할 <span class="sub">— 현재 턴에서 바꾸려는 상태</span></h2><div class="titlerule"></div><div class="body colflow" style="justify-content:space-between;"><p class="lead">프롬프트는 일정한 문장 공식을 채우는 양식이 아닙니다. <b>현재 상태에서 원하는 상태로 무엇을 바꿀지</b>를 모델이나 에이전트에 전달하는 요청입니다. 같은 요청도 연결된 파일·도구·권한·이전 작업 상태에 따라 실행 범위가 달라집니다.</p><div class="steps big"><div class="st"><div class="sn">현재 상태</div><div class="sh">작업 대상 확인</div><p>열려 있는 폴더, 선택한 파일, 오류 메시지, 데이터 상태를 확인합니다.</p></div><div class="st"><div class="sn">변경 요청</div><div class="sh">원하는 동작 지정</div><p>설명, 수정, 실행, 비교, 생성 중 어떤 변화를 원하는지 전달합니다.</p></div><div class="st"><div class="sn">경계</div><div class="sh">건드리지 않을 범위</div><p>원본 보존, 개인정보 제외, 외부 전송 금지, 승인 필요 작업을 구분합니다.</p></div><div class="st"><div class="sn">완료 상태</div><div class="sh">검증 가능한 종료점</div><p>파일 생성, 테스트 통과, 수치 일치, 출처 표시처럼 확인 가능한 상태를 둡니다.</p></div></div><div class="relay big"><div class="rc"><div class="rk">예: 현재</div><div class="rv">월별 XLSX 12개</div></div><div class="ra">›</div><div class="rc"><div class="rk">요청</div><div class="rv">학교별로 병합·집계</div></div><div class="ra">›</div><div class="rc"><div class="rk">경계</div><div class="rv">개인정보 열 제외</div></div><div class="ra">›</div><div class="rc"><div class="rk">완료</div><div class="rv">행 수·누락값 검증</div></div></div><div class="note"><div class="nl">실무 기준</div><p>프롬프트의 품질은 표현의 화려함보다 <b>에이전트가 현재 작업 상태와 완료 상태를 정확히 구분할 수 있는지</b>로 판단합니다.</p></div></div></div><div class="pageno">05</div></section>
+
+<section class="slide"><div class="hdr"><div class="ht">프롬프트·컨텍스트·에이전트·하네스<span>CONTEXT</span></div><div class="hr">1부 · 작업 맥락</div></div><div class="stage"><div class="crumb">1부 · 작업 맥락</div><h2 class="atitle"><span class="lbl">[이론]</span> 컨텍스트의 구성 <span class="sub">— 지침·자료·대화·실행 상태</span></h2><div class="titlerule"></div><div class="body split"><div class="concepts fill big"><div class="concept"><div class="no">1</div><div class="cbody"><div class="cn">지침과 기준</div><p>기관 규칙, 작성 양식, 보안 기준, 프로젝트별 작업 지침입니다.<span class="boxmore">예 — 개인정보 마스킹, 원본 보존, 출력 서식.</span><span class="boxcheck">확인 — 현재 작업에 적용되는 우선순위가 분명한가.</span></p></div></div><div class="concept"><div class="no">2</div><div class="cbody"><div class="cn">문서와 데이터</div><p>파일, DB 조회 결과, 검색 문단, 표, 코드처럼 작업의 근거가 되는 자료입니다.<span class="boxmore">예 — 회의록, 매뉴얼, XLSX, 오류 로그.</span><span class="boxcheck">확인 — 최신성·권한·출처가 유지되는가.</span></p></div></div></div><div class="concepts fill big"><div class="concept"><div class="no">3</div><div class="cbody"><div class="cn">대화와 결정 기록</div><p>이전 요청, 수정 지시, 채택한 선택지, 제외한 대안이 현재 판단에 영향을 줍니다.<span class="boxmore">예 — 제목 확정, 색상 선택, 변경 금지 범위.</span><span class="boxcheck">확인 — 오래된 지시와 최신 지시를 구분하는가.</span></p></div></div><div class="concept"><div class="no">4</div><div class="cbody"><div class="cn">실행 상태와 결과</div><p>현재 파일 내용, 터미널 출력, 테스트 결과, 화면 상태가 다음 행동의 근거입니다.<span class="boxmore">예 — 생성된 파일, 실패 명령, 렌더 이미지.</span><span class="boxcheck">확인 — 추측 대신 실제 결과를 다시 읽었는가.</span></p></div></div></div></div><div class="note"><div class="nl">정리</div><p>컨텍스트 엔지니어링은 설명을 길게 쓰는 기술이 아니라, <b>현재 작업에 필요한 근거와 상태를 선택해 모델이 사용할 수 있게 만드는 일</b>입니다.</p></div></div><div class="pageno">06</div></section>
+
+<section class="slide"><div class="hdr"><div class="ht">프롬프트·컨텍스트·에이전트·하네스<span>CONTEXT WINDOW</span></div><div class="hr">1부 · 입력 범위</div></div><div class="stage"><div class="crumb">1부 · 입력 범위</div><h2 class="atitle"><span class="lbl">[구분]</span> 컨텍스트 창과 컨텍스트 설계 <span class="sub">— 용량과 선택의 차이</span></h2><div class="titlerule"></div><div class="body colflow" style="justify-content:space-between;"><div class="tablefill"><table class="grid even roomy" style="--rows:4;"><tr><th style="width:190px;">구분</th><th style="width:260px;">뜻</th><th>실무 영향</th><th style="width:280px;">대응</th></tr><tr><td><b>컨텍스트 창</b></td><td>한 번에 모델이 읽을 수 있는 토큰 범위</td><td>긴 문서·대화·코드가 누적되면 중요한 정보가 밀려나거나 비용과 지연이 증가합니다.</td><td>문서 분할, 대화 요약, 필요한 파일만 선택합니다.</td></tr><tr><td><b>컨텍스트 구성</b></td><td>현재 요청에 넣을 근거와 상태의 조합</td><td>같은 모델도 어떤 지침·문서·실행 결과를 넣는지에 따라 판단과 출력이 달라집니다.</td><td>현재 작업과 직접 관련된 근거를 우선합니다.</td></tr><tr><td><b>컨텍스트 갱신</b></td><td>도구 실행 후 새 결과를 다시 입력에 반영</td><td>파일을 수정하거나 코드를 실행한 뒤 결과를 읽지 않으면 다음 판단이 이전 상태에 머뭅니다.</td><td>실행 → 결과 읽기 → 다음 행동 순서를 유지합니다.</td></tr><tr><td><b>컨텍스트 오염</b></td><td>오래되거나 충돌하는 지시·자료가 섞인 상태</td><td>폐지 문서, 과거 요구, 관련 없는 로그가 현재 작업을 잘못 이끌 수 있습니다.</td><td>최신성·우선순위·권한·출처를 표시합니다.</td></tr></table></div><div class="note"><div class="nl">판단</div><p>큰 컨텍스트 창은 많은 자료를 넣을 수 있게 하지만, 필요한 자료를 선별하고 갱신하는 설계를 대신하지 않습니다.</p></div></div></div><div class="pageno">07</div></section>
+
+<section class="slide"><div class="hdr"><div class="ht">프롬프트·컨텍스트·에이전트·하네스<span>AGENT</span></div><div class="hr">1부 · 실행 주체</div></div><div class="stage"><div class="crumb">1부 · 실행 주체</div><h2 class="atitle"><span class="lbl">[이론]</span> 에이전트의 구성 <span class="sub">— 모델·컨텍스트·도구·실행 루프</span></h2><div class="titlerule"></div><div class="body colflow" style="justify-content:space-between;"><p class="lead">에이전트는 LLM의 다른 이름이 아닙니다. 모델이 현재 컨텍스트를 읽고 도구를 선택하며, 실행 결과를 다시 읽어 다음 행동을 결정하는 <b>반복 실행 구조</b>입니다.</p><div class="steps big"><div class="st"><div class="sn">① 읽기</div><div class="sh">상태·요청 파악</div><p>현재 파일, 지침, 데이터, 이전 실행 결과를 읽습니다.</p></div><div class="st"><div class="sn">② 판단</div><div class="sh">다음 행동 선택</div><p>검색, 파일 읽기, 코드 실행, 사용자 확인 중 필요한 행동을 고릅니다.</p></div><div class="st"><div class="sn">③ 실행</div><div class="sh">도구 호출</div><p>OS, Python, 브라우저, DB, API를 권한 범위 안에서 사용합니다.</p></div><div class="st"><div class="sn">④ 검증</div><div class="sh">결과 재확인</div><p>출력·오류·파일 상태를 확인하고 완료 또는 수정 여부를 결정합니다.</p></div></div><div class="relay big"><div class="rc"><div class="rk">MODEL</div><div class="rv">판단과 생성</div></div><div class="ra">+</div><div class="rc"><div class="rk">CONTEXT</div><div class="rv">근거와 현재 상태</div></div><div class="ra">+</div><div class="rc"><div class="rk">TOOLS</div><div class="rv">검색·파일·실행</div></div><div class="ra">+</div><div class="rc"><div class="rk">LOOP</div><div class="rv">결과 기반 반복</div></div></div><div class="note"><div class="nl">정의</div><p>에이전트는 한 번 답하고 끝나는 챗봇과 달리, <b>도구 결과를 다음 컨텍스트로 사용해 작업을 계속합니다.</b></p></div></div></div><div class="pageno">08</div></section>
+
+<section class="slide"><div class="hdr"><div class="ht">프롬프트·컨텍스트·에이전트·하네스<span>TOOLS</span></div><div class="hr">1부 · 도구 연결</div></div><div class="stage"><div class="crumb">1부 · 도구 연결</div><h2 class="atitle"><span class="lbl">[구조]</span> 에이전트의 도구 사용 <span class="sub">— 호출·결과·재판단</span></h2><div class="titlerule"></div><div class="body split-r"><div class="colflow"><p class="lead">도구는 모델이 실제 상태를 읽고 바꾸는 통로입니다. 도구 호출은 실행 권한을 수반하므로 입력 범위, 승인 조건, 실패 처리, 로그가 함께 설계되어야 합니다.</p><div class="concepts fill"><div class="concept"><div class="no">1</div><div class="cbody"><div class="cn">읽기 도구</div><p>파일·DB·웹·화면에서 현재 상태를 가져옵니다.</p></div></div><div class="concept"><div class="no">2</div><div class="cbody"><div class="cn">변경 도구</div><p>파일 작성, 코드 실행, 화면 입력, API 요청으로 상태를 바꿉니다.</p></div></div><div class="concept"><div class="no">3</div><div class="cbody"><div class="cn">검증 도구</div><p>테스트, 렌더, 행 수, 오류 로그로 변경 결과를 확인합니다.</p></div></div></div></div><div class="figwrap"><div class="figcap">도구 실행 루프</div><div class="loop big"><div class="lp"><div class="lpn">1</div><div class="lpt"><b>작업 상태 읽기</b> — 파일·데이터·화면·오류를 확인합니다.</div></div><div class="lp"><div class="lpn">2</div><div class="lpt"><b>도구 호출</b> — 필요한 인수와 권한 범위로 실행합니다.</div></div><div class="lp"><div class="lpn">3</div><div class="lpt"><b>실행 결과 수집</b> — 성공·실패·부분 결과를 컨텍스트에 넣습니다.</div></div><div class="lp"><div class="lpn">4</div><div class="lpt"><b>다음 행동 결정</b> — 수정, 재실행, 중단, 승인 요청을 선택합니다.</div></div><div class="back">결과가 완료 기준에 맞을 때까지 반복</div></div></div></div><div class="note"><div class="nl">주의</div><p>모델의 자신감이 아니라 실제 도구 결과가 다음 판단의 근거가 되어야 합니다.</p></div></div><div class="pageno">09</div></section>
+
+<section class="slide"><div class="hdr"><div class="ht">프롬프트·컨텍스트·에이전트·하네스<span>HARNESS</span></div><div class="hr">1부 · 실행 환경</div></div><div class="stage"><div class="crumb">1부 · 실행 환경</div><h2 class="atitle"><span class="lbl">[이론]</span> 하네스의 역할 <span class="sub">— LLM과 내 컴퓨터의 연결 계층</span></h2><div class="titlerule"></div><div class="body split-l"><div class="colflow"><p class="lead">인터랙티브 도식에서 하네스는 클라우드 LLM과 내 컴퓨터 사이를 연결합니다. 모델의 판단을 OS·파일·브라우저·Python·DB의 실제 동작으로 바꾸고, 실행 결과를 다시 모델에 돌려줍니다.</p><div class="concepts fill big"><div class="concept"><div class="no">1</div><div class="cbody"><div class="cn">위쪽: 모델과 에이전트</div><p>요청과 컨텍스트를 읽고 다음 행동을 선택합니다.<span class="boxmore">전달 — 도구 이름, 인수, 변경 대상, 예상 결과.</span><span class="boxcheck">제약 — 사용 가능한 도구와 승인 조건 안에서만 요청합니다.</span></p></div></div><div class="concept"><div class="no">2</div><div class="cbody"><div class="cn">아래쪽: 내 컴퓨터</div><p>OS·명령줄·브라우저·Python·DB·폴더가 실제 작업 공간입니다.<span class="boxmore">실행 — 읽기, 쓰기, 변환, 테스트, 배포.</span><span class="boxcheck">반환 — 출력, 오류, 파일 경로, 화면 상태.</span></p></div></div></div></div><div class="figwrap"><div class="figcap">하네스 연결 구조</div><div class="stack"><div class="sb s1"><div class="sh">LLM</div><div class="sd">판단·생성·도구 선택</div></div><div class="sb s2"><div class="sh">에이전트</div><div class="sd">컨텍스트 + 도구 + 반복 실행</div></div><div class="sb s3"><div class="sh">하네스</div><div class="sd">도구 정의·권한·파일·실행·로그 연결</div></div><div class="sb s4"><div class="sh">내 컴퓨터와 업무 시스템</div><div class="sd">OS · CLI · Browser · Python · DB · Folder · API</div></div></div></div><div class="note"><div class="nl">정의</div><p>코딩에이전트의 차이는 모델 이름보다 <b>어떤 하네스가 어떤 도구와 작업 상태를 연결하는가</b>에서 크게 나타납니다.</p></div></div><div class="pageno">10</div></section>
+
+<section class="slide"><div class="hdr"><div class="ht">프롬프트·컨텍스트·에이전트·하네스<span>COMPARISON</span></div><div class="hr">1부 · 챗봇과 코딩에이전트</div></div><div class="stage"><div class="crumb">1부 · 챗봇과 코딩에이전트</div><h2 class="atitle"><span class="lbl">[비교]</span> 챗봇과 코딩에이전트 <span class="sub">— 답변과 실행의 차이</span></h2><div class="titlerule"></div><div class="body colflow" style="justify-content:space-between;"><div class="tablefill"><table class="grid even roomy" style="--rows:4;"><tr><th style="width:180px;">구분</th><th>챗봇</th><th>코딩에이전트</th><th style="width:250px;">전산직 확인점</th></tr><tr><td><b>작업 범위</b></td><td>대화창 안에서 답변·요약·초안을 만듭니다.</td><td>프로젝트 파일, 명령줄, 브라우저, 테스트 도구를 사용합니다.</td><td>접근 가능한 폴더와 프로그램</td></tr><tr><td><b>상태 인식</b></td><td>사용자가 붙여 넣은 내용 중심으로 이해합니다.</td><td>파일과 실행 결과를 읽어 현재 상태를 갱신합니다.</td><td>최신 결과를 실제로 읽는지</td></tr><tr><td><b>실행 책임</b></td><td>사람이 답변을 복사해 직접 실행합니다.</td><td>하네스가 도구를 호출하고 결과를 수집합니다.</td><td>승인·중단·원본 보호 조건</td></tr><tr><td><b>완료 판단</b></td><td>설명이나 코드 제안으로 끝날 수 있습니다.</td><td>테스트·렌더·행 수·오류를 확인해 종료합니다.</td><td>검증 명령과 완료 기준</td></tr></table></div><div class="note"><div class="nl">구분</div><p>챗봇과 코딩에이전트는 같은 계열의 모델을 사용할 수 있지만, <b>하네스와 도구 실행 루프</b>가 작업 결과를 다르게 만듭니다.</p></div></div></div><div class="pageno">11</div></section>
+
+<section class="slide"><div class="hdr"><div class="ht">프롬프트·컨텍스트·에이전트·하네스<span>HARNESS COMPONENTS</span></div><div class="hr">1부 · 구성요소</div></div><div class="stage"><div class="crumb">1부 · 구성요소</div><h2 class="atitle"><span class="lbl">[구조]</span> 하네스 구성요소 <span class="sub">— 지침·도구·메모리·검증</span></h2><div class="titlerule"></div><div class="body split"><div class="concepts fill big"><div class="concept"><div class="no">1</div><div class="cbody"><div class="cn">지침과 스킬</div><p>작업 방식, 파일 규칙, 문체, 보안 기준, 검증 절차를 제공합니다.<span class="boxmore">입력 — 기관 공통 기준과 업무별 절차.</span><span class="boxcheck">확인 — 충돌 시 우선순위와 적용 범위.</span></p></div></div><div class="concept"><div class="no">2</div><div class="cbody"><div class="cn">도구와 권한</div><p>파일, 명령줄, 브라우저, DB, API를 어떤 범위에서 쓸지 정의합니다.<span class="boxmore">입력 — 도구 설명, 인수, 접근 경로.</span><span class="boxcheck">확인 — 쓰기·삭제·외부 전송 승인 조건.</span></p></div></div></div><div class="concepts fill big"><div class="concept"><div class="no">3</div><div class="cbody"><div class="cn">메모리와 작업 상태</div><p>대화, 파일, 결정 기록, 실행 결과를 다음 행동에 이어 줍니다.<span class="boxmore">입력 — 현재 작업과 장기 기준을 분리.</span><span class="boxcheck">확인 — 오래된 정보와 민감정보의 보존 범위.</span></p></div></div><div class="concept"><div class="no">4</div><div class="cbody"><div class="cn">검증과 로그</div><p>변경 전후, 실행 명령, 성공·실패, 산출물 경로를 남깁니다.<span class="boxmore">산출물 — 테스트 결과, 렌더 이미지, 점검표.</span><span class="boxcheck">확인 — 재현과 인수인계가 가능한가.</span></p></div></div></div></div><div class="note"><div class="nl">운영 기준</div><p>하네스는 편리한 도구 묶음이 아니라 에이전트가 <b>어떻게 읽고, 실행하고, 멈추고, 검증할지</b>를 정하는 작업 환경입니다.</p></div></div><div class="pageno">12</div></section>
+
+<section class="slide"><div class="hdr"><div class="ht">오케스트레이션<span>WORKFLOW</span></div><div class="hr">2부 · 업무흐름</div></div><div class="stage"><div class="crumb">2부 · 업무흐름</div><h2 class="atitle"><span class="lbl">[설계]</span> 오케스트레이션 <span class="sub">— 여러 작업과 승인 단계의 연결</span></h2><div class="titlerule"></div><div class="body colflow" style="justify-content:space-between;"><p class="lead">오케스트레이션은 모델을 여러 번 호출하는 것보다 넓은 개념입니다. 입력 준비, 도구 실행, 사람 승인, 실패 처리, 산출물 저장을 하나의 업무 흐름으로 연결합니다.</p><div class="steps big"><div class="st"><div class="sn">① 수집</div><div class="sh">입력 준비</div><p>파일·DB·API에서 필요한 자료만 읽고 민감정보를 분리합니다.</p></div><div class="st"><div class="sn">② 처리</div><div class="sh">도구와 모델 실행</div><p>파싱·집계·검색·생성을 역할에 맞는 도구로 나눕니다.</p></div><div class="st"><div class="sn">③ 승인</div><div class="sh">위험 작업 확인</div><p>외부 발송, 원본 수정, 개인정보 조회는 사람 확인 뒤 진행합니다.</p></div><div class="st"><div class="sn">④ 검증</div><div class="sh">결과 판정</div><p>수치·출처·오류·파일 상태를 확인하고 재실행 여부를 정합니다.</p></div></div><div class="relay big"><div class="rc"><div class="rk">INPUT</div><div class="rv">정제된 자료</div></div><div class="ra">›</div><div class="rc"><div class="rk">WORK</div><div class="rv">도구 실행 결과</div></div><div class="ra">›</div><div class="rc"><div class="rk">GATE</div><div class="rv">승인·보류 기록</div></div><div class="ra">›</div><div class="rc"><div class="rk">OUTPUT</div><div class="rv">검증된 산출물</div></div></div><div class="note"><div class="nl">핵심</div><p>오케스트레이션의 품질은 모델 응답보다 <b>업무 단계 사이의 데이터 전달과 실패·승인 처리</b>에서 결정됩니다.</p></div></div></div><div class="pageno">13</div></section>
+
+<section class="slide"><div class="hdr"><div class="ht">LLM과 SLM<span>MODEL FUNDAMENTALS</span></div><div class="hr">3부 · 모델 원리</div></div><div class="stage"><div class="crumb">3부 · 모델 원리</div><h2 class="atitle"><span class="lbl">[이론]</span> LLM과 SLM <span class="sub">— 업무 난이도·비용·장비에 따른 구분</span></h2><div class="titlerule"></div><div class="body colflow" style="justify-content:space-between;"><div style="flex:1;display:flex;gap:18px;align-items:stretch;"><div class="domain big"><div class="dh">LLM <span>대형 언어모델</span></div><ul class="dl"><li><b>적합</b> 긴 문서 이해, 규정 비교, 복잡한 작성</li><li><b>장점</b> 폭넓은 지식과 높은 지시 이해</li><li><b>비용</b> API 비용·지연·외부 전송 검토</li><li><b>검증</b> 기관 문서 샘플로 정확도 시험</li></ul></div><div class="domain big"><div class="dh">SLM <span>소형 언어모델</span></div><ul class="dl"><li><b>적합</b> 분류, 추출, 짧은 요약, 도구 호출</li><li><b>장점</b> 빠른 응답, 로컬 실행, 낮은 비용</li><li><b>한계</b> 복잡한 추론과 긴 문서 품질</li><li><b>검증</b> 반복 업무별 최소 품질 확인</li></ul></div><div class="domain big"><div class="dh">혼합 운영 <span>라우팅</span></div><ul class="dl"><li><b>분기</b> 단순 작업은 SLM, 복잡한 작업은 LLM</li><li><b>보안</b> 민감 자료는 로컬, 공개 자료는 API</li><li><b>비용</b> 캐시·사용량 제한·월 비용 상한</li><li><b>운영</b> 실패 시 대체 모델과 사람 검토</li></ul></div></div><div class="note"><div class="nl">판단</div><p>모델 하나를 표준으로 정하기보다 업무 난이도, 자료 등급, 응답속도, 비용에 따라 모델을 나누는 편이 현실적입니다.</p></div></div></div><div class="pageno">14</div></section>
+
+<section class="slide"><div class="hdr"><div class="ht">LLM과 SLM<span>MODEL CARD</span></div><div class="hr">3부 · 모델 사양</div></div><div class="stage"><div class="crumb">3부 · 모델 사양</div><h2 class="atitle"><span class="lbl">[판독]</span> 모델 카드 읽기 <span class="sub">— 크기·문맥·압축·라이선스</span></h2><div class="titlerule"></div><div class="body colflow" style="justify-content:space-between;"><div class="tablefill"><table class="grid even roomy" style="--rows:5;"><tr><th style="width:190px;">항목</th><th style="width:330px;">뜻</th><th>업무 판단</th><th style="width:250px;">확인 방법</th></tr><tr><td><b>Parameters</b></td><td>학습된 가중치의 규모로 7B·14B·70B처럼 표시합니다.</td><td>클수록 장비·메모리·지연이 증가하며 업무별 품질 향상이 같은 비율로 늘지는 않습니다.</td><td>VRAM·RAM·응답시간 측정</td></tr><tr><td><b>Context length</b></td><td>한 번에 읽을 수 있는 토큰 범위입니다.</td><td>긴 문서·대화 처리에 영향을 주지만 검색과 요약 전략을 대신하지는 않습니다.</td><td>실제 문서 길이로 시험</td></tr><tr><td><b>Quantization</b></td><td>가중치를 압축해 로컬 실행 자원을 줄이는 형식입니다.</td><td>메모리와 속도는 개선되지만 품질이 일부 낮아질 수 있습니다.</td><td>동일 질문의 품질 비교</td></tr><tr><td><b>License</b></td><td>기관 사용·상업 사용·재배포 조건입니다.</td><td>서비스 탑재와 내부 배포 전에 허용 범위를 확인해야 합니다.</td><td>원문 라이선스 검토</td></tr><tr><td><b>Korean quality</b></td><td>한국어 지시, 공문체, 표, 긴 문서 처리 품질입니다.</td><td>공개 벤치마크보다 기관 문서의 요약·추출·질의 샘플이 중요합니다.</td><td>업무 질문 세트 평가</td></tr></table></div></div></div><div class="pageno">15</div></section>
+
+<section class="slide"><div class="hdr"><div class="ht">LLM과 SLM<span>MODEL TERMS</span></div><div class="hr">3부 · 핵심 용어</div></div><div class="stage"><div class="crumb">3부 · 핵심 용어</div><h2 class="atitle"><span class="lbl">[개념]</span> 파라미터·KV 캐시·MoE·임베딩 <span class="sub">— 사양과 구조 판독</span></h2><div class="titlerule"></div><div class="body split"><div class="concepts fill big"><div class="concept"><div class="no">1</div><div class="cbody"><div class="cn">파라미터</div><p>학습으로 만들어진 숫자 규모이며 모델 파일과 실행 자원에 연결됩니다.<span class="boxmore">적용 — 7B·14B 후보의 장비 요구량 비교.</span><span class="boxcheck">확인 — 크기와 실제 업무 품질을 함께 측정합니다.</span></p></div></div><div class="concept"><div class="no">2</div><div class="cbody"><div class="cn">KV 캐시</div><p>이전 토큰 계산 결과를 저장해 다음 생성을 빠르게 하는 메모리입니다.<span class="boxmore">적용 — 긴 대화와 동시 사용자 부하 산정.</span><span class="boxcheck">확인 — 컨텍스트 길이별 메모리 증가를 봅니다.</span></p></div></div></div><div class="concepts fill big"><div class="concept"><div class="no">3</div><div class="cbody"><div class="cn">MoE</div><p>여러 전문가 중 일부만 선택해 계산하는 모델 구조입니다.<span class="boxmore">적용 — 총 파라미터와 활성 파라미터 구분.</span><span class="boxcheck">확인 — 모델 크기만으로 실행비용을 판단하지 않습니다.</span></p></div></div><div class="concept"><div class="no">4</div><div class="cbody"><div class="cn">임베딩</div><p>문장과 문서를 의미를 비교할 수 있는 숫자 벡터로 바꿉니다.<span class="boxmore">적용 — 지침·FAQ의 유사 문단 검색.</span><span class="boxcheck">확인 — 한국어 문서의 검색 적중률을 시험합니다.</span></p></div></div></div></div><div class="note"><div class="nl">연결</div><p>이 용어들은 모델 선택, 로컬 실행 용량, 동시 사용자, RAG 검색 품질을 판단할 때 사용합니다.</p></div></div><div class="pageno">16</div></section>
+
+<section class="slide"><div class="hdr"><div class="ht">AI 도입 지점<span>BOTTLENECK</span></div><div class="hr">4부 · 병목 선정</div></div><div class="stage"><div class="crumb">4부 · 병목 선정</div><h2 class="atitle"><span class="lbl">[적용]</span> 레거시 전체 교체보다 병목 개선 <span class="sub">— 검색·추출·분석·작성</span></h2><div class="titlerule"></div><div class="body split"><div class="concepts fill big"><div class="concept"><div class="no">1</div><div class="cbody"><div class="cn">자료검색</div><p>지침·공문·매뉴얼을 찾는 시간이 길다면 RAG 검색을 검토합니다.<span class="boxmore">입력 — 현행 문서, 시행일, 부서, 문서유형.</span><span class="boxcheck">확인 — 답변에 출처와 적용일이 표시되는가.</span></p></div></div><div class="concept"><div class="no">2</div><div class="cbody"><div class="cn">텍스트 추출</div><p>PDF·HWPX·스캔·엑셀에서 반복적으로 항목을 뽑는 구간입니다.<span class="boxmore">입력 — 기관·기한·예산·담당자 필드.</span><span class="boxcheck">확인 — 표와 OCR 실패 파일이 별도 기록되는가.</span></p></div></div></div><div class="concepts fill big"><div class="concept"><div class="no">3</div><div class="cbody"><div class="cn">데이터분석</div><p>집계·누락값·이상값·차트·보고 초안을 연결할 수 있습니다.<span class="boxmore">입력 — 개인정보가 제거된 XLSX·CSV.</span><span class="boxcheck">확인 — 원본 행 수와 집계 합계를 대조하는가.</span></p></div></div><div class="concept"><div class="no">4</div><div class="cbody"><div class="cn">문서 초안</div><p>회의 후속조치, 안내문, 보고서 초안을 만들고 사람이 검토합니다.<span class="boxmore">입력 — 근거 문서와 적용 대상.</span><span class="boxcheck">확인 — 근거·담당자·기한·예외가 남는가.</span></p></div></div></div></div><div class="note"><div class="nl">선정 기준</div><p>반복성이 높고 입력자료와 검증 기준이 있으며 위험을 통제할 수 있는 업무부터 적용합니다.</p></div></div><div class="pageno">17</div></section>
+
+<section class="slide"><div class="hdr"><div class="ht">AI 도입 지점<span>DOCUMENT PIPELINE</span></div><div class="hr">4부 · 문서 처리</div></div><div class="stage"><div class="crumb">4부 · 문서 처리</div><h2 class="atitle"><span class="lbl">[절차]</span> 문서와 데이터 처리 파이프라인 <span class="sub">— 읽기부터 검증까지</span></h2><div class="titlerule"></div><div class="body colflow" style="justify-content:space-between;"><div class="steps big"><div class="st"><div class="sn">① READ</div><div class="sh">파일 읽기</div><p>HWPX·PDF·DOCX·XLSX·CSV를 형식에 맞는 파서로 읽습니다.</p></div><div class="st"><div class="sn">② CLEAN</div><div class="sh">정제·마스킹</div><p>머리말·중복·빈 열을 정리하고 민감정보를 분리합니다.</p></div><div class="st"><div class="sn">③ ANALYZE</div><div class="sh">검색·집계·생성</div><p>규칙 기반 처리와 모델 처리를 역할에 맞게 조합합니다.</p></div><div class="st"><div class="sn">④ VERIFY</div><div class="sh">검증·저장</div><p>수치·출처·누락·실패를 확인하고 결과 파일과 로그를 남깁니다.</p></div></div><div class="relay big"><div class="rc"><div class="rk">READ 후</div><div class="rv">원문 텍스트·표</div></div><div class="ra">›</div><div class="rc"><div class="rk">CLEAN 후</div><div class="rv">정제 데이터</div></div><div class="ra">›</div><div class="rc"><div class="rk">ANALYZE 후</div><div class="rv">분석 결과·근거</div></div><div class="ra">›</div><div class="rc"><div class="rk">VERIFY 후</div><div class="rv">제출 파일·검증 로그</div></div></div><div class="note"><div class="nl">구현 기준</div><p>모델 호출 전후의 파일 처리와 검증 절차가 업무 자동화의 대부분을 차지합니다.</p></div></div></div><div class="pageno">18</div></section>
+
+<section class="slide"><div class="hdr"><div class="ht">AI 도입 지점<span>SYSTEM CONNECTION</span></div><div class="hr">4부 · 시스템 연결</div></div><div class="stage"><div class="crumb">4부 · 시스템 연결</div><h2 class="atitle"><span class="lbl">[설계]</span> DB·문서·파일·API 연결 <span class="sub">— 직접 접근보다 중계 계층</span></h2><div class="titlerule"></div><div class="body colflow" style="justify-content:space-between;"><div class="tablefill"><table class="grid even roomy" style="--rows:4;"><tr><th style="width:170px;">연결 대상</th><th style="width:350px;">권장 방식</th><th>하네스가 수행하는 일</th><th style="width:300px;">통제 기준</th></tr><tr><td><b>기존 DB</b></td><td>읽기 전용 API·조회 전용 계정·제한된 질의</td><td>필요한 행과 열만 조회하고 결과를 모델 입력 형식으로 바꿉니다.</td><td>최소 권한, 질의 제한, 조회 로그</td></tr><tr><td><b>문서 저장소</b></td><td>파서·메타데이터·RAG 색인</td><td>텍스트와 표를 추출하고 시행일·부서·등급을 함께 저장합니다.</td><td>최신 문서 우선, 폐지 문서 제외</td></tr><tr><td><b>업무 파일</b></td><td>읽기 전용 입력 폴더·별도 출력 폴더</td><td>파일을 변환·집계하되 원본을 수정하지 않고 실패 목록을 남깁니다.</td><td>백업, 원본 보호, 재실행 가능성</td></tr><tr><td><b>외부 API</b></td><td>승인된 중계 서버·비밀키 관리·호출량 제한</td><td>요청을 전송하고 응답·오류·비용을 기록합니다.</td><td>자료 등급, 외부 전송, 계약 조건</td></tr></table></div><div class="note"><div class="nl">구조</div><p>AI가 운영 시스템을 직접 다루기보다 기존 프로그램이 필요한 자료만 안전하게 제공하는 중계 구조가 적합합니다.</p></div></div></div><div class="pageno">19</div></section>
+
+<section class="slide"><div class="hdr"><div class="ht">바이브코딩<span>TOOL MAP</span></div><div class="hr">5부 · 도구 선택</div></div><div class="stage"><div class="crumb">5부 · 도구 선택</div><h2 class="atitle"><span class="lbl">[실무]</span> PowerShell·Python·Node.js·Rust <span class="sub">— 문제에 맞는 실행 도구</span></h2><div class="titlerule"></div><div class="body colflow" style="justify-content:space-between;"><div class="tablefill"><table class="grid even roomy" style="--rows:4;"><tr><th style="width:170px;">도구</th><th style="width:330px;">잘하는 일</th><th>전산업무 예시</th><th style="width:280px;">검증 기준</th></tr><tr><td><b>PowerShell</b></td><td>Windows 파일·폴더·프로세스 자동화</td><td>파일 목록, 로그 압축, 폴더 생성, 일괄 이름 변경</td><td>원본 보존, 처리 목록, 실패 로그</td></tr><tr><td><b>Python</b></td><td>문서·데이터 처리, 분석, AI 파이프라인</td><td>엑셀 병합, PDF 추출, 집계, 차트, RAG 색인</td><td>행 수·누락값·합계·재현 명령</td></tr><tr><td><b>Node.js</b></td><td>웹 화면, API 서버, 내부 서비스</td><td>챗봇 UI, 파일 업로드, 로컬 API 중계, 배포</td><td>입력 검증, 오류 안내, 접근권한</td></tr><tr><td><b>Rust</b></td><td>빠른 실행, 단일 실행파일, 안정적 CLI</td><td>대량 파일 검사, 배포용 도구, 성능 민감 처리</td><td>격리 시험, 실행환경, 실패 복구</td></tr></table></div><div class="note"><div class="nl">선택</div><p>바이브코딩의 목표는 언어 문법을 모두 배우는 것이 아니라 업무 문제에 맞는 실행 환경과 검증 방법을 선택하는 것입니다.</p></div></div></div><div class="pageno">20</div></section>
+
+<section class="slide"><div class="hdr"><div class="ht">바이브코딩<span>TASK BRIEF</span></div><div class="hr">5부 · 코딩에이전트</div></div><div class="stage"><div class="crumb">5부 · 코딩에이전트</div><h2 class="atitle"><span class="lbl">[실습]</span> 코딩에이전트 작업 요청 <span class="sub">— 상태·대상·경계·완료 기준</span></h2><div class="titlerule"></div><div class="body split-l"><div class="colflow"><p class="lead">코딩에이전트에는 멋진 문장보다 작업 공간과 완료 조건이 필요합니다. 요청 뒤에 파일을 찾고 실행하고 수정할 수 있으므로, <b>어디를 읽고 어디까지 바꿀지</b>를 분명히 전달합니다.</p><div class="concepts fill"><div class="concept"><div class="no">1</div><div class="cbody"><div class="cn">현재 상태와 대상</div><p>폴더 경로, 입력 파일, 오류, 기대한 동작을 알려줍니다.</p></div></div><div class="concept"><div class="no">2</div><div class="cbody"><div class="cn">변경 경계</div><p>원본 보존, 제외 열, 설치 가능 범위, 외부 전송 여부를 정합니다.</p></div></div><div class="concept"><div class="no">3</div><div class="cbody"><div class="cn">완료와 보고</div><p>실행 결과, 검증 수치, 산출물 경로, 남은 오류를 보고하게 합니다.</p></div></div></div></div><div class="figwrap"><div class="figcap">실제 요청 예시</div><div class="layer2 big"><div class="lay top"><div class="lt">작업</div><div class="lh">월별 XLSX를 하나의 CSV로 병합</div><p>파일명에서 학교명을 추출해 school 열에 넣고 개인정보 열은 제외합니다.</p></div><div class="conn">▼ 실행·검증</div><div class="lay bot"><div class="lt">완료 기준</div><div class="lh">output/merged.csv + 검증 보고</div><p>샘플 3개로 먼저 실행하고 전체 행 수, 누락값, 실패 파일, 실행 명령을 알려줍니다.</p></div></div></div></div><div class="note"><div class="nl">차이</div><p>이 요청은 정해진 문장 틀을 채우는 것이 아니라, <b>에이전트가 작업 상태를 바꾸고 검증할 수 있는 실행 계약</b>입니다.</p></div></div><div class="pageno">21</div></section>
+
+<section class="slide"><div class="hdr"><div class="ht">바이브코딩<span>AGENT LOOP</span></div><div class="hr">5부 · 실행과 수정</div></div><div class="stage"><div class="crumb">5부 · 실행과 수정</div><h2 class="atitle"><span class="lbl">[절차]</span> 코딩에이전트 작업 루프 <span class="sub">— 탐색·수정·검증·보고</span></h2><div class="titlerule"></div><div class="body split-r"><div class="colflow"><p class="lead">에이전트는 먼저 관련 파일과 실행 환경을 확인하고, 작은 수정 뒤 가장 가까운 검증을 수행합니다. 실패 결과를 읽어 같은 범위에서 고친 뒤 완료 상태를 보고합니다.</p><div class="concepts fill"><div class="concept"><div class="no">A</div><div class="cbody"><div class="cn">탐색 범위 제한</div><p>요청과 직접 관련된 파일·함수·오류부터 읽습니다.</p></div></div><div class="concept"><div class="no">B</div><div class="cbody"><div class="cn">작은 첫 수정</div><p>가설을 확인할 수 있는 최소 변경을 적용합니다.</p></div></div><div class="concept"><div class="no">C</div><div class="cbody"><div class="cn">가까운 검증</div><p>해당 기능의 실행·테스트·렌더를 즉시 수행합니다.</p></div></div></div></div><div class="figwrap"><div class="figcap">반복 실행 구조</div><div class="loop big"><div class="lp"><div class="lpn">1</div><div class="lpt"><b>현상 확인</b> — 입력·오류·기대 결과를 비교합니다.</div></div><div class="lp"><div class="lpn">2</div><div class="lpt"><b>원인 코드 수정</b> — 관련 범위만 변경합니다.</div></div><div class="lp"><div class="lpn">3</div><div class="lpt"><b>실행 결과 읽기</b> — 성공 여부와 새 오류를 확인합니다.</div></div><div class="lp"><div class="lpn">4</div><div class="lpt"><b>완료 보고</b> — 파일·결과·검증·남은 위험을 정리합니다.</div></div><div class="back">실패하면 결과를 컨텍스트에 넣고 같은 범위에서 수정</div></div></div></div><div class="note"><div class="nl">운영</div><p>코드 생성보다 실행 결과를 읽고 수정하는 반복 과정이 코딩에이전트 활용의 중심입니다.</p></div></div><div class="pageno">22</div></section>
+
+<section class="slide"><div class="hdr"><div class="ht">Ollama와 로컬 AI<span>LOCAL MODEL</span></div><div class="hr">6부 · 로컬 실행</div></div><div class="stage"><div class="crumb">6부 · 로컬 실행</div><h2 class="atitle"><span class="lbl">[실습]</span> Ollama 로컬 모델 실행 <span class="sub">— 모델·명령줄·API</span></h2><div class="titlerule"></div><div class="body split"><div class="figwrap"><div class="figcap">명령 흐름</div><div class="loop big"><div class="lp"><div class="lpn">1</div><div class="lpt"><b>ollama --version</b> — 설치와 실행 환경을 확인합니다.</div></div><div class="lp"><div class="lpn">2</div><div class="lpt"><b>ollama pull 모델명</b> — 장비에 맞는 모델을 받습니다.</div></div><div class="lp"><div class="lpn">3</div><div class="lpt"><b>ollama run 모델명</b> — 명령줄에서 응답을 확인합니다.</div></div><div class="lp"><div class="lpn">4</div><div class="lpt"><b>localhost:11434</b> — 프로그램이 로컬 API를 호출합니다.</div></div></div></div><div class="concepts fill big"><div class="concept"><div class="no">1</div><div class="cbody"><div class="cn">장점</div><p>외부 API 없이 모델과 프로그램 연결 구조를 시험할 수 있습니다.<span class="boxmore">적용 — 공개 샘플 문서와 로컬 질문 화면.</span><span class="boxcheck">확인 — 외부 네트워크 요청이 없는지 봅니다.</span></p></div></div><div class="concept"><div class="no">2</div><div class="cbody"><div class="cn">한계</div><p>GPU·메모리·양자화·컨텍스트 길이에 따라 속도와 품질이 달라집니다.<span class="boxmore">측정 — 첫 응답 시간과 초당 생성 토큰.</span><span class="boxcheck">확인 — 동시 사용자와 긴 문서 부하를 시험합니다.</span></p></div></div></div></div><div class="note"><div class="nl">실습 목표</div><p>Ollama 설치 자체보다 모델이 로컬 API를 통해 프로그램과 연결되는 구조를 이해합니다.</p></div></div><div class="pageno">23</div></section>
+
+<section class="slide"><div class="hdr"><div class="ht">Ollama와 로컬 AI<span>LOCAL SERVICE</span></div><div class="hr">6부 · 서비스 구성</div></div><div class="stage"><div class="crumb">6부 · 서비스 구성</div><h2 class="atitle"><span class="lbl">[구조]</span> 로컬 챗봇에서 내부 서비스까지 <span class="sub">— 모델 외 필수 계층</span></h2><div class="titlerule"></div><div class="body colflow" style="justify-content:space-between;"><div class="steps big"><div class="st"><div class="sn">① MODEL</div><div class="sh">Ollama 모델</div><p>모델 파일, 양자화, 컨텍스트, 응답속도를 관리합니다.</p></div><div class="st"><div class="sn">② API</div><div class="sh">로컬 중계</div><p>요청 형식, 시간 제한, 오류, 모델 선택을 처리합니다.</p></div><div class="st"><div class="sn">③ UI·FILE</div><div class="sh">화면과 파일</div><p>질문, 파일 업로드, 파싱, 결과 표시를 담당합니다.</p></div><div class="st"><div class="sn">④ CONTROL</div><div class="sh">권한·로그</div><p>사용자, 자료 범위, 질문·응답, 오류 기록을 관리합니다.</p></div></div><div class="relay big"><div class="rc"><div class="rk">질문 입력</div><div class="rv">사용자·파일·설정</div></div><div class="ra">›</div><div class="rc"><div class="rk">중계 처리</div><div class="rv">파싱·검색·프롬프트</div></div><div class="ra">›</div><div class="rc"><div class="rk">모델 응답</div><div class="rv">텍스트·오류·시간</div></div><div class="ra">›</div><div class="rc"><div class="rk">운영 기록</div><div class="rv">출처·로그·검토</div></div></div><div class="note"><div class="nl">구분</div><p>로컬 모델이 실행된 상태와 여러 사용자가 안전하게 쓰는 내부 서비스는 서로 다른 완성 단계입니다.</p></div></div></div><div class="pageno">24</div></section>
+
+<section class="slide"><div class="hdr"><div class="ht">RAG 챗봇<span>RETRIEVAL AUGMENTED GENERATION</span></div><div class="hr">7부 · 검색 기반 답변</div></div><div class="stage"><div class="crumb">7부 · 검색 기반 답변</div><h2 class="atitle"><span class="lbl">[이론]</span> RAG 기본 흐름 <span class="sub">— 문서 검색 후 근거를 컨텍스트에 추가</span></h2><div class="titlerule"></div><div class="body colflow" style="justify-content:space-between;"><p class="lead">RAG는 긴 문서를 모델에 모두 넣는 방식이 아닙니다. 질문과 관련된 문서 조각을 검색하고, 찾은 근거를 현재 컨텍스트에 넣어 답변과 출처를 생성합니다.</p><div class="steps big"><div class="st"><div class="sn">① PARSE</div><div class="sh">문서 추출</div><p>본문·표·메타데이터를 읽고 오류 파일을 분리합니다.</p></div><div class="st"><div class="sn">② CHUNK</div><div class="sh">문서 분할</div><p>문맥이 유지되는 단위로 나누고 문서 위치를 저장합니다.</p></div><div class="st"><div class="sn">③ INDEX</div><div class="sh">임베딩·저장</div><p>문서 조각을 벡터로 바꾸고 검색 저장소에 넣습니다.</p></div><div class="st"><div class="sn">④ RETRIEVE</div><div class="sh">검색·답변</div><p>관련 문단을 찾아 모델 컨텍스트에 넣고 출처와 함께 답합니다.</p></div></div><div class="relay big"><div class="rc"><div class="rk">문서</div><div class="rv">원문·표·메타데이터</div></div><div class="ra">›</div><div class="rc"><div class="rk">청크</div><div class="rv">문단·쪽·문서명</div></div><div class="ra">›</div><div class="rc"><div class="rk">검색</div><div class="rv">관련 문단 상위 N개</div></div><div class="ra">›</div><div class="rc"><div class="rk">답변</div><div class="rv">근거·출처·실패 응답</div></div></div><div class="note"><div class="nl">연결</div><p>RAG에서 검색된 문서 조각은 에이전트가 현재 질문을 처리할 때 사용하는 동적 컨텍스트입니다.</p></div></div></div><div class="pageno">25</div></section>
+
+<section class="slide"><div class="hdr"><div class="ht">RAG 챗봇<span>QUALITY</span></div><div class="hr">7부 · 품질 기준</div></div><div class="stage"><div class="crumb">7부 · 품질 기준</div><h2 class="atitle"><span class="lbl">[검증]</span> RAG 품질을 좌우하는 요소 <span class="sub">— 문서·분할·메타데이터·권한</span></h2><div class="titlerule"></div><div class="body split"><div class="concepts fill big"><div class="concept"><div class="no">1</div><div class="cbody"><div class="cn">문서 최신성</div><p>현행과 폐지 문서가 섞이면 답변 근거가 충돌합니다.<span class="boxmore">입력 — 시행일·폐지 여부·적용 대상.</span><span class="boxcheck">확인 — 최신 문서가 우선 검색되는가.</span></p></div></div><div class="concept"><div class="no">2</div><div class="cbody"><div class="cn">분할과 표 추출</div><p>문단이 너무 작으면 맥락이 끊기고 표가 깨지면 조건·금액·기한이 빠집니다.<span class="boxmore">시험 — 400·800·1200자와 표 행 단위.</span><span class="boxcheck">확인 — 검증 질문의 검색 적중률.</span></p></div></div></div><div class="concepts fill big"><div class="concept"><div class="no">3</div><div class="cbody"><div class="cn">메타데이터와 권한</div><p>부서·문서유형·등급·시행일을 검색 필터와 권한 판정에 사용합니다.<span class="boxmore">적용 — 사용자 역할별 검색 범위.</span><span class="boxcheck">확인 — 검색 전에 권한이 적용되는가.</span></p></div></div><div class="concept"><div class="no">4</div><div class="cbody"><div class="cn">출처와 실패 응답</div><p>문서에 없는 내용은 추측하지 않고 찾을 수 없다고 답해야 합니다.<span class="boxmore">출력 — 문서명·쪽·문단·유사도.</span><span class="boxcheck">확인 — 원문을 바로 열어 검토할 수 있는가.</span></p></div></div></div></div><div class="note"><div class="nl">품질</div><p>RAG 품질은 모델 이름보다 문서 관리, 검색 평가, 권한 필터, 출처 표시에서 먼저 결정됩니다.</p></div></div><div class="pageno">26</div></section>
+
+<section class="slide"><div class="hdr"><div class="ht">RAG 챗봇<span>IMPLEMENTATION</span></div><div class="hr">7부 · 코딩에이전트 구현</div></div><div class="stage"><div class="crumb">7부 · 코딩에이전트 구현</div><h2 class="atitle"><span class="lbl">[실습]</span> 코딩에이전트로 RAG 구현 <span class="sub">— 작업 단위와 산출물</span></h2><div class="titlerule"></div><div class="body colflow" style="justify-content:space-between;"><div class="steps big"><div class="st"><div class="sn">① DOCS</div><div class="sh">샘플 문서 준비</div><p>공개 가능한 FAQ·지침·매뉴얼 10개와 질문 5개를 준비합니다.</p></div><div class="st"><div class="sn">② PARSER</div><div class="sh">추출 코드</div><p>문서명·문단 번호·본문·표·오류를 extracted.json에 저장합니다.</p></div><div class="st"><div class="sn">③ INDEX</div><div class="sh">검색 저장소</div><p>문서 분할과 임베딩을 로컬에서 실행하고 색인을 만듭니다.</p></div><div class="st"><div class="sn">④ CHAT</div><div class="sh">질문 화면</div><p>관련 문단 3개, 답변, 출처, 검색 실패 메시지를 표시합니다.</p></div></div><div class="relay big"><div class="rc"><div class="rk">입력</div><div class="rv">docs/ + questions.json</div></div><div class="ra">›</div><div class="rc"><div class="rk">중간 산출물</div><div class="rv">extracted.json + index</div></div><div class="ra">›</div><div class="rc"><div class="rk">최종 산출물</div><div class="rv">HTML 질문 화면</div></div><div class="ra">›</div><div class="rc"><div class="rk">검증</div><div class="rv">5개 질문 결과표</div></div></div><div class="note"><div class="nl">에이전트 요청</div><p>구현 언어보다 문서 범위, 메타데이터, 출처 형식, 검색 실패 응답, 검증 질문을 먼저 지정합니다.</p></div></div></div><div class="pageno">27</div></section>
+
+<section class="slide"><div class="hdr"><div class="ht">민첩한 AI<span>TOOL TRANSITION</span></div><div class="hr">8부 · 직원 제작 도구</div></div><div class="stage"><div class="crumb">8부 · 직원 제작 도구</div><h2 class="atitle"><span class="lbl">[운영]</span> py·html·exe 운영 전환 <span class="sub">— 개인 실험에서 기관 도구까지</span></h2><div class="titlerule"></div><div class="body colflow" style="justify-content:space-between;"><div class="tablefill"><table class="grid even roomy" style="--rows:4;"><tr><th style="width:180px;">단계</th><th style="width:280px;">예</th><th>필요한 조치</th><th style="width:300px;">운영 판정</th></tr><tr><td><b>개인 보조</b></td><td>파일명 변경, 엑셀 정리 py</td><td>샘플 데이터, 원본 보호, 실행 결과 확인을 전제로 개인 환경에서 사용합니다.</td><td><span class="pill soft">개인정보 제외·공유 전 점검</span></td></tr><tr><td><b>부서 공유</b></td><td>통계표 생성기, 단일 HTML 도구</td><td>소스, 사용법, 입력·출력 예시, 오류 처리, 담당자를 함께 둡니다.</td><td><span class="pill soft">재현·인수인계 가능</span></td></tr><tr><td><b>기관 운영</b></td><td>내부 웹도구, DB 조회, exe</td><td>권한, 로그, 배포, 백업, 보안 점검, 장애 대응 책임을 정합니다.</td><td><span class="pill force">정식 운영 기준 적용</span></td></tr><tr><td><b>중단·격리</b></td><td>출처 불명 exe, 외부 전송, 원본 삭제</td><td>소스와 통신·파일 동작을 확인할 때까지 격리 환경에서만 시험합니다.</td><td><span class="pill force">배포 금지·위험 제거</span></td></tr></table></div><div class="note"><div class="nl">접근</div><p>직원 제작 도구를 일괄 금지하기보다 위험과 사용 범위에 따라 개인·부서·기관 운영 단계를 구분합니다.</p></div></div></div><div class="pageno">28</div></section>
+
+<section class="slide"><div class="hdr"><div class="ht">민첩한 AI<span>SAFETY CHECK</span></div><div class="hr">8부 · 안전 기준</div></div><div class="stage"><div class="crumb">8부 · 안전 기준</div><h2 class="atitle"><span class="lbl">[점검]</span> AI·자동화 도구 운영 기준 <span class="sub">— 입력·원본·실패·인수인계</span></h2><div class="titlerule"></div><div class="body split"><div class="concepts fill big"><div class="concept"><div class="no">1</div><div class="cbody"><div class="cn">입력 데이터와 외부 전송</div><p>개인정보·대외비·민감정보가 어디로 전달되는지 확인합니다.<span class="boxmore">조치 — 비식별 샘플과 실제 데이터 경로 분리.</span><span class="boxcheck">확인 — API·로그·임시파일의 저장 범위.</span></p></div></div><div class="concept"><div class="no">2</div><div class="cbody"><div class="cn">원본 보호와 재실행</div><p>읽기 전용 입력과 별도 출력 폴더를 사용합니다.<span class="boxmore">조치 — 덮어쓰기 전 백업과 미리보기.</span><span class="boxcheck">확인 — 재실행해도 원본과 기존 결과가 보존되는가.</span></p></div></div></div><div class="concepts fill big"><div class="concept"><div class="no">3</div><div class="cbody"><div class="cn">실패 처리와 로그</div><p>일부 실패를 전체 성공처럼 보고하지 않고 파일별 원인을 남깁니다.<span class="boxmore">산출물 — 성공·실패·보류 목록.</span><span class="boxcheck">확인 — 중단 후 안전하게 재처리할 수 있는가.</span></p></div></div><div class="concept"><div class="no">4</div><div class="cbody"><div class="cn">인수인계와 책임</div><p>버전, 실행명령, 예시 파일, 담당자, 배포 위치를 기록합니다.<span class="boxmore">산출물 — README·사용법·변경 기록.</span><span class="boxcheck">확인 — 제작자 없이 다른 직원이 재현할 수 있는가.</span></p></div></div></div></div><div class="note"><div class="nl">역할</div><p>전산 담당자는 실험을 막는 사람이 아니라, 유용한 도구가 안전하게 운영 단계로 넘어가도록 기준을 제공하는 역할을 합니다.</p></div></div><div class="pageno">29</div></section>
+
+<section class="slide"><div class="hdr"><div class="ht">실습 산출물<span>COURSE OUTPUTS</span></div><div class="hr">9부 · 적용 계획</div></div><div class="stage"><div class="crumb">9부 · 적용 계획</div><h2 class="atitle"><span class="lbl">[실습]</span> 강의 후 적용 과제 <span class="sub">— 흐름도·도구·로컬 AI·RAG</span></h2><div class="titlerule"></div><div class="body colflow" style="justify-content:space-between;"><div style="flex:1;display:flex;gap:18px;align-items:stretch;"><div class="domain big"><div class="dh">업무 실행 흐름도 <span>AGENT</span></div><ul class="dl"><li><b>대상</b> 반복 업무 1개</li><li><b>표시</b> 프롬프트·컨텍스트·도구</li><li><b>관문</b> 승인·중단·검증</li><li><b>산출물</b> 하네스 구성표</li></ul></div><div class="domain big"><div class="dh">자동화·로컬 AI <span>BUILD</span></div><ul class="dl"><li><b>대상</b> 파일·데이터 자동화 1개</li><li><b>도구</b> PowerShell 또는 Python</li><li><b>연결</b> Ollama API 또는 HTML 화면</li><li><b>검증</b> 입력·출력·오류 기록</li></ul></div><div class="domain big"><div class="dh">RAG 샘플 <span>RETRIEVAL</span></div><ul class="dl"><li><b>자료</b> 공개 문서 10개</li><li><b>질문</b> 검증 질문 5개</li><li><b>출력</b> 관련 문단·답변·출처</li><li><b>판정</b> 검색 실패와 권한 확인</li></ul></div></div><div class="note"><div class="nl">적용 순서</div><p>작은 샘플로 실행과 검증을 끝낸 뒤 위험과 효과를 기록하고, 재사용 가치가 있는 도구만 부서 공유나 기관 운영으로 전환합니다.</p></div></div></div><div class="pageno">30</div></section>
+
+<section class="slide dark"><div class="hdr"><div class="ht">생성형 AI 실무역량 강화<span>COURSE RECAP</span></div><div class="hr">강의 요약 · Q &amp; A</div></div><div class="recap"><div class="eye">강의 요약</div><h1>생성형 AI 업무 활용 구조</h1><div class="ritems"><div class="ri"><div class="rn">01</div><p><b>프롬프트</b>는 현재 상태를 원하는 상태로 바꾸는 요청이며, 컨텍스트가 작업 근거와 실행 상태를 제공합니다.</p></div><div class="ri"><div class="rn">02</div><p><b>에이전트</b>는 모델·컨텍스트·도구·반복 실행으로 구성되며, 하네스가 내 컴퓨터와 업무 시스템을 연결합니다.</p></div><div class="ri"><div class="rn">03</div><p><b>업무 적용</b>은 검색·추출·분석·작성 병목에서 시작하고, 실행·검증·로그·운영 전환 기준을 함께 설계합니다.</p></div></div></div><div class="dmeta"><div class="who">신성진 대표<span>CDSA · AI 업무자동화</span></div><div class="topic">전북교육청 전산직 직무연수<br><b>2026. 10. 8.(목)</b></div></div><div class="pageno">31</div></section>
+
+</div>
+<script>
+(function(){
+  var slides=[].slice.call(document.querySelectorAll('.slide'));
+  var editing=false, pidx=0;
+  var palettes=[
+    {id:'slate-teal', label:'슬레이트 틸'},
+    {id:'classic-rust', label:'클래식 러스트'},
+    {id:'forest-gold', label:'포레스트 골드'},
+    {id:'navy-coral', label:'네이비 코랄'},
+    {id:'graphite-rose', label:'그래파이트 로즈'}
+  ];
+  var bPalette=document.getElementById('btnPalette'),
+      bEdit=document.getElementById('btnEdit'), bSave=document.getElementById('btnSave'),
+      bPdf=document.getElementById('btnPdf'), bPlay=document.getElementById('btnPlay'),
+      nav=document.querySelector('.pnav');
+  function paletteIndex(id){for(var i=0;i<palettes.length;i++){if(palettes[i].id===id)return i;}return 0;}
+  function setPalette(id){
+    var idx=paletteIndex(id), p=palettes[idx];
+    document.body.dataset.palette=p.id;
+    if(bPalette)bPalette.textContent='색상: '+p.label;
+  }
+  if(bPalette){
+    bPalette.onclick=function(){setPalette(palettes[(paletteIndex(document.body.dataset.palette)+1)%palettes.length].id);};
+    setPalette(document.body.dataset.palette||palettes[0].id);
+  }
+  function setEdit(v){editing=v;document.body.classList.toggle('editing',v);
+    slides.forEach(function(s){s.contentEditable=v;});bEdit.classList.toggle('on',v);bEdit.textContent=v?'편집 끝':'편집';}
+  bEdit.onclick=function(){setEdit(!editing);};
+  bPdf.onclick=function(){window.print();};
+  bSave.onclick=function(){
+    var wasEdit=editing; if(editing)setEdit(false);
+    var clone=document.documentElement.cloneNode(true);
+    clone.querySelectorAll('.slide').forEach(function(s){s.removeAttribute('contenteditable');s.classList.remove('present-current');});
+    clone.querySelector('body').classList.remove('editing','presenting');
+    var html='<!doctype html>\n'+clone.outerHTML;
+    var a=document.createElement('a');
+    a.href=URL.createObjectURL(new Blob([html],{type:'text/html;charset=utf-8'}));
+    a.download=(document.title.replace(/\s+/g,'_')||'lecture')+'_편집본.html';
+    document.body.appendChild(a);a.click();a.remove();
+    if(wasEdit)setEdit(true);
+  };
+  function fit(){var s=Math.min(window.innerWidth/1280,window.innerHeight/720);
+    var cur=document.querySelector('.slide.present-current');if(cur)cur.style.setProperty('--ps',s);}
+  function show(i){pidx=(i+slides.length)%slides.length;
+    slides.forEach(function(s){s.classList.remove('present-current');});
+    slides[pidx].classList.add('present-current');fit();
+    nav.textContent=(pidx+1)+' / '+slides.length+'   ·   ← →  이동,  Esc  종료';}
+  function enter(){if(editing)setEdit(false);document.body.classList.add('presenting');show(pidx);
+    if(document.documentElement.requestFullscreen)document.documentElement.requestFullscreen().catch(function(){});}
+  function exit(){document.body.classList.remove('presenting');
+    slides.forEach(function(s){s.classList.remove('present-current');s.style.removeProperty('--ps');});
+    if(document.fullscreenElement)document.exitFullscreen().catch(function(){});}
+  bPlay.onclick=enter;
+  window.addEventListener('resize',function(){if(document.body.classList.contains('presenting'))fit();});
+  document.addEventListener('keydown',function(e){
+    if(!document.body.classList.contains('presenting'))return;
+    if(e.key==='ArrowRight'||e.key==='PageDown'||e.key===' '){e.preventDefault();show(pidx+1);}
+    else if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();show(pidx-1);}
+    else if(e.key==='Escape'){exit();}
+  });
+  document.addEventListener('click',function(e){
+    if(document.body.classList.contains('presenting')&&!editing){
+      var cur=document.querySelector('.slide.present-current');
+      if(cur&&cur.contains(e.target))show(pidx+1);
+    }
+  });
+})();
+</script>
+<script>/* kg-preview: #<heading> \uc704\uce58\ub85c \uc774\ub3d9 */
+(function(){function norm(t){return (t||'').replace(/\s+/g,'').toLowerCase()}
+function go(){var h=decodeURIComponent(location.hash.slice(1));if(!h)return;var k=norm(h).slice(0,24);if(!k)return;
+var best=null,bl=1e9,els=document.body.querySelectorAll('h1,h2,h3,h4,h5,p,div,span,li,td,text,tspan,section,article');
+for(var i=0;i<els.length;i++){var e=els[i],t=norm(e.textContent);if(t.length<bl&&t.indexOf(k)>-1){best=e;bl=t.length}}
+if(!best)return;var box=best.closest('section,[class*=slide],[class*=page],article')||best;
+box.scrollIntoView({block:'start'});box.style.outline='3px solid #c0504d';box.style.outlineOffset='4px';
+setTimeout(function(){box.style.outline=''},2600)}
+window.addEventListener('load',function(){setTimeout(go,400)});window.addEventListener('hashchange',go)})();</script></body>
+</html>

@@ -1,0 +1,620 @@
+<!doctype html>
+<html lang="ko">
+<head><meta name="robots" content="noindex, nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI 에이전트 시대의 공공교육 - AI 챔피언 문제중심 교육모델</title>
+<style>
+:root{
+  --paper:#f4efe4; --paper2:#fbf8f0; --ink:#161616; --ink2:#333942; --muted:#66707c;
+  --line:#d5cab8; --line2:#b7aa93; --dark:#1d2530; --dark2:#11171f;
+  --teal:#0f766e; --teal2:#0b4f4a; --rust:#b45309; --rust2:#7c2d12;
+  --green:#3f7d4b; --blue:#2563a8; --red:#a43b3b; --gold:#bd8b22; --white:#fffdf7;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:#151922;color:var(--ink);font-family:"Aptos","Segoe UI","Malgun Gothic",sans-serif}
+button{font:inherit}
+.toolbar{position:fixed;right:14px;top:14px;z-index:40;display:flex;gap:6px}
+.toolbar button{border:1px solid rgba(255,255,255,.18);background:rgba(17,23,31,.86);color:#f7f1e6;border-radius:6px;padding:7px 10px;font-size:12px;font-weight:800;cursor:pointer}
+.toolbar button:hover{background:var(--teal)}
+.progress{position:fixed;left:0;bottom:0;height:4px;background:linear-gradient(90deg,var(--teal),var(--rust));z-index:50;width:0}
+.toc{position:fixed;left:18px;top:18px;bottom:18px;width:380px;background:rgba(17,23,31,.96);border:1px solid rgba(255,255,255,.14);border-radius:8px;padding:18px;z-index:45;display:none;overflow:auto;color:#f4efe4}
+.toc.open{display:block}.toc h3{margin:0 0 10px;font-size:18px}.toc button{display:block;width:100%;text-align:left;border:0;border-bottom:1px solid rgba(255,255,255,.08);background:transparent;color:#eee3d3;padding:9px 3px;font-size:13px;cursor:pointer}.toc button:hover{color:#f2c36b}
+.deck{min-height:100vh;display:flex;flex-direction:column;align-items:center;gap:24px;padding:24px 0 50px}
+.slide{position:relative;width:1600px;height:900px;overflow:hidden;flex:0 0 auto;display:block;background:linear-gradient(90deg,rgba(15,118,110,.045),rgba(180,83,9,.035)),var(--paper);box-shadow:0 24px 80px rgba(0,0,0,.44)}
+.slide::before{content:"";position:absolute;inset:0;pointer-events:none;background-image:linear-gradient(rgba(22,22,22,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(22,22,22,.03) 1px,transparent 1px);background-size:64px 64px;mask-image:linear-gradient(to bottom,transparent,black 13%,black 88%,transparent)}
+.slide.active{outline:3px solid rgba(15,118,110,.32);outline-offset:5px}
+.top{position:absolute;left:46px;right:46px;top:30px;height:36px;display:flex;align-items:center;justify-content:space-between;color:var(--muted);font-size:14px;font-weight:900;letter-spacing:.03em;z-index:3}
+.top b{color:var(--teal2)}.top span:last-child{color:var(--rust2)}
+.stage{position:absolute;inset:80px 46px 54px;z-index:2;display:flex;flex-direction:column}
+.eyebrow{font-size:17px;font-weight:900;color:var(--rust);letter-spacing:.08em;margin-bottom:8px}
+h1,h2,h3,p{margin:0} h1{font-size:76px;line-height:1.06;letter-spacing:-1.3px} h2{font-size:44px;line-height:1.16;letter-spacing:-.8px;max-width:1260px}
+.sub{font-size:23px;line-height:1.42;color:var(--muted);margin-top:12px;max-width:1260px}.rule{height:2px;background:linear-gradient(90deg,var(--teal),var(--rust),transparent);margin:18px 0 18px}
+.footer{position:absolute;left:46px;right:46px;bottom:22px;display:flex;justify-content:space-between;gap:30px;align-items:center;color:#6f7781;font-size:13px;z-index:3}.page{font-weight:900;color:var(--teal2)}
+.cover{background:linear-gradient(135deg,#121820,#1d2530 54%,#352313);color:var(--white)}.cover::before{opacity:.08}.cover .stage{inset:70px 64px 54px;display:grid;grid-template-columns:1.15fr .85fr;gap:42px;align-items:center}.cover .eyebrow{color:#f0c36e}.cover h1{font-size:80px}.cover .sub{color:#d8d1c5;font-size:25px}.cover .brief{display:grid;grid-template-columns:1fr 1fr;gap:14px}.cover .brief .box{border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.055);border-radius:8px;padding:18px}.cover .brief .box b{display:block;color:#f2c36b;font-size:14px;margin-bottom:7px}.cover .brief .box p{font-size:18px;line-height:1.45;color:#eee7dc}
+.section{background:linear-gradient(135deg,#0b302d,#1d2530 66%,#3a2412);color:var(--white)}.section .stage{justify-content:center;inset:88px 72px 72px}.section h1{font-size:70px;max-width:1190px}.section .sub{color:#d8d1c5}.section .eyebrow{color:#f0c36e}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px;flex:1;min-height:0}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;flex:1;min-height:0}.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;flex:1;min-height:0}.grid5{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;flex:1;min-height:0}
+.panel{background:rgba(255,253,247,.9);border:1px solid var(--line);border-top:4px solid var(--teal);border-radius:7px;padding:18px 19px;min-height:0}.panel.rust{border-top-color:var(--rust)}.panel.green{border-top-color:var(--green)}.panel.blue{border-top-color:var(--blue)}.panel.red{border-top-color:var(--red)}.panel.gold{border-top-color:var(--gold)}.panel.dark{background:var(--dark);border-color:var(--dark);color:var(--white)}.panel h3{font-size:25px;line-height:1.18;letter-spacing:-.3px;margin-bottom:9px}.panel p,.panel li{font-size:18px;line-height:1.47;color:#39424c}.panel.dark p,.panel.dark li{color:#dce1e6}.panel ul{margin:0;padding-left:20px}.panel .meta{font-size:13px;font-weight:900;color:var(--rust);letter-spacing:.04em;margin-bottom:7px}.panel .small{font-size:15px;line-height:1.38;color:#56616d}
+.dense{font-size:17px;line-height:1.42;color:#38414b}.dense b{color:#151515}.tight{font-size:16px;line-height:1.34}.tiny{font-size:14px;line-height:1.32;color:#5b6570}
+.factrow{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}.fact{background:var(--white);border:1px solid var(--line);border-radius:7px;padding:15px}.fact .v{font-size:42px;line-height:1;font-weight:950;color:var(--teal2);letter-spacing:-1px}.fact .l{font-size:15px;line-height:1.32;color:var(--muted);margin-top:8px}.fact.rust .v{color:var(--rust2)}.fact.blue .v{color:var(--blue)}.fact.red .v{color:var(--red)}
+.table{width:100%;border-collapse:collapse;background:var(--white);border:1px solid var(--line);border-radius:7px;overflow:hidden}.table th{background:var(--dark);color:var(--white);font-size:15px;text-align:left;padding:11px 12px}.table td{border-bottom:1px solid var(--line);padding:10px 12px;font-size:16px;line-height:1.34;color:#343c46;vertical-align:top}.table tr:last-child td{border-bottom:0}.table.compact td{font-size:14.5px;padding:8px 10px}.table.compact th{font-size:14px;padding:9px 10px}.table b{color:#111820}
+.twocol{display:grid;grid-template-columns:.86fr 1.14fr;gap:22px;flex:1;min-height:0}.leftnote{background:var(--dark);color:var(--white);border-radius:8px;padding:22px;display:flex;flex-direction:column;justify-content:space-between}.leftnote h3{font-size:31px;line-height:1.18;margin-bottom:14px}.leftnote p{font-size:19px;line-height:1.52;color:#dce1e6}.leftnote .call{border-top:1px solid rgba(255,255,255,.16);padding-top:16px;color:#f0c36e;font-weight:900;font-size:20px;line-height:1.42}
+.pill{display:inline-block;border-radius:999px;padding:4px 9px;font-size:12px;font-weight:900;color:var(--white);background:var(--teal);margin-right:5px;white-space:nowrap}.pill.rust{background:var(--rust)}.pill.blue{background:var(--blue)}.pill.green{background:var(--green)}.pill.red{background:var(--red)}.pill.gold{background:var(--gold);color:#171717}
+.timeline{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.step{background:var(--white);border:1px solid var(--line);border-radius:7px;padding:18px;position:relative}.step:not(:last-child)::after{content:"";position:absolute;right:-11px;top:42px;width:20px;height:2px;background:var(--rust)}.step .tag{font-size:13px;font-weight:950;color:var(--rust);letter-spacing:.08em}.step h3{font-size:25px;margin:8px 0 7px}.step p{font-size:17px;line-height:1.43;color:#3b444e}
+.miniMatrix{display:grid;grid-template-columns:1fr 1fr;gap:12px}.cell{background:var(--white);border:1px solid var(--line);border-radius:7px;padding:15px}.cell h3{font-size:21px;margin-bottom:7px}.cell p{font-size:16px;line-height:1.37;color:#3c4651}
+.quote{background:var(--dark);color:var(--white);border-left:6px solid var(--gold);border-radius:7px;padding:18px 22px;font-size:24px;line-height:1.38;font-weight:900;margin-top:auto}.source{max-width:1260px}
+body.presenting{overflow:hidden}.presenting .deck{display:block;width:auto;height:auto;min-height:0;padding:0;gap:0;transform:none!important}.presenting .slide{display:none;position:fixed;left:50%;top:50%;transform:translate(-50%,-50%) scale(var(--scale,1));transform-origin:center}.presenting .slide.active{display:block;outline:0}
+@page{size:1600px 900px;margin:0}
+@media print{html,body{background:#fff;width:1600px}.toolbar,.toc,.progress{display:none!important}.deck{display:block;min-height:auto;padding:0}.slide{display:block!important;position:relative!important;left:auto!important;top:auto!important;transform:none!important;outline:0!important;box-shadow:none;page-break-after:always;break-after:page}.slide:last-child{page-break-after:auto;break-after:auto}*{print-color-adjust:exact;-webkit-print-color-adjust:exact}}
+</style>
+</head>
+<body>
+<div class="toolbar"><button id="prevBtn">이전</button><button id="nextBtn">다음</button><button id="playBtn">발표</button><button id="tocBtn">목차</button><button id="printBtn">PDF</button></div>
+<nav class="toc" id="toc"><h3>목차</h3></nav><div class="progress" id="progress"></div>
+<main class="deck" id="deck">
+
+<section class="slide cover" data-title="표지">
+  <div class="stage">
+    <div>
+      <div class="eyebrow">AI AGENT ERA · PUBLIC EDUCATION · 60 MIN BRIEFING</div>
+      <h1>AI 에이전트 시대의<br>공공교육</h1>
+      <p class="sub">AI 챔피언 인증과 문제중심 교육을 “공공 AI 전환의 실행 체계”로 다시 설명하는 발표안</p>
+    </div>
+    <div class="brief">
+      <div class="box"><b>발표 상황</b><p>행안부·인사혁신처·과기정통부 관계자와 주요 인사 대상 1시간 발표</p></div>
+      <div class="box"><b>핵심 논지</b><p>AI 챔피언 문제는 시험지가 아니라 업무 전환을 훈련하는 시뮬레이터</p></div>
+      <div class="box"><b>반영 자료</b><p>운영계획 MD, CBT ZIP, 기존 HTML, 착수보고 PPTX, 글로벌리더 PPTX, 강연 HTML 3종</p></div>
+      <div class="box"><b>청중에게 남길 문장</b><p>공공 AI 교육은 도구 교육이 아니라 업무 분해와 오케스트레이션 교육입니다.</p></div>
+    </div>
+  </div>
+  <div class="footer"><span>AI 챔피언 문제중심 교육모델</span><span class="page">01</span></div>
+</section>
+
+<section class="slide" data-title="자료 반영 맵">
+  <div class="top"><b>AI 챔피언 교육모델</b><span>자료 반영 맵</span></div>
+  <div class="stage">
+    <div class="eyebrow">SOURCE INTEGRATION</div>
+    <h2>이번 발표는 선언형 메시지가 아니라, 참고자료에서 나온 <span style="color:var(--teal2)">운영 사실·문제 구조·교육 철학</span>을 한 흐름으로 묶습니다.</h2>
+    <div class="rule"></div>
+    <table class="table">
+      <tr><th style="width:260px">참고자료</th><th style="width:380px">발표에 반영한 핵심</th><th>슬라이드에서 쓰는 방식</th></tr>
+      <tr><td><b>2026 인증체계 운영계획</b></td><td>541명 실적, 1,000명 목표, 12→8 과목, 그린·블루·블랙, 수행평가 90%+이론 10%</td><td>“제도가 이미 문제해결형으로 움직이고 있다”는 정책 근거</td></tr>
+      <tr><td><b>배포본과 CBT형.zip</b></td><td>664개 파일, 그린·블루 실전 20세트, 콘텐츠·데이터·자동화, 첨부자료·스타터 코드</td><td>“문제는 시험지가 아니라 업무 시뮬레이터”라는 물증</td></tr>
+      <tr><td><b>착수보고자료.pptx</b></td><td>배우는 AI→일하는 AI, 민첩한 AI, 문제→도구, 교육은 워크플로우 습득</td><td>교육 철학과 3일 과제형 운영 모델의 언어</td></tr>
+      <tr><td><b>글로벌리더양성과정 PPTX</b></td><td>고속도로/골목길, 같은 도구 N해법, 블록 조합, AI 오케스트레이터, 업무 재설계</td><td>에이전트 시대 역량 정의와 교육 대상 재정의</td></tr>
+      <tr><td><b>강연 HTML 3종</b></td><td>VIBE 코딩, 폐쇄망 8기술, 작동하는 거버넌스 5층위, 공공 부품창고</td><td>“기관에서 실제로 쓸 수 있느냐” 질문에 대한 답</td></tr>
+    </table>
+  </div>
+  <div class="footer"><span class="source">검토 기준: 참고자료 폴더 PPTX/HTML, 운영계획 MD, CBT ZIP 내부 목록 파싱</span><span class="page">02</span></div>
+</section>
+
+<section class="slide" data-title="한 장 결론">
+  <div class="top"><b>AI 챔피언 교육모델</b><span>한 장 결론</span></div>
+  <div class="stage">
+    <div class="eyebrow">EXECUTIVE SUMMARY</div>
+    <h2>공공 AI 교육의 중심은 “AI를 잘 묻는 사람”에서 <span style="color:var(--teal2)">업무를 AI가 처리 가능한 구조로 바꾸는 사람</span>으로 이동해야 합니다.</h2>
+    <div class="rule"></div>
+    <div class="grid3">
+      <div class="panel"><div class="meta">왜</div><h3>현장 병목은 플랫폼 밖에 남습니다</h3><p>소버린 AI, 공공 공통기반, GPU, 파운데이션 모델은 고속도로입니다. 그러나 반복 보고, 엑셀 취합, 회의록 정리, 민원 분류 같은 골목길 문제는 현장 사람이 다시 설계해야 사라집니다.</p></div>
+      <div class="panel rust"><div class="meta">무엇을</div><h3>AI 챔피언은 실행 단위입니다</h3><p>챔피언은 도구를 소개하는 사람이 아니라 문제를 정의하고, 실제 자료로 산출물을 만들고, 검증 기준을 남기며, 동료가 따라 하게 만드는 기관 내 변환자입니다.</p></div>
+      <div class="panel green"><div class="meta">어떻게</div><h3>문제은행이 교육 체계를 만듭니다</h3><p>CBT형 문제는 문서·데이터·자동화 과제를 실제 첨부자료와 함께 제공합니다. 교육, 인증, 기관 PoC가 같은 문제 구조를 공유할 때 역량이 축적됩니다.</p></div>
+    </div>
+    <div class="quote">AI 챔피언 인증의 본질은 “지식 확인”이 아니라 “업무 사이클을 AI로 완성할 수 있는지”를 검증하는 것입니다.</div>
+  </div>
+  <div class="footer"><span>발표 전체의 중심 문장</span><span class="page">03</span></div>
+</section>
+
+<section class="slide" data-title="정책 의사결정 포인트">
+  <div class="top"><b>AI 챔피언 교육모델</b><span>정책 의사결정 포인트</span></div>
+  <div class="stage">
+    <div class="eyebrow">DECISION POINTS</div>
+    <h2>세 부처가 함께 결정해야 할 것은 교육 콘텐츠가 아니라 <span style="color:var(--teal2)">공공 AI 문제해결 역량을 제도화하는 방식</span>입니다.</h2>
+    <div class="rule"></div>
+    <div class="grid3">
+      <div class="panel"><h3>행정안전부</h3><p class="dense"><b>표준 운영자.</b> 문제은행 품질, 수행평가 루브릭, 기관별 적용모델, 그린·블루·블랙 경로를 표준화합니다.</p><ul class="tiny"><li>CBT 문제 구조 표준화</li><li>기관 PoC 재료화</li><li>부처별 확산 사례집</li></ul></div>
+      <div class="panel rust"><h3>인사혁신처</h3><p class="dense"><b>역량 제도화.</b> AI 챔피언을 교육 이수자가 아니라 직무역량 보유자로 인정하고, 경력·보수교육·우대와 연결합니다.</p><ul class="tiny"><li>역량인증-교육훈련 연계</li><li>마이크로크리덴셜 검토</li><li>블랙 코치단 역할 부여</li></ul></div>
+      <div class="panel green"><h3>과기정통부</h3><p class="dense"><b>도구 안전망.</b> 교육생이 실제 기관에서 쓸 수 있는 로컬·오픈소스·에이전트 도구 체인과 검증 절차를 제공합니다.</p><ul class="tiny"><li>공공 부품창고</li><li>로컬 SLM·에이전트 실증</li><li>도구 유형별 보안 체크리스트</li></ul></div>
+    </div>
+  </div>
+  <div class="footer"><span>세 부처의 역할은 분리되어 있지만, 교육생의 경험은 하나의 흐름이어야 합니다.</span><span class="page">04</span></div>
+</section>
+
+<section class="slide section" data-title="PART 1 운영계획이 말하는 변화">
+  <div class="stage"><div class="eyebrow">PART 1</div><h1>운영계획이 이미 말하고 있는 변화</h1><p class="sub">2026년 AI 챔피언 운영계획의 핵심은 규모 확대가 아니라 교육 철학의 전환입니다.</p></div>
+  <div class="footer"><span>비대면 수업 중심에서 하이브리드 과제형·수행평가 중심으로</span><span class="page">05</span></div>
+</section>
+
+<section class="slide" data-title="운영계획 팩트시트">
+  <div class="top"><b>PART 1</b><span>운영계획 팩트시트</span></div>
+  <div class="stage">
+    <div class="eyebrow">2026 OPERATING PLAN</div>
+    <h2>숫자만 봐도 방향은 분명합니다. AI 챔피언은 <span style="color:var(--teal2)">대상 확대·과제형 평가·역할 기반 등급</span>으로 재설계되고 있습니다.</h2>
+    <div class="rule"></div>
+    <div class="factrow">
+      <div class="fact"><div class="v">541</div><div class="l">2025년 시범운영 인증 실적</div></div>
+      <div class="fact rust"><div class="v">1,000</div><div class="l">2026년 그린·블루 합산 목표</div></div>
+      <div class="fact blue"><div class="v">20,241</div><div class="l">2030년 누적 양성 목표</div></div>
+      <div class="fact"><div class="v">12→8</div><div class="l">과목 통합·고도화</div></div>
+      <div class="fact red"><div class="v">90+10</div><div class="l">작업형 90점 + 이론 10점</div></div>
+    </div>
+    <table class="table" style="margin-top:18px">
+      <tr><th style="width:230px">개편 항목</th><th style="width:360px">2025년 운영</th><th>2026년 의미</th></tr>
+      <tr><td><b>교육 철학</b></td><td>도구 사용법 습득 중심</td><td>“배우는 AI”에서 “일하는 AI”로. 현업 문제해결 중심으로 전환</td></tr>
+      <tr><td><b>교육 방식</b></td><td>12일 내외 비대면 실시간 중심</td><td>3일 하이브리드 과제형 + 셀프학습. 집중 학습보다 산출물 중심</td></tr>
+      <tr><td><b>수행평가</b></td><td>생성형AI·데이터분석·서비스구현 3분야</td><td>공통 이론퀴즈 + 문서/콘텐츠 + 데이터 의사결정 + 업무자동화</td></tr>
+    </table>
+  </div>
+  <div class="footer"><span class="source">출처: _2026_인증체계_운영계획_변환.md</span><span class="page">06</span></div>
+</section>
+
+<section class="slide" data-title="등급은 역할이다">
+  <div class="top"><b>PART 1</b><span>그린·블루·블랙</span></div>
+  <div class="stage">
+    <div class="eyebrow">ROLE-BASED CERTIFICATION</div>
+    <h2>그린·블루·블랙은 시험 난이도만이 아니라 <span style="color:var(--teal2)">기관 안에서 맡을 역할</span>의 차이입니다.</h2>
+    <div class="rule"></div>
+    <table class="table">
+      <tr><th style="width:180px">등급</th><th style="width:250px">연계 과정</th><th style="width:390px">역할 정의</th><th>발표에서 강조할 메시지</th></tr>
+      <tr><td><span class="pill green">Green</span></td><td>AI 실무 융합</td><td>AI 전환 아이디어를 정책·서비스 기획안으로 구체화하는 실무자</td><td>현업 주무관이 문제를 말로 끝내지 않고 자료·양식·기획안으로 정리하는 수준</td></tr>
+      <tr><td><span class="pill blue">Blue</span></td><td>AI 심화 개발</td><td>AI 전환사업을 기획·설계하고 구축까지 이끄는 실행자</td><td>데이터와 자동화, LLM 서비스의 최소 구현을 이해하고 외부 개발자와 대화하는 수준</td></tr>
+      <tr><td><span class="pill rust">Black</span></td><td>거점리더·전문인재</td><td>기관 AI 전환을 총괄하고 동료 코칭과 확산을 주도하는 리더</td><td>개별 과제 해결을 넘어 문제은행·코치단·기관 적용모델로 확산시키는 수준</td></tr>
+    </table>
+    <div class="grid3" style="margin-top:16px">
+      <div class="panel green"><div class="meta">Green 19</div><p class="tight">기초 활용과 실무 기획 역량을 확인하는 구간</p></div>
+      <div class="panel blue"><div class="meta">Blue 33</div><p class="tight">데이터·자동화·서비스 구현까지 확장되는 실행 구간</p></div>
+      <div class="panel rust"><div class="meta">Black 48</div><p class="tight">기관 확산과 코칭을 담당하는 거점리더 구간</p></div>
+    </div>
+  </div>
+  <div class="footer"><span class="source">근거: 등급 연계 Green 19 ⊂ Blue 33 ⊂ Black 48 정량 매핑</span><span class="page">07</span></div>
+</section>
+
+<section class="slide" data-title="4대 역량체계">
+  <div class="top"><b>PART 1</b><span>4대 역량체계</span></div>
+  <div class="stage">
+    <div class="eyebrow">COMPETENCY MODEL</div>
+    <h2>2026년 역량체계는 추상 역량이 아니라 <span style="color:var(--teal2)">실무 과업의 네 묶음</span>으로 정리됩니다.</h2>
+    <div class="rule"></div>
+    <div class="grid4">
+      <div class="panel"><div class="meta">① 관통역량</div><h3>공통 AI 리터러시</h3><p>생성형AI 원리, 도구 비교, 프롬프트 기본기, AI 윤리·보안, 비판적 활용을 전 등급에 공통 적용합니다.</p></div>
+      <div class="panel rust"><div class="meta">② 산출물</div><h3>문서 및 콘텐츠</h3><p>행정문서 작성, 요약, 번역, 시각자료, 홍보 콘텐츠 기획을 실제 업무 산출물로 다룹니다.</p></div>
+      <div class="panel blue"><div class="meta">③ 판단</div><h3>데이터 기반 의사결정</h3><p>데이터 수집, 전처리, 분석, 시각화, 인사이트 도출, 정책 보고까지 이어지는 흐름입니다.</p></div>
+      <div class="panel green"><div class="meta">④ 실행</div><h3>업무자동화</h3><p>반복업무 식별, 노코드·로우코드 자동화, LLM 연계 워크플로 구현이 핵심입니다.</p></div>
+    </div>
+    <div class="quote">이 네 묶음은 곧 AI 챔피언 문제의 설계 원칙입니다. 문제는 지식 단원이 아니라 실제 업무의 끝단을 재현해야 합니다.</div>
+  </div>
+  <div class="footer"><span class="source">근거: 4대 대분류·14개 중분류·48개 소분류 체계</span><span class="page">08</span></div>
+</section>
+
+<section class="slide" data-title="수행평가 설계">
+  <div class="top"><b>PART 1</b><span>수행평가 설계</span></div>
+  <div class="stage">
+    <div class="eyebrow">ASSESSMENT DESIGN</div>
+    <h2>수행평가의 본질은 <span style="color:var(--teal2)">복사·붙여넣기로 풀 수 없는 실제 과업</span>을 주는 것입니다.</h2>
+    <div class="rule"></div>
+    <div class="twocol">
+      <div class="leftnote">
+        <div><h3>안티-페이스트 설계</h3><p>운영계획은 대용량 자료와 복합 조건을 통해 단순 답변 복붙으로 해결되지 않는 과제를 지향합니다. AI 도구 사용은 허용하되, 산출물 품질과 근거, 검증을 봐야 합니다.</p></div>
+        <div class="call">작업형 90점 + 이론 10점, 75점 이상 인증</div>
+      </div>
+      <div>
+        <table class="table">
+          <tr><th>평가 요소</th><th>내용</th><th>교육적 의미</th></tr>
+          <tr><td><b>작업형 수행평가</b></td><td>문서/콘텐츠, 데이터, 자동화 등 실무 과제 산출</td><td>AI를 써서 실제 업무 결과물을 완성하는지 확인</td></tr>
+          <tr><td><b>공통 이론퀴즈</b></td><td>원리, 도구 비교, 윤리, 보안, 비판적 활용</td><td>결과만 만드는 것이 아니라 위험과 한계를 이해하는지 확인</td></tr>
+          <tr><td><b>교육과정형</b></td><td>수행평가 90% + 이러닝 10% + 참여도 가점</td><td>수업 참여와 과제 수행을 함께 반영</td></tr>
+          <tr><td><b>자기주도형</b></td><td>수행평가 점수만으로 75점 이상</td><td>교육을 듣지 않아도 역량이 있으면 인증 가능</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="footer"><span class="source">근거: 운영계획 V. AI 과제 수행평가 운영</span><span class="page">09</span></div>
+</section>
+
+<section class="slide section" data-title="PART 2 문제는 교육이다">
+  <div class="stage"><div class="eyebrow">PART 2</div><h1>AI 챔피언 문제는 교육 그 자체입니다</h1><p class="sub">문제지, 첨부자료, 답안지, 해설, 스타터 코드가 함께 있을 때 응시자는 실제 업무 사이클을 경험합니다.</p></div>
+  <div class="footer"><span>문제은행은 평가도구가 아니라 공공 AI 교육의 커리큘럼 엔진</span><span class="page">10</span></div>
+</section>
+
+<section class="slide" data-title="CBT ZIP 인벤토리">
+  <div class="top"><b>PART 2</b><span>CBT ZIP 인벤토리</span></div>
+  <div class="stage">
+    <div class="eyebrow">EVIDENCE FROM CBT PACKAGE</div>
+    <h2>CBT 배포본은 이미 <span style="color:var(--teal2)">실제 수행평가 패키지</span>입니다. 여기서 발표의 설득력이 나옵니다.</h2>
+    <div class="rule"></div>
+    <div class="factrow">
+      <div class="fact"><div class="v">664</div><div class="l">전체 파일</div></div>
+      <div class="fact rust"><div class="v">634</div><div class="l">검증·응시자용 파일</div></div>
+      <div class="fact blue"><div class="v">30</div><div class="l">CBT 변환 JSON</div></div>
+      <div class="fact"><div class="v">20</div><div class="l">그린·블루 실전 세트</div></div>
+      <div class="fact red"><div class="v">354</div><div class="l">첨부 파일 수</div></div>
+    </div>
+    <div class="grid2" style="margin-top:18px">
+      <table class="table compact">
+        <tr><th>첨부 확장자</th><th>개수</th><th>교육적 의미</th></tr>
+        <tr><td><b>.md</b></td><td>197</td><td>보도자료, 법령, 회의록, 매뉴얼 등 문서 기반 판단</td></tr>
+        <tr><td><b>.csv</b></td><td>64</td><td>정책사업, 인구, 시설, 평가 등 데이터 분석</td></tr>
+        <tr><td><b>.json</b></td><td>28</td><td>자동화와 앱 구현을 위한 구조화 입력</td></tr>
+        <tr><td><b>.html/.js/.css/.py</b></td><td>24</td><td>스타터 코드와 로컬 도구 구현</td></tr>
+        <tr><td><b>.png/.jpg/.zip</b></td><td>51</td><td>시각자료, 압축 실무자료, 복합 과제</td></tr>
+      </table>
+      <div class="panel dark">
+        <h3>발표에서 이렇게 말하면 됩니다</h3>
+        <p>“AI 챔피언 문제는 종이에 적힌 질문이 아닙니다. 응시자가 실제 첨부자료를 읽고, 데이터를 정리하고, 작은 도구를 고쳐서 산출물을 내는 구조입니다. 그래서 인증은 교육과 분리되지 않습니다.”</p>
+        <p style="margin-top:12px">이 숫자는 발표의 밀도를 만드는 핵심 물증입니다. 파일 구조가 이미 교육 철학을 보여줍니다.</p>
+      </div>
+    </div>
+  </div>
+  <div class="footer"><span class="source">근거: 배포본과 CBT형.zip 내부 목록 파싱</span><span class="page">11</span></div>
+</section>
+
+<section class="slide" data-title="실전 세트 맵">
+  <div class="top"><b>PART 2</b><span>실전 세트 맵</span></div>
+  <div class="stage">
+    <div class="eyebrow">20 REAL TASK SETS</div>
+    <h2>실전 세트는 공공업무의 여러 장면을 덮습니다. <span style="color:var(--teal2)">정책·재난·법령·교육·민원·협업</span>이 모두 문제화되어 있습니다.</h2>
+    <div class="rule"></div>
+    <div class="grid5">
+      <div class="panel"><h3>1 정책모니터링</h3><p class="tight">보도자료, 정책영역 사전, 사업현황 CSV, 정책공지 JSON</p></div>
+      <div class="panel rust"><h3>2 재난안전</h3><p class="tight">재난 보도자료, 인구현황 CSV, 재난안전정보 JSON, 행사사진</p></div>
+      <div class="panel green"><h3>3 디지털혁신</h3><p class="tight">사업목록, 추진계획 보고서, 회의록, 사업계획 데이터</p></div>
+      <div class="panel blue"><h3>4 교육훈련</h3><p class="tight">교육과정 목록, 운영계획, 교육실적, 법령, 평가회의록</p></div>
+      <div class="panel gold"><h3>5 AI기본법</h3><p class="tight">AI기본법 본문, 정부기능분류 CSV, 조항데이터 JSON</p></div>
+      <div class="panel"><h3>6 시행령 매핑</h3><p class="tight">AI시행령 본문, 고영향AI 영향평가 CSV, 스타터 코드</p></div>
+      <div class="panel rust"><h3>7 협업기관</h3><p class="tight">자원봉사 사례집, 통계, 법령, 회의록, 시설 인허가 현황</p></div>
+      <div class="panel green"><h3>8 민원신고</h3><p class="tight">사이트 가이드, 신고유형, 민원 처리 흐름, 자동 분류 과제</p></div>
+      <div class="panel blue"><h3>9 백서 일관성</h3><p class="tight">백서·요약자료·정책문서 간 표현과 수치 정합성 검토</p></div>
+      <div class="panel gold"><h3>10 다부처 보도</h3><p class="tight">보도자료 묶음, 법령, 연도별 통계, 타부처 매뉴얼, 언론 클리핑</p></div>
+    </div>
+  </div>
+  <div class="footer"><span class="source">근거: 그린/블루 실전 10세트 목록과 첨부 파일명</span><span class="page">12</span></div>
+</section>
+
+<section class="slide" data-title="문제 한 세트 해부">
+  <div class="top"><b>PART 2</b><span>문제 한 세트 해부</span></div>
+  <div class="stage">
+    <div class="eyebrow">ANATOMY OF A TASK SET</div>
+    <h2>좋은 문제 한 세트는 <span style="color:var(--teal2)">문서 이해 → 데이터 판단 → 자동화 구현</span>을 연속 경험하게 해야 합니다.</h2>
+    <div class="rule"></div>
+    <table class="table">
+      <tr><th style="width:190px">과목</th><th style="width:300px">응시자가 마주하는 자료</th><th style="width:390px">해야 하는 일</th><th>교육 효과</th></tr>
+      <tr><td><span class="pill rust">1과목 콘텐츠</span></td><td>보도자료, 법령 발췌, 회의록, 해외사례, 클리핑</td><td>핵심 내용 요약, 정합성 검토, 정책 메시지 정리, 홍보·보고 문안 작성</td><td>AI로 문서를 읽되 근거와 문체를 확인하는 습관을 만듭니다.</td></tr>
+      <tr><td><span class="pill blue">2과목 데이터분석</span></td><td>CSV, 연도별 통계, 사업현황, 인구·시설·민원 데이터</td><td>집계, 비교, 이상치 확인, 시각화, 정책적 해석, 보고서 문장화</td><td>데이터를 표 하나로 끝내지 않고 의사결정 근거로 바꿉니다.</td></tr>
+      <tr><td><span class="pill green">3과목 자동화</span></td><td>JSON, 스타터 HTML/JS/CSS/PY, 문서·CSV 원본</td><td>작은 화면이나 스크립트를 고쳐 반복 분류, 검색, 점검, 변환을 자동화</td><td>개발자가 아니어도 문제를 도구 형태로 설명하고 검증하게 합니다.</td></tr>
+    </table>
+    <div class="quote">따라서 AI 챔피언 문제는 “정답을 맞히는 시험”보다 “일을 끝내는 연습”에 가깝습니다.</div>
+  </div>
+  <div class="footer"><span>문제 설계의 핵심: 실제 자료, 복합 판단, 검증 가능한 산출물</span><span class="page">13</span></div>
+</section>
+
+<section class="slide" data-title="그린 문제 예시">
+  <div class="top"><b>PART 2</b><span>그린 문제 예시</span></div>
+  <div class="stage">
+    <div class="eyebrow">GREEN TASK EXAMPLES</div>
+    <h2>그린은 “AI를 써봤다”가 아니라 <span style="color:var(--teal2)">정책·업무 개선 아이디어를 자료 기반 산출물로 만드는 수준</span>입니다.</h2>
+    <div class="rule"></div>
+    <div class="grid3">
+      <div class="panel"><div class="meta">콘텐츠</div><h3>50개 부서 자료 취합</h3><p>산하 50개 부서에서 받은 자료를 주무관 관점에서 요약·정리하고, 누락·중복·표현 불일치를 잡아 정책 설명자료로 바꿉니다.</p><p class="small">역량: 문서 구조화, 근거 표시, 행정문체 정리</p></div>
+      <div class="panel blue"><div class="meta">데이터</div><h3>최근 5년 청년정책 분석</h3><p>2021~2025년 시·도별 자료를 바탕으로 비교·추세·이상치를 확인하고, 정책 담당자가 읽을 수 있는 해석 문장을 만듭니다.</p><p class="small">역량: 기초 집계, 시각화, 인사이트 문장화</p></div>
+      <div class="panel green"><div class="meta">프로그래밍</div><h3>민원 법정 회신기한 자동 확인</h3><p>민원 접수 시 유형에 따라 회신기한이 달라지는 상황을 작은 도구나 규칙표로 구현하고, 담당자가 바로 확인하게 합니다.</p><p class="small">역량: 업무 규칙 분해, 조건 처리, 사용자 화면</p></div>
+    </div>
+  </div>
+  <div class="footer"><span class="source">근거: 운영계획 부록 AI챔피언 그린 역량인증 문제 예시</span><span class="page">14</span></div>
+</section>
+
+<section class="slide" data-title="블루 문제 예시">
+  <div class="top"><b>PART 2</b><span>블루 문제 예시</span></div>
+  <div class="stage">
+    <div class="eyebrow">BLUE TASK EXAMPLES</div>
+    <h2>블루는 기관 AI 전환사업을 <span style="color:var(--teal2)">기획하고 구현까지 대화할 수 있는 실행자</span>를 확인합니다.</h2>
+    <div class="rule"></div>
+    <div class="grid3">
+      <div class="panel"><div class="meta">콘텐츠</div><h3>10개 부처 제출자료 통합</h3><p>여러 부처가 제출한 계획 자료를 읽고 정책 방향, 중복 과제, 표현 불일치, 실행 리스크를 정리해 통합 보고자료로 만듭니다.</p><p class="small">역량: 다부처 정합성, 정책 문장, 보고 구조 설계</p></div>
+      <div class="panel blue"><div class="meta">데이터</div><h3>1년간 민원 텍스트 분석</h3><p>부서별 민원 건수 비교, 텍스트 길이 분포, 카테고리별 패턴을 분석하고 Notebook 형태로 재현 가능한 결과를 제출합니다.</p><p class="small">역량: 데이터 전처리, 비교 시각화, 재현성</p></div>
+      <div class="panel green"><div class="meta">프로그래밍</div><h3>8개 부서 자동 분류 웹앱</h3><p>민원 텍스트를 입력하면 8개 카테고리로 분류하고, 프론트엔드에서 라벨 번호와 부서명을 보여주는 풀스택 웹앱을 구현합니다.</p><p class="small">역량: 모델/규칙 연동, UI, 배포 가능한 산출물</p></div>
+    </div>
+  </div>
+  <div class="footer"><span class="source">근거: 운영계획 부록 AI챔피언 블루 역량인증 문제 예시</span><span class="page">15</span></div>
+</section>
+
+<section class="slide" data-title="문제 품질 기준">
+  <div class="top"><b>PART 2</b><span>문제 품질 기준</span></div>
+  <div class="stage">
+    <div class="eyebrow">QUALITY BAR</div>
+    <h2>문제는 많다고 좋은 것이 아닙니다. <span style="color:var(--teal2)">업무처럼 읽히고, 자료로 풀리고, 결과가 검증되어야</span> 합니다.</h2>
+    <div class="rule"></div>
+    <div class="grid4">
+      <div class="panel"><h3>실제성</h3><p>첨부는 AI 사용 안내문이 아니라 보도자료, 법령, 회의록, CSV, JSON, 스타터 코드처럼 문제를 푸는 재료여야 합니다.</p></div>
+      <div class="panel rust"><h3>복합성</h3><p>한 파일을 열어 답을 찾는 문제가 아니라 여러 자료를 비교하고 정합성을 판단하게 해야 합니다.</p></div>
+      <div class="panel green"><h3>평이성</h3><p>문제 문장은 일반 응시자가 이해할 수 있어야 합니다. 어려움은 지시문 난해함이 아니라 과업 복합성에서 나와야 합니다.</p></div>
+      <div class="panel blue"><h3>검증성</h3><p>답안은 “그럴듯한 설명”이 아니라 파일, 표, 화면, 로그, 근거 문장으로 확인 가능해야 합니다.</p></div>
+    </div>
+    <div class="quote">자료가 허술하면 교육도 허술해 보입니다. 문제은행 품질은 곧 AI 챔피언 제도의 신뢰입니다.</div>
+  </div>
+  <div class="footer"><span class="source">메모리 반영: 첨부는 실제 업무문서·원천자료·연습파일이어야 한다는 작업 원칙</span><span class="page">16</span></div>
+</section>
+
+<section class="slide section" data-title="PART 3 민첩한 AI 교육">
+  <div class="stage"><div class="eyebrow">PART 3</div><h1>문제 중심 교육은 민첩한 AI 교육입니다</h1><p class="sub">거대한 AI 전환을 선언하는 것이 아니라, 현장 업무를 작은 단위로 쪼개 빠르게 작동시키는 훈련입니다.</p></div>
+  <div class="footer"><span>Find · Build · Use · Revise</span><span class="page">17</span></div>
+</section>
+
+<section class="slide" data-title="배우는 AI에서 일하는 AI로">
+  <div class="top"><b>PART 3</b><span>교육 철학 전환</span></div>
+  <div class="stage">
+    <div class="eyebrow">FROM LEARNING AI TO WORKING AI</div>
+    <h2>현재의 문제는 AI를 몰라서가 아니라, 배운 AI가 <span style="color:var(--teal2)">실제 파일·절차·책임 속으로 들어가지 못한다는 것</span>입니다.</h2>
+    <div class="rule"></div>
+    <div class="grid2">
+      <div class="panel red"><h3>배우는 AI</h3><table class="table compact"><tr><td><b>단위</b></td><td>프롬프트, 기능, 도구 소개</td></tr><tr><td><b>결과</b></td><td>요약문, 초안, 아이디어</td></tr><tr><td><b>한계</b></td><td>업무 구조는 그대로이고 개인 요령으로 사라짐</td></tr><tr><td><b>교육 후 질문</b></td><td>“이걸 우리 기관에서 써도 됩니까?”</td></tr></table></div>
+      <div class="panel green"><h3>일하는 AI</h3><table class="table compact"><tr><td><b>단위</b></td><td>업무 흐름, 입력자료, 판단기준, 최종 산출물</td></tr><tr><td><b>결과</b></td><td>표, 보고서, 화면, 자동화 스크립트, 검증 로그</td></tr><tr><td><b>강점</b></td><td>다음날 같은 업무에 다시 적용 가능</td></tr><tr><td><b>교육 후 질문</b></td><td>“이 문제를 우리 부서 자료로 다시 해보겠습니다.”</td></tr></table></div>
+    </div>
+  </div>
+  <div class="footer"><span class="source">근거: 착수보고자료 “배우는 AI에서 일하는 AI로”</span><span class="page">18</span></div>
+</section>
+
+<section class="slide" data-title="민첩한 AI 루프">
+  <div class="top"><b>PART 3</b><span>민첩한 AI 루프</span></div>
+  <div class="stage">
+    <div class="eyebrow">AGILE AI LOOP</div>
+    <h2>민첩한 AI는 답변 도구가 아니라 <span style="color:var(--teal2)">제작 방식</span>입니다. 작은 문제를 실제 자료로 빠르게 닫습니다.</h2>
+    <div class="rule"></div>
+    <div class="timeline">
+      <div class="step"><div class="tag">FIND</div><h3>문제를 찾는다</h3><p>반복되는 불편, 지연, 재작업, 확인 누락을 업무 흐름에서 꺼냅니다.</p><p class="tiny">예: 매주 같은 CSV 병합, 민원 유형 수동 분류</p></div>
+      <div class="step"><div class="tag">BUILD</div><h3>작게 만든다</h3><p>단일 HTML, 작은 Python, 간단한 스프레드시트 자동화로 먼저 만듭니다.</p><p class="tiny">예: 1개 화면, 1개 버튼, 1개 출력표</p></div>
+      <div class="step"><div class="tag">USE</div><h3>바로 써본다</h3><p>샘플이 아니라 실제 파일과 실제 담당자에게 넣어 봅니다.</p><p class="tiny">예: 부서 자료 30건, 민원 메일 50건</p></div>
+      <div class="step"><div class="tag">REVISE</div><h3>고쳐 쓴다</h3><p>오류, 누락, 문체, 승인 절차를 반영해 다시 조정합니다.</p><p class="tiny">예: 근거열 추가, 예외 케이스 분기</p></div>
+    </div>
+    <div class="quote">AI 혁신은 “전면 전환”보다 “오늘 내 책상 위 2분 개선”이 반복될 때 빨라집니다.</div>
+  </div>
+  <div class="footer"><span class="source">근거: 착수보고자료 “민첩한 AI”</span><span class="page">19</span></div>
+</section>
+
+<section class="slide" data-title="업무 분해 캔버스">
+  <div class="top"><b>PART 3</b><span>업무 분해 캔버스</span></div>
+  <div class="stage">
+    <div class="eyebrow">WORK DECOMPOSITION CANVAS</div>
+    <h2>AI 교육은 “질문을 잘하는 법”보다 먼저 <span style="color:var(--teal2)">업무를 분해하는 법</span>을 가르쳐야 합니다.</h2>
+    <div class="rule"></div>
+    <div class="grid5">
+      <div class="panel"><div class="meta">1 입력</div><h3>무엇을 넣는가</h3><p class="tight">문서, CSV, 이미지, 이메일, 회의록, 법령, 기존 양식</p></div>
+      <div class="panel rust"><div class="meta">2 판단</div><h3>어떤 기준인가</h3><p class="tight">분류 기준, 제외 기준, 우선순위, 법정 기한, 보안 등급</p></div>
+      <div class="panel blue"><div class="meta">3 처리</div><h3>어떤 순서인가</h3><p class="tight">추출, 정리, 비교, 집계, 생성, 검토, 예외 처리</p></div>
+      <div class="panel green"><div class="meta">4 산출</div><h3>무엇으로 끝나는가</h3><p class="tight">보고서, 표, 차트, 답변 초안, 카드뉴스, 자동화 화면</p></div>
+      <div class="panel gold"><div class="meta">5 검증</div><h3>어떻게 확인하는가</h3><p class="tight">근거 링크, 누락 체크, 품질 기준, 담당자 승인, 로그</p></div>
+    </div>
+    <table class="table compact" style="margin-top:16px">
+      <tr><th>발표에서 쓸 예시</th><th>업무 분해 전</th><th>업무 분해 후</th></tr>
+      <tr><td><b>회의록 정리</b></td><td>“회의록 요약해줘”</td><td>결정사항/액션아이템/담당자/기한 추출 → 담당자별 To-do → 보고 문장</td></tr>
+      <tr><td><b>보도자료 검토</b></td><td>“문장 고쳐줘”</td><td>과장표현/근거 없는 수치/오해 소지 문장 표시 → 수정안 → 근거표</td></tr>
+      <tr><td><b>민원 분류</b></td><td>“민원 요약해줘”</td><td>요청사항 추출 → 유형 분류 → 회신기한 계산 → 답변 초안 틀</td></tr>
+    </table>
+  </div>
+  <div class="footer"><span>업무 분해가 안 되면 에이전트도 일할 수 없습니다.</span><span class="page">20</span></div>
+</section>
+
+<section class="slide" data-title="미시 문제 목록">
+  <div class="top"><b>PART 3</b><span>미시 문제 사례</span></div>
+  <div class="stage">
+    <div class="eyebrow">MICRO PAINPOINTS</div>
+    <h2>교육생이 몰입하는 순간은 거대 담론이 아니라 <span style="color:var(--teal2)">자기 책상 위 문제</span>가 해결될 때입니다.</h2>
+    <div class="rule"></div>
+    <div class="grid4">
+      <div class="panel"><h3>문서 추출</h3><ul class="tight"><li>100쪽 PDF에서 점 불릿 문장만 추출</li><li>표·그림 제목과 언급 문장 목록화</li><li>기존 공문 10개에서 조직 템플릿 생성</li></ul></div>
+      <div class="panel rust"><h3>분류·요약</h3><ul class="tight"><li>민원·질의메일 30통 요청사항 분류</li><li>주관식 설문 300행 대표 의견 정리</li><li>비고란 텍스트를 사유 코드로 자동 분류</li></ul></div>
+      <div class="panel blue"><h3>데이터 정리</h3><ul class="tight"><li>부서별 다른 엑셀 공통 필드 정규화</li><li>사업계획서 예산 항목 추출·증감 설명</li><li>중복·유사 과제 표준 명칭 후보 제안</li></ul></div>
+      <div class="panel green"><h3>보고·점검</h3><ul class="tight"><li>현장 점검 메모를 보고서 문장으로 정리</li><li>제출 기한·양식·첨부를 달력형 일정표로 변환</li><li>내부 규정 FAQ와 근거 조항 생성</li></ul></div>
+    </div>
+    <div class="quote">이 목록은 코딩 교육의 주제가 아니라 문제중심 교육의 출발점입니다. 업무를 아는 사람이 문제를 가장 잘 냅니다.</div>
+  </div>
+  <div class="footer"><span class="source">근거: 착수보고자료의 미시적 AI 혁신 사례 목록</span><span class="page">21</span></div>
+</section>
+
+<section class="slide" data-title="같은 노트북 여러 길">
+  <div class="top"><b>PART 3</b><span>해결 경로 선택</span></div>
+  <div class="stage">
+    <div class="eyebrow">ONE LAPTOP, MANY ROUTES</div>
+    <h2>공공 AI 교육은 코딩 하나로 몰아가면 안 됩니다. <span style="color:var(--teal2)">같은 문제도 여러 경로로 풀 수 있다는 안목</span>을 길러야 합니다.</h2>
+    <div class="rule"></div>
+    <table class="table">
+      <tr><th style="width:190px">해결 경로</th><th style="width:290px">맞는 문제</th><th style="width:340px">교육에서 다룰 것</th><th>예시 산출물</th></tr>
+      <tr><td><span class="pill">질문형</span></td><td>초안 작성, 요약, 비교, 아이디어</td><td>좋은 질문보다 근거 확인과 재질문 루프</td><td>정책 요약표, 보고 문장, 수정안</td></tr>
+      <tr><td><span class="pill rust">노코드형</span></td><td>양식 수집, 분류, 알림, 단순 자동화</td><td>업무 흐름, 승인 조건, 예외 처리</td><td>폼, 대시보드, 자동 알림 흐름</td></tr>
+      <tr><td><span class="pill blue">로우코드형</span></td><td>CSV 처리, 파일 변환, HTML 단일 도구</td><td>스타터 코드 읽기, 수정 요청, 실행 검증</td><td>브라우저 도구, Python 스크립트</td></tr>
+      <tr><td><span class="pill green">에이전트형</span></td><td>여러 파일 읽기, 반복 수정, 검증이 필요한 작업</td><td>규칙, 권한, 로그, 사람 승인 지점</td><td>작업 로그, 수정 파일, 검증 보고서</td></tr>
+    </table>
+  </div>
+  <div class="footer"><span class="source">근거: 글로벌리더양성과정 “같은 도구, N개의 길”</span><span class="page">22</span></div>
+</section>
+
+<section class="slide section" data-title="PART 4 에이전트 시대 역량">
+  <div class="stage"><div class="eyebrow">PART 4</div><h1>에이전트 시대의 핵심은 오케스트레이션입니다</h1><p class="sub">공직자가 개발자가 되는 것이 아니라, AI에게 무엇을 맡기고 사람이 어디서 승인할지 설계하는 역량입니다.</p></div>
+  <div class="footer"><span>문제 정의자 · 도구 지휘자 · 검증 책임자</span><span class="page">23</span></div>
+</section>
+
+<section class="slide" data-title="오케스트레이션 역량">
+  <div class="top"><b>PART 4</b><span>AI 오케스트레이터</span></div>
+  <div class="stage">
+    <div class="eyebrow">AI ORCHESTRATION</div>
+    <h2>AI 시대 핵심 인재는 <span style="color:var(--teal2)">코드를 짜는 사람</span>보다 <span style="color:var(--teal2)">AI에게 무엇을 시킬지 아는 사람</span>입니다.</h2>
+    <div class="rule"></div>
+    <div class="twocol">
+      <div class="leftnote"><div><h3>오케스트레이터의 5가지 행동</h3><p>문제를 정하고, 자료를 포장하고, 도구를 고르고, 산출물을 검토하고, 조직 안에 남깁니다. 개발 용어를 몰라도 업무를 잘 아는 사람이 AI를 지휘할 수 있습니다.</p></div><div class="call">도메인 전문가 + AI 지시자 + 문제 정의자</div></div>
+      <div class="grid2">
+        <div class="panel"><div class="meta">DEFINE</div><h3>문제 정의</h3><p>무엇을 해결하고 무엇은 제외할지 정합니다. “민원 요약”이 아니라 “요청사항·부서·기한·답변초안”으로 쪼갭니다.</p></div>
+        <div class="panel rust"><div class="meta">PACKAGE</div><h3>맥락 포장</h3><p>자료, 예시, 규칙, 금지사항, 출력 형식을 AI가 읽을 수 있게 묶습니다.</p></div>
+        <div class="panel blue"><div class="meta">DIRECT</div><h3>도구 지휘</h3><p>검색, 요약, 코드, 표, 시각화, 검증을 어떤 순서로 맡길지 설계합니다.</p></div>
+        <div class="panel green"><div class="meta">GATE</div><h3>사람 검증</h3><p>오류, 보안, 법적 책임, 결재 전 확인을 사람이 닫습니다.</p></div>
+      </div>
+    </div>
+  </div>
+  <div class="footer"><span class="source">근거: 글로벌리더양성과정 “AI 오케스트레이터 채용”</span><span class="page">24</span></div>
+</section>
+
+<section class="slide" data-title="블록 조합">
+  <div class="top"><b>PART 4</b><span>AI 솔루션은 블록 조합</span></div>
+  <div class="stage">
+    <div class="eyebrow">ORCHESTRATION OF BLOCKS</div>
+    <h2>AI 솔루션은 단일 도구가 아닙니다. <span style="color:var(--teal2)">블록의 조합</span>이 업무 변화를 만듭니다.</h2>
+    <div class="rule"></div>
+    <div class="grid3">
+      <div class="panel"><h3>언어·지식 블록</h3><table class="table compact"><tr><td><b>Prompt</b></td><td>무엇을 하라는 지시</td></tr><tr><td><b>RAG</b></td><td>우리 자료를 답변 근거로 연결</td></tr><tr><td><b>LLM API</b></td><td>외부/내부 두뇌 호출</td></tr></table></div>
+      <div class="panel rust"><h3>도구·화면 블록</h3><table class="table compact"><tr><td><b>HTML·CSS·JS</b></td><td>브라우저 단일 파일 도구</td></tr><tr><td><b>Python</b></td><td>엑셀·PDF·파일 자동화</td></tr><tr><td><b>Node.js</b></td><td>브라우저 밖 JS 자동화</td></tr></table></div>
+      <div class="panel green"><h3>연결·통제 블록</h3><table class="table compact"><tr><td><b>MCP</b></td><td>AI가 도구·데이터 직접 호출</td></tr><tr><td><b>Workflow</b></td><td>여러 단계를 자동 연결</td></tr><tr><td><b>Log/Gate</b></td><td>기록과 사람 승인</td></tr></table></div>
+    </div>
+    <div class="quote">교육의 핵심은 “블록 이름 암기”가 아니라, 어떤 업무에 어떤 블록 조합이 적절한지 판단하는 것입니다.</div>
+  </div>
+  <div class="footer"><span class="source">근거: 글로벌리더양성과정 “ORCHESTRATION OF BLOCKS”</span><span class="page">25</span></div>
+</section>
+
+<section class="slide" data-title="폐쇄망 8기술">
+  <div class="top"><b>PART 4</b><span>폐쇄망에서도 작동하는 기술</span></div>
+  <div class="stage">
+    <div class="eyebrow">EIGHT EVIDENCES</div>
+    <h2>기관에서 실제로 쓸 수 있느냐는 질문에 답하려면, 교육 안에 <span style="color:var(--teal2)">검토 가능한 로컬 부품</span>이 들어와야 합니다.</h2>
+    <div class="rule"></div>
+    <div class="grid4">
+      <div class="panel"><h3>01 HTML·JS</h3><p class="tight">브라우저만 있으면 단일 파일 업무 도구가 작동합니다.</p></div>
+      <div class="panel"><h3>02 Python</h3><p class="tight">엑셀, PPT, PDF, 파일 제어를 내부망에서 자동화합니다.</p></div>
+      <div class="panel rust"><h3>03 Electron/EXE</h3><p class="tight">외부망에서 제작 후 독립 실행 프로그램으로 배포할 수 있습니다.</p></div>
+      <div class="panel rust"><h3>04 Node.js</h3><p class="tight">브라우저 없이도 JS로 파일·로그·대량 처리를 자동화합니다.</p></div>
+      <div class="panel blue"><h3>05 Ollama</h3><p class="tight">1B·2B급 로컬 소형 모델로 요약·분류를 내부에서 수행합니다.</p></div>
+      <div class="panel blue"><h3>06 Legacy×SLM</h3><p class="tight">엑셀·파워포인트 같은 기존 도구 안에 AI 기능을 붙입니다.</p></div>
+      <div class="panel green"><h3>07 Agentic AI</h3><p class="tight">Codex·Claude Code류 도구가 파일 읽기·수정·검증을 반복합니다.</p></div>
+      <div class="panel green"><h3>08 Open Source</h3><p class="tight">검증된 라이브러리·MCP·스킬을 공공 부품창고로 모읍니다.</p></div>
+    </div>
+  </div>
+  <div class="footer"><span class="source">근거: lecture_slide_deck.html “여덟 가지 기술 — 폐쇄망에서 돌아가는 것들”</span><span class="page">26</span></div>
+</section>
+
+<section class="slide" data-title="에이전트 하네스">
+  <div class="top"><b>PART 4</b><span>에이전트 하네스</span></div>
+  <div class="stage">
+    <div class="eyebrow">AGENT HARNESS</div>
+    <h2>공공형 AI 에이전트는 모델만으로 완성되지 않습니다. <span style="color:var(--teal2)">기억·규칙·권한·로그·승인</span>이 있어야 합니다.</h2>
+    <div class="rule"></div>
+    <table class="table">
+      <tr><th style="width:180px">구성요소</th><th style="width:360px">공공업무에서 필요한 이유</th><th>교육·인증에 반영할 방식</th></tr>
+      <tr><td><b>기억</b></td><td>기관 문체, 금지 표현, 반복 규칙, 자주 쓰는 산출물 형식을 유지</td><td>업무별 규칙 파일, 예시 산출물, 체크리스트를 함께 제출</td></tr>
+      <tr><td><b>권한</b></td><td>읽을 수 있는 파일, 수정 가능한 범위, 외부 전송 금지 기준을 구분</td><td>자료 등급과 사용 가능한 도구를 문제 조건에 명시</td></tr>
+      <tr><td><b>로그</b></td><td>무엇을 읽고, 무엇을 바꾸고, 어떤 근거로 판단했는지 추적</td><td>작업 기록, 근거표, 오류 수정 내역을 평가 요소로 반영</td></tr>
+      <tr><td><b>사람 승인</b></td><td>결재, 대외 발송, 개인정보, 법적 판단은 사람이 닫아야 함</td><td>최종 제출 전 사람 검토 지점과 반려 기준을 산출물에 포함</td></tr>
+    </table>
+  </div>
+  <div class="footer"><span class="source">근거: 강연 HTML “에이전틱 AI와 하네스”</span><span class="page">27</span></div>
+</section>
+
+<section class="slide" data-title="작동하는 거버넌스">
+  <div class="top"><b>PART 4</b><span>작동하는 거버넌스</span></div>
+  <div class="stage">
+    <div class="eyebrow">WORKING GOVERNANCE</div>
+    <h2>교육생이 가장 많이 묻는 질문은 “우리 기관에서 쓸 수 있습니까?”입니다. 이 질문에 답하는 것이 <span style="color:var(--teal2)">작동하는 거버넌스</span>입니다.</h2>
+    <div class="rule"></div>
+    <div class="grid5">
+      <div class="panel dark"><div class="meta">1층</div><h3>법·제도</h3><p class="tight">개인정보, 보안, 저작권, 행정절차의 큰 틀</p></div>
+      <div class="panel dark"><div class="meta">2층</div><h3>원칙·윤리</h3><p class="tight">책임성, 투명성, 편향 방지, 인간 감독</p></div>
+      <div class="panel rust"><div class="meta">3층</div><h3>정책·절차</h3><p class="tight">어떤 도구를 어떤 기준으로 검토하고 승인할지</p></div>
+      <div class="panel blue"><div class="meta">4층</div><h3>기술 통제</h3><p class="tight">파일, 모델, 라이브러리, 실행환경 검증</p></div>
+      <div class="panel green"><div class="meta">5층</div><h3>문화·역량</h3><p class="tight">배운 사람이 시도하고 공유할 수 있는 조직 분위기</p></div>
+    </div>
+    <div class="quote">거버넌스는 막는 문서가 아니라, 쓸 수 있게 하는 절차입니다.</div>
+  </div>
+  <div class="footer"><span class="source">근거: lecture_script_15min.html “거버넌스 5층위”</span><span class="page">28</span></div>
+</section>
+
+<section class="slide section" data-title="PART 5 운영 제안">
+  <div class="stage"><div class="eyebrow">PART 5</div><h1>AI 챔피언 운영은 교육·인증·컨설팅이 연결되어야 합니다</h1><p class="sub">교육에서 나온 산출물이 기관 PoC가 되고, PoC가 문제은행과 코치단으로 되돌아와야 합니다.</p></div>
+  <div class="footer"><span>표준화는 중앙에서, 문제는 현장에서</span><span class="page">29</span></div>
+</section>
+
+<section class="slide" data-title="3일 하이브리드 과제형">
+  <div class="top"><b>PART 5</b><span>교육 운영 모델</span></div>
+  <div class="stage">
+    <div class="eyebrow">3-DAY HYBRID TASK MODEL</div>
+    <h2>3일 교육이라도 <span style="color:var(--teal2)">사전학습·문제분해·산출물 제작·검증 발표</span>가 연결되면 실무형 교육이 됩니다.</h2>
+    <div class="rule"></div>
+    <div class="timeline">
+      <div class="step"><div class="tag">PRE · 1주</div><h3>선수 이러닝</h3><p>AI 리터러시, 데이터 리터러시, 윤리·보안, 도구 비교를 사전에 학습합니다.</p><p class="tiny">운영계획: 선수과목 이러닝 + 수행평가 안내</p></div>
+      <div class="step"><div class="tag">DAY 1</div><h3>업무 분해 워크숍</h3><p>기관 업무를 입력·판단·처리·산출·검증으로 쪼개 문제 정의서를 만듭니다.</p><p class="tiny">결과: 문제 캔버스, 자료 목록</p></div>
+      <div class="step"><div class="tag">DAY 2</div><h3>산출물 제작</h3><p>문서/콘텐츠, 데이터, 자동화 중 하나를 실제 파일로 구현합니다.</p><p class="tiny">결과: 표, 보고서, 화면, 스크립트</p></div>
+      <div class="step"><div class="tag">DAY 3</div><h3>검증·발표</h3><p>오류, 근거, 보안, 사용 가능성을 확인하고 기관 적용 과제로 발표합니다.</p><p class="tiny">결과: 평가 제출물 + PoC 후보</p></div>
+    </div>
+  </div>
+  <div class="footer"><span class="source">근거: 운영계획 B유형 하이브리드 과제형</span><span class="page">30</span></div>
+</section>
+
+<section class="slide" data-title="교육-컨설팅-인증 루프">
+  <div class="top"><b>PART 5</b><span>운영 루프</span></div>
+  <div class="stage">
+    <div class="eyebrow">OPERATING LOOP</div>
+    <h2>교육이 끝난 뒤 아무것도 남지 않으면 실패입니다. <span style="color:var(--teal2)">산출물과 문제은행이 축적되는 루프</span>가 필요합니다.</h2>
+    <div class="rule"></div>
+    <div class="timeline">
+      <div class="step"><div class="tag">1 교육</div><h3>표준 문제로 훈련</h3><p>CBT 문제 패키지로 문서·데이터·자동화 과제를 수행합니다.</p></div>
+      <div class="step"><div class="tag">2 기관 PoC</div><h3>자기 업무로 재적용</h3><p>교육생이 실제 부서 자료로 같은 구조를 다시 수행합니다.</p></div>
+      <div class="step"><div class="tag">3 인증</div><h3>역량을 확인</h3><p>산출물, 설명, 검증, 윤리·보안 이해를 평가합니다.</p></div>
+      <div class="step"><div class="tag">4 문제은행</div><h3>사례를 환류</h3><p>우수 PoC를 익명화·표준화해 다음 문제와 코칭 자료로 만듭니다.</p></div>
+    </div>
+    <div class="grid3" style="margin-top:16px">
+      <div class="panel"><h3>교육생에게 남는 것</h3><p class="tight">내 업무 문제를 AI 과제로 바꾸는 절차와 산출물 포트폴리오</p></div>
+      <div class="panel rust"><h3>기관에 남는 것</h3><p class="tight">작은 PoC, 재사용 가능한 템플릿, 검증된 업무자동화 후보</p></div>
+      <div class="panel green"><h3>중앙에 남는 것</h3><p class="tight">문제은행 품질 데이터, 교육 개선 근거, 확산 가능한 우수사례</p></div>
+    </div>
+  </div>
+  <div class="footer"><span class="source">근거: 착수보고자료 “교육은 컨설팅의 재료, 컨설팅은 교육의 증거”</span><span class="page">31</span></div>
+</section>
+
+<section class="slide" data-title="100일 실행안">
+  <div class="top"><b>PART 5</b><span>100일 실행안</span></div>
+  <div class="stage">
+    <div class="eyebrow">100-DAY ACTION PLAN</div>
+    <h2>다음 단계는 더 큰 선언이 아니라 <span style="color:var(--teal2)">문제은행 품질·코치단·도구 검토·기관 PoC</span>를 동시에 움직이는 것입니다.</h2>
+    <div class="rule"></div>
+    <table class="table">
+      <tr><th style="width:180px">기간</th><th style="width:330px">해야 할 일</th><th style="width:420px">산출물</th><th>담당 축</th></tr>
+      <tr><td><b>0~30일</b></td><td>CBT 문제은행 20개 실전세트 품질 점검</td><td>문제별 자료 밀도, 지시문 가독성, 검증 가능성 체크리스트</td><td>행안부 + 출제/검수진</td></tr>
+      <tr><td><b>30~60일</b></td><td>그린·블루 대표 산출물 샘플 공개</td><td>콘텐츠 답안, 데이터 분석표, 자동화 화면/코드 예시</td><td>행안부 + 교육기관</td></tr>
+      <tr><td><b>30~70일</b></td><td>도구 유형별 보안·사용 검토 기준 정리</td><td>질문형/노코드/로우코드/에이전트형 체크리스트</td><td>과기정통부 + 보안·정보화 담당</td></tr>
+      <tr><td><b>60~90일</b></td><td>기관별 골목길 업무 PoC 3개씩 착수</td><td>업무분해 캔버스, 샘플 데이터, 최소 작동 도구</td><td>각 기관 + 챔피언 후보</td></tr>
+      <tr><td><b>90~100일</b></td><td>블랙 후보 코치단 편성 및 피드백 루프 가동</td><td>코칭 가이드, 우수사례 환류 양식, 다음 문제은행 후보</td><td>인사혁신처 + 행안부</td></tr>
+    </table>
+  </div>
+  <div class="footer"><span>100일 안에 “보여줄 수 있는 것”을 만들어야 제도가 움직입니다.</span><span class="page">32</span></div>
+</section>
+
+<section class="slide section" data-title="클로징">
+  <div class="stage">
+    <div class="eyebrow">CLOSING MESSAGE</div>
+    <h1>AI 챔피언은 AI를 아는 사람이 아니라,<br>일을 AI로 다시 설계해 기관에 남기는 사람입니다.</h1>
+    <p class="sub">공공 AI 교육은 도구 이름을 늘리는 일이 아닙니다. 문제를 잘 내고, 실제 자료로 풀게 하고, 산출물과 검증 기준을 남겨 다음 사람이 따라 하게 만드는 일입니다.</p>
+    <div class="quote" style="max-width:1180px;margin-top:34px">그래서 AI 챔피언 인증은 공공 AI 전환의 교육이자 평가이자 확산 장치입니다.</div>
+  </div>
+  <div class="footer"><span>AI 에이전트 시대의 공공교육</span><span class="page">33</span></div>
+</section>
+
+</main>
+<script>
+(function(){
+  const slides=[...document.querySelectorAll(".slide")], deck=document.getElementById("deck"), toc=document.getElementById("toc"), progress=document.getElementById("progress");
+  let index=0;
+  function fit(){
+    if(!document.body.classList.contains("presenting")){deck.style.transform="";deck.style.width="";deck.style.height="";slides.forEach(s=>s.style.removeProperty("--scale"));return}
+    const scale=Math.min(window.innerWidth/1600,window.innerHeight/900);slides[index].style.setProperty("--scale",Math.max(.1,scale));
+  }
+  function show(i){index=(i+slides.length)%slides.length;slides.forEach((s,n)=>s.classList.toggle("active",n===index));progress.style.width=((index+1)/slides.length*100)+"%";fit();history.replaceState(null,"","#"+(index+1))}
+  slides.forEach((s,i)=>{const b=document.createElement("button");b.textContent=String(i+1).padStart(2,"0")+". "+(s.dataset.title||"슬라이드");b.onclick=()=>{show(i);toc.classList.remove("open")};toc.appendChild(b)});
+  document.getElementById("prevBtn").onclick=()=>show(index-1);document.getElementById("nextBtn").onclick=()=>show(index+1);document.getElementById("tocBtn").onclick=()=>toc.classList.toggle("open");document.getElementById("printBtn").onclick=()=>window.print();
+  document.getElementById("playBtn").onclick=()=>{const on=!document.body.classList.contains("presenting");document.body.classList.toggle("presenting",on);toc.classList.remove("open");fit();if(on&&document.documentElement.requestFullscreen)document.documentElement.requestFullscreen().catch(()=>{});if(!on&&document.fullscreenElement)document.exitFullscreen().catch(()=>{})};
+  document.addEventListener("keydown",e=>{if(e.key==="ArrowRight"||e.key==="PageDown"||e.key===" "){e.preventDefault();show(index+1)} if(e.key==="ArrowLeft"||e.key==="PageUp"){e.preventDefault();show(index-1)} if(e.key==="Escape"){document.body.classList.remove("presenting");toc.classList.remove("open");if(document.fullscreenElement)document.exitFullscreen().catch(()=>{})}});
+  window.addEventListener("resize",fit);const start=Number(location.hash.replace("#",""));if(Number.isFinite(start)&&start>=1&&start<=slides.length)index=start-1;show(index);
+})();
+</script>
+<script>/* kg-preview: #<heading> \uc704\uce58\ub85c \uc774\ub3d9 */
+(function(){function norm(t){return (t||'').replace(/\s+/g,'').toLowerCase()}
+function go(){var h=decodeURIComponent(location.hash.slice(1));if(!h)return;var k=norm(h).slice(0,24);if(!k)return;
+var best=null,bl=1e9,els=document.body.querySelectorAll('h1,h2,h3,h4,h5,p,div,span,li,td,text,tspan,section,article');
+for(var i=0;i<els.length;i++){var e=els[i],t=norm(e.textContent);if(t.length<bl&&t.indexOf(k)>-1){best=e;bl=t.length}}
+if(!best)return;var box=best.closest('section,[class*=slide],[class*=page],article')||best;
+box.scrollIntoView({block:'start'});box.style.outline='3px solid #c0504d';box.style.outlineOffset='4px';
+setTimeout(function(){box.style.outline=''},2600)}
+window.addEventListener('load',function(){setTimeout(go,400)});window.addEventListener('hashchange',go)})();</script></body>
+</html>

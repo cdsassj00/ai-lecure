@@ -1,0 +1,619 @@
+<!doctype html><html lang="ko"><head><meta name="robots" content="noindex, nofollow"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>바이브 코딩, 어디까지 활용 가능할까</title><style>
+:root{--bg:#f5f6f8;--surface:#fff;--tint:#e5e9ef;--line:#d7dee8;--line2:#bdc7d4;--ink:#102139;--body:#3d4c60;--muted:#68758a;--faint:#93a1b3;--navy:#101827;--coral:#b94a48;--green:#2e7d5b;--gold:#c38424;--blue:#4266a3;--cream:#fff4d6}
+*{box-sizing:border-box}html,body{margin:0;background:#dce1e8;color:var(--ink);font-family:"Pretendard Variable",Pretendard,"Noto Sans KR","Malgun Gothic",sans-serif;word-break:keep-all;overflow-wrap:break-word}body{padding:54px 0}.deck{display:flex;flex-direction:column;align-items:center;gap:28px}.slide{width:1280px;height:720px;position:relative;overflow:hidden;background:radial-gradient(circle at 86% 16%,#fff 0,#f5f6f8 38%,#eef1f4 100%);box-shadow:0 14px 35px -22px #0d1724;flex:none}.topbar{height:44px;background:var(--navy);color:#f5f1e8;padding:0 48px;display:flex;align-items:center;justify-content:space-between;font-size:13px;letter-spacing:.2px}.course{font-weight:800}.course small{font-size:10px;opacity:.68;margin-left:10px;letter-spacing:1.1px}.part{font-size:12px;color:#d5dbe4}.stage{height:644px;padding:20px 50px 12px;display:flex;flex-direction:column}.eyebrow{color:var(--coral);font-size:12.5px;font-weight:900;letter-spacing:.5px;margin-bottom:6px}.title{font-size:35px;line-height:1.18;letter-spacing:-1.35px;margin:0;font-weight:900}.subtitle{font-size:17px;line-height:1.5;color:var(--body);margin:6px 0 0}.content{flex:1;min-height:0;margin-top:16px;position:relative;display:flex;align-items:stretch}.anchor{min-height:50px;flex:none;border-top:2px solid var(--navy);display:flex;align-items:center;gap:18px;margin-top:12px;padding:8px 3px 0;font-size:15px;line-height:1.4}.anchor b{background:var(--navy);color:#fff;padding:5px 11px;border-radius:4px;font-size:12px;letter-spacing:.3px}.anchor span{font-weight:700;color:var(--ink)}footer{position:absolute;left:0;right:0;bottom:0;height:32px;background:rgba(255,255,255,.92);border-top:1px solid var(--line);display:flex;align-items:center;padding:0 50px;color:var(--muted);font-size:11px}footer span:nth-child(2){margin-left:auto;margin-right:18px}footer b{font-size:12px;color:var(--ink)}.toolbar{position:fixed;right:16px;top:12px;z-index:1000;background:#101827ed;border:1px solid #33445a;border-radius:8px;padding:7px 9px;display:flex;gap:6px;align-items:center;box-shadow:0 8px 24px #0004}.toolbar button{background:#fff;color:#102139;border:0;border-radius:5px;padding:7px 10px;font-weight:800;cursor:pointer}.toolbar span{color:#fff;font-size:12px;margin-left:4px;min-width:56px}.editing [data-editable]{outline:2px dashed #b94a48;outline-offset:3px}.presenting{padding:0;background:#05080d;overflow:hidden}.presenting .toolbar{display:none}.presenting .deck{display:block}.presenting .slide{display:none;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) scale(var(--scale,1));transform-origin:center;box-shadow:none}.presenting .slide.active{display:block}body.single{padding:0;overflow:hidden;background:#fff}.single .toolbar{display:none}.single .deck{display:block}.single .slide{display:none;box-shadow:none}.single .slide.active{display:block}
+
+/* cover */
+.cover{background:radial-gradient(circle at 78% 34%,#214e43 0,#112c28 27%,#071513 63%,#050b0c 100%);color:#fff}.cover:before{content:"";position:absolute;width:620px;height:620px;border:1px solid #75b99b55;border-radius:50%;right:-120px;top:-150px;box-shadow:0 0 0 90px #75b99b0a,0 0 0 180px #75b99b08}.cover-rail{height:48px;border-bottom:1px solid #ffffff30;display:flex;justify-content:space-between;align-items:center;padding:0 54px;font-size:12px;letter-spacing:1.2px;color:#c9d8d1}.cover-main{position:absolute;left:76px;right:74px;top:128px;bottom:76px;display:flex;flex-direction:column;justify-content:center}.cover-kicker{font-size:14px;color:#9dd8bd;font-weight:900;letter-spacing:1.2px;margin-bottom:20px}.cover h1{font-size:70px;line-height:1.06;letter-spacing:-3.6px;margin:0;max-width:920px}.cover h1 em{font-style:normal;color:#b8e7cf}.cover p{font-size:21px;color:#d5e2dd;margin:23px 0 48px}.cover-route{display:flex;align-items:center;gap:14px;font-size:14px;color:#e4eee9}.cover-route span{border-top:2px solid #77b99b;padding-top:9px;min-width:145px}.cover-route i{width:34px;height:1px;background:#6c8f81}.cover footer{background:#050b0ccc;border-color:#ffffff25;color:#c2d2cb}
+
+/* chapter */
+.chapter-divider{display:flex;flex-direction:column;padding:0;background:linear-gradient(135deg,#f5f6f8 0,#edf0f3 70%,#e7ecef 100%)}.chapter-top{height:44px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 46px;background:var(--navy);color:#f3ede2;font-size:12px}.chapter-top small{opacity:.65;margin-left:8px}.chapter-head{flex:none;padding:20px 50px 18px;background:var(--tint);border-bottom:1.5px solid var(--line2)}.chapter-eyebrow{font-size:13px;color:var(--coral);font-weight:900;letter-spacing:.4px}.chapter-head h1{margin:5px 0 0;font-size:36px;letter-spacing:-1.4px}.chapter-body{flex:1;display:grid;grid-template-columns:250px 1fr;align-items:center;padding:0 96px 30px 50px;min-height:0}.chapter-no{font-size:110px;font-weight:900;line-height:.9;text-align:center;letter-spacing:-5px;color:#d3dae4}.chapter-message{border-left:4px solid var(--green);padding:24px 0 24px 46px}.chapter-message h2{margin:0;font-size:34px;line-height:1.35;letter-spacing:-1.2px}.chapter-message p{font-size:18px;line-height:1.55;color:var(--body);max-width:720px;margin:18px 0 0}
+
+/* 02 number story */
+.number-story{width:100%;display:grid;grid-template-columns:410px 1fr;gap:54px;align-items:stretch}.big-number{background:var(--navy);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:128px;font-weight:900;line-height:.8;letter-spacing:-8px;border-radius:10px}.big-number small{font-size:18px;letter-spacing:0;margin-top:30px;color:#b8e7cf}.story-lines{display:grid;grid-template-rows:1fr 1fr;border-top:2px solid var(--ink);border-bottom:2px solid var(--ink)}.story-lines>div{padding:26px 20px 20px 0;display:grid;grid-template-columns:150px 1fr;align-items:center}.story-lines>div+div{border-top:1px solid var(--line2)}.story-lines b{font-size:20px;color:var(--coral)}.story-lines p{font-size:18px;line-height:1.55;margin:0;color:var(--body)}
+
+/* timeline */
+.timeline-board{width:100%;display:grid;grid-template-columns:repeat(6,1fr);position:relative;align-items:center;gap:14px}.timeline-board:before{content:"";position:absolute;left:5%;right:5%;top:50%;height:4px;background:var(--line2)}.time-node{z-index:1;background:#fff;border:1px solid var(--line2);border-top:6px solid var(--blue);padding:24px 16px;height:218px;display:flex;flex-direction:column;justify-content:center;box-shadow:0 8px 18px -16px #000}.time-node.hot{border-top-color:var(--green);transform:translateY(-18px)}.time-node time{font-size:15px;font-weight:900;color:var(--blue)}.time-node b{font-size:20px;margin:18px 0 12px}.time-node span{font-size:14px;line-height:1.45;color:var(--body)}
+
+/* matrix */
+.matrix-wrap{width:100%;display:flex}.matrix{width:100%;border-collapse:collapse;table-layout:fixed;background:#fff;border-top:3px solid var(--navy);border-bottom:2px solid var(--navy)}.matrix th{background:var(--navy);color:#fff;font-size:14px;padding:11px 14px;text-align:left}.matrix td{font-size:14px;line-height:1.35;padding:9px 14px;border-bottom:1px solid var(--line);vertical-align:middle}.matrix tr:last-child td{border-bottom:0}.matrix td:first-child{width:18%;color:var(--ink)}.matrix.roomy td{font-size:14.5px;padding:14px}.matrix.roomy th{padding:13px}.matrix tbody tr:nth-child(even){background:#f5f7f8}
+
+/* myth */
+.myth-grid{width:100%;display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid var(--line2);background:#fff}.claim-side,.correction-side{padding:32px 42px;display:flex;flex-direction:column;justify-content:center}.claim-side{background:#f4e7e7;border-right:1px solid var(--line2)}.correction-side{background:#e8f1ed}.myth-grid span{font-size:13px;font-weight:900;letter-spacing:.7px;color:var(--muted)}.myth-grid strong{font-size:42px;letter-spacing:-1.5px;margin:12px 0 18px}.claim-side strong{color:var(--coral)}.correction-side strong{color:var(--green)}.myth-grid ul{font-size:17px;line-height:1.85;margin:0;padding-left:23px;color:var(--body)}
+
+/* manual diagram */
+.manual-diagram{width:100%;display:grid;grid-template-columns:1fr 230px 1.2fr;gap:24px;align-items:stretch}.cloud-zone,.pc-zone{position:relative;border:2px solid var(--line2);background:#fff;padding:44px 26px 20px;display:flex;flex-direction:column;align-items:center;justify-content:center}.zone-label{position:absolute;top:13px;left:18px;font-size:13px;font-weight:900;color:var(--blue)}.llm-orb{width:148px;height:148px;border-radius:50%;background:#fee99a;border:3px solid var(--coral);display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:36px;font-weight:900}.llm-orb small{font-size:12px;color:var(--body);margin-top:6px}.mini-tools{display:flex;gap:9px;margin-top:22px}.mini-tools span{padding:9px 13px;background:var(--tint);font-size:13px;font-weight:800}.copy-bridge{display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--coral)}.copy-bridge b{font-size:21px}.copy-bridge i{font-size:42px;font-style:normal;margin:6px}.copy-bridge small{font-size:12.5px;color:var(--muted);margin-top:10px}.pc-apps{display:grid;grid-template-columns:1fr 1fr;gap:11px;width:100%}.pc-apps span{border-left:5px solid var(--green);background:#edf5f1;padding:18px 14px;font-size:16px;font-weight:900}.file-row{display:flex;gap:10px;margin-top:18px}.file-row code{background:var(--navy);color:#fff;padding:7px 12px;border-radius:4px;font-size:13px}
+
+/* wire map */
+.wire-map{width:100%;display:grid;grid-template-columns:220px 1fr 180px 220px;align-items:center;position:relative}.wire-col{height:100%;display:flex;flex-direction:column;justify-content:space-around;z-index:2}.wire-node{background:#fff;border-left:5px solid var(--blue);padding:18px 16px;box-shadow:0 6px 18px -16px #000}.wire-node b{display:block;font-size:17px}.wire-node span{display:block;font-size:13px;color:var(--body);margin-top:6px}.wire-map svg{width:100%;height:100%;grid-column:2/4;grid-row:1;z-index:0}.wire-map svg path{fill:none;stroke:var(--blue);stroke-width:2.4;marker-end:url(#a8)}.wire-map svg .feedback{stroke:var(--green);stroke-dasharray:8 6}.harness-core{grid-column:3;grid-row:1;z-index:3;width:154px;height:260px;background:var(--navy);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:10px}.harness-core strong{font-size:24px;color:#b8e7cf;margin-bottom:16px}.harness-core span{font-size:13px;padding:6px 0;border-top:1px solid #ffffff2c;width:92px;text-align:center}.wire-col.right{grid-column:4;grid-row:1}
+
+/* anatomy */
+.anatomy-map,.hub-map{width:100%;height:100%;position:relative}.anatomy-core,.hub-core{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:180px;height:130px;border-radius:50%;background:var(--navy);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:34px;font-weight:900;z-index:2}.anatomy-core small{font-size:12px;margin-top:8px;color:#cbd5df}.anno,.hub-item{position:absolute;width:220px;min-height:68px;background:#fff;border-left:5px solid var(--blue);padding:12px 15px;z-index:2}.anno b,.hub-item b{font-size:16px}.anno span,.hub-item span{display:block;font-size:12.5px;color:var(--body);margin-top:4px}.a1,.h1{left:6%;top:4%}.a2,.h2{left:39%;top:0}.a3,.h3{right:6%;top:4%}.a4,.h4{left:6%;bottom:4%}.a5,.h5{left:39%;bottom:0}.a6,.h6{right:6%;bottom:4%}.anatomy-map svg,.hub-map svg{position:absolute;inset:0;width:100%;height:100%;z-index:0}.anatomy-map svg line,.hub-map svg line{stroke:var(--line2);stroke-width:2}
+
+/* compare */
+.before-after{width:100%;display:grid;grid-template-columns:1fr 120px 1fr;align-items:stretch}.before,.after{padding:28px 36px;border-top:5px solid var(--coral);background:#fff}.after{border-top-color:var(--green)}.before>span,.after>span{font-size:13px;font-weight:900;color:var(--muted)}.before h3,.after h3{font-size:27px;margin:14px 0 22px}.before ol,.after ol{font-size:16px;line-height:1.75;color:var(--body);padding-left:23px}.axis{display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--muted);font-size:12px;text-align:center}.axis i{height:160px;width:2px;background:var(--line2);position:relative;margin:14px}.axis i:after{content:"";position:absolute;bottom:-2px;left:-5px;border:6px solid transparent;border-top-color:var(--line2)}.axis small{font-size:11px}.models .before,.models .after{border-top-color:var(--blue)}
+
+/* cycle */
+.cycle{width:100%;height:100%;position:relative}.cycle:before{content:"";position:absolute;width:340px;height:340px;border:3px dashed var(--line2);border-radius:50%;left:50%;top:50%;transform:translate(-50%,-50%)}.cycle-node{position:absolute;width:210px;min-height:72px;background:#fff;border-left:5px solid var(--green);padding:13px 15px;z-index:2}.cycle-node b{font-size:16px}.cycle-node span{display:block;font-size:13px;color:var(--body);margin-top:5px}.cycle .n1{left:8%;top:3%}.cycle .n2{left:39%;top:0}.cycle .n3{right:8%;top:20%}.cycle .n4{right:19%;bottom:2%}.cycle .n5{left:19%;bottom:2%}.cycle-center{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);background:var(--navy);color:#fff;border-radius:50%;width:150px;height:150px;display:flex;align-items:center;justify-content:center;text-align:center;font-size:20px;font-weight:900;z-index:2}
+
+/* layers */
+.layer-stack{width:100%;display:flex;flex-direction:column-reverse;align-items:center;justify-content:center;gap:7px}.layer{height:62px;display:grid;grid-template-columns:190px 1fr;align-items:center;padding:0 25px;border-left:7px solid var(--blue);background:#fff}.layer b{font-size:17px}.layer span{font-size:14px;color:var(--body)}.layer.l1{width:62%;border-color:#b94a48}.layer.l2{width:70%;border-color:#c38424}.layer.l3{width:78%;border-color:#4266a3}.layer.l4{width:86%;border-color:#2e7d5b}.layer.l5{width:94%;border-color:#101827}
+
+/* recap */
+.recap-map{width:100%;height:100%;position:relative}.recap-center{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:190px;height:125px;background:var(--navy);color:#fff;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:900;z-index:2}.recap-item{position:absolute;width:235px;min-height:82px;background:#fff;border-top:5px solid var(--green);padding:15px 18px;z-index:2}.recap-item b{font-size:18px}.recap-item span{display:block;color:var(--body);font-size:13px;margin-top:8px}.recap-map .r1{left:7%;top:5%}.recap-map .r2{right:7%;top:5%}.recap-map .r3{left:7%;bottom:5%}.recap-map .r4{right:7%;bottom:5%}.recap-map svg{position:absolute;inset:0;width:100%;height:100%}.recap-map svg path{stroke:var(--line2);stroke-width:2;fill:none}
+
+/* quadrant */
+.quadrant{width:100%;height:100%;position:relative;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;padding:10px 38px 32px 58px;gap:9px}.quadrant:before{content:"";position:absolute;left:55px;right:30px;top:50%;height:2px;background:var(--navy)}.quadrant:after{content:"";position:absolute;top:8px;bottom:30px;left:50%;width:2px;background:var(--navy)}.qaxis{position:absolute;font-size:12px;font-weight:900;color:var(--muted)}.qaxis.x{bottom:4px;left:51%}.qaxis.y{left:0;top:43%;transform:rotate(-90deg)}.qcell{padding:22px 28px;background:#ffffffcc;display:flex;flex-direction:column;justify-content:center;z-index:1}.qcell b{font-size:21px}.qcell span{font-size:14px;color:var(--body);margin-top:9px}.q1{border-left:6px solid var(--green)}.q2{border-left:6px solid var(--gold)}.q3{border-left:6px solid var(--blue)}.q4{border-left:6px solid var(--coral)}
+
+/* activity brief */
+.brief-sheet{width:100%;display:grid;grid-template-columns:1.7fr .7fr;gap:22px}.brief-main{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:repeat(3,1fr);border-top:2px solid var(--navy);border-bottom:2px solid var(--navy);background:#fff}.brief-main>div{padding:14px 18px;border-bottom:1px solid var(--line);display:flex;flex-direction:column;justify-content:center}.brief-main>div:nth-child(odd){border-right:1px solid var(--line)}.brief-main>div:nth-last-child(-n+2){border-bottom:0}.brief-main b{font-size:17px;color:var(--green)}.brief-main span{font-size:13.5px;color:var(--body);margin-top:5px}.brief-cue{background:var(--navy);color:#fff;padding:26px;display:flex;flex-direction:column;justify-content:center}.brief-cue>b{font-size:21px;color:#b8e7cf}.brief-cue p{font-size:16px;line-height:1.55}.brief-cue small{font-size:12.5px;line-height:1.5;color:#cbd5df;border-top:1px solid #ffffff33;padding-top:14px}.precheck .brief-main span{font-size:13px}.precheck .brief-cue p{font-size:15px}
+
+/* river */
+.river{width:100%;display:grid;grid-template-rows:1fr 92px;gap:18px}.river-main{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;position:relative;align-items:center}.river-main:before{content:"";position:absolute;left:3%;right:3%;height:16px;background:linear-gradient(90deg,var(--blue),var(--green));top:50%;transform:translateY(-50%);border-radius:8px}.river-main>span{z-index:1;background:#fff;border-top:5px solid var(--blue);min-height:150px;padding:18px 14px;display:flex;flex-direction:column;justify-content:center;box-shadow:0 8px 18px -16px #000}.river-main>span:nth-child(n+4){border-top-color:var(--green)}.river-main b{font-size:15px}.river-main small{font-size:12.5px;color:var(--body);margin-top:8px;line-height:1.4}.river-branch{display:grid;grid-template-columns:170px repeat(3,1fr);align-items:center;background:#f3e7e7;border-left:6px solid var(--coral);padding:0 18px;gap:14px}.river-branch b{font-size:16px}.river-branch span{font-size:13px;border-left:1px solid #d9bcbc;padding-left:14px}.scm .river-main>span{min-height:160px}
+
+/* decision */
+.decision-tree{width:100%;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:78px 1fr 54px;gap:14px 20px}.decision-root{grid-column:1/3;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:900}.decision-path{background:#fff;padding:20px 28px;border-top:5px solid var(--coral);display:grid;grid-template-columns:50px 1fr;grid-template-rows:auto 1fr;align-items:center}.decision-path.right{border-top-color:var(--green)}.decision-path>span{grid-row:1/3;width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#f3e7e7;color:var(--coral);font-weight:900}.decision-path .no{background:#e7f1ec;color:var(--green)}.decision-path b{font-size:20px}.decision-path p{font-size:14px;line-height:1.55;color:var(--body);margin:8px 0 0}.decision-bottom{grid-column:1/3;background:var(--cream);border-left:6px solid var(--gold);display:flex;align-items:center;padding:0 24px;font-size:14px;font-weight:800}.enterprise .decision-path p{font-size:15px}
+
+/* demo */
+.demo-stage{width:100%;display:grid;grid-template-columns:1.6fr .7fr;gap:22px}.demo-screen{background:#0d1724;color:#e6edf5;border-radius:8px;overflow:hidden;display:flex;flex-direction:column}.demo-head{height:40px;background:#202e40;border-bottom:1px solid #405067;display:flex;align-items:center;padding:0 18px;font-size:13px;font-weight:900;color:#a9c5e8}.demo-screen pre{font-family:Consolas,"D2Coding",monospace;font-size:14px;line-height:1.48;white-space:pre-wrap;margin:0;padding:18px 24px;color:#e7edf4;flex:1}.observe{background:#fff;border-top:5px solid var(--green);padding:24px;display:flex;flex-direction:column;justify-content:center}.observe>b{font-size:20px}.observe ol{font-size:14px;line-height:1.7;padding-left:21px;color:var(--body)}.observe small{font-size:12px;line-height:1.5;border-top:1px solid var(--line);padding-top:12px;color:var(--muted)}.console-out{background:#111f2f;border-top:1px solid #31455c;padding:12px 24px;font-family:Consolas,monospace;font-size:12.5px;color:#91d6b8}
+
+/* power shell split */
+.split-work{width:100%;display:grid;grid-template-columns:.95fr 1.05fr;gap:24px}.work-copy{background:#fff;border-top:5px solid var(--green);padding:22px 30px}.work-copy h3{font-size:22px;margin:0 0 12px}.work-copy ul{font-size:15.5px;line-height:1.75;color:var(--body);margin:0;padding-left:22px}.risk-line{margin-top:14px;padding-top:12px;border-top:1px solid var(--line);display:grid;grid-template-columns:60px 1fr;font-size:12.5px;line-height:1.45}.risk-line b{color:var(--coral)}.terminal{background:#0d1724;color:#e6edf5;border-radius:8px;padding:20px 24px;display:flex;flex-direction:column}.terminal-head{font-size:13px;color:#8ab3df;font-weight:900;border-bottom:1px solid #31455c;padding-bottom:12px}.terminal code{font-size:15px;line-height:1.55;flex:1;display:flex;align-items:center}.terminal-result{border-top:1px solid #31455c;padding-top:12px;font-size:12.5px}.terminal-result b{color:#91d6b8;margin-right:12px}
+
+/* zoom */
+.zoom-sequence{width:100%;display:grid;grid-template-columns:.72fr 65px 1.45fr .48fr;gap:16px;align-items:stretch}.zoom-overview,.zoom-detail,.zoom-observe{background:#fff;border-top:5px solid var(--blue);padding:20px}.zoom-overview b,.zoom-detail b,.zoom-observe b{display:block;font-size:17px}.zoom-overview>span{display:block;color:var(--body);font-size:13px;margin:12px 0 20px}.sheet-tabs{display:flex;flex-direction:column;gap:10px}.sheet-tabs i{font-style:normal;background:var(--tint);padding:12px;font-size:13px;font-weight:800}.zoom-arrow{display:flex;align-items:center;justify-content:center;font-size:40px;color:var(--coral)}.zoom-detail table{width:100%;border-collapse:collapse;margin:16px 0}.zoom-detail th,.zoom-detail td{border:1px solid var(--line);padding:9px;text-align:center;font-size:13px}.zoom-detail th{background:var(--navy);color:#fff}.zoom-detail small{font-size:12.5px;color:var(--body)}.zoom-observe{border-top-color:var(--green);display:flex;flex-direction:column;gap:10px}.zoom-observe span{background:#edf5f1;padding:10px;font-size:12.5px}
+
+/* staircase */
+.staircase{width:100%;height:100%;position:relative;display:flex;align-items:flex-end;padding:0 12px;gap:12px}.stair{flex:1;background:#fff;border-top:6px solid var(--blue);padding:16px 14px;display:flex;flex-direction:column;justify-content:center}.stair b{font-size:18px}.stair span{font-size:13.5px;color:var(--body);margin:10px 0}.stair small{font-size:11.5px;color:var(--green);font-weight:800}.stair.s1{height:42%}.stair.s2{height:53%}.stair.s3{height:64%}.stair.s4{height:75%}.stair.s5{height:86%;border-top-color:var(--green)}
+
+/* web anatomy */
+.web-anatomy{width:100%;display:grid;grid-template-columns:1.35fr .65fr;gap:24px}.browser-frame{background:#fff;border:1px solid var(--line2);border-radius:9px;overflow:hidden;box-shadow:0 8px 20px -16px #000}.browser-bar{height:40px;background:#e8edf1;display:flex;align-items:center;gap:7px;padding:0 14px}.browser-bar i{width:10px;height:10px;border-radius:50%;background:#b94a48}.browser-bar i:nth-child(2){background:#c38424}.browser-bar i:nth-child(3){background:#2e7d5b}.browser-bar span{margin-left:10px;background:#fff;border-radius:4px;padding:6px 12px;font-size:11px;color:var(--muted);flex:1}.browser-body{display:grid;grid-template-columns:170px 1fr;gap:0;padding:20px}.browser-body b,.browser-body span{padding:15px;border-bottom:1px solid var(--line);font-size:14px}.browser-body b{color:var(--blue)}.browser-body span{color:var(--body)}.web-labels{display:flex;flex-direction:column;justify-content:space-between}.web-labels>div{background:#fff;border-left:6px solid var(--green);padding:14px 18px}.web-labels b{font-size:16px}.web-labels span{display:block;font-size:12.5px;color:var(--body);margin-top:4px}
+
+/* spectrum */
+.spectrum{width:100%;display:grid;grid-template-rows:58px 1fr 72px}.spectrum-axis{display:grid;grid-template-columns:auto 1fr auto 1fr auto;align-items:center;font-size:13px;font-weight:900;color:var(--muted)}.spectrum-axis i{height:3px;background:linear-gradient(90deg,var(--blue),var(--green));margin:0 15px}.spectrum-points{position:relative;border-top:4px solid var(--navy);margin-top:26px}.spectrum-points>div{position:absolute;left:var(--p);transform:translateX(-50%);top:-12px;width:155px;text-align:center}.spectrum-points>div:before{content:"";display:block;width:20px;height:20px;border-radius:50%;background:var(--green);border:4px solid #fff;box-shadow:0 0 0 2px var(--navy);margin:0 auto 16px}.spectrum-points b{font-size:14px;display:block}.spectrum-points small{font-size:11.5px;line-height:1.35;color:var(--body);display:block;margin-top:5px}.spectrum-basis{display:grid;grid-template-columns:1fr 1fr;gap:18px}.spectrum-basis span{background:var(--cream);border-left:5px solid var(--gold);padding:16px;font-size:13px;font-weight:800}
+
+/* case canvas */
+.case-canvas{width:100%;display:grid;grid-template-columns:.72fr 1.35fr .72fr;gap:18px}.case-context,.case-result{background:#fff;border-top:5px solid var(--blue);padding:22px 24px}.case-context b,.case-result>b{font-size:17px;color:var(--blue)}.case-context p{font-size:13.5px;line-height:1.55;color:var(--body);margin:8px 0 18px}.case-flow{display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,#fff,#eef3f5);padding:18px;gap:10px}.case-flow span{flex:1;text-align:center}.case-flow b{font-size:15px;display:block}.case-flow small{font-size:12px;color:var(--body);display:block;margin-top:7px}.case-flow i{font-size:26px;font-style:normal;color:var(--green)}.case-result{border-top-color:var(--green)}.case-result ul{font-size:14px;line-height:1.7;color:var(--body);padding-left:20px}.approval{margin-top:15px;padding:11px;background:#f3e7e7;color:var(--coral);font-size:12.5px;font-weight:900}
+
+/* open columns */
+.open-columns{width:100%;display:grid;gap:0;border-top:3px solid var(--navy);border-bottom:3px solid var(--navy)}.open-columns.three{grid-template-columns:repeat(3,1fr)}.open-columns>div{padding:26px 34px;display:flex;flex-direction:column;justify-content:center}.open-columns>div+div{border-left:1px solid var(--line2)}.open-columns span{font-size:12.5px;color:var(--coral);font-weight:900}.open-columns h3{font-size:24px;margin:12px 0 15px}.open-columns p{font-size:15px;line-height:1.55;color:var(--body);margin:0}.open-columns small{font-size:12px;color:var(--green);font-weight:800;margin-top:20px;border-top:1px solid var(--line);padding-top:12px}
+
+/* handoff */
+.handoff-map{width:100%;display:grid;grid-template-columns:250px 1fr 210px 250px;position:relative;align-items:center}.handoff-col{display:flex;flex-direction:column;gap:8px;z-index:2}.handoff-col b{font-size:18px;margin-bottom:4px}.handoff-col span{background:#fff;border-left:5px solid var(--blue);padding:12px 14px;font-size:13px}.handoff-col:last-of-type{grid-column:4}.handoff-col:last-of-type span{border-left-color:var(--green)}.handoff-core{grid-column:3;grid-row:1;background:var(--navy);color:#fff;border-radius:8px;padding:22px 18px;display:flex;flex-direction:column;z-index:3}.handoff-core strong{font-size:18px;color:#b8e7cf;margin-bottom:10px}.handoff-core span{font-size:12.5px;padding:6px 0;border-top:1px solid #ffffff28}.handoff-map svg{grid-column:2/4;grid-row:1;width:100%;height:100%;z-index:0}.handoff-map svg path{stroke:var(--green);stroke-width:2;fill:none;marker-end:url(#a34)}
+
+/* roadmap */
+.roadmap{width:100%;display:grid;grid-template-columns:repeat(4,1fr);gap:14px;align-items:stretch;position:relative}.roadmap:before{content:"";position:absolute;left:4%;right:4%;height:5px;background:linear-gradient(90deg,var(--blue),var(--green));top:50%;transform:translateY(-50%)}.road-seg{z-index:1;background:#fff;border-top:6px solid var(--blue);padding:22px 20px;display:flex;flex-direction:column;justify-content:center}.road-seg:nth-child(n+3){border-top-color:var(--green)}.road-seg time{font-size:14px;color:var(--coral);font-weight:900}.road-seg b{font-size:21px;margin:13px 0}.road-seg span{font-size:13.5px;line-height:1.5;color:var(--body)}.road-seg small{font-size:11.5px;color:var(--green);margin-top:18px;border-top:1px solid var(--line);padding-top:10px}
+
+.closing{background:radial-gradient(circle at 78% 30%,#214e43 0,#112c28 32%,#071513 72%);color:#fff}.closing .topbar{border-bottom:1px solid #ffffff26}.closing .subtitle{color:#cbdad4}.closing .anchor{border-color:#b8e7cf}.closing .anchor b{background:#b8e7cf;color:#0b211c}.closing .anchor span{color:#fff}.closing footer{background:#050b0ccc;border-color:#ffffff25;color:#c2d2cb}.closing-map .recap-center{background:#b8e7cf;color:#0b211c}.closing-map .recap-item{background:#ffffff12;color:#fff;border-top-color:#8dd0b1}.closing-map .recap-item span{color:#d3dfda}.closing-map svg path{stroke:#ffffff40}
+
+@media print{body{padding:0;background:#fff}.toolbar{display:none!important}.deck{display:block}.slide{box-shadow:none;break-after:page;page-break-after:always;margin:0}@page{size:1280px 720px;margin:0}}
+@media(max-width:1300px) and (not print){body:not(.presenting):not(.single) .slide{transform:scale(.78);transform-origin:top center;margin-bottom:-158px}}
+</style></head><body><div class="toolbar"><button id="presentBtn">발표</button><button id="editBtn">편집</button><button id="saveBtn">저장</button><button id="printBtn">PDF</button><span id="counter"></span></div><div class="deck"><section class="slide cover" id="s01" data-role="cover" data-layout="cover-stage" data-purpose="특강의 주제와 적용 범위를 제시한다" data-minutes="2">
+  <div class="cover-rail"><span>YUHAN-KIMBERLY</span><span>2026.08.18</span></div>
+  <div class="cover-main"><div class="cover-kicker">유한킴벌리 임직원 특강</div><h1 data-editable>바이브 코딩,<br><em>어디까지 활용 가능할까</em></h1><p data-editable>Copilot 중심 환경에서 PC 업무를 자동화하는 구조와 적용 사례</p><div class="cover-route"><span>에이전트 원리</span><i></i><span>업무 확장 경로</span><i></i><span>직무별 적용</span><i></i><span>사내 실행 기준</span></div></div>
+  <footer><span>신성진 · 한국데이터사이언티스트협회</span><span>온·오프라인 동시 진행</span><b data-page-number>01</b></footer>
+</section>
+<section class="slide " id="s02" data-role="context" data-layout="number-story" data-purpose="사례 공유회 이후 특강의 과제를 정리한다" data-minutes="3">
+    <header class="topbar"><div class="course">유한킴벌리 임직원 특강 <small>VIBE CODING FOR WORK</small></div><div class="part">도입 · 배경</div></header>
+    <main class="stage">
+      <div class="eyebrow">도입 · 배경</div>
+      <h1 class="title" data-editable>사례 공유회 이후의 다음 과제</h1>
+      <p class="subtitle" data-editable>관심을 업무 방법으로 바꾸려면 공통 구조와 적용 기준이 필요합니다.</p>
+      <div class="content"><div class="number-story"><div class="big-number">300<small>명 규모 관심</small></div><div class="story-lines"><div><b>이미 확인된 것</b><p>사내 사례 공유회에 많은 임직원이 참여했고, 일부는 실제 업무 적용 사례를 만들고 있습니다.</p></div><div><b>이번 특강의 역할</b><p>개별 사례를 PowerShell·Excel·Python·브라우저·API로 확장할 수 있는 공통 방법으로 정리합니다.</p></div></div></div></div>
+      <div class="anchor"><b>확인</b><span data-editable>멋진 웹사이트 제작보다, 반복 업무의 입력·처리·출력을 바꾸는 방법을 다룹니다.</span></div>
+    </main>
+    <footer><span>바이브 코딩, 어디까지 활용 가능할까</span><span class="time">3분 구간</span><b data-page-number>02</b></footer>
+  </section>
+<section class="slide " id="s03" data-role="process" data-layout="timeline" data-purpose="120분 진행 순서를 제시한다" data-minutes="3">
+    <header class="topbar"><div class="course">유한킴벌리 임직원 특강 <small>VIBE CODING FOR WORK</small></div><div class="part">도입 · 진행 구조</div></header>
+    <main class="stage">
+      <div class="eyebrow">도입 · 진행 구조</div>
+      <h1 class="title" data-editable>120분 진행 구조</h1>
+      <p class="subtitle" data-editable>시연을 중심으로 진행하고, 따라 하기 구간은 짧게 배치합니다.</p>
+      <div class="content"><div class="timeline-board"><div class="time-node hot"><time>00–10</time><b>도입</b><span>목표·환경 경계</span></div><div class="time-node"><time>10–30</time><b>에이전트 원리</b><span>LLM·도구·하네스</span></div><div class="time-node"><time>30–50</time><b>체계적 방법</b><span>업무 명세·검증</span></div><div class="time-node"><time>50–85</time><b>확장 시연</b><span>PC·Excel·Python·웹</span></div><div class="time-node"><time>85–105</time><b>직무 사례</b><span>마케팅·영업·재무·SCM</span></div><div class="time-node"><time>105–120</time><b>사내 적용</b><span>운영 기준·질의</span></div></div></div>
+      <div class="anchor"><b>확인</b><span data-editable>MCP·코딩 에이전트는 개념과 강사 시연으로 확인합니다.</span></div>
+    </main>
+    <footer><span>바이브 코딩, 어디까지 활용 가능할까</span><span class="time">3분 구간</span><b data-page-number>03</b></footer>
+  </section>
+<section class="slide " id="s04" data-role="compare" data-layout="evidence-matrix" data-purpose="유한킴벌리의 사용 가능 도구와 제약을 구분한다" data-minutes="2">
+    <header class="topbar"><div class="course">유한킴벌리 임직원 특강 <small>VIBE CODING FOR WORK</small></div><div class="part">도입 · 환경 경계</div></header>
+    <main class="stage">
+      <div class="eyebrow">도입 · 환경 경계</div>
+      <h1 class="title" data-editable>유한킴벌리 환경에서의 사용 기준</h1>
+      <p class="subtitle" data-editable>제품 일반 기능이 아니라, 사내 확인 내용을 기준으로 강의 범위를 정합니다.</p>
+      <div class="content"><div class="matrix-wrap"><table class="matrix"><thead><tr><th>구분</th><th>사용 기준</th><th>강의 반영</th></tr></thead><tbody><tr><td><b>MS Copilot</b></td><td>사내 공식 AI 도구</td><td>프롬프트 작성·코드 초안·검토의 기본 화면</td></tr><tr><td><b>모델 접근</b></td><td>라이선스에 따라 사내 제공 모델이 다름</td><td>특정 모델보다 작업 명세와 검증 절차를 공통화</td></tr><tr><td><b>Google Gemini</b></td><td>사용 가능</td><td>대체 실행 경로 또는 비교 시연</td></tr><tr><td><b>외부 ChatGPT·Claude</b></td><td>직접 사용 불가</td><td>시연 흐름을 Copilot 중심으로 재구성</td></tr><tr><td><b>Python</b></td><td>설치·사용 가능, Anaconda 사용 경험 있음</td><td>추가 설치 없는 강사 시연 중심</td></tr></tbody></table></div></div>
+      <div class="anchor"><b>확인</b><span data-editable>Copilot Studio는 사용하지 않으며, 회사 데이터는 승인된 경계 안에서만 다룹니다.</span></div>
+    </main>
+    <footer><span>바이브 코딩, 어디까지 활용 가능할까</span><span class="time">2분 구간</span><b data-page-number>04</b></footer>
+  </section>
+<section class="slide chapter-divider" id="s05" data-role="chapter" data-layout="chapter-gate" data-purpose="답변 생성과 업무 실행을 구분합니다." data-divider-index="1" data-minutes="20">
+    <div class="chapter-top"><span>유한킴벌리 임직원 특강 <small>VIBE CODING FOR WORK</small></span><span>2026.08.18 · 송파 본사</span></div>
+    <div class="chapter-head"><div class="chapter-eyebrow">PART 01 · 에이전트 원리</div><h1 data-editable>LLM·도구·하네스의 관계</h1></div>
+    <div class="chapter-body"><div class="chapter-no" data-divider-number>01</div><div class="chapter-message"><h2 data-editable>답변 생성과 업무 실행을 구분합니다.</h2><p data-editable>첨부 도식의 원내용을 복사·붙여넣기 방식과 하네스 방식으로 나누어 확인합니다.</p></div></div>
+    <footer><span>PART 01 · 에이전트 원리</span><span>20분 구간</span><b data-page-number>05</b></footer>
+  </section>
+<section class="slide " id="s06" data-role="concept" data-layout="myth-check" data-purpose="LLM 단독과 업무 실행의 차이를 교정한다" data-minutes="2">
+    <header class="topbar"><div class="course">유한킴벌리 임직원 특강 <small>VIBE CODING FOR WORK</small></div><div class="part">PART 01 · 에이전트 원리</div></header>
+    <main class="stage">
+      <div class="eyebrow">PART 01 · 에이전트 원리</div>
+      <h1 class="title" data-editable>LLM 단독과 업무 실행의 차이</h1>
+      <p class="subtitle" data-editable>LLM은 문장을 만들고 코드를 제안합니다. 실행 권한과 도구는 별도로 필요합니다.</p>
+      <div class="content"><div class="myth-grid"><div class="claim-side"><span>LLM 단독</span><strong>답변 생성</strong><ul><li>질문을 해석합니다.</li><li>문장·표·코드 초안을 만듭니다.</li><li>대화에 들어온 자료를 읽습니다.</li></ul></div><div class="correction-side"><span>업무 실행</span><strong>도구 연결</strong><ul><li>파일을 찾고 변경합니다.</li><li>프로그램을 실행합니다.</li><li>결과를 확인하고 다시 수행합니다.</li></ul></div></div></div>
+      <div class="anchor"><b>확인</b><span data-editable>“코드를 써주는 것”과 “내 PC에서 결과를 만드는 것”은 다른 단계입니다.</span></div>
+    </main>
+    <footer><span>바이브 코딩, 어디까지 활용 가능할까</span><span class="time">2분 구간</span><b data-page-number>06</b></footer>
+  </section>
+<section class="slide " id="s07" data-role="explain" data-layout="split-explain" data-purpose="수동 복사 붙여넣기 구조를 단순 도식으로 설명한다" data-minutes="3">
+    <header class="topbar"><div class="course">유한킴벌리 임직원 특강 <small>VIBE CODING FOR WORK</small></div><div class="part">PART 01 · 에이전트 원리</div></header>
+    <main class="stage">
+      <div class="eyebrow">PART 01 · 에이전트 원리</div>
+      <h1 class="title" data-editable>복사·붙여넣기 방식의 구조</h1>
+      <p class="subtitle" data-editable>클라우드 AI와 내 컴퓨터 사이를 사람이 연결합니다.</p>
+      <div class="content"><div class="manual-diagram"><div class="cloud-zone"><span class="zone-label">클라우드</span><div class="llm-orb">LLM<small>생각·계획</small></div><div class="mini-tools"><span>웹검색</span><span>문서·스킬</span></div></div><div class="copy-bridge"><b>복사</b><i>→</i><b>붙여넣기</b><small>사람이 이동·실행·확인</small></div><div class="pc-zone"><span class="zone-label">내 컴퓨터</span><div class="pc-apps"><span>Windows</span><span>Excel</span><span>Python</span><span>Browser</span></div><div class="file-row"><code>.ps1</code><code>.bas</code><code>.py</code><code>.html</code></div></div></div></div>
+      <div class="anchor"><b>확인</b><span data-editable>이 방식도 바이브 코딩입니다. 자연어로 코드를 만들고 사람이 실행합니다.</span></div>
+    </main>
+    <footer><span>바이브 코딩, 어디까지 활용 가능할까</span><span class="time">3분 구간</span><b data-page-number>07</b></footer>
+  </section>
+<section class="slide " id="s08" data-role="relation" data-layout="three-lane-wire" data-purpose="하네스가 LLM과 PC 도구를 연결하는 구조를 설명한다" data-minutes="3">
+    <header class="topbar"><div class="course">유한킴벌리 임직원 특강 <small>VIBE CODING FOR WORK</small></div><div class="part">PART 01 · 에이전트 원리</div></header>
+    <main class="stage">
+      <div class="eyebrow">PART 01 · 에이전트 원리</div>
+      <h1 class="title" data-editable>에이전트 하네스의 구조</h1>
+      <p class="subtitle" data-editable>하네스는 모델, 작업 지침, 실행 도구, 파일 접근, 검증 단계를 한 화면에서 연결합니다.</p>
+      <div class="content"><div class="wire-map"><div class="wire-col left"><div class="wire-node"><b>요청</b><span>자연어·파일·조건</span></div><div class="wire-node"><b>LLM</b><span>계획·코드·판단</span></div></div><svg viewBox="0 0 360 260" aria-hidden="true"><defs><marker id="a8" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9Z" fill="#4266a3"/></marker></defs><path d="M10 70 C100 70 90 50 178 50"/><path d="M10 190 C100 190 95 210 178 210"/><path d="M182 50 C270 50 260 70 350 70"/><path d="M182 210 C270 210 260 190 350 190"/><path class="feedback" d="M335 155 C250 140 110 140 25 155"/></svg><div class="harness-core"><strong>하네스</strong><span>지침</span><span>권한</span><span>도구 호출</span><span>검증</span></div><div class="wire-col right"><div class="wire-node"><b>Windows·Excel</b><span>파일·프로그램 실행</span></div><div class="wire-node"><b>Python·Browser</b><span>변환·분석·웹 도구</span></div></div></div></div>
+      <div class="anchor"><b>확인</b><span data-editable>사람은 실행 범위와 승인 기준을 정하고, 하네스가 계획과 도구 사용을 이어 줍니다.</span></div>
+    </main>
+    <footer><span>바이브 코딩, 어디까지 활용 가능할까</span><span class="time">3분 구간</span><b data-page-number>08</b></footer>
+  </section>
+<section class="slide " id="s09" data-role="explain" data-layout="anatomy" data-purpose="에이전트의 구성요소를 분해한다" data-minutes="3">
+    <header class="topbar"><div class="course">유한킴벌리 임직원 특강 <small>VIBE CODING FOR WORK</small></div><div class="part">PART 01 · 에이전트 원리</div></header>
+    <main class="stage">
+      <div class="eyebrow">PART 01 · 에이전트 원리</div>
+      <h1 class="title" data-editable>에이전트를 만드는 구성요소</h1>
+      <p class="subtitle" data-editable>LLM 하나가 아니라, 서로 다른 역할의 부품이 함께 동작합니다.</p>
+      <div class="content"><div class="anatomy-map"><div class="anatomy-core">LLM<small>계획·판단</small></div><div class="anno a1"><b>검색·API</b><span>최신 정보와 외부 데이터</span></div><div class="anno a2"><b>문서·RAG</b><span>내 자료의 맥락과 근거</span></div><div class="anno a3"><b>Windows</b><span>PowerShell·CMD 실행</span></div><div class="anno a4"><b>Python</b><span>파일·데이터·문서 처리</span></div><div class="anno a5"><b>MCP</b><span>외부 프로그램 연결 규격</span></div><div class="anno a6"><b>메모리·스킬</b><span>반복 규칙과 작업 기준</span></div><svg viewBox="0 0 1000 350" aria-hidden="true"><g><line x1="500" y1="175" x2="175" y2="58"/><line x1="500" y1="175" x2="500" y2="42"/><line x1="500" y1="175" x2="825" y2="58"/><line x1="500" y1="175" x2="175" y2="292"/><line x1="500" y1="175" x2="500" y2="308"/><line x1="500" y1="175" x2="825" y2="292"/></g></svg></div></div>
+      <div class="anchor"><b>확인</b><span data-editable>도구를 많이 붙이는 것이 목표가 아니라, 필요한 도구만 승인된 범위로 연결합니다.</span></div>
+    </main>
+    <footer><span>바이브 코딩, 어디까지 활용 가능할까</span><span class="time">3분 구간</span><b data-page-number>09</b></footer>
+  </section>
+<section class="slide " id="s10" data-role="compare" data-layout="before-after" data-purpose="챗봇과 에이전트의 업무 흐름 차이를 비교한다" data-minutes="2">
+    <header class="topbar"><div class="course">유한킴벌리 임직원 특강 <small>VIBE CODING FOR WORK</small></div><div class="part">PART 01 · 에이전트 원리</div></header>
+    <main class="stage">
+      <div class="eyebrow">PART 01 · 에이전트 원리</div>
+      <h1 class="title" data-editable>챗봇·코파일럿·에이전트의 차이</h1>
+      <p class="subtitle" data-editable>구분 기준은 모델 이름보다 작업을 어디까지 이어서 수행하는가입니다.</p>
+      <div class="content"><div class="before-after"><div class="before"><span>챗봇</span><h3>질문 ↔ 답변</h3><ol><li>사용자가 자료를 넣습니다.</li><li>답변이나 코드를 받습니다.</li><li>사용자가 실행하고 결과를 다시 전달합니다.</li></ol></div><div class="axis"><b>실행 연결 범위</b><i></i></div><div class="after"><span>에이전트</span><h3>요청 → 계획 → 도구 → 결과</h3><ol><li>허용된 자료와 도구를 확인합니다.</li><li>여러 단계를 순서대로 수행합니다.</li><li>결과를 검사하고 필요한 부분을 수정합니다.</li></ol></div></div></div>
+      <div class="anchor"><b>확인</b><span data-editable>Copilot도 연결된 기능과 권한 범위에 따라 챗봇처럼 또는 에이전트처럼 동작합니다.</span></div>
+    </main>
+    <footer><span>바이브 코딩, 어디까지 활용 가능할까</span><span class="time">2분 구간</span><b data-page-number>10</b></footer>
+  </section>
+<section class="slide " id="s11" data-role="process" data-layout="loop-cycle" data-purpose="에이전트 실행 반복을 설명한다" data-minutes="2">
+    <header class="topbar"><div class="course">유한킴벌리 임직원 특강 <small>VIBE CODING FOR WORK</small></div><div class="part">PART 01 · 에이전트 원리</div></header>
+    <main class="stage">
+      <div class="eyebrow">PART 01 · 에이전트 원리</div>
+      <h1 class="title" data-editable>에이전트의 실행 반복</h1>
+      <p class="subtitle" data-editable>한 번의 답변이 아니라 관찰과 검증을 포함한 반복이 핵심입니다.</p>
+      <div class="content"><div class="cycle"><div class="cycle-node n1"><b>1 요청 해석</b><span>목표·입력·제약</span></div><div class="cycle-node n2"><b>2 계획</b><span>순서·도구·중단점</span></div><div class="cycle-node n3"><b>3 실행</b><span>파일·프로그램·API</span></div><div class="cycle-node n4"><b>4 관찰</b><span>로그·화면·산출물</span></div><div class="cycle-node n5"><b>5 검증</b><span>조건 충족·오류 확인</span></div><div class="cycle-center">수정 후<br>다시 실행</div></div></div>
+      <div class="anchor"><b>확인</b><span data-editable>검증 기준이 없으면 에이전트는 “끝났다”고 판단할 근거가 없습니다.</span></div>
+    </main>
+    <footer><span>바이브 코딩, 어디까지 활용 가능할까</span><span class="time">2분 구간</span><b data-page-number>11</b></footer>
+  </section>
+<section class="slide " id="s12" data-role="relation" data-layout="layer-stack" data-purpose="하네스의 층을 업무 관점으로 정리한다" data-minutes="1">
+    <header class="topbar"><div class="course">유한킴벌리 임직원 특강 <small>VIBE CODING FOR WORK</small></div><div class="part">PART 01 · 에이전트 원리</div></header>
+    <main class="stage">
+      <div class="eyebrow">PART 01 · 에이전트 원리</div>
+      <h1 class="title" data-editable>하네스 프로그램이 맡는 다섯 층</h1>
+      <p class="subtitle" data-editable>기업 AI팀은 모델만 선택하지 않고, 이 다섯 층을 함께 설계합니다.</p>
+      <div class="content"><div class="layer-stack"><div class="layer l5"><b>업무 결과</b><span>문서·표·메일·대시보드·실행 로그</span></div><div class="layer l4"><b>검증과 승인</b><span>사람 확인·권한·중단 조건·감사 기록</span></div><div class="layer l3"><b>도구</b><span>검색·문서·PowerShell·Python·Excel·Browser·MCP</span></div><div class="layer l2"><b>작업 맥락</b><span>스킬·샘플·양식·규정·폴더 구조</span></div><div class="layer l1"><b>LLM</b><span>요청 해석·계획·코드 생성·판단</span></div></div></div>
+      <div class="anchor"><b>확인</b><span data-editable>모델 교체보다 권한·도구·검증 설계가 실제 업무 품질을 좌우합니다.</span></div>
+    </main>
+    <footer><span>바이브 코딩, 어디까지 활용 가능할까</span><span class="time">1분 구간</span><b data-page-number>12</b></footer>
+  </section>
+<section class="slide " id="s13" data-role="synthesis" data-layout="recap-map" data-purpose="에이전트 원리를 네 요소로 회수한다" data-minutes="1">
+    <header class="topbar"><div class="course">유한킴벌리 임직원 특강 <small>VIBE CODING FOR WORK</small></div><div class="part">PART 01 · 에이전트 원리</div></header>
+    <main class="stage">
+      <div class="eyebrow">PART 01 · 에이전트 원리</div>
+      <h1 class="title" data-editable>에이전트 원리 정리</h1>
+      <p class="subtitle" data-editable>첨부 도식의 요소를 업무 실행 관점으로 재배치했습니다.</p>
+      <div class="content"><div class="recap-map"><div class="recap-center">에이전트</div><div class="recap-item r1"><b>LLM</b><span>생각·계획</span></div><div class="recap-item r2"><b>하네스</b><span>순서·권한·연결</span></div><div class="recap-item r3"><b>도구</b><span>OS·Excel·Python·Web</span></div><div class="recap-item r4"><b>검증</b><span>결과·로그·사람 승인</span></div><svg viewBox="0 0 1000 330"><path d="M500 165 L190 70"/><path d="M500 165 L810 70"/><path d="M500 165 L190 260"/><path d="M500 165 L810 260"/></svg></div></div>
+      <div class="anchor"><b>확인</b><span data-editable>바이브 코딩은 자연어를 실행 가능한 작업 흐름으로 바꾸는 방법입니다.</span></div>
+    </main>
+    <footer><span>바이브 코딩, 어디까지 활용 가능할까</span><span class="time">1분 구간</span><b data-page-number>13</b></footer>
+  </section>
+<section class="slide chapter-divider" id="s14" data-role="chapter" data-layout="chapter-gate" data-purpose="코드보다 먼저 업무의 구조와 완료 조건을 정합니다." data-divider-index="2" data-minutes="20">
+    <div class="chapter-top"><span>유한킴벌리 임직원 특강 <small>VIBE CODING FOR WORK</small></span><span>2026.08.18 · 송파 본사</span></div>
+    <div class="chapter-head"><div class="chapter-eyebrow">PART 02 · 체계적 방법</div><h1 data-editable>자연어 요청을 실행 명세로 바꾸기</h1></div>
+    <div class="chapter-body"><div class="chapter-no" data-divider-number>02</div><div class="chapter-message"><h2 data-editable>코드보다 먼저 업무의 구조와 완료 조건을 정합니다.</h2><p data-editable>자동화할 일의 선택, 입력·처리·출력, 권한, 예외, 검증을 하나의 작업 명세로 만듭니다.</p></div></div>
+    <footer><span>PART 02 · 체계적 방법</span><span>20분 구간</span><b data-page-number>14</b></footer>
+  </section>
+<section class="slide " id="s15" data-role="compare" data-layout="quadrant" data-purpose="자동화 후보 업무를 두 기준으로 선별한다" data-minutes="3">
+    <header class="topbar"><div class="course">유한킴벌리 임직원 특강 <small>VIBE CODING FOR WORK</small></div><div class="part">PART 02 · 체계적 방법</div></header>
+    <main class="stage">
+      <div class="eyebrow">PART 02 · 체계적 방법</div>
+      <h1 class="title" data-editable>자동화 후보 업무 선별</h1>
+      <p class="subtitle" data-editable>반복 빈도와 규칙의 명확성을 먼저 봅니다.</p>
+      <div class="content"><div class="quadrant"><div class="qaxis y">규칙 명확성</div><div class="qaxis x">반복 빈도</div><div class="qcell q1"><b>즉시 후보</b><span>파일명 변경, 정기 집계, 양식 변환</span></div><div class="qcell q2"><b>검토 후 후보</b><span>월간 보고, 캠페인 성과 정리</span></div><div class="qcell q3"><b>보조 도구</b><span>비정기 조사, 초안 작성</span></div><div class="qcell q4"><b>사람 중심</b><span>대외 판단, 예외가 많은 승인</span></div></div></div>
+      <div class="anchor"><b>확인</b><span data-editable>빈도가 높고 규칙이 분명하며 실패를 되돌릴 수 있는 업무부터 시작합니다.</span></div>
+    </main>
+    <footer><span>바이브 코딩, 어디까지 활용 가능할까</span><span class="time">3분 구간</span><b data-page-number>15</b></footer>
+  </section>
+<section class="slide " id="s16" data-role="activity" data-layout="activity-brief" data-purpose="업무 자동화 명세의 여섯 필드를 제시한다" data-minutes="4">
+    <header class="topbar"><div class="course">유한킴벌리 임직원 특강 <small>VIBE CODING FOR WORK</small></div><div class="part">PART 02 · 체계적 방법</div></header>
+    <main class="stage">
+      <div class="eyebrow">PART 02 · 체계적 방법</div>
+      <h1 class="title" data-editable>업무 자동화 명세 6개 항목</h1>
+      <p class="subtitle" data-editable>프롬프트보다 먼저 이 여섯 칸을 채우면 코드와 결과가 안정됩니다.</p>
+      <div class="content"><div class="brief-sheet"><div class="brief-main"><div><b>목표</b><span>무엇을 줄이거나 만들 것인가</span></div><div><b>입력</b><span>파일·시트·열·폴더·문서 형식</span></div><div><b>처리 규칙</b><span>정렬·계산·분류·변환 순서</span></div><div><b>출력</b><span>파일명·표 구조·저장 위치</span></div><div><b>예외</b><span>누락·중복·형식 오류 처리</span></div><div><b>검증</b><span>건수·합계·샘플·로그 기준</span></div></div><div class="brief-cue"><b>따라 하기</b><p>내 업무 하나를 고르고 각 항목을 한 줄로만 적습니다.</p><small>완료 신호 — 다른 사람이 읽어도 같은 결과를 예상할 수 있습니다.</small></div></div></div>
+      <div class="anchor"><b>확인</b><span data-editable>도구 이름을 쓰기 전에 입력과 완료 조건을 먼저 적습니다.</span></div>
+    </main>
+    <footer><span>바이브 코딩, 어디까지 활용 가능할까</span><span class="time">4분 구간</span><b data-page-number>16</b></footer>
+  </section>
+<section class="slide " id="s17" data-role="process" data-layout="process-river" data-purpose="자연어에서 실행 가능한 산출물까지의 흐름을 설명한다" data-minutes="4">
+    <header class="topbar"><div class="course">유한킴벌리 임직원 특강 <small>VIBE CODING FOR WORK</small></div><div class="part">PART 02 · 체계적 방법</div></header>
+    <main class="stage">
+      <div class="eyebrow">PART 02 · 체계적 방법</div>
+      <h1 class="title" data-editable>자연어 요청에서 실행 결과까지</h1>
+      <p class="subtitle" data-editable>요청을 바로 코드로 보내지 않고 중간 산출물을 확인합니다.</p>
+      <div class="content"><div class="river"><div class="river-main"><span><b>1 업무 설명</b><small>현재 방식·불편</small></span><span><b>2 입력 구조</b><small>샘플 3줄·열·파일명</small></span><span><b>3 실행 명세</b><small>규칙·예외·출력</small></span><span><b>4 코드 초안</b><small>주석·테스트 모드</small></span><span><b>5 시험 실행</b><small>복사본·소량 데이터</small></span><span><b>6 검증</b><small>건수·합계·로그</small></span></div><div class="river-branch"><b>중단 지점</b><span>민감정보 포함</span><span>삭제·전송·덮어쓰기</span><span>결과 기준 불명확</span></div></div></div>
+      <div class="anchor"><b>확인</b><span data-editable>각 단계의 산출물을 확인하면 오류 위치를 찾기 쉽고, 실행 권한도 분리할 수 있습니다.</span></div>
+    </main>
+    <footer><span>바이브 코딩, 어디까지 활용 가능할까</span><span class="time">4분 구간</span><b data-page-number>17</b></footer>
+  </section>
+<section class="slide " id="s18" data-role="synthesis" data-layout="decision-tree" data-purpose="자동 실행 전 승인 여부를 판단한다" data-minutes="4">
+    <header class="topbar"><div class="course">유한킴벌리 임직원 특강 <small>VIBE CODING FOR WORK</small></div><div class="part">PART 02 · 체계적 방법</div></header>
+    <main class="stage">
+      <div class="eyebrow">PART 02 · 체계적 방법</div>
+      <h1 class="title" data-editable>실행 전 권한·검증 판단</h1>
+      <p class="subtitle" data-editable>파일을 바꾸거나 외부로 보내는 작업은 자동 실행 전에 관문을 둡니다.</p>
+      <div class="content"><div class="decision-tree"><div class="decision-root">이 작업이 원본·외부 시스템을 변경하는가?</div><div class="decision-path left"><span class="yes">예</span><b>사람 승인 필요</b><p>복사본에서 시험 → 변경 목록 미리보기 → 승인 후 실행 → 로그 저장</p></div><div class="decision-path right"><span class="no">아니오</span><b>읽기·초안 중심</b><p>샘플 결과 확인 → 자동 검사 → 결과 파일 분리 저장</p></div><div class="decision-bottom">공통 기준: 개인정보·기밀·대외 전송 여부를 먼저 확인합니다.</div></div></div>
+      <div class="anchor"><b>확인</b><span data-editable>삭제·덮어쓰기·발송은 기본적으로 사람 확인 뒤 실행합니다.</span></div>
+    </main>
+    <footer><span>바이브 코딩, 어디까지 활용 가능할까</span><span class="time">4분 구간</span><b data-page-number>18</b></footer>
+  </section>
+<section class="slide " id="s19" data-role="demo" data-layout="demo-stage" data-purpose="Copilot 중심 시연의 관찰 포인트를 제시한다" data-minutes="5">
+    <header class="topbar"><div class="course">유한킴벌리 임직원 특강 <small>VIBE CODING FOR WORK</small></div><div class="part">PART 02 · 체계적 방법</div></header>
+    <main class="stage">
+      <div class="eyebrow">PART 02 · 체계적 방법</div>
+      <h1 class="title" data-editable>시연 1 · Copilot에서 실행 명세 만들기</h1>
+      <p class="subtitle" data-editable>코드를 바로 요청하지 않고 업무 설명을 실행 명세로 바꾸는 과정을 봅니다.</p>
+      <div class="content"><div class="demo-stage"><div class="demo-screen"><div class="demo-head">Copilot 요청 구조</div><pre>다음 반복 업무를 자동화하려고 합니다.
+1) 현재 방식: [업무 설명]
+2) 입력: [파일·시트·열·샘플 3줄]
+3) 규칙: [처리 순서]
+4) 출력: [파일명·저장 위치]
+5) 예외: [누락·중복·형식 오류]
+6) 검증: [건수·합계·샘플]
+
+먼저 실행 명세만 표로 정리하고,
+내 확인 전에는 코드를 작성하지 마세요.</pre></div><div class="observe"><b>관찰 포인트</b><ol><li>AI가 빠뜨린 입력 정보는 무엇인가</li><li>예외와 완료 조건이 분리되는가</li><li>승인 뒤 어떤 도구가 필요한가</li></ol><small>중단 신호 — 실제 파일 구조와 명세가 다르면 코드 작성 전에 수정합니다.</small></div></div></div>
+      <div class="anchor"><b>확인</b><span data-editable>좋은 결과는 긴 프롬프트보다 정확한 입력 구조와 검증 기준에서 나옵니다.</span></div>
+    </main>
+    <footer><span>바이브 코딩, 어디까지 활용 가능할까</span><span class="time">5분 구간</span><b data-page-number>19</b></footer>
+  </section>
+<section class="slide chapter-divider" id="s20" data-role="chapter" data-layout="chapter-gate" data-purpose="업무에 맞는 실행 환경을 선택합니다." data-divider-index="3" data-minutes="35">
+    <div class="chapter-top"><span>유한킴벌리 임직원 특강 <small>VIBE CODING FOR WORK</small></span><span>2026.08.18 · 송파 본사</span></div>
+    <div class="chapter-head"><div class="chapter-eyebrow">PART 03 · PC 업무 확장 경로</div><h1 data-editable>확장자와 실행 환경 이해</h1></div>
+    <div class="chapter-body"><div class="chapter-no" data-divider-number>03</div><div class="chapter-message"><h2 data-editable>업무에 맞는 실행 환경을 선택합니다.</h2><p data-editable>PowerShell·Excel·Python·브라우저·API/MCP를 하나의 난이도 순서가 아니라 업무 유형별 선택지로 봅니다.</p></div></div>
+    <footer><span>PART 03 · PC 업무 확장 경로</span><span>35분 구간</span><b data-page-number>20</b></footer>
+  </section>
+<section class="slide " id="s21" data-role="explain" data-layout="split-explain" data-purpose="PowerShell과 CMD의 업무 자동화 범위를 설명한다" data-minutes="5">
+    <header class="topbar"><div class="course">유한킴벌리 임직원 특강 <small>VIBE CODING FOR WORK</small></div><div class="part">PART 03 · PC 업무 확장 경로</div></header>
+    <main class="stage">
+      <div class="eyebrow">PART 03 · PC 업무 확장 경로</div>
+      <h1 class="title" data-editable>PowerShell·CMD로 Windows 작업 제어</h1>
+      <p class="subtitle" data-editable>파일과 폴더처럼 운영체제가 이미 알고 있는 작업부터 시작합니다.</p>
+      <div class="content"><div class="split-work"><div class="work-copy"><h3>적합한 업무</h3><ul><li>여러 폴더의 파일 목록 만들기</li><li>파일 이름·확장자·저장 위치 일괄 변경</li><li>특정 프로그램과 문서 열기</li><li>실행 결과를 로그 파일로 남기기</li></ul><div class="risk-line"><b>주의</b><span>삭제·이동·덮어쓰기는 미리보기와 복사본을 먼저 사용합니다.</span></div></div><div class="terminal"><div class="terminal-head">예시 요청 → .ps1</div><code>“이 폴더의 PDF 파일을 날짜순으로 정리하고,<br>변경 전후 이름을 CSV 로그로 남겨줘.<br>실제 변경 전에는 미리보기만 보여줘.”</code><div class="terminal-result"><b>산출물</b><span>정리 스크립트 + 변경 예정 목록 + 실행 로그</span></div></div></div></div>
+      <div class="anchor"><b>확인</b><span data-editable>PowerShell 코드는 먼저 읽고, 대상 경로와 변경 범위를 확인한 뒤 실행합니다.</span></div>
+    </main>
+    <footer><span>바이브 코딩, 어디까지 활용 가능할까</span><span class="time">5분 구간</span><b data-page-number>21</b></footer>
+  </section>
+<section class="slide " id="s22" data-role="explain" data-layout="zoom-sequence" data-purpose="Excel 데이터 구조를 AI와 동기화하는 절차를 설명한다" data-minutes="5">
+    <header class="topbar"><div class="course">유한킴벌리 임직원 특강 <small>VIBE CODING FOR WORK</small></div><div class="part">PART 03 · PC 업무 확장 경로</div></header>
+    <main class="stage">
+      <div class="eyebrow">PART 03 · PC 업무 확장 경로</div>
+      <h1 class="title" data-editable>Excel 업무는 데이터 구조 설명부터</h1>
+      <p class="subtitle" data-editable>파일 전체를 보내기보다 시트·열·샘플·목적을 먼저 맞춥니다.</p>
+      <div class="content"><div class="zoom-sequence"><div class="zoom-overview"><b>통합문서 전체</b><span>시트명: 원본 / 기준정보 / 월간집계</span><div class="sheet-tabs"><i>원본</i><i>기준정보</i><i>월간집계</i></div></div><div class="zoom-arrow">→</div><div class="zoom-detail"><b>AI에 전달할 최소 구조</b><table><tr><th>일자</th><th>거래처</th><th>품목</th><th>수량</th></tr><tr><td>8/1</td><td>A</td><td>P01</td><td>120</td></tr><tr><td>8/2</td><td>B</td><td>P03</td><td>80</td></tr><tr><td>8/2</td><td>A</td><td>P02</td><td>95</td></tr></table><small>목적 — 거래처·품목별 월간 합계와 예외 목록 생성</small></div><div class="zoom-observe"><b>확인</b><span>헤더 위치</span><span>날짜 형식</span><span>빈 셀</span><span>중복 키</span></div></div></div>
+      <div class="anchor"><b>확인</b><span data-editable>엑셀과 AI의 싱크는 “데이터 3줄 + 열 설명 + 원하는 결과”로 시작할 수 있습니다.</span></div>
+    </main>
+    <footer><span>바이브 코딩, 어디까지 활용 가능할까</span><span class="time">5분 구간</span><b data-page-number>22</b></footer>
+  </section>
+<section class="slide " id="s23" data-role="compare" data-layout="evidence-matrix" data-purpose="Excel 자동화 도구의 역할을 비교한다" data-minutes="4">
+    <header class="topbar"><div class="course">유한킴벌리 임직원 특강 <small>VIBE CODING FOR WORK</small></div><div class="part">PART 03 · PC 업무 확장 경로</div></header>
+    <main class="stage">
+      <div class="eyebrow">PART 03 · PC 업무 확장 경로</div>
+      <h1 class="title" data-editable>Excel 자동화 도구 선택</h1>
+      <p class="subtitle" data-editable>같은 Excel 업무라도 반복 방식과 처리 규모에 따라 도구가 달라집니다.</p>
+      <div class="content"><div class="matrix-wrap"><table class="matrix roomy"><thead><tr><th>도구</th><th>적합한 작업</th><th>입력 설명</th><th>검증</th></tr></thead><tbody><tr><td><b>수식</b></td><td>셀 단위 계산·조회</td><td>열 이름, 예시 값, 원하는 계산</td><td>샘플 셀 3개 대조</td></tr><tr><td><b>Power Query</b></td><td>반복 수집·정제·병합</td><td>파일 위치, 열 형식, 변환 규칙</td><td>행 수·누락·중복 확인</td></tr><tr><td><b>VBA</b></td><td>버튼·서식·시트 작업</td><td>통합문서 구조, 실행 순서</td><td>복사본·실행 로그·되돌리기</td></tr><tr><td><b>Python</b></td><td>대량 파일·복합 분석</td><td>폴더·파일 구조, 결과 형식</td><td>집계 합계·예외 파일·로그</td></tr></tbody></table></div></div>
+      <div class="anchor"><b>확인</b><span data-editable>익숙한 Excel 안에서 끝낼지, 여러 파일을 밖에서 처리할지 먼저 결정합니다.</span></div>
+    </main>
+    <footer><span>바이브 코딩, 어디까지 활용 가능할까</span><span class="time">4분 구간</span><b data-page-number>23</b></footer>
+  </section>
+<section class="slide " id="s24" data-role="process" data-layout="staircase" data-purpose="Python 자동화의 단계적 확장 경로를 제시한다" data-minutes="4">
+    <header class="topbar"><div class="course">유한킴벌리 임직원 특강 <small>VIBE CODING FOR WORK</small></div><div class="part">PART 03 · PC 업무 확장 경로</div></header>
+    <main class="stage">
+      <div class="eyebrow">PART 03 · PC 업무 확장 경로</div>
+      <h1 class="title" data-editable>Python 업무 자동화 확장 단계</h1>
+      <p class="subtitle" data-editable>Python 문법을 외우기보다 작은 파일 작업을 실행하고 검증하는 경험부터 시작합니다.</p>
+      <div class="content"><div class="staircase"><div class="stair s1"><b>1 실행</b><span>준비된 코드 복사·실행</span><small>완료: 결과 파일 1개</small></div><div class="stair s2"><b>2 수정</b><span>폴더·열 이름·조건 변경</span><small>완료: 내 데이터 적용</small></div><div class="stair s3"><b>3 패키지</b><span>pandas·openpyxl·문서 처리</span><small>완료: 반복 작업 묶음</small></div><div class="stair s4"><b>4 실행기</b><span>버튼·입력창·로그 추가</span><small>완료: 동료도 실행</small></div><div class="stair s5"><b>5 에이전트</b><span>도구 호출·검증 반복</span><small>완료: 작업 흐름 자동화</small></div></div></div>
+      <div class="anchor"><b>확인</b><span data-editable>Anaconda가 설치된 PC는 Python 실행 환경과 기본 패키지를 이미 포함합니다.</span></div>
+    </main>
+    <footer><span>바이브 코딩, 어디까지 활용 가능할까</span><span class="time">4분 구간</span><b data-page-number>24</b></footer>
+  </section>
+<section class="slide " id="s25" data-role="explain" data-layout="anatomy" data-purpose="단일 HTML 업무도구의 구성요소를 설명한다" data-minutes="4">
+    <header class="topbar"><div class="course">유한킴벌리 임직원 특강 <small>VIBE CODING FOR WORK</small></div><div class="part">PART 03 · PC 업무 확장 경로</div></header>
+    <main class="stage">
+      <div class="eyebrow">PART 03 · PC 업무 확장 경로</div>
+      <h1 class="title" data-editable>브라우저에서 실행하는 단일 HTML 도구</h1>
+      <p class="subtitle" data-editable>HTML·CSS·JavaScript를 한 파일에 넣으면 설치 없이 더블클릭으로 실행할 수 있습니다.</p>
+      <div class="content"><div class="web-anatomy"><div class="browser-frame"><div class="browser-bar"><i></i><i></i><i></i><span>file:///업무도구.html</span></div><div class="browser-body"><b>파일 선택</b><span>CSV·Excel·텍스트</span><b>처리 기준</b><span>검색·필터·집계·변환</span><b>결과 저장</b><span>CSV·PNG·HTML</span></div></div><div class="web-labels"><div><b>HTML</b><span>화면 구조</span></div><div><b>CSS</b><span>배치·가독성</span></div><div><b>JavaScript</b><span>버튼·계산·파일 처리</span></div><div><b>라이브러리</b><span>Chart.js·SheetJS 등 기능 추가</span></div></div></div></div>
+      <div class="anchor"><b>확인</b><span data-editable>데이터를 외부 서버로 보내지 않는 로컬 처리 방식도 설계할 수 있습니다.</span></div>
+    </main>
+    <footer><span>바이브 코딩, 어디까지 활용 가능할까</span><span class="time">4분 구간</span><b data-page-number>25</b></footer>
+  </section>
+<section class="slide " id="s26" data-role="demo" data-layout="demo-stage" data-purpose="브라우저 콘솔 시연의 범위와 주의점을 제시한다" data-minutes="4">
+    <header class="topbar"><div class="course">유한킴벌리 임직원 특강 <small>VIBE CODING FOR WORK</small></div><div class="part">PART 03 · PC 업무 확장 경로</div></header>
+    <main class="stage">
+      <div class="eyebrow">PART 03 · PC 업무 확장 경로</div>
+      <h1 class="title" data-editable>시연 2 · 브라우저 콘솔로 화면 구조 확인</h1>
+      <p class="subtitle" data-editable>F12 콘솔은 현재 페이지의 요소와 텍스트를 확인하고 반복 동작을 시험하는 실행창입니다.</p>
+      <div class="content"><div class="demo-stage console-demo"><div class="demo-screen"><div class="demo-head">브라우저 콘솔 예시</div><pre>// 현재 페이지의 표 제목 확인
+[...document.querySelectorAll('table')].map((t, i) => ({
+  번호: i + 1,
+  제목: t.caption?.innerText || '',
+  행수: t.rows.length
+}))</pre><div class="console-out">Array(2) [{ 번호: 1, 제목: '월간 실적', 행수: 24 }, …]</div></div><div class="observe"><b>관찰 포인트</b><ol><li>화면의 글자도 구조화된 요소입니다.</li><li>읽기와 변경은 권한·약관 범위가 다릅니다.</li><li>페이지가 바뀌면 선택자도 달라집니다.</li></ol><small>완료 신호 — 읽기 전용 확인 코드가 예상한 요소만 찾습니다.</small></div></div></div>
+      <div class="anchor"><b>확인</b><span data-editable>사내 시스템 자동화는 약관·보안·권한 확인 없이 적용하지 않습니다.</span></div>
+    </main>
+    <footer><span>바이브 코딩, 어디까지 활용 가능할까</span><span class="time">4분 구간</span><b data-page-number>26</b></footer>
+  </section>
+<section class="slide " id="s27" data-role="relation" data-layout="hub-spoke" data-purpose="API MCP RAG 파일 형식의 연결 역할을 설명한다" data-minutes="4">
+    <header class="topbar"><div class="course">유한킴벌리 임직원 특강 <small>VIBE CODING FOR WORK</small></div><div class="part">PART 03 · PC 업무 확장 경로</div></header>
+    <main class="stage">
+      <div class="eyebrow">PART 03 · PC 업무 확장 경로</div>
+      <h1 class="title" data-editable>API·MCP·RAG·파일 형식의 역할</h1>
+      <p class="subtitle" data-editable>외부 데이터와 프로그램을 연결할 때 무엇을 연결하는지 구분합니다.</p>
+      <div class="content"><div class="hub-map"><div class="hub-core">LLM·하네스</div><div class="hub-item h1"><b>API</b><span>프로그램 간 요청·응답</span></div><div class="hub-item h2"><b>MCP</b><span>도구와 자료를 공통 방식으로 연결</span></div><div class="hub-item h3"><b>RAG</b><span>문서를 찾아 근거와 함께 전달</span></div><div class="hub-item h4"><b>RSS</b><span>새 소식 목록을 정기 수집</span></div><div class="hub-item h5"><b>JSON·XML</b><span>구조가 있는 데이터 교환</span></div><div class="hub-item h6"><b>ODS·CSV</b><span>표 데이터를 파일로 이동</span></div><svg viewBox="0 0 1000 350"><g><line x1="500" y1="175" x2="170" y2="55"/><line x1="500" y1="175" x2="500" y2="40"/><line x1="500" y1="175" x2="830" y2="55"/><line x1="500" y1="175" x2="170" y2="295"/><line x1="500" y1="175" x2="500" y2="310"/><line x1="500" y1="175" x2="830" y2="295"/></g></svg></div></div>
+      <div class="anchor"><b>확인</b><span data-editable>MCP는 능력을 자동으로 보장하지 않습니다. 연결된 도구의 권한과 데이터 범위가 실제 능력입니다.</span></div>
+    </main>
+    <footer><span>바이브 코딩, 어디까지 활용 가능할까</span><span class="time">4분 구간</span><b data-page-number>27</b></footer>
+  </section>
+<section class="slide " id="s28" data-role="compare" data-layout="spectrum" data-purpose="업무 자동화의 확장 경로를 난이도와 통제 범위로 정리한다" data-minutes="5">
+    <header class="topbar"><div class="course">유한킴벌리 임직원 특강 <small>VIBE CODING FOR WORK</small></div><div class="part">PART 03 · PC 업무 확장 경로</div></header>
+    <main class="stage">
+      <div class="eyebrow">PART 03 · PC 업무 확장 경로</div>
+      <h1 class="title" data-editable>업무 자동화 확장 경로</h1>
+      <p class="subtitle" data-editable>쉬운 도구에서 어려운 도구로 가는 사다리가 아니라, 필요한 통제 범위에 따라 선택합니다.</p>
+      <div class="content"><div class="spectrum"><div class="spectrum-axis"><span>사람 실행</span><i></i><span>부분 자동</span><i></i><span>에이전트 실행</span></div><div class="spectrum-points"><div style="--p:4%"><b>수식·프롬프트</b><small>결과를 사람이 적용</small></div><div style="--p:24%"><b>VBA·Power Query</b><small>Excel 내부 반복</small></div><div style="--p:45%"><b>PowerShell</b><small>Windows 파일·프로그램</small></div><div style="--p:63%"><b>Python</b><small>대량 처리·분석</small></div><div style="--p:80%"><b>HTML·JS</b><small>동료용 실행 화면</small></div><div style="--p:96%"><b>하네스·MCP</b><small>여러 도구 연결·검증</small></div></div><div class="spectrum-basis"><span>선택 기준 1 · 현재 업무가 어디에서 실행되는가</span><span>선택 기준 2 · 데이터와 변경 권한을 어디까지 허용하는가</span></div></div></div>
+      <div class="anchor"><b>확인</b><span data-editable>확장자를 한 번 만들고 실행해 보는 경험이 각 도구의 역할을 이해하는 가장 빠른 방법입니다.</span></div>
+    </main>
+    <footer><span>바이브 코딩, 어디까지 활용 가능할까</span><span class="time">5분 구간</span><b data-page-number>28</b></footer>
+  </section>
+<section class="slide chapter-divider" id="s29" data-role="chapter" data-layout="chapter-gate" data-purpose="직무별 도구보다 입력·판단·산출물의 차이를 봅니다." data-divider-index="4" data-minutes="20">
+    <div class="chapter-top"><span>유한킴벌리 임직원 특강 <small>VIBE CODING FOR WORK</small></span><span>2026.08.18 · 송파 본사</span></div>
+    <div class="chapter-head"><div class="chapter-eyebrow">PART 04 · 직무별 적용</div><h1 data-editable>마케팅·영업·재무·SCM 사례</h1></div>
+    <div class="chapter-body"><div class="chapter-no" data-divider-number>04</div><div class="chapter-message"><h2 data-editable>직무별 도구보다 입력·판단·산출물의 차이를 봅니다.</h2><p data-editable>각 사례를 현재 자료, 반복 판단, 결과 형식, 사람 승인 지점으로 나누어 봅니다.</p></div></div>
+    <footer><span>PART 04 · 직무별 적용</span><span>20분 구간</span><b data-page-number>29</b></footer>
+  </section>
+<section class="slide " id="s30" data-role="case-study" data-layout="case-canvas" data-purpose="마케팅 업무의 바이브 코딩 적용 흐름을 제시한다" data-minutes="4">
+    <header class="topbar"><div class="course">유한킴벌리 임직원 특강 <small>VIBE CODING FOR WORK</small></div><div class="part">PART 04 · 직무별 적용</div></header>
+    <main class="stage">
+      <div class="eyebrow">PART 04 · 직무별 적용</div>
+      <h1 class="title" data-editable>마케팅 · 캠페인 자료 정리와 성과 브리핑</h1>
+      <p class="subtitle" data-editable>여러 채널의 자료를 같은 기준으로 맞추고 검토용 초안을 만듭니다.</p>
+      <div class="content"><div class="case-canvas"><div class="case-context"><b>입력</b><p>채널별 성과 CSV, 캠페인 계획서, 소재 목록, 보고 양식</p><b>반복 판단</b><p>기간·채널·소재 기준 통일, 누락·중복 확인, 지표 계산</p></div><div class="case-flow"><span><b>Power Query·Python</b><small>자료 병합·정제</small></span><i>→</i><span><b>Copilot</b><small>결과 해석 초안</small></span><i>→</i><span><b>HTML·Excel</b><small>검토 화면·표</small></span></div><div class="case-result"><b>산출물</b><ul><li>채널·소재별 성과표</li><li>누락·이상값 목록</li><li>캠페인 브리핑 초안</li></ul><div class="approval">사람 승인 · 대외 메시지·예산 조정</div></div></div></div>
+      <div class="anchor"><b>확인</b><span data-editable>생성보다 먼저 채널별 정의와 집계 기준을 통일합니다.</span></div>
+    </main>
+    <footer><span>바이브 코딩, 어디까지 활용 가능할까</span><span class="time">4분 구간</span><b data-page-number>30</b></footer>
+  </section>
+<section class="slide " id="s31" data-role="case-study" data-layout="open-columns" data-purpose="영업 업무의 입력부터 후속조치까지를 설명한다" data-minutes="4">
+    <header class="topbar"><div class="course">유한킴벌리 임직원 특강 <small>VIBE CODING FOR WORK</small></div><div class="part">PART 04 · 직무별 적용</div></header>
+    <main class="stage">
+      <div class="eyebrow">PART 04 · 직무별 적용</div>
+      <h1 class="title" data-editable>영업 · 고객 브리핑과 후속 조치 정리</h1>
+      <p class="subtitle" data-editable>회의 전·중·후 자료를 하나의 고객 단위로 연결합니다.</p>
+      <div class="content"><div class="open-columns three"><div><span>회의 전</span><h3>고객 브리핑</h3><p>기존 거래·문의·제품 자료를 읽고 확인 질문과 방문 의제를 정리합니다.</p><small>입력 — 승인된 고객 자료·제품 문서</small></div><div><span>회의 후</span><h3>기록 구조화</h3><p>메모와 전사를 결정 사항, 요청 사항, 담당자, 기한으로 분리합니다.</p><small>검증 — 원문 근거와 담당자 확인</small></div><div><span>후속 조치</span><h3>메일·할 일 초안</h3><p>고객 회신과 내부 협조 요청을 서로 다른 문체와 공개 범위로 작성합니다.</p><small>사람 승인 — 발송·CRM 반영</small></div></div></div>
+      <div class="anchor"><b>확인</b><span data-editable>고객 정보는 승인된 Copilot 경계에서만 사용하고, 발송은 사람이 최종 확인합니다.</span></div>
+    </main>
+    <footer><span>바이브 코딩, 어디까지 활용 가능할까</span><span class="time">4분 구간</span><b data-page-number>31</b></footer>
+  </section>
+<section class="slide " id="s32" data-role="compare" data-layout="evidence-matrix" data-purpose="재무 자동화의 작업과 검증 기준을 대응시킨다" data-minutes="4">
+    <header class="topbar"><div class="course">유한킴벌리 임직원 특강 <small>VIBE CODING FOR WORK</small></div><div class="part">PART 04 · 직무별 적용</div></header>
+    <main class="stage">
+      <div class="eyebrow">PART 04 · 직무별 적용</div>
+      <h1 class="title" data-editable>재무 · 월마감 자료 정리와 차이 분석</h1>
+      <p class="subtitle" data-editable>숫자를 만드는 단계와 설명 문장을 만드는 단계를 분리합니다.</p>
+      <div class="content"><div class="matrix-wrap"><table class="matrix roomy"><thead><tr><th>작업</th><th>자동화 후보</th><th>검증 기준</th><th>사람 판단</th></tr></thead><tbody><tr><td><b>자료 수집</b></td><td>파일명·시트·기간 확인</td><td>파일 수·대상 기간</td><td>반영 제외 항목</td></tr><tr><td><b>정제·집계</b></td><td>계정·부서·월 기준 합산</td><td>원본 합계·행 수</td><td>분개·기준 변경</td></tr><tr><td><b>차이 분석</b></td><td>계획 대비 차이와 이상값 표시</td><td>계산식·임계값</td><td>원인 해석</td></tr><tr><td><b>보고 초안</b></td><td>표와 메모를 문장으로 정리</td><td>숫자·표 참조 일치</td><td>경영 판단·대외 공시</td></tr></tbody></table></div></div>
+      <div class="anchor"><b>확인</b><span data-editable>재무 자동화는 결과 숫자보다 원본 합계·계산식·예외 로그를 먼저 남깁니다.</span></div>
+    </main>
+    <footer><span>바이브 코딩, 어디까지 활용 가능할까</span><span class="time">4분 구간</span><b data-page-number>32</b></footer>
+  </section>
+<section class="slide " id="s33" data-role="process" data-layout="process-river" data-purpose="SCM 예외 관리 업무의 자동화 흐름을 제시한다" data-minutes="4">
+    <header class="topbar"><div class="course">유한킴벌리 임직원 특강 <small>VIBE CODING FOR WORK</small></div><div class="part">PART 04 · 직무별 적용</div></header>
+    <main class="stage">
+      <div class="eyebrow">PART 04 · 직무별 적용</div>
+      <h1 class="title" data-editable>SCM · 주문·재고·납기 예외 관리</h1>
+      <p class="subtitle" data-editable>정상 흐름 전체보다 예외를 찾고 담당자에게 전달하는 구간부터 자동화합니다.</p>
+      <div class="content"><div class="river scm"><div class="river-main"><span><b>주문</b><small>수량·요청일·고객</small></span><span><b>재고</b><small>가용·안전재고·창고</small></span><span><b>생산·입고</b><small>예정일·지연</small></span><span><b>납기 판정</b><small>가능·주의·지연</small></span><span><b>예외 목록</b><small>사유·영향·우선순위</small></span><span><b>협의 요청</b><small>담당자·기한·대안</small></span></div><div class="river-branch"><b>자동 검사</b><span>품목 키 불일치</span><span>음수·중복·누락</span><span>기준일 초과</span></div></div></div>
+      <div class="anchor"><b>확인</b><span data-editable>예외 판정 규칙을 표로 확정한 뒤, Python·Excel·HTML 중 실행 위치에 맞는 도구를 고릅니다.</span></div>
+    </main>
+    <footer><span>바이브 코딩, 어디까지 활용 가능할까</span><span class="time">4분 구간</span><b data-page-number>33</b></footer>
+  </section>
+<section class="slide " id="s34" data-role="relation" data-layout="three-lane-wire" data-purpose="직무 간 자료와 산출물 연결을 설명한다" data-minutes="4">
+    <header class="topbar"><div class="course">유한킴벌리 임직원 특강 <small>VIBE CODING FOR WORK</small></div><div class="part">PART 04 · 직무별 적용</div></header>
+    <main class="stage">
+      <div class="eyebrow">PART 04 · 직무별 적용</div>
+      <h1 class="title" data-editable>직무 간 연결 · 하나의 기준으로 넘겨주기</h1>
+      <p class="subtitle" data-editable>부서별 자동화가 서로 다른 정의를 만들지 않도록 공통 키와 검증 항목을 정합니다.</p>
+      <div class="content"><div class="handoff-map"><div class="handoff-col"><b>업무 자료</b><span>캠페인 코드</span><span>고객·거래처 코드</span><span>품목·기간</span><span>예산·실적</span></div><div class="handoff-core"><strong>공통 작업 명세</strong><span>입력 열 정의</span><span>계산 기준</span><span>예외 코드</span><span>출력 양식</span><span>담당자·승인</span></div><div class="handoff-col"><b>직무 산출물</b><span>마케팅 성과표</span><span>영업 후속 조치</span><span>재무 차이 분석</span><span>SCM 예외 목록</span></div><svg viewBox="0 0 1000 320"><defs><marker id="a34" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9Z" fill="#2e7d5b"/></marker></defs><g><path d="M250 65 C360 65 360 65 460 65"/><path d="M250 130 C360 130 360 130 460 130"/><path d="M250 195 C360 195 360 195 460 195"/><path d="M250 260 C360 260 360 260 460 260"/><path d="M540 65 C640 65 640 65 750 65"/><path d="M540 130 C640 130 640 130 750 130"/><path d="M540 195 C640 195 640 195 750 195"/><path d="M540 260 C640 260 640 260 750 260"/></g></svg></div></div>
+      <div class="anchor"><b>확인</b><span data-editable>공통 열·코드·기간·합계 기준을 먼저 정하면 부서 간 자동화 결과를 이어 쓸 수 있습니다.</span></div>
+    </main>
+    <footer><span>바이브 코딩, 어디까지 활용 가능할까</span><span class="time">4분 구간</span><b data-page-number>34</b></footer>
+  </section>
+<section class="slide chapter-divider" id="s35" data-role="chapter" data-layout="chapter-gate" data-purpose="승인된 도구로 작은 자동화부터 검증합니다." data-divider-index="5" data-minutes="15">
+    <div class="chapter-top"><span>유한킴벌리 임직원 특강 <small>VIBE CODING FOR WORK</small></span><span>2026.08.18 · 송파 본사</span></div>
+    <div class="chapter-head"><div class="chapter-eyebrow">PART 05 · 유한킴벌리 적용</div><h1 data-editable>사내 도구 경계에서 실행하기</h1></div>
+    <div class="chapter-body"><div class="chapter-no" data-divider-number>05</div><div class="chapter-message"><h2 data-editable>승인된 도구로 작은 자동화부터 검증합니다.</h2><p data-editable>Copilot 중심 실행 경로, 시연 운영, 사전 안내, 30일 적용 순서를 정리합니다.</p></div></div>
+    <footer><span>PART 05 · 유한킴벌리 적용</span><span>15분 구간</span><b data-page-number>35</b></footer>
+  </section>
+<section class="slide " id="s36" data-role="synthesis" data-layout="decision-tree" data-purpose="사내 환경에서 실행 경로를 선택하는 기준을 제시한다" data-minutes="3">
+    <header class="topbar"><div class="course">유한킴벌리 임직원 특강 <small>VIBE CODING FOR WORK</small></div><div class="part">PART 05 · 유한킴벌리 적용</div></header>
+    <main class="stage">
+      <div class="eyebrow">PART 05 · 유한킴벌리 적용</div>
+      <h1 class="title" data-editable>사내 실행 경로 선택</h1>
+      <p class="subtitle" data-editable>자료 민감도와 실행 위치를 먼저 확인합니다.</p>
+      <div class="content"><div class="decision-tree enterprise"><div class="decision-root">회사 자료가 포함되는가?</div><div class="decision-path left"><span class="yes">예</span><b>승인된 Copilot 경계</b><p>자료 공개 범위 확인 → 샘플·가상 데이터로 설계 → 승인된 위치에서 실행</p></div><div class="decision-path right"><span class="no">아니오</span><b>공개·가상 자료</b><p>Copilot 또는 Gemini로 구조 실험 → 결과 검증 → 회사 자료 적용 전 재확인</p></div><div class="decision-bottom">PC 실행이 필요한가? → PowerShell·Excel·Python·로컬 HTML 중 승인된 방식 선택</div></div></div>
+      <div class="anchor"><b>확인</b><span data-editable>외부 ChatGPT·Claude 직접 사용과 Copilot Studio는 이번 강의 실행 경로에서 제외합니다.</span></div>
+    </main>
+    <footer><span>바이브 코딩, 어디까지 활용 가능할까</span><span class="time">3분 구간</span><b data-page-number>36</b></footer>
+  </section>
+<section class="slide " id="s37" data-role="compare" data-layout="before-after" data-purpose="라이선스 차이가 있어도 공통 방법을 유지하는 법을 설명한다" data-minutes="3">
+    <header class="topbar"><div class="course">유한킴벌리 임직원 특강 <small>VIBE CODING FOR WORK</small></div><div class="part">PART 05 · 유한킴벌리 적용</div></header>
+    <main class="stage">
+      <div class="eyebrow">PART 05 · 유한킴벌리 적용</div>
+      <h1 class="title" data-editable>모델이 달라도 같은 작업 명세 사용</h1>
+      <p class="subtitle" data-editable>사내 제공 모델 차이는 결과 비교 대상으로 두고, 업무 명세와 검증은 동일하게 유지합니다.</p>
+      <div class="content"><div class="before-after models"><div class="before"><span>라이선스 보유자</span><h3>Copilot 안 제공 모델</h3><ol><li>동일한 업무 명세 입력</li><li>실행 전 계획표 확인</li><li>코드·산출물 검증</li></ol></div><div class="axis"><b>공통 기준</b><i></i><small>입력·예외·검증</small></div><div class="after"><span>라이선스 미보유자</span><h3>Copilot 안 기본 제공 모델</h3><ol><li>동일한 업무 명세 입력</li><li>실행 전 계획표 확인</li><li>코드·산출물 검증</li></ol></div></div></div>
+      <div class="anchor"><b>확인</b><span data-editable>모델 이름보다 같은 입력과 같은 검증 기준으로 결과를 비교하는 습관이 중요합니다.</span></div>
+    </main>
+    <footer><span>바이브 코딩, 어디까지 활용 가능할까</span><span class="time">3분 구간</span><b data-page-number>37</b></footer>
+  </section>
+<section class="slide " id="s38" data-role="activity" data-layout="activity-brief" data-purpose="특강 전 사전 확인과 참가자 안내 항목을 정리한다" data-minutes="3">
+    <header class="topbar"><div class="course">유한킴벌리 임직원 특강 <small>VIBE CODING FOR WORK</small></div><div class="part">PART 05 · 유한킴벌리 적용</div></header>
+    <main class="stage">
+      <div class="eyebrow">PART 05 · 유한킴벌리 적용</div>
+      <h1 class="title" data-editable>특강 전 확인·안내 체크리스트</h1>
+      <p class="subtitle" data-editable>참가자에게 Python 사전 설치를 요구하지 않습니다.</p>
+      <div class="content"><div class="brief-sheet precheck"><div class="brief-main"><div><b>Python</b><span>Anaconda 설치 PC는 추가 설치 불필요. 강의는 시연 중심</span></div><div><b>설치형 프로그램</b><span>Antigravity·ChatGPT 앱 설치 가능 여부만 사전 확인</span></div><div><b>네트워크</b><span>강사용 게스트 Wi-Fi와 접속 제한 확인</span></div><div><b>화면</b><span>HDMI·무선 연결, 해상도, 온라인 송출 화면 공유 확인</span></div><div><b>녹화</b><span>사내 교육 목적 범위와 저장·배포 방식 확인</span></div><div><b>실습 자료</b><span>민감정보 없는 샘플 파일, Copilot 접속 상태 확인</span></div></div><div class="brief-cue"><b>당일 운영</b><p>참가자는 Copilot 접속만 확인하고, 따라 하기 구간은 텍스트 작성과 구조 확인으로 제한합니다.</p><small>대체 경로 — 설치나 접속이 막히면 강사 화면 시연과 결과 비교로 진행합니다.</small></div></div></div>
+      <div class="anchor"><b>확인</b><span data-editable>MCP·에이전트 파트는 설치 없이 개념 설명과 강사 시연으로 진행합니다.</span></div>
+    </main>
+    <footer><span>바이브 코딩, 어디까지 활용 가능할까</span><span class="time">3분 구간</span><b data-page-number>38</b></footer>
+  </section>
+<section class="slide " id="s39" data-role="synthesis" data-layout="action-roadmap" data-purpose="특강 이후 30일 적용 순서를 제시한다" data-minutes="3">
+    <header class="topbar"><div class="course">유한킴벌리 임직원 특강 <small>VIBE CODING FOR WORK</small></div><div class="part">PART 05 · 유한킴벌리 적용</div></header>
+    <main class="stage">
+      <div class="eyebrow">PART 05 · 유한킴벌리 적용</div>
+      <h1 class="title" data-editable>특강 이후 30일 적용 순서</h1>
+      <p class="subtitle" data-editable>한 부서의 작은 반복 업무를 선택해 재사용 가능한 기준으로 남깁니다.</p>
+      <div class="content"><div class="roadmap"><div class="road-seg now"><time>1주</time><b>후보 선정</b><span>반복 빈도·규칙·되돌리기 가능성 확인</span><small>산출물: 업무 명세 1장</small></div><div class="road-seg next"><time>2주</time><b>샘플 검증</b><span>가상·소량 데이터로 코드와 결과 비교</span><small>산출물: 테스트 결과·예외 목록</small></div><div class="road-seg pilot"><time>3주</time><b>현업 시험</b><span>사람 승인 지점을 둔 부분 자동화 실행</span><small>산출물: 실행 로그·수정 기록</small></div><div class="road-seg scale"><time>4주</time><b>공유·표준화</b><span>입력 양식·검증 기준·재사용 프롬프트 정리</span><small>산출물: 부서용 자동화 카드</small></div></div></div>
+      <div class="anchor"><b>확인</b><span data-editable>성과는 코드 길이가 아니라 반복 시간, 오류, 재작업이 줄었는지로 확인합니다.</span></div>
+    </main>
+    <footer><span>바이브 코딩, 어디까지 활용 가능할까</span><span class="time">3분 구간</span><b data-page-number>39</b></footer>
+  </section>
+<section class="slide closing" id="s40" data-role="synthesis" data-layout="recap-map" data-purpose="특강의 내용을 실행 기준으로 요약한다" data-minutes="2">
+    <header class="topbar"><div class="course">유한킴벌리 임직원 특강 <small>VIBE CODING FOR WORK</small></div><div class="part">강의 요약 · 질의</div></header>
+    <main class="stage">
+      <div class="eyebrow">강의 요약 · 질의</div>
+      <h1 class="title" data-editable>강의 요약</h1>
+      <p class="subtitle" data-editable>바이브 코딩을 업무에 적용할 때 확인할 네 가지입니다.</p>
+      <div class="content"><div class="recap-map closing-map"><div class="recap-center">업무 적용</div><div class="recap-item r1"><b>업무 구조</b><span>입력·처리·출력</span></div><div class="recap-item r2"><b>실행 도구</b><span>OS·Excel·Python·Web</span></div><div class="recap-item r3"><b>통제 기준</b><span>권한·보안·승인</span></div><div class="recap-item r4"><b>완료 조건</b><span>결과·로그·검증</span></div><svg viewBox="0 0 1000 330"><path d="M500 165 L190 70"/><path d="M500 165 L810 70"/><path d="M500 165 L190 260"/><path d="M500 165 L810 260"/></svg></div></div>
+      <div class="anchor"><b>확인</b><span data-editable>질의 · 내 업무에서 가장 먼저 자동화할 수 있는 반복은 무엇입니까?</span></div>
+    </main>
+    <footer><span>바이브 코딩, 어디까지 활용 가능할까</span><span class="time">2분 구간</span><b data-page-number>40</b></footer>
+  </section></div><script>
+const slides = [...document.querySelectorAll('.slide')];
+let current = 0;
+let editing = false;
+
+function syncDividerNumbers(){
+  const dividers = [...document.querySelectorAll('.slide[data-role="chapter"],.slide[data-role="section"]')];
+  dividers.forEach((slide,index)=>{
+    const order=index+1;
+    const label=String(order).padStart(2,'0');
+    slide.dataset.dividerIndex=String(order);
+    slide.querySelectorAll('[data-divider-number]').forEach(node=>{
+      node.textContent=label;
+      node.contentEditable='false';
+    });
+  });
+}
+
+function syncPageNumbers(){
+  slides.forEach((slide,index)=>slide.querySelectorAll('[data-page-number]').forEach(node=>node.textContent=String(index+1).padStart(2,'0')));
+}
+
+function updateCounter(){
+  const node=document.getElementById('counter');
+  if(node) node.textContent=(current+1)+' / '+slides.length;
+}
+
+function activate(index){
+  current=Math.max(0,Math.min(slides.length-1,index));
+  slides.forEach((slide,i)=>slide.classList.toggle('active',i===current));
+  updateCounter();
+  const url=new URL(location.href);
+  if(document.body.classList.contains('presenting')) url.searchParams.set('slide',String(current+1));
+  history.replaceState(null,'',url);
+}
+
+function fitPresentation(){
+  const scale=Math.min(innerWidth/1280,innerHeight/720);
+  document.documentElement.style.setProperty('--scale',String(scale));
+}
+
+function enterPresentation(){
+  document.body.classList.remove('single');
+  document.body.classList.add('presenting');
+  fitPresentation();
+  activate(current);
+  document.documentElement.requestFullscreen?.().catch(()=>{});
+}
+
+function exitPresentation(){
+  document.body.classList.remove('presenting');
+  document.exitFullscreen?.().catch(()=>{});
+  const url=new URL(location.href);url.searchParams.delete('slide');history.replaceState(null,'',url);
+}
+
+function toggleEdit(){
+  editing=!editing;
+  document.body.classList.toggle('editing',editing);
+  document.querySelectorAll('[data-editable]').forEach(node=>node.contentEditable=editing?'true':'false');
+  document.querySelectorAll('[data-divider-number]').forEach(node=>node.contentEditable='false');
+  document.getElementById('editBtn').textContent=editing?'편집 종료':'편집';
+}
+
+function saveHtml(){
+  syncDividerNumbers();syncPageNumbers();
+  document.querySelectorAll('[contenteditable]').forEach(node=>node.setAttribute('contenteditable','false'));
+  const clone=document.documentElement.cloneNode(true);
+  clone.querySelector('body').classList.remove('editing','presenting','single');
+  clone.querySelectorAll('.slide').forEach(node=>node.classList.remove('active'));
+  const blob=new Blob(['<!doctype html>\n'+clone.outerHTML],{type:'text/html;charset=utf-8'});
+  const link=document.createElement('a');
+  link.href=URL.createObjectURL(blob);
+  link.download='유한킴벌리_바이브코딩_특강_수정본.html';
+  link.click();
+  setTimeout(()=>URL.revokeObjectURL(link.href),1000);
+  if(editing) document.querySelectorAll('[data-editable]').forEach(node=>node.contentEditable='true');
+}
+
+document.getElementById('presentBtn').addEventListener('click',enterPresentation);
+document.getElementById('editBtn').addEventListener('click',toggleEdit);
+document.getElementById('saveBtn').addEventListener('click',saveHtml);
+document.getElementById('printBtn').addEventListener('click',()=>window.print());
+
+addEventListener('keydown',event=>{
+  if(editing) return;
+  if(event.key==='p'||event.key==='P'){enterPresentation();return;}
+  if(event.key==='Escape'){exitPresentation();return;}
+  if(event.key==='ArrowRight'||event.key===' '||event.key==='PageDown'){if(document.body.classList.contains('presenting')||document.body.classList.contains('single')){event.preventDefault();activate(current+1)}}
+  if(event.key==='ArrowLeft'||event.key==='PageUp'){if(document.body.classList.contains('presenting')||document.body.classList.contains('single')){event.preventDefault();activate(current-1)}}
+  if(event.key==='Home'){activate(0)}
+  if(event.key==='End'){activate(slides.length-1)}
+});
+addEventListener('resize',fitPresentation);
+document.addEventListener('fullscreenchange',()=>{if(!document.fullscreenElement) document.body.classList.remove('presenting')});
+
+syncDividerNumbers();
+syncPageNumbers();
+const requested=Number(new URLSearchParams(location.search).get('slide'));
+if(Number.isFinite(requested)&&requested>=1&&requested<=slides.length){document.body.classList.add('single');current=requested-1;activate(current)}else{updateCounter()}
+</script><script>/* kg-preview: #<heading> \uc704\uce58\ub85c \uc774\ub3d9 */
+(function(){function norm(t){return (t||'').replace(/\s+/g,'').toLowerCase()}
+function go(){var h=decodeURIComponent(location.hash.slice(1));if(!h)return;var k=norm(h).slice(0,24);if(!k)return;
+var best=null,bl=1e9,els=document.body.querySelectorAll('h1,h2,h3,h4,h5,p,div,span,li,td,text,tspan,section,article');
+for(var i=0;i<els.length;i++){var e=els[i],t=norm(e.textContent);if(t.length<bl&&t.indexOf(k)>-1){best=e;bl=t.length}}
+if(!best)return;var box=best.closest('section,[class*=slide],[class*=page],article')||best;
+box.scrollIntoView({block:'start'});box.style.outline='3px solid #c0504d';box.style.outlineOffset='4px';
+setTimeout(function(){box.style.outline=''},2600)}
+window.addEventListener('load',function(){setTimeout(go,400)});window.addEventListener('hashchange',go)})();</script></body></html>

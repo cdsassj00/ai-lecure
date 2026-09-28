@@ -1,0 +1,671 @@
+<!doctype html><html lang="ko"><head><meta name="robots" content="noindex, nofollow"><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>생성형 AI 전문역량 강화 — 전산직 공무원을 위한 생성형 AI 전문역량 강화</title>
+<style>
+@font-face{font-family:'Pretendard';font-style:normal;font-weight:400;font-display:block;src:url(data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==) format('woff2')}
+@font-face{font-family:'Pretendard';font-style:normal;font-weight:600;font-display:block;src:url(data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==) format('woff2')}
+@font-face{font-family:'Pretendard';font-style:normal;font-weight:700;font-display:block;src:url(data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==) format('woff2')}
+@font-face{font-family:'Pretendard';font-style:normal;font-weight:900;font-display:block;src:url(data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==) format('woff2')}
+:root{--ink:#2B2728;--acc:#865461;--sec:#9A7A64;--pap:#F5F1ED;--mut:#756D70;--line:#D8CFC7;--tint:#EDE5DD;--paper:#fff;}
+*{box-sizing:border-box}
+html,body{margin:0;background:#cbc4bc;font-family:'Pretendard',sans-serif;color:var(--ink);
+  word-break:keep-all;line-height:1.7;-webkit-font-smoothing:antialiased}
+.deck{display:flex;flex-direction:column;align-items:center;gap:20px;padding:24px 0}
+.page{width:180mm;height:248mm;background:var(--paper);position:relative;overflow:hidden;
+  box-shadow:0 6px 24px rgba(43,39,40,.16);padding:22mm 20mm 20mm}
+.rh{position:absolute;top:12mm;left:20mm;right:20mm;display:flex;justify-content:space-between;
+  font-size:10.5px;font-weight:700;color:var(--mut);letter-spacing:.3px;padding-bottom:5px;border-bottom:.6px solid var(--line)}
+.folio{position:absolute;bottom:11mm;left:0;right:0;text-align:center;font-size:11px;font-weight:700;color:var(--mut)}
+.content{height:calc(100% - 30px);display:flex;flex-direction:column}
+.content.fill{justify-content:flex-start;gap:0}
+.content.fill>*{flex:0 0 auto}
+h1,h2,h3{color:var(--ink)}
+.content h2{font-size:24px;font-weight:900;margin:6px 0 16px;letter-spacing:-.4px}
+.content h3{font-size:17px;font-weight:800;color:var(--acc);margin:22px 0 10px;letter-spacing:-.2px}
+.content p{font-size:14.6px;font-weight:450;margin:0 0 13px;text-align:justify;line-height:1.85}
+.content p+p{text-indent:0}
+/* chapter opener */
+.ch-opener{margin-bottom:20px;padding-bottom:16px;border-bottom:1.4px solid var(--ink)}
+.ch-kicker{font-size:11px;font-weight:900;color:var(--acc);letter-spacing:1.2px;margin-bottom:10px}
+.ch-title{font-size:30px;font-weight:900;margin:0 0 14px;letter-spacing:-.8px;line-height:1.2}
+.ch-lead{font-size:15.4px;font-weight:500;color:#4a4344;margin:0;line-height:1.85}
+/* term */
+.term{background:var(--tint);border-radius:8px;padding:12px 15px;margin:10px 0}
+.term b{color:var(--acc);font-size:14.8px;font-weight:800;margin-right:8px}
+.term span{font-size:14px;color:#4a4344;line-height:1.7}
+/* note / limit */
+.note,.limit{border-left:3px solid var(--sec);background:#faf7f3;border-radius:0 8px 8px 0;padding:11px 15px;margin:12px 0}
+.limit{border-left-color:var(--acc)}
+.note .nl,.limit .ll{display:block;font-size:11px;font-weight:900;color:var(--sec);letter-spacing:.5px;margin-bottom:5px}
+.limit .ll{color:var(--acc)}
+.note p,.limit p{margin:0;font-size:13.8px;line-height:1.75}
+/* tables */
+table{width:100%;border-collapse:collapse;margin:14px 0;font-size:13.6px}
+table.grid caption,table.ex caption,table.resp caption{caption-side:top;text-align:left;font-size:11px;font-weight:900;color:var(--mut);letter-spacing:.4px;padding-bottom:6px}
+.grid thead th{background:var(--ink);color:#fff;font-weight:700;padding:10px 13px;text-align:left;font-size:13.2px}
+.grid tbody td{padding:10px 13px;border-bottom:.6px solid var(--line);vertical-align:top;line-height:1.6}
+.grid tbody tr:nth-child(even) td{background:#faf7f3}
+.ex th,.resp th{background:var(--tint);color:var(--ink);font-weight:800;padding:10px 13px;text-align:left;width:120px;white-space:nowrap;border-bottom:.6px solid var(--line)}
+.ex td,.resp td{padding:10px 13px;border-bottom:.6px solid var(--line);vertical-align:top;line-height:1.6}
+/* steps */
+.steps{margin:14px 0}
+.st-h{font-size:12px;font-weight:900;color:var(--mut);letter-spacing:.4px;margin-bottom:8px}
+.steps ol{list-style:none;margin:0;padding:0}
+.steps li{display:flex;gap:12px;padding:8px 0;border-bottom:.6px solid var(--line);align-items:baseline}
+.steps li:last-child{border-bottom:0}
+.steps .sn{flex:none;width:22px;height:22px;border-radius:50%;background:var(--acc);color:#fff;font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center}
+.steps b{font-size:14.4px;font-weight:800}
+.steps p{margin:3px 0 0;font-size:13.8px;color:#4a4344;line-height:1.65}
+/* figure */
+.fig{margin:14px 0;text-align:center}
+.fig svg{width:100%;height:auto;border:.8px solid var(--line);border-radius:8px}
+.fig figcaption{font-size:11px;color:var(--mut);margin-top:7px;text-align:center}
+/* nextq */
+.nextq{margin-top:18px;background:var(--ink);color:#f3ede9;border-radius:8px;padding:13px 16px}
+.nextq span{display:block;font-size:10.5px;font-weight:900;color:var(--sec);letter-spacing:.8px;margin-bottom:5px}
+.nextq p{margin:0;font-size:13px;font-weight:600;color:#fff}
+.nextq.end span{color:#c9a9a9}
+/* cover */
+.cover{background:var(--ink);color:#fff;display:flex;flex-direction:column;justify-content:space-between;padding:30mm 22mm}
+.cv-top{font-size:12px;font-weight:700;color:#b6a9a2;letter-spacing:1px}
+.cv-course{font-size:15px;font-weight:800;color:var(--sec);letter-spacing:.5px;margin-bottom:16px}
+.cv-title{font-size:52px;font-weight:900;letter-spacing:-1.5px;line-height:1.12;margin:0;color:#fff}
+.cv-sub{font-size:16px;font-weight:500;color:#c9beb8;margin-top:18px;line-height:1.6}
+.cv-author{font-size:15px;font-weight:800}
+.cv-date{font-size:12.5px;color:#b6a9a2;margin-top:6px}
+/* part opener */
+.part{background:#faf7f3}
+.part-wrap{height:100%;display:flex;flex-direction:column;justify-content:center;padding:0 4mm}
+.part-no{font-size:14px;font-weight:900;color:var(--acc);letter-spacing:2px}
+.part-title{font-size:38px;font-weight:900;letter-spacing:-1px;margin:14px 0 18px;line-height:1.2}
+.part-desc{font-size:14.5px;color:#4a4344;line-height:1.8;margin:0 0 26px;max-width:130mm}
+.part-chs{list-style:none;margin:0;padding:0;border-top:1.4px solid var(--ink)}
+.part-chs li{display:flex;gap:14px;align-items:baseline;padding:12px 0;border-bottom:.6px solid var(--line);font-size:15px;font-weight:700}
+.part-chs li span{flex:none;width:26px;height:26px;border-radius:50%;background:var(--ink);color:#fff;font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center}
+/* part objectives */
+.part-obj{margin-top:26px;border-top:1.4px solid var(--line);padding-top:16px}
+.po-h{display:block;font-size:12px;font-weight:900;color:var(--acc);letter-spacing:.6px;margin-bottom:10px}
+.part-obj ul{margin:0;padding-left:20px}
+.part-obj li{font-size:14px;color:#4a4344;line-height:1.75;margin-bottom:6px}
+/* toc */
+.toc{margin-top:8px}
+.toc-part{font-size:14px;font-weight:900;color:var(--acc);margin:18px 0 8px;padding-bottom:4px;border-bottom:1px solid var(--line)}
+.toc-ch{display:flex;align-items:baseline;gap:10px;padding:6px 0;font-size:13.4px}
+.tc-no{flex:none;width:22px;height:22px;border-radius:50%;background:var(--tint);color:var(--ink);font-weight:800;font-size:11px;display:flex;align-items:center;justify-content:center}
+.tc-t{font-weight:600}
+
+/* practice (따라하기) */
+.practice{border:1.4px solid var(--acc);border-radius:10px;margin:16px 0;overflow:hidden}
+.prac-unit{margin:2px 0}
+.prac-sec{font-size:17px;font-weight:800;color:var(--acc);margin:4px 0 8px;letter-spacing:-.2px}
+.prac-intro{font-size:14.6px;font-weight:450;margin:0 0 10px;line-height:1.7;text-align:justify}
+.pt-h{background:var(--acc);color:#fff;padding:9px 16px;font-size:14.5px;font-weight:800;display:flex;align-items:center;gap:10px}
+.pt-badge{background:#fff;color:var(--acc);border-radius:5px;font-size:11px;font-weight:900;padding:3px 9px;letter-spacing:.4px}
+.pg-goal{background:#faf3f1;padding:8px 16px;font-size:13px;color:#4a4344;border-bottom:1px solid var(--line)}
+.pg-goal span{font-weight:900;color:var(--acc);margin-right:8px;font-size:12px}
+.practice ol{list-style:none;margin:0;padding:6px 16px 9px}
+.practice li{display:flex;gap:11px;padding:6px 0;border-bottom:.6px solid var(--line);align-items:baseline}
+.practice li:last-child{border-bottom:0}
+.practice .pn{flex:none;width:22px;height:22px;border-radius:6px;background:var(--ink);color:#fff;font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center}
+.practice .pc b{font-size:14px;font-weight:800}
+.practice .pc p{margin:2px 0 0;font-size:13.4px;color:#4a4344;line-height:1.5}
+.presult{margin-top:4px;font-size:12.4px;font-weight:700;color:var(--sec);background:#f3ede9;border-radius:5px;padding:3px 9px;display:inline-block}
+/* screen mock */
+.screen{background:#2B2728;border-radius:9px;margin:14px 0;overflow:hidden;box-shadow:0 3px 12px rgba(43,39,40,.2)}
+.sc-bar{background:#3a3436;padding:7px 13px;display:flex;align-items:center;gap:6px}
+.sc-bar span{width:9px;height:9px;border-radius:50%;background:#5c5457}
+.sc-bar span:first-child{background:#c98b7e}
+.sc-bar em{margin-left:10px;color:#9a8f92;font-size:11px;font-style:normal;font-weight:600}
+.sc-body{padding:12px 15px;font-family:'Pretendard';font-size:12.8px;line-height:1.75}
+.sc-body .sl{white-space:pre-wrap}
+.sc-body .cmd{color:#e6b9ac}.sc-body .cmd::before{content:"$ ";color:#9a8f92}
+.sc-body .usr{color:#eae2df}.sc-body .usr::before{content:"› ";color:var(--sec)}
+.sc-body .out{color:#b6aaa d;color:#b6aaad}
+/* checkpoint */
+.checkpoint{background:#f0f5f1;border-left:3px solid #5a7d63;border-radius:0 8px 8px 0;padding:12px 16px;margin:14px 0}
+.cp-h{display:block;font-size:11.5px;font-weight:900;color:#5a7d63;letter-spacing:.5px;margin-bottom:7px}
+.checkpoint ul{margin:0;padding-left:18px}
+.checkpoint li{font-size:13.4px;color:#3a4a3f;line-height:1.7;margin-bottom:3px}
+/* pitfall */
+.pitfall{width:100%;border-collapse:collapse;margin:14px 0;font-size:13.2px}
+.pitfall caption{caption-side:top;text-align:left;font-size:11px;font-weight:900;color:var(--mut);letter-spacing:.4px;padding-bottom:6px}
+.pitfall thead th{background:var(--sec);color:#fff;padding:9px 12px;text-align:left;font-size:12.6px;font-weight:700}
+.pitfall .pf-q{padding:9px 12px;border-bottom:.6px solid var(--line);color:var(--acc);font-weight:700;width:42%;vertical-align:top;line-height:1.55}
+.pitfall .pf-a{padding:9px 12px;border-bottom:.6px solid var(--line);vertical-align:top;line-height:1.6}
+.pitfall tbody tr:nth-child(even) td{background:#faf7f3}
+/* worksheet */
+.worksheet{border:1.4px dashed var(--sec);border-radius:10px;margin:16px 0;padding:0 0 8px}
+.ws-h{padding:11px 16px;font-size:14.5px;font-weight:800;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px}
+.ws-badge{background:var(--sec);color:#fff;border-radius:5px;font-size:11px;font-weight:900;padding:3px 9px}
+.worksheet table{margin:8px 0 0}
+.worksheet th{background:#faf7f3;color:var(--ink);font-weight:800;padding:10px 16px;text-align:left;width:150px;vertical-align:top;border-bottom:.6px solid var(--line);font-size:13.4px}
+.ws-blank{padding:10px 16px;border-bottom:.6px solid var(--line);color:var(--mut);font-size:13px;font-style:italic}
+
+/* toolbar + print */
+.tools{position:fixed;right:18px;bottom:16px;z-index:99;display:flex;gap:8px;background:rgba(43,39,40,.92);padding:8px 12px;border-radius:26px;box-shadow:0 8px 24px rgba(0,0,0,.3)}
+.tools button{border:0;border-radius:20px;padding:8px 15px;background:rgba(255,255,255,.14);color:#fff;font:800 12px 'Pretendard';cursor:pointer}
+.tools button:hover{background:rgba(255,255,255,.26)}
+.tools .p{background:var(--acc)}
+@page{size:180mm 248mm;margin:0}
+@media print{html,body{background:#fff}.deck{padding:0;gap:0}.page{box-shadow:none;break-after:page;page-break-after:always}.tools{display:none!important}}
+</style></head>
+<body><main class="deck">
+<section class="page cover">
+          <div class="cv-top">전북특별자치도교육청교육연수원</div>
+          <div class="cv-mid">
+            <div class="cv-course">전산직 공무원을 위한 생성형 AI 전문역량 강화</div>
+            <h1 class="cv-title">생성형 AI 전문역량 강화</h1>
+            <div class="cv-sub">전산직 공무원을 위한 · 프롬프트에서 RAG까지</div>
+          </div>
+          <div class="cv-bottom">
+            <div class="cv-author">신성진 · 한국데이터사이언티스트협회</div>
+            <div class="cv-date">2026. 10. 8. · 직무연수 교재</div>
+          </div>
+        </section><section class="page">
+          <div class="rh"><span>전산직 공무원을 위한 생성형 AI 전문역량 강화</span><span>교재 안내</span></div>
+          <div class="content">
+            <h2>교재 안내</h2>
+            <p>이 교재는 전산직 공무원을 대상으로 한 직무연수 「전산직 공무원을 위한 생성형 AI 전문역량 강화」의 부교재입니다. 생성형 AI를 특정 서비스의 사용법이 아니라, 업무를 처리하는 도구와 시스템의 구조로 이해하도록 구성했습니다.</p>
+            <p>구성은 연수원의 3개 교과 편성을 따르되, 내용은 프롬프트에서 시작해 컨텍스트와 하네스를 거쳐 로컬 AI와 RAG로 이어지는 하나의 흐름으로 배열했습니다. 각 장은 화면에서 보이는 현상으로 시작해, 쉬운 정의와 구체적인 입출력 예시, 처리 순서, 한계, 역할의 구분 순서로 설명합니다. 또한 모든 장에 직접 따라 할 수 있는 실습 절차와 화면 예시, 확인 체크포인트, 자주 하는 실수를 함께 담아 7시간 과정에 맞췄습니다.</p>
+            <table class="grid"><thead><tr><th>교과</th><th>구성 장</th><th>핵심 주제</th></tr></thead><tbody>
+              <tr><td>1과목 · AI 기본 이해와 지시법</td><td>1~4장</td><td>생성형 AI, 프롬프트·컨텍스트, 모델 원리, 하네스</td></tr>
+              <tr><td>2과목 · 부서 업무 적용과 자동화</td><td>5~6장</td><td>도입 병목 판정, 바이브코딩과 코딩에이전트</td></tr>
+              <tr><td>3과목 · 사내 AI 시스템 구축 실습</td><td>7~8장</td><td>로컬 AI, RAG 챗봇과 도구 관리</td></tr>
+              <tr><td>부록 A·B</td><td>9~10장</td><td>용어 사전, 실습 환경 준비와 안전 수칙</td></tr>
+            </tbody></table>
+            <div class="note"><span class="nl">읽는 법</span><p>기술 용어는 처음 나오는 자리에서 곧바로 정의합니다. 수식이나 세부 표기는 본문 이해에 필수가 아니므로, 필요할 때만 참고하면 됩니다.</p></div>
+          </div>
+          <div class="folio">1</div>
+        </section><section class="page">
+          <div class="rh"><span>전산직 공무원을 위한 생성형 AI 전문역량 강화</span><span>차례</span></div>
+          <div class="content"><h2>차례</h2><div class="toc"><div class="toc-part">1과목 · AI 기본 이해와 지시법</div><div class="toc-ch"><span class="tc-no">1</span><span class="tc-t">생성형 AI란 무엇인가</span><span class="tc-dots"></span></div><div class="toc-ch"><span class="tc-no">2</span><span class="tc-t">프롬프트와 컨텍스트</span><span class="tc-dots"></span></div><div class="toc-ch"><span class="tc-no">3</span><span class="tc-t">모델 설명서 읽는 법</span><span class="tc-dots"></span></div><div class="toc-ch"><span class="tc-no">4</span><span class="tc-t">하네스와 오케스트레이션</span><span class="tc-dots"></span></div><div class="toc-part">2과목 · 부서 업무 적용과 자동화</div><div class="toc-ch"><span class="tc-no">5</span><span class="tc-t">어디에 AI를 넣을까</span><span class="tc-dots"></span></div><div class="toc-ch"><span class="tc-no">6</span><span class="tc-t">바이브코딩과 코딩에이전트</span><span class="tc-dots"></span></div><div class="toc-part">3과목 · 사내 AI 시스템 구축 실습</div><div class="toc-ch"><span class="tc-no">7</span><span class="tc-t">로컬 AI — 사내망 챗봇</span><span class="tc-dots"></span></div><div class="toc-ch"><span class="tc-no">8</span><span class="tc-t">RAG 챗봇과 도구 관리</span><span class="tc-dots"></span></div><div class="toc-part">부록 · 용어 사전과 실습 준비</div><div class="toc-ch"><span class="tc-no">9</span><span class="tc-t">부록 A · 용어 사전</span><span class="tc-dots"></span></div><div class="toc-ch"><span class="tc-no">10</span><span class="tc-t">부록 B · 실습 환경 준비</span><span class="tc-dots"></span></div></div></div>
+          <div class="folio">2</div>
+        </section><section class="page part">
+          <div class="rh"><span>전산직 공무원을 위한 생성형 AI 전문역량 강화</span><span>1과목</span></div>
+          <div class="part-wrap">
+            <div class="part-no">1과목</div>
+            <h1 class="part-title">AI 기본 이해와 지시법</h1>
+            <p class="part-desc">프롬프트로 시작해 컨텍스트를 붙이고, 모델 설명서를 읽고, 도구를 순서로 묶는 하네스까지 이해합니다.</p>
+            <ul class="part-chs"><li><span>1</span>생성형 AI란 무엇인가</li><li><span>2</span>프롬프트와 컨텍스트</li><li><span>3</span>모델 설명서 읽는 법</li><li><span>4</span>하네스와 오케스트레이션</li></ul>
+            <div class="part-obj"><span class="po-h">학습 목표</span><ul><li>생성형 AI가 ‘한 번 답’에서 ‘일을 대신’으로 바뀐 변화를 설명할 수 있다.</li><li>프롬프트·컨텍스트·하네스의 관계를 하나의 흐름으로 이해한다.</li><li>모델 사양표를 읽고 업무에 맞는 크기를 판단할 수 있다.</li></ul></div>
+          </div>
+          <div class="folio">3</div>
+        </section><section class="page">
+          <div class="rh"><span>전산직 공무원을 위한 생성형 AI 전문역량 강화</span><span>1장 · 생성형 AI란 무엇인가</span></div>
+          <div class="content"><div class="ch-opener">
+              <div class="ch-kicker">1과목 · 1장</div>
+              <h1 class="ch-title">생성형 AI란 무엇인가</h1>
+              <p class="ch-lead">채팅창에 문장을 넣으면 답이 돌아옵니다. 예전에는 답 한 줄로 끝났지만, 지금은 검색과 정리까지 이어서 처리됩니다. 이 장은 그 변화가 무엇인지, 그리고 왜 전산직이 ‘흐름’을 알아야 하는지를 설명합니다.</p>
+            </div><h3>먼저 확인할 현상</h3><p>생성형 AI 서비스의 채팅창에 “이 회의록을 정리해줘”라고 입력하면, 잠시 뒤 화면에 정리된 문장이 나타납니다. 사람이 미리 정답을 넣어 둔 것이 아닙니다. 서비스가 문장을 새로 만들어 화면에 보여 준 것입니다. 예를 들어 회의록 몇 줄을 붙이고 표로 정리해 달라고 하면, 표 양식을 미리 정해 주지 않아도 담당·기한·조치가 나뉜 표가 만들어집니다. 이처럼 결과의 형태까지 그 자리에서 새로 구성되는 것이 이전 프로그램과의 결정적 차이입니다.</p><p>예전의 프로그램은 정해진 답을 꺼내 보여 주었습니다. 검색창에 단어를 넣으면 미리 저장된 결과 목록이 나오는 방식이었습니다. 생성형 AI는 저장된 답을 꺼내는 대신, 학습한 언어 패턴을 이용해 그 자리에서 새 문장을 만들어 냅니다.</p><p>이 차이는 실무에서 중요합니다. 저장된 답을 꺼내는 방식은 미리 준비한 항목만 보여 줍니다. 반면 새로 만들어 내는 방식은 준비되지 않은 상황에도 문장을 만들어 냅니다. 그래서 회의록 정리, 안내문 초안, 표 작성처럼 매번 내용이 달라지는 일에 쓸 수 있습니다.</p></div>
+          <div class="folio">4</div>
+        </section><section class="page">
+          <div class="rh"><span>전산직 공무원을 위한 생성형 AI 전문역량 강화</span><span>1장 · 생성형 AI란 무엇인가</span></div>
+          <div class="content fill"><h3>한 문장 정의</h3><p>생성형 AI는 사람이 준 글과 자료를 입력으로 받아, 다음에 올 내용을 한 조각씩 계산해 새 결과물을 만들어 내는 프로그램입니다. 이때 결과물은 문장일 수도, 표일 수도, 코드일 수도 있습니다.</p><p>여기서 ‘새로 만들어 낸다’는 말의 의미를 정확히 짚어 둘 필요가 있습니다. 생성형 AI는 인터넷을 실시간으로 뒤져 답을 찾아오는 검색엔진이 아닙니다. 학습 과정에서 수많은 문장의 패턴을 익혀 두었다가, 그 패턴을 바탕으로 다음에 올 법한 말을 조합해 문장을 만듭니다. 그래서 한 번도 본 적 없는 형태의 요청에도 그럴듯한 답을 내놓을 수 있지만, 동시에 학습하지 않은 최신 정보나 우리 기관 내부 자료는 알지 못합니다. 이 두 성질 — 유연하게 만들어 내는 능력과, 모르는 것을 모른다고 인식하지 못하는 한계 — 이 이후 모든 장에서 반복해서 중요하게 다뤄집니다.</p><div class="term"><b>생성(生成, Generative)</b><span>정답표에서 답을 꺼내는 것이 아니라, 학습한 패턴으로 새 문장·표·코드를 만들어 내는 방식을 뜻합니다.</span></div><table class="ex"><caption>입력과 출력</caption><tr><th>입력</th><td>회의록 파일과 “후속조치를 표로 정리해줘”라는 문장</td></tr><tr><th>출력</th><td>담당·기한·조치사항이 칸으로 나뉜 새 표</td></tr></table></div>
+          <div class="folio">5</div>
+        </section><section class="page">
+          <div class="rh"><span>전산직 공무원을 위한 생성형 AI 전문역량 강화</span><span>1장 · 생성형 AI란 무엇인가</span></div>
+          <div class="content fill"><h3>무엇이 달라졌는가</h3><p>이 변화를 실무 관점에서 다시 정리하면, 달라진 것은 ‘AI가 얼마나 똑똑한가’가 아니라 ‘AI가 업무 흐름의 어디까지 들어오는가’입니다. 예전에는 사람이 모든 단계를 손으로 이었기 때문에 AI는 그중 한 칸을 돕는 조수에 가까웠습니다. 지금은 여러 칸을 이어 처리하므로, AI는 조수가 아니라 하나의 작은 업무 라인으로 작동합니다. 그래서 전산 담당자가 던져야 할 질문도 ‘어떤 답을 얻을까’에서 ‘어떤 라인을 맡길까, 그 라인의 어디에 사람 확인을 둘까’로 바뀝니다.</p><p>구체적인 예로 비교하면 차이가 분명합니다. 예전에는 담당자가 여러 부서에서 받은 엑셀 파일을 하나씩 열어 복사하고, 붙여넣고, 합계를 다시 계산한 뒤, 보고 양식에 옮겨 적었습니다. 각 단계마다 사람의 손과 시간이 들어갔습니다. 지금은 ‘이 폴더의 엑셀들을 합쳐 부서별 합계를 표로 만들어 줘’라는 한 번의 부탁으로, 파일을 찾고 열고 합치고 계산해 표까지 만드는 과정이 이어서 처리됩니다. 사람이 하던 일이 사라진 것이 아니라, 반복되는 중간 과정이 자동으로 이어진 것입니다.</p><p>가장 큰 변화는 AI가 ‘한 번 답하고 끝나는 도구’에서 ‘여러 작업을 이어서 처리하는 도구’로 바뀐 점입니다. 예전에는 답을 받은 뒤 사람이 직접 복사하고, 파일을 열고, 계산했습니다. 지금은 서비스가 검색하고, 파일을 열고, 계산해 표까지 만들어 이어서 처리합니다.</p><p>여기서 주의할 점이 있습니다. 파일을 열고 계산하는 동작은 ‘모델’이 혼자 하는 일이 아닙니다. 모델은 다음에 올 글자를 계산할 뿐이고, 파일을 실제로 여는 것은 그 모델을 감싼 ‘서비스’와 ‘프로그램’입니다. 이 구분은 뒤의 여러 장에서 계속 중요하게 쓰입니다.</p></div>
+          <div class="folio">6</div>
+        </section><section class="page">
+          <div class="rh"><span>전산직 공무원을 위한 생성형 AI 전문역량 강화</span><span>1장 · 생성형 AI란 무엇인가</span></div>
+          <div class="content"><p>이 책 전체에서 우리는 ‘누가 무엇을 하는가’를 계속 구분합니다. 모델은 문장을 계산하고, 서비스는 파일을 열고 도구를 실행하며, 사람은 목표를 정하고 결과를 확인합니다. 이 세 주체를 뭉뚱그리면 ‘AI가 알아서 다 한다’는 오해가 생기고, 그 오해는 실무에서 검증을 빠뜨리는 사고로 이어집니다.</p><figure class="fig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 460" font-family="Pretendard, sans-serif">
+<rect width="920" height="460" fill="#F5F1ED"/><g transform="translate(0,0)"><defs><marker id="ah" markerWidth="11" markerHeight="11" refX="7.5" refY="3.2" orient="auto"><path d="M0,0 L8,3.2 L0,6.4 Z" fill="#865461"/></marker></defs><text x="48" y="46" font-size="16" fill="#756D70" font-weight="800" text-anchor="start">도구의 변화 — 한 번 답에서 이어서 처리로</text><rect x="48" y="86" width="824" height="150" rx="10" fill="#fff" stroke="#D8CFC7" stroke-width="1.3"/><text x="72" y="130" font-size="14" fill="#865461" font-weight="800" text-anchor="start">예전</text><text x="72" y="170" font-size="23" fill="#2B2728" font-weight="800" text-anchor="start">질문 → 답 한 줄</text><text x="72" y="206" font-size="14.5" fill="#756D70" font-weight="500" text-anchor="start">나머지(복사·파일 열기·계산)는 사람이 하나하나 직접 처리했다</text><text x="460.0" y="260" font-size="14" fill="#9A7A64" font-weight="800" text-anchor="middle">▼  AI가 여러 도구와 연결되며 처리 범위가 넓어짐</text><rect x="48" y="278" width="824" height="150" rx="10" fill="#fff" stroke="#865461" stroke-width="1.8"/><text x="72" y="322" font-size="14" fill="#865461" font-weight="800" text-anchor="start">지금</text><text x="72" y="362" font-size="22" fill="#2B2728" font-weight="800" text-anchor="start">질문 → 검색 · 정리 · 저장까지 이어서 처리</text><text x="72" y="398" font-size="14.5" fill="#756D70" font-weight="500" text-anchor="start">사람은 마지막 결과 확인과 승인만 담당한다</text></g></svg><figcaption>예전에는 질문에 답 한 줄로 끝났고, 지금은 질문 하나로 검색·정리·저장까지 이어진다는 두 층의 비교 그림</figcaption></figure></div>
+          <div class="folio">7</div>
+        </section><section class="page">
+          <div class="rh"><span>전산직 공무원을 위한 생성형 AI 전문역량 강화</span><span>1장 · 생성형 AI란 무엇인가</span></div>
+          <div class="content fill"><div class="steps"><div class="st-h">‘이어서 처리’가 일어나는 순서</div><ol><li><span class="sn">1</span><div><b>부탁</b><p>사람이 목표와 자료를 문장으로 전달합니다.</p></div></li><li><span class="sn">2</span><div><b>도구 사용</b><p>서비스가 검색·파일 열기·계산 도구를 순서로 씁니다.</p></div></li><li><span class="sn">3</span><div><b>결과</b><p>정리된 표나 초안이 만들어져 화면에 나옵니다.</p></div></li><li><span class="sn">4</span><div><b>확인</b><p>사람이 결과를 검토하고 승인합니다.</p></div></li></ol></div><p>위 네 단계에서 사람이 반드시 개입하는 지점은 마지막 ‘확인’입니다. 앞의 세 단계는 서비스가 자동으로 진행하더라도, 결과가 업무에 쓰이기 전에는 담당자가 눈으로 확인해야 합니다. 특히 대상이 민원인이나 외부 기관이라면, 확인 없이 나가는 문서는 위험합니다.</p><h3>이 방식이 보장하지 않는 것</h3><p>따라서 이 도구를 도입할 때 가장 먼저 정해야 할 것은 ‘검증 지점’입니다. AI가 만든 결과 중 무엇을, 누가, 어느 단계에서 확인할지를 업무 절차에 명시해 두어야 합니다. 검증 지점이 없으면 편리함은 커지지만 잘못된 결과가 그대로 흘러갈 위험도 함께 커집니다. 반대로 검증 지점만 분명하면, 나머지 반복 작업은 안심하고 맡길 수 있습니다.</p></div>
+          <div class="folio">8</div>
+        </section><section class="page">
+          <div class="rh"><span>전산직 공무원을 위한 생성형 AI 전문역량 강화</span><span>1장 · 생성형 AI란 무엇인가</span></div>
+          <div class="content"><div class="limit"><span class="ll">이 방식이 보장하지 않는 것</span><p>생성형 AI는 ‘그럴듯한’ 문장을 만드는 데 뛰어나지만, 그 내용이 항상 사실이라는 보장은 없습니다. 특히 숫자·날짜·규정처럼 틀리면 안 되는 값은 사람이 원문으로 다시 확인해야 합니다. 이 성질의 이유는 3장에서 모델 원리를 다룰 때 설명합니다.</p></div><table class="resp"><caption>역할의 구분</caption><tr><th>모델</th><td>다음에 올 글자를 확률로 계산합니다.</td></tr><tr><th>서비스</th><td>모델을 호출하고, 파일·도구를 실제로 실행합니다.</td></tr><tr><th>사람</th><td>목표를 정하고 결과를 검증·승인합니다.</td></tr></table></div>
+          <div class="folio">9</div>
+        </section><section class="page">
+          <div class="rh"><span>전산직 공무원을 위한 생성형 AI 전문역량 강화</span><span>1장 · 생성형 AI란 무엇인가</span></div>
+          <div class="content fill"><div class="prac-unit"><h3 class="prac-sec">실습 1 — 회의록을 표로 정리해 보기</h3><p class="prac-intro">이 실습은 생성형 AI가 ‘새로 만들어 내는’ 도구라는 것을 직접 확인하는 과정입니다. 짧은 회의록을 붙이고, 후속조치를 표로 정리해 달라고 요청합니다. 준비물은 생성형 AI 서비스 접속 화면과 회의록 몇 줄이면 됩니다.</p><div class="practice"><div class="pt-h"><span class="pt-badge">따라하기</span>회의록 → 후속조치 표</div><div class="pg-goal"><span>실습 목표</span>회의록 문장을 붙여 담당·기한·조치가 담긴 표를 얻는다.</div><ol><li><span class="pn">1</span><div class="pc"><b>서비스 열기</b><p>생성형 AI 서비스의 채팅창을 엽니다.</p><div class="presult">→ 빈 입력창이 보임</div></div></li><li><span class="pn">2</span><div class="pc"><b>회의록 붙이기</b><p>회의 내용 3~5줄을 채팅창에 붙여넣습니다.</p><div class="presult">→ 회의록이 입력창에 들어감</div></div></li><li><span class="pn">3</span><div class="pc"><b>요청 문장 쓰기</b><p>회의록 아래에 “위 내용에서 후속조치를 담당·기한·조치사항 표로 정리해줘”라고 씁니다.</p><div class="presult">→ 요청이 완성됨</div></div></li><li><span class="pn">4</span><div class="pc"><b>결과 확인</b><p>보내기를 누르고 나온 표를 봅니다.</p><div class="presult">→ 담당·기한·조치가 칸으로 나뉜 표</div></div></li><li><span class="pn">5</span><div class="pc"><b>한 번 더 요청</b><p>같은 요청을 한 번 더 보냅니다.</p><div class="presult">→ 표현이 조금 달라진 표가 나옴 — 확률로 만들기 때문</div></div></li></ol></div></div></div>
+          <div class="folio">10</div>
+        </section><section class="page">
+          <div class="rh"><span>전산직 공무원을 위한 생성형 AI 전문역량 강화</span><span>1장 · 생성형 AI란 무엇인가</span></div>
+          <div class="content fill"><div class="screen"><div class="sc-bar"><span></span><span></span><span></span><em>생성형 AI 채팅창 예시</em></div><div class="sc-body"><div class="sl usr">다음 회의록에서 후속조치를 표로 정리해줘.</div><div class="sl usr">- 김주무관: 10/15까지 예산안 초안 작성</div><div class="sl usr">- 이주무관: 다음 주 부서 협의 일정 잡기</div><div class="sl out">정리했습니다.</div><div class="sl out">| 담당 | 기한 | 조치사항 |</div><div class="sl out">| 김주무관 | 10/15 | 예산안 초안 작성 |</div><div class="sl out">| 이주무관 | 다음 주 | 부서 협의 일정 조율 |</div></div></div><p>같은 요청을 두 번 보내면 표의 문구가 조금씩 달라지는 것을 볼 수 있습니다. 이것은 오류가 아니라, 모델이 매번 확률로 다음 내용을 고르기 때문입니다. 완전히 똑같은 결과가 필요하다면 뒤의 장에서 다룰 고정 장치가 필요합니다.</p><div class="checkpoint"><span class="cp-h">확인 체크포인트</span><ul><li>표에 담당·기한·조치 칸이 모두 나왔는가</li><li>회의록에 없던 내용을 지어내지는 않았는가</li><li>두 번째 요청의 표현이 첫 번째와 달라졌는가</li></ul></div></div>
+          <div class="folio">11</div>
+        </section><section class="page">
+          <div class="rh"><span>전산직 공무원을 위한 생성형 AI 전문역량 강화</span><span>1장 · 생성형 AI란 무엇인가</span></div>
+          <div class="content fill"><table class="pitfall"><caption>자주 하는 실수와 해결</caption><thead><tr><th>이런 실수</th><th>이렇게 해결</th></tr></thead><tbody><tr><td class="pf-q">회의록을 붙이지 않고 “회의록 정리해줘”라고만 함</td><td class="pf-a">정리할 원문을 반드시 함께 붙인다</td></tr><tr><td class="pf-q">결과 표를 확인 없이 그대로 보고에 사용</td><td class="pf-a">담당·기한이 맞는지 사람이 검토한다</td></tr></tbody></table><h3>한눈에 정리</h3><p>생성형 AI는 저장된 답을 꺼내는 것이 아니라 새 결과물을 만들어 냅니다. 이제는 한 번 답하고 끝나는 것이 아니라 검색·정리·저장까지 이어서 처리합니다. 다만 그 실행은 모델이 아니라 서비스가 하며, 마지막 확인은 사람의 몫입니다.</p><table class="ex"><caption>입력과 출력</caption><tr><th>더 알아둘 예시</th><td>안내문 초안, 민원 분류, 표 작성처럼 매번 내용이 달라지는 일에 강함</td></tr><tr><th>약한 예시</th><td>정확한 수치 계산, 최신 규정 확인처럼 사실이 고정된 일은 검증 필요</td></tr></table><div class="note"><span class="nl">참고</span><p>실무 팁 — AI에게 일을 시킬 때는 결과물의 용도를 함께 알려 주면 좋습니다. ‘내부 검토용 초안’과 ‘민원인 발송용 최종본’은 요구되는 정확도가 다르기 때문입니다.</p></div><div class="nextq"><span>다음 장에서 답하는 질문</span><p>그렇다면 우리가 AI에게 건네는 ‘한 번의 부탁’은 정확히 무엇이고, 어떻게 써야 할까?</p></div></div>
+          <div class="folio">12</div>
+        </section><section class="page">
+          <div class="rh"><span>전산직 공무원을 위한 생성형 AI 전문역량 강화</span><span>2장 · 프롬프트와 컨텍스트</span></div>
+          <div class="content"><div class="ch-opener">
+              <div class="ch-kicker">1과목 · 2장</div>
+              <h1 class="ch-title">프롬프트와 컨텍스트</h1>
+              <p class="ch-lead">AI에게 무엇을 시킬 때 우리는 문장을 입력합니다. 이 문장을 프롬프트라고 합니다. 그런데 좋은 결과는 문장을 화려하게 꾸며서가 아니라, AI가 볼 자료를 함께 붙여서 나옵니다. 이 장은 프롬프트와 컨텍스트의 관계를 설명합니다.</p>
+            </div><h3>먼저 확인할 현상</h3><p>같은 질문이라도 자료를 붙였을 때와 붙이지 않았을 때 결과가 크게 달라집니다. “보고서 써줘”라고만 입력하면 AI는 상황을 알 수 없어 일반적인 문장을 지어냅니다. 반면 회의록 파일과 부서 지침을 함께 붙이면, 그 내용을 근거로 구체적인 초안을 만듭니다. 이 차이는 한두 번 써 보면 누구나 체감합니다. 자료 없이 얻은 답은 어느 기관에나 통할 법한 무난한 문장이고, 자료를 붙여 얻은 답은 우리 지침의 조항과 표현이 그대로 반영된 문장입니다. 실무에서 바로 쓸 수 있는 쪽은 언제나 후자입니다.</p></div>
+          <div class="folio">13</div>
+        </section><section class="page">
+          <div class="rh"><span>전산직 공무원을 위한 생성형 AI 전문역량 강화</span><span>2장 · 프롬프트와 컨텍스트</span></div>
+          <div class="content fill"><h3>프롬프트의 정의</h3><p>프롬프트는 사람이 AI에게 하는 한 번의 부탁입니다. 길게 다듬는 특별한 기술이 아니라, 무엇을 해달라는 요청과, 어떤 자료를 보고, 어떤 모양으로 달라는 지시를 담은 문장입니다.</p><p>과거에 강조되던 ‘프롬프트 엔지니어링’은 특정한 주문 문구를 외워 쓰면 더 좋은 답이 나온다는 접근이었습니다. 예를 들어 ‘당신은 전문가입니다’로 시작하거나, 역할과 조건을 정해진 순서로 나열하는 식이었습니다. 그러나 최근 모델은 자연스러운 한국어 문장을 충분히 잘 이해하기 때문에, 이런 형식을 외우는 것의 효과는 크게 줄었습니다. 지금 중요한 것은 문장의 형식이 아니라, AI가 참고할 자료를 함께 주는 것과, 원하는 결과의 형태를 분명히 말하는 것입니다. 즉 ‘어떻게 말하느냐’보다 ‘무엇을 함께 주느냐’가 결과를 좌우합니다.</p><div class="note"><span class="nl">참고</span><p>과거에는 프롬프트를 특정한 순서와 형식으로 길게 작성하는 기법이 강조되었습니다. 그러나 최근 모델은 자연스러운 문장을 잘 이해하기 때문에, 문장 형식을 외우는 것보다 ‘AI가 볼 자료를 붙이는 일’이 결과 품질에 훨씬 크게 작용합니다.</p></div></div>
+          <div class="folio">14</div>
+        </section><section class="page">
+          <div class="rh"><span>전산직 공무원을 위한 생성형 AI 전문역량 강화</span><span>2장 · 프롬프트와 컨텍스트</span></div>
+          <div class="content fill"><h3>컨텍스트의 정의</h3><p>컨텍스트를 붙이는 일이 왜 프롬프트를 다듬는 일보다 중요한지는 다음과 같이 이해할 수 있습니다. 프롬프트를 아무리 정교하게 써도, AI가 참고할 자료가 없으면 그 답은 일반적인 지식에서 나옵니다. 우리 기관의 지침, 우리 부서의 표 양식, 우리가 지난번에 쓴 표현은 AI가 알 수 없기 때문입니다. 자료를 붙이는 순간 답의 근거가 ‘세상의 평균’에서 ‘우리 문서’로 옮겨 갑니다. 이 이동이 실무에서 쓸 수 있는 결과와 그렇지 않은 결과를 가릅니다.</p><p>컨텍스트가 없을 때 AI가 어떻게 답하는지 관찰해 보면 이 개념이 더 분명해집니다. 자료 없이 ‘출장비 지급 기준을 알려 줘’라고 물으면, AI는 일반적인 공공기관의 관행을 근거로 그럴듯하게 답합니다. 그러나 그 답이 우리 기관의 실제 여비 규정과 같다는 보장은 없습니다. 반면 우리 기관의 여비 지침을 붙이고 같은 질문을 하면, AI는 그 지침의 조항을 근거로 답하고, 어느 조항을 참고했는지도 밝힐 수 있습니다. 이처럼 컨텍스트는 답의 근거를 ‘세상의 평균적 관행’에서 ‘우리 기관의 실제 규정’으로 바꾸는 장치입니다.</p><p>컨텍스트는 그 부탁에 필요한 배경자료입니다. AI는 우리 부서 사정을 미리 알지 못하므로, 판단에 필요한 자료를 프롬프트와 함께 넣어 주어야 합니다. 이 자료가 있으면 AI는 상상 대신 근거로 답합니다.</p><p>사람에게 일을 부탁하는 상황을 떠올리면 이해가 쉽습니다. 새로 온 동료에게 “이 민원 답변 좀 써 줘”라고만 하면 좋은 답이 나오기 어렵습니다. 관련 지침, 지난 답변 사례, 지켜야 할 규정을 함께 건네야 제대로 된 초안이 나옵니다. AI도 마찬가지로, 판단에 필요한 자료를 함께 주어야 근거 있는 답을 만듭니다.</p></div>
+          <div class="folio">15</div>
+        </section><section class="page">
+          <div class="rh"><span>전산직 공무원을 위한 생성형 AI 전문역량 강화</span><span>2장 · 프롬프트와 컨텍스트</span></div>
+          <div class="content"><div class="term"><b>컨텍스트(context)</b><span>부탁과 함께 모델에 입력되는 배경자료를 뜻합니다. 붙인 문서, 우리 데이터, 지켜야 할 규칙, 원하는 출력 형식이 모두 컨텍스트에 해당합니다.</span></div><figure class="fig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 460" font-family="Pretendard, sans-serif">
+<rect width="920" height="460" fill="#F5F1ED"/><g transform="translate(0,0)"><defs><marker id="ah" markerWidth="11" markerHeight="11" refX="7.5" refY="3.2" orient="auto"><path d="M0,0 L8,3.2 L0,6.4 Z" fill="#865461"/></marker></defs><text x="48" y="46" font-size="16" fill="#756D70" font-weight="800" text-anchor="start">컨텍스트 — 부탁에 함께 붙이는 네 가지 배경자료</text><rect x="355.0" y="200.0" width="210" height="96" rx="14" fill="#865461" stroke="#865461" stroke-width="1.3"/><text x="460.0" y="242.0" font-size="22" fill="#fff" font-weight="800" text-anchor="middle">부탁</text><text x="460.0" y="270.0" font-size="13" fill="#f0e4e4" font-weight="600" text-anchor="middle">( 프롬프트 )</text><rect x="48" y="96" width="250" height="74" rx="10" fill="#fff" stroke="#D8CFC7" stroke-width="1.3"/><text x="66" y="126" font-size="15.5" fill="#2B2728" font-weight="800" text-anchor="start">붙인 문서</text><text x="66" y="150" font-size="13" fill="#756D70" font-weight="550" text-anchor="start">회의록·공문·매뉴얼</text><line x1="298" y1="133.0" x2="355.0" y2="224.0" stroke="#D8CFC7" stroke-width="1.6"/><circle cx="298" cy="133.0" r="4" fill="#865461" stroke="none"/><rect x="622" y="96" width="250" height="74" rx="10" fill="#fff" stroke="#D8CFC7" stroke-width="1.3"/><text x="640" y="126" font-size="15.5" fill="#2B2728" font-weight="800" text-anchor="start">우리 데이터</text><text x="640" y="150" font-size="13" fill="#756D70" font-weight="550" text-anchor="start">엑셀·CSV·DB 결과</text><line x1="622" y1="133.0" x2="565.0" y2="224.0" stroke="#D8CFC7" stroke-width="1.6"/><circle cx="622" cy="133.0" r="4" fill="#865461" stroke="none"/><rect x="48" y="290" width="250" height="74" rx="10" fill="#fff" stroke="#D8CFC7" stroke-width="1.3"/><text x="66" y="320" font-size="15.5" fill="#2B2728" font-weight="800" text-anchor="start">지켜야 할 선</text><text x="66" y="344" font-size="13" fill="#756D70" font-weight="550" text-anchor="start">개인정보 제외·근거만</text><line x1="298" y1="327.0" x2="355.0" y2="272.0" stroke="#D8CFC7" stroke-width="1.6"/><circle cx="298" cy="327.0" r="4" fill="#865461" stroke="none"/><rect x="622" y="290" width="250" height="74" rx="10" fill="#fff" stroke="#D8CFC7" stroke-width="1.3"/><text x="640" y="320" font-size="15.5" fill="#2B2728" font-weight="800" text-anchor="start">원하는 모양</text><text x="640" y="344" font-size="13" fill="#756D70" font-weight="550" text-anchor="start">표·요약·체크리스트</text><line x1="622" y1="327.0" x2="565.0" y2="272.0" stroke="#D8CFC7" stroke-width="1.6"/><circle cx="622" cy="327.0" r="4" fill="#865461" stroke="none"/></g></svg><figcaption>가운데 부탁을 두고 붙인 문서·우리 데이터·지켜야 할 선·원하는 모양 네 가지 자료가 모여 드는 그림</figcaption></figure></div>
+          <div class="folio">16</div>
+        </section><section class="page">
+          <div class="rh"><span>전산직 공무원을 위한 생성형 AI 전문역량 강화</span><span>2장 · 프롬프트와 컨텍스트</span></div>
+          <div class="content fill"><table class="grid"><thead><tr><th>컨텍스트의 종류</th><th>무엇을 넣는가</th><th>확인할 점</th></tr></thead><tbody><tr><td>붙인 문서</td><td>회의록·공문·매뉴얼 등 근거가 될 원문</td><td>최신본인지, 폐지된 문서는 아닌지</td></tr><tr><td>우리 데이터</td><td>엑셀·CSV, 조회한 DB 결과</td><td>원본 행 수와 결과가 맞는지</td></tr><tr><td>지켜야 할 선</td><td>개인정보 제외, 근거 없는 추측 금지</td><td>금지사항이 구체적으로 적혔는지</td></tr><tr><td>원하는 모양</td><td>표·3줄 요약·체크리스트 등 형식</td><td>담당·기한 같은 칸이 채워졌는지</td></tr></tbody></table><p>네 가지 중에서 실무 결과를 가장 크게 바꾸는 것은 ‘붙인 문서’와 ‘우리 데이터’입니다. AI는 우리 기관의 지침이나 수치를 미리 알지 못하므로, 이 자료가 없으면 일반적인 상식으로만 답합니다. 반대로 정확한 문서를 붙이면, 그 문서의 표현과 조항을 근거로 삼아 답의 신뢰도가 크게 올라갑니다.</p><p>‘지켜야 할 선’과 ‘원하는 모양’은 결과를 바로 쓸 수 있게 다듬는 역할을 합니다. 예를 들어 “개인정보 항목은 빼고, 담당과 기한이 있는 표로”라고 미리 정해 두면, 나온 결과를 손보는 시간이 크게 줄어듭니다. 이 두 가지는 길게 쓸 필요 없이 한 문장이면 충분합니다.</p><table class="ex"><caption>입력과 출력</caption><tr><th>입력</th><td>민원 회신 초안 요청 + 관련 지침 PDF + “개인정보 항목은 빼고 표로”</td></tr><tr><th>출력</th><td>지침 조항을 근거로 든, 개인정보가 제외된 회신 표 초안</td></tr></table></div>
+          <div class="folio">17</div>
+        </section><section class="page">
+          <div class="rh"><span>전산직 공무원을 위한 생성형 AI 전문역량 강화</span><span>2장 · 프롬프트와 컨텍스트</span></div>
+          <div class="content"><div class="limit"><span class="ll">이 방식이 보장하지 않는 것</span><p>컨텍스트를 붙여도 그 자료 자체가 틀렸거나 오래되었으면 결과도 틀립니다. 또한 개인정보가 담긴 자료를 그대로 붙이면 그 정보가 외부로 나갈 수 있으므로, 붙이기 전에 민감한 항목을 제거해야 합니다.</p></div><table class="resp"><caption>역할의 구분</caption><tr><th>사람</th><td>어떤 자료를 붙일지 고르고, 민감정보를 제거합니다.</td></tr><tr><th>서비스</th><td>붙인 자료를 모델이 읽을 수 있는 형태로 전달합니다.</td></tr><tr><th>모델</th><td>전달된 부탁과 자료를 근거로 다음 내용을 계산합니다.</td></tr></table></div>
+          <div class="folio">18</div>
+        </section><section class="page">
+          <div class="rh"><span>전산직 공무원을 위한 생성형 AI 전문역량 강화</span><span>2장 · 프롬프트와 컨텍스트</span></div>
+          <div class="content fill"><div class="prac-unit"><h3 class="prac-sec">실습 2 — 자료를 붙였을 때와 안 붙였을 때 비교</h3><p class="prac-intro">컨텍스트의 힘을 눈으로 확인하는 실습입니다. 같은 질문을 자료 없이 한 번, 자료를 붙여 한 번 보내고 두 답을 비교합니다. 차이가 분명히 드러납니다.</p><div class="practice"><div class="pt-h"><span class="pt-badge">따라하기</span>컨텍스트 비교 실험</div><div class="pg-goal"><span>실습 목표</span>같은 질문을 자료 유무만 바꿔 두 번 보내고 결과를 비교한다.</div><ol><li><span class="pn">1</span><div class="pc"><b>자료 없이 질문</b><p>“민원 답변 초안을 써줘”라고만 보냅니다.</p><div class="presult">→ 일반적이고 두루뭉술한 초안이 나옴</div></div></li><li><span class="pn">2</span><div class="pc"><b>자료 준비</b><p>관련 지침 문서나 지난 답변 사례를 준비합니다.</p><div class="presult">→ 붙일 자료가 마련됨</div></div></li><li><span class="pn">3</span><div class="pc"><b>자료 붙여 질문</b><p>같은 요청에 지침 문서를 함께 붙여 보냅니다.</p><div class="presult">→ 지침 조항을 근거로 든 구체적 초안</div></div></li><li><span class="pn">4</span><div class="pc"><b>두 결과 비교</b><p>두 답을 나란히 놓고 근거의 유무를 봅니다.</p><div class="presult">→ 자료를 붙인 쪽이 더 정확함을 확인</div></div></li><li><span class="pn">5</span><div class="pc"><b>형식 지정</b><p>“개인정보는 빼고 표로”를 덧붙여 다시 요청합니다.</p><div class="presult">→ 형식이 지정된 결과가 나옴</div></div></li></ol></div></div></div>
+          <div class="folio">19</div>
+        </section><section class="page">
+          <div class="rh"><span>전산직 공무원을 위한 생성형 AI 전문역량 강화</span><span>2장 · 프롬프트와 컨텍스트</span></div>
+          <div class="content fill"><p>이 실습에서 얻는 교훈은 분명합니다. 답의 품질은 질문 문장을 꾸며서가 아니라, 판단에 필요한 자료를 붙여서 올라갑니다. 그리고 ‘개인정보 제외’, ‘표로’ 같은 짧은 형식 지정만으로도 바로 쓸 수 있는 결과에 가까워집니다.</p><div class="worksheet"><div class="ws-h"><span class="ws-badge">실습 워크시트</span>우리 부서 컨텍스트 정리표</div><table><tr><th>자주 하는 요청</th><td class="ws-blank">(예: 민원 회신 초안)</td></tr><tr><th>붙일 문서</th><td class="ws-blank">(예: 민원 처리 지침 PDF)</td></tr><tr><th>우리 데이터</th><td class="ws-blank">(예: 지난 답변 사례)</td></tr><tr><th>지켜야 할 선</th><td class="ws-blank">(예: 개인정보 제외)</td></tr><tr><th>원하는 모양</th><td class="ws-blank">(예: 담당·기한 표)</td></tr></table></div><div class="checkpoint"><span class="cp-h">확인 체크포인트</span><ul><li>자료를 붙인 답이 더 구체적이었는가</li><li>지침의 조항이나 표현이 답에 반영되었는가</li><li>형식 지정으로 결과가 바로 쓸 수 있게 되었는가</li></ul></div></div>
+          <div class="folio">20</div>
+        </section><section class="page">
+          <div class="rh"><span>전산직 공무원을 위한 생성형 AI 전문역량 강화</span><span>2장 · 프롬프트와 컨텍스트</span></div>
+          <div class="content fill"><table class="pitfall"><caption>자주 하는 실수와 해결</caption><thead><tr><th>이런 실수</th><th>이렇게 해결</th></tr></thead><tbody><tr><td class="pf-q">개인정보가 담긴 원본을 그대로 붙임</td><td class="pf-a">이름·주민번호 등 민감 항목을 지우고 붙인다</td></tr><tr><td class="pf-q">오래된 지침을 붙여 잘못된 근거로 답함</td><td class="pf-a">최신본인지 시행일을 확인하고 붙인다</td></tr></tbody></table><h3>한눈에 정리</h3><p>프롬프트는 부탁, 컨텍스트는 그 부탁에 붙이는 자료입니다. 답의 품질은 문장을 꾸며서가 아니라 자료를 붙여서 올라갑니다. 개인정보 제거와 형식 지정만으로도 바로 쓸 수 있는 결과에 가까워집니다.</p><table class="ex"><caption>입력과 출력</caption><tr><th>좋은 부탁</th><td>‘지침 붙임 + 개인정보 빼고 + 담당·기한 표로’</td></tr><tr><th>아쉬운 부탁</th><td>‘알아서 잘 정리해줘’처럼 자료도 형식도 없는 요청</td></tr></table><div class="note"><span class="nl">참고</span><p>실무 팁 — 자주 쓰는 지침이 여러 개라면, 매번 붙이지 말고 한 파일로 묶어 두면 편합니다. 뒤의 RAG 실습에서 이 묶음이 그대로 재료가 됩니다.</p></div></div>
+          <div class="folio">21</div>
+        </section><section class="page">
+          <div class="rh"><span>전산직 공무원을 위한 생성형 AI 전문역량 강화</span><span>2장 · 프롬프트와 컨텍스트</span></div>
+          <div class="content fill"><div class="prac-unit"><h3 class="prac-sec">실습 2-2 — 같은 자료, 다른 형식으로 뽑기</h3><p class="prac-intro">하나의 자료에서 형식만 바꿔 여러 결과를 뽑아 보는 실습입니다. 같은 공문을 3줄 요약, 표, 체크리스트로 각각 정리해 보면, 형식 지정 한 줄이 결과를 얼마나 바꾸는지 알 수 있습니다.</p><div class="practice"><div class="pt-h"><span class="pt-badge">따라하기</span>형식 바꿔 뽑기</div><div class="pg-goal"><span>실습 목표</span>같은 공문을 세 가지 형식으로 정리한다.</div><ol><li><span class="pn">1</span><div class="pc"><b>공문 붙이기</b><p>안내 공문 하나를 채팅창에 붙입니다.</p><div class="presult">→ 공문이 입력됨</div></div></li><li><span class="pn">2</span><div class="pc"><b>3줄 요약</b><p>“핵심만 3줄로 요약해줘”라고 요청합니다.</p><div class="presult">→ 세 문장 요약이 나옴</div></div></li><li><span class="pn">3</span><div class="pc"><b>표로</b><p>“대상·기간·방법을 표로 정리해줘”라고 요청합니다.</p><div class="presult">→ 항목별 표가 나옴</div></div></li><li><span class="pn">4</span><div class="pc"><b>체크리스트</b><p>“담당자가 확인할 항목을 체크리스트로”라고 요청합니다.</p><div class="presult">→ 확인 목록이 나옴</div></div></li><li><span class="pn">5</span><div class="pc"><b>비교</b><p>세 결과를 비교해 업무에 맞는 형식을 고릅니다.</p><div class="presult">→ 용도에 맞는 형식 선택</div></div></li></ol></div></div></div>
+          <div class="folio">22</div>
+        </section><section class="page">
+          <div class="rh"><span>전산직 공무원을 위한 생성형 AI 전문역량 강화</span><span>2장 · 프롬프트와 컨텍스트</span></div>
+          <div class="content fill"><table class="ex"><caption>입력과 출력</caption><tr><th>같은 입력</th><td>동일한 안내 공문 1건</td></tr><tr><th>다른 출력</th><td>형식 지정에 따라 요약·표·체크리스트로 달라짐</td></tr></table><div class="checkpoint"><span class="cp-h">확인 체크포인트</span><ul><li>세 형식이 모두 같은 자료에서 나왔는가</li><li>형식 지정 문장만으로 결과가 바뀌었는가</li><li>업무 용도에 맞는 형식을 골랐는가</li></ul></div><p>네 가지 컨텍스트를 우리 부서 업무에 적용할 때는, 매번 새로 준비하지 말고 ‘자주 쓰는 묶음’을 만들어 두는 것이 효율적입니다. 예를 들어 민원 회신 업무라면 관련 지침, 표준 답변 양식, 개인정보 제외 규칙을 한 세트로 묶어 두고 필요할 때 그대로 붙이면 됩니다. 이렇게 묶어 둔 컨텍스트는 뒤에서 다룰 RAG 챗봇의 재료가 그대로 되기도 합니다. 즉 컨텍스트를 정리하는 습관은 단순한 편의가 아니라, 이후 자동화의 밑재료를 쌓는 일입니다.</p><div class="nextq"><span>다음 장에서 답하는 질문</span><p>부탁과 자료를 잘 넣었다면, 그 다음 AI가 실제로 ‘어떻게’ 답을 만드는지 그 안을 들여다볼 차례다.</p></div></div>
+          <div class="folio">23</div>
+        </section><section class="page">
+          <div class="rh"><span>전산직 공무원을 위한 생성형 AI 전문역량 강화</span><span>3장 · 모델 설명서 읽는 법</span></div>
+          <div class="content"><div class="ch-opener">
+              <div class="ch-kicker">1과목 · 3장</div>
+              <h1 class="ch-title">모델 설명서 읽는 법</h1>
+              <p class="ch-lead">AI 모델을 고르거나 도입을 검토할 때, 우리는 모델의 사양표를 보게 됩니다. 토큰, 파라미터, 컨텍스트 길이 같은 낯선 용어가 나옵니다. 이 장은 그 숫자들이 실무에서 무엇을 뜻하는지, 어디까지 믿을 수 있는지를 설명합니다.</p>
+            </div><h3>먼저 확인할 현상</h3><p>모델 소개 페이지에는 ‘컨텍스트 128K’, ‘파라미터 70B’ 같은 표현이 적혀 있습니다. 이 숫자가 크면 무엇이 좋아지고, 무엇을 대신 감수해야 하는지 알면 도입 판단이 쉬워집니다. 이런 표현은 처음 보면 암호처럼 느껴지지만, 각 숫자가 ‘무엇을 얼마나 할 수 있는지’를 나타내는 표시일 뿐입니다. 자동차의 배기량이나 연비처럼, 뜻만 알면 우리 업무에 맞는 모델을 고르는 판단 기준이 됩니다.</p></div>
+          <div class="folio">24</div>
+        </section><section class="page">
+          <div class="rh"><span>전산직 공무원을 위한 생성형 AI 전문역량 강화</span><span>3장 · 모델 설명서 읽는 법</span></div>
+          <div class="content fill"><h3>모델의 작동 원리 — 다음 토큰 예측</h3><p>이 원리를 알면 AI를 대하는 태도가 달라집니다. AI의 답은 ‘검색 결과’가 아니라 ‘가장 그럴듯한 문장’입니다. 그래서 잘 아는 주제에는 정확하지만, 자료가 적거나 애매한 주제에는 자신 있게 틀립니다. 실무에서는 이 성질을 역이용할 수 있습니다. 사실 확인이 필요한 부분은 자료(컨텍스트)를 붙여 근거를 강제하고, 표현을 다듬거나 초안을 잡는 부분은 AI의 생성 능력에 맡기는 식으로 역할을 나누면 됩니다.</p><p>이 성질을 조금 더 구체적으로 이해하기 위해 예를 들어 보겠습니다. ‘대한민국의 수도는’이라는 문장 뒤에 올 말로 모델은 ‘서울’을 매우 높은 확률로 고릅니다. 이런 정보는 학습 자료에 수없이 등장했기 때문입니다. 그러나 ‘우리 부서의 지난달 초과근무 시간은’ 같은 문장 뒤에는, 모델이 참고할 근거가 없으므로 그럴듯해 보이는 숫자를 만들어 낼 수 있습니다. 문제는 이 두 경우 모두 문장의 형태는 똑같이 자연스럽고 자신 있어 보인다는 점입니다. 그래서 답이 맞는지 아닌지는 문장의 말투가 아니라, 그 내용의 근거가 어디에 있는지로 판단해야 합니다.</p><p>언어모델은 앞의 문장을 보고 다음에 올 말을 하나씩 예측하는 방식으로 글을 만듭니다. 정답을 찾아오는 것이 아니라, 확률이 높은 말을 골라 이어 붙입니다. 이 때문에 문장은 자연스럽지만, 사실과 다른 내용을 만들어 낼 수도 있습니다.</p><div class="term"><b>토큰(token)</b><span>모델이 읽고 쓰는 작은 글자 조각입니다. 문장의 길이와 처리 비용을 토큰 수로 셉니다. 한글은 보통 한두 글자가 한 토큰이 됩니다.</span></div></div>
+          <div class="folio">25</div>
+        </section><section class="page">
+          <div class="rh"><span>전산직 공무원을 위한 생성형 AI 전문역량 강화</span><span>3장 · 모델 설명서 읽는 법</span></div>
+          <div class="content fill"><p>문장이 모델에 들어가면 먼저 토큰으로 쪼개집니다. 예를 들어 “회의록을 정리해줘”라는 문장은 여러 개의 토큰으로 나뉩니다. 모델은 이 토큰들을 보고 다음 토큰을 하나 고르고, 고른 토큰을 다시 입력에 붙여 그다음 토큰을 고릅니다. 이 과정을 문장이 끝날 때까지 반복합니다.</p><p>이 반복 과정 때문에 두 가지 성질이 생깁니다. 첫째, 문장이 길수록 토큰이 많아져 처리 시간과 비용이 늘어납니다. 둘째, 매번 확률로 고르기 때문에 같은 질문에도 표현이 조금씩 달라집니다. 그래서 완전히 똑같은 답이 필요한 업무에는 별도의 고정 장치를 두어야 합니다.</p><figure class="fig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 460" font-family="Pretendard, sans-serif">
+<rect width="920" height="460" fill="#F5F1ED"/><g transform="translate(0,30)"><defs><marker id="ah" markerWidth="11" markerHeight="11" refX="7.5" refY="3.2" orient="auto"><path d="M0,0 L8,3.2 L0,6.4 Z" fill="#865461"/></marker></defs><text x="48" y="46" font-size="16" fill="#756D70" font-weight="800" text-anchor="start">언어모델의 처리 — 문장을 토큰으로 쪼개 다음 토큰을 하나씩 예측</text><text x="48" y="96" font-size="14" fill="#756D70" font-weight="800" text-anchor="start">① 입력 문장을 토큰으로 쪼갠다</text><rect x="48" y="110" width="192.5" height="58" rx="10" fill="#EDE5DD" stroke="#D8CFC7" stroke-width="1.3"/><text x="144.25" y="146" font-size="17" fill="#2B2728" font-weight="800" text-anchor="middle">회의</text><rect x="258.5" y="110" width="192.5" height="58" rx="10" fill="#EDE5DD" stroke="#D8CFC7" stroke-width="1.3"/><text x="354.75" y="146" font-size="17" fill="#2B2728" font-weight="800" text-anchor="middle">록을</text><rect x="469.0" y="110" width="192.5" height="58" rx="10" fill="#EDE5DD" stroke="#D8CFC7" stroke-width="1.3"/><text x="565.25" y="146" font-size="17" fill="#2B2728" font-weight="800" text-anchor="middle">정리</text><rect x="679.5" y="110" width="192.5" height="58" rx="10" fill="#EDE5DD" stroke="#D8CFC7" stroke-width="1.3"/><text x="775.75" y="146" font-size="17" fill="#2B2728" font-weight="800" text-anchor="middle">해줘</text><text x="48" y="230" font-size="14" fill="#756D70" font-weight="800" text-anchor="start">② 모델이 다음 토큰을 확률로 하나씩 고른다</text><rect x="48" y="244" width="192.5" height="58" rx="10" fill="#fff" stroke="#865461" stroke-width="1.6"/><text x="144.25" y="280" font-size="17" fill="#865461" font-weight="800" text-anchor="middle">정</text><line x1="242.5" y1="273" x2="256.5" y2="273" stroke="#865461" stroke-width="2.2" marker-end="url(#ah)"/><rect x="258.5" y="244" width="192.5" height="58" rx="10" fill="#fff" stroke="#865461" stroke-width="1.6"/><text x="354.75" y="280" font-size="17" fill="#865461" font-weight="800" text-anchor="middle">리</text><line x1="453.0" y1="273" x2="467.0" y2="273" stroke="#865461" stroke-width="2.2" marker-end="url(#ah)"/><rect x="469.0" y="244" width="192.5" height="58" rx="10" fill="#fff" stroke="#865461" stroke-width="1.6"/><text x="565.25" y="280" font-size="17" fill="#865461" font-weight="800" text-anchor="middle">된</text><line x1="663.5" y1="273" x2="677.5" y2="273" stroke="#865461" stroke-width="2.2" marker-end="url(#ah)"/><rect x="679.5" y="244" width="192.5" height="58" rx="10" fill="#fff" stroke="#865461" stroke-width="1.6"/><text x="775.75" y="280" font-size="17" fill="#865461" font-weight="800" text-anchor="middle">표…</text><text x="460.0" y="360" font-size="14.5" fill="#9A7A64" font-weight="700" text-anchor="middle">③ 고른 토큰을 다시 입력에 붙여, 문장이 끝날 때까지 반복한다</text></g></svg><figcaption>입력 문장이 토큰으로 쪼개지고, 모델이 다음 토큰을 하나씩 골라 이어 붙이는 순서 그림</figcaption></figure></div>
+          <div class="folio">26</div>
+        </section><section class="page">
+          <div class="rh"><span>전산직 공무원을 위한 생성형 AI 전문역량 강화</span><span>3장 · 모델 설명서 읽는 법</span></div>
+          <div class="content fill"><h3>사양표에서 확인할 항목</h3><p>사양표를 도입 판단에 활용할 때는 숫자를 절대적 기준이 아니라 ‘상대적 비교의 도구’로 써야 합니다. 예를 들어 컨텍스트 길이가 128K인 모델과 8K인 모델 중 무엇이 좋은지는 업무에 달려 있습니다. 짧은 민원을 분류하는 일이라면 8K로도 충분하고, 오히려 빠르고 저렴한 쪽이 낫습니다. 반대로 수십 쪽 공문을 통째로 넣어 비교해야 한다면 긴 컨텍스트가 반드시 필요합니다. 즉 ‘큰 숫자=좋음’이 아니라 ‘우리 업무의 문서 길이에 맞는 숫자’가 정답입니다.</p><p>사양표의 각 항목이 실무에서 어떤 결정으로 이어지는지 예를 들어 보겠습니다. 매달 수백 건의 민원을 유형별로 분류하는 업무라면, 한 건당 처리 시간이 조금만 길어져도 전체로는 큰 차이가 납니다. 이런 경우 응답 속도가 빠른 작은 모델이 유리하고, 컨텍스트 길이는 짧아도 충분합니다. 반대로 수십 쪽짜리 공문 여러 건을 비교해 개정 전후 차이를 정리하는 업무라면, 문서를 통째로 넣을 수 있는 긴 컨텍스트와 복잡한 내용을 다룰 수 있는 큰 모델이 필요합니다. 같은 사양표라도 우리 업무의 성격에 따라 ‘좋은 모델’의 기준이 완전히 달라지는 것입니다.</p></div>
+          <div class="folio">27</div>
+        </section><section class="page">
+          <div class="rh"><span>전산직 공무원을 위한 생성형 AI 전문역량 강화</span><span>3장 · 모델 설명서 읽는 법</span></div>
+          <div class="content fill"><table class="grid"><thead><tr><th>항목</th><th>뜻</th><th>실무에서 보는 법</th></tr></thead><tbody><tr><td>파라미터</td><td>모델이 학습으로 얻은 내부 수치의 개수</td><td>클수록 표현력이 높지만 느리고 무겁습니다</td></tr><tr><td>컨텍스트 길이</td><td>한 번에 넣을 수 있는 토큰의 최대 수</td><td>길수록 긴 문서를 통째로 넣기 좋습니다</td></tr><tr><td>응답 속도</td><td>답을 만들어 내는 빠르기</td><td>분류·요약 등 대량 작업에서 중요합니다</td></tr><tr><td>작은 모델</td><td>적은 파라미터로 빠르게 동작</td><td>분류·추출 같은 가벼운 일에 적합합니다</td></tr></tbody></table><div class="note"><span class="nl">참고</span><p>위 표의 특성은 서로 맞바꾸는 관계입니다. 큰 모델은 어려운 일을 잘하지만 느리고 비용이 큽니다. 작은 모델은 빠르고 저렴하지만 어려운 추론에는 부족할 수 있습니다. 그래서 실무에서는 일의 난이도에 따라 두 종류를 나눠 씁니다.</p></div><p>사양표를 볼 때 흔히 하는 실수는 ‘숫자가 큰 모델이 항상 좋다’고 판단하는 것입니다. 그러나 민원 분류나 키워드 추출처럼 단순한 작업에 큰 모델을 쓰면, 느리고 비용만 늘 뿐 결과 차이는 크지 않습니다. 작업의 난이도를 먼저 보고, 거기에 맞는 크기를 고르는 것이 비용과 속도를 아끼는 방법입니다.</p></div>
+          <div class="folio">28</div>
+        </section><section class="page">
+          <div class="rh"><span>전산직 공무원을 위한 생성형 AI 전문역량 강화</span><span>3장 · 모델 설명서 읽는 법</span></div>
+          <div class="content fill"><table class="ex"><caption>입력과 출력</caption><tr><th>입력</th><td>긴 공문 PDF 40쪽 + “개정 전후 차이를 표로”</td></tr><tr><th>출력</th><td>큰 모델과 긴 컨텍스트가 있어야 한 번에 처리 가능한 비교표</td></tr></table><div class="limit"><span class="ll">이 방식이 보장하지 않는 것</span><p>사양표의 숫자는 성능의 참고값일 뿐, 우리 업무에 맞는지는 실제 자료로 시험해 봐야 압니다. 특히 한국어 문서, 우리 기관의 표 형식에서는 숫자와 다르게 동작할 수 있습니다.</p></div><table class="resp"><caption>역할의 구분</caption><tr><th>모델</th><td>토큰 단위로 다음 내용을 확률로 계산합니다.</td></tr><tr><th>서비스</th><td>입력을 토큰으로 나누고 결과를 문장으로 되돌립니다.</td></tr><tr><th>사람</th><td>사양을 참고하되 실제 자료로 적합성을 검증합니다.</td></tr></table></div>
+          <div class="folio">29</div>
+        </section><section class="page">
+          <div class="rh"><span>전산직 공무원을 위한 생성형 AI 전문역량 강화</span><span>3장 · 모델 설명서 읽는 법</span></div>
+          <div class="content"><table class="grid"><thead><tr><th>항목</th><th>A 모델(큰 모델)</th><th>B 모델(작은 모델)</th></tr></thead><tbody><tr><td>파라미터</td><td>70B(큼)</td><td>8B(작음)</td></tr><tr><td>컨텍스트 길이</td><td>128K 토큰(긴 문서 가능)</td><td>8K 토큰(짧은 문서)</td></tr><tr><td>응답 속도</td><td>느림</td><td>빠름</td></tr><tr><td>적합 업무</td><td>정책 해석·긴 문서 요약</td><td>민원 분류·키워드 추출</td></tr></tbody></table></div>
+          <div class="folio">30</div>
+        </section><section class="page">
+          <div class="rh"><span>전산직 공무원을 위한 생성형 AI 전문역량 강화</span><span>3장 · 모델 설명서 읽는 법</span></div>
+          <div class="content fill"><div class="prac-unit"><h3 class="prac-sec">실습 3 — 사양표 읽고 도입 판단하기</h3><p class="prac-intro">모델 사양표를 실제로 읽어 보는 실습입니다. 두 모델의 사양을 비교하고, 우리 업무에 어느 쪽이 맞는지 판단해 봅니다. 숫자를 외우는 것이 아니라, 숫자가 업무에 주는 의미를 읽는 연습입니다.</p><div class="practice"><div class="pt-h"><span class="pt-badge">따라하기</span>두 모델 중 고르기</div><div class="pg-goal"><span>실습 목표</span>업무 성격에 맞는 모델을 사양표를 근거로 고른다.</div><ol><li><span class="pn">1</span><div class="pc"><b>업무 정하기</b><p>자동화할 업무를 하나 정합니다(예: 민원 자동 분류).</p><div class="presult">→ 대상 업무가 정해짐</div></div></li><li><span class="pn">2</span><div class="pc"><b>난이도 판단</b><p>그 업무가 단순 분류인지 복잡한 해석인지 봅니다.</p><div class="presult">→ 단순 분류로 판단</div></div></li><li><span class="pn">3</span><div class="pc"><b>사양 대조</b><p>위 표에서 속도·컨텍스트 길이를 확인합니다.</p><div class="presult">→ 빠른 B 모델이 유리함을 확인</div></div></li><li><span class="pn">4</span><div class="pc"><b>근거 적기</b><p>왜 그 모델인지 한 문장으로 적습니다.</p><div class="presult">→ “대량·단순이라 빠른 작은 모델” 근거 완성</div></div></li></ol></div></div><p>이 판단에서 핵심은 ‘가장 큰 모델이 항상 정답은 아니다’라는 것입니다. 대량으로 반복되는 단순 작업에 큰 모델을 쓰면 비용과 시간만 늘어납니다. 업무의 난이도를 먼저 보고 거기에 맞는 크기를 고르는 습관이 도입 비용을 줄입니다.</p></div>
+          <div class="folio">31</div>
+        </section><section class="page">
+          <div class="rh"><span>전산직 공무원을 위한 생성형 AI 전문역량 강화</span><span>3장 · 모델 설명서 읽는 법</span></div>
+          <div class="content fill"><div class="worksheet"><div class="ws-h"><span class="ws-badge">실습 워크시트</span>모델 선택 판단표</div><table><tr><th>자동화할 업무</th><td class="ws-blank">(예: 민원 유형 분류)</td></tr><tr><th>업무 난이도</th><td class="ws-blank">(단순 / 보통 / 복잡)</td></tr><tr><th>한 번에 넣을 문서 길이</th><td class="ws-blank">(짧음 / 김)</td></tr><tr><th>고른 모델</th><td class="ws-blank">(큰 / 작은)</td></tr><tr><th>선택 근거</th><td class="ws-blank">(한 문장)</td></tr></table></div><div class="checkpoint"><span class="cp-h">확인 체크포인트</span><ul><li>업무 난이도를 먼저 판단했는가</li><li>속도와 컨텍스트 길이를 근거로 삼았는가</li><li>선택 근거를 한 문장으로 설명할 수 있는가</li></ul></div><h3>한눈에 정리</h3><p>언어모델은 다음에 올 토큰을 확률로 골라 이어 붙입니다. 그래서 자연스럽지만 가끔 틀립니다. 사양표의 파라미터·컨텍스트 길이·속도는 서로 맞바꾸는 관계이므로, 업무 난이도에 맞는 크기를 고르는 것이 핵심입니다.</p></div>
+          <div class="folio">32</div>
+        </section><section class="page">
+          <div class="rh"><span>전산직 공무원을 위한 생성형 AI 전문역량 강화</span><span>3장 · 모델 설명서 읽는 법</span></div>
+          <div class="content"><table class="grid"><thead><tr><th>잘못된 생각</th><th>올바른 접근</th></tr></thead><tbody><tr><td>큰 모델이 항상 낫다</td><td>단순 작업엔 작은 모델이 빠르고 저렴하다</td></tr><tr><td>사양 숫자만 보면 된다</td><td>우리 자료로 실제 적합성을 시험한다</td></tr></tbody></table><div class="note"><span class="nl">참고</span><p>실무 팁 — 도입 검토 회의에서는 ‘가장 큰 모델’을 요구하기보다, 업무별로 큰 모델과 작은 모델을 나눠 배치하는 안을 제시하면 비용 설득이 쉬워집니다.</p></div><div class="nextq"><span>다음 장에서 답하는 질문</span><p>모델 하나의 성질을 알았다면, 이제 그 모델을 여러 도구와 어떻게 이어 붙여 일하게 만드는지가 궁금해진다.</p></div></div>
+          <div class="folio">33</div>
+        </section><section class="page">
+          <div class="rh"><span>전산직 공무원을 위한 생성형 AI 전문역량 강화</span><span>4장 · 하네스와 오케스트레이션</span></div>
+          <div class="content"><div class="ch-opener">
+              <div class="ch-kicker">1과목 · 4장</div>
+              <h1 class="ch-title">하네스와 오케스트레이션</h1>
+              <p class="ch-lead">모델 하나는 문장을 만들 뿐입니다. 실제 업무는 검색하고, 파일을 열고, 계산하고, 저장하는 여러 단계로 이루어집니다. 이 단계들을 순서로 묶어 두는 틀을 하네스라고 합니다. 이 장은 그 구조와, 사이에 넣는 안전장치를 설명합니다.</p>
+            </div><h3>먼저 확인할 현상</h3><p>“이 폴더의 엑셀을 모아 하나로 합치고, 빠진 값이 있으면 알려줘”라고 부탁하면, AI 서비스는 파일을 찾고, 열고, 합치고, 검증한 결과를 돌려줍니다. 이때 서비스는 한 번 답하고 끝나는 것이 아니라 여러 도구를 순서대로 사용합니다. 이때 서비스는 사람이 매 단계를 지시하지 않아도, 미리 정해 둔 순서를 따라 스스로 다음 도구를 실행합니다. 여러 도구가 한 줄로 이어져 움직이는 이 모습이 바로 하네스가 작동하는 장면입니다.</p></div>
+          <div class="folio">34</div>
+        </section><section class="page">
+          <div class="rh"><span>전산직 공무원을 위한 생성형 AI 전문역량 강화</span><span>4장 · 하네스와 오케스트레이션</span></div>
+          <div class="content fill"><h3>하네스의 정의</h3><p>하네스를 처음 접하면 복잡한 기술처럼 느껴지지만, 본질은 ‘반복되는 수작업 절차를 글로 적어 고정한 것’입니다. 매달 부서별 실적을 취합할 때 검색하고, 열고, 합치고, 저장하는 순서가 늘 같다면, 그 순서가 곧 하네스의 설계도입니다. 사람이 매번 같은 지시를 반복하는 대신, 그 절차를 한 번 정의해 두고 실행만 시키는 것입니다. 그래서 하네스를 잘 만드는 능력은 코딩 실력이 아니라 ‘업무 절차를 명확히 나누는 능력’에 더 가깝습니다.</p><p>하네스라는 말이 낯설다면, ‘반복 업무 매뉴얼을 프로그램이 대신 실행하는 것’으로 이해하면 됩니다. 숙련된 담당자의 머릿속에는 ‘먼저 이 폴더를 열고, 이 값을 찾아, 이렇게 계산한 뒤, 여기에 저장한다’는 절차가 들어 있습니다. 이 절차가 글로 정리되어 있지 않으면, 담당자가 바뀔 때마다 다시 익혀야 하고 실수도 잦아집니다. 하네스는 이 절차를 컴퓨터가 이해할 수 있는 순서로 적어 두고, 사람이 지시하면 그 순서대로 도구를 실행하게 만든 것입니다. 그래서 하네스를 설계하는 능력의 핵심은 프로그래밍 기술이 아니라, 업무를 명확한 단계로 나누고 각 단계의 입력과 출력을 정의하는 능력입니다.</p><p>하네스는 모델이 여러 도구를 정해진 순서로 이어받아 일하도록 묶은 작업 틀입니다. 지시를 받으면 도구를 차례로 사용하고, 중간에 사람의 승인을 거치거나 처리 기록을 남깁니다. 이렇게 묶어 두면 같은 일을 반복할 수 있습니다.</p><p>하네스가 없으면 사람이 매번 같은 지시를 반복해야 합니다. 검색해 달라고 하고, 결과를 복사해 다시 정리해 달라고 하고, 또 저장해 달라고 하는 식입니다. 하네스는 이 반복 지시를 하나의 절차로 묶어, 한 번의 부탁으로 전체가 돌아가게 만듭니다. 그래서 하네스는 ‘반복되는 업무를 프로그램으로 굳힌 것’이라고 볼 수 있습니다.</p></div>
+          <div class="folio">35</div>
+        </section><section class="page">
+          <div class="rh"><span>전산직 공무원을 위한 생성형 AI 전문역량 강화</span><span>4장 · 하네스와 오케스트레이션</span></div>
+          <div class="content fill"><div class="term"><b>하네스(harness)</b><span>모델 호출과 도구 사용, 검증과 기록을 하나로 묶어 반복 가능한 업무 흐름으로 만든 프로그램 구조입니다.</span></div><div class="term"><b>오케스트레이션(orchestration)</b><span>여러 도구와 모델 호출의 순서를 정하고 조율하는 일입니다. 하네스가 실제로 하는 조율 작업이 오케스트레이션입니다.</span></div><figure class="fig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 460" font-family="Pretendard, sans-serif">
+<rect width="920" height="460" fill="#F5F1ED"/><g transform="translate(0,26)"><defs><marker id="ah" markerWidth="11" markerHeight="11" refX="7.5" refY="3.2" orient="auto"><path d="M0,0 L8,3.2 L0,6.4 Z" fill="#865461"/></marker></defs><text x="48" y="46" font-size="16" fill="#756D70" font-weight="800" text-anchor="start">하네스 — 지시에서 시작해 도구를 순서로 이어 처리하고 기록한다</text><text x="48" y="96" font-size="14" fill="#865461" font-weight="800" text-anchor="start">지시  →</text><rect x="48" y="120" width="186.5" height="96" rx="10" fill="#fff" stroke="#865461" stroke-width="1.6"/><text x="141.25" y="160" font-size="16" fill="#2B2728" font-weight="800" text-anchor="middle">1. 검색</text><text x="141.25" y="188" font-size="13" fill="#756D70" font-weight="550" text-anchor="middle">필요한 문서 찾기</text><line x1="237.5" y1="168.0" x2="257.5" y2="168.0" stroke="#865461" stroke-width="2.2" marker-end="url(#ah)"/><rect x="260.5" y="120" width="186.5" height="96" rx="10" fill="#fff" stroke="#D8CFC7" stroke-width="1.3"/><text x="353.75" y="160" font-size="16" fill="#2B2728" font-weight="800" text-anchor="middle">2. 열기·읽기</text><text x="353.75" y="188" font-size="13" fill="#756D70" font-weight="550" text-anchor="middle">값 뽑기</text><line x1="450.0" y1="168.0" x2="470.0" y2="168.0" stroke="#865461" stroke-width="2.2" marker-end="url(#ah)"/><rect x="473.0" y="120" width="186.5" height="96" rx="10" fill="#fff" stroke="#D8CFC7" stroke-width="1.3"/><text x="566.25" y="160" font-size="16" fill="#2B2728" font-weight="800" text-anchor="middle">3. 정리·계산</text><text x="566.25" y="188" font-size="13" fill="#756D70" font-weight="550" text-anchor="middle">표 만들기</text><line x1="662.5" y1="168.0" x2="682.5" y2="168.0" stroke="#865461" stroke-width="2.2" marker-end="url(#ah)"/><rect x="685.5" y="120" width="186.5" height="96" rx="10" fill="#fff" stroke="#D8CFC7" stroke-width="1.3"/><text x="778.75" y="160" font-size="16" fill="#2B2728" font-weight="800" text-anchor="middle">4. 저장·기록</text><text x="778.75" y="188" font-size="13" fill="#756D70" font-weight="550" text-anchor="middle">결과 남기기</text><rect x="48" y="270" width="824" height="96" rx="10" fill="#faf3f1" stroke="#9A7A64" stroke-width="1.4"/><text x="72" y="306" font-size="14" fill="#9A7A64" font-weight="900" text-anchor="start">사이에 넣는 안전장치</text><text x="72" y="336" font-size="14.5" fill="#2B2728" font-weight="600" text-anchor="start">위험한 동작(개인정보 조회·외부 발송·원본 수정) 앞에는 사람 승인 · 모든 단계는 로그로 기록</text></g></svg><figcaption>지시에서 시작해 검색·열기·정리·저장 도구가 순서로 이어지고 사람 승인과 기록이 사이에 들어가는 그림</figcaption></figure></div>
+          <div class="folio">36</div>
+        </section><section class="page">
+          <div class="rh"><span>전산직 공무원을 위한 생성형 AI 전문역량 강화</span><span>4장 · 하네스와 오케스트레이션</span></div>
+          <div class="content"><div class="steps"><div class="st-h">하네스가 도구를 쓰는 순서</div><ol><li><span class="sn">1</span><div><b>검색</b><p>질문에 맞는 문서·자료를 먼저 찾습니다.</p></div></li><li><span class="sn">2</span><div><b>열기·읽기</b><p>찾은 파일을 열어 필요한 값을 뽑습니다.</p></div></li><li><span class="sn">3</span><div><b>정리·계산</b><p>뽑은 값을 집계해 표나 초안으로 만듭니다.</p></div></li><li><span class="sn">4</span><div><b>저장·기록</b><p>결과와 처리 과정을 로그로 남깁니다.</p></div></li></ol></div></div>
+          <div class="folio">37</div>
+        </section><section class="page">
+          <div class="rh"><span>전산직 공무원을 위한 생성형 AI 전문역량 강화</span><span>4장 · 하네스와 오케스트레이션</span></div>
+          <div class="content fill"><h3>사이에 넣는 안전장치</h3><p>안전장치를 어디에 둘지는 ‘되돌릴 수 있는가’를 기준으로 판단합니다. 검색이나 읽기처럼 원본을 바꾸지 않는 동작은 자동으로 두어도 안전합니다. 반면 파일을 덮어쓰거나, 외부로 보내거나, 개인정보를 조회하는 동작은 한 번 실행되면 되돌리기 어렵습니다. 이런 동작 앞에는 반드시 사람의 승인 단계를 둡니다. 처음에는 승인 단계를 넉넉히 두었다가, 실제로 문제가 없다는 것이 확인된 안전한 단계부터 하나씩 자동으로 바꾸는 것이 실무에서 검증된 순서입니다.</p><p>승인 지점을 설계할 때 흔히 저지르는 실수는, 편리함을 위해 위험한 동작까지 자동으로 두는 것입니다. 예를 들어 ‘결과를 자동으로 관련 부서에 메일로 보내라’고 설정하면, 검토되지 않은 초안이나 잘못된 수치가 그대로 외부에 나갈 수 있습니다. 한 번 나간 공문은 되돌릴 수 없습니다. 그래서 되돌릴 수 있는 동작(검색·조회·초안 작성)과 되돌릴 수 없는 동작(발송·삭제·덮어쓰기)을 구분하고, 후자 앞에는 반드시 사람이 확인하는 단계를 둡니다. 운영이 안정되어 특정 단계가 확실히 안전하다는 것이 검증되면, 그때 하나씩 자동으로 전환합니다.</p><table class="grid"><thead><tr><th>위험한 동작</th><th>안전장치</th><th>이유</th></tr></thead><tbody><tr><td>개인정보 조회</td><td>사람 승인 후 진행</td><td>무단 열람을 막기 위해</td></tr><tr><td>외부로 발송</td><td>사람 승인 후 진행</td><td>잘못된 전송을 막기 위해</td></tr><tr><td>원본 파일 수정</td><td>사람 승인 후 진행</td><td>되돌릴 수 없는 손상을 막기 위해</td></tr><tr><td>모든 단계</td><td>로그로 기록</td><td>무엇을 했는지 추적하기 위해</td></tr></tbody></table></div>
+          <div class="folio">38</div>
+        </section><section class="page">
+          <div class="rh"><span>전산직 공무원을 위한 생성형 AI 전문역량 강화</span><span>4장 · 하네스와 오케스트레이션</span></div>
+          <div class="content fill"><h3>챗봇·에이전트·하네스·서비스</h3><p>같은 모델이라도 어디까지 묶느냐에 따라 이름과 쓰임이 달라집니다. 묻는 말에 답만 하면 챗봇, 도구를 스스로 이어 쓰면 에이전트, 순서와 규칙과 기록을 묶으면 하네스, 화면과 권한과 로그까지 갖추면 업무 서비스입니다. 위로 갈수록 편해지지만 안전장치도 함께 커져야 합니다.</p><p>이 네 단계를 우리 부서 상황에 맞춰 고르는 것이 중요합니다. 한두 번 쓰는 일이라면 챗봇으로 충분하고, 매달 반복되는 일이라면 하네스로 묶을 가치가 있습니다. 여러 부서가 함께 쓰고 개인정보를 다룬다면, 권한과 로그를 갖춘 업무 서비스 단계까지 올라가야 합니다.</p><div class="limit"><span class="ll">이 방식이 보장하지 않는 것</span><p>하네스는 사람의 승인 지점을 잘못 설계하면 위험한 동작이 자동으로 실행될 수 있습니다. 그래서 되돌릴 수 없는 동작 앞에는 반드시 승인 단계를 두어야 합니다.</p></div><table class="resp"><caption>역할의 구분</caption><tr><th>사람</th><td>순서와 규칙, 승인 지점을 설계합니다.</td></tr><tr><th>하네스</th><td>정해진 순서로 도구를 실행하고 기록합니다.</td></tr><tr><th>모델</th><td>각 단계에서 필요한 문장·판단을 생성합니다.</td></tr></table></div>
+          <div class="folio">39</div>
+        </section><section class="page">
+          <div class="rh"><span>전산직 공무원을 위한 생성형 AI 전문역량 강화</span><span>4장 · 하네스와 오케스트레이션</span></div>
+          <div class="content fill"><div class="prac-unit"><h3 class="prac-sec">실습 4 — 승인 지점이 있는 업무 흐름 설계</h3><p class="prac-intro">하네스를 직접 코드로 만드는 것은 뒤의 장에서 다루고, 이 실습에서는 종이 위에서 업무 흐름을 설계합니다. 어떤 단계를 어떤 순서로 두고, 어디에 사람 승인을 넣을지 정하는 연습입니다.</p><div class="practice"><div class="pt-h"><span class="pt-badge">따라하기</span>업무 흐름 그려 보기</div><div class="pg-goal"><span>실습 목표</span>반복 업무 하나를 골라 단계와 승인 지점을 설계한다.</div><ol><li><span class="pn">1</span><div class="pc"><b>업무 고르기</b><p>매달 반복되는 업무를 하나 고릅니다.</p><div class="presult">→ 예: 부서별 실적 취합</div></div></li><li><span class="pn">2</span><div class="pc"><b>단계 나누기</b><p>검색·열기·정리·저장 네 단계로 나눕니다.</p><div class="presult">→ 네 단계가 적힘</div></div></li><li><span class="pn">3</span><div class="pc"><b>위험 표시</b><p>되돌릴 수 없는 단계에 표시합니다.</p><div class="presult">→ ‘저장(덮어쓰기)’에 위험 표시</div></div></li><li><span class="pn">4</span><div class="pc"><b>승인 넣기</b><p>위험 단계 앞에 사람 승인을 넣습니다.</p><div class="presult">→ 승인 지점이 정해짐</div></div></li><li><span class="pn">5</span><div class="pc"><b>기록 정하기</b><p>무엇을 로그로 남길지 정합니다.</p><div class="presult">→ 처리 건수·시각 기록으로 결정</div></div></li></ol></div></div></div>
+          <div class="folio">40</div>
+        </section><section class="page">
+          <div class="rh"><span>전산직 공무원을 위한 생성형 AI 전문역량 강화</span><span>4장 · 하네스와 오케스트레이션</span></div>
+          <div class="content fill"><div class="worksheet"><div class="ws-h"><span class="ws-badge">실습 워크시트</span>업무 흐름 설계 워크시트</div><table><tr><th>대상 업무</th><td class="ws-blank">(예: 부서별 실적 취합)</td></tr><tr><th>1단계</th><td class="ws-blank">(예: 각 부서 폴더 검색)</td></tr><tr><th>2단계</th><td class="ws-blank">(예: 엑셀 열어 값 뽑기)</td></tr><tr><th>3단계</th><td class="ws-blank">(예: 하나로 합쳐 집계)</td></tr><tr><th>4단계</th><td class="ws-blank">(예: 결과 저장)</td></tr><tr><th>승인 지점</th><td class="ws-blank">(예: 원본 덮어쓰기 전)</td></tr><tr><th>남길 기록</th><td class="ws-blank">(예: 처리 건수·시각)</td></tr></table></div><p>설계할 때 가장 흔한 실수는 승인 지점을 빠뜨리는 것입니다. 편리함만 좇아 모든 단계를 자동으로 두면, 잘못된 파일이 덮어써지거나 미완성 문서가 발송될 수 있습니다. 되돌릴 수 없는 동작 앞에는 반드시 사람의 확인을 둡니다.</p><table class="pitfall"><caption>자주 하는 실수와 해결</caption><thead><tr><th>이런 실수</th><th>이렇게 해결</th></tr></thead><tbody><tr><td class="pf-q">모든 단계를 자동으로 두어 통제 상실</td><td class="pf-a">되돌릴 수 없는 동작 앞에 승인을 둔다</td></tr><tr><td class="pf-q">기록을 남기지 않아 문제 추적 불가</td><td class="pf-a">각 단계의 처리 결과를 로그로 남긴다</td></tr></tbody></table></div>
+          <div class="folio">41</div>
+        </section><section class="page">
+          <div class="rh"><span>전산직 공무원을 위한 생성형 AI 전문역량 강화</span><span>4장 · 하네스와 오케스트레이션</span></div>
+          <div class="content"><h3>한눈에 정리</h3><p>하네스는 여러 도구를 순서로 묶어 반복 가능한 흐름을 만든 구조입니다. 되돌릴 수 없는 동작 앞에는 사람 승인을, 모든 단계에는 기록을 둡니다. 챗봇에서 업무 서비스로 갈수록 편해지지만 통제 장치도 커집니다.</p><div class="note"><span class="nl">참고</span><p>실무 팁 — 하네스를 처음 만들 때는 승인 지점을 많이 두었다가, 익숙해지면 안전한 단계부터 줄이는 방식이 안전합니다. 처음부터 전부 자동으로 두지 않습니다.</p></div><div class="nextq"><span>다음 장에서 답하는 질문</span><p>도구를 순서로 묶는 법을 알았다면, 이제 우리 부서의 어떤 업무에 이 구조를 적용할지 판정할 차례다.</p></div></div>
+          <div class="folio">42</div>
+        </section><section class="page part">
+          <div class="rh"><span>전산직 공무원을 위한 생성형 AI 전문역량 강화</span><span>2과목</span></div>
+          <div class="part-wrap">
+            <div class="part-no">2과목</div>
+            <h1 class="part-title">부서 업무 적용과 자동화</h1>
+            <p class="part-desc">우리 부서 업무 중 어디에 AI를 넣을지 판정하고, 코딩에이전트로 반복 업무를 자동화합니다.</p>
+            <ul class="part-chs"><li><span>5</span>어디에 AI를 넣을까</li><li><span>6</span>바이브코딩과 코딩에이전트</li></ul>
+            <div class="part-obj"><span class="po-h">학습 목표</span><ul><li>기존 시스템을 유지하며 병목만 좁게 돕는 도입 원칙을 이해한다.</li><li>다섯 기준으로 도입 후보 업무를 판정할 수 있다.</li><li>코딩에이전트에게 목표·규칙·확인을 담아 일을 맡길 수 있다.</li></ul></div>
+          </div>
+          <div class="folio">43</div>
+        </section><section class="page">
+          <div class="rh"><span>전산직 공무원을 위한 생성형 AI 전문역량 강화</span><span>5장 · 어디에 AI를 넣을까</span></div>
+          <div class="content"><div class="ch-opener">
+              <div class="ch-kicker">2과목 · 5장</div>
+              <h1 class="ch-title">어디에 AI를 넣을까</h1>
+              <p class="ch-lead">기존 시스템을 전부 AI로 바꾸는 것은 위험합니다. 문서함·게시판·엑셀은 그대로 두고, 시간이 새는 병목에만 AI를 넣는 것이 안전합니다. 이 장은 어떤 업무가 도입에 적합한지 판정하는 기준을 설명합니다.</p>
+            </div><h3>먼저 확인할 현상</h3><p>어느 부서든 매달 똑같이 반복되는 일이 있습니다. 흩어진 지침을 찾아 헤매고, PDF 공문에서 항목을 손으로 옮겨 적고, 같은 엑셀 집계를 반복합니다. 이런 일이 바로 AI를 넣기 좋은 병목입니다. 이런 일들은 대개 담당자의 머릿속에만 있고 절차로 정리돼 있지 않아, 새로운 직원이 오면 다시 익혀야 합니다. 그래서 시간이 새는 것은 물론이고, 사람이 바뀔 때마다 업무 품질이 흔들리는 원인이 되기도 합니다.</p></div>
+          <div class="folio">44</div>
+        </section><section class="page">
+          <div class="rh"><span>전산직 공무원을 위한 생성형 AI 전문역량 강화</span><span>5장 · 어디에 AI를 넣을까</span></div>
+          <div class="content fill"><h3>레거시 전체 교체가 아니라 병목만</h3><p>‘병목만 좁게’라는 원칙이 중요한 이유는, 공공기관의 업무 시스템이 서로 얽혀 있기 때문입니다. 하나의 시스템을 통째로 바꾸면 그와 연결된 다른 업무, 다른 부서, 기존 결재 흐름까지 영향을 받습니다. 반면 자료 검색이나 텍스트 추출 같은 특정 구간만 도우면, 그 구간의 입력과 출력은 그대로 두고 내부 처리 방식만 바뀝니다. 그래서 실패해도 원래 방식으로 즉시 되돌릴 수 있고, 다른 업무에 파급되지 않습니다. 이것이 도입 위험을 낮추는 핵심 전략입니다.</p><p>‘병목만 좁게’ 접근이 실제로 어떻게 적용되는지 예를 들어 보겠습니다. 어떤 부서가 매달 여러 기관에서 받은 공문에서 사업명·기간·예산을 뽑아 대장에 입력하는 일에 많은 시간을 쓴다고 합시다. 이때 기존의 대장 시스템이나 결재 절차를 바꿀 필요는 없습니다. 공문에서 항목을 뽑아 표로 정리하는 ‘텍스트 추출’ 구간에만 AI를 넣으면 됩니다. 입력은 여전히 공문 파일이고 출력은 여전히 대장에 넣을 표이므로, 앞뒤 업무는 그대로입니다. 만약 AI 결과가 마음에 들지 않으면 예전처럼 손으로 입력하면 되고, 다른 부서 업무에는 아무 영향이 없습니다. 이것이 위험을 최소화하면서 효과를 확인하는 방법입니다.</p><p>기존 업무 시스템을 통째로 바꾸면 익숙한 절차가 흔들리고 위험이 커집니다. 대신 손이 많이 가는 지점만 좁게 도우면, 실패해도 되돌리기 쉽고 효과를 바로 확인할 수 있습니다.</p><p>좁게 시작하면 세 가지 이점이 있습니다. 첫째, 실패해도 원래 업무 절차가 그대로 남아 있어 되돌리기 쉽습니다. 둘째, 효과를 짧은 기간에 확인할 수 있어 확산 여부를 빨리 판단할 수 있습니다. 셋째, 담당자가 새 도구에 익숙해질 시간을 벌 수 있습니다. 반대로 전체를 한꺼번에 바꾸면 문제가 어디서 생겼는지 찾기 어렵고, 되돌리는 비용도 큽니다.</p></div>
+          <div class="folio">45</div>
+        </section><section class="page">
+          <div class="rh"><span>전산직 공무원을 위한 생성형 AI 전문역량 강화</span><span>5장 · 어디에 AI를 넣을까</span></div>
+          <div class="content fill"><div class="term"><b>병목(bottleneck)</b><span>전체 업무 중 시간이 유독 많이 걸려 처리가 지체되는 구간입니다. AI 도입은 이 구간부터 좁게 시작합니다.</span></div><figure class="fig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 460" font-family="Pretendard, sans-serif">
+<rect width="920" height="460" fill="#F5F1ED"/><g transform="translate(0,0)"><defs><marker id="ah" markerWidth="11" markerHeight="11" refX="7.5" refY="3.2" orient="auto"><path d="M0,0 L8,3.2 L0,6.4 Z" fill="#865461"/></marker></defs><text x="48" y="46" font-size="16" fill="#756D70" font-weight="800" text-anchor="start">AI 도입 지점 — 기존 업무는 유지하고 병목 네 곳만 좁게 돕는다</text><circle cx="460.0" cy="244.0" r="78" fill="#2B2728" stroke="none"/><text x="460.0" y="238.0" font-size="16" fill="#fff" font-weight="800" text-anchor="middle">기존 업무</text><text x="460.0" y="262.0" font-size="12.5" fill="#ccc" font-weight="600" text-anchor="middle">( 유지 )</text><rect x="48" y="94" width="248" height="66" rx="10" fill="#fff" stroke="#865461" stroke-width="1.4"/><text x="66" y="122" font-size="15.5" fill="#865461" font-weight="800" text-anchor="start">자료검색</text><text x="66" y="144" font-size="12.5" fill="#756D70" font-weight="550" text-anchor="start">지침·공문·매뉴얼 찾기</text><line x1="296" y1="127.0" x2="405.4" y2="212.8" stroke="#D8CFC7" stroke-width="1.6"/><circle cx="296" cy="127.0" r="4" fill="#865461" stroke="none"/><rect x="624" y="94" width="248" height="66" rx="10" fill="#fff" stroke="#865461" stroke-width="1.4"/><text x="642" y="122" font-size="15.5" fill="#865461" font-weight="800" text-anchor="start">텍스트추출</text><text x="642" y="144" font-size="12.5" fill="#756D70" font-weight="550" text-anchor="start">PDF·한글에서 항목 뽑기</text><line x1="624" y1="127.0" x2="514.6" y2="212.8" stroke="#D8CFC7" stroke-width="1.6"/><circle cx="624" cy="127.0" r="4" fill="#9A7A64" stroke="none"/><rect x="48" y="300" width="248" height="66" rx="10" fill="#fff" stroke="#865461" stroke-width="1.4"/><text x="66" y="328" font-size="15.5" fill="#865461" font-weight="800" text-anchor="start">데이터정리</text><text x="66" y="350" font-size="12.5" fill="#756D70" font-weight="550" text-anchor="start">엑셀 집계·이상값 확인</text><line x1="296" y1="333.0" x2="405.4" y2="275.2" stroke="#D8CFC7" stroke-width="1.6"/><circle cx="296" cy="333.0" r="4" fill="#865461" stroke="none"/><rect x="624" y="300" width="248" height="66" rx="10" fill="#fff" stroke="#865461" stroke-width="1.4"/><text x="642" y="328" font-size="15.5" fill="#865461" font-weight="800" text-anchor="start">초안작성</text><text x="642" y="350" font-size="12.5" fill="#756D70" font-weight="550" text-anchor="start">보고·안내문 초안</text><line x1="624" y1="333.0" x2="514.6" y2="275.2" stroke="#D8CFC7" stroke-width="1.6"/><circle cx="624" cy="333.0" r="4" fill="#9A7A64" stroke="none"/></g></svg><figcaption>가운데 기존 업무를 두고 자료검색·텍스트추출·데이터정리·초안작성 네 병목만 AI가 돕는 그림</figcaption></figure><h3>도입 판정 다섯 기준</h3><p>이 다섯 기준을 실제 회의에서 쓸 때는, 각 업무에 대해 다섯 항목을 표로 채워 보는 것이 효과적입니다. 표를 채우다 보면 감으로는 좋아 보였던 업무가 실제로는 확인이 어렵거나 개인정보 위험이 크다는 것이 드러나기도 합니다. 반대로 눈에 잘 띄지 않던 반복 업무가 사실은 도입 1순위라는 것이 보이기도 합니다. 이 판정표는 도입 여부를 감정이 아니라 근거로 설득하는 도구이며, 예산과 인력을 어디에 먼저 쓸지 정하는 우선순위표로도 쓸 수 있습니다.</p></div>
+          <div class="folio">46</div>
+        </section><section class="page">
+          <div class="rh"><span>전산직 공무원을 위한 생성형 AI 전문역량 강화</span><span>5장 · 어디에 AI를 넣을까</span></div>
+          <div class="content fill"><table class="grid"><thead><tr><th>기준</th><th>이러면 적합</th><th>이러면 아직</th></tr></thead><tbody><tr><td>반복성</td><td>매주·매월 반복된다</td><td>한 번뿐인 일이다</td></tr><tr><td>참고 자료</td><td>문서·표가 정리돼 있다</td><td>말로만 지시가 온다</td></tr><tr><td>확인 가능성</td><td>정답·규정·샘플이 있다</td><td>맞는지 알 방법이 없다</td></tr><tr><td>위험도</td><td>개인정보를 뺄 수 있다</td><td>민감정보를 그대로 쓴다</td></tr><tr><td>효과</td><td>줄어든 시간이 뚜렷하다</td><td>효과를 재기 어렵다</td></tr></tbody></table><p>이 다섯 기준에서 ‘적합’ 쪽이 세 개 이상이면, 작은 범위로 먼저 시작해 볼 만한 업무입니다. 반대로 ‘아직’ 쪽이 많으면 도입을 뒤로 미루고 자료부터 정리하는 편이 낫습니다.</p><p>판정할 때는 ‘가장 눈에 띄는 업무’가 아니라 ‘가장 안전하게 시작할 수 있는 업무’를 먼저 고르는 편이 좋습니다. 효과가 커 보여도 개인정보가 많거나 결과를 확인하기 어려운 업무는, 처음 도입 대상으로는 위험합니다. 작은 성공을 먼저 만든 뒤 점차 넓히는 방식이 실패 위험을 줄입니다.</p><table class="ex"><caption>입력과 출력</caption><tr><th>입력</th><td>‘매달 부서별 실적 엑셀을 합쳐 요약’이라는 업무</td></tr><tr><th>출력</th><td>반복성·자료·확인 모두 충족 → 도입 1순위로 판정</td></tr></table></div>
+          <div class="folio">47</div>
+        </section><section class="page">
+          <div class="rh"><span>전산직 공무원을 위한 생성형 AI 전문역량 강화</span><span>5장 · 어디에 AI를 넣을까</span></div>
+          <div class="content"><div class="limit"><span class="ll">이 방식이 보장하지 않는 것</span><p>판정 기준을 충족해도, 자료에 개인정보가 많거나 결과를 검증할 사람이 없으면 도입을 미뤄야 합니다. 효과가 큰 업무보다 안전하게 시작할 수 있는 업무를 먼저 고릅니다.</p></div><table class="resp"><caption>역할의 구분</caption><tr><th>사람</th><td>업무를 기준으로 판정하고 우선순위를 정합니다.</td></tr><tr><th>서비스</th><td>선정된 병목 구간의 자료와 도구를 연결합니다.</td></tr><tr><th>모델</th><td>해당 구간의 분류·요약·초안을 생성합니다.</td></tr></table></div>
+          <div class="folio">48</div>
+        </section><section class="page">
+          <div class="rh"><span>전산직 공무원을 위한 생성형 AI 전문역량 강화</span><span>5장 · 어디에 AI를 넣을까</span></div>
+          <div class="content fill"><div class="prac-unit"><h3 class="prac-sec">실습 5 — 우리 부서 병목 찾아 판정하기</h3><p class="prac-intro">도입 판정 다섯 기준을 실제 업무에 적용해 보는 실습입니다. 우리 부서에서 반복되는 업무 세 가지를 적고, 다섯 기준으로 점수를 매겨 도입 순서를 정합니다.</p><div class="practice"><div class="pt-h"><span class="pt-badge">따라하기</span>병목 판정 실습</div><div class="pg-goal"><span>실습 목표</span>반복 업무 세 개를 다섯 기준으로 판정해 순위를 매긴다.</div><ol><li><span class="pn">1</span><div class="pc"><b>업무 나열</b><p>반복되는 업무 세 가지를 적습니다.</p><div class="presult">→ 세 업무가 나열됨</div></div></li><li><span class="pn">2</span><div class="pc"><b>기준 적용</b><p>각 업무를 다섯 기준으로 ‘적합/아직’ 판정합니다.</p><div class="presult">→ 항목별 판정 완료</div></div></li><li><span class="pn">3</span><div class="pc"><b>점수 세기</b><p>‘적합’ 개수를 셉니다.</p><div class="presult">→ 업무별 점수가 나옴</div></div></li><li><span class="pn">4</span><div class="pc"><b>순위 정하기</b><p>점수가 높은 순으로 도입 순서를 정합니다.</p><div class="presult">→ 1순위 업무 결정</div></div></li><li><span class="pn">5</span><div class="pc"><b>근거 적기</b><p>1순위를 고른 이유를 적습니다.</p><div class="presult">→ 도입 제안 근거 완성</div></div></li></ol></div></div></div>
+          <div class="folio">49</div>
+        </section><section class="page">
+          <div class="rh"><span>전산직 공무원을 위한 생성형 AI 전문역량 강화</span><span>5장 · 어디에 AI를 넣을까</span></div>
+          <div class="content fill"><div class="worksheet"><div class="ws-h"><span class="ws-badge">실습 워크시트</span>병목 판정 워크시트</div><table><tr><th>업무 A</th><td class="ws-blank">(반복성/자료/확인/위험/효과 판정)</td></tr><tr><th>업무 B</th><td class="ws-blank">(반복성/자료/확인/위험/효과 판정)</td></tr><tr><th>업무 C</th><td class="ws-blank">(반복성/자료/확인/위험/효과 판정)</td></tr><tr><th>1순위 업무</th><td class="ws-blank">(적합 개수가 가장 많은 것)</td></tr><tr><th>선정 근거</th><td class="ws-blank">(한 문장)</td></tr></table></div><div class="checkpoint"><span class="cp-h">확인 체크포인트</span><ul><li>세 업무 모두 다섯 기준으로 판정했는가</li><li>‘적합’이 세 개 이상인 업무를 우선했는가</li><li>개인정보 위험이 큰 업무를 뒤로 미뤘는가</li></ul></div><h3>한눈에 정리</h3><p>기존 시스템은 그대로 두고 반복되는 병목만 좁게 돕습니다. 반복성·자료·확인·위험·효과 다섯 기준으로 판정하고, 안전하게 시작할 수 있는 업무를 먼저 고릅니다.</p></div>
+          <div class="folio">50</div>
+        </section><section class="page">
+          <div class="rh"><span>전산직 공무원을 위한 생성형 AI 전문역량 강화</span><span>5장 · 어디에 AI를 넣을까</span></div>
+          <div class="content"><div class="note"><span class="nl">참고</span><p>실무 팁 — 병목을 고를 때 ‘가장 불편한 일’과 ‘가장 안전하게 바꿀 수 있는 일’이 다를 수 있습니다. 첫 도입은 후자를 골라 작은 성공을 먼저 만듭니다.</p></div><div class="nextq"><span>다음 장에서 답하는 질문</span><p>바꿀 업무를 골랐다면, 그 반복 업무를 실제로 자동화하는 도구를 어떻게 다루는지 배울 차례다.</p></div></div>
+          <div class="folio">51</div>
+        </section><section class="page">
+          <div class="rh"><span>전산직 공무원을 위한 생성형 AI 전문역량 강화</span><span>6장 · 바이브코딩과 코딩에이전트</span></div>
+          <div class="content"><div class="ch-opener">
+              <div class="ch-kicker">2과목 · 6장</div>
+              <h1 class="ch-title">바이브코딩과 코딩에이전트</h1>
+              <p class="ch-lead">반복 업무를 자동화하려면 코드가 필요합니다. 그러나 직접 프로그래밍 언어를 배우지 않아도, 도구에게 말로 시켜 만드는 방법이 있습니다. 이 장은 어떤 일에 어떤 도구가 맞는지, 코딩에이전트에게 어떻게 일을 맡기는지 설명합니다.</p>
+            </div><h3>먼저 확인할 현상</h3><p>코딩에이전트에게 “이 폴더의 엑셀을 하나로 합쳐줘”라고 입력하면, 도구가 코드를 만들고 실행해 합쳐진 파일을 돌려줍니다. 사람이 코드를 한 줄도 쓰지 않았지만 결과가 나옵니다. 코드를 직접 보지 않아도 결과 파일이 만들어지므로, 처음에는 마치 마법처럼 느껴집니다. 그러나 실제로는 사람의 지시가 코드로 옮겨지고 실행된 것일 뿐이며, 지시가 정확할수록 결과도 정확해집니다.</p></div>
+          <div class="folio">52</div>
+        </section><section class="page">
+          <div class="rh"><span>전산직 공무원을 위한 생성형 AI 전문역량 강화</span><span>6장 · 바이브코딩과 코딩에이전트</span></div>
+          <div class="content fill"><h3>바이브코딩의 정의</h3><p>바이브코딩이 가능해진 것은 코딩에이전트가 사람의 말을 코드로 옮기고, 그 코드를 실행해 결과까지 확인해 주기 때문입니다. 그래서 사용자는 ‘어떻게 만들지’가 아니라 ‘무엇을 원하는지’에 집중하면 됩니다. 다만 여기에는 분명한 한계가 있습니다. 원하는 것을 정확히 말하지 못하면, 에이전트도 정확히 만들지 못합니다. 즉 바이브코딩은 문제를 흐리게 정의해도 되는 방식이 아니라, 오히려 문제를 더 분명히 정의하도록 요구하는 방식입니다. 사용자·입력·출력·금지 조건을 한 문장으로 적을 수 있으면, 이후 결과 품질이 크게 안정됩니다.</p><p>바이브코딩이 특히 유용한 상황은, 시중의 완성된 프로그램으로는 딱 맞지 않는 우리 부서만의 자잘한 반복 업무입니다. 예를 들어 ‘파일명 앞에 날짜를 붙여 정리하기’, ‘여러 엑셀의 특정 열만 뽑아 합치기’, ‘PDF 여러 개에서 표만 추출하기’ 같은 일은, 시중 소프트웨어를 사서 쓰기에는 애매하고 손으로 하기에는 반복이 많습니다. 이런 일이야말로 코딩에이전트에게 말로 시켜 짧은 도구를 만들기에 적합합니다. 다만 만들어진 도구가 무엇을 하는지 대략의 흐름은 이해하고, 결과가 맞는지 반드시 확인해야 합니다. 특히 파일을 지우거나 덮어쓰는 동작은 실행 전에 내용을 점검해야 합니다.</p><p>바이브코딩은 프로그램을 직접 작성하는 대신, 코딩에이전트에게 목표를 말로 전달해 만들게 하는 방식입니다. 언어 문법을 외울 필요는 없고, 어떤 일에 어떤 도구가 맞는지 감을 잡는 것이 중요합니다.</p><p>여기서 오해하지 말아야 할 점이 있습니다. 바이브코딩은 코드를 몰라도 된다는 뜻이지, 아무것도 확인하지 않아도 된다는 뜻은 아닙니다. 도구가 만든 코드가 무엇을 하는지 대략의 흐름은 이해해야 하고, 결과가 맞는지 반드시 검증해야 합니다. 특히 파일을 지우거나 덮어쓰는 동작은 실행 전에 내용을 확인해야 합니다.</p></div>
+          <div class="folio">53</div>
+        </section><section class="page">
+          <div class="rh"><span>전산직 공무원을 위한 생성형 AI 전문역량 강화</span><span>6장 · 바이브코딩과 코딩에이전트</span></div>
+          <div class="content"><div class="term"><b>코딩에이전트</b><span>사람의 지시를 받아 코드를 만들고, 실행하고, 결과를 확인해 보고하는 프로그램입니다. Cursor가 대표적인 예입니다.</span></div><figure class="fig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 460" font-family="Pretendard, sans-serif">
+<rect width="920" height="460" fill="#F5F1ED"/><g transform="translate(0,18)"><defs><marker id="ah" markerWidth="11" markerHeight="11" refX="7.5" refY="3.2" orient="auto"><path d="M0,0 L8,3.2 L0,6.4 Z" fill="#865461"/></marker></defs><text x="48" y="46" font-size="16" fill="#756D70" font-weight="800" text-anchor="start">바이브코딩 — 업무 종류에 따라 세 도구를 나눠 쓴다</text><rect x="48.0" y="100" width="256.0" height="210" rx="10" fill="#fff" stroke="#D8CFC7" stroke-width="1.3"/><rect x="48.0" y="100" width="256.0" height="52" rx="10" fill="#865461" stroke="#865461" stroke-width="1.3"/><text x="176.0" y="133" font-size="19" fill="#fff" font-weight="800" text-anchor="middle">PowerShell</text><text x="176.0" y="192" font-size="15" fill="#2B2728" font-weight="800" text-anchor="middle">윈도우 파일 정리</text><text x="176.0" y="240" font-size="12" fill="#756D70" font-weight="800" text-anchor="middle">예시</text><text x="176.0" y="266" font-size="13" fill="#756D70" font-weight="550" text-anchor="middle">폴더·파일명·로그 정리</text><rect x="332.0" y="100" width="256.0" height="210" rx="10" fill="#fff" stroke="#D8CFC7" stroke-width="1.3"/><rect x="332.0" y="100" width="256.0" height="52" rx="10" fill="#865461" stroke="#865461" stroke-width="1.3"/><text x="460.0" y="133" font-size="19" fill="#fff" font-weight="800" text-anchor="middle">Python</text><text x="460.0" y="192" font-size="15" fill="#2B2728" font-weight="800" text-anchor="middle">문서·데이터 처리</text><text x="460.0" y="240" font-size="12" fill="#756D70" font-weight="800" text-anchor="middle">예시</text><text x="460.0" y="266" font-size="13" fill="#756D70" font-weight="550" text-anchor="middle">엑셀 병합·PDF 추출·집계</text><rect x="616.0" y="100" width="256.0" height="210" rx="10" fill="#fff" stroke="#D8CFC7" stroke-width="1.3"/><rect x="616.0" y="100" width="256.0" height="52" rx="10" fill="#865461" stroke="#865461" stroke-width="1.3"/><text x="744.0" y="133" font-size="19" fill="#fff" font-weight="800" text-anchor="middle">Node.js</text><text x="744.0" y="192" font-size="15" fill="#2B2728" font-weight="800" text-anchor="middle">간단한 웹·화면</text><text x="744.0" y="240" font-size="12" fill="#756D70" font-weight="800" text-anchor="middle">예시</text><text x="744.0" y="266" font-size="13" fill="#756D70" font-weight="550" text-anchor="middle">입력 화면·사내 API·챗봇 UI</text></g></svg><figcaption>업무 종류에 따라 PowerShell·Python·Node.js 세 도구가 각각 어떤 일에 쓰이는지 갈래로 나눈 그림</figcaption></figure></div>
+          <div class="folio">54</div>
+        </section><section class="page">
+          <div class="rh"><span>전산직 공무원을 위한 생성형 AI 전문역량 강화</span><span>6장 · 바이브코딩과 코딩에이전트</span></div>
+          <div class="content"><h3>도구를 언제 쓰는가</h3><table class="grid"><thead><tr><th>도구</th><th>잘하는 일</th><th>실습 예시</th></tr></thead><tbody><tr><td>PowerShell</td><td>윈도우 파일·폴더 정리</td><td>파일명·수정일·크기를 CSV로 수집</td></tr><tr><td>Python</td><td>문서·데이터 처리</td><td>월별 엑셀 병합, 누락값·합계 검증</td></tr><tr><td>Node.js</td><td>간단한 웹·화면</td><td>질문화면과 내부 API 중계 구현</td></tr></tbody></table><p>세 도구는 경쟁 관계가 아니라 역할이 다릅니다. 윈도우 파일을 정리할 때는 PowerShell이 편하고, 엑셀·문서·데이터를 다룰 때는 Python이 강하며, 화면이나 간단한 사내 웹이 필요하면 Node.js가 맞습니다. 처음에는 우리 부서에서 가장 자주 하는 반복 업무 한 가지를 골라, 거기에 맞는 도구 하나만 익히면 충분합니다.</p></div>
+          <div class="folio">55</div>
+        </section><section class="page">
+          <div class="rh"><span>전산직 공무원을 위한 생성형 AI 전문역량 강화</span><span>6장 · 바이브코딩과 코딩에이전트</span></div>
+          <div class="content fill"><h3>코딩에이전트에게 일 맡기는 법</h3><p>이 세 가지를 함께 말해야 하는 이유는, 각각이 서로 다른 실패를 막기 때문입니다. ‘목표’를 빠뜨리면 엉뚱한 것을 만들고, ‘지켜야 할 선’을 빠뜨리면 개인정보가 새거나 원본이 손상되며, ‘끝나고 확인’을 빠뜨리면 잘못된 결과를 검증 없이 신뢰하게 됩니다. 특히 ‘샘플로 먼저 시험해줘’ 한 줄은 실무에서 매우 중요합니다. 전체 데이터에 바로 실행하면 오류가 전체에 퍼지지만, 샘플 몇 개로 먼저 확인하면 문제를 초기에 잡을 수 있습니다.</p><p>코딩에이전트는 대신 타이핑하는 도구가 아니라 만들고 고치고 확인하는 작업 파트너입니다. 다음 세 가지를 함께 말하면 스스로 만들고 검증해 보고합니다.</p><div class="steps"><div class="st-h">지시에 담을 세 가지</div><ol><li><span class="sn">1</span><div><b>목표와 입력</b><p>무엇을 만들지, 입력 파일이 어디 있는지 말합니다.</p></div></li><li><span class="sn">2</span><div><b>지켜야 할 선</b><p>개인정보 제외, 원본 보존 같은 규칙을 말합니다.</p></div></li><li><span class="sn">3</span><div><b>끝나고 확인</b><p>결과 수와 오류를 보고하게 하고, 샘플로 먼저 시험하게 합니다.</p></div></li></ol></div></div>
+          <div class="folio">56</div>
+        </section><section class="page">
+          <div class="rh"><span>전산직 공무원을 위한 생성형 AI 전문역량 강화</span><span>6장 · 바이브코딩과 코딩에이전트</span></div>
+          <div class="content fill"><table class="ex"><caption>입력과 출력</caption><tr><th>입력</th><td>“이 폴더 엑셀 합쳐줘 / 개인정보 칸 빼줘 / output에 저장 / 몇 줄인지 알려줘 / 샘플 3개로 먼저”</td></tr><tr><th>출력</th><td>합쳐진 파일과 함께 처리 행 수·누락값 보고</td></tr></table><div class="limit"><span class="ll">이 방식이 보장하지 않는 것</span><p>코딩에이전트가 만든 코드도 오류가 있을 수 있습니다. 그래서 항상 샘플로 먼저 시험하고, 원본 파일은 그대로 두고 결과만 따로 저장하도록 지시해야 합니다.</p></div><table class="resp"><caption>역할의 구분</caption><tr><th>사람</th><td>목표·규칙·확인 기준을 지시합니다.</td></tr><tr><th>코딩에이전트</th><td>코드를 만들고 실행해 결과를 보고합니다.</td></tr><tr><th>사람</th><td>샘플 결과를 검증한 뒤 전체 실행을 승인합니다.</td></tr></table></div>
+          <div class="folio">57</div>
+        </section><section class="page">
+          <div class="rh"><span>전산직 공무원을 위한 생성형 AI 전문역량 강화</span><span>6장 · 바이브코딩과 코딩에이전트</span></div>
+          <div class="content"><div class="screen"><div class="sc-bar"><span></span><span></span><span></span><em>코딩에이전트 지시 예시</em></div><div class="sc-body"><div class="sl usr">data 폴더의 엑셀 파일들을 하나로 합쳐줘.</div><div class="sl usr">- 개인정보로 보이는 칸(이름·연락처)은 빼줘</div><div class="sl usr">- 원본은 그대로 두고 output 폴더에 저장해줘</div><div class="sl usr">- 다 되면 합친 행 수와 빠진 값이 있는지 알려줘</div><div class="sl usr">- 먼저 샘플 3개 파일로만 시험해줘</div><div class="sl out">샘플 3개로 시험한 결과: 총 152행, 빠진 값 3건.</div><div class="sl out">이대로 전체 실행할까요?</div></div></div></div>
+          <div class="folio">58</div>
+        </section><section class="page">
+          <div class="rh"><span>전산직 공무원을 위한 생성형 AI 전문역량 강화</span><span>6장 · 바이브코딩과 코딩에이전트</span></div>
+          <div class="content fill"><div class="prac-unit"><h3 class="prac-sec">실습 6 — 코딩에이전트로 엑셀 합치기</h3><p class="prac-intro">코딩에이전트에게 실제로 일을 맡겨 보는 실습입니다. 여러 엑셀 파일을 하나로 합치는 작업을, 코드를 한 줄도 쓰지 않고 지시문만으로 끝냅니다. 핵심은 목표·규칙·확인을 함께 말하는 것입니다.</p><div class="practice"><div class="pt-h"><span class="pt-badge">따라하기</span>엑셀 병합 맡기기</div><div class="pg-goal"><span>실습 목표</span>지시문만으로 여러 엑셀을 안전하게 하나로 합친다.</div><ol><li><span class="pn">1</span><div class="pc"><b>목표 말하기</b><p>“이 폴더의 엑셀을 하나로 합쳐줘”라고 씁니다.</p><div class="presult">→ 작업 목표 전달됨</div></div></li><li><span class="pn">2</span><div class="pc"><b>규칙 덧붙이기</b><p>“개인정보 칸 빼고, 원본 두고 output에 저장”을 덧붙입니다.</p><div class="presult">→ 안전 규칙 전달됨</div></div></li><li><span class="pn">3</span><div class="pc"><b>확인 요구</b><p>“합친 행 수와 빠진 값을 알려줘”를 덧붙입니다.</p><div class="presult">→ 검증 요청 전달됨</div></div></li><li><span class="pn">4</span><div class="pc"><b>샘플 먼저</b><p>“샘플 3개로 먼저 시험해줘”를 덧붙입니다.</p><div class="presult">→ 소규모 시험 요청됨</div></div></li><li><span class="pn">5</span><div class="pc"><b>결과 검토</b><p>샘플 결과의 행 수·오류를 확인합니다.</p><div class="presult">→ 이상 없으면 전체 실행 승인</div></div></li></ol></div></div></div>
+          <div class="folio">59</div>
+        </section><section class="page">
+          <div class="rh"><span>전산직 공무원을 위한 생성형 AI 전문역량 강화</span><span>6장 · 바이브코딩과 코딩에이전트</span></div>
+          <div class="content fill"><p>이 지시문 다섯 줄이 바이브코딩의 핵심입니다. 목표(합치기), 규칙(개인정보 제외·원본 보존), 확인(행 수·누락 보고), 시험(샘플 먼저)이 모두 들어 있습니다. 코드를 몰라도, 이 네 가지를 말로 전달하면 에이전트가 만들고 검증해 보고합니다.</p><div class="checkpoint"><span class="cp-h">확인 체크포인트</span><ul><li>지시에 목표·규칙·확인이 모두 들어갔는가</li><li>샘플로 먼저 시험하도록 요청했는가</li><li>원본을 보존하고 결과만 따로 저장하게 했는가</li></ul></div><table class="pitfall"><caption>자주 하는 실수와 해결</caption><thead><tr><th>이런 실수</th><th>이렇게 해결</th></tr></thead><tbody><tr><td class="pf-q">샘플 없이 바로 전체 실행</td><td class="pf-a">반드시 샘플 몇 개로 먼저 시험한다</td></tr><tr><td class="pf-q">원본 폴더에 결과를 덮어씀</td><td class="pf-a">결과는 별도 output 폴더에 저장한다</td></tr><tr><td class="pf-q">행 수 확인 없이 결과를 신뢰</td><td class="pf-a">넣은 행과 나온 행이 맞는지 대조한다</td></tr></tbody></table><h3>한눈에 정리</h3><p>바이브코딩은 도구에게 말로 시켜 반복 업무를 줄이는 방식입니다. PowerShell·Python·Node.js는 역할이 다르며, 코딩에이전트에게는 목표·규칙·확인을 함께 말해야 합니다. 코드를 몰라도 되지만 검증은 반드시 필요합니다.</p></div>
+          <div class="folio">60</div>
+        </section><section class="page">
+          <div class="rh"><span>전산직 공무원을 위한 생성형 AI 전문역량 강화</span><span>6장 · 바이브코딩과 코딩에이전트</span></div>
+          <div class="content"><div class="note"><span class="nl">참고</span><p>실무 팁 — 코딩에이전트에게는 결과뿐 아니라 ‘무엇을 했는지 한 줄로 설명해줘’를 함께 요청하면, 코드를 몰라도 처리 내용을 검토할 수 있습니다.</p></div><div class="screen"><div class="sc-bar"><span></span><span></span><span></span><em>코딩에이전트 지시 예시</em></div><div class="sc-body"><div class="sl usr">이 폴더 파일들의 이름·크기·수정일을 CSV로 만들어줘.</div><div class="sl usr">- 하위 폴더까지 포함해줘</div><div class="sl usr">- 결과는 list.csv로 저장해줘</div><div class="sl usr">- 파일을 옮기거나 지우지는 마</div><div class="sl out">완료: 48개 파일, list.csv 저장됨.</div></div></div></div>
+          <div class="folio">61</div>
+        </section><section class="page">
+          <div class="rh"><span>전산직 공무원을 위한 생성형 AI 전문역량 강화</span><span>6장 · 바이브코딩과 코딩에이전트</span></div>
+          <div class="content fill"><div class="prac-unit"><h3 class="prac-sec">실습 6-2 — 파일 목록을 표로 만들기</h3><p class="prac-intro">PowerShell을 쓰는 자동화를 코딩에이전트에게 맡겨 보는 실습입니다. 폴더 안 파일들의 이름·크기·수정일을 한 표로 뽑습니다. 문서 정리 현황을 파악할 때 유용합니다.</p><div class="practice"><div class="pt-h"><span class="pt-badge">따라하기</span>파일 현황 표 만들기</div><div class="pg-goal"><span>실습 목표</span>폴더의 파일 목록을 안전하게 표로 정리한다.</div><ol><li><span class="pn">1</span><div class="pc"><b>목표 말하기</b><p>“파일 이름·크기·수정일을 CSV로”라고 요청합니다.</p><div class="presult">→ 작업 목표 전달</div></div></li><li><span class="pn">2</span><div class="pc"><b>범위 지정</b><p>“하위 폴더까지 포함”을 덧붙입니다.</p><div class="presult">→ 범위가 정해짐</div></div></li><li><span class="pn">3</span><div class="pc"><b>안전 규칙</b><p>“옮기거나 지우지 마”를 덧붙입니다.</p><div class="presult">→ 읽기 전용 규칙 전달</div></div></li><li><span class="pn">4</span><div class="pc"><b>결과 확인</b><p>만들어진 CSV의 행 수와 폴더 파일 수를 비교합니다.</p><div class="presult">→ 수가 맞으면 성공</div></div></li></ol></div></div></div>
+          <div class="folio">62</div>
+        </section><section class="page">
+          <div class="rh"><span>전산직 공무원을 위한 생성형 AI 전문역량 강화</span><span>6장 · 바이브코딩과 코딩에이전트</span></div>
+          <div class="content"><table class="pitfall"><caption>자주 하는 실수와 해결</caption><thead><tr><th>이런 실수</th><th>이렇게 해결</th></tr></thead><tbody><tr><td class="pf-q">‘정리해줘’라고만 해서 파일이 이동됨</td><td class="pf-a">‘옮기거나 지우지 마, 목록만’이라고 명시한다</td></tr><tr><td class="pf-q">하위 폴더가 빠짐</td><td class="pf-a">‘하위 폴더 포함’을 지시에 넣는다</td></tr></tbody></table><div class="nextq"><span>다음 장에서 답하는 질문</span><p>우리 컴퓨터에서 도구로 자동화까지 했다면, 이제 인터넷 없이 사내망에서 AI 자체를 돌리는 방법이 궁금해진다.</p></div></div>
+          <div class="folio">63</div>
+        </section><section class="page part">
+          <div class="rh"><span>전산직 공무원을 위한 생성형 AI 전문역량 강화</span><span>3과목</span></div>
+          <div class="part-wrap">
+            <div class="part-no">3과목</div>
+            <h1 class="part-title">사내 AI 시스템 구축 실습</h1>
+            <p class="part-desc">사내망에서 도는 로컬 AI와, 우리 문서로만 답하는 RAG 챗봇을 만들고 직원 제작 도구를 관리합니다.</p>
+            <ul class="part-chs"><li><span>7</span>로컬 AI — 사내망 챗봇</li><li><span>8</span>RAG 챗봇과 도구 관리</li></ul>
+            <div class="part-obj"><span class="po-h">학습 목표</span><ul><li>사내망에서 도는 로컬 AI의 구조와 장단점을 설명할 수 있다.</li><li>우리 문서로만 답하고 출처를 표시하는 RAG의 원리를 이해한다.</li><li>직원 제작 도구를 등급으로 나눠 관리하는 기준을 세울 수 있다.</li></ul></div>
+          </div>
+          <div class="folio">64</div>
+        </section><section class="page">
+          <div class="rh"><span>전산직 공무원을 위한 생성형 AI 전문역량 강화</span><span>7장 · 로컬 AI — 사내망 챗봇</span></div>
+          <div class="content"><div class="ch-opener">
+              <div class="ch-kicker">3과목 · 7장</div>
+              <h1 class="ch-title">로컬 AI — 사내망 챗봇</h1>
+              <p class="ch-lead">자료를 외부로 보내기 어려운 업무에서는, 인터넷 없이 사내 장비 안에서 도는 AI가 필요합니다. 이 장은 Ollama로 로컬 챗봇을 실행하는 구조와, 그 장점과 한계를 설명합니다.</p>
+            </div><h3>먼저 확인할 현상</h3><p>Ollama를 설치하고 모델을 내려받으면, 인터넷 연결 없이도 내 컴퓨터 안에서 챗봇이 답합니다. 질문과 자료가 외부 서버로 나가지 않고 장비 안에서만 처리됩니다. 인터넷 연결을 끊어도 답이 나오는 것을 보면, 자료가 외부로 나가지 않는다는 사실을 직접 확인할 수 있습니다. 보안이 중요한 공공기관에서 로컬 AI가 주목받는 이유가 바로 여기에 있습니다.</p></div>
+          <div class="folio">65</div>
+        </section><section class="page">
+          <div class="rh"><span>전산직 공무원을 위한 생성형 AI 전문역량 강화</span><span>7장 · 로컬 AI — 사내망 챗봇</span></div>
+          <div class="content fill"><h3>로컬 AI의 정의</h3><p>공공기관에서 로컬 AI를 검토하는 이유는 대부분 보안 때문입니다. 그러나 로컬 AI를 도입한다고 해서 모든 문제가 해결되는 것은 아닙니다. 자료가 밖으로 나가지 않는 대신, 장비 성능이라는 새로운 제약이 생깁니다. 외부의 큰 모델은 강력한 서버에서 돌지만, 로컬 모델은 우리 기관의 PC나 서버에서 돌기 때문에 속도와 정확도가 그 장비 수준에 묶입니다. 그래서 로컬 AI는 ‘보안이 중요하고, 요구 정확도가 아주 높지는 않은’ 업무에 먼저 적용하는 것이 현실적입니다.</p><p>로컬 AI와 외부 서비스의 차이를 자동차에 비유하지 않고 그대로 설명하면 이렇습니다. 외부 서비스는 대형 데이터센터의 강력한 장비에서 모델을 돌리고, 우리는 인터넷으로 질문을 보내 답을 받습니다. 빠르고 정확하지만, 질문과 자료가 외부로 나갑니다. 로컬 AI는 우리 기관의 PC나 서버에 모델을 내려받아 그 장비에서 직접 돌립니다. 자료가 밖으로 나가지 않아 안전하지만, 그 장비의 성능만큼만 빠르고 정확합니다. 따라서 로컬 AI 도입은 ‘보안이 얼마나 중요한가’와 ‘우리 장비가 얼마나 좋은가’를 함께 따져 결정해야 하며, 두 가지를 모르는 채로 도입하면 느리고 부정확한 결과에 실망하기 쉽습니다.</p><p>로컬 AI는 외부 서버 대신 내 컴퓨터나 사내 장비 안에서 모델을 실행하는 방식입니다. 자료가 밖으로 나가지 않아 검토·실습에 안전하지만, 장비 성능에 따라 속도와 정확도가 달라집니다.</p><p>공공기관에서 로컬 AI가 주목받는 이유는 자료 보안 때문입니다. 외부 서비스에 자료를 보내면 그 자료가 어디에 저장되는지 통제하기 어렵습니다. 로컬 AI는 자료가 기관 장비 밖으로 나가지 않으므로, 민감한 내부 문서로 실습하거나 시험해 보기에 적합합니다. 다만 안전한 대신 성능은 외부의 큰 모델보다 낮을 수 있다는 점을 함께 고려해야 합니다.</p></div>
+          <div class="folio">66</div>
+        </section><section class="page">
+          <div class="rh"><span>전산직 공무원을 위한 생성형 AI 전문역량 강화</span><span>7장 · 로컬 AI — 사내망 챗봇</span></div>
+          <div class="content"><div class="term"><b>Ollama</b><span>로컬 장비에서 언어모델을 내려받아 실행해 주는 프로그램입니다. 명령 한 줄로 모델을 켜고 끌 수 있습니다.</span></div><figure class="fig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 460" font-family="Pretendard, sans-serif">
+<rect width="920" height="460" fill="#F5F1ED"/><g transform="translate(0,18)"><defs><marker id="ah" markerWidth="11" markerHeight="11" refX="7.5" refY="3.2" orient="auto"><path d="M0,0 L8,3.2 L0,6.4 Z" fill="#865461"/></marker></defs><text x="48" y="46" font-size="16" fill="#756D70" font-weight="800" text-anchor="start">로컬 AI — 모델 실행 위에 연결과 화면·기록을 쌓아야 서비스가 된다</text><rect x="48" y="90" width="824" height="90" rx="10" fill="#EDE5DD" stroke="#D8CFC7" stroke-width="1.3"/><text x="72" y="126" font-size="17" fill="#2B2728" font-weight="800" text-anchor="start">③ 화면·기록</text><text x="72" y="154" font-size="13.5" fill="#756D70" font-weight="550" text-anchor="start">질문 화면 · 파일 올리기 · 오류 안내 · 로그</text><text x="848" y="142" font-size="12.5" fill="#9A7A64" font-weight="700" text-anchor="end">사람이 실제로 쓰는 부분</text><rect x="48" y="194" width="824" height="90" rx="10" fill="#fff" stroke="#D8CFC7" stroke-width="1.3"/><text x="72" y="230" font-size="17" fill="#2B2728" font-weight="800" text-anchor="start">② 연결</text><text x="72" y="258" font-size="13.5" fill="#756D70" font-weight="550" text-anchor="start">질문과 자료를 모델에 전달</text><text x="848" y="246" font-size="12.5" fill="#9A7A64" font-weight="700" text-anchor="end">프로그램이 잇는 부분</text><rect x="48" y="298" width="824" height="90" rx="10" fill="#fff" stroke="#865461" stroke-width="1.6"/><text x="72" y="334" font-size="17" fill="#2B2728" font-weight="800" text-anchor="start">① 모델 실행</text><text x="72" y="362" font-size="13.5" fill="#756D70" font-weight="550" text-anchor="start">Ollama가 로컬 모델을 장비 위에서 구동</text><text x="848" y="350" font-size="12.5" fill="#9A7A64" font-weight="700" text-anchor="end">장비(그래픽카드) 위에서</text></g></svg><figcaption>장비 위에서 모델이 실행되고, 그 위에 연결 계층과 화면·기록 계층이 쌓이는 세 층 그림</figcaption></figure></div>
+          <div class="folio">67</div>
+        </section><section class="page">
+          <div class="rh"><span>전산직 공무원을 위한 생성형 AI 전문역량 강화</span><span>7장 · 로컬 AI — 사내망 챗봇</span></div>
+          <div class="content fill"><h3>모델 실행에서 서비스까지</h3><p>이 구분이 실무에서 중요한 이유는, 도입 성공을 판단하는 기준이 달라지기 때문입니다. ‘로컬 모델을 켰다’는 것은 시작일 뿐, 직원이 실제로 쓰려면 질문을 넣을 화면, 자료를 안전하게 올리는 통로, 오류가 났을 때의 안내, 누가 언제 무엇을 했는지의 기록이 함께 있어야 합니다. 이 부분을 준비하고 운영하는 것이 전산 담당자의 역할이며, 로컬 AI 프로젝트의 성패도 사실 모델 자체보다 이 운영 준비에서 갈립니다.</p><p>모델을 켜는 것만으로는 ‘서비스’가 되지 않습니다. 사용자가 질문을 넣을 화면, 자료를 올릴 통로, 오류를 안내하는 부분, 처리 기록이 함께 있어야 업무에 쓸 수 있는 서비스가 됩니다.</p><p>이 구분은 도입을 검토할 때 특히 중요합니다. “로컬 AI를 도입했다”는 말이 곧 “업무에 바로 쓸 수 있다”는 뜻은 아닙니다. 실제 업무에 쓰려면 사용자가 접근할 화면, 자료를 안전하게 올리는 통로, 오류가 났을 때의 안내, 누가 언제 무엇을 했는지의 기록이 갖춰져야 합니다. 이 부분을 준비하는 것이 전산 담당자의 몫입니다.</p><table class="grid"><thead><tr><th>계층</th><th>무엇을 하는가</th><th>예</th></tr></thead><tbody><tr><td>모델 실행</td><td>로컬 모델을 장비 위에서 돌림</td><td>Ollama가 모델을 구동</td></tr><tr><td>연결</td><td>질문과 자료를 모델에 전달</td><td>프로그램이 입력을 중계</td></tr><tr><td>화면·기록</td><td>질문 화면·파일 올리기·로그</td><td>사용자가 실제로 쓰는 부분</td></tr></tbody></table></div>
+          <div class="folio">68</div>
+        </section><section class="page">
+          <div class="rh"><span>전산직 공무원을 위한 생성형 AI 전문역량 강화</span><span>7장 · 로컬 AI — 사내망 챗봇</span></div>
+          <div class="content fill"><h3>장점과 한계</h3><table class="grid"><thead><tr><th>구분</th><th>내용</th></tr></thead><tbody><tr><td>장점</td><td>자료를 외부로 보내지 않아 실습·검토에 안전하다</td></tr><tr><td>한계</td><td>장비의 그래픽카드·메모리에 따라 느리고 덜 정확할 수 있다</td></tr><tr><td>확인</td><td>도입 전 응답 속도와 메모리 사용량을 미리 측정한다</td></tr></tbody></table><div class="limit"><span class="ll">이 방식이 보장하지 않는 것</span><p>로컬 모델은 외부의 큰 모델보다 성능이 낮을 수 있습니다. 그래서 정확도가 중요한 업무에는 적합성을 반드시 시험한 뒤 적용해야 합니다.</p></div><table class="resp"><caption>역할의 구분</caption><tr><th>장비</th><td>모델 실행에 필요한 연산을 담당합니다.</td></tr><tr><th>프로그램</th><td>질문·자료 전달과 화면·기록을 담당합니다.</td></tr><tr><th>사람</th><td>보안 요건과 성능 한계를 확인하고 적용을 판단합니다.</td></tr></table></div>
+          <div class="folio">69</div>
+        </section><section class="page">
+          <div class="rh"><span>전산직 공무원을 위한 생성형 AI 전문역량 강화</span><span>7장 · 로컬 AI — 사내망 챗봇</span></div>
+          <div class="content"><div class="screen"><div class="sc-bar"><span></span><span></span><span></span><em>터미널에서 로컬 모델 실행</em></div><div class="sc-body"><div class="sl cmd">ollama pull llama3.2</div><div class="sl out">모델을 내려받는 중... 완료</div><div class="sl cmd">ollama run llama3.2</div><div class="sl usr">안녕, 너는 인터넷에 연결되어 있니?</div><div class="sl out">저는 이 컴퓨터 안에서 실행되고 있습니다.</div><div class="sl out">입력하신 내용은 외부로 전송되지 않습니다.</div></div></div></div>
+          <div class="folio">70</div>
+        </section><section class="page">
+          <div class="rh"><span>전산직 공무원을 위한 생성형 AI 전문역량 강화</span><span>7장 · 로컬 AI — 사내망 챗봇</span></div>
+          <div class="content fill"><div class="prac-unit"><h3 class="prac-sec">실습 7 — Ollama로 로컬 챗봇 켜기</h3><p class="prac-intro">사내 장비 안에서만 도는 챗봇을 직접 실행하는 실습입니다. Ollama를 설치하고 모델을 내려받아, 인터넷 없이 대화가 되는지 확인합니다. 자료가 외부로 나가지 않는다는 점을 눈으로 확인하는 것이 목표입니다.</p><div class="practice"><div class="pt-h"><span class="pt-badge">따라하기</span>로컬 챗봇 실행</div><div class="pg-goal"><span>실습 목표</span>인터넷 없이 장비 안에서 챗봇을 실행해 본다.</div><ol><li><span class="pn">1</span><div class="pc"><b>설치 확인</b><p>Ollama가 설치돼 있는지 확인합니다.</p><div class="presult">→ 설치 완료 상태</div></div></li><li><span class="pn">2</span><div class="pc"><b>모델 내려받기</b><p>작은 모델 하나를 내려받습니다.</p><div class="presult">→ 모델 다운로드 완료</div></div></li><li><span class="pn">3</span><div class="pc"><b>실행</b><p>모델을 실행해 대화창을 엽니다.</p><div class="presult">→ 질문 입력 대기 상태</div></div></li><li><span class="pn">4</span><div class="pc"><b>질문하기</b><p>간단한 질문을 입력합니다.</p><div class="presult">→ 장비 안에서 답이 나옴</div></div></li><li><span class="pn">5</span><div class="pc"><b>속도 체감</b><p>답이 나오는 속도를 외부 서비스와 비교합니다.</p><div class="presult">→ 장비 성능에 따른 차이 확인</div></div></li></ol></div></div></div>
+          <div class="folio">71</div>
+        </section><section class="page">
+          <div class="rh"><span>전산직 공무원을 위한 생성형 AI 전문역량 강화</span><span>7장 · 로컬 AI — 사내망 챗봇</span></div>
+          <div class="content fill"><p>실행해 보면 두 가지를 체감합니다. 첫째, 자료가 밖으로 나가지 않아 안심하고 내부 문서로 시험할 수 있습니다. 둘째, 장비 성능에 따라 외부의 큰 모델보다 느리거나 답이 단순할 수 있습니다. 이 장단점을 알고 나면, 어떤 업무에 로컬 AI가 맞는지 판단할 수 있습니다.</p><div class="checkpoint"><span class="cp-h">확인 체크포인트</span><ul><li>인터넷 없이 답이 나오는 것을 확인했는가</li><li>응답 속도가 장비에 따라 다름을 체감했는가</li><li>내부 문서로 시험해도 안전한 이유를 이해했는가</li></ul></div><table class="pitfall"><caption>자주 하는 실수와 해결</caption><thead><tr><th>이런 실수</th><th>이렇게 해결</th></tr></thead><tbody><tr><td class="pf-q">고사양이 필요한 큰 모델을 저사양 PC에서 실행</td><td class="pf-a">장비에 맞는 작은 모델부터 시작한다</td></tr><tr><td class="pf-q">모델만 켜고 ‘서비스 완성’으로 오해</td><td class="pf-a">화면·파일 통로·기록까지 갖춰야 서비스다</td></tr></tbody></table><h3>한눈에 정리</h3><p>로컬 AI는 자료를 외부로 보내지 않고 장비 안에서 모델을 돌립니다. 보안에 유리하지만 성능은 낮을 수 있습니다. 모델만 켜는 것과, 화면·파일 통로·기록을 갖춘 서비스는 다릅니다.</p></div>
+          <div class="folio">72</div>
+        </section><section class="page">
+          <div class="rh"><span>전산직 공무원을 위한 생성형 AI 전문역량 강화</span><span>7장 · 로컬 AI — 사내망 챗봇</span></div>
+          <div class="content"><div class="note"><span class="nl">참고</span><p>실무 팁 — 로컬 AI 도입 전에는 실제 업무 자료 몇 건으로 응답 속도와 정확도를 측정해 기록해 두면, 도입 여부를 숫자로 설득할 수 있습니다.</p></div><div class="nextq"><span>다음 장에서 답하는 질문</span><p>모델을 사내에서 돌릴 수 있다면, 이제 우리 문서만 근거로 답하게 만드는 방법이 마지막 과제로 남는다.</p></div></div>
+          <div class="folio">73</div>
+        </section><section class="page">
+          <div class="rh"><span>전산직 공무원을 위한 생성형 AI 전문역량 강화</span><span>8장 · RAG 챗봇과 도구 관리</span></div>
+          <div class="content"><div class="ch-opener">
+              <div class="ch-kicker">3과목 · 8장</div>
+              <h1 class="ch-title">RAG 챗봇과 도구 관리</h1>
+              <p class="ch-lead">AI가 우리 부서 문서만 근거로 답하게 하려면, 먼저 찾아본 뒤 답하는 구조가 필요합니다. 이 구조를 RAG라고 합니다. 이 장은 RAG의 흐름과 출처 표시, 그리고 직원이 만든 자동화 도구를 관리하는 기준을 설명합니다.</p>
+            </div><h3>먼저 확인할 현상</h3><p>우리 부서 지침 문서를 올려 둔 챗봇에 질문하면, 그 문서 내용을 근거로 답하고 답 아래에 어느 문서·어느 문단을 봤는지 출처를 표시합니다. 문서에 없는 질문에는 추측하지 않고 ‘찾을 수 없다’고 답합니다. 문서에 있는 내용을 물으면 근거와 함께 답하고, 문서에 없는 내용을 물으면 지어내지 않고 모른다고 답하는 이 두 가지 태도가, 일반 챗봇과 RAG 챗봇을 가르는 결정적 차이입니다.</p></div>
+          <div class="folio">74</div>
+        </section><section class="page">
+          <div class="rh"><span>전산직 공무원을 위한 생성형 AI 전문역량 강화</span><span>8장 · RAG 챗봇과 도구 관리</span></div>
+          <div class="content fill"><h3>RAG의 정의</h3><p>RAG가 공공 업무에 특히 잘 맞는 이유는, 답의 근거를 문서로 고정할 수 있기 때문입니다. 일반 챗봇의 답은 근거를 확인할 방법이 없어 그대로 업무에 쓰기 어렵습니다. RAG 챗봇은 답과 함께 ‘어느 문서 몇 조를 봤는지’를 표시하므로, 담당자가 원문을 열어 즉시 검증할 수 있습니다. 또한 문서에 없는 내용은 ‘찾을 수 없다’고 답하게 만들 수 있어, 근거 없는 답변으로 인한 사고를 줄입니다. 이 두 가지 — 출처 표시와 모르면 모른다 — 가 RAG를 신뢰할 수 있는 업무 도구로 만드는 핵심입니다.</p><p>RAG가 일반 챗봇과 어떻게 다른지 실제 대화로 비교하면 분명합니다. 일반 챗봇에 ‘출장비 숙박 한도가 얼마냐’고 물으면, 학습한 일반 지식으로 ‘보통 얼마쯤’이라고 답하지만 그것이 우리 기관 규정인지는 알 수 없습니다. RAG 챗봇에 같은 질문을 하면, 먼저 우리 기관의 여비 지침 문서에서 관련 문단을 찾고, 그 문단을 근거로 ‘1박 최대 7만원’이라고 답하며, 아래에 ‘여비지침 5조’라는 출처를 붙입니다. 담당자는 그 조항을 열어 답이 맞는지 즉시 확인할 수 있습니다. 또한 지침에 없는 내용을 물으면 지어내지 않고 ‘문서에서 찾을 수 없다’고 답합니다. 이 두 가지 태도가 RAG를 실제 업무에 신뢰하고 쓸 수 있게 만듭니다.</p><p>RAG는 질문이 오면 관련 문단을 먼저 찾고, 그 문단을 근거로 답을 만드는 방식입니다. 문서를 넣으면 알아서 답하는 기능이 아니라, ‘검색한 뒤 생성하는’ 구조입니다.</p><p>일반 챗봇과 RAG 챗봇의 가장 큰 차이는 ‘근거’입니다. 일반 챗봇은 학습한 내용을 바탕으로 그럴듯하게 답하지만, 그 답이 우리 기관 규정과 맞는지는 알 수 없습니다. RAG 챗봇은 답하기 전에 우리 문서에서 관련 문단을 찾고, 그 문단을 근거로 답하며, 어느 문서를 봤는지 함께 보여 줍니다. 그래서 담당자가 답의 근거를 즉시 검토할 수 있습니다.</p></div>
+          <div class="folio">75</div>
+        </section><section class="page">
+          <div class="rh"><span>전산직 공무원을 위한 생성형 AI 전문역량 강화</span><span>8장 · RAG 챗봇과 도구 관리</span></div>
+          <div class="content"><div class="term"><b>RAG</b><span>검색으로 근거 문단을 찾은 뒤 그 내용으로 답을 만드는 방식입니다. 영어 Retrieval-Augmented Generation의 약자로, ‘검색으로 보강한 생성’을 뜻합니다.</span></div><figure class="fig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 460" font-family="Pretendard, sans-serif">
+<rect width="920" height="460" fill="#F5F1ED"/><g transform="translate(0,26)"><defs><marker id="ah" markerWidth="11" markerHeight="11" refX="7.5" refY="3.2" orient="auto"><path d="M0,0 L8,3.2 L0,6.4 Z" fill="#865461"/></marker></defs><text x="48" y="46" font-size="16" fill="#756D70" font-weight="800" text-anchor="start">RAG — 우리 문서에서 근거를 찾은 뒤 출처와 함께 답한다</text><rect x="48" y="104" width="186.5" height="86" rx="10" fill="#fff" stroke="#D8CFC7" stroke-width="1.3"/><text x="141.25" y="142" font-size="15.5" fill="#2B2728" font-weight="800" text-anchor="middle">1. 모으기</text><text x="141.25" y="168" font-size="13" fill="#756D70" font-weight="550" text-anchor="middle">문서 수집</text><line x1="237.5" y1="147.0" x2="257.5" y2="147.0" stroke="#865461" stroke-width="2.2" marker-end="url(#ah)"/><rect x="260.5" y="104" width="186.5" height="86" rx="10" fill="#fff" stroke="#D8CFC7" stroke-width="1.3"/><text x="353.75" y="142" font-size="15.5" fill="#2B2728" font-weight="800" text-anchor="middle">2. 나누기</text><text x="353.75" y="168" font-size="13" fill="#756D70" font-weight="550" text-anchor="middle">문단 분할</text><line x1="450.0" y1="147.0" x2="470.0" y2="147.0" stroke="#865461" stroke-width="2.2" marker-end="url(#ah)"/><rect x="473.0" y="104" width="186.5" height="86" rx="10" fill="#fff" stroke="#D8CFC7" stroke-width="1.3"/><text x="566.25" y="142" font-size="15.5" fill="#2B2728" font-weight="800" text-anchor="middle">3. 색인</text><text x="566.25" y="168" font-size="13" fill="#756D70" font-weight="550" text-anchor="middle">검색 준비</text><line x1="662.5" y1="147.0" x2="682.5" y2="147.0" stroke="#865461" stroke-width="2.2" marker-end="url(#ah)"/><rect x="685.5" y="104" width="186.5" height="86" rx="10" fill="#fff" stroke="#865461" stroke-width="1.6"/><text x="778.75" y="142" font-size="15.5" fill="#2B2728" font-weight="800" text-anchor="middle">4. 검색 후 생성</text><text x="778.75" y="168" font-size="13" fill="#756D70" font-weight="550" text-anchor="middle">출처와 답</text><rect x="48" y="250" width="824" height="110" rx="10" fill="#faf3f1" stroke="#9A7A64" stroke-width="1.4"/><text x="72" y="288" font-size="14.5" fill="#9A7A64" font-weight="900" text-anchor="start">핵심 — 출처 표시와 ‘모르면 모른다’</text><text x="72" y="320" font-size="14" fill="#2B2728" font-weight="600" text-anchor="start">답 아래에 어느 문서·어느 문단을 봤는지 표시한다</text><text x="72" y="346" font-size="14" fill="#2B2728" font-weight="600" text-anchor="start">문서에 없는 질문에는 지어내지 않고 ‘찾을 수 없다’고 답한다</text></g></svg><figcaption>문서 수집·문단 분할·색인·검색 후 생성으로 이어지고 답 아래 출처가 표시되는 순서 그림</figcaption></figure></div>
+          <div class="folio">76</div>
+        </section><section class="page">
+          <div class="rh"><span>전산직 공무원을 위한 생성형 AI 전문역량 강화</span><span>8장 · RAG 챗봇과 도구 관리</span></div>
+          <div class="content fill"><div class="steps"><div class="st-h">RAG가 답을 만드는 순서</div><ol><li><span class="sn">1</span><div><b>모으기</b><p>지침·FAQ·매뉴얼을 폴더에 모읍니다.</p></div></li><li><span class="sn">2</span><div><b>나누기</b><p>문단 단위로 쪼개 문서명·문단번호를 붙입니다.</p></div></li><li><span class="sn">3</span><div><b>색인</b><p>비슷한 문단을 찾을 수 있도록 저장합니다.</p></div></li><li><span class="sn">4</span><div><b>검색 후 생성</b><p>질문에 맞는 문단을 찾아 출처와 함께 답합니다.</p></div></li></ol></div><div class="term"><b>벡터(vector)</b><span>문장의 의미를 숫자 목록으로 바꾼 것입니다. 의미가 비슷한 문장은 벡터도 가까워, 비슷한 문단을 빠르게 찾는 데 쓰입니다.</span></div><div class="note"><span class="nl">참고</span><p>RAG의 품질은 문단을 얼마나 알맞게 나누는지, 그리고 답 아래 출처를 정확히 표시하는지에 크게 좌우됩니다. 출처가 있어야 담당자가 답을 검토할 수 있고, 문서에 없는 내용은 ‘모른다’고 답하게 만들 수 있습니다.</p></div></div>
+          <div class="folio">77</div>
+        </section><section class="page">
+          <div class="rh"><span>전산직 공무원을 위한 생성형 AI 전문역량 강화</span><span>8장 · RAG 챗봇과 도구 관리</span></div>
+          <div class="content fill"><h3>직원 제작 도구의 관리</h3><p>직원 제작 도구를 관리하는 기준을 세울 때는 ‘금지’와 ‘방치’ 사이의 균형이 중요합니다. 전면 금지하면 현장의 유용한 자동화가 사라지고, 오히려 담당자 몰래 쓰이면서 통제 밖으로 빠져나갑니다. 반대로 아무 기준 없이 방치하면, 출처가 불분명한 실행파일이 기관망에서 돌아 보안 사고로 이어질 수 있습니다. 그래서 개인이 쓰는 작은 도구는 열어 두되, 여러 부서가 함께 쓰거나 위험한 동작을 하는 도구는 점검한다는 등급 기준이 현실적인 해법입니다. 이 기준을 문서로 만들어 공유하는 것 자체가 전산 담당자의 중요한 업무입니다.</p><p>직원들이 생성형 AI로 만든 작은 자동화 파일은 막기보다 등급을 나눠 관리하는 것이 현실적입니다. 개인 실험은 열어 두되, 기관 운영으로 넘어갈수록 통제를 강화합니다.</p><p>직원들이 만든 도구를 무조건 금지하면, 현장의 유용한 자동화가 사라지고 오히려 통제 밖에서 몰래 쓰이게 됩니다. 반대로 아무 기준 없이 두면, 출처가 불분명한 실행파일이 기관망에서 돌아 보안 사고로 이어질 수 있습니다. 그래서 ‘개인이 쓰는 것은 열어 두고, 여럿이 쓰거나 위험한 것은 점검한다’는 등급 기준이 현실적인 균형점입니다.</p></div>
+          <div class="folio">78</div>
+        </section><section class="page">
+          <div class="rh"><span>전산직 공무원을 위한 생성형 AI 전문역량 강화</span><span>8장 · RAG 챗봇과 도구 관리</span></div>
+          <div class="content fill"><table class="grid"><thead><tr><th>등급</th><th>예시</th><th>전산직 대응</th></tr></thead><tbody><tr><td>개인 보조</td><td>엑셀 정리 스크립트, 단일 계산기</td><td>개인정보 제외, 개인 PC에서만 실행</td></tr><tr><td>부서 공유</td><td>부서용 변환 도구, 보고서 생성기</td><td>소스 보관, 사용법 문서, 담당자 지정</td></tr><tr><td>기관 운영</td><td>여러 부서가 쓰는 exe, 내부 웹도구</td><td>보안 점검, 권한, 로그, 백업</td></tr><tr><td>중단 대상</td><td>출처 불명 exe, 외부 전송, 원본 삭제</td><td>격리 시험 전 배포 금지</td></tr></tbody></table><div class="limit"><span class="ll">이 방식이 보장하지 않는 것</span><p>RAG 챗봇도 색인에 없는 최신 문서는 답하지 못합니다. 그래서 문서가 바뀌면 다시 색인해야 하고, 폐지된 문서는 색인에서 빼야 합니다.</p></div><table class="resp"><caption>역할의 구분</caption><tr><th>서비스</th><td>질문에 맞는 문단을 찾아 모델에 전달합니다.</td></tr><tr><th>모델</th><td>전달된 문단을 근거로 답 문장을 생성합니다.</td></tr><tr><th>전산직</th><td>문서 갱신·출처 표시·도구 등급을 관리합니다.</td></tr></table></div>
+          <div class="folio">79</div>
+        </section><section class="page">
+          <div class="rh"><span>전산직 공무원을 위한 생성형 AI 전문역량 강화</span><span>8장 · RAG 챗봇과 도구 관리</span></div>
+          <div class="content fill"><h3>과정을 마치며 — 전체 흐름 되짚기</h3><p>이 교재는 프롬프트에서 시작해 RAG까지, 생성형 AI가 업무 도구가 되는 하나의 흐름을 따라왔습니다. 프롬프트는 한 번의 부탁이고, 컨텍스트는 그 부탁에 붙이는 자료이며, 하네스는 여러 도구를 순서로 묶은 틀입니다. 모델의 원리를 알면 어디까지 믿을지 판단할 수 있고, 병목을 고르면 어디에 AI를 넣을지 정할 수 있습니다.</p><p>기억할 원칙은 세 가지입니다. 첫째, AI의 성과는 좋은 모델이 아니라 자료를 붙이고 흐름으로 묶고 사람이 확인하는 구조에서 나옵니다. 둘째, 기존 시스템은 그대로 두고 반복되는 병목만 좁게 돕습니다. 셋째, 틀리면 안 되는 값은 언제나 사람이 원문으로 다시 확인합니다. 이 원칙 위에서 로컬 AI와 RAG, 직원 제작 도구 관리까지 우리 기관에 맞게 운영 기준을 세우면 됩니다.</p><div class="screen"><div class="sc-bar"><span></span><span></span><span></span><em>완성된 RAG 챗봇 화면 예시</em></div><div class="sc-body"><div class="sl usr">출장비 지급 기준이 어떻게 되나요?</div><div class="sl out">국내 출장의 경우 실비로 지급합니다.(지침 3조)</div><div class="sl out">숙박은 1박 최대 7만원까지 인정됩니다.(지침 5조)</div><div class="sl out">[출처] 여비지침.pdf · 3조, 5조</div><div class="sl usr">우주 여행 경비도 되나요?</div><div class="sl out">해당 내용은 문서에서 찾을 수 없습니다.</div></div></div></div>
+          <div class="folio">80</div>
+        </section><section class="page">
+          <div class="rh"><span>전산직 공무원을 위한 생성형 AI 전문역량 강화</span><span>8장 · RAG 챗봇과 도구 관리</span></div>
+          <div class="content fill"><div class="prac-unit"><h3 class="prac-sec">실습 8 — 우리 문서로 답하는 RAG 챗봇 만들기</h3><p class="prac-intro">이 과정의 마지막 실습입니다. 코딩에이전트와 함께, 우리 부서 문서로만 답하고 출처를 보여 주는 작은 챗봇을 만듭니다. 코딩 실력보다 무엇을 시킬지 잘 나누는 것이 중요합니다.</p><div class="practice"><div class="pt-h"><span class="pt-badge">따라하기</span>RAG 챗봇 만들기</div><div class="pg-goal"><span>실습 목표</span>우리 문서로만 답하고 출처를 표시하는 챗봇을 만든다.</div><ol><li><span class="pn">1</span><div class="pc"><b>문서 준비</b><p>개인정보 없는 지침·FAQ 몇 개를 폴더에 모읍니다.</p><div class="presult">→ docs 폴더 준비 완료</div></div></li><li><span class="pn">2</span><div class="pc"><b>지시하기</b><p>코딩에이전트에게 “이 폴더 문서로만 답하고 출처를 보여주는 챗봇 만들어줘”라고 씁니다.</p><div class="presult">→ 작업 목표 전달됨</div></div></li><li><span class="pn">3</span><div class="pc"><b>규칙 덧붙이기</b><p>“문서에 없으면 모른다고 답해줘”를 덧붙입니다.</p><div class="presult">→ 추측 금지 규칙 전달됨</div></div></li><li><span class="pn">4</span><div class="pc"><b>시험 질문</b><p>문서에 있는 내용과 없는 내용을 각각 물어봅니다.</p><div class="presult">→ 있는 질문엔 출처, 없는 질문엔 모른다</div></div></li><li><span class="pn">5</span><div class="pc"><b>출처 확인</b><p>답 아래에 문서명·조항이 나오는지 봅니다.</p><div class="presult">→ 출처 표시 확인</div></div></li></ol></div></div></div>
+          <div class="folio">81</div>
+        </section><section class="page">
+          <div class="rh"><span>전산직 공무원을 위한 생성형 AI 전문역량 강화</span><span>8장 · RAG 챗봇과 도구 관리</span></div>
+          <div class="content fill"><p>완성도보다 세 가지가 되는지가 실습의 목표입니다. 첫째, 우리 문서에서 찾아 답한다. 둘째, 답 아래에 출처를 붙인다. 셋째, 문서에 없는 질문에는 지어내지 않고 ‘모른다’고 답한다. 이 세 가지가 되면, 담당자가 답을 신뢰하고 검토할 수 있는 챗봇입니다.</p><div class="worksheet"><div class="ws-h"><span class="ws-badge">실습 워크시트</span>RAG 챗봇 실습 점검표</div><table><tr><th>사용한 문서</th><td class="ws-blank">(예: 여비지침, 복무 FAQ)</td></tr><tr><th>있는 내용 질문</th><td class="ws-blank">(답과 출처가 나왔는가)</td></tr><tr><th>없는 내용 질문</th><td class="ws-blank">(‘모른다’고 답했는가)</td></tr><tr><th>출처 표시</th><td class="ws-blank">(문서명·조항이 나왔는가)</td></tr><tr><th>개선할 점</th><td class="ws-blank">(자유 기록)</td></tr></table></div><div class="checkpoint"><span class="cp-h">확인 체크포인트</span><ul><li>있는 내용은 출처와 함께 답했는가</li><li>없는 내용은 지어내지 않고 모른다고 했는가</li><li>답의 근거를 담당자가 바로 확인할 수 있는가</li></ul></div></div>
+          <div class="folio">82</div>
+        </section><section class="page">
+          <div class="rh"><span>전산직 공무원을 위한 생성형 AI 전문역량 강화</span><span>8장 · RAG 챗봇과 도구 관리</span></div>
+          <div class="content fill"><table class="pitfall"><caption>자주 하는 실수와 해결</caption><thead><tr><th>이런 실수</th><th>이렇게 해결</th></tr></thead><tbody><tr><td class="pf-q">문서에 개인정보를 넣어 색인</td><td class="pf-a">개인정보 없는 문서만 색인한다</td></tr><tr><td class="pf-q">문서가 바뀌었는데 다시 색인 안 함</td><td class="pf-a">문서 갱신 시 반드시 재색인한다</td></tr><tr><td class="pf-q">출처 표시를 끄고 답만 보여줌</td><td class="pf-a">출처 표시는 검토를 위해 반드시 켠다</td></tr></tbody></table><h3>한눈에 정리</h3><p>RAG는 우리 문서에서 근거를 찾은 뒤 그 내용으로 답하고 출처를 표시합니다. 문서에 없는 질문에는 모른다고 답하게 만듭니다. 직원 제작 도구는 개인·부서·기관·중단 등급으로 나눠 관리합니다.</p><div class="note"><span class="nl">참고</span><p>실무 팁 — RAG 챗봇은 문서가 바뀔 때마다 다시 색인해야 합니다. ‘문서 갱신 → 재색인’을 담당자 업무 절차에 넣어 두면 오래된 답을 막을 수 있습니다.</p></div></div>
+          <div class="folio">83</div>
+        </section><section class="page">
+          <div class="rh"><span>전산직 공무원을 위한 생성형 AI 전문역량 강화</span><span>8장 · RAG 챗봇과 도구 관리</span></div>
+          <div class="content fill"><div class="prac-unit"><h3 class="prac-sec">실습 8-2 — 출처가 맞는지 검증하기</h3><p class="prac-intro">RAG 챗봇의 답을 그대로 믿지 않고, 표시된 출처가 실제 문서와 맞는지 확인하는 실습입니다. 이 검증 습관이 있어야 RAG 챗봇을 업무에 안전하게 쓸 수 있습니다.</p><div class="practice"><div class="pt-h"><span class="pt-badge">따라하기</span>출처 대조하기</div><div class="pg-goal"><span>실습 목표</span>챗봇 답의 출처를 원문과 대조해 정확성을 확인한다.</div><ol><li><span class="pn">1</span><div class="pc"><b>질문하기</b><p>문서에 있는 내용을 챗봇에 물어봅니다.</p><div class="presult">→ 답과 출처가 나옴</div></div></li><li><span class="pn">2</span><div class="pc"><b>출처 열기</b><p>표시된 문서·조항을 원문에서 찾습니다.</p><div class="presult">→ 해당 조항 위치 확인</div></div></li><li><span class="pn">3</span><div class="pc"><b>내용 대조</b><p>답 내용이 원문과 일치하는지 봅니다.</p><div class="presult">→ 일치 여부 판단</div></div></li><li><span class="pn">4</span><div class="pc"><b>불일치 처리</b><p>다르면 문서를 다시 색인하거나 문단 분할을 조정합니다.</p><div class="presult">→ 개선 방향 결정</div></div></li></ol></div></div></div>
+          <div class="folio">84</div>
+        </section><section class="page">
+          <div class="rh"><span>전산직 공무원을 위한 생성형 AI 전문역량 강화</span><span>8장 · RAG 챗봇과 도구 관리</span></div>
+          <div class="content"><div class="checkpoint"><span class="cp-h">확인 체크포인트</span><ul><li>표시된 출처가 실제 문서에 있는가</li><li>답 내용이 원문과 일치하는가</li><li>불일치 시 재색인·분할 조정을 이해했는가</li></ul></div><p>출처 검증에서 불일치가 자주 나온다면, 문단을 너무 크거나 작게 나눈 경우가 많습니다. 문단이 너무 크면 관련 없는 내용이 섞이고, 너무 작으면 맥락이 끊깁니다. 적절한 크기로 다시 나누면 정확도가 올라갑니다.</p><div class="nextq"><span>다음 장에서 답하는 질문</span><p>이제 우리 문서로 답하는 챗봇과 직원 제작 도구까지 다뤘으니, 기관의 AI 운영 기준을 스스로 세울 수 있다.</p></div></div>
+          <div class="folio">85</div>
+        </section><section class="page part">
+          <div class="rh"><span>전산직 공무원을 위한 생성형 AI 전문역량 강화</span><span>부록</span></div>
+          <div class="part-wrap">
+            <div class="part-no">부록</div>
+            <h1 class="part-title">용어 사전과 실습 준비</h1>
+            <p class="part-desc">강의와 실습을 마친 뒤 복습하고, 다음 실습을 준비할 때 참고하는 자료입니다.</p>
+            <ul class="part-chs"><li><span>9</span>부록 A · 용어 사전</li><li><span>10</span>부록 B · 실습 환경 준비</li></ul>
+            <div class="part-obj"><span class="po-h">학습 목표</span><ul><li>교재의 핵심 용어를 실무 관점에서 복습한다.</li><li>실습 환경과 준비물을 점검하고 안전 수칙을 확인한다.</li></ul></div>
+          </div>
+          <div class="folio">86</div>
+        </section><section class="page">
+          <div class="rh"><span>전산직 공무원을 위한 생성형 AI 전문역량 강화</span><span>9장 · 부록 A · 용어 사전</span></div>
+          <div class="content"><div class="ch-opener">
+              <div class="ch-kicker">부록 · 9장</div>
+              <h1 class="ch-title">부록 A · 용어 사전</h1>
+              <p class="ch-lead">교재에 나온 핵심 용어를 한곳에 모았습니다. 강의 중이나 실습 후 복습할 때 참고하세요. 각 용어는 전산직 실무 관점에서 짧게 정리했습니다.</p>
+            </div><h3>개념 용어</h3><div class="term"><b>생성형 AI</b><span>저장된 답을 꺼내는 대신 학습한 패턴으로 새 문장·표·코드를 만들어 내는 프로그램.</span></div><div class="term"><b>프롬프트</b><span>사람이 AI에게 하는 한 번의 부탁. 무엇을·어떤 자료로·어떤 모양으로 달라는 문장.</span></div><div class="term"><b>컨텍스트</b><span>부탁과 함께 넣는 배경자료. 붙인 문서·우리 데이터·지켜야 할 선·원하는 형식.</span></div><div class="term"><b>하네스</b><span>모델 호출·도구 사용·검증·기록을 묶어 반복 가능한 업무 흐름으로 만든 구조.</span></div><div class="term"><b>오케스트레이션</b><span>여러 도구와 모델 호출의 순서를 정하고 조율하는 일.</span></div></div>
+          <div class="folio">87</div>
+        </section><section class="page">
+          <div class="rh"><span>전산직 공무원을 위한 생성형 AI 전문역량 강화</span><span>9장 · 부록 A · 용어 사전</span></div>
+          <div class="content fill"><h3>모델 용어</h3><div class="term"><b>토큰</b><span>모델이 읽고 쓰는 작은 글자 조각. 문장 길이와 비용을 토큰 수로 셈.</span></div><div class="term"><b>파라미터</b><span>모델이 학습으로 얻은 내부 수치의 개수. 클수록 표현력이 높지만 무거움.</span></div><div class="term"><b>컨텍스트 길이</b><span>한 번에 넣을 수 있는 토큰의 최대 수. 길수록 긴 문서를 통째로 처리.</span></div><div class="term"><b>큰 모델·작은 모델</b><span>복잡한 일에 강한 큰 모델과, 빠르고 저렴한 작은 모델. 난이도로 나눠 씀.</span></div><h3>구축 용어</h3><div class="term"><b>로컬 AI</b><span>외부 서버 대신 내 장비 안에서 모델을 실행하는 방식. 보안에 유리.</span></div><div class="term"><b>Ollama</b><span>로컬 장비에서 언어모델을 내려받아 실행해 주는 프로그램.</span></div></div>
+          <div class="folio">88</div>
+        </section><section class="page">
+          <div class="rh"><span>전산직 공무원을 위한 생성형 AI 전문역량 강화</span><span>9장 · 부록 A · 용어 사전</span></div>
+          <div class="content"><div class="term"><b>RAG</b><span>검색으로 근거 문단을 찾은 뒤 그 내용으로 답을 만드는 방식(검색으로 보강한 생성).</span></div><div class="term"><b>벡터</b><span>문장의 의미를 숫자 목록으로 바꾼 것. 비슷한 문단을 빠르게 찾는 데 사용.</span></div><div class="term"><b>코딩에이전트</b><span>지시를 받아 코드를 만들고 실행해 결과를 보고하는 프로그램(예: Cursor).</span></div><div class="nextq"><span>다음 장에서 답하는 질문</span><p>용어가 정리되었으니, 실습 환경을 준비하면 바로 따라 할 수 있다.</p></div></div>
+          <div class="folio">89</div>
+        </section><section class="page">
+          <div class="rh"><span>전산직 공무원을 위한 생성형 AI 전문역량 강화</span><span>10장 · 부록 B · 실습 환경 준비</span></div>
+          <div class="content"><div class="ch-opener">
+              <div class="ch-kicker">부록 · 10장</div>
+              <h1 class="ch-title">부록 B · 실습 환경 준비</h1>
+              <p class="ch-lead">연수 당일 실습을 원활히 하기 위한 준비 사항입니다. 강의장 전산실 환경을 기준으로, 미리 확인하면 좋은 항목을 정리했습니다.</p>
+            </div><h3>공통 준비물</h3><table class="grid"><thead><tr><th>항목</th><th>확인 내용</th></tr></thead><tbody><tr><td>생성형 AI 접속</td><td>실습용 서비스 접속 계정 또는 화면</td></tr><tr><td>실습 문서</td><td>개인정보 없는 지침·FAQ 샘플 몇 개</td></tr><tr><td>작업 폴더</td><td>입력용 data 폴더, 결과용 output 폴더</td></tr><tr><td>코딩에이전트</td><td>Cursor 등 설치 여부 확인</td></tr><tr><td>로컬 AI</td><td>Ollama 설치 및 작은 모델 다운로드</td></tr></tbody></table></div>
+          <div class="folio">90</div>
+        </section><section class="page">
+          <div class="rh"><span>전산직 공무원을 위한 생성형 AI 전문역량 강화</span><span>10장 · 부록 B · 실습 환경 준비</span></div>
+          <div class="content fill"><h3>실습별 준비 요약</h3><table class="grid"><thead><tr><th>실습</th><th>준비물</th><th>예상 시간</th></tr></thead><tbody><tr><td>1·2 프롬프트·컨텍스트</td><td>회의록·지침 샘플</td><td>각 15분</td></tr><tr><td>3 모델 사양 판단</td><td>사양표(교재 제공)</td><td>10분</td></tr><tr><td>4·5 흐름·병목 설계</td><td>워크시트(교재 제공)</td><td>각 15분</td></tr><tr><td>6 엑셀 합치기</td><td>여러 엑셀 파일, 코딩에이전트</td><td>20분</td></tr><tr><td>7 로컬 챗봇</td><td>Ollama, 작은 모델</td><td>20분</td></tr><tr><td>8 RAG 챗봇</td><td>지침 문서 폴더, 코딩에이전트</td><td>25분</td></tr></tbody></table><div class="note"><span class="nl">참고</span><p>실습은 완성도보다 흐름 이해가 목표입니다. 시간이 부족하면 각 실습의 핵심 한 가지(예: 출처 표시, 샘플 먼저 시험)만 확인해도 충분합니다.</p></div></div>
+          <div class="folio">91</div>
+        </section><section class="page">
+          <div class="rh"><span>전산직 공무원을 위한 생성형 AI 전문역량 강화</span><span>10장 · 부록 B · 실습 환경 준비</span></div>
+          <div class="content"><h3>안전 수칙</h3><p>실습 중에는 개인정보가 담긴 실제 업무 파일을 사용하지 않습니다. 반드시 개인정보를 제거한 샘플로 진행합니다. 파일을 다루는 실습에서는 원본을 그대로 두고 결과만 별도 폴더에 저장하며, 되돌릴 수 없는 동작 전에는 샘플로 먼저 시험합니다.</p><div class="nextq end"><span>과정을 마치며</span><p>이제 준비가 끝났으니, 본문의 실습을 순서대로 따라 하면 된다.</p></div></div>
+          <div class="folio">92</div>
+        </section>
+</main>
+<aside class="tools"><button id="bE">편집</button><button id="bS">저장 HTML</button><button class="p" id="bP">PDF</button></aside>
+<script>
+document.querySelectorAll('.content, .cv-title, .ch-lead, .ch-title').forEach(el=>el.setAttribute('contenteditable','false'));
+bE.onclick=()=>{const on=!document.body.dataset.edit;document.body.dataset.edit=on?'1':'';
+  document.querySelectorAll('.content,.cv-title,.cv-sub,.part-title,.part-desc').forEach(el=>el.setAttribute('contenteditable',on));bE.textContent=on?'완료':'편집';};
+bS.onclick=()=>{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([document.documentElement.outerHTML],{type:'text/html;charset=utf-8'}));a.download='전산실무역량강화_교재.html';a.click();};
+bP.onclick=()=>window.print();
+
+// Fill balancer: distribute leftover vertical space on each content page as capped gaps,
+// so pages fill toward the footer without large awkward jumps.
+function balancePages(){
+  document.querySelectorAll('.page').forEach(pg=>{
+    const c=pg.querySelector('.content'); if(!c) return;
+    // reset any prior spacing
+    [...c.children].forEach(el=>{ el.style.marginTop=''; });
+    if(c.classList.contains('opener')) return;
+    const folio=pg.querySelector('.folio'); if(!folio) return;
+    const pr=pg.getBoundingClientRect();
+    const cRect=c.getBoundingClientRect();
+    const kids=[...c.children].filter(k=>k.offsetHeight>0);
+    if(kids.length<2) return;
+    const contentBottom=kids[kids.length-1].getBoundingClientRect().bottom;
+    const target=folio.getBoundingClientRect().top - 14;   // stop just above folio
+    let slack=target - contentBottom;
+    if(slack<=8) return;                                   // already full
+    // Only widen gaps BEFORE section-level blocks (figures, tables, boxes, headings, practice, etc.),
+    // never between two consecutive paragraphs — keeps prose tight, pushes slack to natural breaks.
+    const isProse = el => el.tagName==='P';
+    const breakIdx=[];
+    for(let j=1;j<kids.length;j++){
+      if(!(isProse(kids[j]) && isProse(kids[j-1]))) breakIdx.push(j);
+    }
+    const slots = breakIdx.length || (kids.length-1);
+    const perGapCap = slots<=2 ? 120 : (slots<=4 ? 80 : 56);
+    let per=Math.min(perGapCap, slack/slots);
+    const applyTo = breakIdx.length? breakIdx : [...Array(kids.length).keys()].slice(1);
+    for(const j of applyTo){
+      const cur=parseFloat(getComputedStyle(kids[j]).marginTop)||0;
+      kids[j].style.marginTop=(cur+per)+'px';
+    }
+  });
+}
+function runBalance(){ requestAnimationFrame(()=>requestAnimationFrame(balancePages)); }
+if(document.fonts && document.fonts.ready){ document.fonts.ready.then(runBalance); }
+window.addEventListener('load', runBalance);
+</script>
+<script>/* kg-preview: #<heading> \uc704\uce58\ub85c \uc774\ub3d9 */
+(function(){function norm(t){return (t||'').replace(/\s+/g,'').toLowerCase()}
+function go(){var h=decodeURIComponent(location.hash.slice(1));if(!h)return;var k=norm(h).slice(0,24);if(!k)return;
+var best=null,bl=1e9,els=document.body.querySelectorAll('h1,h2,h3,h4,h5,p,div,span,li,td,text,tspan,section,article');
+for(var i=0;i<els.length;i++){var e=els[i],t=norm(e.textContent);if(t.length<bl&&t.indexOf(k)>-1){best=e;bl=t.length}}
+if(!best)return;var box=best.closest('section,[class*=slide],[class*=page],article')||best;
+box.scrollIntoView({block:'start'});box.style.outline='3px solid #c0504d';box.style.outlineOffset='4px';
+setTimeout(function(){box.style.outline=''},2600)}
+window.addEventListener('load',function(){setTimeout(go,400)});window.addEventListener('hashchange',go)})();</script></body></html>

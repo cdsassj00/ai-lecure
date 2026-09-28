@@ -1,0 +1,788 @@
+<!doctype html>
+<html lang="ko">
+<head><meta name="robots" content="noindex, nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>구글 스프레드시트 × 생성형 AI 실무 — 강의안</title>
+<!--
+  사용법: 이 파일을 결과 경로로 복사한 뒤, <section class="slide"> 들을 주제에 맞게 채운다.
+  CSS는 손대지 말고 그대로 둔다(디자인 일관성). 아래 슬라이드들은 레이아웃 예시이며,
+  필요한 것만 골라 복제·편집하고 나머지는 지운다. 캔버스는 1280x720(16:9) 고정.
+-->
+<style>
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css");
+@import url("https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500;600;700;900&family=JetBrains+Mono:wght@400;600&display=swap");
+:root{
+  --paper:#f8f4ed; --paper2:#fbf8f1; --band:#efe8d7; --band2:#e7dcc6;
+  --dark:#1a130f; --ink:#211913; --ink2:#473d33; --muted:#8c8275;
+  --rust:#bf571d; --rust2:#9c440f; --gold:#c98a3a; --line:#ddd1ba; --line2:#cabb9c;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;background:#cfc8ba;font-family:Pretendard,"Apple SD Gothic Neo","Noto Sans KR","Noto Sans CJK KR",sans-serif;color:var(--ink);-webkit-font-smoothing:antialiased;}
+.deck{display:flex;flex-direction:column;align-items:center;gap:22px;padding:22px 0 40px;}
+.slide{position:relative;width:1280px;height:720px;background:var(--paper);overflow:hidden;box-shadow:0 10px 34px rgba(0,0,0,.22);}
+h1,h2,h3,h4,p,ul,ol,li{margin:0;padding:0;}
+
+/* 머리글: 솔리드 다크 마스트헤드 (그림자/그라데이션 금지) */
+.hdr{position:absolute;top:0;left:0;right:0;height:44px;display:flex;align-items:center;justify-content:space-between;padding:0 46px;background:var(--dark);z-index:3;}
+.hdr .ht{font-size:12.5px;font-weight:700;color:#f3ede2;letter-spacing:.2px;}
+.hdr .ht span{color:rgba(243,237,226,.42);font-weight:600;letter-spacing:1px;font-size:10px;margin-left:7px;}
+.hdr .hr{font-size:10.5px;font-weight:600;letter-spacing:1.2px;color:rgba(243,237,226,.55);}
+
+.stage{position:absolute;top:44px;left:0;right:0;bottom:0;padding:26px 50px 38px;display:flex;flex-direction:column;}
+.crumb{font-size:14px;font-weight:600;color:var(--rust);letter-spacing:.3px;margin-bottom:6px;}
+.atitle{font-family:"Noto Serif KR","Noto Serif CJK KR","Nanum Myeongjo",serif;font-weight:700;font-size:28px;line-height:1.28;color:#13100c;letter-spacing:-.4px;}
+.atitle .lbl{color:var(--rust2);}
+.atitle .sub{font-weight:500;color:#3a322a;}
+.titlerule{height:0;border-bottom:1.5px solid var(--line2);margin:14px 0 0;}
+
+.body{flex:1;min-height:0;display:grid;gap:26px;padding-top:18px;}
+.split{grid-template-columns:1fr 1fr;}
+.split-l{grid-template-columns:1.08fr .92fr;}
+.split-r{grid-template-columns:.9fr 1.1fr;}
+.colflow{display:flex;flex-direction:column;min-height:0;}
+
+/* 인트로 설명문(합니다체) */
+.lead{font-size:16.5px;line-height:1.82;color:var(--ink);font-weight:400;}
+.lead b{font-weight:700;color:#13100c;}
+.lead .hl{color:var(--rust2);font-weight:700;}
+
+/* 번호 개념 정의 — 박스 그리드 대신 이것을 쓴다 */
+.concepts{display:flex;flex-direction:column;}
+.concepts.fill{flex:1;justify-content:flex-start;}          /* 칼럼 높이를 균등 분배해 채움 */
+.concepts.fill .concept{flex:1;align-items:center;}
+.concept{padding:16px 0 17px;border-bottom:1px solid var(--line);display:flex;gap:16px;}
+.concept:first-child{padding-top:5px;}
+.concept .no{flex:0 0 auto;font-family:"Noto Serif KR","Noto Serif CJK KR","Nanum Myeongjo",serif;font-size:22px;font-weight:700;color:var(--rust);line-height:1.25;width:30px;}
+.concept .cbody{flex:1;}
+.concept .cbody .cn{font-size:17.5px;font-weight:700;color:#15100c;line-height:1.3;}
+.concept .cbody .cn .en{font-size:12px;font-weight:600;color:var(--muted);letter-spacing:.6px;margin-left:8px;}
+.concept .cbody p{font-size:15px;line-height:1.7;color:var(--ink2);margin-top:6px;font-weight:400;}
+.concept .cbody p b{color:#2a231c;font-weight:700;}
+
+/* 하단 정리/캡션 바 — 슬로건 금지, 사실 설명만 */
+.note{margin-top:auto;display:flex;gap:16px;align-items:flex-start;padding:16px 20px;background:var(--band);border-left:3px solid var(--rust);border-radius:0 3px 3px 0;}
+.note .nl{flex:0 0 auto;font-size:12px;font-weight:700;letter-spacing:1px;color:var(--rust2);padding-top:2px;}
+.note p{font-size:15px;line-height:1.66;color:var(--ink);font-weight:400;}
+.note p b{font-weight:700;color:var(--rust2);}
+.srcline{position:absolute;left:50px;bottom:15px;font-size:11px;color:var(--muted);font-weight:400;}
+.pageno{position:absolute;right:30px;bottom:13px;font-size:13.5px;font-weight:700;color:var(--rust);}
+
+/* 표 */
+table.grid{width:100%;border-collapse:collapse;font-size:13.8px;}
+table.grid th{background:var(--dark);color:#f1ebe0;font-weight:700;font-size:13px;padding:9px 12px;text-align:left;}
+table.grid td{padding:9.5px 12px;border-bottom:1px solid var(--line);color:var(--ink2);vertical-align:top;line-height:1.5;}
+table.grid tr:nth-child(even) td{background:rgba(231,220,198,.36);}
+table.grid td b{color:#1c1610;font-weight:700;}
+.grp td{background:var(--band2)!important;color:var(--rust2);font-weight:700;font-size:13px;letter-spacing:.5px;}
+table.grid.tight{font-size:13px;}
+table.grid.tight th,table.grid.tight td{padding:6.5px 12px;}
+table.grid.tight td{line-height:1.45;}
+/* 균등 행 배분: 표가 슬라이드의 주 콘텐츠라 아래가 빌 때 .fill 을 붙인다.
+   표가 남는 세로 공간까지 늘어나고, 각 행이 그 공간을 나눠 가져 바닥까지 고르게 찬다.
+   (행 내용이 많으면 그만큼만 더 커지므로 넘치지 않는다. 커리큘럼·비교표처럼 행 수가 적을 때 유효.) */
+.colflow > table.grid.fill{flex:1;min-height:0;}
+table.grid.fill{height:100%;}
+table.grid.fill th,table.grid.fill td{vertical-align:middle;}
+.pill{display:inline-block;font-size:11px;font-weight:700;padding:2px 8px;border-radius:3px;white-space:nowrap;}
+code{font-family:"JetBrains Mono",ui-monospace,Menlo,Consolas,"Noto Sans KR","Noto Sans CJK KR",monospace;font-size:12.5px;background:#f0e7d6;color:#7a3410;padding:1.5px 6px;border-radius:4px;border:1px solid var(--line2);white-space:nowrap;}
+table.grid code{font-size:12px;padding:1px 5px;}
+.pill.soft{background:#eef1e9;color:#3a5240;}
+.pill.force{background:#34190f;color:#ffcfa8;}
+
+/* === 도식 === */
+.figcap{font-size:12px;font-weight:700;letter-spacing:1px;color:var(--muted);margin-bottom:16px;text-transform:uppercase;}
+.figwrap{display:flex;flex-direction:column;justify-content:center;min-height:0;height:100%;}
+.figwrap.flow .veri{flex:1;justify-content:space-between;}  /* 5단 이상 흐름만 채우기. 항목 3개 이하면 .flow 빼기 */
+
+/* 가로 타임라인 */
+.lineage{display:flex;align-items:stretch;}
+.lineage .ln{flex:1;text-align:center;padding:0 10px;position:relative;}
+.lineage .ln .dot{width:17px;height:17px;border-radius:50%;background:var(--paper);border:4px solid var(--rust);margin:0 auto 16px;position:relative;z-index:2;}
+.lineage .ln.hot .dot{background:var(--rust);}
+.lineage .ln::before{content:"";position:absolute;top:8px;left:0;right:0;height:2px;background:var(--line2);z-index:1;}
+.lineage .ln:first-child::before{left:50%;}.lineage .ln:last-child::before{right:50%;}
+.lineage .ln .yr{font-size:12px;font-weight:700;color:var(--muted);margin-bottom:5px;}
+.lineage .ln .tm{font-size:16px;font-weight:700;color:#15100c;line-height:1.25;margin-bottom:8px;}
+.lineage .ln p{font-size:13.5px;line-height:1.5;color:var(--ink2);}
+
+/* 2계층 스택(대비) */
+.layer2{display:flex;flex-direction:column;gap:15px;}
+.layer2 .lay{border-radius:6px;padding:21px 24px;}
+.layer2 .lay.top{background:var(--band);border:1.5px solid var(--line2);}
+.layer2 .lay.bot{background:var(--dark);color:#efe7da;}
+.layer2 .lay .lh{font-size:17.5px;font-weight:700;margin-bottom:6px;}
+.layer2 .lay.top .lh{color:#15100c;}
+.layer2 .lay .lt{font-size:12.5px;font-weight:600;color:var(--rust);letter-spacing:.5px;margin-bottom:9px;}
+.layer2 .lay.bot .lt{color:var(--gold);}
+.layer2 .lay p{font-size:14px;line-height:1.6;}
+.layer2 .lay.top p{color:var(--ink2);}.layer2 .lay.bot p{color:#cabfb0;}
+.layer2 .conn{text-align:center;color:var(--muted);font-size:13px;font-weight:600;}
+
+/* 순서 흐름 도식(반복 포함) */
+.loop{display:flex;flex-direction:column;gap:13px;}
+.loop .lp{display:flex;align-items:center;gap:14px;background:var(--paper2);border:1px solid var(--line);border-radius:5px;padding:15px 18px;}
+.loop .lp .lpn{flex:0 0 auto;width:27px;height:27px;border-radius:50%;background:var(--dark);color:#f1ebe0;font-size:12.5px;font-weight:700;display:flex;align-items:center;justify-content:center;}
+.loop .lp .lpt{font-size:15px;color:var(--ink);line-height:1.4;}
+.loop .lp .lpt b{font-weight:700;color:#15100c;}
+.loop .back{font-size:13px;color:var(--rust2);font-weight:700;text-align:center;align-self:center;margin-top:5px;background:var(--band);border:1px dashed var(--line2);border-radius:20px;padding:7px 18px;}
+
+/* 폭 증가 계층 스택 */
+.stack{display:flex;flex-direction:column;gap:12px;align-items:center;}
+.stack .sb{border-radius:5px;padding:16px 22px;color:#fff;text-align:left;}
+.stack .sb .sh{font-size:16px;font-weight:700;}
+.stack .sb .sd{font-size:13px;opacity:.92;margin-top:3px;line-height:1.45;}
+.stack .s1{width:56%;background:#9c440f;}.stack .s2{width:70%;background:#b35a26;}
+.stack .s3{width:84%;background:#c47a45;}.stack .s4{width:98%;background:#caa06e;color:#2a1d12;}
+
+/* 분기 흐름(검증/판정) */
+.veri{display:flex;flex-direction:column;gap:11px;}
+.veri .vrow{display:flex;align-items:center;gap:13px;}
+.veri .vbox{flex:1;background:var(--paper2);border:1px solid var(--line);border-radius:5px;padding:15px 18px;}
+.veri .vbox .vt{font-size:15px;font-weight:700;color:#15100c;}
+.veri .vbox p{font-size:13.5px;color:var(--ink2);line-height:1.5;margin-top:3px;}
+.veri .vbox.fail{background:#2a1812;border-color:#2a1812;}
+.veri .vbox.fail .vt{color:#ffd9bb;}.veri .vbox.fail p{color:#d3c6b8;}
+.veri .arr{color:var(--rust);font-size:18px;font-weight:700;flex:0 0 auto;}
+
+/* 가로 단계(좌→우) */
+.steps{display:flex;align-items:stretch;}
+.steps .st{flex:1;padding:0 18px;position:relative;}
+.steps .st:not(:last-child)::after{content:"›";position:absolute;right:-7px;top:15px;color:var(--rust);font-size:24px;font-weight:700;}
+.steps .st .sn{font-size:12px;font-weight:700;color:var(--rust);letter-spacing:.5px;margin-bottom:7px;}
+.steps .st .sh{font-size:16.5px;font-weight:700;color:#15100c;margin-bottom:7px;}
+.steps .st p{font-size:14.5px;line-height:1.58;color:var(--ink2);}
+
+/* 단계 카드화: .steps.card 를 붙이면 각 단계가 배경·테두리를 갖는 카드가 되어 허공에 뜨지 않는다.
+   단계 텍스트가 짧아 위아래가 비어 보일 때 쓴다. */
+.steps.card{gap:12px;}
+.steps.card .st{background:var(--paper2);border:1px solid var(--line);border-top:3px solid var(--rust);border-radius:6px;padding:16px 18px;display:flex;flex-direction:column;justify-content:center;}
+.steps.card .st:not(:last-child)::after{right:-9px;top:50%;transform:translateY(-50%);}
+/* 단계 폰트 확대: 내용이 적으면 .steps.roomy 로 키운다 */
+.steps.roomy .st .sn{font-size:13px;margin-bottom:9px;}
+.steps.roomy .st .sh{font-size:18.5px;margin-bottom:9px;}
+.steps.roomy .st p{font-size:16px;line-height:1.68;}
+
+/* 단계+릴레이 세로 채움 래퍼: 두 줄을 균등 분배해 위아래 빈 여백을 없앤다.
+   기존에 인라인 style="justify-content:space-around" 로 두던 것을 이 클래스로 대체한다.
+   space-around 는 양끝 여백이 커 허해 보이므로 space-evenly + 각 블록 자체가 늘어나게 한다. */
+.stepflow{flex:1;min-height:0;display:flex;flex-direction:column;justify-content:space-evenly;gap:16px;padding:6px 0;}
+.stepflow > .steps{flex:1;}
+.stepflow .relaywrap{display:flex;flex-direction:column;justify-content:center;}
+
+/* 단계 사이 데이터 릴레이 바 */
+.relay{display:flex;align-items:stretch;gap:9px;}
+.relay .rc{flex:1;background:var(--band);border:1px solid var(--line2);border-radius:5px;padding:13px 12px;text-align:center;display:flex;flex-direction:column;justify-content:center;}
+.relay .rc .rk{font-size:11px;font-weight:700;color:var(--rust2);letter-spacing:.5px;margin-bottom:5px;}
+.relay .rc .rv{font-size:14.5px;font-weight:700;color:#15100c;}
+.relay .ra{display:flex;align-items:center;color:var(--rust);font-size:17px;font-weight:700;}
+/* 릴레이 카드도 허하면 키운다 */
+.relay.roomy .rc{padding:17px 14px;}
+.relay.roomy .rc .rk{font-size:12px;margin-bottom:7px;}
+.relay.roomy .rc .rv{font-size:16.5px;}
+
+/* 영역 카드(3열) */
+.domain{flex:1;background:var(--paper2);border:1px solid var(--line);border-top:3px solid var(--rust);border-radius:5px;padding:18px 19px;display:flex;flex-direction:column;}
+.domain .dh{font-size:17.5px;font-weight:700;color:#15100c;margin-bottom:6px;}
+.domain .dh span{font-size:12px;font-weight:600;color:var(--muted);margin-left:7px;}
+.dl{list-style:none;display:flex;flex-direction:column;flex:1;justify-content:space-around;padding-top:4px;}
+.dl li{position:relative;padding-left:16px;font-size:14.5px;line-height:1.55;color:var(--ink2);}
+.dl li::before{content:"";position:absolute;left:0;top:9px;width:6px;height:6px;background:var(--rust);border-radius:1px;}
+.dl li b{color:var(--rust2);font-weight:700;margin-right:5px;}
+/* === 허함 방지: 내용이 적은 박스는 .roomy 를 붙여 폰트를 키운다 (새 문장 추가 대신 크기·여백으로 채움) ===
+   빈 박스를 억지 문장으로 채우지 말고, 원문 텍스트를 크게 키워 시각적 밀도를 맞추는 용도.
+   .domain / .layer2 .lay / .note / .concept 에 각각 적용 가능. */
+.domain.roomy{padding:24px 24px;justify-content:center;}
+.domain.roomy .dh{font-size:21px;margin-bottom:12px;}
+.domain.roomy .dl li{font-size:17px;line-height:1.7;padding-left:18px;}
+.domain.roomy .dl li::before{top:11px;width:7px;height:7px;}
+.domain.roomy .dl{justify-content:space-evenly;}
+
+.layer2 .lay.roomy{padding:26px 28px;}
+.layer2 .lay.roomy .lh{font-size:20px;margin-bottom:9px;}
+.layer2 .lay.roomy .lt{font-size:13.5px;margin-bottom:11px;}
+.layer2 .lay.roomy p{font-size:16px;line-height:1.7;}
+
+.note.roomy{padding:20px 24px;}
+.note.roomy p{font-size:17px;line-height:1.72;}
+.note.roomy .nl{font-size:13px;}
+
+.concept.roomy .cbody .cn{font-size:19.5px;}
+.concept.roomy .cbody p{font-size:16.5px;line-height:1.78;margin-top:8px;}
+.concept.roomy .no{font-size:25px;}
+
+/* 카드 안 항목을 자동 균등 분배해 세로 여백을 없앤다(항목이 적을 때 유효) */
+.domain .dl.spread{justify-content:space-evenly;}
+.dl.spread li{padding-top:5px;padding-bottom:5px;}
+
+/* 인용(좌측 빈 중단 채울 때) */
+.pull{border-left:3px solid var(--rust);padding:6px 0 6px 20px;font-family:"Noto Serif KR","Noto Serif CJK KR","Nanum Myeongjo",serif;font-size:19.5px;font-weight:600;color:#15100c;line-height:1.5;}
+.pull span{display:block;font-family:Pretendard,"Noto Sans KR","Noto Sans CJK KR",sans-serif;font-size:14px;font-weight:400;color:var(--ink2);line-height:1.65;margin-top:11px;}
+
+/* 수치 강조 */
+.stats{display:flex;gap:16px;margin-top:8px;}
+.stat{flex:1;text-align:center;background:var(--paper2);border:1px solid var(--line);border-radius:5px;padding:16px 12px;}
+.stat .sv{font-family:"Noto Serif KR","Noto Serif CJK KR","Nanum Myeongjo",serif;font-size:28px;font-weight:700;color:var(--rust2);line-height:1;}
+.stat .sl{font-size:13px;color:var(--ink2);margin-top:7px;line-height:1.4;}
+
+/* 다크 표지/마무리 */
+.slide.dark{background:var(--dark);color:#f1ebe0;}
+.slide.dark .hdr{background:transparent;border-bottom:1px solid rgba(255,255,255,.1);}
+.dwrap{position:absolute;inset:44px 0 0;display:flex;flex-direction:column;justify-content:center;padding:0 80px;}
+.dwrap .eye{font-size:13px;font-weight:600;letter-spacing:3px;color:var(--gold);margin-bottom:20px;text-transform:uppercase;}
+.dwrap h1{font-family:"Noto Serif KR","Noto Serif CJK KR","Nanum Myeongjo",serif;font-weight:700;font-size:56px;line-height:1.16;color:#fdfbf6;letter-spacing:-1px;}
+.dwrap h1 .ac{color:var(--rust);}
+.dwrap .ds{font-size:19px;color:#c6bbac;font-weight:400;margin-top:20px;line-height:1.65;max-width:900px;}
+.dwrap .den{font-family:"Noto Serif KR","Noto Serif CJK KR","Nanum Myeongjo",serif;font-size:17px;font-weight:500;letter-spacing:5px;color:rgba(255,255,255,.14);margin-top:16px;text-transform:uppercase;}
+.dmeta{position:absolute;left:80px;right:80px;bottom:52px;display:flex;justify-content:space-between;align-items:flex-end;border-top:1px solid rgba(255,255,255,.14);padding-top:18px;}
+.dmeta .who{font-size:14.5px;color:#e6ddd0;font-weight:600;}
+.dmeta .who span{display:block;font-size:12px;color:var(--muted);font-weight:400;margin-top:3px;}
+.dmeta .topic{font-size:13px;color:#c6bbac;text-align:right;line-height:1.55;max-width:520px;}
+.dmeta .topic b{color:var(--gold);font-weight:600;}
+.recap{position:absolute;inset:44px 0 0;display:flex;flex-direction:column;justify-content:center;padding:0 80px;}
+.recap .eye{font-size:13px;font-weight:600;letter-spacing:3px;color:var(--gold);margin-bottom:16px;}
+.recap h1{font-family:"Noto Serif KR","Noto Serif CJK KR","Nanum Myeongjo",serif;font-size:40px;font-weight:700;color:#fdfbf6;line-height:1.3;margin-bottom:30px;}
+.recap .ritems{display:flex;flex-direction:column;gap:18px;max-width:960px;}
+.recap .ri{display:flex;gap:16px;align-items:baseline;}
+.recap .ri .rn{font-family:"Noto Serif KR","Noto Serif CJK KR","Nanum Myeongjo",serif;color:var(--rust);font-size:19px;font-weight:700;flex:0 0 auto;}
+.recap .ri p{font-size:16.5px;color:#d8cdbe;line-height:1.62;}
+.recap .ri p b{color:#fdfbf6;font-weight:700;}
+
+/* === 강의 도구: 편집 · PDF · 발표 (인쇄/발표 시 자동 숨김) === */
+.tool{position:fixed;top:12px;right:12px;z-index:9999;display:flex;gap:6px;font-family:Pretendard,"Noto Sans KR","Noto Sans CJK KR",sans-serif;}
+.tool button{font-size:12px;font-weight:700;padding:7px 12px;border-radius:6px;border:1px solid var(--line2);background:#fffdf8;color:#3a322a;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.18);}
+.tool button:hover{background:var(--band);}
+.tool button.on{background:var(--rust);color:#fff;border-color:var(--rust);}
+body.editing .slide{outline:2px dashed rgba(191,87,29,.45);outline-offset:-2px;}
+body.presenting{overflow:hidden;background:#0c0907;}
+body.presenting .deck{display:block;padding:0;gap:0;margin:0;}
+body.presenting .slide{display:none!important;}
+body.presenting .slide.present-current{display:block!important;position:fixed;left:50%;top:50%;transform:translate(-50%,-50%) scale(var(--ps,1));box-shadow:0 0 70px rgba(0,0,0,.6);}
+.pnav{position:fixed;bottom:14px;left:0;right:0;text-align:center;color:rgba(255,255,255,.55);font-size:13px;font-family:Pretendard,"Noto Sans KR","Noto Sans CJK KR",sans-serif;z-index:9999;display:none;}
+body.presenting .pnav{display:block;}
+@page{size:1280px 720px;margin:0;}
+@media print{
+  html,body{margin:0;padding:0;background:#fff;width:1280px;}
+  .tool,.pnav{display:none!important;}
+  .deck{display:block;gap:0;padding:0;margin:0;}
+  .slide{margin:0;box-shadow:none;page-break-after:always;break-after:page;}
+  .slide:last-child{page-break-after:auto;break-after:auto;}
+  *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}
+}
+</style>
+</head>
+<body>
+<div class="tool">
+  <button id="btnEdit">편집</button>
+  <button id="btnSave">저장(HTML)</button>
+  <button id="btnPdf">PDF</button>
+  <button id="btnPlay">발표</button>
+</div>
+<div class="pnav"></div>
+<div class="deck">
+
+<!-- ===== 표지 (다크) ===== -->
+<section class="slide dark">
+  <div class="hdr"><div class="ht">구글 스프레드시트 × 생성형 AI 실무<span>GOOGLE SHEETS × GENERATIVE AI</span></div><div class="hr">카카오엔터테인먼트 · 2026.7.24</div></div>
+  <div class="dwrap">
+    <div class="eye">카카오엔터테인먼트 실무자 · 실습형 · 4시간</div>
+    <h1>구글 스프레드시트<br><span class="ac">× 생성형 AI</span> 실무</h1>
+    <div class="ds">구글 전용 함수 심화, Gemini 연동, Apps Script 자동화, 그리고 현업 데이터로 대시보드를 직접 만드는 4시간 실습 과정입니다.</div>
+    <div class="den">Google Sheets Practice</div>
+  </div>
+  <div class="dmeta">
+    <div class="who">신성진<span>한국데이터사이언티스트협회(CDSA)</span></div>
+    <div class="topic">구글 전용 함수 · Gemini · Apps Script · 대시보드 제작<br><b>실습형 · 4시간</b></div>
+  </div>
+</section>
+
+<!-- ===== 커리큘럼 표 ===== -->
+<section class="slide">
+  <div class="hdr"><div class="ht">구글 스프레드시트 × 생성형 AI 실무<span>GOOGLE SHEETS × GENERATIVE AI</span></div><div class="hr">CURRICULUM</div></div>
+  <div class="stage">
+    <div class="crumb">과정 안내</div>
+    <h2 class="atitle"><span class="lbl">[과정 안내]</span> 전체 커리큘럼 <span class="sub">— 5개 모듈 · 4시간</span></h2>
+    <div class="titlerule"></div>
+    <div class="body colflow" style="padding-top:14px;">
+      <table class="grid fill">
+        <tr><th style="width:150px;">모듈</th><th>주요 내용</th><th style="width:150px;">도구</th><th style="width:66px;">시간</th></tr>
+        <tr><td><b>M1. 기본 이해 + 서식·공유</b></td><td>엑셀과 구글 스프레드시트의 핵심 차이를 통합 데모로 확인합니다. 상세 서식·드롭다운·웹 게시는 사전 학습자료로 병행합니다.</td><td>Gemini 사이드패널</td><td>0.5</td></tr>
+        <tr><td><b>M2. 구글 전용 함수 심화</b></td><td>QUERY·IMPORTRANGE·ARRAYFORMULA를 중심으로 다룹니다. 수식은 Gemini에 자연어로 요청해 생성·수정합니다.</td><td>QUERY · Gemini</td><td>1.0</td></tr>
+        <tr><td><b>M3. 생성형 AI 연동</b></td><td>Gemini in Sheets(AI 함수)와 GPT for Sheets로 요약·분류·번역을 시트 안에서 일괄 처리합니다.</td><td>=AI() · 부가기능</td><td>0.5</td></tr>
+        <tr><td><b>M4. Apps Script 자동화</b></td><td>Apps Script 코드를 생성형 AI로 작성합니다. 구글 시트를 데이터베이스로 쓰는 웹앱 사례도 시연합니다.</td><td>Apps Script</td><td>0.5</td></tr>
+        <tr><td><b>M5. 업무 대시보드 제작</b></td><td>지표 도출부터 QUERY·피벗·차트 결합, 웹 게시까지 현업 데이터로 대시보드를 완성합니다.</td><td>피벗 · 차트 · 웹 게시</td><td>1.5</td></tr>
+      </table>
+      <div class="note"><div class="nl">과정 목표</div><p>구글 전용 함수와 생성형 AI를 결합해 <b>현업에 바로 쓸 대시보드 1개</b>를 직접 만들어 가는 것을 목표로 합니다.</p></div>
+    </div>
+  </div>
+  <div class="pageno">02</div>
+</section>
+
+<!-- ===== M1: 엑셀 vs 구글 핵심 차이 (개념) ===== -->
+<section class="slide">
+  <div class="hdr"><div class="ht">구글 스프레드시트 × 생성형 AI 실무<span>GOOGLE SHEETS × GENERATIVE AI</span></div><div class="hr">M1 · 기본 이해</div></div>
+  <div class="stage">
+    <div class="crumb">M1 · 기본 이해</div>
+    <h2 class="atitle"><span class="lbl">[이론]</span> 엑셀과 구글 스프레드시트 <span class="sub">— 무엇이 다른가</span></h2>
+    <div class="titlerule"></div>
+    <div class="body split-l" style="padding-top:18px;">
+      <div class="colflow">
+        <p class="lead" style="margin-bottom:14px;">구글 스프레드시트는 설치하는 프로그램이 아니라 브라우저에서 여는 서비스입니다. 화면은 비슷해 보이지만 <b>협업·저장·버전 관리</b>가 근본적으로 다르게 동작합니다.</p>
+        <div class="concepts fill">
+          <div class="concept"><div class="no">1</div><div class="cbody"><div class="cn">실시간 공동 편집<span class="en">CO-EDIT</span></div>
+            <p>여러 명이 같은 파일을 동시에 편집합니다. 파일을 주고받으며 이름을 바꿔 저장할 필요가 없습니다. <span style="color:var(--rust2)">예 — 팀원이 입력하는 값이 내 화면에 바로 보입니다.</span></p></div></div>
+          <div class="concept"><div class="no">2</div><div class="cbody"><div class="cn">자동 저장 · 버전 기록<span class="en">AUTOSAVE</span></div>
+            <p>저장 버튼이 없습니다. 모든 변경이 즉시 저장되고, 시점별로 되돌릴 수 있습니다. <span style="color:var(--rust2)">예 — 어제 오전 상태로 복원할 수 있습니다.</span></p></div></div>
+          <div class="concept"><div class="no">3</div><div class="cbody"><div class="cn">Gemini 사이드패널<span class="en">GEMINI</span></div>
+            <p>시트 우측 ✦ 아이콘으로 AI 패널을 엽니다. 시트 내용을 요약·질문하거나 표를 만들어 달라고 할 수 있습니다.</p></div></div>
+        </div>
+      </div>
+      <div class="figwrap">
+        <div class="figcap">엑셀 파일을 가져오는 두 가지 방법</div>
+        <div class="layer2">
+          <div class="lay top"><div class="lt">방법 A · 그대로 열기</div><div class="lh">드라이브에 올려서 열기</div><p>.xlsx를 드래그해 업로드하면 엑셀 형식 그대로 열립니다. 제목 옆에 .XLSX 배지가 붙습니다.</p></div>
+          <div class="conn">▼ 구글 전용 기능을 쓰려면</div>
+          <div class="lay bot"><div class="lt">방법 B · 변환</div><div class="lh">Google Sheets로 저장</div><p>파일 &gt; Google Sheets로 저장을 누르면 변환됩니다. 스마트칩·구글 전용 함수를 온전히 쓸 수 있습니다.</p></div>
+        </div>
+      </div>
+    </div>
+    <div class="note"><div class="nl">정리</div><p>상세 서식·드롭다운·웹 게시 기능은 <b>사전 학습자료(PDF)</b>로 제공합니다. 교육 당일은 실습에 집중합니다.</p></div>
+  </div>
+  <div class="pageno">03</div>
+</section>
+
+<!-- ===== 엑셀·구글 기능 비교 (표) ===== -->
+<section class="slide">
+  <div class="hdr"><div class="ht">구글 스프레드시트 × 생성형 AI 실무<span>GOOGLE SHEETS × GENERATIVE AI</span></div><div class="hr">M1 · 기본 이해</div></div>
+  <div class="stage">
+    <div class="crumb">M1 · 기본 이해</div>
+    <h2 class="atitle"><span class="lbl">[이론]</span> 엑셀과 구글 스프레드시트 <span class="sub">— 기능 비교</span></h2>
+    <div class="titlerule"></div>
+    <div class="body colflow" style="padding-top:16px;">
+      <p class="lead" style="margin-bottom:13px;">같은 작업이라도 엑셀과 구글에서 이름과 위치가 다릅니다. 아래 항목만 알아 두면 화면 전환이 어렵지 않습니다.</p>
+      <table class="grid">
+        <tr><th style="width:190px;">기능</th><th style="width:230px;">엑셀</th><th>구글 스프레드시트</th></tr>
+        <tr><td><b>저장</b></td><td>Ctrl+S로 수동 저장</td><td>자동 저장 — 저장 버튼 없음</td></tr>
+        <tr><td><b>협업</b></td><td>파일 복사본을 주고받음</td><td>링크 공유로 실시간 공동 편집</td></tr>
+        <tr><td><b>버전 관리</b></td><td>파일명에 날짜를 붙여 관리</td><td>버전 기록에서 시점별 복원</td></tr>
+        <tr><td><b>메뉴 구조</b></td><td>리본 메뉴</td><td>상단 텍스트 메뉴 + 아이콘 툴바</td></tr>
+        <tr><td><b>외부 데이터</b></td><td>파워 쿼리로 연결</td><td>IMPORTRANGE 함수로 시트 간 연결</td></tr>
+        <tr><td><b>생성형 AI</b></td><td>Copilot(별도 구독)</td><td>Gemini 사이드패널 · =AI() 함수</td></tr>
+      </table>
+      <div class="note"><div class="nl">정리</div><p>대부분의 기본 조작은 <b>양쪽이 비슷</b>합니다. 이 과정은 구글에만 있는 기능과 생성형 AI 활용에 집중합니다.</p></div>
+    </div>
+  </div>
+  <div class="pageno">04</div>
+</section>
+
+<!-- ===== 엑셀·구글 함수 비교 (표) ===== -->
+<section class="slide">
+  <div class="hdr"><div class="ht">구글 스프레드시트 × 생성형 AI 실무<span>GOOGLE SHEETS × GENERATIVE AI</span></div><div class="hr">M2 · 함수 심화</div></div>
+  <div class="stage">
+    <div class="crumb">M2 · 함수 심화</div>
+    <h2 class="atitle"><span class="lbl">[이론]</span> 함수 비교 <span class="sub">— 어디에 집중할 것인가</span></h2>
+    <div class="titlerule"></div>
+    <div class="body colflow" style="padding-top:16px;">
+      <p class="lead" style="margin-bottom:13px;">엑셀에도 있는 함수는 짧게 넘어가고, <b>구글에만 있거나 동작이 다른 함수</b>에 시간을 씁니다.</p>
+      <table class="grid">
+        <tr><th style="width:280px;">함수</th><th style="width:150px;">역할</th><th>비고</th></tr>
+        <tr><td><b>FILTER / SORT / UNIQUE</b></td><td>조건 추출·정렬·중복 제거</td><td><span class="pill soft">양쪽 존재</span> 엑셀 365에도 동일하게 있음</td></tr>
+        <tr><td><b>QUERY</b></td><td>SQL식 집계·분석</td><td><span class="pill force">구글 전용</span> 엑셀에 대응물 없음 — 이 과정의 핵심</td></tr>
+        <tr><td><b>IMPORTRANGE</b></td><td>다른 시트 실시간 연결</td><td><span class="pill force">구글 전용</span> 여러 시트를 하나로 취합</td></tr>
+        <tr><td><b>ARRAYFORMULA</b></td><td>수식 자동 확장</td><td><span class="pill force">구글 전용</span> 한 셀 수식을 열 전체에 적용</td></tr>
+        <tr><td><b>=AI() / GPT()</b></td><td>요약·분류·번역</td><td><span class="pill force">구글 전용</span> 생성형 AI를 셀 안에서 호출</td></tr>
+      </table>
+      <div class="note"><div class="nl">정리</div><p>구글 전용 3대 함수 <b>QUERY·IMPORTRANGE·ARRAYFORMULA</b>와 AI 함수에 집중합니다. 문법 암기는 하지 않습니다.</p></div>
+    </div>
+  </div>
+  <div class="pageno">05</div>
+</section>
+
+<!-- ===== M2: 구글 전용 함수 심화 (개념 3개) ===== -->
+<section class="slide">
+  <div class="hdr"><div class="ht">구글 스프레드시트 × 생성형 AI 실무<span>GOOGLE SHEETS × GENERATIVE AI</span></div><div class="hr">M2 · 함수 심화</div></div>
+  <div class="stage">
+    <div class="crumb">M2 · 함수 심화</div>
+    <h2 class="atitle"><span class="lbl">[개념]</span> 구글 전용 3대 함수 <span class="sub">— 무엇을 할 수 있는가</span></h2>
+    <div class="titlerule"></div>
+    <div class="body split-l" style="padding-top:18px;">
+      <div class="colflow">
+        <p class="lead" style="margin-bottom:14px;">세 함수가 각각 무엇을 할 수 있는지만 알면 됩니다. 그래야 <b>Gemini에 무엇을 요청할지</b> 알 수 있습니다. 수식 문법은 외우지 않습니다.</p>
+        <div class="concepts fill">
+          <div class="concept"><div class="no">1</div><div class="cbody"><div class="cn">QUERY<span class="en">SQL식 집계</span></div>
+            <p>표에서 원하는 열을 골라 조건으로 걸러 내고 합계를 냅니다. <span style="color:var(--rust2)">예 — "장르별 조회수 합계를 높은 순으로" 한 줄로 처리.</span></p></div></div>
+          <div class="concept"><div class="no">2</div><div class="cbody"><div class="cn">IMPORTRANGE<span class="en">시트 연결</span></div>
+            <p>다른 시트의 데이터를 실시간으로 끌어옵니다. <span style="color:var(--rust2)">예 — 팀원 3명의 시트를 하나로 자동 취합.</span></p></div></div>
+          <div class="concept"><div class="no">3</div><div class="cbody"><div class="cn">ARRAYFORMULA<span class="en">수식 확장</span></div>
+            <p>한 셀에 쓴 수식을 열 전체에 자동 적용합니다. <span style="color:var(--rust2)">예 — 새 행이 들어와도 수식을 다시 복사할 필요 없음.</span></p></div></div>
+        </div>
+      </div>
+      <div class="figwrap">
+        <div class="figcap">QUERY 한 줄이 대체하는 것</div>
+        <div class="layer2">
+          <div class="lay top"><div class="lt">기존 방식</div><div class="lh">필터 + 정렬 + 피벗 + 합계</div><p>메뉴를 여러 번 눌러 단계별로 처리합니다. 데이터가 바뀌면 다시 해야 합니다.</p></div>
+          <div class="conn">▼ 한 줄로</div>
+          <div class="lay bot"><div class="lt">QUERY 방식</div><div class="lh">=QUERY(범위, "조건")</div><p>조건을 문장처럼 적으면 결과가 자동으로 갱신됩니다. 데이터가 바뀌어도 그대로 유지됩니다.</p></div>
+        </div>
+      </div>
+    </div>
+    <div class="note"><div class="nl">정리</div><p>세 함수의 <b>쓰임새</b>만 파악하면 됩니다. 실제 수식은 다음 단계에서 Gemini에게 자연어로 요청해 받습니다.</p></div>
+  </div>
+  <div class="pageno">06</div>
+</section>
+
+<!-- ===== [신규] M2: QUERY 실전 활용 (표) ===== -->
+<section class="slide">
+  <div class="hdr"><div class="ht">구글 스프레드시트 × 생성형 AI 실무<span>GOOGLE SHEETS × GENERATIVE AI</span></div><div class="hr">M2 · 함수 심화</div></div>
+  <div class="stage">
+    <div class="crumb">M2 · 함수 심화</div>
+    <h2 class="atitle"><span class="lbl">[실전]</span> QUERY 활용 <span class="sub">— 대표 3패턴</span></h2>
+    <div class="titlerule"></div>
+    <div class="body colflow" style="padding-top:16px;">
+      <p class="lead" style="margin-bottom:13px;">QUERY는 표를 데이터베이스처럼 다룹니다. 아래 세 패턴만 알면 대부분의 집계·조회가 해결됩니다. 문법은 Gemini에 요청하되, <b>무엇을 뽑는 패턴인지</b>는 알아 둡니다.</p>
+      <table class="grid fill">
+        <tr><th style="width:150px;">패턴</th><th style="width:330px;">수식 예시</th><th>무엇을 하는가</th></tr>
+        <tr><td><b>골라 보기</b><br><span style="color:var(--muted);font-size:12px;">SELECT</span></td><td><code>=QUERY(A:E, "select A, C where C &gt; 1000")</code></td><td>필요한 열만 골라, 조건에 맞는 행만 뽑습니다. 예 — 조회수 1000 이상 작품만.</td></tr>
+        <tr><td><b>묶어 합치기</b><br><span style="color:var(--muted);font-size:12px;">GROUP BY</span></td><td><code>=QUERY(A:E, "select B, sum(D) group by B")</code></td><td>같은 항목끼리 묶어 합계·평균을 냅니다. 예 — 장르별 조회수 합계.</td></tr>
+        <tr><td><b>정렬해 보기</b><br><span style="color:var(--muted);font-size:12px;">ORDER BY</span></td><td><code>=QUERY(A:E, "select B, sum(D) group by B order by sum(D) desc")</code></td><td>집계 결과를 큰 순서로 정렬합니다. 예 — 인기 장르 순위표.</td></tr>
+      </table>
+      <div class="note roomy"><div class="nl">요청 팁</div><p>Gemini에는 이렇게 적습니다 — <b>"작품 시트에서 장르별 조회수 합계를 높은 순으로 QUERY로 만들어 줘"</b>. 열 위치(A, D)는 실제 시트에 맞게 바꿔 줍니다.</p></div>
+    </div>
+  </div>
+  <div class="pageno">07</div>
+</section>
+
+<!-- ===== [신규] M2: IMPORTRANGE·ARRAYFORMULA 실전 (개념+도식) ===== -->
+<section class="slide">
+  <div class="hdr"><div class="ht">구글 스프레드시트 × 생성형 AI 실무<span>GOOGLE SHEETS × GENERATIVE AI</span></div><div class="hr">M2 · 함수 심화</div></div>
+  <div class="stage">
+    <div class="crumb">M2 · 함수 심화</div>
+    <h2 class="atitle"><span class="lbl">[실전]</span> IMPORTRANGE · ARRAYFORMULA <span class="sub">— 여러 시트를 하나로</span></h2>
+    <div class="titlerule"></div>
+    <div class="body split-l" style="padding-top:18px;">
+      <div class="colflow">
+        <p class="lead" style="margin-bottom:14px;">팀원이 각자 관리하는 시트를 <b>하나로 모아</b> 한 번에 집계하는 상황이 가장 흔합니다. 이때 두 함수를 함께 씁니다.</p>
+        <div class="concepts fill">
+          <div class="concept roomy"><div class="no">1</div><div class="cbody"><div class="cn">IMPORTRANGE<span class="en">시트 연결</span></div>
+            <p><code>=IMPORTRANGE("시트URL", "시트1!A:E")</code><br>다른 파일의 범위를 실시간으로 끌어옵니다. 원본이 바뀌면 자동으로 갱신됩니다. 처음 한 번은 <b>액세스 허용</b>을 눌러야 합니다.</p></div></div>
+          <div class="concept roomy"><div class="no">2</div><div class="cbody"><div class="cn">ARRAYFORMULA<span class="en">수식 확장</span></div>
+            <p><code>=ARRAYFORMULA(C2:C * D2:D)</code><br>한 셀 수식을 열 전체에 자동 적용합니다. 새 행이 들어와도 수식을 다시 복사할 필요가 없습니다.</p></div></div>
+        </div>
+      </div>
+      <div class="figwrap">
+        <div class="figcap">세 팀 시트를 하나로 취합하는 구조</div>
+        <div class="layer2">
+          <div class="lay top roomy"><div class="lt">원본 · 팀별 시트</div><div class="lh">A팀 · B팀 · C팀 시트</div><p>각 팀이 자기 시트에만 입력합니다. 서로의 시트를 건드리지 않습니다.</p></div>
+          <div class="conn">▼ IMPORTRANGE 로 끌어오기</div>
+          <div class="lay bot roomy"><div class="lt">취합 · 통합 시트</div><div class="lh">전체 현황판 한 장</div><p>세 시트가 한 곳에 실시간으로 모입니다. 여기서 QUERY로 전체를 집계합니다.</p></div>
+        </div>
+      </div>
+    </div>
+    <div class="note roomy"><div class="nl">정리</div><p>IMPORTRANGE로 <b>모으고</b>, ARRAYFORMULA로 <b>계산을 자동 확장</b>하고, QUERY로 <b>집계</b>합니다. 세 함수가 하나의 흐름을 이룹니다.</p></div>
+  </div>
+  <div class="pageno">08</div>
+</section>
+
+<!-- ===== M2: Gemini로 수식 생성 (단계 + 릴레이) ===== -->
+<section class="slide">
+  <div class="hdr"><div class="ht">구글 스프레드시트 × 생성형 AI 실무<span>GOOGLE SHEETS × GENERATIVE AI</span></div><div class="hr">M2 · 함수 심화</div></div>
+  <div class="stage">
+    <div class="crumb">M2 · 함수 심화</div>
+    <h2 class="atitle"><span class="lbl">[실습]</span> Gemini로 수식 생성 <span class="sub">— 자연어로 요청하고 붙여넣기</span></h2>
+    <div class="titlerule"></div>
+    <div class="body colflow" style="padding-top:18px;">
+      <p class="lead" style="margin-bottom:8px;">수식을 외워서 쓰지 않습니다. 원하는 결과를 <b>한국어 문장</b>으로 Gemini에 요청하고, 받은 수식을 붙여넣습니다. 에러가 나면 에러 메시지를 그대로 붙여 수정을 요청합니다.</p>
+      <div class="stepflow">
+        <div class="steps card roomy">
+          <div class="st"><div class="sn">① 요청</div><div class="sh">문장으로 설명</div><p>"작품 시트에서 장르별 조회수 합계를 구해 줘"라고 Gemini에 적습니다.</p></div>
+          <div class="st"><div class="sn">② 받기</div><div class="sh">수식 받기</div><p>Gemini가 =QUERY(…) 수식을 만들어 줍니다.</p></div>
+          <div class="st"><div class="sn">③ 붙여넣기</div><div class="sh">셀에 적용</div><p>수식을 셀에 붙여넣어 결과를 확인합니다.</p></div>
+          <div class="st"><div class="sn">④ 수정</div><div class="sh">에러 해결</div><p>에러가 나면 메시지를 그대로 붙여 "고쳐 줘"라고 요청합니다.</p></div>
+        </div>
+        <div class="relaywrap">
+          <div class="figcap" style="margin-bottom:12px;">단계마다 손에 남는 것</div>
+          <div class="relay roomy">
+            <div class="rc"><div class="rk">① 후</div><div class="rv">요청 문장</div></div><div class="ra">›</div>
+            <div class="rc"><div class="rk">② 후</div><div class="rv">QUERY 수식</div></div><div class="ra">›</div>
+            <div class="rc"><div class="rk">③ 후</div><div class="rv">집계 결과표</div></div><div class="ra">›</div>
+            <div class="rc"><div class="rk">④ 후</div><div class="rv">완성된 수식</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="note"><div class="nl">정리</div><p>익힐 것은 문법이 아니라 <b>무엇을 요청할지 아는 것</b>입니다. 함수의 쓰임새를 알면 정확히 요청할 수 있습니다.</p></div>
+    </div>
+  </div>
+  <div class="pageno">09</div>
+</section>
+
+<!-- ===== M3: 생성형 AI 연동 (개념 2개 + 도식) ===== -->
+<section class="slide">
+  <div class="hdr"><div class="ht">구글 스프레드시트 × 생성형 AI 실무<span>GOOGLE SHEETS × GENERATIVE AI</span></div><div class="hr">M3 · AI 연동</div></div>
+  <div class="stage">
+    <div class="crumb">M3 · AI 연동</div>
+    <h2 class="atitle"><span class="lbl">[개념]</span> 생성형 AI 연동 <span class="sub">— 셀 안에서 요약·분류·번역</span></h2>
+    <div class="titlerule"></div>
+    <div class="body split-l" style="padding-top:18px;">
+      <div class="colflow">
+        <p class="lead" style="margin-bottom:14px;">텍스트 요약·분류·번역을 시트 밖으로 나가지 않고 <b>셀 안에서 함수로</b> 처리합니다. 수백 개 행도 수식 하나를 아래로 끌어 일괄 처리합니다.</p>
+        <div class="concepts fill">
+          <div class="concept"><div class="no">1</div><div class="cbody"><div class="cn">Gemini in Sheets<span class="en">=AI()</span></div>
+            <p>구글 워크스페이스에 기본 내장된 AI 함수입니다. <span style="color:var(--rust2)">예 — =AI("이 리뷰를 긍정·부정으로 분류", B2)</span></p></div></div>
+          <div class="concept"><div class="no">2</div><div class="cbody"><div class="cn">GPT for Sheets<span class="en">부가기능</span></div>
+            <p>Marketplace에서 설치하는 부가 기능입니다. GPT_ 함수로 요약·번역·추출을 수행합니다.</p></div></div>
+        </div>
+      </div>
+      <div class="figwrap">
+        <div class="figcap">한 줄 수식으로 처리하는 예</div>
+        <div class="loop">
+          <div class="lp"><div class="lpn">요약</div><div class="lpt">긴 시청자 리뷰를 <b>한 줄 핵심</b>으로 압축</div></div>
+          <div class="lp"><div class="lpn">분류</div><div class="lpt">문의 내용을 <b>카테고리별로</b> 자동 태깅</div></div>
+          <div class="lp"><div class="lpn">번역</div><div class="lpt">해외 반응을 <b>한국어로</b> 일괄 번역</div></div>
+          <div class="lp"><div class="lpn">추출</div><div class="lpt">자유 텍스트에서 <b>작품명·배우명</b>만 뽑기</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="note"><div class="nl">정리</div><p>반복되는 텍스트 정리 업무를 <b>수식 하나로</b> 처리합니다. 수백 행도 끌어내리기 한 번이면 끝납니다.</p></div>
+  </div>
+  <div class="pageno">10</div>
+</section>
+
+<!-- ===== [신규] M3: 생성형 AI 실전 프롬프트 (표) ===== -->
+<section class="slide">
+  <div class="hdr"><div class="ht">구글 스프레드시트 × 생성형 AI 실무<span>GOOGLE SHEETS × GENERATIVE AI</span></div><div class="hr">M3 · AI 연동</div></div>
+  <div class="stage">
+    <div class="crumb">M3 · AI 연동</div>
+    <h2 class="atitle"><span class="lbl">[실전]</span> AI 함수 프롬프트 <span class="sub">— 그대로 쓰는 예시</span></h2>
+    <div class="titlerule"></div>
+    <div class="body colflow" style="padding-top:16px;">
+      <p class="lead" style="margin-bottom:13px;">AI 함수는 셀 안에 <b>지시문 + 대상 셀</b>을 넣는 구조입니다. 아래 예시를 시트에 그대로 넣고, 지시문만 업무에 맞게 바꿔 씁니다.</p>
+      <table class="grid fill">
+        <tr><th style="width:120px;">작업</th><th style="width:430px;">수식 예시</th><th>결과</th></tr>
+        <tr><td><b>요약</b></td><td><code>=AI("이 리뷰를 한 문장으로 요약", B2)</code></td><td>긴 시청자 리뷰가 핵심 한 줄로 압축됩니다.</td></tr>
+        <tr><td><b>분류</b></td><td><code>=AI("긍정/부정/중립 중 하나로 분류", B2)</code></td><td>리뷰 감정이 세 단어 중 하나로 태깅됩니다.</td></tr>
+        <tr><td><b>번역</b></td><td><code>=AI("이 문장을 한국어로 번역", B2)</code></td><td>해외 반응이 한국어로 바뀝니다.</td></tr>
+        <tr><td><b>추출</b></td><td><code>=AI("이 문장에서 작품명만 뽑아 줘", B2)</code></td><td>자유 텍스트에서 작품명만 남습니다.</td></tr>
+      </table>
+      <div class="note roomy"><div class="nl">일괄 처리</div><p>수식을 <b>한 셀에 넣고 아래로 끌어내리면</b> 수백 행이 한 번에 처리됩니다. 열 하나가 요약, 옆 열이 분류가 되도록 나란히 배치할 수 있습니다.</p></div>
+    </div>
+  </div>
+  <div class="pageno">11</div>
+</section>
+
+<!-- ===== M4: Apps Script + 시트 백엔드 (2계층 + 개념) ===== -->
+<section class="slide">
+  <div class="hdr"><div class="ht">구글 스프레드시트 × 생성형 AI 실무<span>GOOGLE SHEETS × GENERATIVE AI</span></div><div class="hr">M4 · 자동화</div></div>
+  <div class="stage">
+    <div class="crumb">M4 · 자동화</div>
+    <h2 class="atitle"><span class="lbl">[개념]</span> Apps Script 자동화 <span class="sub">— 시트를 데이터베이스로</span></h2>
+    <div class="titlerule"></div>
+    <div class="body split-l" style="padding-top:18px;">
+      <div class="colflow">
+        <p class="lead" style="margin-bottom:14px;">Apps Script는 구글의 자동화 스크립트 환경입니다. 엑셀의 매크로(VBA)에 해당합니다. 코드는 <b>생성형 AI로 작성</b>하고, 메뉴 버튼으로 실행합니다.</p>
+        <div class="concepts fill">
+          <div class="concept"><div class="no">1</div><div class="cbody"><div class="cn">AI가 코드 작성<span class="en">SCRIPT</span></div>
+            <p>"완료된 행을 다른 시트로 옮기는 코드를 만들어 줘"라고 요청하면 스크립트를 받습니다. <span style="color:var(--rust2)">예 — 메일 자동 발송, 행 이동.</span></p></div></div>
+          <div class="concept"><div class="no">2</div><div class="cbody"><div class="cn">시트 = 데이터베이스<span class="en">BACKEND</span></div>
+            <p>구글 시트를 웹앱의 저장소로 씁니다. 별도 서버 없이 데이터를 쌓고 읽습니다. <span style="color:var(--rust2)">예 — 설문 접수, 팀 현황판.</span></p></div></div>
+        </div>
+      </div>
+      <div class="figwrap">
+        <div class="figcap">시트 백엔드 웹앱 구조</div>
+        <div class="layer2">
+          <div class="lay top"><div class="lt">화면</div><div class="lh">HTML 웹 페이지</div><p>설문 폼이나 현황판을 브라우저에 띄웁니다. 사용자는 시트를 직접 보지 않습니다.</p></div>
+          <div class="conn">▼ doGet / doPost 로 주고받음</div>
+          <div class="lay bot"><div class="lt">저장소</div><div class="lh">구글 시트</div><p>입력값이 시트에 행으로 쌓이고, 현황이 시트에서 읽혀 화면에 표시됩니다.</p></div>
+        </div>
+      </div>
+    </div>
+    <div class="note"><div class="nl">정리</div><p>서버를 따로 두지 않고 <b>시트 하나로</b> 설문 접수·팀 현황판 같은 작은 웹앱을 운영할 수 있습니다.</p></div>
+  </div>
+  <div class="pageno">12</div>
+</section>
+
+<!-- ===== [신규] M4: 시트 백엔드 웹앱 사례 (단계 카드) ===== -->
+<section class="slide">
+  <div class="hdr"><div class="ht">구글 스프레드시트 × 생성형 AI 실무<span>GOOGLE SHEETS × GENERATIVE AI</span></div><div class="hr">M4 · 자동화</div></div>
+  <div class="stage">
+    <div class="crumb">M4 · 자동화</div>
+    <h2 class="atitle"><span class="lbl">[실전]</span> 시트 백엔드 웹앱 <span class="sub">— 설문 접수 자동화 사례</span></h2>
+    <div class="titlerule"></div>
+    <div class="body colflow" style="padding-top:18px;">
+      <p class="lead" style="margin-bottom:8px;">별도 서버나 데이터베이스 없이, 구글 시트 한 장으로 <b>설문을 받고 현황을 보여 주는</b> 웹앱을 만듭니다. 아래 네 단계로 동작합니다.</p>
+      <div class="stepflow">
+        <div class="steps card roomy">
+          <div class="st"><div class="sn">① 화면</div><div class="sh">웹 폼 접속</div><p>참여자가 링크로 설문 페이지를 엽니다. 시트는 보이지 않습니다.</p></div>
+          <div class="st"><div class="sn">② 저장</div><div class="sh">시트에 기록</div><p>제출하면 doPost가 응답을 시트에 한 행으로 저장합니다.</p></div>
+          <div class="st"><div class="sn">③ 집계</div><div class="sh">실시간 계산</div><p>시트에서 QUERY로 응답 수·비율이 자동 집계됩니다.</p></div>
+          <div class="st"><div class="sn">④ 현황</div><div class="sh">현황판 표시</div><p>doGet이 집계 결과를 현황 페이지에 보여 줍니다.</p></div>
+        </div>
+        <div class="relaywrap">
+          <div class="figcap" style="margin-bottom:12px;">각 단계에서 쓰는 도구</div>
+          <div class="relay roomy">
+            <div class="rc"><div class="rk">화면</div><div class="rv">HTML 폼</div></div><div class="ra">›</div>
+            <div class="rc"><div class="rk">저장</div><div class="rv">Apps Script doPost</div></div><div class="ra">›</div>
+            <div class="rc"><div class="rk">저장소</div><div class="rv">구글 시트</div></div><div class="ra">›</div>
+            <div class="rc"><div class="rk">표시</div><div class="rv">doGet 현황판</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="note roomy"><div class="nl">정리</div><p>서버 비용도, 데이터베이스 설정도 없습니다. <b>시트 한 장이 접수함이자 집계기이자 현황판</b> 역할을 모두 합니다.</p></div>
+    </div>
+  </div>
+  <div class="pageno">13</div>
+</section>
+
+<!-- ===== M5: 대시보드 실습 (단계 + 릴레이) ===== -->
+<section class="slide">
+  <div class="hdr"><div class="ht">구글 스프레드시트 × 생성형 AI 실무<span>GOOGLE SHEETS × GENERATIVE AI</span></div><div class="hr">M5 · 실습 프로젝트</div></div>
+  <div class="stage">
+    <div class="crumb">M5 · 실습 프로젝트</div>
+    <h2 class="atitle"><span class="lbl">[실습]</span> 업무 대시보드 제작 <span class="sub">— 지표 도출부터 웹 게시까지</span></h2>
+    <div class="titlerule"></div>
+    <div class="body colflow" style="padding-top:18px;">
+      <p class="lead" style="margin-bottom:8px;">앞의 모듈을 하나로 이어 <b>현업 데이터로 대시보드를 완성</b>합니다. 제공 예제(콘텐츠 성과 데이터) 또는 참가자 현업 데이터 중에서 고릅니다.</p>
+      <div class="stepflow">
+        <div class="steps card roomy">
+          <div class="st"><div class="sn">① 지표</div><div class="sh">Gemini로 도출</div><p>어떤 지표를 볼지 Gemini와 정합니다.</p></div>
+          <div class="st"><div class="sn">② 집계</div><div class="sh">QUERY·피벗</div><p>지표를 QUERY와 피벗테이블로 계산합니다.</p></div>
+          <div class="st"><div class="sn">③ 시각화</div><div class="sh">차트 결합</div><p>집계 결과를 차트로 만들어 배치합니다.</p></div>
+          <div class="st"><div class="sn">④ 게시</div><div class="sh">웹 게시</div><p>대시보드를 웹에 게시해 공유합니다.</p></div>
+        </div>
+        <div class="relaywrap">
+          <div class="figcap" style="margin-bottom:12px;">단계마다 완성되는 산출물</div>
+          <div class="relay roomy">
+            <div class="rc"><div class="rk">① 후</div><div class="rv">지표 목록</div></div><div class="ra">›</div>
+            <div class="rc"><div class="rk">② 후</div><div class="rv">집계표</div></div><div class="ra">›</div>
+            <div class="rc"><div class="rk">③ 후</div><div class="rv">차트 대시보드</div></div><div class="ra">›</div>
+            <div class="rc"><div class="rk">④ 후</div><div class="rv">공유 URL</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="note"><div class="nl">정리</div><p>희망자는 여기에 <b>시트 백엔드 미니앱</b> 제작까지 확장합니다. 교육이 끝나면 완성된 대시보드가 손에 남습니다.</p></div>
+    </div>
+  </div>
+  <div class="pageno">14</div>
+</section>
+
+<!-- ===== [신규] M5: 대시보드 구성 요소 (영역 카드) ===== -->
+<section class="slide">
+  <div class="hdr"><div class="ht">구글 스프레드시트 × 생성형 AI 실무<span>GOOGLE SHEETS × GENERATIVE AI</span></div><div class="hr">M5 · 실습 프로젝트</div></div>
+  <div class="stage">
+    <div class="crumb">M5 · 실습 프로젝트</div>
+    <h2 class="atitle"><span class="lbl">[실전]</span> 대시보드 구성 요소 <span class="sub">— 무엇을 배치하나</span></h2>
+    <div class="titlerule"></div>
+    <div class="body colflow" style="padding-top:16px;">
+      <p class="lead" style="margin-bottom:6px;">대시보드는 한 화면에서 <b>숫자·추이·비중</b>을 한눈에 보게 만듭니다. 아래 세 영역을 조합해 배치합니다.</p>
+      <div style="flex:1;display:flex;gap:18px;align-items:stretch;padding:10px 0;">
+        <div class="domain roomy"><div class="dh">핵심 숫자 <span>요약 카드</span></div><ul class="dl spread"><li><b>지표</b> 총 조회수·구독자·매출</li><li><b>수식</b> SUM · COUNTIF 로 집계</li><li><b>배치</b> 화면 상단에 큰 숫자로</li></ul></div>
+        <div class="domain roomy"><div class="dh">추이 <span>시계열 차트</span></div><ul class="dl spread"><li><b>지표</b> 월별·주별 변화</li><li><b>차트</b> 꺾은선 그래프</li><li><b>배치</b> 가운데 넓게</li></ul></div>
+        <div class="domain roomy"><div class="dh">비중 <span>구성 차트</span></div><ul class="dl spread"><li><b>지표</b> 장르별·채널별 비율</li><li><b>차트</b> 원형·막대 그래프</li><li><b>배치</b> 하단 또는 우측</li></ul></div>
+      </div>
+      <div class="note roomy"><div class="nl">만드는 순서</div><p>먼저 QUERY·피벗으로 <b>집계표</b>를 만들고, 그 표를 선택해 <b>차트 삽입</b>으로 그래프를 만든 뒤, 한 시트에 나란히 배치해 대시보드를 완성합니다.</p></div>
+    </div>
+  </div>
+  <div class="pageno">15</div>
+</section>
+
+<!-- ===== 산출물·적용 (영역 카드 3열) ===== -->
+<section class="slide">
+  <div class="hdr"><div class="ht">구글 스프레드시트 × 생성형 AI 실무<span>GOOGLE SHEETS × GENERATIVE AI</span></div><div class="hr">교육 산출물</div></div>
+  <div class="stage">
+    <div class="crumb">교육 산출물</div>
+    <h2 class="atitle"><span class="lbl">[적용]</span> 교육 산출물 <span class="sub">— 현업으로 가져가는 것</span></h2>
+    <div class="titlerule"></div>
+    <div class="body colflow" style="padding-top:16px;">
+      <p class="lead" style="margin-bottom:6px;">이 과정은 지식 전달이 아니라 <b>결과물 제작</b>이 목표입니다. 교육이 끝나면 아래 세 가지를 완성해 가져갑니다.</p>
+      <div style="flex:1;display:flex;gap:18px;align-items:stretch;padding:10px 0;">
+        <div class="domain roomy"><div class="dh">대시보드 <span>M5</span></div><ul class="dl"><li><b>완성</b> 현업 데이터 대시보드 1개</li><li><b>상태</b> 웹 게시까지 완료</li><li><b>재사용</b> 데이터만 바꿔 반복 사용</li></ul></div>
+        <div class="domain roomy"><div class="dh">자동화 <span>M4</span></div><ul class="dl"><li><b>완성</b> Apps Script 매크로 1개</li><li><b>선택</b> 시트 백엔드 미니 웹앱</li><li><b>활용</b> 메일 발송·행 이동 자동화</li></ul></div>
+        <div class="domain roomy"><div class="dh">자료 <span>공통</span></div><ul class="dl"><li><b>제공</b> 사전 학습자료 PDF</li><li><b>제공</b> 실습 예제 시트 사본</li><li><b>제공</b> 프롬프트 모음</li></ul></div>
+      </div>
+      <div class="note"><div class="nl">공통점</div><p>세 산출물 모두 <b>현업 데이터를 바꿔 그대로 재사용</b>할 수 있는 형태로 만들어 갑니다.</p></div>
+    </div>
+  </div>
+  <div class="pageno">16</div>
+</section>
+
+<!-- ===== 강의 요약 (다크) ===== -->
+<section class="slide dark">
+  <div class="hdr"><div class="ht">구글 스프레드시트 × 생성형 AI 실무<span>GOOGLE SHEETS × GENERATIVE AI</span></div><div class="hr">강의 요약 · Q &amp; A</div></div>
+  <div class="recap">
+    <div class="eye">마무리</div>
+    <h1>강의 요약</h1>
+    <div class="ritems">
+      <div class="ri"><div class="rn">01</div><p>기본 조작은 엑셀과 비슷하므로, 이 과정은 <b>구글 전용 함수와 생성형 AI</b>에 집중합니다.</p></div>
+      <div class="ri"><div class="rn">02</div><p>구글 전용 3대 함수 <b>QUERY·IMPORTRANGE·ARRAYFORMULA</b>는 쓰임새만 알면, 수식은 Gemini에 요청해 받습니다.</p></div>
+      <div class="ri"><div class="rn">03</div><p>텍스트 요약·분류·번역은 <b>=AI() 함수</b>로 셀 안에서 일괄 처리합니다.</p></div>
+      <div class="ri"><div class="rn">04</div><p>Apps Script로 자동화하고, <b>구글 시트를 데이터베이스</b> 삼아 작은 웹앱을 서버 없이 운영합니다.</p></div>
+      <div class="ri"><div class="rn">05</div><p>마지막에 현업 데이터로 <b>대시보드를 완성해 웹 게시</b>까지 마칩니다.</p></div>
+    </div>
+  </div>
+  <div class="dmeta">
+    <div class="who">신성진<span>한국데이터사이언티스트협회(CDSA)</span></div>
+    <div class="topic">질의응답<br><b>카카오엔터테인먼트 · 2026.7.24 · 4시간</b></div>
+  </div>
+  <div class="pageno">17</div>
+</section>
+
+</div>
+<script>
+(function(){
+  var slides=[].slice.call(document.querySelectorAll('.slide'));
+  var editing=false, pidx=0;
+  var bEdit=document.getElementById('btnEdit'), bSave=document.getElementById('btnSave'),
+      bPdf=document.getElementById('btnPdf'), bPlay=document.getElementById('btnPlay'),
+      nav=document.querySelector('.pnav');
+  function setEdit(v){editing=v;document.body.classList.toggle('editing',v);
+    slides.forEach(function(s){s.contentEditable=v;});bEdit.classList.toggle('on',v);bEdit.textContent=v?'편집 끝':'편집';}
+  bEdit.onclick=function(){setEdit(!editing);};
+  bPdf.onclick=function(){window.print();};
+  bSave.onclick=function(){
+    var wasEdit=editing; if(editing)setEdit(false);
+    var clone=document.documentElement.cloneNode(true);
+    clone.querySelectorAll('.slide').forEach(function(s){s.removeAttribute('contenteditable');s.classList.remove('present-current');});
+    clone.querySelector('body').classList.remove('editing','presenting');
+    var html='<!doctype html>\n'+clone.outerHTML;
+    var a=document.createElement('a');
+    a.href=URL.createObjectURL(new Blob([html],{type:'text/html;charset=utf-8'}));
+    a.download=(document.title.replace(/\s+/g,'_')||'lecture')+'_편집본.html';
+    document.body.appendChild(a);a.click();a.remove();
+    if(wasEdit)setEdit(true);
+  };
+  function fit(){var s=Math.min(window.innerWidth/1280,window.innerHeight/720);
+    var cur=document.querySelector('.slide.present-current');if(cur)cur.style.setProperty('--ps',s);}
+  function show(i){pidx=(i+slides.length)%slides.length;
+    slides.forEach(function(s){s.classList.remove('present-current');});
+    slides[pidx].classList.add('present-current');fit();
+    nav.textContent=(pidx+1)+' / '+slides.length+'   ·   ← →  이동,  Esc  종료';}
+  function enter(){if(editing)setEdit(false);document.body.classList.add('presenting');show(pidx);
+    if(document.documentElement.requestFullscreen)document.documentElement.requestFullscreen().catch(function(){});}
+  function exit(){document.body.classList.remove('presenting');
+    slides.forEach(function(s){s.classList.remove('present-current');s.style.removeProperty('--ps');});
+    if(document.fullscreenElement)document.exitFullscreen().catch(function(){});}
+  bPlay.onclick=enter;
+  window.addEventListener('resize',function(){if(document.body.classList.contains('presenting'))fit();});
+  document.addEventListener('keydown',function(e){
+    if(!document.body.classList.contains('presenting'))return;
+    if(e.key==='ArrowRight'||e.key==='PageDown'||e.key===' '){e.preventDefault();show(pidx+1);}
+    else if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();show(pidx-1);}
+    else if(e.key==='Escape'){exit();}
+  });
+  document.addEventListener('click',function(e){
+    if(document.body.classList.contains('presenting')&&!editing){
+      var cur=document.querySelector('.slide.present-current');
+      if(cur&&cur.contains(e.target))show(pidx+1);
+    }
+  });
+})();
+</script>
+<script>/* kg-preview: #<heading> \uc704\uce58\ub85c \uc774\ub3d9 */
+(function(){function norm(t){return (t||'').replace(/\s+/g,'').toLowerCase()}
+function go(){var h=decodeURIComponent(location.hash.slice(1));if(!h)return;var k=norm(h).slice(0,24);if(!k)return;
+var best=null,bl=1e9,els=document.body.querySelectorAll('h1,h2,h3,h4,h5,p,div,span,li,td,text,tspan,section,article');
+for(var i=0;i<els.length;i++){var e=els[i],t=norm(e.textContent);if(t.length<bl&&t.indexOf(k)>-1){best=e;bl=t.length}}
+if(!best)return;var box=best.closest('section,[class*=slide],[class*=page],article')||best;
+box.scrollIntoView({block:'start'});box.style.outline='3px solid #c0504d';box.style.outlineOffset='4px';
+setTimeout(function(){box.style.outline=''},2600)}
+window.addEventListener('load',function(){setTimeout(go,400)});window.addEventListener('hashchange',go)})();</script></body>
+</html>

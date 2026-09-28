@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head><meta name="robots" content="noindex, nofollow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>제1차시 — 고밀도 샘플 3장</title>
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Noto+Serif+KR:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f5efe4;--bg2:#ede4d3;--bg3:#e3d6bb;
+  --ink:#2b2015;--ink2:#5a4a38;--ink3:#8a7659;--ink4:#b3a17f;
+  --acc:#b8532a;--acc2:#8b3e1f;--acc3:#d49575;
+  --ln:#d8c8ae;--ln2:#e6d9bf;
+  --dk:#1a1612;--dk2:#241e17;--on:#ede4d3;--on2:#a89172;
+  --serif:'Fraunces','Noto Serif KR',Georgia,serif;
+  --sans:'Pretendard Variable',Pretendard,-apple-system,sans-serif;
+  --mono:'JetBrains Mono',ui-monospace,Consolas,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:#0e0a06;font-family:var(--sans);-webkit-font-smoothing:antialiased}
+.deck{height:100vh;overflow-y:scroll;scroll-snap-type:y mandatory;scroll-behavior:smooth}
+.stage{width:100vw;min-height:100vh;display:flex;align-items:center;justify-content:center;scroll-snap-align:start;padding:16px}
+.slide{width:1600px;height:900px;background:var(--bg);position:relative;overflow:hidden;transform-origin:center;box-shadow:0 40px 90px -30px rgba(0,0,0,0.7);
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' seed='3'/%3E%3CfeColorMatrix values='0 0 0 0 0.16  0 0 0 0 0.12  0 0 0 0 0.08  0 0 0 0.025 0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E")}
+
+/* ── HEADER 52px ── */
+.hbar{position:absolute;top:0;left:0;right:0;height:52px;background:var(--dk);display:flex;align-items:center;justify-content:space-between;padding:0 80px}
+.hbar .mark{display:flex;align-items:center;gap:12px;font-family:var(--mono);font-size:10.5px;color:#fff;letter-spacing:2.5px;font-weight:600}
+.hbar .mark::before{content:"";width:22px;height:8px;background:var(--acc)}
+.hbar .meta{font-family:var(--mono);font-size:10.5px;color:#bbb;letter-spacing:1.5px}
+
+/* ── HEADLINE 52→190 ── */
+.hl{position:absolute;left:80px;right:80px;top:72px}
+.hl .kicker{font-family:var(--mono);font-size:10.5px;color:var(--ink3);letter-spacing:2.5px;font-weight:700;margin-bottom:10px}
+.hl h1{font-family:var(--serif);font-weight:700;font-size:30px;line-height:1.2;letter-spacing:-0.3px;color:var(--ink)}
+.hl .lede{font-size:13px;color:var(--ink2);margin-top:8px;line-height:1.6;font-style:italic;max-width:1200px}
+.hl .bar{width:48px;height:3px;background:var(--ink);margin-top:8px}
+.hrule{position:absolute;left:80px;right:80px;top:195px;height:1px;background:var(--ln2)}
+
+/* ── BODY 195→848 = 653px ── */
+.bd{position:absolute;left:80px;right:80px;top:210px;bottom:56px;overflow:hidden}
+
+/* ── FOOTER 56px ── */
+.fbar{position:absolute;bottom:0;left:0;right:0;height:56px;background:#f0e8d8;border-top:3px solid var(--ln)}
+.fbar .inner{display:flex;align-items:center;justify-content:space-between;padding:0 80px;height:100%}
+.fbar .fl{display:flex;flex-direction:column;gap:2px}
+.fbar .fl .a{font-family:var(--mono);font-size:10px;color:var(--ink3);letter-spacing:2.5px;font-weight:700}
+.fbar .fl .b{font-size:13px;color:var(--ink)}
+.fbar .fr{display:flex;flex-direction:column;align-items:flex-end;gap:2px}
+
+/* ── COLUMN DIVIDERS ── */
+.cdiv{position:absolute;top:210px;bottom:56px;width:1px;background:var(--ln2)}
+
+/* ── SECTION HEADER ── */
+.sh{display:flex;align-items:baseline;gap:10px;margin-bottom:8px}
+.sh .n{font-family:var(--mono);font-size:10.5px;color:var(--ink3);letter-spacing:2.5px;font-weight:700}
+.sh .t{font-size:11px;color:var(--ink2)}
+.sh-line{height:1px;background:var(--ln2);margin-bottom:10px}
+
+/* ── TEXT ── */
+.bt{font-size:13px;line-height:1.7;color:var(--ink2);margin-bottom:8px}
+.bt strong{color:var(--ink);font-weight:600}
+.bth{font-size:14px;color:var(--ink);font-weight:600;margin-bottom:6px;line-height:1.35}
+
+/* ── MICRO TABLE ── */
+.mtbl{width:100%;border-collapse:collapse;margin:8px 0;font-size:12px}
+.mtbl thead th{font-family:var(--mono);font-size:10px;color:var(--ink3);letter-spacing:1.5px;font-weight:700;text-align:left;padding:6px 8px;border-bottom:1.2px solid var(--ink)}
+.mtbl tbody td{padding:5px 8px;border-bottom:1px solid var(--ln2);color:var(--ink2);vertical-align:top;line-height:1.5}
+.mtbl tbody td:first-child{color:var(--ink);font-weight:600}
+.mtbl tbody td .pill{display:inline-block;font-family:var(--mono);font-size:9px;color:var(--acc);background:rgba(184,83,42,0.1);padding:1px 5px;letter-spacing:0.08em;text-transform:uppercase;font-weight:600;border-radius:2px;margin:1px 2px 0 0}
+
+/* ── CALLOUT (cream) ── */
+.co{background:var(--bg2);border-left:3px solid var(--acc);padding:10px 14px;margin:8px 0}
+.co .lb{font-family:var(--mono);font-size:10px;color:var(--acc);letter-spacing:2px;font-weight:700;margin-bottom:4px}
+.co .main{font-size:14px;color:var(--ink);font-weight:600;line-height:1.35;margin-bottom:4px}
+.co p{font-size:12px;color:var(--ink2);line-height:1.6}
+
+/* ── CALLOUT (dark) ── */
+.cod{background:var(--dk);padding:12px 16px;margin:8px 0;position:relative;overflow:hidden}
+.cod::before{content:"";position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='nd'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' seed='5'/%3E%3CfeColorMatrix values='0 0 0 0 1  0 0 0 0 0.92  0 0 0 0 0.78  0 0 0 0.04 0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23nd)'/%3E%3C/svg%3E");opacity:0.6;pointer-events:none}
+.cod>*{position:relative}
+.cod .lb{font-family:var(--mono);font-size:10px;color:var(--on2);letter-spacing:2px;font-weight:700;margin-bottom:5px}
+.cod .main{font-size:15px;color:var(--on);font-weight:700;line-height:1.3;margin-bottom:5px}
+.cod p{font-size:12px;color:var(--on2);line-height:1.65}
+
+/* ── DATA STRIP ── */
+.dstrip{background:var(--dk);padding:8px 16px;margin:8px 0;display:grid;grid-template-columns:repeat(3,1fr);gap:0;position:relative;overflow:hidden}
+.dstrip::before{content:"";position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='ns'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' seed='7'/%3E%3CfeColorMatrix values='0 0 0 0 1  0 0 0 0 0.92  0 0 0 0 0.78  0 0 0 0.04 0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23ns)'/%3E%3C/svg%3E");opacity:0.6;pointer-events:none}
+.dstrip>*{position:relative}
+.dstrip .c{padding:4px 0}
+.dstrip .c:not(:first-child){border-left:1px solid rgba(255,255,255,0.12);padding-left:14px}
+.dstrip .c .a{font-family:var(--mono);font-size:9px;color:var(--on2);letter-spacing:1.5px;font-weight:700}
+.dstrip .c .n{font-size:20px;color:var(--on);font-weight:800;margin-top:2px}
+.dstrip .c .d{font-size:9px;color:var(--on2);margin-top:1px}
+
+/* ── STEPS ── */
+.step{display:grid;grid-template-columns:14px 1fr;gap:8px;margin-bottom:6px}
+.step .sn{width:14px;height:14px;background:var(--ink);color:var(--bg);font-family:var(--mono);font-size:9px;font-weight:800;display:flex;align-items:center;justify-content:center}
+.step .st{font-size:13px;color:var(--ink);font-weight:700;line-height:1.3}
+.step .sd{font-size:11.5px;color:var(--ink2);margin-top:1px;line-height:1.5}
+
+/* ── CHECKLIST ── */
+.chk{display:grid;grid-template-columns:12px 1fr;gap:8px;margin-bottom:4px}
+.chk .b{width:12px;height:12px;border:1.2px solid var(--ink);margin-top:2px}
+.chk .t{font-size:12px;color:var(--ink2);line-height:1.5}
+
+/* ── PITFALL ── */
+.pit{border-left:3px solid var(--ink);padding:8px 14px;margin:8px 0}
+.pit .lb{font-family:var(--mono);font-size:10px;color:var(--ink3);letter-spacing:2px;font-weight:700;margin-bottom:4px}
+.pit .item{margin-bottom:5px}
+.pit .item .h{font-size:12.5px;color:var(--ink);font-weight:700;line-height:1.3}
+.pit .item .d{font-size:11px;color:var(--ink2);line-height:1.5}
+
+/* ── QUOTE ── */
+.quote{border-left:3px solid var(--ink);padding:8px 14px;margin:8px 0}
+.quote .src{font-family:var(--mono);font-size:10px;color:var(--ink3);letter-spacing:2px;font-weight:700;margin-bottom:4px}
+.quote .q{font-family:var(--serif);font-size:13px;color:var(--ink);font-weight:700;font-style:italic;line-height:1.4}
+.quote .a{font-size:11px;color:var(--ink2);margin-top:2px}
+
+/* ── CODE BLOCK ── */
+.cblk{background:var(--dk);color:var(--on);padding:10px 14px;font-family:var(--mono);font-size:11px;line-height:1.65;border-left:2px solid var(--acc);margin:8px 0}
+.cblk .cm{color:var(--acc3);opacity:0.8}
+.cblk .kw{color:var(--acc3);font-weight:600}
+.cblk .cap{font-size:9.5px;color:var(--on2);margin-top:4px;letter-spacing:0.1em}
+
+/* ── COVER ── */
+.cover .ctop{position:absolute;top:56px;left:80px;display:flex;align-items:center;gap:14px;font-family:var(--mono);font-size:10px;color:var(--acc);letter-spacing:2.5px;font-weight:600}
+.cover .ctop::before{content:"";width:22px;height:8px;background:var(--acc)}
+.cover .ctr{position:absolute;top:56px;right:80px;font-family:var(--mono);font-size:10px;color:var(--ink3);letter-spacing:2px;text-align:right;line-height:1.6}
+.cover .vol{position:absolute;top:140px;right:80px;font-family:var(--serif);font-size:260px;line-height:1;color:var(--acc);font-weight:300;opacity:0.07;letter-spacing:-0.06em;pointer-events:none;font-style:italic}
+.cover .cgrid{position:absolute;top:180px;left:80px;right:80px;bottom:120px;display:grid;grid-template-columns:1fr 360px;gap:56px}
+.cover h1{font-family:var(--serif);font-weight:700;font-size:56px;line-height:1.06;letter-spacing:-0.03em;color:var(--ink)}
+.cover .dvd{width:56px;height:2px;background:var(--acc);margin:18px 0 14px}
+.cover .sub{font-family:var(--serif);font-size:17px;color:var(--ink);font-weight:600;line-height:1.45}
+.cover .desc{margin-top:14px;font-size:13px;color:var(--ink2);line-height:1.7;max-width:580px}
+.cover .desc strong{color:var(--ink)}
+.cover .meta{align-self:end;border-top:1px solid var(--ink);padding-top:14px}
+.cover .meta .row{display:grid;grid-template-columns:85px 1fr;gap:10px;padding:7px 0;border-bottom:1px solid var(--ln);font-size:12px;align-items:baseline}
+.cover .meta .row:last-child{border-bottom:none}
+.cover .meta .k{font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--ink3);font-weight:700}
+.cover .meta .v{font-family:var(--serif);color:var(--ink);font-weight:600}
+.cover .cbl{position:absolute;bottom:56px;left:80px;font-family:var(--mono);font-size:10px;color:var(--ink3);letter-spacing:2px}
+.cover .cbr{position:absolute;bottom:56px;right:80px;font-size:12px;color:var(--ink2);text-align:right;line-height:1.6;max-width:500px}
+
+.deck-nav{position:fixed;right:12px;top:50%;transform:translateY(-50%);z-index:50;display:flex;flex-direction:column;gap:6px}
+.deck-nav a{width:7px;height:7px;border-radius:50%;background:rgba(245,239,228,0.2);transition:all .25s}
+.deck-nav a.active{background:var(--acc3);transform:scale(1.4)}
+</style>
+</head>
+<body>
+<div class="deck" id="deck">
+
+<!-- ═══ SLIDE 1 — COVER ═══ -->
+<div class="stage"><div class="slide cover" data-title="Cover">
+  <div class="hbar"><div class="mark">SESSION 01 · ORIENTATION</div><div class="meta">공공 AI 전문인재 양성과정 · 8주 실전 여정</div></div>
+  <div class="ctop">PUBLIC AI EXPERT PROGRAM · 2026</div>
+  <div class="ctr">Module 01 / Session 01<br>Hub Leader Track</div>
+  <div class="vol">01</div>
+  <div class="cgrid">
+    <div>
+      <div style="font-family:var(--mono);font-size:10px;color:var(--acc);letter-spacing:3px;font-weight:700;margin-bottom:12px">SESSION 01</div>
+      <h1>AI 에이전트 시대의 개막과 공공 구현 지형도</h1>
+      <div class="dvd"></div>
+      <div class="sub">공공 AI 거점리더의 기술 지형과 환경 세팅</div>
+      <p class="desc">8주 과정의 첫 시간. <strong>① 현재 AI 기술의 위치와 흐름</strong>을 NLP 진화사·트랜스포머·프롬프트 진화 3축으로 정리하고, <strong>② 본 과정에서 학습할 9가지 공공 AI 구현 유형</strong>을 개괄한다. 후반부에는 환경 세팅·아카이브 가입·거점 미션 카드 작성이 워크샵으로 진행된다. 거점리더는 기술자가 아니다 — 아키텍처를 설계하고 에이전트에 위임하는 사람이다. 구현은 에이전트가 한다.</p>
+    </div>
+    <div class="meta">
+      <div class="row"><span class="k">Program</span><span class="v">공공 AI 전문인재 양성과정</span></div>
+      <div class="row"><span class="k">Module</span><span class="v">01 — Orientation</span></div>
+      <div class="row"><span class="k">Session</span><span class="v">01 / 08</span></div>
+      <div class="row"><span class="k">Format</span><span class="v">강의 · 워크샵 · 환경 세팅</span></div>
+      <div class="row"><span class="k">Duration</span><span class="v">3 hours (강의 110m + 워크샵 70m)</span></div>
+      <div class="row"><span class="k">Objective</span><span class="v">① AI 기술 위치 파악 ② 9유형 개괄 ③ 환경 정렬</span></div>
+      <div class="row"><span class="k">Edition</span><span class="v">2026.04 · v1.0</span></div>
+    </div>
+  </div>
+  <div class="cbl">— Editorial Warm Edition</div>
+  <div class="cbr">본 과정은 기술자 양성이 아닌, 부서 내 AI 활용을 코칭·확산할 거점리더 양성을 목적으로 한다.</div>
+</div></div>
+
+<!-- ═══ SLIDE 2 — NLP 진화사 + 프롬프트 진화 (고밀도 1장) ═══ -->
+<div class="stage"><div class="slide" data-title="Evolution">
+  <div class="hbar"><div class="mark">MODULE 01 · UNIT 01 · NLP & PROMPTING EVOLUTION</div><div class="meta">공공 AI 전문인재 양성과정 · 8주 실전 여정</div></div>
+  <div class="hl">
+    <div class="kicker">UNIT 01 · AI / NLP 진화 흐름 · LECTURE 01</div>
+    <h1>모델은 '답하는 도구'에서 '일하는 동료'로, 프롬프트는 '질문'에서 '작업 환경'으로 변했다</h1>
+    <div class="lede">왼쪽은 NLP/LLM 모델의 진화, 가운데는 프롬프트 입력 양식의 진화, 오른쪽은 MicroGPT로 확인하는 트랜스포머 내부 구조. 세 축을 한 장에서 동시에 정리한다.</div>
+    <div class="bar"></div>
+  </div>
+  <div class="hrule"></div>
+
+  <div class="cdiv" style="left:556px"></div>
+  <div class="cdiv" style="left:1060px"></div>
+
+  <div class="bd">
+    <!-- COL 1 — NLP 진화사 -->
+    <div style="position:absolute;left:0;top:0;width:456px">
+      <div class="sh"><span class="n">01 · NLP EVOLUTION</span><span class="t">3단계 진화 흐름</span></div>
+      <div class="sh-line"></div>
+
+      <div style="background:var(--bg2);border:1px solid var(--ln);padding:10px 14px;margin-bottom:8px">
+        <div style="font-family:var(--mono);font-size:9px;color:var(--ink3);letter-spacing:2px;font-weight:700;margin-bottom:4px">2017 — 2022 · PRE-LLM</div>
+        <div class="bth">BERT · PaLM · T5 — 모델은 '부품'이었다</div>
+        <p class="bt" style="margin-bottom:4px">트랜스포머 등장 후 인코더(BERT)·디코더(GPT) 두 갈래. 도메인마다 파인튜닝 필수. 분류·추출이 주된 용도. 일반 사용자에게는 거의 보이지 않음.</p>
+      </div>
+
+      <div style="background:var(--bg2);border:1px solid var(--ln);padding:10px 14px;margin-bottom:8px">
+        <div style="font-family:var(--mono);font-size:9px;color:var(--ink3);letter-spacing:2px;font-weight:700;margin-bottom:4px">2022.11 — 2024 · LLM 시대</div>
+        <div class="bth">ChatGPT 이후 — AI 사용이 일상에 진입</div>
+        <p class="bt" style="margin-bottom:4px">GPT-3.5 → GPT-4, Claude, Gemini 연이어 등장. 한 모델이 글쓰기·요약·번역·코드·추론을 모두 처리. RLHF·멀티모달·긴 컨텍스트가 핵심 기술. <strong>프롬프트 엔지니어링</strong> 직무가 등장.</p>
+      </div>
+
+      <div style="background:var(--dk);padding:10px 14px;margin-bottom:8px;position:relative;overflow:hidden">
+        <div style="position:relative;z-index:1">
+          <div style="font-family:var(--mono);font-size:9px;color:var(--acc3);letter-spacing:2px;font-weight:700;margin-bottom:4px">2024 — 현재 · AGENT 시대</div>
+          <div style="font-size:14px;color:var(--on);font-weight:700;margin-bottom:4px;line-height:1.3">일을 통째로 위임한다 — 사용자는 기획자가 된다</div>
+          <p style="font-size:12px;color:var(--on2);line-height:1.6">모델이 도구를 호출(function calling, MCP)하고, 스스로 루프를 돌며(reasoning), 다른 에이전트와 협업(A2A, MoA). Claude Code·Cursor·Antigravity는 '답변'이 아닌 <strong style="color:var(--on)">'완성된 결과물'</strong>을 돌려준다.</p>
+        </div>
+      </div>
+
+      <div class="co">
+        <div class="lb">KEY TAKEAWAY</div>
+        <div class="main">이 과정이 '왜 지금' 필요한가를 이해하는 것이 1차시의 목적이다.</div>
+        <p>거점리더가 만들 최종 산출물은 코드가 아니라 <strong>아키텍처 1장</strong>이다. 에이전트 시대에 사용자의 역할은 작업자 → 설계자로 이동했고, 이 과정은 그 역할 전환을 8주에 걸쳐 훈련한다.</p>
+      </div>
+
+      <div class="dstrip">
+        <div class="c"><div class="a">HUGGING FACE</div><div class="n">1.6M+</div><div class="d">누적 등록 모델 수 (2025)</div></div>
+        <div class="c"><div class="a">MULTIMODAL</div><div class="n">78%</div><div class="d">프론티어 모델 멀티모달 지원율</div></div>
+        <div class="c"><div class="a">AGENT</div><div class="n">~3년</div><div class="d">행정 자동화 본격 도래 전망</div></div>
+      </div>
+    </div>
+
+    <!-- COL 2 — 프롬프트 진화 -->
+    <div style="position:absolute;left:480px;top:0;width:556px">
+      <div class="sh"><span class="n">02 · PROMPTING EVOLUTION</span><span class="t">입력 양식의 3단계 변화</span></div>
+      <div class="sh-line"></div>
+
+      <table class="mtbl" style="margin-bottom:6px">
+        <thead><tr><th style="width:80px">CRITERION</th><th>① PROMPT</th><th>② CONTEXT</th><th>③ HARNESS</th></tr></thead>
+        <tbody>
+          <tr><td>정의</td><td>한 번의 질문과 답</td><td>역할+자료+제약+예시 패키지</td><td style="background:rgba(184,83,42,0.06)"><strong>도구·메모리·서브 에이전트 결합 환경</strong></td></tr>
+          <tr><td>단위</td><td>한 문장</td><td>시스템 프롬프트 / 프로젝트</td><td style="background:rgba(184,83,42,0.06)">파일 시스템+터미널+API 전체</td></tr>
+          <tr><td>재사용</td><td>단발성</td><td>템플릿으로 재사용</td><td style="background:rgba(184,83,42,0.06)">환경 자체가 재사용 단위</td></tr>
+          <tr><td>대표 도구</td><td><code>chat.openai.com</code> 첫 화면</td><td>Custom GPTs, Projects, Skills, Gems</td><td style="background:rgba(184,83,42,0.06)">Claude Code, Cursor, Antigravity</td></tr>
+          <tr><td>과정 내 위치</td><td>1~2회차</td><td>3회차 (메타 프롬프트)</td><td style="background:rgba(184,83,42,0.06)"><strong>6~8회차</strong> 에이전트 도구</td></tr>
+        </tbody>
+      </table>
+
+      <div class="cod">
+        <div class="lb">FIELD CASE · 3회차 메타 프롬프트 공유 활동 미리보기</div>
+        <div class="main">20~40명 × 2개 = 80개 시드 프롬프트 라이브러리</div>
+        <p>수강생이 각자 자주 쓰는 프롬프트 2개를 메타 프롬프트로 변환해 공용 저장소에 등록. 동료 프롬프트를 자기 부서 맥락에 맞게 변형해 재사용. 실패 사례도 '왜 실패했는지' 메모와 함께 등록. 이 과정이 거점리더 역할 훈련의 핵심이다.</p>
+      </div>
+
+      <div class="quote">
+        <div class="src">SOURCE · ANTHROPIC DOCS · 2025</div>
+        <div class="q">"좋은 프롬프트는 작성하는 것이 아니라 구조화하는 것이다."</div>
+        <div class="a">— Constructing Effective Prompts for Agentic Workflows</div>
+      </div>
+
+      <div style="font-family:var(--mono);font-size:10px;color:var(--ink3);letter-spacing:2px;font-weight:700;margin:8px 0 4px">FIGURE 1 · 프롬프트 → 컨텍스트 → 하네스 진화 방향</div>
+      <div style="display:grid;grid-template-columns:1fr 30px 1fr 30px 1fr;gap:0;align-items:center">
+        <div style="background:var(--bg2);border:1px solid var(--ln);padding:10px 12px;text-align:center">
+          <div style="font-family:var(--mono);font-size:9px;color:var(--ink3);letter-spacing:1.5px;font-weight:700">PROMPT</div>
+          <div style="font-family:var(--serif);font-size:13px;color:var(--ink);font-weight:600;margin-top:4px">한 번의 질문</div>
+          <div style="font-size:10px;color:var(--ink2);margin-top:2px">"요약해줘" 한 마디</div>
+        </div>
+        <div style="text-align:center;font-family:var(--serif);font-size:18px;color:var(--acc)">→</div>
+        <div style="background:var(--bg2);border:1px solid var(--ln);padding:10px 12px;text-align:center">
+          <div style="font-family:var(--mono);font-size:9px;color:var(--ink3);letter-spacing:1.5px;font-weight:700">CONTEXT</div>
+          <div style="font-family:var(--serif);font-size:13px;color:var(--ink);font-weight:600;margin-top:4px">업무 맥락의 묶음</div>
+          <div style="font-size:10px;color:var(--ink2);margin-top:2px">Custom GPT, Projects</div>
+        </div>
+        <div style="text-align:center;font-family:var(--serif);font-size:18px;color:var(--acc)">→</div>
+        <div style="background:var(--dk);padding:10px 12px;text-align:center">
+          <div style="font-family:var(--mono);font-size:9px;color:var(--acc3);letter-spacing:1.5px;font-weight:700">HARNESS</div>
+          <div style="font-family:var(--serif);font-size:13px;color:var(--on);font-weight:600;margin-top:4px">작업 환경 자체</div>
+          <div style="font-size:10px;color:var(--on2);margin-top:2px">Claude Code, Cursor</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- COL 3 — MicroGPT / Transformer -->
+    <div style="position:absolute;left:984px;top:0;width:460px">
+      <div class="sh"><span class="n">03 · TRANSFORMER TOUCH</span><span class="t">MicroGPT로 핵심 구조 체감</span></div>
+      <div class="sh-line"></div>
+
+      <div class="bth">왜 LLM은 다음 단어를 예측할 수 있는가</div>
+      <p class="bt">트랜스포머의 핵심 메커니즘인 <strong>Self-Attention(Q·K·V)</strong>과 <strong>Multi-Head</strong> 구조를 200줄 분량의 MicroGPT 코드로 확인한다. 모델을 구현하기 위해서가 아니라, 거점리더가 동료에게 '왜 이런 답이 나오는가'를 설명할 수 있는 직관을 갖추기 위해서다.</p>
+
+      <div style="font-family:var(--mono);font-size:10px;color:var(--ink3);letter-spacing:2px;font-weight:700;margin:6px 0 4px">TABLE 1 · Q·K·V 비유</div>
+      <table class="mtbl">
+        <thead><tr><th>구성</th><th>비유</th><th>역할</th></tr></thead>
+        <tbody>
+          <tr><td>Q · Query</td><td>"내가 궁금한 것"</td><td>현재 단어가 다른 단어에 묻는 질의</td></tr>
+          <tr><td>K · Key</td><td>"각 단어의 색인표"</td><td>각 단어가 갖고 있는 검색 색인</td></tr>
+          <tr><td>V · Value</td><td>"실제 의미 내용"</td><td>색인에 매칭된 실제 정보</td></tr>
+          <tr><td>Softmax</td><td>"누구를 얼마나 볼지"</td><td>Q·K 유사도로 가중치 계산</td></tr>
+        </tbody>
+      </table>
+
+      <div class="co">
+        <div class="lb">MULTI-HEAD · 핵심 비유</div>
+        <div class="main">한 문장을 여러 명이 동시에 다른 관점으로 읽는다.</div>
+        <p>Head 1은 문법, Head 2는 주제, Head 3은 시제를 본다. 각 관점의 결과를 결합해 다음 단어를 결정한다. 프론티어 모델은 이 Head를 32~96개 운용한다.</p>
+      </div>
+
+      <div class="cblk">
+<span class="cm"># MicroGPT — 200줄 분량 GPT 시연</span>
+<span class="kw">class</span> Head(nn.Module):
+  <span class="kw">def</span> forward(self, x):
+    q = self.query(x)  <span class="cm"># 질의</span>
+    k = self.key(x)    <span class="cm"># 색인</span>
+    v = self.value(x)  <span class="cm"># 의미</span>
+    w = q @ k.T / sqrt(d)
+    w = softmax(w)     <span class="cm"># 가중치 계산</span>
+    <span class="kw">return</span> w @ v        <span class="cm"># 결합 출력</span>
+        <div class="cap">개념용 의사코드 · 시연은 Karpathy nanoGPT 기반</div>
+      </div>
+
+      <div class="pit">
+        <div class="lb">PITFALL · 이 회차에서 빠지기 쉬운 실수</div>
+        <div class="item"><div class="h">▸ 트랜스포머 수식에 매몰된다</div><div class="d">수식이 아닌 비유로 충분. "Q·K·V = 질의·색인·내용" 한 줄만 기억하면 된다.</div></div>
+        <div class="item"><div class="h">▸ "그래서 환각은 왜 생기나요?" 질문에 당황</div><div class="d">→ 모델은 '확률적으로 그럴듯한 다음 단어'를 생성할 뿐, 사실 여부를 검증하지 않는다. 이 한 줄이 답이다.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="fbar"><div class="inner"><div class="fl"><span class="a">MODULE</span><span class="b">01 · AI 에이전트 시대의 개막과 공공 구현 지형도</span></div><div class="fr"><span class="a">PAGE</span><span class="b">002 / 013</span></div></div></div>
+</div></div>
+
+<!-- ═══ SLIDE 3 — 9가지 구현 유형 (고밀도 1장) ═══ -->
+<div class="stage"><div class="slide" data-title="9 Types">
+  <div class="hbar"><div class="mark">MODULE 01 · UNIT 04 · IMPLEMENTATION TYPES</div><div class="meta">공공 AI 전문인재 양성과정 · 8주 실전 여정</div></div>
+  <div class="hl">
+    <div class="kicker">UNIT 04 · 9가지 공공 AI 구현 유형 · LECTURE 03</div>
+    <h1>9개 유형은 본 과정 모든 실습의 분류 체계다 — 어시스트로 한 번, 에이전트로 한 번 더</h1>
+    <div class="lede">민첩한 AI는 거대 시스템 구축이 아닌 '조립 가능한 작은 도구'의 연속이다. 유형은 난이도 순이 아니라 배포 형태 순이다. 같은 문제도 유형에 따라 만드는 방식이 달라진다.</div>
+    <div class="bar"></div>
+  </div>
+  <div class="hrule"></div>
+
+  <div class="cdiv" style="left:556px"></div>
+  <div class="cdiv" style="left:1060px"></div>
+
+  <div class="bd">
+    <!-- COL 1 — Type 1~3 -->
+    <div style="position:absolute;left:0;top:0;width:456px">
+      <div class="sh"><span class="n">TYPE 01–03</span><span class="t">파이썬·VBA·독립 프로그램</span></div>
+      <div class="sh-line"></div>
+
+      <div style="background:var(--bg2);border:1px solid var(--ln);padding:10px 14px;margin-bottom:6px">
+        <div style="display:flex;justify-content:space-between;align-items:baseline"><div style="font-family:var(--mono);font-size:9px;color:var(--acc);letter-spacing:2px;font-weight:700">TYPE 01</div><div style="font-family:var(--mono);font-size:9px;color:var(--ink3);letter-spacing:1.5px;font-weight:600">SESSION 04</div></div>
+        <div class="bth" style="margin-top:4px">AI 작성 파이썬 코드를 내부망에서 실행</div>
+        <p class="bt">외부망에서 Claude·GPT에 코드 요청 → .py 파일로 내부망 반입 → IDLE/터미널에서 실행. 모든 공공 구현의 가장 단순한 기본형. 에러 시 로그를 다시 외부망에 가져가 수정 요청.</p>
+      </div>
+
+      <div style="background:var(--bg2);border:1px solid var(--ln);padding:10px 14px;margin-bottom:6px">
+        <div style="display:flex;justify-content:space-between;align-items:baseline"><div style="font-family:var(--mono);font-size:9px;color:var(--acc);letter-spacing:2px;font-weight:700">TYPE 02</div><div style="font-family:var(--mono);font-size:9px;color:var(--ink3);letter-spacing:1.5px;font-weight:600">SESSION 05 · 하이라이트</div></div>
+        <div class="bth" style="margin-top:4px">VBA 업무 자동화 + 로컬 sLLM (Ollama)</div>
+        <p class="bt"><code>=AI_SUMMARIZE(A1)</code> · <code>=AI_CLASSIFY()</code> · <code>=AI_EXTRACT()</code> 같은 함수를 VBA + Ollama로 직접 구현. <strong>외부 API 없이 완전 내부망에서 셀 단위 AI 호출.</strong> 2회차에 설치한 Ollama가 복선.</p>
+      </div>
+
+      <div style="background:var(--bg2);border:1px solid var(--ln);padding:10px 14px;margin-bottom:6px">
+        <div style="display:flex;justify-content:space-between;align-items:baseline"><div style="font-family:var(--mono);font-size:9px;color:var(--acc);letter-spacing:2px;font-weight:700">TYPE 03</div><div style="font-family:var(--mono);font-size:9px;color:var(--ink3);letter-spacing:1.5px;font-weight:600">SESSION 06</div></div>
+        <div class="bth" style="margin-top:4px">파이썬 + PyInstaller 독립 실행 프로그램</div>
+        <p class="bt">tkinter/PyQt로 GUI 작성 → .exe 패키징. 망분리 PC에서도 더블클릭으로 실행. 민원 통계 관리, 문서 변환, 오프라인 DB 검색 등에 적합.</p>
+      </div>
+
+      <div class="co">
+        <div class="lb">KEY TAKEAWAY</div>
+        <div class="main">유형 1~3은 '파이썬이 있으면 다 된다'</div>
+        <p>세 유형 모두 파이썬 기반이며, 4·5·6회차에 걸쳐 어시스트→에이전트 두 모드로 학습한다. 파이썬 가상환경·한글 폰트·패키지 관리는 4회차 첫 시간에 일괄 정리.</p>
+      </div>
+
+      <div class="dstrip">
+        <div class="c"><div class="a">ASSIST MODE</div><div class="n">S04–05</div><div class="d">외부망 어시스트 코드 수령</div></div>
+        <div class="c"><div class="a">AGENT MODE</div><div class="n">S06</div><div class="d">에이전트 도구 본격 개발</div></div>
+        <div class="c"><div class="a">INTERNAL</div><div class="n">100%</div><div class="d">결과물은 내부망에서 실행</div></div>
+      </div>
+    </div>
+
+    <!-- COL 2 — Type 4~6 -->
+    <div style="position:absolute;left:480px;top:0;width:556px">
+      <div class="sh"><span class="n">TYPE 04–06</span><span class="t">Electron · HTML 단일 파일 · Node.js</span></div>
+      <div class="sh-line"></div>
+
+      <div style="background:var(--bg2);border:1px solid var(--ln);padding:10px 14px;margin-bottom:6px">
+        <div style="display:flex;justify-content:space-between;align-items:baseline"><div style="font-family:var(--mono);font-size:9px;color:var(--acc);letter-spacing:2px;font-weight:700">TYPE 04</div><div style="font-family:var(--mono);font-size:9px;color:var(--ink3);letter-spacing:1.5px;font-weight:600">SESSION 06</div></div>
+        <div class="bth" style="margin-top:4px">Electron 기반 데스크톱 앱</div>
+        <p class="bt">웹 기술(HTML·CSS·JS)로 네이티브 데스크톱 앱 구현. 부서 내부 배포에 적합한 고급 GUI 옵션. 6회차에서 에이전트로 처음 구축.</p>
+      </div>
+
+      <div style="background:var(--dk);padding:12px 14px;margin-bottom:6px;position:relative;overflow:hidden">
+        <div style="position:relative;z-index:1">
+          <div style="display:flex;justify-content:space-between;align-items:baseline"><div style="font-family:var(--mono);font-size:9px;color:var(--acc3);letter-spacing:2px;font-weight:700">TYPE 05 · ★ 공공망 최적</div><div style="font-family:var(--mono);font-size:9px;color:var(--on2);letter-spacing:1.5px;font-weight:600">SESSION 04 · 06</div></div>
+          <div style="font-size:14px;color:var(--on);font-weight:700;margin:4px 0;line-height:1.3">HTML+CSS+JS · CDN 로컬화 단일 파일 앱</div>
+          <p style="font-size:12px;color:var(--on2);line-height:1.6">한 개의 .html 파일에 모든 의존성 포함. <strong style="color:var(--on)">메일로 보내고 더블클릭으로 실행.</strong> 공공망에서 가장 활용도가 높은 형태. Chart.js·ECharts·D3 같은 시각화 라이브러리를 CDN 없이 파일 내 인라인. 4회차(어시스트) + 6회차(에이전트) 두 번 등장.</p>
+        </div>
+      </div>
+
+      <div style="background:var(--bg2);border:1px solid var(--ln);padding:10px 14px;margin-bottom:6px">
+        <div style="display:flex;justify-content:space-between;align-items:baseline"><div style="font-family:var(--mono);font-size:9px;color:var(--acc);letter-spacing:2px;font-weight:700">TYPE 06</div><div style="font-family:var(--mono);font-size:9px;color:var(--ink3);letter-spacing:1.5px;font-weight:600">SESSION 05 · 06</div></div>
+        <div class="bth" style="margin-top:4px">Node.js 기반 로컬 도구</div>
+        <p class="bt">커맨드라인·간단 서버를 갖춘 도구. 5회차에서 맛보기 → 6회차에서 에이전트로 본격 개발. 7회차 RAG·웹서비스의 런타임 기반이 되기도 한다.</p>
+      </div>
+
+      <div class="cod">
+        <div class="lb">FIELD CASE · 유형 5 공공 사례</div>
+        <div class="main">민원 현황 대시보드 — 단일 .html 파일, 500KB</div>
+        <p>엑셀 CSV를 드래그&드롭하면 즉시 차트 생성. Chart.js를 인라인으로 포함해 인터넷 연결 불필요. 부서장 결재 후 팀 전체에 메일 배포. 수정 필요 시 AI에 재요청해 코드 교체.</p>
+      </div>
+
+      <div class="quote">
+        <div class="src">DESIGN PRINCIPLE</div>
+        <div class="q">9개 유형은 '난이도 순'이 아니라 '배포 형태 순'이다.</div>
+        <div class="a">같은 민원 분류 자동화도 유형 ①(스크립트)·②(엑셀 함수)·⑤(웹 대시보드)·⑦(RAG 챗봇)·⑨(풀스택)로 구현 가능. 어떤 유형으로 배포할지 결정하는 것이 거점리더의 아키텍처 판단이다.</div>
+      </div>
+    </div>
+
+    <!-- COL 3 — Type 7~9 + Checklist -->
+    <div style="position:absolute;left:984px;top:0;width:460px">
+      <div class="sh"><span class="n">TYPE 07–09</span><span class="t">RAG · 웹서비스 · 풀스택 에이전트</span></div>
+      <div class="sh-line"></div>
+
+      <div style="background:var(--bg2);border:1px solid var(--ln);padding:10px 14px;margin-bottom:6px">
+        <div style="display:flex;justify-content:space-between;align-items:baseline"><div style="font-family:var(--mono);font-size:9px;color:var(--acc);letter-spacing:2px;font-weight:700">TYPE 07</div><div style="font-family:var(--mono);font-size:9px;color:var(--ink3);letter-spacing:1.5px;font-weight:600">SESSION 07</div></div>
+        <div class="bth" style="margin-top:4px">Ollama 기반 로컬 RAG</div>
+        <p class="bt">부서 PDF·법령·매뉴얼 위에서 답변하는 AI. 완전 내부망 동작. <strong>넣기·쪼개기·찾기·답하기</strong> 4단계 파이프라인. 법령 RAG·민원 매뉴얼 RAG·회의록 RAG가 대표 공공 사례.</p>
+      </div>
+
+      <div style="background:var(--bg2);border:1px solid var(--ln);padding:10px 14px;margin-bottom:6px">
+        <div style="display:flex;justify-content:space-between;align-items:baseline"><div style="font-family:var(--mono);font-size:9px;color:var(--acc);letter-spacing:2px;font-weight:700">TYPE 08</div><div style="font-family:var(--mono);font-size:9px;color:var(--ink3);letter-spacing:1.5px;font-weight:600">SESSION 07</div></div>
+        <div class="bth" style="margin-top:4px">백엔드 결합 웹서비스</div>
+        <p class="bt">프론트(보는 곳) + 백엔드(일하는 곳) + 저장소 3덩어리. FastAPI·Express 등 프레임워크 선택은 에이전트가 담당. 외부망 개발 → 내부망 이관 체크리스트 동반.</p>
+      </div>
+
+      <div style="background:var(--dk);padding:12px 14px;margin-bottom:6px;position:relative;overflow:hidden">
+        <div style="position:relative;z-index:1">
+          <div style="display:flex;justify-content:space-between;align-items:baseline"><div style="font-family:var(--mono);font-size:9px;color:var(--acc3);letter-spacing:2px;font-weight:700">TYPE 09 · ★ 캡스톤</div><div style="font-family:var(--mono);font-size:9px;color:var(--on2);letter-spacing:1.5px;font-weight:600">SESSION 08</div></div>
+          <div style="font-size:14px;color:var(--on);font-weight:700;margin:4px 0;line-height:1.3">API · MCP 기반 풀스택 멀티 에이전트 서비스</div>
+          <p style="font-size:12px;color:var(--on2);line-height:1.6">여러 API(기상청·법령·공공데이터포털)와 MCP 서버를 조합해 <strong style="color:var(--on)">자율적으로 동작하는 서비스</strong> 구축. 8회차 아키텍처 캔버스 워크숍의 결과물이 이 유형으로 구현된다. 거점 미션이 도달할 최종 단계.</p>
+        </div>
+      </div>
+
+      <div style="font-family:var(--mono);font-size:10px;color:var(--ink3);letter-spacing:2px;font-weight:700;margin:8px 0 6px">CHECKLIST · 1차시 마감 전 자가 점검</div>
+      <div style="border-top:1.2px solid var(--ink);padding-top:6px">
+        <div class="chk"><div class="b"></div><div class="t">AI/NLP 진화 3단계(Pre-LLM → LLM → Agent)를 설명할 수 있는가</div></div>
+        <div class="chk"><div class="b"></div><div class="t">프롬프트 → 컨텍스트 → 하네스 차이를 구분할 수 있는가</div></div>
+        <div class="chk"><div class="b"></div><div class="t">Q·K·V와 멀티헤드를 비유로 설명할 수 있는가</div></div>
+        <div class="chk"><div class="b"></div><div class="t">9가지 구현 유형 중 3개 이상 이름과 회차를 말할 수 있는가</div></div>
+        <div class="chk"><div class="b"></div><div class="t">외부망/내부망 코드 이관 절차를 알고 있는가</div></div>
+        <div class="chk"><div class="b"></div><div class="t">환경 세팅 체크리스트 10개 항목이 모두 완료됐는가</div></div>
+        <div class="chk"><div class="b"></div><div class="t">공용 아카이브에 자기소개를 등록했는가</div></div>
+        <div class="chk"><div class="b"></div><div class="t">거점 미션 카드 1장을 작성하고 등록했는가</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="fbar"><div class="inner"><div class="fl"><span class="a">MODULE</span><span class="b">01 · AI 에이전트 시대의 개막과 공공 구현 지형도</span></div><div class="fr"><span class="a">PAGE</span><span class="b">003 / 013</span></div></div></div>
+</div></div>
+
+</div>
+<nav class="deck-nav" id="dots"></nav>
+<script>
+function scaleSlides(){const s=document.querySelectorAll('.slide'),vw=innerWidth-32,vh=innerHeight-32,sc=Math.min(vw/1600,vh/900);s.forEach(e=>e.style.transform=`scale(${sc})`)}
+addEventListener('resize',scaleSlides);scaleSlides();
+const stages=document.querySelectorAll('.stage'),dots=document.getElementById('dots');
+stages.forEach(s=>{const a=document.createElement('a');a.href='#';a.addEventListener('click',e=>{e.preventDefault();s.scrollIntoView({behavior:'smooth'})});dots.appendChild(a)});
+const nd=dots.querySelectorAll('a'),dk=document.getElementById('deck');
+function ud(){let i=0,m=1e9;stages.forEach((s,x)=>{const d=Math.abs(s.getBoundingClientRect().top+s.getBoundingClientRect().height/2-innerHeight/2);if(d<m){m=d;i=x}});nd.forEach((d,x)=>d.classList.toggle('active',x===i))}
+dk.addEventListener('scroll',ud);ud();
+document.addEventListener('keydown',e=>{let i=0,m=1e9;stages.forEach((s,x)=>{const d=Math.abs(s.getBoundingClientRect().top+s.getBoundingClientRect().height/2-innerHeight/2);if(d<m){m=d;i=x}});if(['ArrowDown','PageDown',' '].includes(e.key)&&i<stages.length-1){e.preventDefault();stages[i+1].scrollIntoView({behavior:'smooth'})}else if(['ArrowUp','PageUp'].includes(e.key)&&i>0){e.preventDefault();stages[i-1].scrollIntoView({behavior:'smooth'})}});
+</script>
+<script>/* kg-preview: #<heading> \uc704\uce58\ub85c \uc774\ub3d9 */
+(function(){function norm(t){return (t||'').replace(/\s+/g,'').toLowerCase()}
+function go(){var h=decodeURIComponent(location.hash.slice(1));if(!h)return;var k=norm(h).slice(0,24);if(!k)return;
+var best=null,bl=1e9,els=document.body.querySelectorAll('h1,h2,h3,h4,h5,p,div,span,li,td,text,tspan,section,article');
+for(var i=0;i<els.length;i++){var e=els[i],t=norm(e.textContent);if(t.length<bl&&t.indexOf(k)>-1){best=e;bl=t.length}}
+if(!best)return;var box=best.closest('section,[class*=slide],[class*=page],article')||best;
+box.scrollIntoView({block:'start'});box.style.outline='3px solid #c0504d';box.style.outlineOffset='4px';
+setTimeout(function(){box.style.outline=''},2600)}
+window.addEventListener('load',function(){setTimeout(go,400)});window.addEventListener('hashchange',go)})();</script></body>
+</html>

@@ -1,0 +1,1451 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head><meta name="robots" content="noindex, nofollow">
+<meta charset="UTF-8">
+<title>AI 에이전트·ChatGPT·Claude 실행구조 — 서비스별 PPT 생성 상세 흐름 19장 강의안</title>
+<style>
+  :root{
+    --bg:#f5f6f8; --surf:#ffffff; --tint:#e5e9ef; --tint2:#d7dde6;
+    --hair:#d7dee8; --hair2:#c3cedb;
+    --ink:#102139; --body:#3d4c60; --mut:#68758a; --faint:#93a1b3;
+    --blue:#b94a48; --cyan:#943539; --green:#2e7d5b; --amber:#c38424;
+    --coral:#b94a48; --navy:#101827;
+    --gG:#2e8a5c; --gB:#4266a3; --gK:#141b28;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{background:#c8ccd3}
+  body{font-family:'Pretendard Variable',Pretendard,'Noto Sans KR','Malgun Gothic',sans-serif;
+       color:var(--ink);-webkit-font-smoothing:antialiased}
+  .deck{display:flex;flex-direction:column;align-items:center;gap:28px;padding:28px 0}
+  body.shot .deck{padding:0;gap:0}
+
+  /* ---------- slide frame ---------- */
+  .slide{width:1280px;height:720px;position:relative;overflow:hidden;flex:none;
+    background:
+      radial-gradient(760px 380px at 88% -10%, rgba(185,74,72,.05), transparent 60%),
+      var(--bg);
+    display:grid;grid-template-rows:auto 1fr auto auto;row-gap:14px;
+    padding:28px 48px 0}
+  .slide::before{content:'';position:absolute;inset:0 0 auto 0;height:4px;pointer-events:none;
+    background:linear-gradient(90deg,var(--gG) 0 33.3%,var(--gB) 33.3% 66.6%,var(--gK) 66.6% 100%)}
+
+  /* ---------- header ---------- */
+  .head{display:grid;grid-template-columns:1fr auto;column-gap:24px;align-items:end;
+    margin:-28px -48px 0;padding:24px 48px 14px;
+    background:linear-gradient(180deg,#e5e9ef 0%,#eef1f5 100%);
+    border-bottom:2px solid #bdc7d4}
+  .slide{word-break:keep-all;overflow-wrap:break-word}
+  .kick{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+  .kick .no{font-weight:900;font-size:12px;letter-spacing:.1em;color:#fff;
+    background:var(--blue);padding:3px 9px;border-radius:3px}
+  .kick .lb{font-weight:800;font-size:12.5px;letter-spacing:.2em;color:var(--blue);text-transform:uppercase}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1.2px;line-height:1.16;color:#102139}
+  h1 em{font-style:normal;color:var(--blue)}
+  h1 em.g{color:var(--green)} h1 em.a{color:var(--amber)} h1 em.c{color:var(--coral)} h1 em.f{color:var(--faint)}
+  .headsub{margin-top:7px;font-size:15px;color:var(--body);font-weight:500}
+  .headsub b{color:var(--ink);font-weight:800}
+  .brand{text-align:right;padding-bottom:3px}
+  .brand .t1{font-weight:900;font-size:13px;letter-spacing:.08em;color:var(--ink)}
+  .brand .t1 span{color:var(--blue)}
+  .brand .t2{font-size:11px;color:var(--mut);margin-top:3px;letter-spacing:.04em}
+
+  /* ---------- open sections (no boxes) ---------- */
+  .main{display:grid;row-gap:14px;min-height:0}
+  .sec{display:grid;grid-template-rows:auto 1fr;min-height:0;row-gap:9px}
+  .sl{display:flex;align-items:center;gap:10px}
+  .sl .tx{flex:none;font-weight:900;font-size:13.5px;letter-spacing:.02em;color:var(--ink)}
+  .sl .tx i{font-style:normal;color:var(--blue)}
+  .sl .sx{flex:none;font-size:12px;color:var(--mut);font-weight:500}
+  .sl .ln{flex:1;border-top:1px solid var(--hair2)}
+  .sl .tag{flex:none;font-size:11px;font-weight:800;color:var(--coral);
+    border:1px solid rgba(185,74,72,.42);border-radius:20px;padding:2.5px 11px;letter-spacing:.03em;background:#faeeed}
+
+  /* open step (typography-led, no border) */
+  .flow{display:grid;min-height:0}
+  .step{display:flex;flex-direction:column;min-height:0;padding:4px 2px 0;position:relative}
+  .step .cno{font-size:11px;font-weight:900;letter-spacing:.12em;color:var(--mut);margin-bottom:5px}
+  .step .ct{font-weight:800;font-size:16.5px;letter-spacing:-.4px;line-height:1.28;color:var(--ink)}
+  .step .cs{font-size:13px;color:var(--body);line-height:1.55;margin-top:7px}
+  .step .cs b{color:var(--ink);font-weight:800}
+  .step .cf{margin-top:auto;padding-top:9px;font-size:11.5px;color:var(--mut)}
+  .step .cf b{color:var(--blue);font-weight:800}
+  .stepno{position:absolute;top:0;right:6px;font-size:30px;font-weight:900;color:var(--hair2);line-height:1}
+  .arrow{align-self:center;justify-self:center;color:var(--hair2);font-size:22px;font-weight:900}
+
+  /* highlighted step = only these get a surface */
+  .step.hot{background:linear-gradient(180deg,#f8ecea,#fbf4f3);border-radius:12px;
+    padding:12px 14px 12px;border:1px solid #e5c8c5}
+  .step.hot .cno{color:var(--blue)} .step.hot .stepno{color:#e8cfcc;top:8px;right:12px}
+  .step.hotg{background:linear-gradient(180deg,#e8f0ea,#f4f8f5);border-radius:12px;
+    padding:12px 14px 12px;border:1px solid #c8dcce}
+  .step.hotg .cno{color:var(--green)} .step.hotg .stepno{color:#bfd8c8;top:8px;right:12px}
+
+  .chips{display:flex;flex-wrap:wrap;gap:7px}
+  .chip{font-size:12px;font-weight:700;color:var(--body);background:var(--tint);
+    border:1px solid var(--hair);border-radius:20px;padding:4px 12px;white-space:nowrap}
+  .chip.on{color:#fff;background:var(--blue);border-color:var(--blue);font-weight:800}
+
+  /* ---------- anchor bar (single strong element) ---------- */
+  .anchor{height:54px;border-radius:11px;display:flex;align-items:center;gap:14px;padding:0 20px;
+    background:linear-gradient(92deg,var(--navy),#1d2940);color:#fff;
+    box-shadow:0 8px 20px -10px rgba(16,28,51,.45)}
+  .anchor .k{flex:none;font-size:11px;font-weight:900;letter-spacing:.16em;color:var(--navy);
+    background:#ffc9c5;border-radius:4px;padding:4px 10px}
+  .anchor .t{font-size:16.5px;font-weight:800;letter-spacing:-.2px}
+  .anchor .t b{color:#ffc9c5}
+  .anchor .r{margin-left:auto;font-size:12px;color:#aab6ca;font-weight:600;text-align:right}
+  .anchor.coral{background:linear-gradient(92deg,#B23A24,var(--coral))}
+  .anchor.coral .k{background:#FFD9CF;color:#8F2D1B}
+  .anchor.coral .t b{color:#FFE1B8}
+  .anchor.coral .r{color:#FFD3C7}
+
+  /* ---------- footer ---------- */
+  .foot{height:34px;display:flex;align-items:center;gap:12px;border-top:1px solid var(--hair);
+    font-size:10.5px;color:var(--faint);letter-spacing:.04em}
+  .foot .pg{margin-left:auto;font-weight:900;color:var(--mut);font-size:11.5px}
+  .foot .pg b{color:var(--blue)}
+
+  /* ============ KEYNOTE v2 (s1~s5) — 편집본 V3 디자인 시스템 ============ */
+  .slide.key{display:flex;flex-direction:column;padding:0}
+  body.present .slide.key.cur{display:flex}   /* 발표 모드의 display:grid 오버라이드 방지 */
+  .slide.key::before{display:none}
+  .key .ktop{height:44px;flex:none;display:flex;align-items:center;justify-content:space-between;
+    padding:0 46px;background:var(--navy)}
+  .key .kt1{font-size:12.5px;font-weight:700;color:#f3ede2;letter-spacing:.2px}
+  .key .kt1 small{font-size:10px;color:rgba(243,237,226,.42);font-weight:600;letter-spacing:1px;margin-left:7px}
+  .key .kt2{font-size:10.5px;font-weight:600;letter-spacing:1.2px;color:rgba(243,237,226,.55)}
+  .key .khdr{flex:none;background:var(--tint);padding:20px 50px 18px;border-bottom:1.5px solid var(--hair2)}
+  .key .keyebrow{font-size:10.5px;font-weight:900;letter-spacing:1.7px;color:var(--cyan);
+    margin-bottom:6px;text-transform:uppercase}
+  .key .ktitle{font-size:30px;font-weight:900;color:#102139;letter-spacing:-1.15px;line-height:1.16}
+  .key .kbody{flex:1;display:flex;align-items:center;padding:0 96px 30px 50px;min-height:0}
+  .key .krow{display:grid;grid-template-columns:240px 1fr;align-items:start;width:100%}
+  .key .knum{font-size:110px;font-weight:900;color:#d3dae4;line-height:.9;text-align:center;
+    padding-top:6px;letter-spacing:-5px}
+  .key .ktxt{display:flex;flex-direction:column;gap:18px;max-width:880px}
+  .key .ktxt h2{font-size:33px;font-weight:900;color:#102139;line-height:1.38;letter-spacing:-1.2px}
+  .key .ktxt h2 em{font-style:normal;color:var(--blue)}
+  .key .ktxt h2 .h2tag{display:block;font-size:16px;font-weight:800;letter-spacing:-.3px;
+    color:#2e7d5b;margin-top:12px}
+  .key .ktxt h2 .h2tag i{font-style:normal;color:var(--mut);font-weight:600}
+  .key .ktxt h2 em.g{color:#2e7d5b} .key .ktxt h2 em.a{color:var(--amber)} .key .ktxt h2 em.c{color:var(--cyan)}
+  .key .ktxt p{font-size:15px;color:var(--body);line-height:1.8;font-weight:400}
+  .key .ktxt p b{color:var(--cyan);font-weight:700}
+  .key .kpg{position:absolute;right:30px;bottom:13px;font-size:13.5px;font-weight:700;color:var(--blue)}
+
+  /* ============ SLIDE 06 · 전수 현황 ============ */
+  .s6x-main{grid-template-rows:.66fr 1fr}
+  .s6x-top{display:grid;grid-template-columns:.9fr 1.15fr .8fr 1.5fr 1.45fr;gap:12px}
+  .stat6{background:var(--surf);border:1px solid var(--hair);border-radius:10px;display:flex;
+    flex-direction:column;align-items:center;justify-content:center;gap:7px;text-align:center;
+    box-shadow:0 4px 12px -9px rgba(16,33,57,.16)}
+  .stat6 .n{font-size:26px;font-weight:900;letter-spacing:-1px;color:#4266a3}
+  .stat6.g .n{color:#2e8a5c}.stat6.a .n{color:#c38424}
+  .stat6 .l{font-size:11.8px;color:var(--mut);font-weight:600;padding:0 8px}
+  .role{background:var(--tint);border:1px solid var(--hair);border-radius:10px;padding:11px 15px;
+    display:flex;flex-direction:column;gap:6px;justify-content:center}
+  .role .rt{font-size:14px;font-weight:800;color:var(--ink)}
+  .role .rt small{font-size:11px;color:var(--mut);font-weight:700;margin-left:6px}
+  .role .ri{font-size:11.8px;line-height:1.62;color:var(--body)}
+  .s6x-rows{display:grid;grid-template-rows:repeat(5,1fr);row-gap:8px;min-height:0}
+  .agrow{display:grid;grid-template-columns:158px 132px 1.18fr 1.12fr;gap:14px;align-items:center;
+    background:var(--surf);border:1px solid var(--hair);border-left:4px solid #4266a3;border-radius:8px;
+    padding:4px 16px;min-height:0;box-shadow:0 3px 10px -8px rgba(16,33,57,.14)}
+  .agrow .ag{font-size:15px;font-weight:900;letter-spacing:-.3px;color:var(--ink)}
+  .agrow .sz{font-size:13px;font-weight:800}
+  .agrow .cfg{font-size:12.4px;color:var(--body);line-height:1.4}
+  .agrow .sch{font-size:11.8px;color:var(--mut);line-height:1.4}
+
+  /* ============ SLIDE 06 · 사례 상세 ============ */
+  .case6-main{grid-template-rows:1fr 1fr 1fr 46px;row-gap:10px}
+  .csrow{display:grid;grid-template-columns:148px repeat(4,1fr) 1.06fr;min-height:0;
+    background:var(--surf);border:1px solid var(--hair);border-radius:9px;overflow:hidden;
+    box-shadow:0 3px 10px -8px rgba(16,33,57,.14)}
+  .csrow .cshead{background:var(--tint);border-right:1px solid var(--hair);padding:10px 12px;
+    display:flex;flex-direction:column;justify-content:center;gap:4px;border-left:4px solid #4266a3}
+  .csrow .cshead small{font-size:9px;font-weight:800;color:var(--mut);letter-spacing:.04em;line-height:1.35}
+  .csrow .cshead b{font-size:16.5px;font-weight:900;letter-spacing:-.4px;color:var(--ink)}
+  .csrow .cscell{padding:9px 12px;border-right:1px solid var(--hair);display:flex;flex-direction:column;
+    gap:4px;justify-content:center;min-width:0}
+  .csrow .cscell:last-child{border-right:none;background:#f9f1e2}
+  .csrow .cscell em{font-style:normal;font-size:9.5px;font-weight:900;letter-spacing:.08em;color:var(--mut)}
+  .csrow .cscell:last-child em{color:#8f5f14}
+  .csrow .cscell p{font-size:11.8px;line-height:1.5;color:var(--body)}
+  .csrow .cscell.out p{font-weight:700;color:var(--ink)}
+  .dflow{display:grid;grid-template-columns:1fr 22px 1fr 22px 1fr 22px 1fr 22px 1.02fr;align-items:stretch}
+  .dflow .dstep{background:var(--tint);border:1px solid var(--hair2);border-radius:8px;display:flex;
+    flex-direction:column;align-items:center;justify-content:center;gap:1px;text-align:center;padding:4px 8px}
+  .dflow .dstep b{font-size:11.8px;font-weight:800;color:var(--ink)}
+  .dflow .dstep span{font-size:10px;color:var(--mut);font-weight:600}
+  .dflow .darr{align-self:center;justify-self:center;color:var(--blue);font-weight:900;font-size:15px}
+  .dflow .dstep.fin{background:#f8ecea;border-color:rgba(185,74,72,.45)}
+  .dflow .dstep.fin b{color:#943539}
+
+  /* ============ SLIDE 08 · 도구 오케스트레이션 맵 ============ */
+  .s7x-main{display:grid;grid-template-columns:1fr 1fr 1fr;grid-template-rows:1fr 1fr;
+    column-gap:16px;row-gap:16px;position:relative;min-height:0}
+  .s7x-main::before{content:'';position:absolute;inset:-6px;border-radius:10px;
+    background-image:radial-gradient(#c3cddd 1.1px,transparent 1.1px);background-size:24px 24px;opacity:.55}
+  .npanel{background:rgba(255,255,255,.92);border:1px solid var(--hair);border-radius:11px;padding:11px 14px;
+    display:flex;flex-direction:column;gap:8px;min-height:0;z-index:2;
+    box-shadow:0 4px 12px -9px rgba(16,33,57,.18)}
+  .npanel .nh{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:900;letter-spacing:-.2px;color:var(--ink)}
+  .npanel .nh .dot{width:9px;height:9px;border-radius:50%;flex:none}
+  .npanel .nh small{margin-left:auto;font-size:9.5px;color:var(--mut);font-weight:700}
+  .npanel .nchips{display:flex;flex-wrap:wrap;gap:6px;flex:1;align-content:center;min-height:0}
+  .npanel .chip{font-size:11.4px;font-weight:700;padding:3.5px 10px;border-radius:15px;
+    background:var(--tint);border:1px solid var(--hair2);color:var(--body);white-space:nowrap}
+  .nmidcol{grid-column:2;grid-row:1/3;display:flex;flex-direction:column;justify-content:space-between;min-height:0;z-index:2}
+  .nmidcol .npanel{flex:0 0 33.5%}
+  .nhubwrap{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;z-index:4}
+  .nethub{width:212px;height:212px;border-radius:50%;display:flex;flex-direction:column;align-items:center;
+    justify-content:center;text-align:center;gap:6px;padding:20px;
+    background:radial-gradient(circle at 36% 28%,#22314f,#0d1626 72%);
+    box-shadow:0 16px 36px -12px rgba(16,24,39,.6),0 0 0 9px rgba(16,24,39,.07),0 0 0 1px rgba(16,24,39,.3)}
+  .nethub .k{font-size:9px;font-weight:900;letter-spacing:2.2px;color:#ffc9c5}
+  .nethub .t{font-size:16.5px;font-weight:900;letter-spacing:-.5px;color:#fff;line-height:1.3}
+  .nethub .s{font-size:10px;color:#b9c2d4;line-height:1.5}
+  .nethub .s b{color:#e8b571;font-weight:800}
+
+  /* ============ COVER ============ */
+  .slide.cover{grid-template-rows:auto 1fr auto auto}
+  .cover .head{margin:0;padding:0;background:none;border-bottom:none}
+  .cover h1{font-size:70px;letter-spacing:-2.4px;line-height:1.12}
+  .cv-mid{display:flex;flex-direction:column;justify-content:center;gap:20px}
+  .cv-sub{font-size:19px;color:var(--body);font-weight:500;line-height:1.6;max-width:980px}
+  .cv-sub b{color:var(--ink);font-weight:800}
+  .cv-agenda{display:grid;grid-template-columns:1fr 1fr 1fr 1.12fr;gap:12px}
+  .cv-item{background:var(--surf);border:1px solid var(--hair);border-radius:12px;
+    padding:16px 18px;display:flex;flex-direction:column;gap:6px;
+    box-shadow:0 6px 18px -12px rgba(16,28,51,.18)}
+  .cv-item .k{font-size:11px;font-weight:900;letter-spacing:.14em;color:var(--blue)}
+  .cv-item .t{font-size:17.5px;font-weight:800;letter-spacing:-.3px;color:var(--ink)}
+  .cv-item .s{font-size:12px;color:var(--mut);line-height:1.45}
+  .cv-item.ask{background:linear-gradient(160deg,#faeeed,#FFFFFF);border-color:rgba(185,74,72,.5)}
+  .cv-item.ask .k{color:var(--coral)}
+  .cv-stats{display:flex;gap:40px;padding-top:6px}
+  .cv-stats .st{display:flex;flex-direction:column;gap:4px;padding-left:16px;border-left:2px solid var(--hair2)}
+  .cv-stats .n{font-size:27px;font-weight:900;letter-spacing:-.5px;color:var(--blue)}
+  .cv-stats .n i{font-style:normal;font-size:15px;color:var(--body);font-weight:800}
+  .cv-stats .l{font-size:12px;color:var(--mut);font-weight:600}
+
+  /* ============ SLIDE 1 ============ */
+  .s1-main{grid-template-rows:1.04fr 1fr}
+  .s1-models{display:flex;align-items:center;gap:9px;border-bottom:1px solid var(--hair);padding-bottom:2px}
+  .s1-models .lb{font-weight:800;font-size:13.5px;flex:none;color:var(--ink)}
+  .s1-models .lb i{font-style:normal;color:var(--blue)}
+  .s1-models .note{margin-left:auto;font-size:12px;color:var(--mut);font-weight:600;flex:none}
+  .s1-steps{grid-template-columns:1fr 34px 1fr 34px 1.14fr;column-gap:0}
+  .s1-steps .step:not(.hot):not(.hotg){border-top:2px solid var(--hair2);padding-top:10px}
+
+  /* ============ SLIDE 2 ============ */
+  .s2-main{grid-template-rows:1fr 1.02fr}
+  .s2-eq{grid-template-columns:1fr 40px 1fr 40px 1.3fr 46px .74fr}
+  .s2-eq .step:not(.hotg){border-top:2px solid var(--hair2);padding-top:10px}
+  .op{align-self:center;justify-self:center;font-size:28px;font-weight:900;color:var(--hair2)}
+  .s2-sum{background:linear-gradient(165deg,var(--green),#1f5c42);border-radius:12px;color:#fff;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:12px;
+    box-shadow:0 10px 22px -12px rgba(46,125,91,.45)}
+  .s2-sum .b{font-size:20px;font-weight:900;letter-spacing:-.3px}
+  .s2-sum .s{font-size:11.5px;color:#d5ead9;margin-top:6px;line-height:1.45;font-weight:600}
+  .s2-low{grid-template-columns:1.18fr 1fr 1fr;column-gap:24px}
+
+  /* ============ SLIDE 3 ============ */
+  .s3-main{grid-template-rows:1.12fr 1fr}
+  .s3-cycle{grid-template-columns:1fr 26px 1fr 26px 1fr 26px 1fr 26px 1.08fr}
+  .s3-cycle .step:not(.hot){border-top:2px solid var(--hair2);padding-top:10px}
+  .s3-cycle .step .ct{font-size:15px}
+  .s3-cycle .step .cs{font-size:12.2px;margin-top:5px}
+  .loopnote{grid-column:1 / -1;display:flex;align-items:center;gap:10px;font-size:12px;
+    color:var(--mut);font-weight:600;padding-top:8px}
+  .loopnote .ln{flex:1;border-top:1.5px dashed var(--hair2);position:relative}
+  .loopnote .ln::before{content:'◀';position:absolute;left:-2px;top:-8px;color:var(--faint);font-size:10px}
+  .s3-low{grid-template-columns:1fr 1fr;column-gap:24px}
+  .s3-low .step:not(.hot){border-top:2px solid var(--hair2);padding-top:10px}
+
+  /* ============ SLIDE 4 ============ */
+  .s4-main{grid-template-rows:1fr 1.05fr}
+  .s4-domains{grid-template-columns:1fr 1fr 1fr;column-gap:24px}
+  .s4-domains .step:not(.hot){border-top:2px solid var(--hair2);padding-top:10px}
+  .s4-verify{grid-template-columns:1fr 28px 1fr 28px 1fr 28px 1fr}
+  .s4-verify .step:not(.hot){border-top:2px solid var(--hair2);padding-top:10px}
+  .s4-trend{display:flex;align-items:center;gap:11px;border-top:1px solid var(--hair);padding-top:10px}
+  .s4-trend .lb{font-weight:800;font-size:13px;flex:none}
+  .s4-trend .lb i{font-style:normal;color:var(--green)}
+
+  /* ============ SLIDE 5 ============ */
+  .s5-main{grid-template-rows:1.55fr .45fr}
+  .s5-cases{grid-template-columns:1fr 1fr 1fr;column-gap:16px}
+  .case{display:grid;grid-template-rows:auto 1fr 1.3fr auto;background:var(--surf);
+    border:1px solid var(--hair);border-radius:14px;padding:14px 17px;gap:6px;min-height:0;
+    box-shadow:0 6px 18px -12px rgba(16,28,51,.18)}
+  .case .nm{display:flex;align-items:baseline;gap:9px;padding-bottom:8px;border-bottom:1px solid var(--hair)}
+  .case .nm .t{font-size:19px;font-weight:900;letter-spacing:-.4px}
+  .case .nm .e{font-size:11px;color:var(--mut);font-weight:700}
+  .case .row{display:grid;grid-template-columns:40px 1fr;gap:10px;align-items:center;min-height:0}
+  .case .row .k{font-size:11px;font-weight:900;letter-spacing:.05em;align-self:center}
+  .case .row.pb .k{color:var(--coral)} .case .row.sv .k{color:var(--green)} .case .row.hm .k{color:var(--amber)}
+  .case .row .v{font-size:12.8px;color:var(--body);line-height:1.5;
+    border-left:1px solid var(--hair);padding-left:11px}
+  .case .row .v b{color:var(--ink);font-weight:800}
+  .case .tech{display:flex;align-items:center;gap:6px;font-size:10.8px;color:var(--mut);font-weight:700;
+    padding-top:9px;border-top:1px solid var(--hair);flex-wrap:wrap}
+  .case .tech b{color:var(--blue);font-weight:800}
+  .s5-demo{grid-template-columns:1fr 1fr 1fr;column-gap:24px}
+  .s5-demo .dm{display:flex;align-items:center;gap:15px;border-top:2px solid var(--hair2);padding-top:12px}
+  .s5-demo .dn{font-size:30px;font-weight:900;color:var(--blue);flex:none;line-height:1}
+  .s5-demo .dt{font-size:14px;font-weight:600;line-height:1.5;color:var(--body)}
+  .s5-demo .dt b{color:var(--ink);font-size:15.5px;font-weight:800}
+
+  /* ============ SLIDE 6 ============ */
+  .s6-main{grid-template-columns:330px 30px 1fr 30px 296px;position:relative;min-height:0}
+  .col{display:grid;grid-template-rows:26px 1fr;min-height:0;row-gap:9px}
+  .colh{display:flex;align-items:center;gap:8px;font-weight:900;font-size:13px;letter-spacing:.02em;
+    border-bottom:2px solid var(--ink);padding-bottom:7px}
+  .colh .dot{width:8px;height:8px;border-radius:50%;background:var(--blue)}
+  .colh small{color:var(--mut);font-weight:600;font-size:11px;margin-left:auto}
+  .colbody{display:grid;row-gap:0;min-height:0}
+  .cap{display:flex;flex-direction:column;justify-content:center;min-height:0;
+    border-bottom:1px solid var(--hair);padding:2px 2px}
+  .cap:last-child{border-bottom:none}
+  .cap .t{font-size:12.8px;font-weight:800;letter-spacing:-.3px;line-height:1.22;color:var(--ink)}
+  .cap .t i{font-style:normal;color:var(--blue);font-weight:900;font-size:10px;letter-spacing:.06em;margin-right:6px}
+  .cap .s{font-size:9.8px;color:var(--mut);margin-top:1px;line-height:1.3}
+  .colbody.trks{row-gap:9px}
+  .trk{background:var(--surf);border:1px solid var(--hair);border-radius:11px;
+    display:grid;grid-template-columns:96px 1fr;min-height:0;overflow:hidden;
+    box-shadow:0 4px 12px -9px rgba(16,28,51,.16)}
+  .trk .tl{display:flex;flex-direction:column;justify-content:center;gap:2px;padding:8px 12px;
+    border-right:1px solid var(--hair)}
+  .trk .tl .t{font-size:13.5px;font-weight:900;letter-spacing:-.2px}
+  .trk .tl .s{font-size:9.8px;color:var(--mut);font-weight:700;line-height:1.32}
+  .trk .tr{display:grid;gap:6px;padding:8px 10px;align-content:center}
+  .sub3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+  .sub2{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+  .subj{background:var(--tint);border-radius:8px;padding:6px 9px;min-width:0}
+  .subj .c{font-size:9.6px;font-weight:900;color:var(--blue);letter-spacing:.06em}
+  .subj .t{font-size:11.8px;font-weight:800;line-height:1.24;letter-spacing:-.2px;margin-top:1px;
+    word-break:keep-all;color:var(--ink)}
+  .subj .r{font-size:9.4px;color:var(--mut);margin-top:2px;font-weight:700}
+  .subj .r b{color:var(--amber)}
+  .colbody.grds{row-gap:9px}
+  .grade{border-radius:12px;padding:12px 15px;display:flex;flex-direction:column;min-height:0;color:#fff}
+  .grade .g{font-size:19px;font-weight:900;letter-spacing:.02em;line-height:1}
+  .grade .r{font-size:12px;font-weight:800;margin-top:4px;opacity:.92}
+  .grade .d{font-size:11.4px;line-height:1.45;margin-top:6px;opacity:.88}
+  .grade .ev{margin-top:auto;padding-top:7px;border-top:1px solid rgba(255,255,255,.3);
+    font-size:10.8px;font-weight:800;letter-spacing:.01em}
+  .grade.G{background:linear-gradient(160deg,#2e8a5c,#1f6644);box-shadow:0 10px 22px -13px rgba(46,138,92,.4)}
+  .grade.B{background:linear-gradient(160deg,#4266a3,#2f4c85);box-shadow:0 10px 22px -13px rgba(66,102,163,.4)}
+  .grade.K{background:linear-gradient(160deg,#1c2331,#0d1320);box-shadow:0 10px 22px -13px rgba(20,27,40,.5)}
+  svg.wires{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:3;overflow:visible}
+
+  /* ============ SLIDE 7 ============ */
+  .s7-main{grid-template-rows:48px 1fr 64px}
+  .s7-score{display:grid;grid-template-columns:210px 96px 186px 186px 210px 1fr;align-items:stretch;
+    border-radius:11px;overflow:hidden;background:var(--navy);color:#fff;
+    box-shadow:0 8px 20px -12px rgba(16,28,51,.5)}
+  .s7-score>div{display:flex;flex-direction:column;justify-content:center;padding:0 15px;
+    border-right:1px solid rgba(255,255,255,.14)}
+  .s7-score .h{background:rgba(255,255,255,.08);font-weight:900;font-size:13.5px}
+  .s7-score .h small{font-size:10px;color:#9aa8c0;font-weight:700}
+  .s7-score .p .n{font-size:15.5px;font-weight:900}
+  .s7-score .p .l{font-size:10px;color:#9aa8c0;font-weight:700}
+  .s7-score .p.i .n{color:#cdd6e4} .s7-score .p.a .n{color:#ffc9c5}
+  .s7-score .p.b .n{color:#a8d8b9} .s7-score .p.c .n{color:#e7c17c}
+  .s7-score .cond{border-right:none;align-items:flex-end}
+  .s7-score .cond .n{font-size:14.5px;font-weight:900}
+  .s7-score .cond .l{font-size:10px;color:#9aa8c0;font-weight:700}
+  .mtx{display:grid;grid-template-columns:116px 1.18fr 1.18fr 1.18fr 1.02fr;
+    grid-template-rows:24px 1fr 1fr 1fr;column-gap:14px;row-gap:0;min-height:0}
+  .mh{display:flex;align-items:center;font-size:11px;font-weight:900;letter-spacing:.06em;color:var(--mut)}
+  .mrow-line{border-bottom:1px solid var(--hair)}
+  .mg{display:flex;flex-direction:column;justify-content:center;min-height:0;padding:6px 0}
+  .mg .g{font-size:17px;font-weight:900;letter-spacing:.02em}
+  .mg .s{font-size:10px;font-weight:700;margin-top:3px;line-height:1.35;color:var(--mut)}
+  .mg.G .g{color:var(--gG)} .mg.B .g{color:var(--gB)} .mg.K .g{color:var(--gK)}
+  .mc{display:flex;flex-direction:column;justify-content:center;min-height:0;padding:6px 0}
+  .mc .t{font-size:13px;font-weight:800;letter-spacing:-.2px;line-height:1.32;color:var(--ink)}
+  .mc .s{font-size:11px;color:var(--mut);line-height:1.4;margin-top:3px}
+  .mc .m{font-size:10.2px;font-weight:800;color:var(--faint);margin-top:5px;letter-spacing:.01em}
+  .mc .m b{color:var(--amber)}
+  .mc.ev .t{color:var(--amber);font-size:12.2px}
+  .mc.ev{border-left:1px solid var(--hair);padding-left:14px}
+  .s7-relay{display:grid;grid-template-columns:1.3fr 28px 1fr 28px 1.2fr;min-height:0}
+  .relay{display:flex;flex-direction:column;justify-content:center;border-top:2px solid var(--hair2);padding-top:9px}
+  .relay .t{font-size:14px;font-weight:900;letter-spacing:-.2px;color:var(--ink)}
+  .relay .t b{color:var(--green)}
+  .relay .s{font-size:11.5px;color:var(--mut);margin-top:3px;line-height:1.35;font-weight:600}
+
+  /* ---------- presentation mode ---------- */
+  .ptools{position:fixed;right:18px;bottom:16px;z-index:60;display:flex;align-items:center;gap:8px;user-select:none}
+  .ptools .hintxt{font-size:11px;color:#7d8698;font-weight:700;margin-right:4px;letter-spacing:.02em;
+    background:rgba(255,255,255,.8);border-radius:14px;padding:4px 10px}
+  .ptools button{appearance:none;border:none;cursor:pointer;font-family:inherit;
+    display:flex;align-items:center;gap:6px;border-radius:22px;padding:10px 16px;
+    font-size:12.5px;font-weight:800;letter-spacing:.02em;
+    background:rgba(16,28,51,.9);color:#fff;box-shadow:0 8px 24px rgba(0,0,0,.28)}
+  .ptools button:hover{background:#1d2940}
+  .ptools button.primary{background:#b94a48}
+  .ptools button.primary:hover{background:#943539}
+  .ptools button.on{background:#B23A24}
+  body.shot .ptools,body.present .ptools{display:none}
+  @media print{.ptools{display:none}}
+  body.editing .slide{outline:2px dashed #b94a48;outline-offset:-3px;cursor:text}
+  body.editing .slide:focus{outline:2px dashed #b94a48}
+  body.present{overflow:hidden;background:#070d18}
+  body.present .phint{display:none}
+  body.present .deck{padding:0;gap:0}
+  body.present .slide{display:none}
+  body.present .slide.cur{display:grid;position:fixed;left:50%;top:50%;margin:0;
+    transform:translate(-50%,-50%) scale(var(--sc,1));box-shadow:0 30px 80px rgba(0,0,0,.5)}
+  body.present .slide.cur .a-el{opacity:0;transform:translateY(16px)}
+  body.present .slide.cur .a-el.anchor{transform:translateY(24px)}
+  body.present .slide.cur.reveal .a-el{opacity:1;transform:none;
+    transition:opacity .55s ease,transform .55s cubic-bezier(.2,.75,.25,1);
+    transition-delay:var(--d,0ms)}
+
+  /* ---------- print / PDF ---------- */
+  @page{size:1280px 720px;margin:0}
+  @media print{
+    html,body{background:var(--bg)}
+    .deck{padding:0;gap:0}
+    .slide{page-break-after:always;break-inside:avoid;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  }
+
+
+  /* ============ COMPACT AGENT ARCHITECTURE · 4 SLIDES ============ */
+  .gloss-main{display:grid;grid-template-rows:1fr 82px;row-gap:14px;min-height:0}
+  .gloss-grid{display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:1fr 1fr;gap:12px;min-height:0}
+  .gloss-card{background:var(--surf);border:1px solid var(--hair);border-radius:12px;padding:13px 15px;display:flex;flex-direction:column;min-height:0;border-top:5px solid var(--hair2)}
+  .gloss-card .en{font-size:9.5px;font-weight:900;letter-spacing:.13em;color:var(--mut)}
+  .gloss-card h3{font-size:18px;font-weight:900;letter-spacing:-.35px;margin:5px 0 6px;color:var(--ink)}
+  .gloss-card p{font-size:11.3px;line-height:1.48;color:var(--body)}
+  .gloss-card p b{color:var(--cyan)}
+  .gloss-card:nth-child(1),.gloss-card:nth-child(5){border-top-color:var(--coral)}
+  .gloss-card:nth-child(2),.gloss-card:nth-child(6){border-top-color:var(--gB)}
+  .gloss-card:nth-child(3),.gloss-card:nth-child(7){border-top-color:var(--gG)}
+  .gloss-card:nth-child(4),.gloss-card:nth-child(8){border-top-color:var(--amber)}
+  .readflow{display:grid;grid-template-columns:1fr 28px 1fr 28px 1fr 28px 1fr;align-items:stretch}
+  .readstep{border-radius:10px;background:var(--navy);color:#fff;padding:11px 13px;display:flex;align-items:center;gap:9px}
+  .readstep b{font-size:10.5px;color:#ffc9c5;flex:none}.readstep span{font-size:10.5px;line-height:1.35;color:#d9e0ea;font-weight:700}
+  .readarr{display:grid;place-items:center;color:var(--coral);font-size:20px;font-weight:900}
+
+  .agent-main{display:grid;grid-template-rows:1fr .47fr;row-gap:14px;min-height:0}
+  .agent-eq{display:grid;grid-template-columns:1fr 34px 1.28fr 34px 1.12fr 44px 1.08fr;align-items:stretch;gap:0;min-height:0}
+  .af-node{background:var(--surf);border:1px solid var(--hair);border-radius:13px;padding:17px 18px;display:flex;flex-direction:column;min-width:0;box-shadow:0 7px 18px -14px rgba(16,28,51,.28)}
+  .af-node .ey{font-size:10px;font-weight:900;letter-spacing:.15em;color:var(--mut);margin-bottom:8px}
+  .af-node .big{font-size:29px;font-weight:900;line-height:1.05;letter-spacing:-1px;color:var(--ink)}
+  .af-node .desc{font-size:12.4px;line-height:1.53;color:var(--body);margin-top:11px}
+  .af-node .desc b{color:var(--cyan)}
+  .af-node ul{list-style:none;display:grid;gap:7px;margin-top:auto;padding-top:14px}
+  .af-node li{font-size:11.4px;color:var(--body);padding-top:6px;border-top:1px solid var(--hair)}
+  .af-node.harness{background:linear-gradient(160deg,#faecea,#fff);border-color:#dfb7b3}
+  .af-node.harness .big{color:var(--cyan)}
+  .af-node.tool{background:linear-gradient(160deg,#eef2f7,#fff);border-color:#c5cfdd}
+  .af-node.tool .big{font-size:23px;letter-spacing:-.7px}
+  .af-node.agent{background:linear-gradient(160deg,var(--navy),#27324a);border-color:var(--navy);color:#fff}
+  .af-node.agent .ey{color:#b5c0d0}.af-node.agent .big{color:#fff}.af-node.agent .desc,.af-node.agent li{color:#d9e0ea}.af-node.agent li{border-color:rgba(255,255,255,.18)}
+  .eqop{align-self:center;justify-self:center;font-size:28px;font-weight:900;color:var(--hair2)}
+  .agent-proof{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+  .factline{background:transparent;border-top:2px solid var(--hair2);padding:11px 4px 0;display:grid;grid-template-columns:45px 1fr;gap:11px}
+  .factline .n{font-size:25px;font-weight:900;color:var(--hair2);line-height:1}
+  .factline .t{font-size:12.7px;line-height:1.5;color:var(--body)}.factline .t b{color:var(--ink)}
+
+  .loop-main{display:grid;grid-template-rows:205px 1fr;row-gap:15px;min-height:0}
+  .tool-loop{position:relative;display:grid;grid-template-columns:1fr 25px 1.22fr 25px 1.08fr 25px 1.18fr;align-items:stretch;gap:0}
+  .loopbox{background:var(--surf);border:1px solid var(--hair);border-radius:11px;padding:14px 15px;display:flex;flex-direction:column;justify-content:center;min-width:0}
+  .loopbox .k{font-size:9.8px;font-weight:900;color:var(--blue);letter-spacing:.12em;margin-bottom:5px}
+  .loopbox .t{font-size:16px;font-weight:900;letter-spacing:-.3px;line-height:1.25;color:var(--ink)}
+  .loopbox .s{font-size:11.5px;line-height:1.48;color:var(--body);margin-top:7px}
+  .loopbox.core{background:linear-gradient(150deg,var(--navy),#263249);border-color:var(--navy)}
+  .loopbox.core .k{color:#ffc9c5}.loopbox.core .t{color:#fff}.loopbox.core .s{color:#c8d1df}
+  .loopbox.call{background:#f8ecea;border-color:#e5c8c5}
+  .loopbox.exec{background:#edf1f6;border-color:#c4cfde}
+  .loop-arrow{align-self:center;justify-self:center;color:var(--blue);font-weight:900;font-size:21px}
+  .loop-return{position:absolute;left:23%;right:3%;bottom:-23px;height:22px;border-left:1.7px dashed var(--hair2);border-right:1.7px dashed var(--hair2);border-bottom:1.7px dashed var(--hair2);border-radius:0 0 12px 12px;color:var(--mut);font-size:10.8px;font-weight:700;text-align:center;padding-top:4px}
+  .loop-return::before{content:'↖';position:absolute;left:-7px;top:-14px;font-size:18px;color:var(--blue)}
+  .harness-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;min-height:0}
+  .exec-card{border-radius:12px;padding:15px 16px;background:var(--surf);border:1px solid var(--hair);display:grid;grid-template-rows:auto auto 1fr auto;min-height:0}
+  .exec-card .badge{font-size:10px;font-weight:900;letter-spacing:.13em;color:#fff;border-radius:3px;padding:3px 8px;width:max-content}
+  .exec-card h3{font-size:19px;font-weight:900;margin:9px 0 6px;letter-spacing:-.4px}
+  .exec-card p{font-size:11.7px;line-height:1.52;color:var(--body)}
+  .exec-card .examples{font-size:10.8px;color:var(--mut);font-weight:700;border-top:1px solid var(--hair);padding-top:8px;margin-top:8px}
+  .exec-card.cloudh{border-top:5px solid var(--gB)}.exec-card.cloudh .badge{background:var(--gB)}
+  .exec-card.localh{border-top:5px solid var(--gG)}.exec-card.localh .badge{background:var(--gG)}
+  .exec-card.hybridh{border-top:5px solid var(--amber)}.exec-card.hybridh .badge{background:var(--amber)}
+
+  .triple-main{display:grid;grid-template-rows:1fr 94px;row-gap:14px;min-height:0}
+  .triple-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;min-height:0}
+  .triple-card{background:var(--surf);border:1px solid var(--hair);border-radius:13px;padding:15px 17px;display:flex;flex-direction:column;min-height:0;box-shadow:0 6px 16px -14px rgba(16,28,51,.25)}
+  .triple-card .mode{display:flex;align-items:baseline;justify-content:space-between;border-bottom:2px solid var(--hair2);padding-bottom:8px;margin-bottom:9px}
+  .triple-card .mode b{font-size:23px;font-weight:900;letter-spacing:-.5px}.triple-card .mode small{font-size:9.8px;font-weight:900;letter-spacing:.1em;color:var(--mut)}
+  .triple-card .row{display:grid;grid-template-columns:65px 1fr;gap:8px;padding:6px 0;border-bottom:1px solid var(--hair)}
+  .triple-card .row:last-of-type{border-bottom:none}
+  .triple-card .row em{font-style:normal;font-size:10.5px;font-weight:900;color:var(--mut)}
+  .triple-card .row span{font-size:11.6px;color:var(--body);line-height:1.4}.triple-card .row span b{color:var(--ink)}
+  .triple-card.chatc{border-top:5px solid var(--faint)}
+  .triple-card.workc{border-top:5px solid var(--coral)}
+  .triple-card.codexc{border-top:5px solid var(--gG)}
+  .triple-card .looptag{margin-top:auto;padding:10px 11px;border-radius:8px;background:var(--tint);font-size:11px;font-weight:800;color:var(--ink);letter-spacing:-.1px}
+  .triple-card.workc .looptag{background:#f8ecea;color:var(--cyan)}
+  .triple-card.codexc .looptag{background:#e8f0ea;color:var(--green)}
+  .install-strip{display:grid;grid-template-columns:1fr 1fr 1fr;background:var(--navy);color:#fff;border-radius:11px;overflow:hidden}
+  .install-strip>div{padding:12px 15px;border-right:1px solid rgba(255,255,255,.15);display:flex;flex-direction:column;justify-content:center;gap:4px}
+  .install-strip>div:last-child{border-right:none}.install-strip b{font-size:12.5px}.install-strip span{font-size:10.6px;line-height:1.38;color:#c4cedb}.install-strip code{background:rgba(255,255,255,.1);color:#ffc9c5}
+
+  .claude-main{display:grid;grid-template-rows:1fr 118px;row-gap:14px;min-height:0}
+  .cc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;min-height:0}
+  .cc-env{border-radius:12px;background:var(--surf);border:1px solid var(--hair);padding:14px 14px 12px;display:flex;flex-direction:column;min-height:0}
+  .cc-env .top{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--hair);padding-bottom:8px}
+  .cc-env .top b{font-size:18px;font-weight:900}.cc-env .top i{font-style:normal;font-size:9px;font-weight:900;padding:3px 7px;border-radius:3px;color:#fff}
+  .cc-env p{font-size:10.75px;line-height:1.43;color:var(--body);margin-top:8px}
+  .cc-env .where{margin-top:auto;border-top:1px solid var(--hair);padding-top:7px;font-size:9.85px;line-height:1.35;color:var(--mut);font-weight:700}
+  .cc-env.local{border-top:5px solid var(--gG)}.cc-env.local i{background:var(--gG)}
+  .cc-env.remote{border-top:5px solid var(--coral)}.cc-env.remote i{background:var(--coral)}
+  .cc-env.ssh{border-top:5px solid var(--amber)}.cc-env.ssh i{background:var(--amber)}
+  .cc-env.wsl{border-top:5px solid var(--gB)}.cc-env.wsl i{background:var(--gB)}
+  .compare-strip{display:grid;grid-template-columns:1.04fr .92fr 1.35fr;background:var(--tint);border:1px solid var(--hair2);border-radius:11px;overflow:hidden}
+  .compare-strip>div{padding:10px 13px;border-right:1px solid var(--hair2)}.compare-strip>div:last-child{border-right:none}
+  .compare-strip b{display:block;font-size:11.8px;color:var(--ink);margin-bottom:4px}.compare-strip p{font-size:10.05px;line-height:1.36;color:var(--body)}
+  .compare-strip .thesis{background:linear-gradient(140deg,var(--navy),#263249);color:#fff;display:flex;flex-direction:column;justify-content:center}.compare-strip .thesis b{color:#ffc9c5;font-size:12.3px}.compare-strip .thesis p{color:#e2e7ee;font-size:10.45px}
+  .srcmini{font-size:9.5px;color:var(--mut);font-weight:600}
+
+  /* ============ INTEGRATED STORY · 개념 경계와 제품 상세 ============ */
+  .icon{width:26px;height:26px;color:currentColor}
+  .termintro-main{display:grid;grid-template-rows:1fr 70px;gap:11px;min-height:0}
+  .termcards2{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:11px;min-height:0}
+  .term2{border:1px solid var(--hair);border-radius:10px;background:#fff;padding:14px 16px;display:grid;grid-template-columns:52px 1fr;gap:13px;align-items:start}
+  .term2 .ico2{width:48px;height:48px;border-radius:13px;display:grid;place-items:center}
+  .term2 h3{font-size:16px;margin:0 0 6px}.term2 p{font-size:11.7px;line-height:1.5;color:var(--body);margin:0}
+  .term2 .mini2{font-size:10.3px;color:var(--mut);line-height:1.42;margin-top:7px;padding-top:7px;border-top:1px solid var(--hair)}
+  .term2.agent .ico2{background:#fff0ef;color:var(--coral)}.term2.cloudrt .ico2{background:#edf3fb;color:var(--gB)}
+  .term2.connector .ico2{background:#fff7e9;color:var(--amber)}.term2.runner .ico2{background:#edf7f1;color:var(--green)}
+  .analogy{font-size:9px;font-weight:900;margin-left:5px;color:var(--mut)}
+  .plainroute2{display:grid;grid-template-columns:1fr 28px 1fr 28px 1fr 28px 1fr;align-items:stretch}
+  .plainstep2{border:1px solid var(--hair);border-radius:9px;background:#fff;padding:9px 12px;display:flex;align-items:center;gap:9px}
+  .plainstep2 b{font-size:10.3px;color:var(--coral);flex:none}.plainstep2 span{font-size:10.2px;line-height:1.35;color:var(--body);font-weight:700}
+  .plainarr2{display:grid;place-items:center;color:var(--gB);font-size:20px;font-weight:900}
+
+  .scope-main{display:flex;flex-direction:column;min-height:0}
+  .scopepanel{border:1px solid var(--hair);border-radius:12px;background:#fff;padding:12px;display:flex;flex-direction:column;min-height:0;height:100%}
+  .scopehead{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}.scopehead h2{font-size:13.5px;margin:0}.scopehead span{font-size:8.8px;color:var(--mut);background:var(--tint);border-radius:99px;padding:4px 8px;font-weight:800}
+  .scopegrid{display:grid;grid-template-columns:125px 26px 350px 115px 1fr;gap:8px;align-items:stretch;flex:1;min-height:0}
+  .surface2,.cloud2,.local2{border-radius:10px;padding:9px;border:1px solid var(--hair);position:relative}
+  .surface2{background:#f8fafc}.cloud2{background:#f5f8fc;border-color:#c9d7e9}.local2{background:#f4faf6;border-color:#c8ddcf}
+  .ztitle2{font-size:10.8px;font-weight:900;margin-bottom:7px}.zsub2{font-size:8.5px;color:var(--mut);line-height:1.3;margin-bottom:7px}
+  .surf2{height:72px;background:#fff;border:1px solid var(--hair);border-radius:8px;display:flex;align-items:center;gap:7px;padding:7px;margin-bottom:8px}.surf2 b{font-size:10.5px}.surf2 span{display:block;font-size:8.2px;color:var(--mut);margin-top:2px}
+  .uiarrow{display:flex;align-items:center;justify-content:center;color:var(--gB);font-size:25px;font-weight:900}
+  .controller2{background:#fff0ef;border:1px solid #e9bbb7;border-radius:9px;padding:9px;text-align:center}.controller2 b{display:block;font-size:11.5px;color:var(--cyan)}.controller2 span{font-size:8.8px;color:var(--body);line-height:1.35}
+  .down2{text-align:center;color:var(--coral);font-size:18px;font-weight:900;line-height:1.1;margin:2px 0}
+  .cruntimes{display:grid;grid-template-rows:repeat(3,1fr);gap:6px;min-height:0}.crun{border:1px solid #bfd0e5;border-radius:8px;background:#fff;padding:7px 8px}.crun b{display:block;font-size:10.2px;color:#2f4c85;margin-bottom:2px}.crun span{font-size:8.4px;color:var(--body);line-height:1.3}.crun.codevm{border-color:#e0c895;background:#fffaf2}.crun.codevm b{color:#865611}
+  .route2{display:grid;grid-template-rows:104px 66px 66px 66px;gap:6px;align-items:center}.route2 .blank2{font-size:8.7px;color:var(--mut);text-align:center;line-height:1.3}
+  .rlabel{position:relative;border-radius:8px;padding:7px 14px 7px 7px;font-size:8.8px;line-height:1.3;font-weight:800}.rlabel:after{content:'→';position:absolute;right:-6px;top:50%;transform:translateY(-50%);font-size:17px;font-weight:900}.rlabel.workcall{background:#fff7e9;color:#855713}.rlabel.workcall:after{color:var(--amber)}.rlabel.codecall{background:#edf7f1;color:#285e48}.rlabel.codecall:after{color:var(--green)}.rlabel.nopc{background:#f0f2f5;color:#737d8b}.rlabel.nopc:after{content:'×';color:#8b94a1}
+  .localnote2{background:#f0f2f5;border-radius:7px;padding:7px;text-align:center;font-size:8.45px;color:#5f6977;line-height:1.35;margin-bottom:7px}
+  .lpath2{display:grid;grid-template-columns:1fr 17px 1fr;align-items:stretch;margin-bottom:8px}.lbox2{border-radius:8px;border:1px solid var(--hair);padding:7px;text-align:center;display:flex;flex-direction:column;justify-content:center;min-height:68px}.lbox2 b{font-size:9.7px;margin-bottom:3px}.lbox2 span{font-size:8.1px;color:var(--body);line-height:1.3}.lbox2.conn{background:#fff7e9;border-color:#e3cfaa}.lbox2.exec{background:#edf7f1;border-color:#bdd9c7}.lbox2.res{background:#fff}.larrow2{display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:900}.lpath2.connpath .larrow2{color:var(--amber)}.lpath2.execpath .larrow2{color:var(--green)}
+  .answerstrip2{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:8px}.answer2{border-radius:8px;padding:7px 8px;text-align:center;font-size:8.8px;line-height:1.35}.answer2 b{display:block;font-size:9.4px;margin-bottom:2px}.answer2.no{background:#f0f2f5;color:#616b79}.answer2.yes{background:#edf3fb;color:#31588d}.answer2.conditional{background:#edf7f1;color:#285e48}
+  .conceptnote2{margin-top:7px;font-size:8.6px;color:var(--mut);line-height:1.35;text-align:right}
+
+  .arch-main{display:flex;flex-direction:column;gap:10px;min-height:0}
+  .layerbox{position:relative;flex:1;min-height:0;border:1px solid var(--hair);border-radius:13px;background:#fff;padding:10px;overflow:hidden}
+  .layers{display:grid;grid-template-columns:145px 190px 225px 220px 205px;gap:12px;height:100%}.layer{position:relative;z-index:2;border-radius:10px;border:1px solid var(--hair);padding:9px;background:#fff}.lh{height:30px;margin:-9px -9px 9px;border-radius:9px 9px 0 0;display:flex;align-items:center;padding:0 10px;color:#fff;font-size:11px;font-weight:900}.lh.s{background:#5a6e8c}.lh.a{background:var(--coral)}.lh.h{background:var(--green)}.lh.r{background:var(--gB)}.lh.x{background:var(--amber)}
+  .item{border:1px solid var(--hair);border-radius:8px;padding:8px;margin-bottom:7px;background:#fbfcfd}.item b{font-size:10.5px}.item span{display:block;font-size:8.9px;color:var(--mut);line-height:1.35;margin-top:2px}.item.chat{border-left:4px solid var(--gB)}.item.work{border-left:4px solid var(--green)}.item.code{border-left:4px solid var(--coral)}.item.bridge{border-left:4px solid var(--amber)}.item.remote{border-left:4px solid #6f5aa8}
+  .layerarrow{position:absolute;inset:0;width:100%;height:100%;z-index:1;pointer-events:none}.lanes{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}.lane{border-radius:9px;padding:8px 10px;font-size:9.5px;line-height:1.42}.lane b{display:block;font-size:10.5px;margin-bottom:2px}.lane.chat{background:#edf3fb;color:#31588d}.lane.work{background:#edf7f1;color:#285e48}.lane.code{background:#fff0ef;color:#8e3936}
+
+  .product-main{display:flex;flex-direction:column;min-height:0;gap:0}
+  .productgrid{display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:1fr 1fr;gap:9px;flex:1;min-height:0}
+  .pcard{border:1px solid var(--hair);border-radius:11px;background:#fff;overflow:hidden;padding:0 9px 7px;position:relative}.pcard.disabled{background:#f1f3f5;border-style:dashed}
+  .ptitle{height:31px;margin:0 -9px 6px;padding:0 9px;background:var(--tint);border-bottom:1px solid var(--hair);display:flex;align-items:center;justify-content:space-between}.ptitle b{font-size:12.5px}.ptitle span{font-size:8.5px;font-weight:900;color:var(--mut)}
+  .pflow{display:grid;grid-template-columns:1fr 17px 1fr 17px 1fr;align-items:stretch}.pnode{border:1px solid var(--hair);border-radius:8px;min-height:66px;padding:5px;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center}.pnode b{font-size:9.65px}.pnode span{font-size:8.15px;color:var(--body);line-height:1.28;margin-top:2px}.pnode.agent{background:#fff5f4;border-color:#e9beb9}.pnode.cloud{background:#f5f9fd;border-color:#bfd0e5}.pnode.hybrid{background:#fff8f6;border-color:#dfc2bd}.pnode.local{background:#f5fbf7;border-color:#bdd9c7}.pnode.remote{background:#fffaf2;border-color:#e0c895}.pa{display:flex;align-items:center;justify-content:center;color:var(--gB);font-weight:900}
+  .pmeta{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-top:5px}.pmeta div{border-radius:6px;background:#f3f4f6;padding:4px 5px}.pmeta b{display:block;font-size:8.1px;color:var(--mut)}.pmeta span{font-size:8.5px;color:var(--ink);font-weight:700}.pnote{margin-top:4px;font-size:8.25px;line-height:1.28;color:var(--mut)}.pnote b{color:var(--ink)}
+  .xmark{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}.xmark strong{font-size:44px;color:#a4abb5}.xmark b{font-size:12px}.xmark span{font-size:9px;color:var(--mut);line-height:1.45;margin-top:5px}
+  .glosstrip{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-top:7px}.gterm{border:1px solid var(--hair);border-radius:8px;background:#fff;padding:5px 8px}.gterm b{font-size:9.6px}.gterm span{display:block;font-size:8.35px;color:var(--body);line-height:1.3;margin-top:1px}.clinote{margin-top:7px;border-radius:9px;background:var(--navy);color:#fff;padding:7px 11px;font-size:9.2px;line-height:1.38}.clinote b{color:#ffc9c5}
+
+  /* 계층 정정: 구성요소와 배치 방식을 분리 */
+  .hierarchy-main{display:grid;grid-template-rows:1fr 112px;gap:12px;min-height:0}
+  .hierarchy-grid{display:grid;grid-template-columns:1.55fr .86fr;gap:14px;min-height:0}
+  .hpanel{border:1px solid var(--hair);border-radius:12px;background:#fff;padding:13px 14px;min-height:0}
+  .hpanel-title{display:flex;align-items:baseline;justify-content:space-between;border-bottom:1px solid var(--hair);padding-bottom:8px;margin-bottom:10px}.hpanel-title b{font-size:15px}.hpanel-title span{font-size:10px;color:var(--mut);font-weight:700}
+  .component-row{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;height:calc(100% - 42px)}
+  .component{border-radius:10px;border:1px solid var(--hair);padding:11px;display:flex;flex-direction:column;background:#fbfcfd}.component .no{font-size:9px;font-weight:900;letter-spacing:.1em;color:var(--mut)}.component h3{font-size:14px;margin:5px 0}.component p{font-size:10.3px;line-height:1.43;color:var(--body)}.component .where{margin-top:auto;padding-top:7px;border-top:1px solid var(--hair);font-size:9.3px;font-weight:800;color:var(--mut)}
+  .component.model{border-top:5px solid var(--coral)}.component.harnessx{border-top:5px solid var(--gB)}.component.toolx{border-top:5px solid var(--green)}.component.runx{border-top:5px solid var(--amber)}
+  .deploy-list{display:grid;gap:8px}.deploy{border-radius:9px;padding:10px 12px;display:grid;grid-template-columns:72px 1fr;gap:10px;align-items:center}.deploy b{font-size:11px}.deploy span{font-size:10px;line-height:1.4;color:var(--body)}.deploy.cloud{background:#edf3fb}.deploy.local{background:#edf7f1}.deploy.hybrid{background:#fff7e9}
+  .wholelabel{margin-top:9px;border:2px dashed var(--coral);border-radius:10px;background:#fff7f6;padding:9px 11px;font-size:10.4px;line-height:1.42;color:var(--body)}.wholelabel b{color:var(--cyan)}
+  .placement-examples{display:grid;grid-template-columns:repeat(3,1fr);gap:11px}.pex{border:1px solid var(--hair);border-radius:10px;background:#fff;padding:10px 12px}.pex .tag{font-size:9px;font-weight:900;letter-spacing:.09em;color:var(--coral)}.pex b{display:block;font-size:12.2px;margin:4px 0}.pex p{font-size:10px;line-height:1.4;color:var(--body)}
+
+  /* 세 가지 실제 배치도 */
+  .config-main{display:grid;grid-template-rows:1fr 66px;gap:10px;min-height:0}
+  .config-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;min-height:0}
+  .config-card{border:1px solid var(--hair);border-radius:12px;background:#fff;padding:12px;display:flex;flex-direction:column;min-height:0}.config-card.cloudcfg{border-top:5px solid var(--gB)}.config-card.localcfg{border-top:5px solid var(--green)}.config-card.workcfg{border-top:5px solid var(--amber)}
+  .cfghead{display:flex;align-items:baseline;justify-content:space-between;border-bottom:1px solid var(--hair);padding-bottom:7px}.cfghead b{font-size:15px}.cfghead span{font-size:9px;font-weight:900;color:var(--mut)}
+  .cfgflow{display:grid;grid-template-rows:repeat(3,1fr);gap:6px;margin-top:9px;flex:1;min-height:0}.cfgbox{border-radius:8px;padding:7px 9px;border:1px solid var(--hair);background:#fbfcfd;display:flex;align-items:center;gap:8px}.cfgbox .loc{font-size:8.5px;font-weight:900;min-width:54px;color:var(--mut)}.cfgbox div b{display:block;font-size:10.5px}.cfgbox div span{display:block;font-size:8.8px;line-height:1.3;color:var(--body);margin-top:2px}.cfgbox.modelb{background:#fff5f4;border-color:#e9beb9}.cfgbox.harnessb{background:#f5f9fd;border-color:#bfd0e5}.cfgbox.toolb{background:#f5fbf7;border-color:#bdd9c7}.cfgbox.connectb{background:#fffaf2;border-color:#e0c895}
+  .cfgresult{margin-top:8px;border-radius:8px;background:var(--navy);color:#fff;padding:7px 9px;font-size:9.6px;line-height:1.35}.cfgresult b{color:#ffc9c5}
+  .cfganswers{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}.cfganswer{border-radius:9px;padding:8px 10px;background:var(--tint);font-size:9.6px;line-height:1.35;color:var(--body)}.cfganswer b{display:block;font-size:10.2px;color:var(--ink);margin-bottom:2px}
+
+  /* 하네스를 중심으로 다시 그린 전체 시스템 */
+  .system-main{display:grid;grid-template-rows:1fr 86px;gap:11px;min-height:0}
+  .system-map{border:1px solid var(--hair);border-radius:12px;background:#fff;padding:13px 13px 26px;display:grid;grid-template-columns:150px 26px 330px 26px 260px 26px 1fr;align-items:stretch;position:relative;min-height:0}
+  .sysbox{border:1px solid var(--hair);border-radius:10px;padding:11px;background:#fbfcfd;display:flex;flex-direction:column;min-height:0}.sysbox .ey{font-size:9px;font-weight:900;letter-spacing:.1em;color:var(--mut)}.sysbox h3{font-size:15px;margin:5px 0 7px}.sysbox p{font-size:10px;line-height:1.42;color:var(--body)}.sysbox ul{list-style:none;margin-top:auto;display:grid;gap:4px}.sysbox li{font-size:9.3px;color:var(--body);padding-top:4px;border-top:1px solid var(--hair)}
+  .sysbox.ui{border-top:5px solid #5a6e8c}.sysbox.hx{border-top:5px solid var(--gB);background:#f5f9fd}.sysbox.execx{border-top:5px solid var(--green);background:#f5fbf7}.sysbox.outx{border-top:5px solid var(--amber)}
+  .sysarr{display:grid;place-items:center;color:var(--gB);font-size:21px;font-weight:900}
+  .modelcall{border-radius:9px;background:#fff5f4;border:1px solid #e9beb9;padding:8px 9px;margin:3px 0 7px}.modelcall b{font-size:10.5px;color:var(--cyan)}.modelcall span{display:block;font-size:8.8px;line-height:1.32;color:var(--body);margin-top:2px}
+  .returnline{position:absolute;left:202px;right:245px;bottom:5px;border-bottom:2px dashed var(--hair2);height:12px;text-align:center;font-size:8.8px;color:var(--mut);font-weight:800}.returnline:before{content:'↖';position:absolute;left:-5px;bottom:-7px;font-size:16px;color:var(--gB)}
+  .mode-map{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.mode-row{border-radius:9px;padding:9px 11px;font-size:9.7px;line-height:1.38}.mode-row b{display:block;font-size:10.7px;margin-bottom:3px}.mode-row.chatm{background:#edf3fb;color:#31588d}.mode-row.workm{background:#fff7e9;color:#795114}.mode-row.codem{background:#edf7f1;color:#285e48}
+
+  /* 직관형 표 — 핵심 뜻과 실제 실행 위치 */
+  .simple-table-main{display:grid;grid-template-rows:1fr 78px;gap:11px;min-height:0}
+  .tablecard{border:1px solid var(--hair);border-radius:12px;background:#fff;overflow:hidden;min-height:0}
+  .stable{width:100%;height:100%;border-collapse:collapse;table-layout:fixed}
+  .stable th{background:var(--navy);color:#fff;text-align:left;font-size:12px;letter-spacing:.04em;padding:9px 14px;border-right:1px solid rgba(255,255,255,.15)}
+  .stable th:last-child{border-right:none}.stable td{border-top:1px solid var(--hair);border-right:1px solid var(--hair);padding:8px 14px;vertical-align:middle;font-size:12.1px;line-height:1.42;color:var(--body)}.stable td:last-child{border-right:none}
+  .stable td:first-child{font-weight:900;color:var(--ink);background:#f8fafc}.stable td b{color:var(--cyan)}
+  .stable .kind{display:inline-block;margin-left:6px;border-radius:99px;padding:2px 6px;font-size:8px;font-weight:900;vertical-align:1px;background:#edf3fb;color:#31588d}.stable .kind.system{background:#fff0ef;color:#8e3936}.stable .kind.mode{background:#fff7e9;color:#795114}
+  .meaning-table col:first-child{width:235px}.location-table col:nth-child(1){width:270px}.location-table col:nth-child(2){width:350px}
+  .term-mini-row,.table-note-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.term-mini,.table-note{border-radius:9px;padding:9px 11px;background:var(--tint);font-size:9.8px;line-height:1.36;color:var(--body)}.term-mini b,.table-note b{display:block;font-size:10.5px;color:var(--ink);margin-bottom:2px}.term-mini:nth-child(1){background:#fff0ef}.term-mini:nth-child(2){background:#edf7f1}.term-mini:nth-child(3){background:#edf3fb}
+  .table-note-grid{grid-template-columns:1.05fr 1.1fr 1fr}.table-note:nth-child(1){background:#edf3fb}.table-note:nth-child(2){background:#edf7f1}.table-note:nth-child(3){background:#fff7e9}
+
+  /* 5장: 실제 요청이 끝날 때까지의 전체 왕복 흐름 */
+  .actual-main{display:grid;grid-template-rows:1fr 88px;gap:10px;min-height:0}
+  .actual-map{position:relative;display:grid;grid-template-columns:1fr 25px 1fr 25px 1fr 25px 1fr;grid-template-rows:1fr 22px 1fr;gap:6px 4px;min-height:0}
+  .actnode{border:1px solid var(--hair);border-top:5px solid var(--gB);border-radius:10px;background:#fff;padding:9px 10px;display:flex;flex-direction:column;min-width:0}.actnode.local{border-top-color:var(--green);background:#fbfefc}.actnode.model{border-top-color:var(--coral);background:#fffafa}.actnode.policy{border-top-color:var(--amber);background:#fffdf8}.actnode.runtime{border-top-color:#7d6aaa;background:#fdfbff}.actnode.output{border-top-color:var(--green);background:#f6fbf8}
+  .actnode .n{font-size:8px;font-weight:900;letter-spacing:.08em;color:var(--mut)}.actnode h3{font-size:12.2px;line-height:1.22;margin:4px 0 5px}.actnode p{font-size:9.1px;line-height:1.38;color:var(--body)}.actnode ul{list-style:none;display:grid;gap:2px;margin-top:5px}.actnode li{font-size:8.4px;line-height:1.25;color:var(--mut)}.actnode li:before{content:'• ';color:var(--coral);font-weight:900}.actnode .where{margin-top:auto;padding-top:5px;border-top:1px dashed var(--hair);font-size:8px;font-weight:900;color:var(--mut)}
+  .actarr{display:grid;place-items:center;font-size:20px;font-weight:900;color:var(--gB)}.actarr.down{font-size:18px}.feedback{position:absolute;left:16%;right:29%;bottom:-3px;border-bottom:2px dashed #9eb0c6;height:16px;text-align:center;font-size:8px;color:var(--mut);font-weight:900}.feedback:before{content:'↖';position:absolute;left:-9px;bottom:-8px;font-size:18px;color:var(--gB)}
+  .actual-ports{display:grid;grid-template-columns:repeat(6,1fr);gap:7px}.aport{border-radius:8px;padding:7px 8px;background:var(--tint);font-size:8.4px;line-height:1.28;color:var(--body)}.aport b{display:block;font-size:9.3px;color:var(--ink);margin-bottom:2px}.aport.skill{background:#edf3fb}.aport.mcp{background:#f1edfb}.aport.web{background:#fff7e9}.aport.file{background:#edf7f1}.aport.work{background:#fff0ef}.aport.save{background:#eaf2ee}
+
+  /* 서비스별 실제 작업 흐름 — 같은 문법으로 위치와 저장 경계를 비교 */
+  .service-flow-main{display:grid;grid-template-rows:43px 1fr 86px;gap:10px;min-height:0}
+  .promptbar{display:grid;grid-template-columns:1fr auto;align-items:center;gap:14px;border:1px solid #c9d5e4;border-left:6px solid var(--coral);border-radius:10px;background:#fff;padding:8px 13px}
+  .promptbar .prompt{font-size:13px;font-weight:900;color:var(--ink)}.promptbar .prompt:before{content:'실제 명령';font-size:8.5px;letter-spacing:.08em;color:var(--coral);display:block;margin-bottom:1px}.promptbar .scope{font-size:9.2px;color:var(--mut);font-weight:800;text-align:right;line-height:1.3}
+  .flowline{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:19px;min-height:0;align-items:stretch}
+  .fbox{position:relative;border:1px solid var(--hair);border-top:5px solid var(--gB);border-radius:11px;background:#fff;padding:10px 10px 9px;display:flex;flex-direction:column;min-width:0}
+  .fbox:not(:last-child):after{content:'→';position:absolute;right:-17px;top:46%;transform:translateY(-50%);font-size:19px;font-weight:900;color:var(--gB);z-index:2}
+  .fbox.local{border-top-color:var(--green);background:#fbfefc}.fbox.cloud{border-top-color:var(--gB);background:#fbfdff}.fbox.hybrid{border-top-color:var(--amber);background:#fffdf8}.fbox.remote{border-top-color:#7d6aaa;background:#fdfbff}.fbox.output{border-top-color:var(--coral);background:#fffafa}.fbox.conditional{border-style:dashed}
+  .fbox .step{font-size:8.4px;font-weight:900;letter-spacing:.08em;color:var(--mut)}.fbox h3{font-size:13px;line-height:1.24;margin:5px 0 7px}.fbox p{font-size:10px;line-height:1.46;color:var(--body)}.fbox p b{color:var(--ink)}
+  .fbox .explain{display:block;margin-top:6px;padding-top:6px;border-top:1px dashed var(--hair);font-size:8.8px;line-height:1.35;color:var(--mut)}.fbox .explain b{color:var(--cyan)}
+  .fbox .locpill{display:inline-block;align-self:flex-start;margin-top:auto;border-radius:99px;padding:3px 7px;font-size:8px;font-weight:900;background:#edf3fb;color:#31588d}.fbox.local .locpill{background:#edf7f1;color:#285e48}.fbox.hybrid .locpill{background:#fff2d9;color:#795114}.fbox.remote .locpill{background:#f1edfb;color:#5b4888}.fbox.output .locpill{background:#fff0ef;color:#8e3936}
+  .toolchips{display:flex;flex-wrap:wrap;gap:4px;margin-top:7px}.toolchips span{border:1px solid var(--hair);border-radius:99px;background:#fff;padding:2px 5px;font-size:7.7px;font-weight:900;color:var(--mut)}.toolchips span.on{border-color:#9db7d6;color:#31588d;background:#edf3fb}.toolchips span.local{border-color:#a9ccb6;color:#285e48;background:#edf7f1}.toolchips span.off{opacity:.52;text-decoration:line-through}
+  .storage-strip{display:grid;grid-template-columns:1fr 1.15fr 1.15fr;gap:9px}.storage-card{border-radius:9px;padding:8px 10px;background:var(--tint);font-size:9.2px;line-height:1.36;color:var(--body)}.storage-card b{display:block;font-size:10px;color:var(--ink);margin-bottom:2px}.storage-card.state{background:#edf3fb}.storage-card.work{background:#fff7e9}.storage-card.result{background:#edf7f1}.storage-card strong{color:var(--cyan)}
+  .flowlegend{display:flex;gap:5px;align-items:center;margin-top:4px}.flowlegend span{border-radius:99px;padding:2px 6px;font-size:7.8px;font-weight:900}.flowlegend .c{background:#edf3fb;color:#31588d}.flowlegend .l{background:#edf7f1;color:#285e48}.flowlegend .h{background:#fff2d9;color:#795114}.flowlegend .r{background:#f1edfb;color:#5b4888}
+  .superseded{display:none!important}
+  .slide.dense{row-gap:8px}
+  .slide.dense .head{padding:18px 48px 10px}.slide.dense h1{font-size:28px}.slide.dense .headsub{font-size:13px;line-height:1.35;margin-top:4px}
+  .slide.dense .brand .t1{font-size:12px}.slide.dense .brand .t2{font-size:9.5px}
+  .slide.dense .anchor{height:46px;padding:0 16px}.slide.dense .anchor .t{font-size:14.2px}.slide.dense .anchor .r{font-size:10px}
+  .slide.dense .foot{height:28px;font-size:9.4px}
+
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute"><defs>
+  <symbol id="i-web" viewBox="0 0 24 24"><rect x="2.5" y="4" width="19" height="16" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M3 8h18M6 6h.01M9 6h.01" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="14" r="4" fill="none" stroke="currentColor" stroke-width="1.5"/></symbol>
+  <symbol id="i-app" viewBox="0 0 24 24"><rect x="2.5" y="3.5" width="19" height="13" rx="1.8" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M8 20h8M10 16.5v3.5M14 16.5v3.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+  <symbol id="i-cloud" viewBox="0 0 24 24"><path d="M7.5 18.5h10a4 4 0 0 0 .7-7.9A6.5 6.5 0 0 0 5.7 9a4.8 4.8 0 0 0 1.8 9.5Z" fill="none" stroke="currentColor" stroke-width="1.8"/></symbol>
+  <symbol id="i-brain" viewBox="0 0 24 24"><path d="M9 5a3 3 0 0 0-5 2.2A3.4 3.4 0 0 0 3 13a3 3 0 0 0 3 4.8A3 3 0 0 0 11 20V4A3 3 0 0 0 9 5Zm6 0a3 3 0 0 1 5 2.2 3.4 3.4 0 0 1 1 5.8 3 3 0 0 1-3 4.8A3 3 0 0 1 13 20V4a3 3 0 0 1 2 1Z" fill="none" stroke="currentColor" stroke-width="1.7"/></symbol>
+  <symbol id="i-bridge" viewBox="0 0 24 24"><path d="M3 18h18M5 18v-5c0-5 3-8 7-8s7 3 7 8v5M8 18v-5c0-3 1.5-5 4-5s4 2 4 5v5" fill="none" stroke="currentColor" stroke-width="1.7"/></symbol>
+  <symbol id="i-terminal" viewBox="0 0 24 24"><rect x="2.5" y="4" width="19" height="16" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="m7 9 3 3-3 3M12.5 16h4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+</defs></svg>
+<div class="deck">
+
+<!-- ================= PLAIN-LANGUAGE GLOSSARY ================= -->
+<section class="slide" id="st1">
+  <div class="head">
+    <div>
+      <div class="kick"><span class="no">01</span><span class="lb">Core Terms · 한눈에 이해하는 다섯 가지</span></div>
+      <h1>먼저 다섯 단어만 구분하면 <em>에이전트 구조가 한눈에 보입니다</em></h1>
+      <div class="headsub">구성요소·전체 시스템·운영 형태를 같은 층으로 섞지 않습니다. 어려운 용어는 실제 하는 일에 맞춰 읽으면 됩니다.</div>
+    </div>
+    <div class="brand"><div class="t1">AGENT <span>GUIDE</span></div><div class="t2">THINK · MANAGE · ACT · CHECK</div></div>
+  </div>
+  <div class="main simple-table-main">
+    <div class="tablecard">
+      <table class="stable meaning-table">
+        <colgroup><col><col></colgroup>
+        <thead><tr><th>구분</th><th>정확한 의미</th></tr></thead>
+        <tbody>
+          <tr><td>LLM <span class="kind">구성요소</span></td><td>다음 행동과 답을 판단하는 AI 모델</td></tr>
+          <tr><td>하네스(Harness) <span class="kind">구성요소</span></td><td>모델을 호출하고 도구·권한·파일·반복·오류를 관리하는 프로그램</td></tr>
+          <tr><td>런타임(Runtime) <span class="kind">구성요소</span></td><td>Python·Bash·브라우저·테스트가 실제로 실행되는 환경</td></tr>
+          <tr><td>에이전트(Agent) <span class="kind system">전체 시스템</span></td><td><b>LLM + 하네스 + 도구 + 상태 + 실행환경</b>을 합친 전체 시스템</td></tr>
+          <tr><td>클라우드 에이전트 <span class="kind mode">운영 형태</span></td><td>에이전트를 이루는 하네스·실행환경·작업 과정이 서비스 회사의 클라우드에서 운영되는 형태</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="term-mini-row">
+      <div class="term-mini"><b>툴 호출(Tool Call)</b>LLM이 만든 “도구 이름 + 입력값” 요청서이며, 실행 결과 그 자체는 아닙니다.</div>
+      <div class="term-mini"><b>셸·Bash</b>문자 명령으로 프로그램·파일·테스트를 실행하는 환경입니다.</div>
+      <div class="term-mini"><b>VM·Sandbox</b>별도의 가상컴퓨터 또는 권한·영향 범위를 제한한 실행공간입니다.</div>
+    </div>
+  </div>
+  <div class="anchor"><span class="k">READ</span><span class="t"><b>LLM·하네스·런타임은 구성요소</b> · <b>에이전트는 전체</b> · <b>클라우드는 운영 위치</b>입니다</span><span class="r">구성요소 → 전체 시스템 → 운영 형태</span></div>
+  <div class="foot"><span>LLM Agent · Tool Calling · Harness Architecture</span><span>일반인용 용어 안내</span><span class="pg"><b>01</b> / 19</span></div>
+</section>
+
+<!-- ================= SLIDE 1 ================= -->
+<section class="slide" id="st2">
+  <div class="head">
+    <div>
+      <div class="kick"><span class="no">02</span><span class="lb">Agent Anatomy · 에이전트를 이루는 네 부분</span></div>
+      <h1>AI 에이전트의 실체 — <em>LLM·하네스·도구·실행환경</em>이 함께 일을 만듭니다</h1>
+      <div class="headsub">에이전트는 단독 프로그램 한 개가 아니라, 판단 모델과 실행 관리 프로그램, 도구와 작업장이 결합된 <b>전체 목표 수행 시스템</b>입니다.</div>
+    </div>
+    <div class="brand"><div class="t1">AI <span>AGENT</span></div><div class="t2">MODEL · HARNESS · TOOLS</div></div>
+  </div>
+  <div class="main agent-main">
+    <div class="agent-eq">
+      <div class="af-node model">
+        <span class="ey">BRAIN · 문맥을 읽는 판단 모델</span><span class="big">LLM</span>
+        <p class="desc">맥락을 읽고 <b>답·계획·다음 행동</b>을 생성합니다.</p>
+        <ul><li>텍스트·코드 생성</li><li>도구 선택과 인자 제안</li><li>결과 해석과 재계획</li></ul>
+      </div><span class="eqop">＋</span>
+      <div class="af-node harness">
+        <span class="ey">MANAGER · 실행을 관리하는 프로그램</span><span class="big">HARNESS</span>
+        <p class="desc">모델을 반복 호출하며 <b>상태·권한·검증·오류복구</b>를 관리합니다.</p>
+        <ul><li>System instruction · Skills · Rules</li><li>Tool schema · 승인 · Sandbox</li><li>Memory · Retry · Stop condition</li></ul>
+      </div><span class="eqop">＋</span>
+      <div class="af-node tool">
+        <span class="ey">ACTION · 요청서와 실제 작업장</span><span class="big">TOOLS / RUNTIME</span>
+        <p class="desc">Tool Call은 <b>도구 이름과 입력값</b>이고, 툴 러너와 런타임이 이를 실제로 실행합니다.</p>
+        <ul><li>search(query) · browser · API</li><li>shell(command) · Git · test</li><li>Local Runtime 또는 Cloud VM</li></ul>
+      </div><span class="eqop">＝</span>
+      <div class="af-node agent">
+        <span class="ey">SYSTEM · 목표를 수행하는 전체 시스템</span><span class="big">AGENT</span>
+        <p class="desc">관찰 → 판단 → 행동 → 검증을 반복해 결과물을 만듭니다.</p>
+        <ul><li>문서·분석·코드 산출</li><li>실행 로그와 근거</li><li>완료 또는 사람 승인</li></ul>
+      </div>
+    </div>
+    <div class="agent-proof">
+      <div class="factline"><span class="n">01</span><span class="t"><b>Tool Call은 실행 결과가 아니다.</b><br>LLM이 만든 구조화 요청일 뿐이다.</span></div>
+      <div class="factline"><span class="n">02</span><span class="t"><b>Harness가 요청을 검증·전달</b>하고, 툴 러너·런타임이 실행한 결과를 다시 모델에 넣는다.</span></div>
+      <div class="factline"><span class="n">03</span><span class="t"><b>같은 모델도 하네스가 다르면</b><br>속도·권한·파일·산출물이 달라진다.</span></div>
+    </div>
+  </div>
+  <div class="anchor"><span class="k">CORE</span><span class="t"><b>Agent = LLM + Harness + Tools + Runtime + State</b> · Cloud/Local은 이 구성요소의 위치입니다</span><span class="r">전체 시스템 ≠ 개별 부품 ≠ 배치 위치</span></div>
+  <div class="foot"><span>LLM Agent · Tool Calling · Harness Architecture</span><span>개념 프레임워크</span><span class="pg"><b>02</b> / 19</span></div>
+</section>
+
+<!-- ================= SLIDE 2 ================= -->
+<section class="slide" id="st3">
+  <div class="head">
+    <div>
+      <div class="kick"><span class="no">03</span><span class="lb">Execution Loop · 실행 요청과 실제 실행장소</span></div>
+      <h1>툴 호출은 한 번의 요청으로 끝나지 않고, <em>관찰–행동–검증을 반복</em>합니다</h1>
+      <div class="headsub">같은 Desktop 화면에서도 명령은 <b>클라우드·내 PC·원격 서버</b> 중 서로 다른 곳에서 실행될 수 있습니다.</div>
+    </div>
+    <div class="brand"><div class="t1">TOOL <span>LOOP</span></div><div class="t2">CLOUD · LOCAL · HYBRID</div></div>
+  </div>
+  <div class="main loop-main">
+    <div class="tool-loop">
+      <div class="loopbox"><span class="k">GOAL · 목표</span><span class="t">사용자 목표·파일·제약</span><span class="s">“이 저장소(코드 프로젝트 폴더)의 오류를 고치고 테스트까지 통과시켜라.”</span></div>
+      <span class="loop-arrow">›</span>
+      <div class="loopbox core"><span class="k">AGENT HARNESS · 실행 관리자</span><span class="t">계획 · 상태 · 권한 · 반복</span><span class="s">모델 호출, 도구 목록 제공, 승인 확인, 결과 누적, 중단조건 판단</span></div>
+      <span class="loop-arrow">›</span>
+      <div class="loopbox call"><span class="k">MODEL DECISION · 모델 판단</span><span class="t">도구 이름 + 입력값</span><span class="s"><code>shell({"cmd":"npm test"})</code><br>하네스가 요청 형식(스키마)·권한을 검증</span></div>
+      <span class="loop-arrow">›</span>
+      <div class="loopbox exec"><span class="k">TOOL RUNNER · 실제 실행 담당</span><span class="t">허가된 도구 실행 → 관찰값 반환</span><span class="s">런타임에서 명령을 실행하고 출력(stdout) · 바뀐 파일 비교(diff) · 웹 응답 · 오류코드를 하네스에 돌려줌</span></div>
+      <div class="loop-return">도구 결과 / 관찰값 / 실행 기록 → 현재 상태 갱신 → 다음 행동 재계획</div>
+    </div>
+    <div class="harness-grid">
+      <div class="exec-card cloudh"><span class="badge">CLOUD · 클라우드형</span><h3>격리된 가상컴퓨터(VM)·컨테이너에서 실행</h3><p><b>모델·브라우저·코드실행·파일</b>이 서비스 제공자의 클라우드 경계 안에 있습니다. 로컬 PC 파일은 직접 보지 못합니다.</p><span class="examples">예: Web Work · Codex Cloud · Claude Code Web/Remote</span></div>
+      <div class="exec-card localh"><span class="badge">LOCAL · 내 PC형</span><h3>내 셸·도구·저장소에서 실행</h3><p>모델 추론은 클라우드 API를 쓰더라도 <b>명령·테스트·파일 수정</b>은 내 PC나 내가 관리하는 서버에서 일어납니다.</p><span class="examples">예: Codex CLI/Desktop Local · Claude Code CLI/Local/SSH</span></div>
+      <div class="exec-card hybridh"><span class="badge">HYBRID · 혼합형</span><h3>구성요소가 클라우드와 내 PC에 나뉨</h3><p><b>클라우드 LLM + 로컬 하네스·툴 러너</b> 또는 <b>클라우드 업무 하네스 + 로컬 커넥터</b>처럼 서로 다른 위치의 구성요소가 협업합니다.</p><span class="examples">예: Codex·Claude Code Local / Desktop Work·Cowork</span></div>
+    </div>
+  </div>
+  <div class="anchor"><span class="k">CHECK</span><span class="t">항상 세 가지를 물으십시오 — <b>모델은 어디서 추론하는가 · 명령은 어디서 도는가 · 파일은 어디에 남는가</b></span><span class="r">화면 위치와 실행 위치는 다를 수 있음</span></div>
+  <div class="foot"><span>LLM Agent · Tool Calling · Harness Architecture</span><span>개념도 — 제품별 구현은 권한·요금제에 따라 변동</span><span class="pg"><b>03</b> / 19</span></div>
+</section>
+
+<!-- ================= STORY 4 · CLOUD AND LOCAL BOUNDARY ================= -->
+<section class="slide" id="st4">
+  <div class="head">
+    <div>
+      <div class="kick"><span class="no">04</span><span class="lb">Execution Location · 하네스와 명령은 어디에서 도는가</span></div>
+      <h1>제품명이 같아도 <em>하네스 위치와 명령 실행 위치</em>는 달라집니다</h1>
+      <div class="headsub">Local·Cloud 선택은 단순한 화면 이름이 아니라 <b>어느 프로그램이 어느 컴퓨터에서 작업하는지</b>를 결정합니다.</div>
+    </div>
+    <div class="brand"><div class="t1">WHERE <span>IT RUNS</span></div><div class="t2">HARNESS · COMMAND · FILE</div></div>
+  </div>
+  <div class="main simple-table-main">
+    <div class="tablecard">
+      <table class="stable location-table">
+        <colgroup><col><col><col></colgroup>
+        <thead><tr><th>사용 방식</th><th>하네스가 주로 작동하는 곳</th><th>도구·명령이 실제로 실행되는 곳</th></tr></thead>
+        <tbody>
+          <tr><td>Claude Code CLI Local</td><td>내 PC에 설치된 Claude Code</td><td><b>내 PC</b></td></tr>
+          <tr><td>Codex CLI Local</td><td>내 PC에 설치된 Codex CLI</td><td><b>내 PC</b></td></tr>
+          <tr><td>Claude Code Web</td><td>Anthropic 클라우드</td><td><b>Anthropic 관리형 VM</b></td></tr>
+          <tr><td>Codex Cloud</td><td>OpenAI 클라우드</td><td><b>OpenAI 관리형 실행환경</b></td></tr>
+          <tr><td>Desktop에서 Cloud 선택</td><td>클라우드 하네스</td><td><b>클라우드 VM</b></td></tr>
+          <tr><td>Desktop에서 Local 선택</td><td>로컬 하네스</td><td><b>내 PC</b></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="table-note-grid">
+      <div class="table-note"><b>Local이어도 모델 계산은?</b>LLM의 판단은 일반적으로 OpenAI·Anthropic의 클라우드 모델 서비스가 담당합니다.</div>
+      <div class="table-note"><b>Desktop은 실행장소가 아닙니다</b>같은 앱에서도 Local·Cloud·SSH·WSL 선택에 따라 실제 작업 컴퓨터가 달라집니다.</div>
+      <div class="table-note"><b>파일은 어디에 남습니까?</b>명령이 실행되는 런타임과 연결한 저장 위치를 함께 확인해야 합니다.</div>
+    </div>
+  </div>
+  <div class="anchor"><span class="k">LOCATION</span><span class="t"><b>하네스 위치 + 명령 실행 위치 + 파일 위치</b>를 확인하면 “클라우드인가, 로컬인가”가 분명해집니다</span><span class="r">화면 위치 ≠ 실행 위치</span></div>
+  <div class="foot"><span>Cloud·Local 실제 배치 비교</span><span>모델 판단 위치와 도구 실행 위치를 분리</span><span class="pg"><b>04</b> / 19</span></div>
+</section>
+
+<!-- ================= STORY 5 · MASTER ARCHITECTURE ================= -->
+<section class="slide dense" id="st5">
+  <div class="head">
+    <div>
+      <div class="kick"><span class="no">05</span><span class="lb">Master Architecture · 하네스를 중심으로 전체 시스템 읽기</span></div>
+      <h1>에이전트는 별도 부품이 아니라 <em>LLM·하네스·도구·런타임이 함께 작동하는 전체</em>입니다</h1>
+      <div class="headsub"><b>하네스(Harness)</b>가 중심에서 모델에게 판단을 요청하고, 받은 도구 요청을 실제 실행환경에 전달한 뒤, 결과를 다시 모델에 보내 반복합니다.</div>
+    </div>
+    <div class="brand"><div class="t1">AGENT <span>AS A SYSTEM</span></div><div class="t2">UI → HARNESS ↔ LLM · HARNESS → TOOLS</div></div>
+  </div>
+  <div class="main actual-main">
+    <div class="actual-map">
+      <div class="actnode local" style="grid-column:1;grid-row:1"><span class="n">01 · USER REQUEST</span><h3>사람이 목표와 자료를 입력</h3><p>“00에 대한 PPT를 만들어줘”와 함께 대상·장수·디자인·참고파일·저장 위치를 지정합니다.</p><ul><li>Web·Desktop·CLI는 입력 화면</li><li>파일은 업로드 또는 폴더 권한으로 전달</li></ul><span class="where">사람의 PC · 사용자 화면</span></div>
+      <div class="actarr" style="grid-column:2;grid-row:1">→</div>
+      <div class="actnode" style="grid-column:3;grid-row:1"><span class="n">02 · HARNESS INTAKE</span><h3>하네스가 작업 꾸러미를 만듦</h3><p><b>하네스</b>는 LLM과 도구 사이의 실행 관리자입니다. 요청·대화·규칙·파일 목록·사용 가능한 도구를 한 묶음으로 정리합니다.</p><ul><li>System instruction: 반드시 지킬 기본 규칙</li><li>Skill: 특정 일을 하는 절차서</li><li>State: 지금까지의 진행 기록</li></ul><span class="where">Cloud 또는 Local Harness</span></div>
+      <div class="actarr" style="grid-column:4;grid-row:1">→</div>
+      <div class="actnode model" style="grid-column:5;grid-row:1"><span class="n">03 · LLM DECISION</span><h3>LLM이 다음 행동을 판단</h3><p><b>LLM</b>은 요청을 읽고 답·계획 또는 <b>툴 호출</b>을 만듭니다. 툴 호출은 “어떤 도구에 무슨 값을 넣을지” 적은 실행 요청서입니다.</p><ul><li>예: web.search(검색어)</li><li>예: shell(“python build_ppt.py”)</li></ul><span class="where">모델 제공자의 클라우드</span></div>
+      <div class="actarr" style="grid-column:6;grid-row:1">→</div>
+      <div class="actnode policy" style="grid-column:7;grid-row:1"><span class="n">04 · POLICY / APPROVAL</span><h3>형식·권한·위험을 확인</h3><p>하네스가 도구 이름과 입력값이 맞는지, 파일·네트워크·명령 권한이 있는지 검사합니다. 위험한 작업은 사용자 승인을 요청합니다.</p><ul><li>Sandbox: 영향 범위를 가둔 실행공간</li><li>거부되면 다른 방법을 다시 계획</li></ul><span class="where">Harness의 정책 계층</span></div>
+      <div class="actarr down" style="grid-column:7;grid-row:2">↓</div>
+      <div class="actnode output" style="grid-column:1;grid-row:3"><span class="n">08 · DELIVER / SAVE</span><h3>최종 결과를 저장·전달</h3><p>검증을 통과한 PPTX를 대화·클라우드 작업·로컬 폴더·저장소 브랜치 중 해당 서비스의 결과 위치에 저장합니다.</p><ul><li>Cloud 결과는 다운로드해야 PC에 생김</li><li>Local 결과는 지정 폴더에 바로 생김</li></ul><span class="where">Cloud / 내 PC / Repo / 원격 서버</span></div>
+      <div class="actarr" style="grid-column:2;grid-row:3">←</div>
+      <div class="actnode" style="grid-column:3;grid-row:3"><span class="n">07 · OBSERVE / VERIFY</span><h3>결과·오류를 읽고 검증</h3><p>도구가 돌려준 내용과 실행 기록을 하네스가 상태에 붙입니다. LLM은 슬라이드 누락·글자 넘침·파일 오류를 보고 수정 여부를 판단합니다.</p><ul><li>렌더링: PPT를 이미지로 펼쳐 보기</li><li>검증 실패 → 02번으로 돌아가 재시도</li></ul><span class="where">Harness ↔ LLM 반복</span></div>
+      <div class="actarr" style="grid-column:4;grid-row:3">←</div>
+      <div class="actnode runtime" style="grid-column:5;grid-row:3"><span class="n">06 · TOOL RUNNER / RUNTIME</span><h3>도구가 실제로 실행됨</h3><p><b>툴 러너</b>가 요청을 실행하고, <b>런타임</b>이라는 실제 작업 컴퓨터에서 웹·API·MCP·Python·Bash·브라우저가 작동합니다.</p><ul><li>VM: 클라우드에 만든 가상컴퓨터</li><li>Local: 내 PC의 프로그램·파일 사용</li></ul><span class="where">Cloud VM / 내 PC / SSH / WSL</span></div>
+      <div class="actarr" style="grid-column:6;grid-row:3">←</div>
+      <div class="actnode policy" style="grid-column:7;grid-row:3"><span class="n">05 · ROUTE TO TOOL</span><h3>알맞은 연결 통로로 보냄</h3><p>검색은 Web, 업무서비스는 API·MCP, 로컬 파일은 Connector, 명령은 Shell로 보냅니다. 설정되지 않은 도구는 사용할 수 없습니다.</p><ul><li>MCP: AI와 외부 도구를 잇는 공통 규격</li><li>API: 프로그램끼리 요청·응답하는 창구</li></ul><span class="where">Harness의 Tool Router</span></div>
+      <div class="feedback">도구 결과·오류·중간파일·검증 기록 → 상태 갱신 → 다시 모델 판단</div>
+    </div>
+    <div class="actual-ports">
+      <div class="aport skill"><b>SKILL · 작업 절차서</b>PPT 제작 순서·검수표·템플릿 사용법을 적은 지침입니다. 스스로 실행하는 프로그램은 아닙니다.</div>
+      <div class="aport mcp"><b>MCP · 외부도구 연결 규격</b>하네스가 Notion·Figma·DB 같은 도구 목록과 입력 형식을 받아 호출하는 표준 통로입니다.</div>
+      <div class="aport web"><b>WEB / API · 외부 정보</b>웹은 페이지를 찾고 읽는 도구, API는 서비스에 구조화된 요청을 보내 데이터를 받는 창구입니다.</div>
+      <div class="aport file"><b>FILES · 입력 자료</b>Web은 업로드 사본, Local은 원본 폴더, Cloud Code는 저장소 복제본을 주로 읽습니다.</div>
+      <div class="aport work"><b>INTERMEDIATE · 중간파일</b>메모·원고·이미지·JSON·PPTX 초안·렌더링 이미지·로그가 런타임 작업공간에 생깁니다.</div>
+      <div class="aport save"><b>OUTPUT · 결과 위치</b>대화 첨부·Cloud Workspace·내 PC 폴더·Repo/PR·원격 서버 중 서비스가 사용하는 위치에 남습니다.</div>
+    </div>
+  </div>
+  <div class="anchor"><span class="k">ACTUAL LOOP</span><span class="t"><b>입력 → 하네스 → LLM → 권한검사 → 도구 → 런타임 → 검증 → 저장</b>을 완료될 때까지 반복합니다</span><span class="r">도구 결과가 다시 다음 판단의 입력이 됨</span></div>
+  <div class="foot"><span>공통 판독 공식: UI → Harness ↔ LLM · Harness → Tool Runner/Runtime → Output</span><span>이제 제품별로 적용</span><span class="pg"><b>05</b> / 19</span></div>
+</section>
+
+<!-- ================= SERVICE FLOW 06 · CHATGPT WEB CHAT ================= -->
+<section class="slide dense" id="st6">
+  <div class="head"><div><div class="kick"><span class="no">06</span><span class="lb">Service Flow · ChatGPT Web Chat</span></div><h1>ChatGPT Web Chat에서 PPT를 요청하면 <em>대화 세션 안에서 생성</em>됩니다</h1><div class="headsub">브라우저는 입력·확인 화면입니다. 계획과 기본 도구 관리는 OpenAI 클라우드에서 이루어지고, 완성 파일은 대화에 붙은 뒤 사용자가 내려받습니다.</div></div><div class="brand"><div class="t1">CHATGPT <span>WEB CHAT</span></div><div class="t2">CLOUD CHAT · DOWNLOAD TO LOCAL</div><div class="flowlegend"><span class="c">CLOUD</span><span class="l">LOCAL</span><span class="h">CONDITIONAL</span></div></div></div>
+  <div class="main service-flow-main">
+    <div class="promptbar"><div class="prompt">“00에 대한 파워포인트 파일을 만들어줘.”</div><div class="scope">빠른 질문·대화형 제작<br>로컬 폴더 직접 작업은 아님</div></div>
+    <div class="flowline">
+      <div class="fbox local"><span class="step">01 · REQUEST</span><h3>브라우저에서 명령</h3><p>주제·대상·장수·디자인 조건과 참고파일을 입력합니다. 브라우저는 요청을 보내고 결과를 보여 주는 <b>화면</b>일 뿐, PPT를 직접 만드는 프로그램은 아닙니다.</p><span class="explain"><b>파일 이동:</b> 첨부한 로컬 파일은 클라우드 대화에 사용할 사본으로 업로드됩니다. 원본 폴더 전체가 자동으로 열리지는 않습니다.</span><span class="locpill">내 PC · 화면/업로드</span></div>
+      <div class="fbox cloud"><span class="step">02 · PLAN</span><h3>Chat 하네스 + LLM</h3><p><b>하네스</b>는 대화와 도구를 관리하는 프로그램이고, <b>LLM</b>은 내용을 읽어 다음 답이나 행동을 판단하는 AI 모델입니다. 둘이 목차·장표별 메시지·필요한 도구를 정합니다.</p><span class="explain"><b>실제 동작:</b> 하네스가 대화와 지침을 모델에 보내고, 모델이 “검색할지·파일을 만들지·먼저 질문할지”를 돌려줍니다.</span><span class="locpill">OpenAI 클라우드</span></div>
+      <div class="fbox cloud conditional"><span class="step">03 · CONTEXT</span><h3>첨부·프로젝트 지침</h3><p>업로드 파일, 이전 대화, 프로젝트 지침과 허용된 메모리를 모아 모델이 읽을 <b>맥락(Context)</b>을 만듭니다. 맥락은 이번 판단에 참고시키는 정보 묶음입니다.</p><span class="explain"><b>Skill:</b> 특정 작업의 순서·규칙을 적은 절차서입니다. 일반 Chat에서는 제공·설치·권한된 범위에서만 사용됩니다.</span><div class="toolchips"><span class="on">첨부</span><span class="on">지침</span><span>Skill 조건부</span></div><span class="locpill">클라우드 대화 상태</span></div>
+      <div class="fbox cloud conditional"><span class="step">04 · TOOLS</span><h3>웹·API·원격 도구</h3><p>최신 자료가 필요하면 <b>Web</b>으로 페이지를 찾고, 외부 서비스는 <b>API</b> 또는 <b>MCP</b> 도구로 요청합니다. 사용할 수 있는 도구는 계정·플러그인·권한에 따라 다릅니다.</p><span class="explain"><b>MCP:</b> AI가 외부 도구의 이름과 입력 형식을 받아 호출하는 공통 연결 규격. <b>API:</b> 프로그램끼리 요청과 응답을 주고받는 창구.</span><div class="toolchips"><span class="on">WEB</span><span>API</span><span>MCP</span></div><span class="locpill">클라우드/외부 서비스</span></div>
+      <div class="fbox cloud"><span class="step">05 · BUILD</span><h3>클라우드 생성 도구</h3><p>클라우드 <b>런타임</b>, 즉 실제 프로그램이 도는 작업환경에서 원고·표·이미지·레이아웃 정보를 만들고 PPTX 생성 도구로 묶습니다.</p><span class="explain"><b>중간파일:</b> 조사 메모, 이미지, 표 데이터, 장표 원고, PPTX 초안과 오류 로그가 세션 작업공간에 임시로 만들어집니다.</span><span class="locpill">클라우드 런타임</span></div>
+      <div class="fbox output"><span class="step">06 · SAVE</span><h3>PPTX를 대화에 첨부</h3><p>하네스가 생성 결과를 다시 읽어 누락·오류를 확인하고, 필요하면 2단계로 돌아가 수정합니다. 통과한 PPTX를 대화의 파일 또는 링크로 제공합니다.</p><span class="explain"><b>저장 위치:</b> 처음에는 클라우드 대화에 있습니다. 사용자가 ‘다운로드’를 눌러야 내 PC의 다운로드/지정 폴더에 별도 사본이 생깁니다.</span><span class="locpill">클라우드 → 내 PC</span></div>
+    </div>
+    <div class="storage-strip"><div class="storage-card state"><b>판단·상태 저장</b>대화·프로젝트 상태는 <strong>클라우드 계정 영역</strong>에서 관리됩니다.</div><div class="storage-card work"><b>중간과정 파일</b>생성 도구가 만든 임시 자료는 <strong>클라우드 세션 작업공간</strong>에서 처리됩니다.</div><div class="storage-card result"><b>최종 결과물</b>대화의 파일/링크로 제공되고, 사용자가 내려받은 사본만 <strong>내 PC</strong>에 생깁니다.</div></div>
+  </div>
+  <div class="anchor"><span class="k">WEB CHAT</span><span class="t"><b>브라우저는 화면</b> · 실제 제작은 클라우드 · <b>다운로드해야 로컬 파일</b>이 됩니다</span><span class="r">도구·요금제에 따라 PPTX 대신 초안이 나올 수 있음</span></div>
+  <div class="foot"><span>Source: OpenAI Help — ChatGPT Work and Codex / ChatGPT web</span><span>도구·보존기간은 계정·관리정책에 따라 달라짐</span><span class="pg"><b>06</b> / 19</span></div>
+</section>
+
+<!-- ================= SERVICE FLOW 07 · CHATGPT WEB WORK ================= -->
+<section class="slide dense" id="st7">
+  <div class="head"><div><div class="kick"><span class="no">07</span><span class="lb">Service Flow · ChatGPT Web Work</span></div><h1>ChatGPT Web Work는 PPT를 <em>다단계 업무 결과물</em>로 완성합니다</h1><div class="headsub">조사·분석·제작·검토를 Work 하네스가 이어서 관리합니다. 웹에서는 내 PC 폴더를 직접 읽지 못하므로 업로드·프로젝트·플러그인으로 자료를 전달합니다.</div></div><div class="brand"><div class="t1">CHATGPT <span>WEB WORK</span></div><div class="t2">CLOUD WORKSPACE · SKILLS · PLUGINS</div><div class="flowlegend"><span class="c">CLOUD</span><span class="l">LOCAL</span><span class="h">CONDITIONAL</span></div></div></div>
+  <div class="main service-flow-main">
+    <div class="promptbar"><div class="prompt">“00을 조사하고 근거를 붙여 발표용 파워포인트를 완성해줘.”</div><div class="scope">장기 조사·완성물 중심<br>진행 확인·수정 지시 가능</div></div>
+    <div class="flowline">
+      <div class="fbox local"><span class="step">01 · REQUEST</span><h3>Web Work에 목표 전달</h3><p>단순 질문이 아니라 “조사부터 완성 PPT까지”라는 <b>결과 목표</b>를 맡깁니다. 참고자료를 업로드하고 대상·장수·출처표기·마감·검토기준을 지정합니다.</p><span class="explain"><b>웹의 경계:</b> 사용자가 선택해 업로드한 사본과 클라우드 연결 자료만 읽습니다. 내 PC 폴더를 마음대로 훑지 못합니다.</span><span class="locpill">내 PC · 화면/업로드</span></div>
+      <div class="fbox cloud"><span class="step">02 · ORCHESTRATE</span><h3>Work 하네스 + LLM</h3><p><b>Work 하네스</b>는 긴 업무의 진행 관리자입니다. LLM에게 한 번만 답을 받는 대신 조사 → 구조화 → 시각화 → 파일제작 → 검토 작업을 차례로 시킵니다.</p><span class="explain"><b>상태(State):</b> 무엇을 끝냈고 무엇이 남았는지, 어느 자료를 썼는지, 사용자가 무엇을 승인했는지를 계속 기록합니다.</span><span class="locpill">OpenAI 클라우드</span></div>
+      <div class="fbox cloud"><span class="step">03 · WORKFLOW</span><h3>스킬·프로젝트 지침</h3><p><b>Skill</b>은 “PPT를 어떤 순서와 기준으로 만들 것인지” 적은 재사용 절차서입니다. 프로젝트 지침·브랜드 규칙·템플릿과 함께 필요한 순간에 읽습니다.</p><span class="explain"><b>중요:</b> 스킬은 일을 직접 실행하는 앱이 아닙니다. 하네스와 LLM이 스킬 내용을 따라 적절한 도구를 선택하게 하는 작업 설명서입니다.</span><div class="toolchips"><span class="on">SKILL</span><span class="on">지침</span><span>템플릿</span></div><span class="locpill">클라우드 작업 상태</span></div>
+      <div class="fbox cloud conditional"><span class="step">04 · CONNECT</span><h3>웹·플러그인·MCP/API</h3><p>웹에서 공개 자료를 찾고, 설치된 <b>플러그인</b>의 커넥터나 원격 MCP/API를 통해 허가된 사내 문서·DB·업무서비스를 읽거나 작업합니다.</p><span class="explain"><b>Connector:</b> 특정 서비스에 로그인해 자료를 주고받는 연결 통로. <b>MCP:</b> 여러 외부도구를 AI가 같은 방식으로 찾고 호출하게 하는 표준.</span><div class="toolchips"><span class="on">WEB</span><span class="on">PLUGIN</span><span>MCP/API</span></div><span class="locpill">클라우드/업무 서비스</span></div>
+      <div class="fbox cloud"><span class="step">05 · PRODUCE</span><h3>클라우드 작업공간</h3><p>클라우드 런타임에서 조사 메모·출처표·표 데이터·이미지·장표 원고·PPTX 초안을 만들고, 렌더링한 화면을 보며 글자 넘침과 누락을 수정합니다.</p><span class="explain"><b>렌더링:</b> PPTX를 실제 슬라이드 이미지처럼 펼쳐 눈으로 검사하는 과정. 오류가 있으면 하네스가 다시 제작 단계를 실행합니다.</span><span class="locpill">클라우드 런타임</span></div>
+      <div class="fbox output"><span class="step">06 · DELIVER</span><h3>Work 결과물 제공</h3><p>완성 PPTX, 사용한 근거와 진행 요약을 Work 대화·프로젝트에 남깁니다. 사용자는 결과를 검토하고 같은 작업 안에서 수정·재생성을 요청할 수 있습니다.</p><span class="explain"><b>저장 위치:</b> 작업 상태와 산출물은 먼저 클라우드에 있습니다. 다운로드한 파일만 내 PC에 생기며 원본 클라우드 작업과 별도 사본입니다.</span><span class="locpill">클라우드 → 내 PC</span></div>
+    </div>
+    <div class="storage-strip"><div class="storage-card state"><b>판단·작업 상태</b>Work 대화·프로젝트·일정 작업은 <strong>클라우드</strong>에서 이어집니다.</div><div class="storage-card work"><b>중간과정 파일</b>조사 메모·표·이미지·초안은 <strong>클라우드 작업공간</strong>에서 생성·검토됩니다.</div><div class="storage-card result"><b>최종 결과물</b>클라우드 Work 대화/프로젝트에 남고, 다운로드한 PPTX는 <strong>내 PC</strong>에 저장됩니다.</div></div>
+  </div>
+  <div class="anchor"><span class="k">WEB WORK</span><span class="t"><b>스킬은 작업법</b> · <b>MCP·플러그인은 외부 연결</b> · 실제 파일 제작은 클라우드 작업공간</span><span class="r">웹은 로컬 폴더 직접 접근 불가</span></div>
+  <div class="foot"><span>Source: <a href="https://help.openai.com/en/articles/20001275-chatgpt-work-and-codex">OpenAI — ChatGPT Work and Codex</a></span><span>2026-07-17 확인</span><span class="pg"><b>07</b> / 19</span></div>
+</section>
+
+<!-- ================= SERVICE FLOW 08 · CHATGPT DESKTOP CHAT ================= -->
+<section class="slide dense" id="st8">
+  <div class="head"><div><div class="kick"><span class="no">08</span><span class="lb">Service Flow · ChatGPT Desktop Quick Chat</span></div><h1>Desktop Quick Chat도 기본적으로 <em>클라우드 대화 처리</em>입니다</h1><div class="headsub">PC 앱을 사용한다고 해서 Chat이 자동으로 내 Bash·Python을 실행하지 않습니다. 앱은 빠른 입력·첨부·동기화 화면이고, 일반 Chat 하네스와 생성 도구는 클라우드에서 작동합니다.</div></div><div class="brand"><div class="t1">CHATGPT <span>DESKTOP CHAT</span></div><div class="t2">LOCAL UI · CLOUD CHAT</div><div class="flowlegend"><span class="c">CLOUD</span><span class="l">LOCAL</span><span class="h">CONDITIONAL</span></div></div></div>
+  <div class="main service-flow-main">
+    <div class="promptbar"><div class="prompt">“이 자료로 00 발표용 파워포인트를 만들어줘.”</div><div class="scope">Quick Chat 기준<br>Work·Codex와 별도 하네스</div></div>
+    <div class="flowline">
+      <div class="fbox local"><span class="step">01 · REQUEST</span><h3>Desktop 앱 입력</h3><p>PC에 설치된 ChatGPT 앱에서 명령을 입력하고 필요한 파일만 선택해 첨부합니다. <b>Desktop 앱</b>은 빠른 입력과 알림·파일 선택을 제공하는 화면입니다.</p><span class="explain"><b>오해 주의:</b> 앱이 내 PC에 설치되었다고 해서 일반 Chat이 내 폴더·Python·Bash를 자동으로 실행하는 것은 아닙니다.</span><span class="locpill">내 PC · 앱/첨부</span></div>
+      <div class="fbox cloud"><span class="step">02 · PLAN</span><h3>Chat 하네스 + LLM</h3><p>앱이 요청을 OpenAI 서비스에 보내면, 클라우드 <b>Chat 하네스</b>가 대화 상태와 도구를 관리하고 LLM이 목차·내용·다음 행동을 판단합니다.</p><span class="explain"><b>하네스:</b> 모델을 호출하고 결과를 보관하며 필요한 도구를 실행시키는 관리 프로그램. 판단만 하는 LLM과 역할이 다릅니다.</span><span class="locpill">OpenAI 클라우드</span></div>
+      <div class="fbox hybrid conditional"><span class="step">03 · CONTEXT</span><h3>선택한 파일만 전달</h3><p>사용자가 파일 선택창으로 첨부한 자료가 클라우드 대화의 <b>맥락</b>으로 전달됩니다. 맥락은 모델이 이번 답을 만들 때 참고하는 입력 묶음입니다.</p><span class="explain"><b>경계:</b> 첨부 사본은 읽을 수 있지만 폴더 전체를 임의로 순회하지는 않습니다. 명시적인 Skill 워크플로는 Work/Codex와 구분합니다.</span><div class="toolchips"><span class="local">파일 선택</span><span class="off">SKILL 워크플로</span><span class="off">폴더 직접순회</span></div><span class="locpill">내 PC → 클라우드</span></div>
+      <div class="fbox cloud conditional"><span class="step">04 · TOOLS</span><h3>웹·앱·원격 도구</h3><p>허용된 Web 검색과 앱·플러그인·원격 MCP/API를 사용해 자료를 가져옵니다. 이 도구들은 서비스가 공개한 입력 형식에 맞춰 요청하고 결과를 돌려줍니다.</p><span class="explain"><b>MCP/API:</b> 외부 프로그램과 데이터를 연결하는 통로. <b>Local Bash:</b> 내 PC 명령창 실행은 일반 Chat의 기본 도구가 아닙니다.</span><div class="toolchips"><span class="on">WEB</span><span>MCP/API</span><span class="off">LOCAL BASH</span></div><span class="locpill">클라우드/외부</span></div>
+      <div class="fbox cloud"><span class="step">05 · BUILD</span><h3>클라우드 파일 생성</h3><p>클라우드 런타임에서 장표 원고·표·이미지·레이아웃과 PPTX 초안을 만듭니다. 런타임은 파일 생성 프로그램이 실제로 실행되는 작업 컴퓨터입니다.</p><span class="explain"><b>중간파일:</b> 첨부 사본, 조사 메모, 이미지, 표 데이터, PPTX 초안과 오류 기록은 클라우드 세션 안에서 처리됩니다.</span><span class="locpill">클라우드 런타임</span></div>
+      <div class="fbox output"><span class="step">06 · SAVE</span><h3>앱에서 내려받기</h3><p>결과가 대화에 파일로 붙으면 사용자가 열어 보고 수정 요청을 할 수 있습니다. 최종 승인 뒤 저장 위치를 골라 내려받습니다.</p><span class="explain"><b>저장 위치:</b> 대화 첨부는 클라우드에 있고, 다운로드한 PPTX는 내 PC의 선택한 폴더에 있는 별도 사본입니다.</span><span class="locpill">클라우드 → 내 PC</span></div>
+    </div>
+    <div class="storage-strip"><div class="storage-card state"><b>대화 상태</b>Quick Chat 기록은 Web Chat과 같은 <strong>클라우드 대화 계열</strong>로 동기화될 수 있습니다.</div><div class="storage-card work"><b>중간과정 파일</b>첨부 사본과 생성 중 자료는 <strong>클라우드 대화 런타임</strong>에서 처리됩니다.</div><div class="storage-card result"><b>최종 결과물</b>대화 첨부는 클라우드, 사용자가 저장한 PPTX는 <strong>내 PC 지정 폴더</strong>에 남습니다.</div></div>
+  </div>
+  <div class="anchor"><span class="k">DESKTOP CHAT</span><span class="t"><b>앱이 내 PC에 있어도 실행은 클라우드</b> · 로컬 폴더·터미널 작업은 Work/Codex와 구분</span><span class="r">Desktop 화면 ≠ Local Runtime</span></div>
+  <div class="foot"><span>Source: OpenAI Help — ChatGPT desktop / Work and Codex</span><span>2026-07-17 확인</span><span class="pg"><b>08</b> / 19</span></div>
+</section>
+
+<!-- ================= SERVICE FLOW 09 · CHATGPT DESKTOP WORK ================= -->
+<section class="slide dense" id="st9">
+  <div class="head"><div><div class="kick"><span class="no">09</span><span class="lb">Service Flow · ChatGPT Desktop Work</span></div><h1>Desktop Work는 클라우드 판단과 <em>허가한 로컬 파일·앱</em>을 연결합니다</h1><div class="headsub">모델과 업무 계획은 클라우드 서비스가 담당하고, Desktop의 연결 통로가 사용자가 허가한 로컬 폴더·파일·앱에 접근합니다. 로컬 셸 실행은 Codex와 구분합니다.</div></div><div class="brand"><div class="t1">CHATGPT <span>DESKTOP WORK</span></div><div class="t2">CLOUD HARNESS · LOCAL CONNECTOR</div><div class="flowlegend"><span class="c">CLOUD</span><span class="l">LOCAL</span><span class="h">HYBRID</span></div></div></div>
+  <div class="main service-flow-main">
+    <div class="promptbar"><div class="prompt">“이 폴더의 자료와 회사 템플릿으로 00 파워포인트를 완성해줘.”</div><div class="scope">권한을 준 로컬 파일·앱 사용<br>Desktop Work 스레드는 해당 PC에 유지</div></div>
+    <div class="flowline">
+      <div class="fbox local"><span class="step">01 · REQUEST</span><h3>로컬 폴더·프로젝트 열기</h3><p>Desktop Work에서 작업할 폴더와 참고파일을 직접 선택합니다. 앱은 어떤 경로를 읽고 수정할 수 있는지 보여 주고 사용자에게 권한 승인을 받습니다.</p><span class="explain"><b>권한 범위:</b> 선택·허가한 파일과 앱만 대상으로 삼습니다. 다른 폴더까지 자동으로 권한이 넓어지는 것은 아닙니다.</span><span class="locpill">내 PC</span></div>
+      <div class="fbox cloud"><span class="step">02 · ORCHESTRATE</span><h3>Work 하네스 + LLM</h3><p>클라우드 Work 하네스가 조사·구성·제작·검토 순서를 관리하고, LLM이 각 단계에서 읽을 파일과 사용할 도구, 다음 행동을 판단합니다.</p><span class="explain"><b>혼합형 구조:</b> 생각과 작업관리는 클라우드, 실제 파일은 허가된 내 PC 범위에 있을 수 있어 두 위치가 함께 작동합니다.</span><span class="locpill">OpenAI 클라우드</span></div>
+      <div class="fbox hybrid"><span class="step">03 · WORKFLOW</span><h3>스킬·플러그인·지침</h3><p><b>Skill</b>은 PPT 제작 순서·브랜드 규칙·검수법을 적은 절차서이고, <b>Plugin</b>은 스킬·도구·커넥터를 묶어 설치하는 확장 꾸러미입니다.</p><span class="explain"><b>실제 동작:</b> 하네스가 작업과 맞는 스킬을 읽고 회사 템플릿·프로젝트 지침에 맞춰 어떤 도구를 어느 순서로 쓸지 정합니다.</span><div class="toolchips"><span class="on">SKILL</span><span class="on">PLUGIN</span><span>템플릿</span></div><span class="locpill">클라우드 + 내 PC</span></div>
+      <div class="fbox hybrid"><span class="step">04 · CONNECT</span><h3>Local Connector·MCP</h3><p><b>Local Connector</b>는 클라우드 하네스의 파일·앱 요청을 Desktop 앱이 받아 허가한 로컬 자원에 전달하는 중계 통로입니다. 원격 자료는 MCP/API·Web으로 연결합니다.</p><span class="explain"><b>중요:</b> Connector는 임의의 Bash·Python 명령 실행기와 다릅니다. 어떤 동작이 가능한지는 앱 기능과 승인 범위가 결정합니다.</span><div class="toolchips"><span class="local">LOCAL FILE</span><span>MCP/API</span><span class="on">WEB</span></div><span class="locpill">권한 경계 통과</span></div>
+      <div class="fbox local"><span class="step">05 · PRODUCE</span><h3>허가된 작업영역에서 제작</h3><p>선택한 로컬 프로젝트에서 원고·표·이미지·PPTX 초안을 만들거나 갱신합니다. 클라우드 판단 결과가 연결 통로를 거쳐 파일 작업으로 바뀝니다.</p><span class="explain"><b>중간파일:</b> 메모, 소스자료, 이미지, 장표 원고, 임시 PPTX와 검토 기록이 해당 PC의 Work 작업영역에 남습니다.</span><span class="locpill">내 PC 작업영역</span></div>
+      <div class="fbox output"><span class="step">06 · SAVE</span><h3>로컬 PPTX 저장</h3><p>하네스가 파일 존재·내용·검토기준을 확인하고 수정이 필요하면 다시 제작합니다. 완료되면 PPTX와 관련 자료를 지정한 로컬 폴더에 저장합니다.</p><span class="explain"><b>저장 위치:</b> Desktop Work 스레드와 로컬 파일은 공식 안내상 해당 컴퓨터에 남습니다. 사용자가 옮기거나 공유하기 전에는 Web Work와 별개입니다.</span><span class="locpill">내 PC</span></div>
+    </div>
+    <div class="storage-strip"><div class="storage-card state"><b>판단·작업 스레드</b>모델 판단은 클라우드지만 Desktop Work 스레드는 공식 안내상 <strong>해당 컴퓨터</strong>에 남습니다.</div><div class="storage-card work"><b>중간과정 파일</b>허가한 프로젝트 폴더의 메모·소스·이미지·초안은 <strong>내 PC</strong>에서 관리됩니다.</div><div class="storage-card result"><b>최종 결과물</b>PPTX는 지정한 <strong>로컬 폴더</strong>에 저장됩니다. 별도 공유 전에는 자동으로 웹 Work에 나타나지 않습니다.</div></div>
+  </div>
+  <div class="anchor"><span class="k">DESKTOP WORK</span><span class="t"><b>클라우드 업무 하네스 + 로컬 연결 통로</b> · 파일은 권한을 준 PC 범위에서 읽고 저장</span><span class="r">Local Connector ≠ 임의의 Local Shell</span></div>
+  <div class="foot"><span>Source: <a href="https://help.openai.com/en/articles/20001275-chatgpt-work-and-codex">OpenAI — Desktop Work local files and outputs</a></span><span>2026-07-17 확인</span><span class="pg"><b>09</b> / 19</span></div>
+</section>
+
+<!-- ================= SERVICE FLOW 10 · CODEX CLI LOCAL ================= -->
+<section class="slide dense" id="st10">
+  <div class="head"><div><div class="kick"><span class="no">10</span><span class="lb">Service Flow · Codex CLI Local</span></div><h1>Codex CLI에서는 <em>내 PC 하네스와 실행환경</em>이 PPTX를 만듭니다</h1><div class="headsub">모델 판단은 OpenAI 서비스와 통신하지만 Codex CLI, 스킬·MCP 설정, Python·Node·Bash, 중간파일과 결과물은 현재 로컬 작업 폴더에서 작동합니다.</div></div><div class="brand"><div class="t1">CODEX <span>CLI LOCAL</span></div><div class="t2">CLOUD MODEL · LOCAL HARNESS/RUNTIME</div><div class="flowlegend"><span class="c">CLOUD</span><span class="l">LOCAL</span><span class="h">HYBRID</span></div></div></div>
+  <div class="main service-flow-main">
+    <div class="promptbar"><div class="prompt">codex → “00에 대한 파워포인트를 이 폴더에 만들어줘.”</div><div class="scope">현재 디렉터리가 작업공간<br>PPTX 생성 라이브러리·템플릿 필요</div></div>
+    <div class="flowline">
+      <div class="fbox local"><span class="step">01 · REQUEST</span><h3>터미널에서 명령</h3><p><b>CLI(Command Line Interface)</b>는 버튼 대신 문자 명령으로 프로그램을 조작하는 화면입니다. 현재 폴더에서 Codex를 실행하고 저장경로·자료·템플릿·검수기준을 지정합니다.</p><span class="explain"><b>현재 폴더:</b> Codex가 기본적으로 읽고 수정할 로컬 작업공간입니다. “여기에 저장”이라고 하면 이 경로를 기준으로 파일을 만듭니다.</span><span class="locpill">내 PC · CLI</span></div>
+      <div class="fbox hybrid"><span class="step">02 · ORCHESTRATE</span><h3>로컬 Codex 하네스 ↔ LLM</h3><p>내 PC의 Codex 하네스가 파일 목록·권한·작업 상태·재시도를 관리합니다. 판단이 필요할 때 대화와 필요한 파일 내용을 OpenAI 모델 서비스에 보내고 답이나 툴 호출을 받습니다.</p><span class="explain"><b>혼합형:</b> LLM 계산은 클라우드, 하네스와 실제 명령은 내 PC입니다. 따라서 모델 위치와 파일 실행 위치가 서로 다릅니다.</span><span class="locpill">내 PC ↔ OpenAI</span></div>
+      <div class="fbox local"><span class="step">03 · WORKFLOW</span><h3>AGENTS.md·스킬</h3><p><b>AGENTS.md</b>는 이 프로젝트에서 지킬 규칙을 적은 안내문이고, <b>SKILL.md</b>는 PPT 제작 같은 특정 업무의 순서·도구·검수법을 적은 절차서입니다.</p><span class="explain"><b>실제 동작:</b> 하네스가 관련 스킬의 설명을 보고 필요할 때 본문·스크립트·템플릿·assets(첨부 자원)를 읽어 작업계획에 반영합니다.</span><div class="toolchips"><span class="local">SKILL.md</span><span class="local">AGENTS.md</span><span>assets</span></div><span class="locpill">내 PC/저장소</span></div>
+      <div class="fbox hybrid conditional"><span class="step">04 · CONNECT</span><h3>MCP·웹·API</h3><p><b>MCP</b>는 Codex가 외부 도구의 기능과 입력 형식을 받아 호출하는 연결 표준입니다. 웹은 공개 페이지를 찾고, API는 서비스에 구조화된 요청을 보내 데이터를 받습니다.</p><span class="explain"><b>실행 위치:</b> STDIO MCP는 내 PC 프로세스로, HTTP MCP/API는 원격 서버로 요청합니다. 인터넷·명령 권한이 막혀 있으면 사용자 승인이나 설정 변경이 필요합니다.</span><div class="toolchips"><span class="local">MCP</span><span>WEB</span><span>API</span></div><span class="locpill">내 PC ↔ 외부</span></div>
+      <div class="fbox local"><span class="step">05 · BUILD</span><h3>Python·Node·Bash 실행</h3><p><b>런타임</b>은 프로그램이 실제로 도는 작업환경입니다. 내 PC의 Python·Node·Bash와 PPTX 라이브러리를 실행해 원고·표·이미지를 슬라이드 파일로 조립합니다.</p><span class="explain"><b>중간파일:</b> JSON/Markdown 원고, 내려받은 이미지, 임시 PPTX, 렌더링 이미지, 검사 로그가 프로젝트나 임시 폴더에 생기며 실패하면 다시 수정합니다.</span><span class="locpill">내 PC 런타임</span></div>
+      <div class="fbox output"><span class="step">06 · SAVE</span><h3>현재 폴더에 PPTX</h3><p>Codex가 파일 생성 여부와 렌더링 결과를 확인하고 완료 내용을 보고합니다. 최종 PPTX와 필요 시 원본·중간자료·실행 로그를 지정한 로컬 경로에 남깁니다.</p><span class="explain"><b>Git/Repo:</b> Git은 파일 변경 이력을 기록하는 도구, Repo는 그 기록과 프로젝트 파일을 보관하는 폴더입니다. PPTX도 선택하면 변경 이력에 포함할 수 있습니다.</span><span class="locpill">내 PC/Repo</span></div>
+    </div>
+    <div class="storage-strip"><div class="storage-card state"><b>설정·상태</b><code>~/.codex/</code>, 프로젝트 설정·스킬은 <strong>내 PC 또는 저장소</strong>에 있습니다.</div><div class="storage-card work"><b>중간과정 파일</b>원고·이미지·렌더링·검증 로그는 <strong>현재 작업 폴더</strong> 또는 임시 폴더에 생깁니다.</div><div class="storage-card result"><b>최종 결과물</b><code>00_발표자료.pptx</code>가 <strong>지정한 로컬 경로</strong>에 저장됩니다.</div></div>
+  </div>
+  <div class="anchor"><span class="k">CODEX CLI</span><span class="t"><b>모델 계산은 클라우드</b> · 하네스·MCP 설정·명령·중간파일·PPTX는 <b>내 PC</b></span><span class="r">승인·Sandbox·네트워크 정책 적용</span></div>
+  <div class="foot"><span>Sources: <a href="https://learn.chatgpt.com/docs/codex/cli">Codex CLI</a> · <a href="https://learn.chatgpt.com/docs/extend/mcp?surface=cli">MCP</a> · Build skills</span><span>2026-07-17 확인</span><span class="pg"><b>10</b> / 19</span></div>
+</section>
+
+<!-- ================= SERVICE FLOW 11 · CODEX DESKTOP LOCAL ================= -->
+<section class="slide dense" id="st11">
+  <div class="head"><div><div class="kick"><span class="no">11</span><span class="lb">Service Flow · Codex Desktop Local</span></div><h1>Desktop Codex Local은 GUI에서 지시하지만 <em>실제 작업은 내 PC</em>에서 합니다</h1><div class="headsub">선택한 로컬 폴더·저장소를 Codex 하네스가 읽고, 승인된 터미널·개발도구·PPTX 생성 스크립트를 내 컴퓨터에서 실행합니다.</div></div><div class="brand"><div class="t1">CODEX <span>DESKTOP LOCAL</span></div><div class="t2">LOCAL FOLDER · TERMINAL · MCP</div><div class="flowlegend"><span class="c">CLOUD</span><span class="l">LOCAL</span><span class="h">HYBRID</span></div></div></div>
+  <div class="main service-flow-main">
+    <div class="promptbar"><div class="prompt">“이 프로젝트 자료로 00 파워포인트를 만들고 미리보기까지 검사해줘.”</div><div class="scope">Desktop Codex에서 Local 환경 선택<br>폴더 접근·명령 실행 승인</div></div>
+    <div class="flowline">
+      <div class="fbox local"><span class="step">01 · REQUEST</span><h3>로컬 폴더 열기</h3><p>Desktop Codex에서 실제 작업할 폴더나 코드 저장소(Repo)를 선택하고, PPTX 파일명·참고자료·회사 템플릿·완료기준을 입력합니다.</p><span class="explain"><b>GUI:</b> Graphic User Interface의 약자로 버튼·메뉴가 있는 화면입니다. GUI는 편한 조작창이고 실제 파일 작업은 선택한 Local 환경에서 일어납니다.</span><span class="locpill">내 PC · 앱</span></div>
+      <div class="fbox hybrid"><span class="step">02 · ORCHESTRATE</span><h3>로컬 하네스 ↔ LLM</h3><p>내 PC의 Codex 하네스가 폴더·상태·권한·도구를 관리하고, 작업 판단만 OpenAI의 LLM에 요청합니다. 모델이 툴 호출을 돌려주면 하네스가 승인 후 실행합니다.</p><span class="explain"><b>반복:</b> 명령 결과·파일 변경·오류를 다시 모델에 보여 주고, 모델이 수정 명령을 내리도록 완료될 때까지 왕복합니다.</span><span class="locpill">내 PC ↔ OpenAI</span></div>
+      <div class="fbox local"><span class="step">03 · WORKFLOW</span><h3>공유 스킬·설정</h3><p>Desktop·CLI가 공유하는 Codex 설정, AGENTS.md, 프로젝트/사용자 Skill과 PPT 템플릿을 읽습니다. Skill은 모델이 따라야 할 상세 제작 절차입니다.</p><span class="explain"><b>설정 위치:</b> 개인 설정은 보통 사용자 Codex 폴더에, 팀 규칙과 스킬은 저장소에 두어 같은 프로젝트 구성원이 함께 사용할 수 있습니다.</span><div class="toolchips"><span class="local">SKILL</span><span class="local">AGENTS.md</span><span>template</span></div><span class="locpill">내 PC</span></div>
+      <div class="fbox hybrid conditional"><span class="step">04 · CONNECT</span><h3>MCP·웹·API</h3><p><b>STDIO MCP</b>는 내 PC에서 명령으로 실행되는 연결 서버, <b>HTTP MCP</b>는 인터넷 주소로 접속하는 원격 서버입니다. Web/API도 권한 범위에서 자료를 가져옵니다.</p><span class="explain"><b>승인:</b> 외부 전송·로그인·파일수정·명령실행은 설정된 정책에 따라 묻거나 차단합니다. 연결했다고 모든 도구가 자동 허용되는 것은 아닙니다.</span><div class="toolchips"><span class="local">STDIO MCP</span><span>HTTP MCP</span><span>WEB/API</span></div><span class="locpill">내 PC ↔ 외부</span></div>
+      <div class="fbox local"><span class="step">05 · BUILD</span><h3>로컬 터미널·도구</h3><p>내 PC의 Python·Node·PowerShell 또는 WSL에서 PPTX 생성 스크립트와 렌더러를 실행합니다. 렌더러는 완성 슬라이드를 이미지로 펼쳐 눈으로 검사하게 합니다.</p><span class="explain"><b>중간파일:</b> 수집자료·원고·이미지·임시 PPTX·렌더 이미지·검사 로그가 선택한 프로젝트나 임시 로컬 폴더에 생깁니다.</span><span class="locpill">내 PC Runtime</span></div>
+      <div class="fbox output"><span class="step">06 · SAVE</span><h3>로컬 결과·변경점</h3><p>Desktop에서 새 파일과 바뀐 파일, 실행 로그를 검토합니다. 하네스가 오류가 없다고 판단하면 PPTX를 로컬 폴더에 남기고 완료를 보고합니다.</p><span class="explain"><b>Diff:</b> 작업 전후 무엇이 달라졌는지 보여 주는 변경 비교입니다. Git 저장소라면 PPTX·원고·스크립트를 함께 기록할 수 있습니다.</span><span class="locpill">내 PC/Repo</span></div>
+    </div>
+    <div class="storage-strip"><div class="storage-card state"><b>작업 상태</b>Desktop 세션과 Codex 설정은 <strong>해당 컴퓨터의 Codex 환경</strong>에서 관리됩니다.</div><div class="storage-card work"><b>중간과정 파일</b>원고·이미지·렌더·테스트 파일은 <strong>프로젝트/임시 로컬 폴더</strong>에 저장됩니다.</div><div class="storage-card result"><b>최종 결과물</b>PPTX는 <strong>내 PC 폴더</strong>에 바로 생기며 Git 대상이면 변경점으로 확인할 수 있습니다.</div></div>
+  </div>
+  <div class="anchor"><span class="k">CODEX DESKTOP</span><span class="t">GUI는 조작 화면 · <b>Local 선택 시 하네스·툴 러너·파일은 내 PC</b>에서 작동</span><span class="r">CLI와 MCP 설정 공유 가능</span></div>
+  <div class="foot"><span>Sources: OpenAI Codex desktop · Local environments · MCP</span><span>2026-07-17 확인</span><span class="pg"><b>11</b> / 19</span></div>
+</section>
+
+<!-- ================= SERVICE FLOW 12 · CODEX CLOUD ================= -->
+<section class="slide dense" id="st12">
+  <div class="head"><div><div class="kick"><span class="no">12</span><span class="lb">Service Flow · Codex Cloud</span></div><h1>Codex Cloud에서는 <em>격리된 클라우드 환경</em>이 PPTX를 만듭니다</h1><div class="headsub">저장소와 환경 설정을 연결한 뒤 작업을 맡기면, 클라우드 하네스와 전용 실행환경이 백그라운드에서 명령을 실행합니다. 결과는 클라우드 작업·브랜치·다운로드 경로로 회수합니다.</div></div><div class="brand"><div class="t1">CODEX <span>CLOUD</span></div><div class="t2">ISOLATED ENVIRONMENT · BACKGROUND</div><div class="flowlegend"><span class="c">CLOUD</span><span class="l">LOCAL</span><span class="h">CONDITIONAL</span></div></div></div>
+  <div class="main service-flow-main">
+    <div class="promptbar"><div class="prompt">“이 저장소의 자료와 템플릿으로 00 PPTX를 만들고 결과를 남겨줘.”</div><div class="scope">GitHub/환경 연결 필요<br>프레젠테이션 도구를 환경에 설치해야 함</div></div>
+    <div class="flowline">
+      <div class="fbox local"><span class="step">01 · REQUEST</span><h3>Codex Cloud 작업 생성</h3><p>브라우저나 연결 서비스에서 GitHub 저장소, 사용할 Cloud 환경과 “PPTX를 만들어라”라는 목표를 선택합니다. 화면은 작업을 등록하고 진행 로그를 보는 역할입니다.</p><span class="explain"><b>사전조건:</b> 클라우드 환경에 PPTX 생성 라이브러리·폰트·템플릿이 준비되어 있어야 실제 파일까지 만들 수 있습니다.</span><span class="locpill">내 PC · 화면</span></div>
+      <div class="fbox cloud"><span class="step">02 · ORCHESTRATE</span><h3>클라우드 하네스 + LLM</h3><p>OpenAI 클라우드의 Codex 하네스가 계획·권한·로그·재시도와 <b>백그라운드 실행</b>을 관리합니다. 백그라운드는 사용자가 창을 닫아도 작업환경에서 계속 처리하는 방식입니다.</p><span class="explain"><b>실제 동작:</b> 하네스가 모델 판단과 도구 실행을 반복하고 각 단계의 로그·오류·변경 내용을 Cloud 작업 상태에 누적합니다.</span><span class="locpill">OpenAI 클라우드</span></div>
+      <div class="fbox cloud"><span class="step">03 · ENVIRONMENT</span><h3>저장소 설정·스킬</h3><p>서비스가 Repo의 복제본을 Cloud 환경에 준비하고 AGENTS.md·Skill·템플릿·의존성·환경변수를 읽습니다. <b>의존성</b>은 작업에 필요한 프로그램과 라이브러리입니다.</p><span class="explain"><b>중요:</b> 내 PC의 개인 설정과 파일은 자동으로 복사되지 않습니다. 재현할 규칙·스킬·템플릿은 저장소나 Cloud 환경 설정에 넣어야 합니다.</span><div class="toolchips"><span class="on">REPO</span><span class="on">SKILL</span><span>ENV</span></div><span class="locpill">클라우드 복제본</span></div>
+      <div class="fbox cloud conditional"><span class="step">04 · CONNECT</span><h3>원격 MCP·웹·API</h3><p>Cloud에서 접속할 수 있는 원격 MCP/API, 플러그인과 허용된 Web을 사용합니다. 비밀값(토큰·키)은 환경 설정의 보안 저장소에서 필요한 도구에만 전달합니다.</p><span class="explain"><b>네트워크 정책:</b> 어떤 인터넷 주소와 서비스로 나갈 수 있는지 정한 규칙입니다. 정책이 막으면 검색·다운로드·API 호출이 실패합니다.</span><div class="toolchips"><span>MCP</span><span>WEB</span><span>API</span></div><span class="locpill">클라우드 ↔ 외부</span></div>
+      <div class="fbox cloud"><span class="step">05 · BUILD</span><h3>격리 실행환경</h3><p><b>격리 환경</b>은 다른 작업과 분리된 Cloud 컴퓨터입니다. 그 안의 셸·Python·Node로 원고·이미지·PPTX를 만들고 렌더·검사를 반복합니다.</p><span class="explain"><b>중간파일:</b> Repo 복제본, 다운로드 자료, 이미지, 원고, 임시 PPTX, 렌더링 결과와 실행 로그가 이 Cloud 환경에 생깁니다.</span><span class="locpill">OpenAI 관리형 환경</span></div>
+      <div class="fbox output"><span class="step">06 · RETURN</span><h3>작업 결과 회수</h3><p>하네스가 요약·로그·Diff와 PPTX를 작업 산출물 또는 저장소 브랜치에 남깁니다. 사용자는 화면에서 검토하고 후속 수정을 요청하거나 다운로드합니다.</p><span class="explain"><b>Branch/Artifact:</b> Branch는 저장소에서 작업을 분리한 변경 줄기, Artifact는 실행이 만든 결과 파일입니다. 둘 다 내려받아야 내 PC 사본이 생깁니다.</span><span class="locpill">클라우드 → Repo/내 PC</span></div>
+    </div>
+    <div class="storage-strip"><div class="storage-card state"><b>작업 상태</b>태스크·로그·환경 구성은 <strong>Codex Cloud</strong>에 저장되고 백그라운드에서 이어집니다.</div><div class="storage-card work"><b>중간과정 파일</b>저장소 복제본과 임시 생성물은 <strong>격리된 클라우드 환경</strong>에 있습니다.</div><div class="storage-card result"><b>최종 결과물</b>PPTX를 브랜치·아티팩트·지원되는 다운로드 방식으로 내보내야 <strong>내 PC</strong>에서 사용할 수 있습니다.</div></div>
+  </div>
+  <div class="anchor"><span class="k">CODEX CLOUD</span><span class="t"><b>하네스·명령·중간파일은 클라우드</b> · 결과는 브랜치·산출물·다운로드로 회수</span><span class="r">로컬 설정은 자동 전달되지 않을 수 있음</span></div>
+  <div class="foot"><span>Source: <a href="https://learn.chatgpt.com/docs/cloud">OpenAI — Codex cloud</a></span><span>격리 환경·병렬 작업·summary/diff 검토</span><span class="pg"><b>12</b> / 19</span></div>
+</section>
+
+<!-- ================= SERVICE FLOW 13 · CLAUDE WEB CHAT ================= -->
+<section class="slide dense" id="st13">
+  <div class="head"><div><div class="kick"><span class="no">13</span><span class="lb">Service Flow · Claude Web Chat</span></div><h1>Claude Web Chat은 <em>클라우드 대화·분석 도구</em>로 PPT를 만듭니다</h1><div class="headsub">브라우저는 접속 화면이며, Claude 모델과 Chat 하네스가 대화 맥락·첨부·연결 도구를 관리합니다. 로컬 폴더는 직접 작업하지 않으며 완성 파일은 내려받아야 내 PC에 생깁니다.</div></div><div class="brand"><div class="t1">CLAUDE <span>WEB CHAT</span></div><div class="t2">CLOUD CHAT · CONNECTORS</div><div class="flowlegend"><span class="c">CLOUD</span><span class="l">LOCAL</span><span class="h">CONDITIONAL</span></div></div></div>
+  <div class="main service-flow-main">
+    <div class="promptbar"><div class="prompt">“00에 대한 발표용 파워포인트를 만들어줘.”</div><div class="scope">대화·설명·분석 중심<br>로컬 폴더 직접 접근 없음</div></div>
+    <div class="flowline">
+      <div class="fbox local"><span class="step">01 · REQUEST</span><h3>브라우저 입력·업로드</h3><p>Claude 웹 화면에 주제·대상·장수·디자인·참고자료를 입력합니다. 브라우저는 요청을 Anthropic 서비스에 보내고 결과를 보여 주는 접속 화면입니다.</p><span class="explain"><b>파일 이동:</b> 직접 업로드한 파일 사본만 클라우드 대화로 전달됩니다. 웹 Chat이 내 PC의 원본 폴더를 자동 탐색하거나 수정하지 않습니다.</span><span class="locpill">내 PC · 화면</span></div>
+      <div class="fbox cloud"><span class="step">02 · PLAN</span><h3>Claude Chat 하네스 + LLM</h3><p>Claude Chat 하네스가 대화·첨부·사용 가능한 도구를 관리하고, LLM이 슬라이드 구조·자료 사용·다음 행동을 판단합니다.</p><span class="explain"><b>역할 구분:</b> LLM은 생각과 툴 호출을 만들고, 하네스는 그 요청의 형식·권한을 확인해 실제 도구로 보내고 결과를 다시 모델에 전달합니다.</span><span class="locpill">Anthropic 클라우드</span></div>
+      <div class="fbox cloud conditional"><span class="step">03 · CONTEXT</span><h3>프로젝트·첨부·지침</h3><p>업로드 자료, 이전 대화, 프로젝트 지침 등 허용된 정보를 모델의 <b>Context</b>로 묶습니다. Context는 모델이 이번 판단에 참고하도록 함께 보내는 정보입니다.</p><span class="explain"><b>Skill 조건부:</b> Skill은 반복 작업 절차서입니다. 일반 Chat에서는 Claude Code용 로컬 Skill이 자동 실행된다고 가정하지 않고, 해당 서비스가 제공·허용한 범위만 사용합니다.</span><div class="toolchips"><span class="on">첨부</span><span>PROJECT</span><span>지침</span><span>SKILL 조건부</span></div><span class="locpill">클라우드 상태</span></div>
+      <div class="fbox cloud conditional"><span class="step">04 · CONNECT</span><h3>웹·커넥터·원격 MCP</h3><p>최신 공개자료는 Web으로 찾고, 로그인한 업무서비스는 Connector/MCP/API를 통해 요청합니다. 사용할 수 있는 연결은 계정·조직 관리자가 허용한 목록에 한정됩니다.</p><span class="explain"><b>Connector/MCP:</b> Claude와 외부 서비스 사이의 연결 통로. <b>API:</b> 프로그램끼리 정해진 형식으로 요청·응답하는 창구입니다.</span><div class="toolchips"><span class="on">WEB</span><span>MCP</span><span>API</span></div><span class="locpill">클라우드/외부</span></div>
+      <div class="fbox cloud"><span class="step">05 · BUILD</span><h3>클라우드 생성환경</h3><p>Anthropic이 관리하는 실행환경에서 장표 원고·표·이미지·임시 생성물을 처리하고, 지원되는 파일 도구가 있으면 PPTX를 조립합니다.</p><span class="explain"><b>중간파일:</b> 첨부 사본, 조사 메모, 이미지, 표 데이터, 슬라이드 원고와 PPTX 초안이 클라우드 대화/분석 작업공간에 생깁니다.</span><span class="locpill">Anthropic 관리 환경</span></div>
+      <div class="fbox output"><span class="step">06 · SAVE</span><h3>대화 결과 다운로드</h3><p>대화 또는 <b>Artifact</b>에서 결과를 확인합니다. Artifact는 Claude가 만든 문서·코드·시각 결과를 별도 작업물로 보여 주는 표현입니다.</p><span class="explain"><b>저장 위치:</b> 결과는 먼저 클라우드 대화/Artifact에 있고, 사용자가 다운로드한 PPTX만 내 PC의 선택한 폴더에 별도 사본으로 저장됩니다.</span><span class="locpill">클라우드 → 내 PC</span></div>
+    </div>
+    <div class="storage-strip"><div class="storage-card state"><b>판단·대화 상태</b>대화·프로젝트 상태는 <strong>Claude 클라우드 계정 영역</strong>에서 관리됩니다.</div><div class="storage-card work"><b>중간과정 파일</b>첨부 사본·원고·생성 자료는 <strong>클라우드 대화/분석 환경</strong>에서 처리됩니다.</div><div class="storage-card result"><b>최종 결과물</b>대화/Artifact에 남고 다운로드한 PPTX만 <strong>내 PC</strong>에 저장됩니다.</div></div>
+  </div>
+  <div class="anchor"><span class="k">CLAUDE WEB CHAT</span><span class="t"><b>Chat은 클라우드 대화 흐름</b> · MCP/커넥터는 외부 자료 통로 · 다운로드가 로컬 저장</span><span class="r">Claude Code 스킬·로컬 셸과 구분</span></div>
+  <div class="foot"><span>Source: Anthropic Claude web / Connectors·MCP 안내</span><span>기능은 요금제·조직 정책에 따라 달라짐</span><span class="pg"><b>13</b> / 19</span></div>
+</section>
+
+<!-- ================= SERVICE FLOW 14 · CLAUDE WEB COWORK ================= -->
+<section class="slide dense" id="st14">
+  <div class="head"><div><div class="kick"><span class="no">14</span><span class="lb">Service Flow · Claude Web Cowork</span></div><h1>Claude Web Cowork는 <em>계속 유지되는 클라우드 업무</em>로 PPT를 완성합니다</h1><div class="headsub">목표를 맡기면 Cowork 하네스가 조사·도구사용·파일제작·검토를 여러 단계로 수행합니다. 웹에서는 로컬 폴더 대신 업로드·클라우드 자료·커넥터를 사용합니다.</div></div><div class="brand"><div class="t1">CLAUDE <span>WEB COWORK</span></div><div class="t2">PERSISTENT CLOUD · MULTI-STEP</div><div class="flowlegend"><span class="c">CLOUD</span><span class="l">LOCAL</span><span class="h">CONDITIONAL</span></div></div></div>
+  <div class="main service-flow-main">
+    <div class="promptbar"><div class="prompt">“00을 조사하고 회사용 발표자료 PPTX를 끝까지 완성해줘.”</div><div class="scope">다단계 위임·백그라운드 처리<br>Web에서는 로컬 폴더 직접 접근 없음</div></div>
+    <div class="flowline">
+      <div class="fbox local"><span class="step">01 · DELEGATE</span><h3>웹에서 목표·자료 전달</h3><p>“조사부터 PPT 완성까지 맡긴다”는 업무 목표와 업로드·클라우드 자료, 장수·브랜드·출처·완료기준, 중간 승인 지점을 지정합니다.</p><span class="explain"><b>Delegate(위임):</b> 매 단계마다 사람이 명령하는 대신 결과 목표를 맡기고, 에이전트가 필요한 하위 작업을 나누어 진행하게 하는 방식입니다.</span><span class="locpill">내 PC · 화면/업로드</span></div>
+      <div class="fbox cloud"><span class="step">02 · ORCHESTRATE</span><h3>Cowork 하네스 + LLM</h3><p><b>Cowork 하네스</b>가 조사·구성·디자인·제작·검수 작업을 순서와 병렬 작업으로 나누고, LLM이 각 단계의 다음 행동을 판단합니다.</p><span class="explain"><b>Orchestrate:</b> 여러 도구·파일·작업 순서를 지휘한다는 뜻입니다. 진행률·질문·승인 대기·오류를 작업 상태로 계속 보관합니다.</span><span class="locpill">Anthropic 클라우드</span></div>
+      <div class="fbox cloud"><span class="step">03 · WORKFLOW</span><h3>지침·플러그인·스킬</h3><p>회사 지침·템플릿과 설치·허가된 Skill/Plugin을 읽습니다. Skill은 반복 절차서, Plugin은 관련 스킬·도구·연결 구성을 묶어 배포하는 확장 꾸러미입니다.</p><span class="explain"><b>실제 동작:</b> 하네스가 업무와 맞는 절차를 선택해 “자료수집 → 출처정리 → 장표작성 → 렌더검수”처럼 실행 순서를 구체화합니다.</span><div class="toolchips"><span>SKILL</span><span>PLUGIN</span><span>TEMPLATE</span></div><span class="locpill">클라우드 작업 상태</span></div>
+      <div class="fbox cloud conditional"><span class="step">04 · CONNECT</span><h3>웹·MCP·API</h3><p>Web으로 공개 자료를 찾고, Connector/MCP를 통해 허가된 업무서비스·문서·DB에 접근하며, API로 정해진 데이터나 작업을 요청합니다.</p><span class="explain"><b>권한:</b> 연결 도구는 로그인·조직 정책·도구별 승인 범위 안에서만 읽거나 행동합니다. 연결되지 않은 로컬 폴더는 웹에서 직접 볼 수 없습니다.</span><div class="toolchips"><span class="on">WEB</span><span>MCP</span><span>API</span></div><span class="locpill">클라우드/외부</span></div>
+      <div class="fbox cloud"><span class="step">05 · PRODUCE</span><h3>지속 클라우드 작업공간</h3><p>중간 메모·출처·표·이미지·원고·PPTX 초안과 검토본을 클라우드 작업공간에 보관하며 여러 번 수정합니다.</p><span class="explain"><b>Persistent:</b> 작업 상태가 한 응답 후 사라지지 않고 이어진다는 뜻입니다. 브라우저를 닫아도 지원되는 작업은 클라우드에서 계속될 수 있습니다.</span><span class="locpill">Anthropic 클라우드</span></div>
+      <div class="fbox output"><span class="step">06 · DELIVER</span><h3>클라우드 결과 제공</h3><p>완성 PPTX, 근거와 작업요약을 Cowork 작업의 산출물로 남깁니다. 사용자는 검토·승인·수정 요청 후 결과 파일을 내려받습니다.</p><span class="explain"><b>저장 위치:</b> 작업상태·중간파일·결과는 먼저 Cowork 클라우드에 있습니다. 다운로드한 PPTX만 내 PC에 생깁니다.</span><span class="locpill">클라우드 → 내 PC</span></div>
+    </div>
+    <div class="storage-strip"><div class="storage-card state"><b>작업 상태</b>진행상태와 승인 대기점은 <strong>지속되는 Cowork 클라우드 세션</strong>에서 관리됩니다.</div><div class="storage-card work"><b>중간과정 파일</b>조사자료·초안·검토본은 <strong>클라우드 작업공간</strong>에 머뭅니다.</div><div class="storage-card result"><b>최종 결과물</b>Cowork 작업의 산출물로 제공되고 다운로드한 사본은 <strong>내 PC</strong>에 저장됩니다.</div></div>
+  </div>
+  <div class="anchor"><span class="k">WEB COWORK</span><span class="t"><b>목표 위임 → 클라우드 작업 지속 → 승인 → 다운로드</b> · 로컬 폴더는 직접 작업하지 않음</span><span class="r">웹·모바일은 클라우드 세션 계열</span></div>
+  <div class="foot"><span>Source: Anthropic Cowork web/cloud 안내</span><span>2026-07-17 확인 · 기능 제공범위 변동 가능</span><span class="pg"><b>14</b> / 19</span></div>
+</section>
+
+<!-- ================= SERVICE FLOW 15 · CLAUDE DESKTOP CHAT ================= -->
+<section class="slide dense" id="st15">
+  <div class="head"><div><div class="kick"><span class="no">15</span><span class="lb">Service Flow · Claude Desktop Chat</span></div><h1>Claude Desktop Chat도 <em>대화 처리와 코드 실행환경을 구분</em>해야 합니다</h1><div class="headsub">Desktop 앱은 입력·첨부·커넥터 화면입니다. 일반 Chat은 Claude Code 탭과 다르며, 내 Bash·Python·폴더를 자동으로 실행·수정하는 하네스가 아닙니다.</div></div><div class="brand"><div class="t1">CLAUDE <span>DESKTOP CHAT</span></div><div class="t2">LOCAL UI · CLOUD CHAT · CONNECTORS</div><div class="flowlegend"><span class="c">CLOUD</span><span class="l">LOCAL</span><span class="h">CONDITIONAL</span></div></div></div>
+  <div class="main service-flow-main">
+    <div class="promptbar"><div class="prompt">“선택한 자료로 00 발표용 파워포인트를 만들어줘.”</div><div class="scope">Desktop Chat 기준<br>Code·Cowork는 별도 하네스</div></div>
+    <div class="flowline">
+      <div class="fbox local"><span class="step">01 · REQUEST</span><h3>Desktop 앱 입력</h3><p>내 PC에 설치된 Claude 앱에서 명령을 입력하고 필요한 파일만 선택해 첨부합니다. Desktop 앱은 입력·알림·파일선택을 편하게 하는 사용자 화면입니다.</p><span class="explain"><b>기본 경계:</b> 일반 Chat 탭은 Claude Code와 다른 실행 흐름입니다. 앱 설치만으로 내 Bash·Python·전체 폴더를 자동 실행하지 않습니다.</span><span class="locpill">내 PC · 앱</span></div>
+      <div class="fbox cloud"><span class="step">02 · PLAN</span><h3>Claude Chat 하네스 + LLM</h3><p>앱이 요청을 보내면 Anthropic 클라우드의 Chat 하네스가 대화·첨부·도구를 관리하고 LLM이 목차·내용·다음 행동을 판단합니다.</p><span class="explain"><b>하네스와 LLM:</b> LLM은 판단을 만들고, 하네스는 그 판단을 실제 도구·파일처리와 연결하며 결과를 다시 모델에 보여 줍니다.</span><span class="locpill">Anthropic 클라우드</span></div>
+      <div class="fbox hybrid conditional"><span class="step">03 · CONTEXT</span><h3>첨부·허용된 연결</h3><p>선택한 파일의 사본과 지원되는 Connector의 자료가 대화 Context에 포함됩니다. Context는 모델이 답을 만들 때 함께 읽는 현재 자료 묶음입니다.</p><span class="explain"><b>Skill 조건부:</b> Skill은 작업 절차서이지만 Claude Code의 로컬 Skill과 일반 Chat 기능은 같지 않습니다. 현재 탭에서 제공·허용된 기능만 사용합니다.</span><div class="toolchips"><span class="local">첨부</span><span>CONNECTOR</span><span>SKILL 조건부</span><span class="off">폴더 임의탐색</span></div><span class="locpill">내 PC → 클라우드</span></div>
+      <div class="fbox cloud conditional"><span class="step">04 · TOOLS</span><h3>웹·원격 MCP/API</h3><p>허용된 Web·Connector·원격 MCP/API로 외부 자료를 읽거나 요청합니다. 로컬 STDIO MCP와 Shell은 사용하는 탭과 지원 범위를 구분해야 합니다.</p><span class="explain"><b>STDIO/Shell:</b> 내 PC에서 프로세스와 명령을 실행하는 방식입니다. 일반 Chat의 기본 클라우드 도구와 동일하지 않으며 권한·설정 없이 작동하지 않습니다.</span><div class="toolchips"><span class="on">WEB</span><span>MCP/API</span><span class="off">LOCAL SHELL</span></div><span class="locpill">클라우드/외부</span></div>
+      <div class="fbox cloud"><span class="step">05 · BUILD</span><h3>클라우드 대화 생성환경</h3><p>Anthropic 관리 환경에서 장표 원고·표·이미지·임시 생성물을 처리하고, 지원되는 파일 생성 기능으로 PPTX/Artifact를 만듭니다.</p><span class="explain"><b>중간파일:</b> 첨부 사본, 메모, 이미지, 표, 원고와 PPTX 초안은 클라우드 Chat 환경에서 처리되며 로컬 폴더에 자동 저장되지 않습니다.</span><span class="locpill">Anthropic 관리 환경</span></div>
+      <div class="fbox output"><span class="step">06 · SAVE</span><h3>앱에서 파일 저장</h3><p>대화 또는 Artifact에서 결과를 확인하고 수정 요청을 합니다. 완료한 PPTX를 앱의 다운로드 기능으로 원하는 로컬 경로에 저장합니다.</p><span class="explain"><b>두 사본:</b> 클라우드 대화의 결과와 내 PC에 내려받은 파일은 별도입니다. 로컬 파일을 수정해도 클라우드 결과가 자동으로 바뀌지는 않습니다.</span><span class="locpill">클라우드 → 내 PC</span></div>
+    </div>
+    <div class="storage-strip"><div class="storage-card state"><b>대화 상태</b>일반 Chat의 상태는 <strong>Claude 계정의 클라우드 대화</strong>에서 관리됩니다.</div><div class="storage-card work"><b>중간과정 파일</b>첨부 사본과 생성 중 자료는 <strong>클라우드 Chat 환경</strong>에서 처리됩니다.</div><div class="storage-card result"><b>최종 결과물</b>대화/Artifact는 클라우드, 내려받은 PPTX는 <strong>내 PC</strong>에 남습니다.</div></div>
+  </div>
+  <div class="anchor"><span class="k">DESKTOP CHAT</span><span class="t"><b>Desktop 앱 ≠ Claude Code Runtime</b> · Chat의 기본 제작 흐름은 클라우드 대화 계열</span><span class="r">첨부·커넥터와 로컬 명령 실행을 구분</span></div>
+  <div class="foot"><span>Source: Anthropic Claude Desktop / Connectors 안내</span><span>지원 도구·권한은 플랜·조직 정책에 따라 달라짐</span><span class="pg"><b>15</b> / 19</span></div>
+</section>
+
+<!-- ================= SERVICE FLOW 16 · CLAUDE DESKTOP COWORK ================= -->
+<section class="slide dense" id="st16">
+  <div class="head"><div><div class="kick"><span class="no">16</span><span class="lb">Service Flow · Claude Desktop Cowork</span></div><h1>Desktop Cowork는 <em>업무 하네스와 허가한 내 파일·앱</em>을 연결합니다</h1><div class="headsub">Cowork가 목표를 여러 단계로 수행하고, Desktop의 로컬 연결 통로가 선택한 폴더·앱 작업을 승인 범위에서 실행합니다. 선택한 Cloud/Local 처리 방식에 따라 중간파일 위치를 확인해야 합니다.</div></div><div class="brand"><div class="t1">CLAUDE <span>DESKTOP COWORK</span></div><div class="t2">WORK HARNESS · LOCAL FILES/APPS</div><div class="flowlegend"><span class="c">CLOUD</span><span class="l">LOCAL</span><span class="h">HYBRID</span></div></div></div>
+  <div class="main service-flow-main">
+    <div class="promptbar"><div class="prompt">“이 폴더의 자료를 조사해 00 PPTX를 만들고 파일로 저장해줘.”</div><div class="scope">로컬 폴더·앱 권한 필요<br>처리 모드와 승인 범위를 확인</div></div>
+    <div class="flowline">
+      <div class="fbox local"><span class="step">01 · DELEGATE</span><h3>폴더·앱·목표 선택</h3><p>작업할 로컬 폴더·파일·앱과 결과 파일명을 지정하고, Cowork가 읽거나 수정할 범위를 직접 승인합니다. 또한 장수·브랜드·출처·검수기준을 줍니다.</p><span class="explain"><b>권한:</b> 폴더를 선택하는 것은 단순 첨부보다 넓은 접근입니다. 실수로 원본을 바꾸지 않도록 복사본·출력 폴더를 따로 지정하는 편이 안전합니다.</span><span class="locpill">내 PC</span></div>
+      <div class="fbox cloud"><span class="step">02 · ORCHESTRATE</span><h3>Cowork 하네스 + LLM</h3><p>Cowork 하네스가 조사·파일읽기·구성·PPT 제작·검토를 여러 단계로 관리하고, LLM이 각 단계에서 필요한 파일·도구·다음 행동을 판단합니다.</p><span class="explain"><b>업무 에이전트:</b> 질문에 한 번 답하는 대신 목표를 하위 작업으로 나누고 진행상태·승인·오류를 보관하며 결과까지 만드는 시스템입니다.</span><span class="locpill">Anthropic 서비스</span></div>
+      <div class="fbox hybrid"><span class="step">03 · WORKFLOW</span><h3>스킬·플러그인·템플릿</h3><p>Skill의 제작 절차와 Plugin의 연결도구, 회사 템플릿·지침을 읽습니다. Skill은 지시서이고 Plugin은 지시서와 실행도구를 설치 가능한 묶음으로 제공할 수 있습니다.</p><span class="explain"><b>실제 동작:</b> 하네스가 작업과 맞는 지침을 골라 자료수집·원고작성·PPTX 생성·화면검사의 순서와 완료조건을 구체화합니다.</span><div class="toolchips"><span>SKILL</span><span>PLUGIN</span><span class="local">TEMPLATE</span></div><span class="locpill">클라우드 + 내 PC</span></div>
+      <div class="fbox hybrid"><span class="step">04 · CONNECT</span><h3>Local Connector·MCP·웹</h3><p><b>Local Connector</b>가 Cowork 요청을 Desktop 앱에서 받아 허가한 파일·앱으로 전달합니다. 외부 업무서비스는 Connector/MCP/API, 공개자료는 Web을 사용합니다.</p><span class="explain"><b>권한 경계:</b> 각 요청은 앱·조직 정책·사용자 승인의 범위 안에서만 실행됩니다. MCP는 연결 표준이지 권한을 우회하는 통로가 아닙니다.</span><div class="toolchips"><span class="local">FILES/APPS</span><span>MCP/API</span><span class="on">WEB</span></div><span class="locpill">권한된 연결</span></div>
+      <div class="fbox hybrid"><span class="step">05 · PRODUCE</span><h3>선택한 작업공간에서 제작</h3><p>Cloud 처리면 Anthropic 작업공간에서, Local 접근형이면 지정한 PC 범위에서 원고·이미지·표·PPTX 초안과 렌더링 검토본을 생성·수정합니다.</p><span class="explain"><b>중간파일 위치:</b> 선택한 처리 모드에 따라 달라집니다. 같은 Desktop 화면이어도 Cloud면 클라우드, Local이면 내 PC에 먼저 생깁니다.</span><span class="locpill">선택 모드에 따라 다름</span></div>
+      <div class="fbox output"><span class="step">06 · SAVE</span><h3>PPTX와 근거 저장</h3><p>로컬 작업은 지정 폴더에 PPTX와 관련 자료를 저장합니다. 클라우드 작업은 Cowork 산출물에 남긴 뒤 사용자가 검토·승인하고 다운로드합니다.</p><span class="explain"><b>확인 방법:</b> 작업 시작 전에 “하네스 위치·실행환경·중간파일 폴더·최종 저장경로”를 확인하면 Cloud/Local 혼동을 피할 수 있습니다.</span><span class="locpill">내 PC 또는 클라우드</span></div>
+    </div>
+    <div class="storage-strip"><div class="storage-card state"><b>작업 상태</b>계획·승인 상태는 Cowork가 관리하며 <strong>선택한 Cloud/Local 모드</strong>를 먼저 확인해야 합니다.</div><div class="storage-card work"><b>중간과정 파일</b>Local이면 지정 폴더·앱, Cloud이면 <strong>지속 클라우드 작업공간</strong>에서 처리됩니다.</div><div class="storage-card result"><b>최종 결과물</b>Local은 <strong>내 PC</strong>, Cloud는 Cowork 산출물에 남고 다운로드해야 로컬 사본이 생깁니다.</div></div>
+  </div>
+  <div class="anchor"><span class="k">DESKTOP COWORK</span><span class="t"><b>Desktop은 화면</b> · 실제 중간파일·PPTX 위치는 <b>선택한 Cloud/Local 처리 모드</b>가 결정</span><span class="r">권한 범위와 저장경로를 시작 전에 확인</span></div>
+  <div class="foot"><span>Source: Anthropic Cowork Desktop / Web·Cloud 안내</span><span>2026-07-17 확인 · 제공 기능 변동 가능</span><span class="pg"><b>16</b> / 19</span></div>
+</section>
+
+<!-- ================= SERVICE FLOW 17 · CLAUDE CODE CLI LOCAL ================= -->
+<section class="slide dense" id="st17">
+  <div class="head"><div><div class="kick"><span class="no">17</span><span class="lb">Service Flow · Claude Code CLI Local</span></div><h1>Claude Code CLI Local은 <em>내 PC 도구·파일·스킬</em>로 PPTX를 생성합니다</h1><div class="headsub">Claude 모델 판단은 Anthropic 서비스가 담당하지만, Claude Code 하네스·셸·Python/Node·MCP·중간파일·결과물은 현재 로컬 프로젝트에서 작동합니다.</div></div><div class="brand"><div class="t1">CLAUDE CODE <span>CLI LOCAL</span></div><div class="t2">CLOUD MODEL · LOCAL EXECUTION</div><div class="flowlegend"><span class="c">CLOUD</span><span class="l">LOCAL</span><span class="h">HYBRID</span></div></div></div>
+  <div class="main service-flow-main">
+    <div class="promptbar"><div class="prompt">claude → “00 PPTX를 이 프로젝트에 만들고 렌더링 검수까지 해줘.”</div><div class="scope">현재 폴더·설치 도구 사용<br>편집·Bash·네트워크 승인 적용</div></div>
+    <div class="flowline">
+      <div class="fbox local"><span class="step">01 · REQUEST</span><h3>터미널에서 목표 입력</h3><p>내 PC 터미널에서 Claude Code를 실행하고 파일명·저장경로·참고자료·템플릿·완료기준을 지시합니다. CLI는 문자 명령으로 프로그램을 조작하는 화면입니다.</p><span class="explain"><b>작업공간:</b> Claude Code를 시작한 현재 폴더가 기본 범위입니다. 다른 폴더를 읽거나 수정하려면 경로와 권한을 따로 확인합니다.</span><span class="locpill">내 PC · CLI</span></div>
+      <div class="fbox hybrid"><span class="step">02 · ORCHESTRATE</span><h3>로컬 Claude Code ↔ LLM</h3><p>내 PC의 Claude Code 하네스가 파일·상태·권한·재시도를 관리하고, 판단이 필요할 때 Anthropic 모델 서비스에 맥락을 보내 답·계획·툴 호출을 받습니다.</p><span class="explain"><b>혼합형:</b> 모델 계산은 Anthropic 클라우드, 실제 셸·파일 작업은 내 PC입니다. 도구 결과와 오류는 다시 모델로 보내 다음 행동을 판단합니다.</span><span class="locpill">내 PC ↔ Anthropic</span></div>
+      <div class="fbox local"><span class="step">03 · WORKFLOW</span><h3>CLAUDE.md·스킬</h3><p><b>CLAUDE.md</b>는 프로젝트의 상시 규칙과 사실을 적는 안내문, <b>SKILL.md</b>는 PPT 제작처럼 반복되는 업무의 단계·도구·검수법을 적는 절차서입니다.</p><span class="explain"><b>필요할 때 읽기:</b> 하네스가 스킬 이름·설명을 먼저 보고 관련 작업일 때 본문·스크립트·참고자료·assets를 불러옵니다.</span><div class="toolchips"><span class="local">SKILL</span><span class="local">CLAUDE.md</span><span>assets</span></div><span class="locpill">내 PC/Repo</span></div>
+      <div class="fbox hybrid conditional"><span class="step">04 · CONNECT</span><h3>MCP·웹·API</h3><p>STDIO MCP는 내 PC에서 명령으로 실행되고, HTTP MCP/API는 원격 주소로 요청합니다. Web은 공개자료를 찾고 읽습니다. 모두 설정·네트워크·승인 범위 안에서만 작동합니다.</p><span class="explain"><b>MCP:</b> Claude Code가 DB·Figma·업무도구의 이름과 입력 형식을 받아 같은 방식으로 호출하도록 연결하는 표준입니다.</span><div class="toolchips"><span class="local">STDIO MCP</span><span>HTTP MCP</span><span>WEB/API</span></div><span class="locpill">내 PC ↔ 외부</span></div>
+      <div class="fbox local"><span class="step">05 · BUILD</span><h3>Bash·Python·Node 실행</h3><p>내 PC 런타임에서 Bash·Python·Node와 PPTX 생성 라이브러리를 실행합니다. 원고·표·이미지를 파일로 만들고 PPTX 조립·렌더링·검증을 반복합니다.</p><span class="explain"><b>중간파일:</b> Markdown/JSON 원고, 이미지, 임시 PPTX, 슬라이드 렌더 이미지, 오류·검증 로그가 프로젝트나 임시 로컬 폴더에 생깁니다.</span><span class="locpill">내 PC Runtime</span></div>
+      <div class="fbox output"><span class="step">06 · SAVE</span><h3>프로젝트에 결과 저장</h3><p>Claude Code가 결과 파일을 다시 읽거나 렌더해 완료조건을 확인하고, 문제가 있으면 제작 단계로 돌아갑니다. 통과하면 PPTX와 필요한 원본을 지정 경로에 남깁니다.</p><span class="explain"><b>버전관리:</b> Repo에 기록하면 누가 어떤 원고·스크립트·자료를 바꿨는지 추적할 수 있습니다. 결과는 처음부터 내 PC에 있습니다.</span><span class="locpill">내 PC/Repo</span></div>
+    </div>
+    <div class="storage-strip"><div class="storage-card state"><b>설정·상태</b><code>~/.claude/</code>, CLAUDE.md, 프로젝트 스킬·MCP 설정은 <strong>내 PC/저장소</strong>에 있습니다.</div><div class="storage-card work"><b>중간과정 파일</b>원고·이미지·렌더·검증로그는 <strong>현재 프로젝트/임시 로컬 폴더</strong>에 생성됩니다.</div><div class="storage-card result"><b>최종 결과물</b><code>00_발표자료.pptx</code>는 <strong>지정한 로컬 경로</strong>에 바로 저장됩니다.</div></div>
+  </div>
+  <div class="anchor"><span class="k">CLAUDE CODE CLI</span><span class="t"><b>모델은 클라우드</b> · Claude Code 하네스·MCP·셸·중간파일·PPTX는 <b>내 PC</b></span><span class="r">Local 실행은 직접 파일 접근</span></div>
+  <div class="foot"><span>Sources: <a href="https://code.claude.com/docs/en/skills">Claude Code Skills</a> · <a href="https://code.claude.com/docs/en/mcp">MCP</a> · Security</span><span>2026-07-17 확인</span><span class="pg"><b>17</b> / 19</span></div>
+</section>
+
+<!-- ================= SERVICE FLOW 18 · CLAUDE CODE WEB ================= -->
+<section class="slide dense" id="st18">
+  <div class="head"><div><div class="kick"><span class="no">18</span><span class="lb">Service Flow · Claude Code Web / Remote</span></div><h1>Claude Code Web은 <em>Anthropic 관리형 클라우드 실행환경</em>에서 작업합니다</h1><div class="headsub">웹에서 저장소와 작업을 선택하면 원격 Claude Code 하네스가 새 클라우드 환경에서 명령을 실행합니다. 내 PC의 개인 설정·로컬 MCP·파일은 자동으로 넘어가지 않습니다.</div></div><div class="brand"><div class="t1">CLAUDE CODE <span>WEB</span></div><div class="t2">MANAGED CLOUD · REPOSITORY CLONE</div><div class="flowlegend"><span class="c">CLOUD</span><span class="l">LOCAL</span><span class="h">CONDITIONAL</span></div></div></div>
+  <div class="main service-flow-main">
+    <div class="promptbar"><div class="prompt">“이 저장소의 템플릿으로 00 PPTX를 만들고 결과를 브랜치에 남겨줘.”</div><div class="scope">Cloud/Web 세션<br>저장소에 도구·스킬·템플릿 포함 권장</div></div>
+    <div class="flowline">
+      <div class="fbox local"><span class="step">01 · REQUEST</span><h3>웹에서 저장소·목표 선택</h3><p>브라우저에서 접근 가능한 저장소와 “PPTX를 만들고 브랜치에 남겨라”라는 완료조건을 정해 원격 세션을 시작합니다. 브라우저는 지시·로그·검토 화면입니다.</p><span class="explain"><b>Repo:</b> 코드와 템플릿·자료·변경이력을 모아 둔 프로젝트 저장소입니다. Cloud 세션은 보통 이 저장소의 복제본을 작업합니다.</span><span class="locpill">내 PC · 브라우저</span></div>
+      <div class="fbox cloud"><span class="step">02 · ORCHESTRATE</span><h3>원격 Claude Code + LLM</h3><p>Anthropic 클라우드의 Claude Code 하네스가 계획·권한·로그·재시도·백그라운드 진행을 관리하고 LLM의 판단과 도구 실행을 반복합니다.</p><span class="explain"><b>Remote:</b> 내 PC가 아니라 서비스 회사가 관리하는 컴퓨터에서 세션이 실행된다는 뜻입니다. 앱이나 브라우저를 닫아도 지원되는 작업은 계속될 수 있습니다.</span><span class="locpill">Anthropic 클라우드</span></div>
+      <div class="fbox cloud"><span class="step">03 · WORKFLOW</span><h3>저장소 설정·스킬</h3><p>Cloud에 clone(복제)된 저장소에서 CLAUDE.md·<code>.claude/</code>·Repo Skill·템플릿·의존성을 읽어 동일한 작업절차와 환경을 재현합니다.</p><span class="explain"><b>자동 전달 안 됨:</b> 내 PC의 <code>~/.claude/</code>, 로컬 Skill·MCP·폰트·파일은 별개입니다. 필요한 것은 Repo나 Cloud 환경 설정에 명시해야 합니다.</span><div class="toolchips"><span class="on">REPO SKILL</span><span>CLAUDE.md</span><span>assets</span></div><span class="locpill">클라우드 복제본</span></div>
+      <div class="fbox cloud conditional"><span class="step">04 · CONNECT</span><h3>원격 MCP·웹·API</h3><p>Cloud에서 접속할 수 있도록 구성된 HTTP MCP/API와 허용된 Web을 사용합니다. 로컬 STDIO MCP는 내 PC 프로세스이므로 Cloud 세션에 자동으로 나타나지 않습니다.</p><span class="explain"><b>네트워크·비밀값:</b> 외부 주소 허용목록과 토큰·API 키가 준비되어야 연결됩니다. 설정이 없으면 하네스가 다른 방법을 찾거나 사용자에게 묻습니다.</span><div class="toolchips"><span>MCP</span><span>WEB</span><span>API</span></div><span class="locpill">클라우드 ↔ 외부</span></div>
+      <div class="fbox cloud"><span class="step">05 · BUILD</span><h3>관리형 VM에서 생성</h3><p><b>VM</b>은 물리 컴퓨터 안에 별도로 만든 가상컴퓨터입니다. 이 격리 VM의 셸·Python·Node로 중간자료·PPTX를 만들고 렌더·검증합니다.</p><span class="explain"><b>중간파일:</b> Repo 복제본, 다운로드 자료, 원고, 이미지, 임시 PPTX, 렌더링 이미지와 로그가 VM 작업공간에 생깁니다.</span><span class="locpill">Anthropic 관리형 환경</span></div>
+      <div class="fbox output"><span class="step">06 · RETURN</span><h3>브랜치·변경점으로 회수</h3><p>완료한 PPTX와 원고·스크립트 변경을 작업 Branch에 남기고 요약·Diff를 제공합니다. 사용자는 PR·병합·다운로드 등으로 결과를 회수합니다.</p><span class="explain"><b>Branch/PR:</b> Branch는 분리된 작업 줄기, PR(Pull Request)은 그 변경을 검토해 원래 저장소에 합쳐 달라는 요청입니다.</span><span class="locpill">클라우드 → Repo/내 PC</span></div>
+    </div>
+    <div class="storage-strip"><div class="storage-card state"><b>원격 세션 상태</b>작업·로그·승인 상태는 <strong>Anthropic 클라우드 세션</strong>에서 관리됩니다.</div><div class="storage-card work"><b>중간과정 파일</b>저장소 복제본·이미지·렌더·초안은 <strong>관리형 클라우드 실행환경</strong>에 있습니다.</div><div class="storage-card result"><b>최종 결과물</b>PPTX를 저장소 브랜치·PR·지원되는 다운로드 방식으로 회수해야 <strong>내 PC</strong>에 생깁니다.</div></div>
+  </div>
+  <div class="anchor"><span class="k">CLAUDE CODE WEB</span><span class="t"><b>하네스·명령·중간파일은 Anthropic 클라우드</b> · Repo 설정으로 재현하고 결과를 회수</span><span class="r">내 PC 사용자 설정은 자동 복제되지 않음</span></div>
+  <div class="foot"><span>Source: <a href="https://code.claude.com/docs/en/claude-code-on-the-web">Claude Code on the web</a></span><span>2026-07-17 확인</span><span class="pg"><b>18</b> / 19</span></div>
+</section>
+
+<!-- ================= SERVICE FLOW 19 · CLAUDE CODE DESKTOP ENVIRONMENTS ================= -->
+<section class="slide dense" id="st19">
+  <div class="head"><div><div class="kick"><span class="no">19</span><span class="lb">Service Flow · Claude Code Desktop Environment Selector</span></div><h1>Claude Code Desktop은 <em>Local·Cloud·SSH·WSL 중 실제 작업 컴퓨터</em>를 선택합니다</h1><div class="headsub">같은 Desktop 화면에서 같은 명령을 내려도 선택한 환경에 따라 하네스·도구·중간파일·PPTX가 놓이는 곳이 달라집니다. 모델 판단은 Anthropic 서비스와 통신합니다.</div></div><div class="brand"><div class="t1">CLAUDE CODE <span>DESKTOP</span></div><div class="t2">LOCAL · CLOUD · SSH · WSL</div><div class="flowlegend"><span class="c">CLOUD</span><span class="l">LOCAL</span><span class="r">REMOTE</span><span class="h">SELECT</span></div></div></div>
+  <div class="main service-flow-main">
+    <div class="promptbar"><div class="prompt">“00에 대한 PPTX를 만들고 선택한 환경의 작업 폴더에 저장해줘.”</div><div class="scope">명령 전에 Environment 선택<br>저장경로는 선택 환경의 경로</div></div>
+    <div class="flowline">
+      <div class="fbox local"><span class="step">01 · REQUEST</span><h3>Desktop에서 목표 입력</h3><p>Claude Desktop의 Code 화면에서 프로젝트·템플릿·PPTX 파일명·완료기준을 입력합니다. Desktop 앱은 공통 조작 화면이며 아직 실제 실행 위치를 결정하지 않습니다.</p><span class="explain"><b>핵심 질문:</b> “앱이 어디에 설치됐나”보다 “Environment에서 무엇을 선택했나”가 파일·명령 위치를 결정합니다.</span><span class="locpill">내 PC · 화면</span></div>
+      <div class="fbox hybrid"><span class="step">02 · SELECT</span><h3>실행환경 선택</h3><p><b>Local</b>은 내 운영체제, <b>Cloud</b>는 Anthropic 관리환경, <b>SSH</b>는 내가 관리하는 원격 서버, <b>WSL</b>은 Windows 안 Linux 환경입니다.</p><span class="explain"><b>Environment:</b> 하네스와 도구·파일이 실제로 놓이고 명령이 실행되는 작업 컴퓨터 또는 작업공간을 뜻합니다.</span><span class="locpill">환경 선택기</span></div>
+      <div class="fbox hybrid"><span class="step">03 · HARNESS</span><h3>선택한 곳의 Claude Code</h3><p>Local/WSL은 내 PC, Cloud는 Anthropic, SSH는 원격 서버에 있는 Claude Code 하네스가 파일·상태·권한·명령·재시도를 관리합니다.</p><span class="explain"><b>모델 위치:</b> 어느 환경을 선택해도 Claude 모델 판단은 일반적으로 Anthropic 서비스와 통신합니다. 하네스 위치와 LLM 위치는 같지 않을 수 있습니다.</span><span class="locpill">선택 환경</span></div>
+      <div class="fbox remote conditional"><span class="step">04 · CONFIG</span><h3>그 환경의 스킬·MCP·도구</h3><p>선택한 환경에서 실제로 읽을 수 있는 CLAUDE.md·Skill·MCP 설정·템플릿·폰트·웹/API만 사용합니다. 다른 환경의 개인 설정은 자동 공유되지 않습니다.</p><span class="explain"><b>예:</b> Local의 STDIO MCP는 내 PC에서 실행되고, SSH의 STDIO MCP는 원격 서버에서 실행됩니다. Cloud에는 원격 MCP 구성이 따로 필요합니다.</span><div class="toolchips"><span>SKILL</span><span>MCP</span><span>WEB/API</span></div><span class="locpill">설정도 환경별</span></div>
+      <div class="fbox hybrid"><span class="step">05 · BUILD</span><h3>선택한 Runtime에서 제작</h3><p>그 환경의 Python·Node·Bash와 PPTX 라이브러리가 원고·표·이미지·임시 PPTX·렌더링 미리보기·검증 로그를 실제로 생성합니다.</p><span class="explain"><b>파일 위치:</b> Local/WSL은 내 PC, Cloud는 관리형 VM, SSH는 원격 서버의 현재 작업 폴더에 중간파일이 먼저 생깁니다.</span><span class="locpill">Local/Cloud/SSH/WSL</span></div>
+      <div class="fbox output"><span class="step">06 · SAVE</span><h3>그 환경의 폴더에 저장</h3><p>검증을 통과한 PPTX는 실행한 환경의 파일시스템에 저장됩니다. Local/WSL은 내 PC에서 바로 열 수 있지만 Cloud/SSH 결과는 별도 전송이 필요합니다.</p><span class="explain"><b>전송 방법:</b> Cloud는 다운로드·Repo/PR, SSH는 scp(원격 파일 복사)·Git 등을 사용합니다. 화면에 보인다고 자동으로 로컬 사본이 생기지는 않습니다.</span><span class="locpill">선택 환경 → 필요 시 전송</span></div>
+    </div>
+    <div class="storage-strip"><div class="storage-card state"><b>하네스·설정 위치</b><strong>Local/WSL: 내 PC</strong> · <strong>Cloud: Anthropic</strong> · <strong>SSH: 원격 서버</strong></div><div class="storage-card work"><b>중간과정 파일</b>원고·이미지·렌더·로그는 모두 <strong>선택한 실행환경의 작업 폴더</strong>에 만들어집니다.</div><div class="storage-card result"><b>최종 결과물</b>Cloud/SSH 결과는 다운로드·scp·Git 등으로 옮겨야 내 PC 사본이 생깁니다. Local/WSL은 바로 내 PC에 있습니다.</div></div>
+  </div>
+  <div class="anchor coral"><span class="k">FINAL CHECK</span><span class="t"><b>환경 선택이 하네스·명령·중간파일·PPTX 위치를 결정</b>합니다 — 화면 이름만 보지 마십시오</span><span class="r">Local·Cloud·SSH·WSL별 설정도 서로 다름</span></div>
+  <div class="foot"><span>Source: <a href="https://code.claude.com/docs/en/desktop">Claude Code Desktop — Environment configuration</a></span><span>Local / Remote / SSH / WSL 공식 구분</span><span class="pg"><b>19</b> / 19</span></div>
+</section>
+
+<!-- ================= ARCHIVED OVERVIEW SLIDES · SOURCE CONTENT PRESERVED ================= -->
+<!-- ================= STORY 6 · CHATGPT OVERVIEW ================= -->
+<section class="superseded" id="old-st6">
+  <div class="head">
+    <div>
+      <div class="kick"><span class="no">06</span><span class="lb">ChatGPT Stack · Chat / Work / Codex 비교</span></div>
+      <h1>ChatGPT의 차이는 파일 생성 여부가 아니라, <em>기본 실행 관리 방식과 작업 순서</em>입니다</h1>
+      <div class="headsub">Chat도 파일을 만들 수 있습니다. Work는 <b>업무 결과물 완성 과정</b>, Codex는 <b>소프트웨어 수정·실행·검증 과정</b>을 기본으로 합니다.</div>
+    </div>
+    <div class="brand"><div class="t1">CHATGPT <span>STACK</span></div><div class="t2">WEB · DESKTOP · CLI</div></div>
+  </div>
+  <div class="main triple-main">
+    <div class="triple-cards">
+      <div class="triple-card chatc">
+        <div class="mode"><b>CHAT</b><small>대화 중심 실행 관리자</small></div>
+        <div class="row"><em>목적</em><span>질문·검색·브레인스토밍·빠른 생성</span></div>
+        <div class="row"><em>실행</em><span><b>클라우드 대화 런타임</b> + 필요 시 검색·파일·계산 도구</span></div>
+        <div class="row"><em>상태</em><span>대화 순서(턴)·프로젝트 맥락 중심</span></div>
+        <div class="row"><em>출력</em><span>답변, 코드, 문서·엑셀·PPT 파일도 가능</span></div>
+        <div class="looptag">질문 → 필요한 도구 → 답변·파일</div>
+      </div>
+      <div class="triple-card workc">
+        <div class="mode"><b>WORK</b><small>결과물 완성용 실행 관리자</small></div>
+        <div class="row"><em>목적</em><span>리서치·분석·문서·시트·슬라이드 <b>완성</b></span></div>
+        <div class="row"><em>Web</em><span><b>클라우드 실행</b> — 로컬 PC 파일 직접 접근 불가</span></div>
+        <div class="row"><em>Desktop</em><span>클라우드 업무 하네스 + 허가된 <b>내 PC 파일·앱 연결 통로</b></span></div>
+        <div class="row"><em>상태</em><span>장기·다단계·예약/트리거·검토 루프</span></div>
+        <div class="looptag">목표 → 계획 → 조사 → 제작 → 검토</div>
+      </div>
+      <div class="triple-card codexc">
+        <div class="mode"><b>CODEX</b><small>소프트웨어 작업용 실행 관리자</small></div>
+        <div class="row"><em>목적</em><span>코드 수정·명령·테스트·리뷰·저장소 작업</span></div>
+        <div class="row"><em>Desktop</em><span><b>내 PC 폴더·코드 저장소(repo)·터미널</b> — Windows Sandbox 지원</span></div>
+        <div class="row"><em>CLI</em><span>현재 디렉터리와 설치된 개발 도구를 직접 사용</span></div>
+        <div class="row"><em>Cloud</em><span>격리 원격 환경에서 병렬·백그라운드 작업 가능</span></div>
+        <div class="looptag">코드 저장소 → 수정 → 실행 → 테스트 → 변경점 비교</div>
+      </div>
+    </div>
+    <div class="install-strip">
+      <div><b>WEB</b><span>설치 없음 · Chat/Work는 클라우드 · Codex는 웹 선택 모드가 아님</span></div>
+      <div><b>DESKTOP APP</b><span>Quick Chat · Work · Codex를 제공. Desktop Work 스레드와 로컬 파일은 해당 PC에 남음</span></div>
+      <div><b>CLI / CONFIG</b><span>Codex 명령줄 도구(CLI) 설치 · 사용자 설정 <code>~/.codex/</code> · 프로젝트 규칙/skills는 코드 저장소(repo)에 넣어 공유</span></div>
+    </div>
+  </div>
+  <div class="anchor"><span class="k">OPENAI</span><span class="t"><b>Chat = 대화</b> · <b>Work = 업무 결과물</b> · <b>Codex = 코드 실행·검증</b> — 기능 중복은 있어도 기본 작업대가 다릅니다</span><span class="r">공식: OpenAI Help · Codex Windows Sandbox</span></div>
+  <div class="foot"><span>Sources: <a href="https://help.openai.com/en/articles/20001275-chatgpt-work-and-codex">OpenAI Work &amp; Codex</a> · <a href="https://learn.chatgpt.com/docs/windows/windows-sandbox">Windows Sandbox</a></span><span>2026-07-17 확인</span><span class="pg"><b>06</b> / 09</span></div>
+</section>
+
+<!-- ================= STORY 7 · CHATGPT WEB/DESKTOP DETAIL ================= -->
+<section class="superseded" id="old-st7">
+  <div class="head">
+    <div>
+      <div class="kick"><span class="no">07</span><span class="lb">OpenAI Detail · Web과 Desktop을 여섯 칸으로 비교</span></div>
+      <h1>ChatGPT는 <em>각 모드가 어느 실행환경을 쓰는지</em>로 구분합니다</h1>
+      <div class="headsub">각 카드의 화살표를 <b>판단하는 부분 → 도구 사용을 관리하는 부분 → 실제 실행되는 곳</b>의 순서로 읽으십시오. Codex는 Web의 선택 모드가 아니며, Desktop Codex는 로컬 저장소·터미널·개발도구를 사용합니다.</div>
+    </div>
+    <div class="brand"><div class="t1">CHATGPT <span>DETAIL</span></div><div class="t2">WEB CHAT · WEB WORK · DESKTOP CHAT · WORK · CODEX</div></div>
+  </div>
+  <div class="main product-main">
+    <div class="productgrid">
+      <div class="pcard"><div class="ptitle"><b>Web Chat</b><span>브라우저</span></div><div class="pflow"><div class="pnode agent"><b>클라우드 LLM 판단</b><span>대화 맥락·답변·도구 사용 제안</span></div><div class="pa">→</div><div class="pnode cloud"><b>Chat 하네스</b><span>검색·첨부·분석 도구와 대화 상태 관리</span></div><div class="pa">→</div><div class="pnode cloud"><b>클라우드 대화 실행환경</b><span>Cloud Chat Runtime · 대화 처리</span></div></div><div class="pmeta"><div><b>로컬 커넥터</b><span>없음</span></div><div><b>내 PC 런타임</b><span>사용 안 함</span></div></div><div class="pnote">필요한 로컬 파일은 사용자가 <b>업로드</b>합니다.</div></div>
+      <div class="pcard"><div class="ptitle"><b>Web Work</b><span>브라우저</span></div><div class="pflow"><div class="pnode agent"><b>클라우드 LLM 판단</b><span>요청 이해·다음 행동 제안</span></div><div class="pa">→</div><div class="pnode cloud"><b>Work 하네스</b><span>계획·도구선택·반복·웹·문서도구 관리</span></div><div class="pa">→</div><div class="pnode cloud"><b>클라우드 작업공간</b><span>Cloud Workspace · 장기 조사·산출물</span></div></div><div class="pmeta"><div><b>로컬 커넥터</b><span>없음</span></div><div><b>내 PC 런타임</b><span>사용 안 함</span></div></div><div class="pnote">Web Work는 클라우드에서 실행되며 내 PC 폴더에 직접 접근하지 못합니다.</div></div>
+      <div class="pcard disabled"><div class="ptitle"><b>Web Codex?</b><span>브라우저</span></div><div class="xmark"><strong>×</strong><b>선택 가능한 Web 모드가 아님</b><span>공식 모드 전환 화면 기준<br>Desktop Codex가 중심</span></div></div>
+      <div class="pcard"><div class="ptitle"><b>Desktop Quick Chat</b><span>PC 앱</span></div><div class="pflow"><div class="pnode agent"><b>클라우드 LLM 판단</b><span>대화 맥락·답변·도구 사용 제안</span></div><div class="pa">→</div><div class="pnode cloud"><b>Chat 하네스</b><span>일반 대화·검색·대화 상태 관리</span></div><div class="pa">→</div><div class="pnode cloud"><b>클라우드 대화 실행환경</b><span>Web Chat과 같은 계열</span></div></div><div class="pmeta"><div><b>앱의 역할</b><span>화면·대화 동기화</span></div><div><b>로컬 Bash</b><span>기본 사용 안 함</span></div></div><div class="pnote">Desktop이라고 해서 일반 Chat이 자동으로 내 Python·Bash를 실행하는 것은 아닙니다.</div></div>
+      <div class="pcard"><div class="ptitle"><b>Desktop Work</b><span>PC 앱</span></div><div class="pflow"><div class="pnode agent"><b>클라우드 LLM 판단</b><span>요청 이해·계획 제안</span></div><div class="pa">→</div><div class="pnode hybrid"><b>Work 하네스 + 연결 통로</b><span>Cloud 도구 관리 + Local Connector</span></div><div class="pa">→</div><div class="pnode local"><b>허가한 내 PC 자원</b><span>폴더·파일·데스크톱 앱</span></div></div><div class="pmeta"><div><b>로컬 커넥터</b><span>파일·앱 접근에 사용</span></div><div><b>내 Python·Bash</b><span>Codex처럼 자동 보장 아님</span></div></div><div class="pnote">공식 문서가 확인하는 범위는 허가한 로컬 파일·데스크톱 앱 접근입니다. 임의의 로컬 shell(문자 명령창) 실행과는 구분합니다.</div></div>
+      <div class="pcard"><div class="ptitle"><b>Desktop Codex</b><span>PC 앱</span></div><div class="pflow"><div class="pnode agent"><b>클라우드 LLM 판단</b><span>코드 이해·계획·도구 요청</span></div><div class="pa">→</div><div class="pnode local"><b>내 PC Codex 하네스</b><span>상태·권한·저장소·명령·Git·test 관리</span></div><div class="pa">→</div><div class="pnode local"><b>내 PC 실행환경</b><span>Local Runtime · Python·Node·터미널</span></div></div><div class="pmeta"><div><b>핵심 로컬 구성요소</b><span>Local Tool Runner</span></div><div><b>주 결과</b><span>변경점(diff)·테스트·코드</span></div></div><div class="pnote">Local Tool Runner가 <b>저장소·설치된 도구·명령·테스트</b>를 내 PC에서 실행합니다.</div></div>
+    </div>
+    <div class="clinote"><b>Codex CLI</b>는 터미널에서 쓰는 같은 코드 하네스 계열입니다. CLI(Command Line Interface)는 문자 명령으로 프로그램을 조작하는 방식이며, 모델 판단은 OpenAI 서비스가 담당하고 파일·Python·Bash·Git·테스트는 보통 현재 내 PC 프로젝트에서 실행합니다.</div>
+  </div>
+  <div class="anchor"><span class="k">OPENAI</span><span class="t"><b>Chat = 클라우드 대화</b> · <b>Work = 클라우드 업무(+Desktop 연결 통로)</b> · <b>Codex = 내 PC 개발 도구 실행</b></span><span class="r">개요에서 본 차이를 Web·Desktop별로 확인</span></div>
+  <div class="foot"><span>출처: OpenAI Help — ChatGPT Work and Codex / Moving to the new ChatGPT desktop app</span><span>2026-07-17 확인</span><span class="pg"><b>07</b> / 09</span></div>
+</section>
+
+<!-- ================= STORY 8 · CLAUDE CODE EXECUTION LOCATION ================= -->
+<section class="superseded" id="old-st8">
+  <div class="head">
+    <div>
+      <div class="kick"><span class="no">08</span><span class="lb">Claude Code · 실제 실행되는 컴퓨터 선택</span></div>
+      <h1>Claude Code는 내 PC 전용 도구가 아니라, <em>실행장소를 선택하는 코드 작업 시스템</em>입니다</h1>
+      <div class="headsub">같은 Desktop UI에서도 Local·Remote·SSH·WSL에 따라 <b>명령이 실제로 도는 컴퓨터</b>가 달라집니다.</div>
+    </div>
+    <div class="brand"><div class="t1">CLAUDE <span>CODE</span></div><div class="t2">LOCAL · REMOTE · SSH · WSL</div></div>
+  </div>
+  <div class="main claude-main">
+    <div class="cc-grid">
+      <div class="cc-env local"><div class="top"><b>LOCAL</b><i>내 PC</i></div><p>내 컴퓨터에서 실행하며 선택한 폴더의 파일과 설치된 도구에 직접 접근합니다. 모델의 판단 처리는 Anthropic 서비스와 통신합니다.</p><span class="where">명령: 내 운영체제(OS) · 파일: 내 PC 코드 저장소 · 셸/테스트: 내 PC</span></div>
+      <div class="cc-env remote"><div class="top"><b>REMOTE / WEB</b><i>Anthropic VM</i></div><p>세션마다 새 관리형 가상컴퓨터(VM)에 저장소를 복제(clone)해 실행합니다. 앱이나 PC를 닫아도 백그라운드에서 계속할 수 있습니다.</p><span class="where">명령: 격리 VM · 파일: 저장소 복제본 · 결과: 작업 가지(branch)/변경점(diff)/병합 요청(PR)</span></div>
+      <div class="cc-env ssh"><div class="top"><b>SSH</b><i>내 서버</i></div><p>Desktop은 조작 화면이고 Claude Code는 SSH(원격 명령 접속)를 통해 내가 관리하는 서버·클라우드 VM·개발 컨테이너에서 실행됩니다.</p><span class="where">명령/파일: 원격 서버 · 권한: 그 서버에 로그인한 계정</span></div>
+      <div class="cc-env wsl"><div class="top"><b>WSL 2</b><i>내 PC Linux</i></div><p>Windows 안에 마련한 Linux 환경인 WSL 배포판에서 Linux 도구 묶음과 경로를 사용합니다. 일반 Windows Local과는 별도 실행장입니다.</p><span class="where">명령: WSL · 파일: Linux/연결된 Windows 경로 · 도구: Linux용</span></div>
+    </div>
+    <div class="compare-strip">
+      <div><b>설정은 어디까지 따라가는가</b><p>개인 설정·skills는 <code>~/.claude/</code>에 있습니다. Remote/Web VM에는 자동 복제되지 않습니다. 공유하려면 <code>CLAUDE.md</code>와 <code>.claude/</code>를 코드 저장소(repo)에 변경 기록으로 저장(commit)합니다.</p></div>
+      <div><b>권한·샌드박스</b><p>기본은 읽기 전용이며, 편집·Bash 명령은 승인이 필요합니다. 작업 폴더 경계와 선택적 <code>/sandbox</code>로 파일·네트워크 범위를 제한합니다.</p></div>
+      <div class="thesis"><b>Work/Cowork vs Codex/Claude Code</b><p>차이는 GitHub·병합 요청(PR)·분리 작업 폴더(worktree) 하나가 아닙니다. <strong>업무 문서·온라인 업무서비스(SaaS)를 검증하는 하네스</strong>와 <strong>코드 저장소·명령·테스트·변경점을 검증하는 하네스</strong>의 차이입니다.</p></div>
+    </div>
+  </div>
+  <div class="anchor coral"><span class="k">FINAL</span><span class="t">제품명을 외우지 말고 <b>작업 대상 + 실행 위치 + 권한 + 상태 + 검증 루프</b>를 그리면 구조가 보입니다</span><span class="r">Local 사용자 설정 ≠ Repo 설정 ≠ Cloud VM 설정</span></div>
+  <div class="foot"><span>Sources: <a href="https://code.claude.com/docs/en/desktop">Claude Code Desktop</a> · <a href="https://code.claude.com/docs/en/claude-code-on-the-web">Web/Cloud VM</a> · <a href="https://code.claude.com/docs/en/security">Security</a></span><span>2026-07-17 확인</span><span class="pg"><b>08</b> / 09</span></div>
+</section>
+
+<!-- ================= STORY 9 · CLAUDE WEB/DESKTOP DETAIL ================= -->
+<section class="superseded" id="old-st9">
+  <div class="head">
+    <div>
+      <div class="kick"><span class="no">09</span><span class="lb">Anthropic Detail · Chat / Cowork / Claude Code 비교</span></div>
+      <h1>Claude는 <em>Web에도 Code가 있고</em>, Desktop Code는 실행장소를 바꿀 수 있습니다</h1>
+      <div class="headsub">각 카드를 <b>판단 → 도구 관리 → 실제 실행장소</b> 순서로 읽으십시오. Cowork는 문서·조사 중심 업무 에이전트이고, Claude Code는 코드 작업용 실행 관리 프로그램입니다.</div>
+    </div>
+    <div class="brand"><div class="t1">CLAUDE <span>DETAIL</span></div><div class="t2">WEB · DESKTOP · LOCAL · CLOUD · SSH · WSL</div></div>
+  </div>
+  <div class="main product-main">
+    <div class="productgrid">
+      <div class="pcard"><div class="ptitle"><b>Web Chat</b><span>브라우저</span></div><div class="pflow"><div class="pnode agent"><b>클라우드 LLM 판단</b><span>Claude 모델이 대화 맥락·답변·도구 사용 제안</span></div><div class="pa">→</div><div class="pnode cloud"><b>Chat 하네스</b><span>대화·첨부·연결 기능과 상태 관리</span></div><div class="pa">→</div><div class="pnode cloud"><b>클라우드 대화 실행환경</b><span>Cloud Chat Runtime · 응답 처리</span></div></div><div class="pmeta"><div><b>로컬 폴더</b><span>직접 접근 없음</span></div><div><b>주 용도</b><span>질문·설명·분석</span></div></div><div class="pnote">일반 Chat은 Cowork처럼 지정 폴더를 직접 작업하지 않습니다.</div></div>
+      <div class="pcard"><div class="ptitle"><b>Web Cowork</b><span>브라우저 · 베타</span></div><div class="pflow"><div class="pnode agent"><b>클라우드 LLM 판단</b><span>목표 이해·다음 행동 제안</span></div><div class="pa">→</div><div class="pnode cloud"><b>Cowork 하네스</b><span>목표 분해·파일·도구·연결·브라우저 관리</span></div><div class="pa">→</div><div class="pnode cloud"><b>계속 유지되는 클라우드</b><span>Persistent Cloud · 노트북을 닫아도 지속</span></div></div><div class="pmeta"><div><b>로컬 커넥터</b><span>없음</span></div><div><b>주 용도</b><span>리서치·문서·업무</span></div></div><div class="pnote">Web·Mobile Cowork 작업은 클라우드에서 계속될 수 있습니다.</div></div>
+      <div class="pcard"><div class="ptitle"><b>Web Claude Code</b><span>브라우저 코드 작업</span></div><div class="pflow"><div class="pnode agent"><b>클라우드 LLM 판단</b><span>코드 이해·계획·도구 요청</span></div><div class="pa">→</div><div class="pnode remote"><b>원격 Claude Code 하네스</b><span>상태·권한·저장소·Git·빌드·테스트 관리</span></div><div class="pa">→</div><div class="pnode remote"><b>새 관리형 가상컴퓨터</b><span>Fresh VM · 저장소를 새로 복제</span></div></div><div class="pmeta"><div><b>내 PC 설정</b><span>자동 전달 안 됨</span></div><div><b>격리</b><span>세션별 VM</span></div></div><div class="pnote">세션마다 Anthropic 관리형 VM에서 repository clone(코드 저장소 복제)으로 시작합니다.</div></div>
+      <div class="pcard"><div class="ptitle"><b>Desktop Chat</b><span>PC 앱</span></div><div class="pflow"><div class="pnode agent"><b>클라우드 LLM 판단</b><span>Claude 모델이 답변·도구 사용 제안</span></div><div class="pa">→</div><div class="pnode cloud"><b>Chat 하네스</b><span>일반 대화·첨부·대화 상태 관리</span></div><div class="pa">→</div><div class="pnode cloud"><b>클라우드 대화 실행환경</b><span>앱은 접속 화면</span></div></div><div class="pmeta"><div><b>로컬 Bash</b><span>기본 사용 안 함</span></div><div><b>Code 탭</b><span>별도 하네스</span></div></div><div class="pnote">Desktop Chat과 Desktop Claude Code는 같은 앱 안의 서로 다른 탭·런타임입니다.</div></div>
+      <div class="pcard"><div class="ptitle"><b>Desktop Cowork</b><span>PC 앱</span></div><div class="pflow"><div class="pnode agent"><b>클라우드 LLM 판단</b><span>목표 이해·다음 행동 제안</span></div><div class="pa">→</div><div class="pnode hybrid"><b>Cowork 하네스 + 연결 통로</b><span>Cloud 도구 관리 + Local Connector</span></div><div class="pa">→</div><div class="pnode local"><b>내 폴더·앱</b><span>사용자가 허가한 범위</span></div></div><div class="pmeta"><div><b>Desktop 추가점</b><span>로컬 폴더·앱 접근</span></div><div><b>주 용도</b><span>비코딩 지식업무</span></div></div><div class="pnote">Web/Mobile에 없는 로컬 자원 접근을 Desktop이 추가합니다.</div></div>
+      <div class="pcard"><div class="ptitle"><b>Desktop Claude Code</b><span>PC 앱 코드 작업</span></div><div class="pflow"><div class="pnode agent"><b>클라우드 LLM 판단</b><span>코드 이해·계획·도구 요청</span></div><div class="pa">→</div><div class="pnode hybrid"><b>Claude Code 하네스</b><span>상태·권한 관리 + 실행장소 선택</span></div><div class="pa">→</div><div class="pnode local"><b>선택한 실행환경</b><span>Local·Cloud·SSH·WSL</span></div></div><div class="pmeta"><div><b>Local</b><span>내 PC 명령</span></div><div><b>Cloud</b><span>Anthropic VM</span></div></div><div class="pnote">SSH는 다른 서버에 원격 접속하는 방식, WSL은 Windows 안 Linux 환경이며, 선택한 곳에서 명령을 실행합니다.</div></div>
+    </div>
+    <div class="glosstrip"><div class="gterm"><b>VM · 가상컴퓨터</b><span>한 컴퓨터 안에 만든 별도의 컴퓨터 환경</span></div><div class="gterm"><b>SSH · 원격 명령 접속</b><span>내 PC에서 다른 서버의 명령창에 접속</span></div><div class="gterm"><b>WSL · Windows 안 Linux</b><span>Windows에서 Linux 도구를 쓰는 작업공간</span></div><div class="gterm"><b>Sandbox · 제한된 실행공간</b><span>실수의 영향을 줄이도록 권한과 범위를 제한</span></div></div>
+    <div class="clinote"><b>Claude Code CLI</b>는 Desktop Code의 Local 세션과 같은 계열입니다. 모델 판단은 Anthropic 서비스가 담당하고, 프로젝트 파일·명령·테스트는 현재 로컬 환경에서 실행합니다. <b>--cloud</b>를 쓰면 새 클라우드 세션으로 위임할 수 있습니다.</div>
+  </div>
+  <div class="anchor coral"><span class="k">FINAL</span><span class="t">제품명을 외우지 말고 <b>작업 대상 + 실행 위치 + 권한 + 상태 + 검증 과정</b>을 그리면 구조가 보입니다</span><span class="r">Local 설정 ≠ 저장소 설정 ≠ Cloud VM 설정</span></div>
+  <div class="foot"><span>출처: Claude Code Desktop·Web 공식 문서 / Claude Cowork 공식 페이지</span><span>2026-07-17 확인</span><span class="pg"><b>09</b> / 09</span></div>
+</section>
+
+
+</div>
+
+<script>
+// ---- per-slide shot mode: ?slide=N ----
+(function(){
+  const p = new URLSearchParams(location.search).get('slide');
+  if(p){
+    document.body.classList.add('shot');
+    document.querySelectorAll('.slide').forEach((s,i)=>{ if(i+1!==+p) s.style.display='none'; });
+    window.scrollTo(0,0);
+  }
+})();
+
+// ---- presentation mode (P / ▶버튼 / 더블클릭 진입, Esc 종료) ----
+(function(){
+  if(document.body.classList.contains('shot')) return;
+  const slides=[...document.querySelectorAll('.slide')];
+  let cur=0, present=false;
+  const SEL='.head .kick,.head h1,.head .headsub,.head .brand,.s1-models,.sl,.step,.arrow,.op,'+
+            '.s2-sum,.s2-big,.case,.dm,.s4-trend,.loopnote,.colh,.cap,.trk,.grade,'+
+            '.s7-score,.mtx>*,.relay,.anchor,.cover h1,.cv-sub,.cv-item,.cv-stats .st,.ktop,.keyebrow,.ktitle,.knum,.ktxt h2,.ktxt p,.stat6,.role,.agrow,.npanel,.nethub,.csrow,.dstep,.af-node,.factline,.loopbox,.exec-card,.triple-card,.install-strip>div,.looptag,.cc-env,.compare-strip>div,.term2,.plainstep2,.scopepanel,.layer,.lane,.pcard,.gterm,.clinote,.component,.deploy,.pex,.config-card,.cfganswer,.sysbox,.mode-row';
+  let editing=false;
+  const bar=document.createElement('div');
+  bar.className='ptools';
+  bar.innerHTML='<span class="hintxt">P 발표 · ←→ 이동 · Esc 종료</span>'+
+    '<button type="button" data-act="edit">✏ 편집</button>'+
+    '<button type="button" data-act="save">💾 저장 HTML</button>'+
+    '<button type="button" data-act="pdf">📄 PDF</button>'+
+    '<button type="button" class="primary" data-act="play">▶ 발표</button>';
+  document.body.appendChild(bar);
+  const btnEdit=bar.querySelector('[data-act="edit"]');
+  function setEdit(on){
+    editing=on;
+    document.body.classList.toggle('editing',on);
+    document.querySelectorAll('.slide').forEach(s=>{
+      if(on) s.setAttribute('contenteditable','true');
+      else s.removeAttribute('contenteditable');
+    });
+    btnEdit.classList.toggle('on',on);
+    btnEdit.textContent=on?'✔ 편집 완료':'✏ 편집';
+    if(!on && typeof drawWires==='function') setTimeout(drawWires,60);
+  }
+  function saveHTML(){
+    if(editing) setEdit(false);
+    const clone=document.documentElement.cloneNode(true);
+    clone.querySelectorAll('.ptools').forEach(e=>e.remove());
+    clone.querySelectorAll('[contenteditable]').forEach(e=>e.removeAttribute('contenteditable'));
+    clone.querySelectorAll('.a-el').forEach(e=>{
+      e.classList.remove('a-el'); e.style.removeProperty('--d');
+      if(!e.getAttribute('style')) e.removeAttribute('style');
+    });
+    const b=clone.querySelector('body'); if(b) b.removeAttribute('class');
+    clone.querySelectorAll('.slide').forEach(s=>{
+      s.classList.remove('cur','reveal');
+      s.style.removeProperty('--sc'); s.style.removeProperty('display');
+      if(!s.getAttribute('style')) s.removeAttribute('style');
+    });
+    const svg=clone.querySelector('svg.wires');
+    if(svg){svg.innerHTML='';svg.removeAttribute('viewBox');}
+    const html='<!DOCTYPE html>\n'+clone.outerHTML;
+    const a=document.createElement('a');
+    a.href=URL.createObjectURL(new Blob([html],{type:'text/html;charset=utf-8'}));
+    const d=new Date(), z=n=>String(n).padStart(2,'0');
+    a.download='AI에이전트_서비스별_PPT생성플로우_19장_상세설명_ssjhtml2_'+d.getFullYear()+z(d.getMonth()+1)+z(d.getDate())+'_'+z(d.getHours())+z(d.getMinutes())+'.html';
+    a.click(); URL.revokeObjectURL(a.href);
+  }
+  bar.addEventListener('click',e=>{
+    const btn=e.target.closest('button'); if(!btn) return;
+    const act=btn.dataset.act;
+    if(act==='edit') setEdit(!editing);
+    else if(act==='save') saveHTML();
+    else if(act==='pdf'){ if(editing) setEdit(false); setTimeout(()=>window.print(),120); }
+    else if(act==='play'){ if(editing) setEdit(false); enter(); }
+  });
+  function mark(slide){
+    slide.querySelectorAll(SEL).forEach((e,i)=>{
+      e.classList.add('a-el');
+      e.style.setProperty('--d',Math.min(i*55,1500)+'ms');
+    });
+  }
+  function fit(){
+    const sc=Math.min(innerWidth/1280,innerHeight/720);
+    slides.forEach(s=>s.style.setProperty('--sc',sc));
+  }
+  function animateWires(slide){
+    const svg=slide.querySelector('svg.wires'); if(!svg) return;
+    svg.querySelectorAll('path').forEach((p,i)=>{
+      try{
+        const L=p.getTotalLength(); if(!L) return;
+        p.style.strokeDasharray=L; p.style.strokeDashoffset=L; p.style.transition='none';
+        requestAnimationFrame(()=>{
+          p.style.transition='stroke-dashoffset .9s ease '+(600+i*35)+'ms';
+          p.style.strokeDashoffset='0';
+        });
+      }catch(err){}
+    });
+    svg.querySelectorAll('circle').forEach((c,i)=>{
+      c.style.opacity='0'; c.style.transition='none';
+      requestAnimationFrame(()=>{
+        c.style.transition='opacity .4s ease '+(1000+i*35)+'ms';
+        c.style.opacity='1';
+      });
+    });
+  }
+  function show(n){
+    cur=Math.max(0,Math.min(slides.length-1,n));
+    slides.forEach((s,i)=>{s.classList.toggle('cur',i===cur);s.classList.remove('reveal');});
+    const s=slides[cur];
+    mark(s);
+    if(typeof drawWires==='function') drawWires(); if(typeof drawNet==='function') drawNet();
+    requestAnimationFrame(()=>requestAnimationFrame(()=>{
+      s.classList.add('reveal');
+      animateWires(s);
+    }));
+  }
+  function enter(){
+    if(present) return;
+    let idx=0;
+    slides.forEach((s,i)=>{ if(s.getBoundingClientRect().top < innerHeight/2) idx=i; });
+    present=true; document.body.classList.add('present'); fit();
+    show(idx);
+    if(document.documentElement.requestFullscreen)
+      document.documentElement.requestFullscreen().catch(()=>{});
+  }
+  function exit(){
+    if(!present) return;
+    present=false; document.body.classList.remove('present');
+    slides.forEach(s=>s.classList.remove('cur','reveal'));
+    if(document.fullscreenElement) document.exitFullscreen().catch(()=>{});
+    if(typeof drawWires==='function') setTimeout(drawWires,60);
+    slides[cur].scrollIntoView();
+  }
+  document.addEventListener('dblclick',()=>{ if(!present && !editing) enter(); });
+  addEventListener('resize',()=>{ if(present) fit(); });
+  document.addEventListener('fullscreenchange',()=>{ if(!document.fullscreenElement) exit(); });
+  document.addEventListener('keydown',e=>{
+    if(editing){ if(e.key==='Escape') setEdit(false); return; }
+    if(!present){
+      if(e.key==='p'||e.key==='P'){ enter(); return; }
+      if(e.key==='ArrowRight'||e.key==='PageDown'){ cur=Math.min(slides.length-1,cur+1); slides[cur].scrollIntoView({behavior:'smooth'}); }
+      else if(e.key==='ArrowLeft'||e.key==='PageUp'){ cur=Math.max(0,cur-1); slides[cur].scrollIntoView({behavior:'smooth'}); }
+      return;
+    }
+    if(e.key==='Escape'){ exit(); return; }
+    if(e.key==='ArrowRight'||e.key==='PageDown'||e.key===' '||e.key==='Enter'){ e.preventDefault(); show(cur+1); }
+    else if(e.key==='ArrowLeft'||e.key==='PageUp'){ e.preventDefault(); show(cur-1); }
+    else if(e.key==='Home'){ show(0); }
+    else if(e.key==='End'){ show(slides.length-1); }
+  });
+  // ?present=1 로 열면 바로 발표 모드
+  if(new URLSearchParams(location.search).get('present')) setTimeout(enter,120);
+})();
+
+// ---- slide 6 flowchart wires (measured coordinates) ----
+function drawWires(){
+  const map=document.getElementById('wiremap'); if(!map) return;
+  const s6=document.getElementById('s6'); if(s6.style.display==='none') return;
+  const svg=document.getElementById('wires6');
+  const mr=map.getBoundingClientRect();
+  svg.setAttribute('viewBox','0 0 '+mr.width+' '+mr.height);
+  const R=id=>{const r=document.getElementById(id).getBoundingClientRect();
+    return {l:r.left-mr.left, r:r.right-mr.left, t:r.top-mr.top, b:r.bottom-mr.top,
+            cy:r.top-mr.top+r.height/2};};
+  const caps=['cap1','cap2','cap3','cap4','cap5','cap6','cap7','cap8','cap9','cap10'].map(R);
+  const trks=['trk1','trk2','trk3','trk4'].map(R);
+  const busX=caps[0].r+15;
+  const BUS='#c3cad6';
+  let paths=[];
+  caps.forEach(c=>paths.push(`<path d="M ${c.r} ${c.cy} H ${busX}" stroke="${BUS}" stroke-width="1.6" fill="none"/>`));
+  paths.push(`<path d="M ${busX} ${caps[0].cy} V ${caps[9].cy}" stroke="${BUS}" stroke-width="1.6" fill="none"/>`);
+  trks.forEach(t=>{
+    paths.push(`<path d="M ${busX} ${t.cy} H ${t.l}" stroke="${BUS}" stroke-width="1.6" fill="none"/>`);
+    paths.push(`<circle cx="${t.l}" cy="${t.cy}" r="2.8" fill="#a4aec0"/>`);
+  });
+  const g=R('grdG'), b=R('grdB'), k=R('grdK');
+  const wire=(t,gr,col,w)=>{
+    const x1=t.r, y1=t.cy, x2=gr.l, y2=gr.cy, mx=(x1+x2)/2;
+    paths.push(`<path d="M ${x1} ${y1} C ${mx} ${y1}, ${mx} ${y2}, ${x2} ${y2}" stroke="${col}" stroke-width="${w}" fill="none" opacity="0.85"/>`);
+    paths.push(`<circle cx="${x2}" cy="${y2}" r="3.2" fill="${col}"/>`);
+  };
+  wire(trks[0],g,'#ccd4e0',1.4); wire(trks[0],b,'#ccd4e0',1.4); wire(trks[0],k,'#ccd4e0',1.4);
+  wire(trks[1],g,'#2e8a5c',2.8);
+  wire(trks[2],b,'#4266a3',2.8);
+  wire(trks[3],k,'#1c2331',2.8);
+  svg.innerHTML=paths.join('');
+}
+function drawNet(){
+  const map=document.getElementById('netmap'); if(!map) return;
+  const sl=document.getElementById('s7x'); if(!sl||sl.style.display==='none') return;
+  const svg=document.getElementById('wires8'); if(!svg) return;
+  const mr=map.getBoundingClientRect(); if(mr.width<10) return;
+  svg.setAttribute('viewBox','0 0 '+mr.width+' '+mr.height);
+  const hb=document.getElementById('nethub').getBoundingClientRect();
+  const hx=hb.left-mr.left+hb.width/2, hy=hb.top-mr.top+hb.height/2;
+  const specs=[['np1','#b94a48'],['np2','#4266a3'],['np3','#2e8a5c'],['np4','#c38424'],['np5','#141b28'],['np6','#6f5aa8']];
+  let p='';
+  p+='<circle cx="'+hx+'" cy="'+hy+'" r="146" fill="none" stroke="#aab8cc" stroke-width="1" stroke-dasharray="3 7" opacity="0.65"/>';
+  p+='<circle cx="'+hx+'" cy="'+hy+'" r="188" fill="none" stroke="#b8c4d6" stroke-width="1" stroke-dasharray="2 9" opacity="0.4"/>';
+  specs.forEach(function(sp){
+    const r=document.getElementById(sp[0]).getBoundingClientRect();
+    const cx=r.left-mr.left+r.width/2, cy=r.top-mr.top+r.height/2;
+    const mx=(hx+cx)/2;
+    p+='<path d="M '+hx+' '+hy+' C '+mx+' '+hy+', '+mx+' '+cy+', '+cx+' '+cy+'" stroke="'+sp[1]+'" stroke-width="2.5" fill="none" opacity="0.85"/>';
+    const dx=cx-hx, dy=cy-hy, L=Math.hypot(dx,dy)||1;
+    p+='<circle cx="'+(hx+dx/L*118)+'" cy="'+(hy+dy/L*118)+'" r="3.6" fill="'+sp[1]+'"/>';
+    p+='<circle cx="'+(hx+dx/L*146)+'" cy="'+(hy+dy/L*146)+'" r="2.2" fill="'+sp[1]+'" opacity="0.65"/>';
+  });
+  svg.innerHTML=p;
+}
+window.addEventListener('load',drawNet);
+window.addEventListener('resize',drawNet);
+if(document.fonts&&document.fonts.ready){document.fonts.ready.then(()=>{drawWires();drawNet();});}
+window.addEventListener('load',drawWires);
+window.addEventListener('resize',drawWires);
+</script>
+<script>/* kg-preview: #<heading> \uc704\uce58\ub85c \uc774\ub3d9 */
+(function(){function norm(t){return (t||'').replace(/\s+/g,'').toLowerCase()}
+function go(){var h=decodeURIComponent(location.hash.slice(1));if(!h)return;var k=norm(h).slice(0,24);if(!k)return;
+var best=null,bl=1e9,els=document.body.querySelectorAll('h1,h2,h3,h4,h5,p,div,span,li,td,text,tspan,section,article');
+for(var i=0;i<els.length;i++){var e=els[i],t=norm(e.textContent);if(t.length<bl&&t.indexOf(k)>-1){best=e;bl=t.length}}
+if(!best)return;var box=best.closest('section,[class*=slide],[class*=page],article')||best;
+box.scrollIntoView({block:'start'});box.style.outline='3px solid #c0504d';box.style.outlineOffset='4px';
+setTimeout(function(){box.style.outline=''},2600)}
+window.addEventListener('load',function(){setTimeout(go,400)});window.addEventListener('hashchange',go)})();</script></body>
+</html>

@@ -1,0 +1,1469 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head><meta name="robots" content="noindex, nofollow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Session 03 · 메타 프롬프트 설계와 AI 서비스 워크플로우 오케스트레이션</title>
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700;9..144,800&family=Noto+Serif+KR:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f5efe4;--bg2:#ede4d3;--ink:#2b2015;--ink2:#5a4a38;--ink3:#8a7659;--acc:#b8532a;--acc3:#d49575;--ln:#d8c8ae;--ln2:#e6d9bf;--dk:#1a1612;--dk2:#241e17;--on:#ede4d3;--on2:#a89172;--serif:'Fraunces','Noto Serif KR',Georgia,serif;--sans:'Pretendard Variable',Pretendard,sans-serif;--mono:'JetBrains Mono',ui-monospace,Consolas,monospace}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{margin:0;padding:0;overflow:hidden;height:100vh;width:100vw;background:#0e0a06;font-family:var(--sans);-webkit-font-smoothing:antialiased}
+.deck{height:100vh;overflow-y:scroll;scroll-snap-type:y mandatory;scroll-behavior:smooth;scrollbar-width:none;-ms-overflow-style:none;background:#0e0a06}
+.deck::-webkit-scrollbar{display:none}
+.stage{width:100vw;min-height:100vh;display:flex;align-items:center;justify-content:center;scroll-snap-align:start;padding:0;background:#0e0a06}
+.slide{width:1600px;height:900px;background:var(--bg);position:relative;overflow:hidden;transform-origin:center;box-shadow:0 40px 90px -30px rgba(0,0,0,0.7);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' seed='3'/%3E%3CfeColorMatrix values='0 0 0 0 0.16  0 0 0 0 0.12  0 0 0 0 0.08  0 0 0 0.025 0'/%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E")}
+
+.hbar{position:absolute;top:0;left:0;right:0;height:52px;background:var(--dk);display:flex;align-items:center;justify-content:space-between;padding:0 80px}
+.hbar-l{display:flex;align-items:center;gap:12px;font-family:var(--mono);font-size:10.5px;color:#fff;letter-spacing:2.5px;font-weight:600}
+.hbar-l::before{content:"";width:22px;height:8px;background:var(--acc)}
+.hbar-r{font-family:var(--mono);font-size:10.5px;color:#bbb;letter-spacing:1.5px}
+.hl{position:absolute;left:80px;right:80px;top:86px}
+.hl-kicker{font-family:var(--mono);font-size:12px;color:var(--ink3);letter-spacing:2.5px;font-weight:700;margin-bottom:14px}
+.hl-title{font-family:var(--serif);font-weight:700;font-size:36px;line-height:1.22;letter-spacing:-0.5px;color:var(--ink)}
+.hl-sub{font-size:15.5px;color:var(--ink2);margin-top:12px;line-height:1.6}
+.hl-bar{width:60px;height:3px;background:var(--ink);margin-top:16px}
+.hl-rule{position:absolute;left:80px;right:80px;top:248px;height:1px;background:var(--ln2)}
+.fbar{position:absolute;bottom:0;left:0;right:0;height:52px;background:#f0e8d8;border-top:3px solid var(--ln);display:flex;align-items:center;justify-content:space-between;padding:0 80px}
+.fbar-l,.fbar-r{display:flex;flex-direction:column;gap:2px}.fbar-r{align-items:flex-end}
+.fbar-label{font-family:var(--mono);font-size:10px;color:var(--ink3);letter-spacing:2.5px;font-weight:700}
+.fbar-title{font-size:13px;color:var(--ink)}
+
+.bd{position:absolute;left:80px;right:80px;top:264px;bottom:72px;display:grid;gap:1px;background:var(--ln2)}
+.bd.col3{grid-template-columns:1fr 1fr 1fr}
+.bd.col2{grid-template-columns:1fr 1fr}
+.bd.col2w{grid-template-columns:1.25fr 1fr}
+.bd.col2n{grid-template-columns:1fr 1.3fr}
+.col{background:var(--bg);padding:30px 34px;display:flex;flex-direction:column;overflow:hidden;min-width:0;gap:14px}
+.col > .grow{flex:1;min-height:0;display:flex;flex-direction:column;justify-content:flex-end;gap:10px}
+
+.card{background:var(--bg);padding:34px 36px;display:flex;flex-direction:column;gap:16px;overflow:hidden;min-width:0}
+.card.dk{background:var(--dk);color:var(--on)}
+.card-k{font-family:var(--mono);font-size:11px;color:var(--acc);letter-spacing:2.5px;font-weight:700}
+.card.dk .card-k{color:var(--acc3)}
+.card-anchor{font-family:var(--serif);font-size:26px;font-weight:700;line-height:1.22;color:var(--ink);letter-spacing:-0.4px}
+.card.dk .card-anchor{color:var(--on)}
+.card-anchor em{color:var(--acc);font-style:normal}
+.card.dk .card-anchor em{color:var(--acc3)}
+.card-body{font-size:14px;line-height:1.75;color:var(--ink2)}
+.card.dk .card-body{color:var(--on2)}
+.card-body strong{color:var(--ink);font-weight:700}
+.card.dk .card-body strong{color:var(--on)}
+.card-spacer{flex:1;min-height:8px}
+.card-note{font-size:12.5px;color:var(--ink3);font-style:italic;line-height:1.6}
+.card.dk .card-note{color:var(--on2)}
+
+.sh{display:flex;align-items:baseline;gap:12px;margin-bottom:3px}
+.sh-n{font-family:var(--mono);font-size:11px;color:var(--ink3);letter-spacing:2.5px;font-weight:700;white-space:nowrap}
+.sh-t{font-size:12.5px;color:var(--ink2)}
+.sh-line{height:1px;background:var(--ln2);margin-bottom:10px}
+
+.mtbl{width:100%;border-collapse:collapse;font-size:12.5px}
+.mtbl thead th{font-family:var(--mono);font-size:10px;color:var(--ink3);letter-spacing:1.5px;font-weight:700;text-align:left;padding:9px 9px;border-bottom:1.5px solid var(--ink);background:var(--bg2)}
+.mtbl tbody td{padding:10px 9px;border-bottom:1px solid var(--ln2);color:var(--ink2);vertical-align:top;line-height:1.6}
+.mtbl tbody tr:last-child td{border-bottom:0}
+.mtbl tbody td:first-child{color:var(--ink);font-weight:700;font-family:var(--mono);font-size:10.5px;letter-spacing:1px;white-space:nowrap}
+.mtbl tbody td.q{color:var(--ink);font-weight:600;font-family:var(--sans);font-size:12.5px;letter-spacing:0}
+
+.co{background:var(--bg2);border-left:3px solid var(--acc);padding:14px 18px}
+.co-lb{font-family:var(--mono);font-size:10.5px;color:var(--acc);letter-spacing:2px;font-weight:700;margin-bottom:5px}
+.co-main{font-size:14.5px;color:var(--ink);font-weight:700;line-height:1.5}
+.co p{font-size:12.5px;color:var(--ink2);line-height:1.7;margin-top:5px}
+
+.next{background:var(--dk);padding:16px 20px;color:var(--on)}
+.next-k{font-family:var(--mono);font-size:10.5px;color:var(--acc3);letter-spacing:2px;font-weight:700;margin-bottom:5px}
+.next-t{font-size:13.5px;line-height:1.65;color:var(--on2)}
+.next-t strong{color:var(--on);font-weight:700}
+
+.pit{border-left:3px solid var(--ink);padding:11px 15px;background:var(--bg2)}
+.pit-lb{font-family:var(--mono);font-size:10px;color:var(--ink3);letter-spacing:2px;font-weight:700;margin-bottom:5px}
+.pit-h{font-size:13px;color:var(--ink);font-weight:700;line-height:1.45}
+.pit-d{font-size:12px;color:var(--ink2);line-height:1.65;margin-top:4px}
+
+.smap{display:flex;flex-direction:column;gap:7px}
+.smap-i{display:grid;grid-template-columns:50px 1fr;gap:12px;align-items:start;padding:9px 13px;background:var(--bg2);border-left:2px solid var(--ln)}
+.smap-i.on{border-left-color:var(--acc);background:#f0e7d6}
+.smap-n{font-family:var(--mono);font-size:11px;color:var(--acc);letter-spacing:1.5px;font-weight:700;padding-top:2px}
+.smap-t{font-size:13px;color:var(--ink);font-weight:600;line-height:1.5}
+
+.qex{background:var(--bg2);border-left:3px solid var(--ink);padding:20px 26px;font-family:var(--serif);font-size:19px;line-height:1.75;color:var(--ink)}
+.qex .hot{background:var(--ink);color:var(--on);padding:2px 7px;border-radius:2px;font-weight:700;font-family:var(--sans);font-size:16px;letter-spacing:-0.2px}
+.qex .dim{color:var(--ink3);font-style:italic;font-size:16px}
+
+.draft{padding:14px 18px}
+.draft.weak{background:var(--bg2);border-left:3px solid var(--ln)}
+.draft.strong{background:var(--dk);color:var(--on);border-left:3px solid var(--acc3)}
+.draft-k{font-family:var(--mono);font-size:10px;letter-spacing:1.8px;font-weight:700;color:var(--ink3);margin-bottom:5px}
+.draft.strong .draft-k{color:var(--acc3)}
+.draft-t{font-size:13.5px;line-height:1.7;color:var(--ink)}
+.draft.strong .draft-t{color:var(--on)}
+.draft-note{font-size:11px;color:var(--ink3);margin-top:7px;line-height:1.55;font-style:italic}
+.draft.strong .draft-note{color:var(--on2)}
+
+.cmp2{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--ln2)}
+.cmp2c{padding:18px 22px;display:flex;flex-direction:column;gap:9px;background:var(--bg2)}
+.cmp2c.dk{background:var(--dk);color:var(--on)}
+.cmp2c-k{font-family:var(--mono);font-size:10.5px;color:var(--acc);letter-spacing:2px;font-weight:700}
+.cmp2c.dk .cmp2c-k{color:var(--acc3)}
+.cmp2c-h{font-family:var(--serif);font-size:19px;font-weight:700;color:var(--ink);line-height:1.3;letter-spacing:-0.3px}
+.cmp2c.dk .cmp2c-h{color:var(--on)}
+.cmp2c-d{font-size:12.5px;color:var(--ink2);line-height:1.7}
+.cmp2c.dk .cmp2c-d{color:var(--on2)}
+.cmp2c-list{display:flex;flex-direction:column;gap:4px;font-size:12px;line-height:1.65;color:var(--ink2)}
+.cmp2c.dk .cmp2c-list{color:var(--on2)}
+.cmp2c-list li{list-style:none;padding-left:14px;position:relative}
+.cmp2c-list li::before{content:"—";position:absolute;left:0;color:var(--ink3);font-family:var(--mono)}
+.cmp2c.dk .cmp2c-list li::before{color:var(--on2)}
+.cmp2c-fig{font-family:var(--mono);font-size:10px;color:var(--ink3);letter-spacing:1.5px;font-weight:700;padding-top:7px;border-top:1px solid var(--ln);margin-top:auto}
+.cmp2c.dk .cmp2c-fig{color:var(--acc3);border-top-color:#3a2f24}
+
+.hybrid{background:#f0e7d6;border-left:4px solid var(--acc);padding:18px 24px;display:flex;flex-direction:column;gap:8px}
+.hybrid-k{font-family:var(--mono);font-size:11px;color:var(--acc);letter-spacing:2.5px;font-weight:700}
+.hybrid-h{font-family:var(--serif);font-size:21px;font-weight:700;color:var(--ink);line-height:1.3;letter-spacing:-0.3px}
+.hybrid-d{font-size:13px;color:var(--ink2);line-height:1.7}
+.hybrid-d strong{color:var(--ink);font-weight:700}
+
+.tline{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--ln2);width:100%}
+.tblock{background:var(--bg2);padding:18px 20px;display:flex;flex-direction:column;gap:8px;position:relative}
+.tblock.dk{background:var(--dk);color:var(--on)}
+.tblock-w{font-family:var(--mono);font-size:11px;color:var(--acc);letter-spacing:2px;font-weight:700}
+.tblock.dk .tblock-w{color:var(--acc3)}
+.tblock-h{font-family:var(--serif);font-size:21px;font-weight:700;line-height:1.25;color:var(--ink);letter-spacing:-0.3px}
+.tblock.dk .tblock-h{color:var(--on)}
+.tblock-sess{font-size:11.5px;color:var(--ink2);line-height:1.6;font-family:var(--mono);letter-spacing:0.3px}
+.tblock.dk .tblock-sess{color:var(--on2)}
+.tblock-d{font-size:12px;color:var(--ink2);line-height:1.7}
+.tblock.dk .tblock-d{color:var(--on2)}
+
+/* 추가 컴포넌트 */
+.flow{display:grid;gap:10px;align-items:center}
+.flow.h4{grid-template-columns:1fr auto 1fr auto 1fr auto 1fr}
+.flow.h3{grid-template-columns:1fr auto 1fr auto 1fr}
+.flow-box{background:var(--bg2);border:1px solid var(--ln);padding:12px 14px;text-align:center;display:flex;flex-direction:column;gap:4px}
+.flow-box.dk{background:var(--dk);color:var(--on);border-color:var(--dk)}
+.flow-box.on{background:#f0e7d6;border-color:var(--acc);border-width:2px}
+.flow-box-k{font-family:var(--mono);font-size:9.5px;color:var(--ink3);letter-spacing:1.5px;font-weight:700}
+.flow-box.dk .flow-box-k{color:var(--acc3)}
+.flow-box.on .flow-box-k{color:var(--acc)}
+.flow-box-t{font-size:12.5px;color:var(--ink);font-weight:700;line-height:1.4}
+.flow-box.dk .flow-box-t{color:var(--on)}
+.flow-arrow{font-family:var(--mono);font-size:22px;color:var(--acc);font-weight:700;text-align:center}
+
+.grid2x2{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:1px;background:var(--ln2)}
+.qd{background:var(--bg2);padding:16px 20px;display:flex;flex-direction:column;gap:6px}
+.qd.dk{background:var(--dk);color:var(--on)}
+.qd-k{font-family:var(--mono);font-size:10px;color:var(--ink3);letter-spacing:2px;font-weight:700}
+.qd.dk .qd-k{color:var(--acc3)}
+.qd-h{font-size:14px;color:var(--ink);font-weight:700;line-height:1.35;font-family:var(--serif)}
+.qd.dk .qd-h{color:var(--on)}
+.qd-d{font-size:12px;color:var(--ink2);line-height:1.65}
+.qd.dk .qd-d{color:var(--on2)}
+.qd-d strong{color:var(--ink);font-weight:700}
+.qd.dk .qd-d strong{color:var(--on)}
+
+.ladder{display:flex;flex-direction:column;gap:1px;background:var(--ln2)}
+.ladder-step{background:var(--bg);padding:14px 18px;display:grid;grid-template-columns:56px 1fr auto;gap:16px;align-items:center}
+.ladder-step.dk{background:var(--dk);color:var(--on)}
+.ladder-step.on{background:#f0e7d6}
+.ladder-n{font-family:var(--serif);font-size:28px;color:var(--acc);font-weight:700;letter-spacing:-0.03em}
+.ladder-step.dk .ladder-n{color:var(--acc3)}
+.ladder-b{display:flex;flex-direction:column;gap:3px;min-width:0}
+.ladder-h{font-size:14px;color:var(--ink);font-weight:700;line-height:1.4}
+.ladder-step.dk .ladder-h{color:var(--on)}
+.ladder-d{font-size:12px;color:var(--ink2);line-height:1.6}
+.ladder-step.dk .ladder-d{color:var(--on2)}
+.ladder-tag{font-family:var(--mono);font-size:9.5px;color:var(--ink3);letter-spacing:1.5px;font-weight:700;text-align:right;white-space:nowrap}
+.ladder-step.dk .ladder-tag{color:var(--acc3)}
+
+.code{background:var(--dk2);padding:14px 18px;font-family:var(--mono);font-size:11.5px;line-height:1.75;color:var(--on);white-space:pre-wrap;border-left:3px solid var(--acc3)}
+.code .cm{color:var(--on2)}
+.code .kw{color:var(--acc3);font-weight:600}
+
+.typelist{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--ln2);flex:1}
+.type{background:var(--bg2);padding:16px 18px;display:flex;flex-direction:column;gap:6px}
+.type.dk{background:var(--dk);color:var(--on)}
+.type-n{font-family:var(--serif);font-size:32px;color:var(--acc);font-weight:700;line-height:1;letter-spacing:-0.03em}
+.type.dk .type-n{color:var(--acc3)}
+.type-h{font-size:13px;color:var(--ink);font-weight:700;line-height:1.35}
+.type.dk .type-h{color:var(--on)}
+.type-d{font-size:11.5px;color:var(--ink2);line-height:1.6}
+.type.dk .type-d{color:var(--on2)}
+.type-tag{font-family:var(--mono);font-size:9.5px;color:var(--ink3);letter-spacing:1.5px;font-weight:700;margin-top:auto;padding-top:6px;border-top:1px solid var(--ln)}
+.type.dk .type-tag{color:var(--acc3);border-top-color:#3a2f24}
+
+.toolbar{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:center;justify-content:center;gap:6px;padding:6px 20px;background:rgba(14,10,6,0.92);backdrop-filter:blur(10px);border-bottom:1px solid rgba(255,255,255,0.08)}
+.toolbar button{background:rgba(255,255,255,0.08);color:#ccc;border:1px solid rgba(255,255,255,0.12);padding:5px 14px;font-family:var(--mono);font-size:10px;letter-spacing:1.5px;cursor:pointer;border-radius:3px;text-transform:uppercase;font-weight:600}
+.toolbar button:hover{background:var(--acc);color:#fff;border-color:var(--acc)}
+.toolbar .pg{color:rgba(255,255,255,0.55);font-size:11px;padding:5px 10px;min-width:80px;text-align:center;font-family:var(--mono);letter-spacing:1px}
+@media print{@page{size:423.33mm 237.5mm;margin:0}*{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}html,body{overflow:visible!important;height:auto!important;background:#fff!important}.deck{overflow:visible!important;height:auto!important;scroll-snap-type:none!important;background:#fff!important}.stage{min-height:0!important;height:auto!important;page-break-after:always;page-break-inside:avoid;padding:0!important;margin:0!important;background:#fff!important;display:block!important}.stage:last-child{page-break-after:avoid}.slide{transform:none!important;box-shadow:none!important;width:1600px!important;height:900px!important}.toolbar{display:none!important}}
+</style>
+</head>
+<body>
+<div class="deck" id="deck">
+
+<!-- ============================================================ -->
+<!-- SLIDE 001 · COVER                                             -->
+<!-- ============================================================ -->
+<div class="stage"><div class="slide" data-title="Cover">
+  <div class="hbar"><div class="hbar-l">SESSION 03 · LECTURE COVER</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 03 of 08</div></div>
+
+  <div style="position:absolute;top:140px;right:72px;font-family:var(--serif);font-size:280px;line-height:1;color:var(--acc);font-weight:300;opacity:0.08;letter-spacing:-0.06em;pointer-events:none;font-style:italic">03</div>
+
+  <div style="position:absolute;top:92px;left:80px;display:flex;align-items:center;gap:12px;font-family:var(--mono);font-size:11.5px;color:var(--acc);letter-spacing:3px;font-weight:700">
+    <div style="width:26px;height:2px;background:var(--acc)"></div>
+    PUBLIC AI EXPERT PROGRAM · 2026
+  </div>
+
+  <div style="position:absolute;top:150px;left:80px;max-width:1020px">
+    <div style="font-family:var(--mono);font-size:12px;color:var(--ink3);letter-spacing:2.5px;font-weight:700;margin-bottom:14px">SESSION 03 · 재료 창고의 마지막 조립</div>
+    <h1 style="font-family:var(--serif);font-weight:700;font-size:54px;line-height:1.1;letter-spacing:-0.04em;color:var(--ink);margin-bottom:16px">메타 프롬프트 설계와<br>AI 서비스 워크플로우 오케스트레이션</h1>
+    <div style="width:72px;height:3px;background:var(--ink);margin-bottom:18px"></div>
+    <div style="font-family:var(--serif);font-size:20px;color:var(--ink);font-weight:600;line-height:1.5">프롬프트를 AI에게 만들게 하고, 도구 여러 개를 체인으로 이어 붙여 업무를 푸는 첫 경험</div>
+    <p style="margin-top:18px;font-size:14px;color:var(--ink2);line-height:1.8;max-width:960px">Stage A(재료 창고)의 마지막 차시로, 1차시 지형 파악과 2차시 재료 수집을 토대로 <strong style="color:var(--ink)">서비스 체인을 조립하는 방법</strong>을 다룬다. 핵심 전환은 프롬프트 기법 암기에서 워크플로우 설계로의 이동이다.</p>
+  </div>
+
+  <div style="position:absolute;top:340px;right:80px;width:380px;border-top:2px solid var(--ink);padding-top:18px">
+    <div style="font-family:var(--mono);font-size:10.5px;color:var(--ink3);letter-spacing:2.5px;font-weight:700;margin-bottom:18px">SESSION METADATA</div>
+    <div style="display:grid;grid-template-columns:100px 1fr;gap:10px;padding:10px 0;border-bottom:1px solid var(--ln);font-size:13.5px"><span style="font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--ink3);font-weight:700">STAGE</span><span style="color:var(--ink);font-weight:600">A · 재료 창고 (3/3 · 완료)</span></div>
+    <div style="display:grid;grid-template-columns:100px 1fr;gap:10px;padding:10px 0;border-bottom:1px solid var(--ln);font-size:13.5px"><span style="font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--ink3);font-weight:700">SESSION</span><span style="color:var(--ink);font-weight:600">03 / 08</span></div>
+    <div style="display:grid;grid-template-columns:100px 1fr;gap:10px;padding:10px 0;border-bottom:1px solid var(--ln);font-size:13.5px"><span style="font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--ink3);font-weight:700">DURATION</span><span style="color:var(--ink);font-weight:600">150분 · 3파트</span></div>
+    <div style="display:grid;grid-template-columns:100px 1fr;gap:10px;padding:10px 0;border-bottom:1px solid var(--ln);font-size:13.5px"><span style="font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--ink3);font-weight:700">FOCUS</span><span style="color:var(--ink);font-weight:600">메타 생성 + 워크플로우 조립</span></div>
+    <div style="display:grid;grid-template-columns:100px 1fr;gap:10px;padding:10px 0;font-size:13.5px"><span style="font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--ink3);font-weight:700">OUTPUT</span><span style="color:var(--ink);font-weight:600">프롬프트 시드 + 레시피 카드</span></div>
+  </div>
+
+  <div style="position:absolute;bottom:80px;left:80px;right:80px;display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
+    <div style="border-top:2px solid var(--acc);padding-top:10px"><div style="font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--ink3);font-weight:700;margin-bottom:5px">PART A · 45min</div><div style="font-size:13.5px;color:var(--ink);font-weight:700;line-height:1.4">메타 프롬프트</div><div style="font-size:11.5px;color:var(--ink2);margin-top:3px;line-height:1.5">AI가 프롬프트를 만든다 · 교차 검증 · 프롬프트 공유</div></div>
+    <div style="border-top:2px solid var(--acc);padding-top:10px"><div style="font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--ink3);font-weight:700;margin-bottom:5px">PART B · 60min</div><div style="font-size:13.5px;color:var(--ink);font-weight:700;line-height:1.4">워크플로우 6타입</div><div style="font-size:11.5px;color:var(--ink2);margin-top:3px;line-height:1.5">문서 취합 · 데이터 · 변환 · 리서치 · 이미지 · 영상</div></div>
+    <div style="border-top:2px solid var(--acc);padding-top:10px"><div style="font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--ink3);font-weight:700;margin-bottom:5px">PART C · 45min</div><div style="font-size:13.5px;color:var(--ink);font-weight:700;line-height:1.4">워크숍 + 발표</div><div style="font-size:11.5px;color:var(--ink2);margin-top:3px;line-height:1.5">내 업무 워크플로우 1개 조립 · 레시피 카드 등록</div></div>
+  </div>
+
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">03 · 메타 프롬프트 설계와 AI 서비스 워크플로우 오케스트레이션</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">001 / 032</span></div></div>
+</div></div>
+
+<!-- ============================================================ -->
+<!-- SLIDE 002 · HERO ONE SENTENCE                                 -->
+<!-- ============================================================ -->
+<div class="stage"><div class="slide" data-title="Hero One Sentence">
+  <div class="hbar"><div class="hbar-l">SESSION 03 · CORE MESSAGE</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 03</div></div>
+
+  <div style="position:absolute;top:80px;left:80px;right:80px;bottom:260px;background:var(--dk);padding:60px 80px;color:var(--on);display:flex;flex-direction:column;justify-content:center">
+    <div style="font-family:var(--mono);font-size:11.5px;color:var(--acc3);letter-spacing:3px;font-weight:700;margin-bottom:18px">SESSION 03 · CORE MESSAGE</div>
+    <div style="font-family:var(--serif);font-weight:700;font-size:56px;line-height:1.12;letter-spacing:-0.03em;color:var(--on)">프롬프트를 <span style="color:var(--acc3);font-style:italic">외우지 않는다</span>.<br>워크플로우를 <span style="color:var(--acc3);font-style:italic">짠다</span>.</div>
+    <div style="width:60px;height:3px;background:var(--acc3);margin:22px 0 18px"></div>
+    <p style="font-size:16.5px;color:var(--on2);line-height:1.75;max-width:1200px">3차시의 학습 목표는 세 가지 전환이다. <strong style="color:var(--on)">① 프롬프트 기법 암기 → 메타 생성</strong> · <strong style="color:var(--on)">② 도구 단품 → 서비스 체인</strong> · <strong style="color:var(--on)">③ 개인 프롬프트 → 부서 공용 자산</strong>.</p>
+  </div>
+
+  <div style="position:absolute;bottom:80px;left:80px;right:80px;display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--ln2);height:160px">
+    <div style="background:var(--bg2);padding:24px 28px;display:flex;flex-direction:column;gap:6px"><div style="font-family:var(--mono);font-size:10.5px;color:var(--acc);letter-spacing:2px;font-weight:700">MOVE 01</div><div style="font-family:var(--serif);font-size:20px;color:var(--ink);font-weight:700;line-height:1.3">기법 암기 → 메타 생성</div><div style="font-size:12.5px;color:var(--ink2);line-height:1.6">프롬프트를 외우지 않고 AI에게 만들게 한다. 상황만 기술하면 구조화된 프롬프트가 나온다.</div></div>
+    <div style="background:var(--bg2);padding:24px 28px;display:flex;flex-direction:column;gap:6px"><div style="font-family:var(--mono);font-size:10.5px;color:var(--acc);letter-spacing:2px;font-weight:700">MOVE 02</div><div style="font-family:var(--serif);font-size:20px;color:var(--ink);font-weight:700;line-height:1.3">도구 단품 → 서비스 체인</div><div style="font-size:12.5px;color:var(--ink2);line-height:1.6">"어떤 도구가 좋나요"에서 "어떤 흐름이 내 업무에 맞나요"로 질문이 바뀐다.</div></div>
+    <div style="background:var(--dk);padding:24px 28px;display:flex;flex-direction:column;gap:6px;color:var(--on)"><div style="font-family:var(--mono);font-size:10.5px;color:var(--acc3);letter-spacing:2px;font-weight:700">MOVE 03</div><div style="font-family:var(--serif);font-size:20px;color:var(--on);font-weight:700;line-height:1.3">개인 기술 → 부서 자산</div><div style="font-size:12.5px;color:var(--on2);line-height:1.6">프롬프트·레시피를 공유 아카이브에 등록해 부서 전체가 재사용한다.</div></div>
+  </div>
+
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">03 · 메타 프롬프트 설계와 AI 서비스 워크플로우 오케스트레이션</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">002 / 032</span></div></div>
+</div></div>
+
+<div class="stage"><div class="slide" data-title="Part A Intro">
+  <div class="hbar"><div class="hbar-l">PART A · META PROMPT</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 03</div></div>
+  <div class="hl">
+    <div class="hl-kicker">PART A · 메타 프롬프트 설계 · 개요 · 3MIN</div>
+    <div class="hl-title">Part A는 "프롬프트를 AI에게 만들게 하는" 접근이다</div>
+    <div class="hl-sub">프롬프트 기법을 외우는 대신, 업무 상황을 기술하면 AI가 구조화된 프롬프트를 만들어주고, 그것을 교차 검증해서 완성한다. 완성된 프롬프트는 부서 공용 자산으로 등록된다.</div>
+    <div class="hl-bar"></div>
+  </div>
+  <div class="hl-rule"></div>
+  <div class="bd col3">
+    <div class="card">
+      <div class="card-k">STEP 01 · GENERATE</div>
+      <div class="card-anchor"><em>상황 기술</em> →<br>AI가 프롬프트를 만든다</div>
+      <div class="card-body">"나는 ○○부서 주무관이고, ○○ 업무를 한다. 이 업무에 쓸 시스템 프롬프트를 만들어줘." — 이 문장이 메타 프롬프트의 기본 형태다. AI가 역할·규칙·포맷·예시를 구조화해 돌려준다.</div>
+      <div class="card-spacer"></div>
+      <div class="card-note">3차시 A-1에서 실습. 10분이면 초안이 나온다.</div>
+    </div>
+    <div class="card dk">
+      <div class="card-k">STEP 02 · CROSS-VALIDATE</div>
+      <div class="card-anchor">같은 프롬프트를<br><em>3개 모델</em>에 던진다</div>
+      <div class="card-body">ChatGPT · Claude · Gemini에 같은 메타 프롬프트를 던지고 5관점으로 비교. 한 모델에만 맡기면 편향이 고정된다. 교차 검증으로 누락·편향·불필요 수사를 잡는다.</div>
+      <div class="card-spacer"></div>
+      <div class="card-note">3차시 A-2에서 실습. 2차시 라이브 비교의 확장.</div>
+    </div>
+    <div class="card">
+      <div class="card-k">STEP 03 · SHARE &amp; ARCHIVE</div>
+      <div class="card-anchor">완성본을 <em>부서 자산</em>으로<br>등록한다</div>
+      <div class="card-body">1인 2개 × 수강생 전원 = 수십 개의 프롬프트 시드가 공용 라이브러리에 쌓인다. 실패한 프롬프트도 등록. 동료의 프롬프트를 내 부서 맥락으로 변형하는 열람·변형까지 포함.</div>
+      <div class="card-spacer"></div>
+      <div class="card-note">3차시 A-3 프롬프트 공유 활동. 45분.</div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">03 · 메타 프롬프트 설계와 AI 서비스 워크플로우 오케스트레이션</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">003 / 032</span></div></div>
+</div></div>
+
+<div class="stage"><div class="slide" data-title="Meta Prompt Concept">
+  <div class="hbar"><div class="hbar-l">PART A-1 · META PROMPT CONCEPT</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 03</div></div>
+  <div class="hl">
+    <div class="hl-kicker">PART A-1 · 메타 프롬프트의 원리 — 상황 기술 → 구조화 프롬프트 · 10MIN</div>
+    <div class="hl-title">메타 프롬프트는 "프롬프트를 만드는 프롬프트"다</div>
+    <div class="hl-sub">직접 지시문을 짜는 대신, AI에게 업무 상황을 기술하면 AI가 역할·규칙·포맷·예시를 구조화해 돌려준다. 프롬프트 작성의 핵심 역량이 <strong>"기법 암기"에서 "상황 기술"로</strong> 이동한다.</div>
+    <div class="hl-bar"></div>
+  </div>
+  <div class="hl-rule"></div>
+  <div class="bd col2w">
+    <div class="col">
+      <div class="sh"><span class="sh-n">CONCEPT</span><span class="sh-t">메타 프롬프트의 구조</span></div><div class="sh-line"></div>
+      <div class="card-body" style="color:var(--ink2)">메타 프롬프트는 2단계로 작동한다. <strong style="color:var(--ink)">1단계</strong>에서 AI에게 "나는 ○○ 업무를 하는데, 이 업무에 쓸 시스템 프롬프트를 만들어줘"라고 상황을 기술한다. <strong style="color:var(--ink)">2단계</strong>에서 AI가 만든 프롬프트를 실제 업무에 돌려보고 수정한다.</div>
+      <div class="code" style="margin-top:12px">
+<span class="cm"># 메타 프롬프트 · 입력 예시</span>
+
+<span class="kw">상황:</span> ○○구 교통정책과 주무관.
+       버스 노선 관련 민원을 처리한다.
+       답변은 공문 형식이다.
+
+<span class="kw">요청:</span> 이 업무에 쓸 시스템 프롬프트를
+       만들어줘. 역할·규칙·포맷·예시를
+       모두 포함해줘.</div>
+      <div class="grow">
+        <div class="co">
+          <div class="co-lb">WHY IT WORKS</div>
+          <div class="co-main">상황만 바꾸면 프롬프트가 자동으로 바뀐다</div>
+          <p>같은 메타 프롬프트 양식에 부서·업무·제약만 교체하면 새 프롬프트가 나온다. 기법을 외울 필요가 없어진다.</p>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">OUTPUT STRUCTURE</span><span class="sh-t">AI가 만들어주는 프롬프트의 구조</span></div><div class="sh-line"></div>
+      <table class="mtbl">
+        <thead><tr><th style="width:120px">섹션</th><th>내용</th></tr></thead>
+        <tbody>
+          <tr><td>PERSONA</td><td class="q">누구로서 답할지 — "○○구 민원 답변 담당자"</td></tr>
+          <tr><td>CONTEXT</td><td class="q">배경 · 조직 · 제약 — "공문 형식 · 법령 인용 필수"</td></tr>
+          <tr><td>RULES</td><td class="q">지킬 것 · 하지 말 것 — "가정적 표현 금지"</td></tr>
+          <tr><td>FORMAT</td><td class="q">출력 양식 — "접수확인 → 사안요약 → 근거 → 답변 → 안내"</td></tr>
+          <tr><td>EXAMPLES</td><td class="q">좋은 예 · 나쁜 예 — 모델이 따라할 기준</td></tr>
+        </tbody>
+      </table>
+      <div class="grow">
+        <div class="pit">
+          <div class="pit-lb">CRITICAL DIFFERENCE</div>
+          <div class="pit-h">기법 암기 vs 메타 생성</div>
+          <div class="pit-d"><strong>기법 암기:</strong> "역할을 먼저 정하고, 규칙을 나열하고, 포맷을 지정하고…" — 매번 기억해야 한다.<br><strong>메타 생성:</strong> "상황을 기술하면 AI가 위 5섹션을 알아서 채운다" — 기억할 필요가 없다. 수정만 한다.</div>
+        </div>
+        <div class="next">
+          <div class="next-k">NEXT</div>
+          <div class="next-t">다음 슬라이드에서 실제로 메타 프롬프트를 써보는 <strong>실습 가이드</strong>로 넘어간다.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">03 · 메타 프롬프트 설계와 AI 서비스 워크플로우 오케스트레이션</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">004 / 032</span></div></div>
+</div></div>
+
+<div class="stage"><div class="slide" data-title="Meta Practice Guide">
+  <div class="hbar"><div class="hbar-l">PART A-1 · PRACTICE GUIDE</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 03</div></div>
+  <div class="hl">
+    <div class="hl-kicker">PART A-1 · 메타 프롬프트 실습 가이드 — 4단계 작성법 · 15MIN</div>
+    <div class="hl-title">메타 프롬프트 실습 — 4단계로 완성한다</div>
+    <div class="hl-sub">상황 기술 → AI 생성 → 시험 실행 → 수정 확정. 이 4단계를 한 번 돌려보면 이후부터는 반복 적용할 수 있다. 오늘 2개의 프롬프트를 이 절차로 만든다.</div>
+    <div class="hl-bar"></div>
+  </div>
+  <div class="hl-rule"></div>
+  <div class="bd col2">
+    <div class="col">
+      <div class="sh"><span class="sh-n">4 STEPS</span><span class="sh-t">메타 프롬프트 작성 절차</span></div><div class="sh-line"></div>
+      <div class="ladder" style="flex:1">
+        <div class="ladder-step">
+          <div class="ladder-n">01</div>
+          <div class="ladder-b"><div class="ladder-h">상황 기술</div><div class="ladder-d">부서·직무·업무 내용·제약 조건·기대 출력을 자연어로 적는다. 완벽할 필요 없다.</div></div>
+          <div class="ladder-tag">5분</div>
+        </div>
+        <div class="ladder-step">
+          <div class="ladder-n">02</div>
+          <div class="ladder-b"><div class="ladder-h">AI 생성</div><div class="ladder-d">상황 기술을 AI에게 주며 "시스템 프롬프트를 만들어줘"라고 요청. 5섹션(역할·맥락·규칙·포맷·예시) 구조로 받는다.</div></div>
+          <div class="ladder-tag">5분</div>
+        </div>
+        <div class="ladder-step">
+          <div class="ladder-n">03</div>
+          <div class="ladder-b"><div class="ladder-h">시험 실행</div><div class="ladder-d">생성된 프롬프트를 실제 업무 데이터에 돌려본다. 출력이 기대와 다른 부분을 표시한다.</div></div>
+          <div class="ladder-tag">10분</div>
+        </div>
+        <div class="ladder-step dk">
+          <div class="ladder-n">04</div>
+          <div class="ladder-b"><div class="ladder-h">수정 확정</div><div class="ladder-d">시험 결과를 반영해 프롬프트를 다듬는다. 규칙 추가·예시 보강·포맷 조정. 이 버전을 저장한다.</div></div>
+          <div class="ladder-tag">10분</div>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">TIPS</span><span class="sh-t">메타 프롬프트 작성 요령</span></div><div class="sh-line"></div>
+      <div class="pit">
+        <div class="pit-lb">TIP 01 · 상황 기술의 핵심</div>
+        <div class="pit-h">"완벽한 설명"이 아니라 "빠진 것 없는 설명"이 목표</div>
+        <div class="pit-d">부서명 · 업무 이름 · 입력물 · 출력물 · 제약(비식별 · 공문 형식 · 글자 수 등). 이 다섯 항목만 빠지지 않으면 AI가 나머지를 채운다.</div>
+      </div>
+      <div class="pit">
+        <div class="pit-lb">TIP 02 · 수정의 방향</div>
+        <div class="pit-h">AI가 빠뜨린 규칙 · 틀린 포맷 · 불필요한 수사를 잡는다</div>
+        <div class="pit-d">AI는 "정중한 어투"를 과잉 삽입하는 경향이 있다. 공문에 불필요한 인사말이 들어가면 잘라낸다. 금지 표현 리스트를 규칙에 추가한다.</div>
+      </div>
+      <div class="grow">
+        <div class="co">
+          <div class="co-lb">DEPLOYMENT TARGET</div>
+          <div class="co-main">완성된 프롬프트는 Custom GPT · Claude Project · Gems로 패키징</div>
+          <p>프롬프트 텍스트 파일로 끝나지 않고 <strong>동료가 질문만 하면 되는 환경</strong>으로 만든다. 2차시에서 배운 배포 단위를 여기서 실행.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">03 · 메타 프롬프트 설계와 AI 서비스 워크플로우 오케스트레이션</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">005 / 032</span></div></div>
+</div></div>
+
+<div class="stage"><div class="slide" data-title="Cross Validation">
+  <div class="hbar"><div class="hbar-l">PART A-2 · CROSS VALIDATION</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 03</div></div>
+  <div class="hl">
+    <div class="hl-kicker">PART A-2 · 교차 검증 — 같은 메타 프롬프트를 3개 모델에 던진다 · 10MIN</div>
+    <div class="hl-title">교차 검증은 누락·편향·불필요 수사를 잡는 구조다</div>
+    <div class="hl-sub">모델마다 "잘하는 프롬프트 스타일"이 다르다. ChatGPT는 구조 설계에 강하고 Claude는 논리·제약 반영에 강하고 Gemini는 간결·실용적이다. 한 모델에만 맡기면 그 모델의 편향이 프롬프트에 고정된다.</div>
+    <div class="hl-bar"></div>
+  </div>
+  <div class="hl-rule"></div>
+  <div class="bd col2">
+    <div class="col">
+      <div class="sh"><span class="sh-n">WHY</span><span class="sh-t">교차 검증을 하는 3가지 이유</span></div><div class="sh-line"></div>
+      <div class="co"><div class="co-lb">REASON 01</div><div class="co-main">누락 방지 — 한 모델이 놓친 제약을 다른 모델이 잡아낸다</div><p>"500자 이내"를 ChatGPT는 반영하지만 출력 형식을 빠뜨릴 수 있다. Claude는 반대 패턴. 교차하면 양쪽 누락이 드러난다.</p></div>
+      <div class="co"><div class="co-lb">REASON 02</div><div class="co-main">편향 제거 — 모델별 관용 표현이 달라 편향을 의식하게 된다</div><p>ChatGPT는 목록을 선호하고 Claude는 문단을 선호하는 식. 셋을 비교하면 "왜 이 형식이지?"를 자연스럽게 물어보게 된다.</p></div>
+      <div class="co"><div class="co-lb">REASON 03</div><div class="co-main">감사 대응 — "왜 이 프롬프트를 썼나" 근거가 남는다</div><p>3개 결과를 표로 비교한 기록 자체가 <strong>의사결정 근거</strong>다. 감사·개선·인수인계 시 재현 가능.</p></div>
+      <div class="grow">
+        <div class="pit"><div class="pit-lb">PITFALL</div><div class="pit-h">3개 돌린 뒤 "그냥 하나 골라서 쓴다"</div><div class="pit-d">이러면 교차 검증이 아니라 3배 비용. <strong>비교표를 채우고 조합</strong>해야 값어치가 있다.</div></div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">HOW</span><span class="sh-t">교차 검증 매트릭스 · 5관점</span></div><div class="sh-line"></div>
+      <table class="mtbl"><thead><tr><th style="width:130px">관찰 항목</th><th>CHATGPT</th><th>CLAUDE</th><th>GEMINI</th></tr></thead><tbody>
+        <tr><td>구조 완성도</td><td class="q">__</td><td class="q">__</td><td class="q">__</td></tr>
+        <tr><td>한국어 자연스러움</td><td class="q">__</td><td class="q">__</td><td class="q">__</td></tr>
+        <tr><td>제약 반영도</td><td class="q">__</td><td class="q">__</td><td class="q">__</td></tr>
+        <tr><td>불필요 수사</td><td class="q">__</td><td class="q">__</td><td class="q">__</td></tr>
+        <tr><td>누락 지시</td><td class="q">__</td><td class="q">__</td><td class="q">__</td></tr>
+      </tbody></table>
+      <div class="grow">
+        <div class="next">
+          <div class="next-k">COMBINE RULE</div>
+          <div class="next-t">A의 역할 + B의 제약 + C의 출력 형식 = 최종본. 3개 결과의 <strong>가장 좋은 부분만 뽑아 조합</strong>한다. 모든 프롬프트에 교차 검증을 할 필요는 없다 — 재사용할 핵심 프롬프트에만. 1회성 프롬프트는 메타 생성만으로 충분하다.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">03 · 메타 프롬프트 설계와 AI 서비스 워크플로우 오케스트레이션</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">006 / 032</span></div></div>
+</div></div>
+
+<div class="stage"><div class="slide" data-title="Prompt Sharing">
+  <div class="hbar"><div class="hbar-l">PART A-3 · PROMPT SHARING</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 03</div></div>
+  <div class="hl">
+    <div class="hl-kicker">PART A-3 · 프롬프트 공유 활동 — 시드 라이브러리 구축 · 45MIN</div>
+    <div class="hl-title">프롬프트 공유 활동으로 부서 자산을 만든다</div>
+    <div class="hl-sub">수강생 전원이 자주 쓰는 프롬프트 2개를 메타 프롬프트로 변환해 공용 저장소에 등록한다. 실패한 프롬프트도 등록. 동료 프롬프트를 내 부서 맥락으로 변형하는 열람·변형 단계까지 포함.</div>
+    <div class="hl-bar"></div>
+  </div>
+  <div class="hl-rule"></div>
+  <div class="bd col2">
+    <div class="col">
+      <div class="sh"><span class="sh-n">PROCEDURE</span><span class="sh-t">45분 공유 활동 5단계</span></div><div class="sh-line"></div>
+      <table class="mtbl"><thead><tr><th style="width:90px">단계</th><th style="width:50px">시간</th><th>내용</th></tr></thead><tbody>
+        <tr><td>① 선택</td><td class="q">5분</td><td>사전 준비한 프롬프트 2개 확인</td></tr>
+        <tr><td>② 변환</td><td class="q">15분</td><td>메타 프롬프트로 구조화</td></tr>
+        <tr><td>③ 교차 검증</td><td class="q">10분</td><td>다른 모델에 돌려 비교·개선</td></tr>
+        <tr><td>④ 등록</td><td class="q">5분</td><td>원본+변환 버전 아카이브에 등록</td></tr>
+        <tr><td>⑤ 열람·변형</td><td class="q">10분</td><td>동료 프롬프트를 내 맥락으로 적용</td></tr>
+      </tbody></table>
+      <div class="co"><div class="co-lb">UNIQUE RULE</div><div class="co-main">실패한 프롬프트도 반드시 등록한다</div><p>"왜 안 됐는가"를 메모와 함께 등록. <strong>실패 사례가 더 큰 학습 자산</strong>. 같은 실수를 동료가 반복하지 않게 한다.</p></div>
+      <div class="grow">
+        <div class="pit"><div class="pit-lb">PITFALL</div><div class="pit-h">민감 업무 프롬프트 그대로 등록 금지</div><div class="pit-d">실제 이름·부서·금액 등 식별 정보는 치환 후 등록. "환경부" → "A기관" 수준으로.</div></div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">ARCHIVE</span><span class="sh-t">시드 라이브러리 구조</span></div><div class="sh-line"></div>
+      <table class="mtbl"><thead><tr><th style="width:110px">카테고리</th><th>예시</th></tr></thead><tbody>
+        <tr><td>문서 작성</td><td class="q">보고서 · 공문 · 민원 답변</td></tr>
+        <tr><td>데이터 분석</td><td class="q">엑셀 · 통계 · 차트</td></tr>
+        <tr><td>요약·정리</td><td class="q">회의록 · 법령 · 논문</td></tr>
+        <tr><td>번역·변환</td><td class="q">영문→한문 · 형식 변환</td></tr>
+        <tr><td>기획·전략</td><td class="q">정책 · SWOT · 벤치마킹</td></tr>
+      </tbody></table>
+      <div class="card dk" style="padding:22px 26px;margin-top:10px">
+        <div class="card-k">DEPLOYMENT</div>
+        <div class="card-anchor">시드 중 부서에 맞는 것을<br><em>Custom GPT</em>로 패키징</div>
+        <div class="card-body">① 라이브러리에서 선별 → ② 부서 맥락으로 변형 → ③ Custom GPT 또는 Claude Project로 패키징 → ④ 동료에게 "들어가서 질문만 하세요"로 배포 → ⑤ 피드백 사이클.</div>
+      </div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">03 · 메타 프롬프트 설계와 AI 서비스 워크플로우 오케스트레이션</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">007 / 032</span></div></div>
+</div></div>
+
+<div class="stage"><div class="slide" data-title="Hero Department Asset">
+  <div class="hbar"><div class="hbar-l">KEY INSIGHT · PART A</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 03</div></div>
+
+  <div style="position:absolute;top:80px;left:80px;right:80px;bottom:80px;background:var(--bg2);padding:80px 90px;display:flex;flex-direction:column;justify-content:center">
+    <div style="font-family:var(--mono);font-size:11.5px;color:var(--acc);letter-spacing:3px;font-weight:700;margin-bottom:18px">KEY INSIGHT · PART A</div>
+    <div style="font-family:var(--serif);font-weight:700;font-size:58px;line-height:1.12;letter-spacing:-0.03em;color:var(--ink)">프롬프트는 <span style="color:var(--acc);font-style:italic">개인 기술</span>이 아니라<br><span style="color:var(--acc);font-style:italic">부서 자산</span>이다</div>
+    <div style="width:72px;height:3px;background:var(--acc);margin:22px 0 20px"></div>
+    <p style="font-size:17px;color:var(--ink2);line-height:1.75;max-width:1200px">한 번 만든 메타 프롬프트 · 시스템 프롬프트 · SKILL.md는 <strong style="color:var(--ink)">부서 전체가 재사용</strong>할 수 있다. 거점리더가 이 자산을 구축·배포하면 AI 숙련도가 낮은 동료도 일관된 품질의 산출물을 받는다. 이것이 공공 환경에서 AI가 실제 조직 생산성으로 연결되는 핵심 구조다.</p>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:36px;max-width:1200px">
+      <div style="border-top:3px solid var(--acc);padding-top:14px"><div style="font-family:var(--mono);font-size:10.5px;color:var(--ink3);letter-spacing:2px;font-weight:700;margin-bottom:4px">INDIVIDUAL</div><div style="font-size:15px;color:var(--ink);font-weight:700;line-height:1.35">거점리더가 만든다</div><div style="font-size:12.5px;color:var(--ink2);margin-top:3px;line-height:1.55">메타 프롬프트로 구조화하고 교차 검증으로 다듬는다.</div></div>
+      <div style="border-top:3px solid var(--acc);padding-top:14px"><div style="font-family:var(--mono);font-size:10.5px;color:var(--ink3);letter-spacing:2px;font-weight:700;margin-bottom:4px">TEAM</div><div style="font-size:15px;color:var(--ink);font-weight:700;line-height:1.35">Custom GPT로 패키징</div><div style="font-size:12.5px;color:var(--ink2);margin-top:3px;line-height:1.55">동료는 들어와 질문만 하면 된다. 숙련도 격차가 무의미.</div></div>
+      <div style="border-top:3px solid var(--acc);padding-top:14px"><div style="font-family:var(--mono);font-size:10.5px;color:var(--ink3);letter-spacing:2px;font-weight:700;margin-bottom:4px">DEPARTMENT</div><div style="font-size:15px;color:var(--ink);font-weight:700;line-height:1.35">아카이브로 축적</div><div style="font-size:12.5px;color:var(--ink2);margin-top:3px;line-height:1.55">사람이 이동해도 자산은 남는다. 분기별 개선 사이클.</div></div>
+    </div>
+  </div>
+
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">03 · 메타 프롬프트 설계와 AI 서비스 워크플로우 오케스트레이션</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">008 / 032</span></div></div>
+</div></div><div class="stage"><div class="slide" data-title="Part B Intro">
+  <div class="hbar"><div class="hbar-l">PART B · WORKFLOW 6 TYPES</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 03</div></div>
+  <div style="position:absolute;top:90px;left:80px;right:80px;bottom:290px;padding:30px 0 0">
+    <div style="font-family:var(--mono);font-size:11.5px;color:var(--acc);letter-spacing:3px;font-weight:700;margin-bottom:18px">PART B · AI SERVICE WORKFLOW 6 TYPES</div>
+    <div style="font-family:var(--serif);font-weight:700;font-size:52px;line-height:1.1;letter-spacing:-0.03em;color:var(--ink)">서비스 체인 6가지 <span style="color:var(--acc);font-style:italic">타입 프레임</span></div>
+    <div style="width:72px;height:3px;background:var(--ink);margin:22px 0 18px"></div>
+    <p style="font-size:16px;color:var(--ink2);line-height:1.75;max-width:1200px">6가지 워크플로우 타입의 <strong style="color:var(--ink)">구조와 설계 원리</strong>를 제시한다. 각 타입에는 대표 예시 1건이 포함되어 있으며, 강사는 부서·기관 특성에 맞는 사례로 교체할 수 있다. 예시보다 중요한 것은 <strong style="color:var(--ink)">타입별 구조</strong>(입력 → 체인 → 게이트 → 출력)를 이해하는 것이다.</p>
+  </div>
+  <div style="position:absolute;bottom:80px;left:80px;right:80px;display:grid;grid-template-columns:repeat(6,1fr);gap:1px;background:var(--ln2);height:190px">
+    <div style="background:var(--bg2);padding:18px 16px;display:flex;flex-direction:column;gap:5px"><div style="font-family:var(--mono);font-size:10px;color:var(--acc);letter-spacing:2px;font-weight:700">TYPE 01</div><div style="font-family:var(--serif);font-size:17px;color:var(--ink);font-weight:700;line-height:1.25">문서 취합</div><div style="font-size:11px;color:var(--ink2);line-height:1.5;margin-top:auto">여러 문서 → 분류 → 통합 정리</div></div>
+    <div style="background:var(--bg2);padding:18px 16px;display:flex;flex-direction:column;gap:5px"><div style="font-family:var(--mono);font-size:10px;color:var(--acc);letter-spacing:2px;font-weight:700">TYPE 02</div><div style="font-family:var(--serif);font-size:17px;color:var(--ink);font-weight:700;line-height:1.25">데이터 분석</div><div style="font-size:11px;color:var(--ink2);line-height:1.5;margin-top:auto">CSV → 통계·차트 → 인사이트 → 보고</div></div>
+    <div style="background:var(--bg2);padding:18px 16px;display:flex;flex-direction:column;gap:5px"><div style="font-family:var(--mono);font-size:10px;color:var(--acc);letter-spacing:2px;font-weight:700">TYPE 03</div><div style="font-family:var(--serif);font-size:17px;color:var(--ink);font-weight:700;line-height:1.25">문서 변환</div><div style="font-size:11px;color:var(--ink2);line-height:1.5;margin-top:auto">같은 원본 → 독자별 다른 형태</div></div>
+    <div style="background:var(--bg2);padding:18px 16px;display:flex;flex-direction:column;gap:5px"><div style="font-family:var(--mono);font-size:10px;color:var(--acc);letter-spacing:2px;font-weight:700">TYPE 04</div><div style="font-family:var(--serif);font-size:17px;color:var(--ink);font-weight:700;line-height:1.25">논문 리서치</div><div style="font-size:11px;color:var(--ink2);line-height:1.5;margin-top:auto">트렌드 → 논문 → 학습·정리</div></div>
+    <div style="background:var(--bg2);padding:18px 16px;display:flex;flex-direction:column;gap:5px"><div style="font-family:var(--mono);font-size:10px;color:var(--acc);letter-spacing:2px;font-weight:700">TYPE 05</div><div style="font-family:var(--serif);font-size:17px;color:var(--ink);font-weight:700;line-height:1.25">이미지 콘텐츠</div><div style="font-size:11px;color:var(--ink2);line-height:1.5;margin-top:auto">포스터 · 카드뉴스 · 배너</div></div>
+    <div style="background:var(--dk);padding:18px 16px;display:flex;flex-direction:column;gap:5px;color:var(--on)"><div style="font-family:var(--mono);font-size:10px;color:var(--acc3);letter-spacing:2px;font-weight:700">TYPE 06</div><div style="font-family:var(--serif);font-size:17px;color:var(--on);font-weight:700;line-height:1.25">영상 파이프라인</div><div style="font-size:11px;color:var(--on2);line-height:1.5;margin-top:auto">스크립트 → TTS → 영상 → 편집</div></div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">03 · 메타 프롬프트 설계와 AI 서비스 워크플로우 오케스트레이션</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">009 / 032</span></div></div>
+</div></div>
+<div class="stage"><div class="slide" data-title="B-01 문서 취합">
+  <div class="hbar"><div class="hbar-l">PART B-01 · TYPE 01</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 03</div></div>
+  <div class="hl">
+    <div class="hl-kicker">PART B-01 · 워크플로우 타입 01 · 문서 취합</div>
+    <div class="hl-title">TYPE 01 — 문서 취합형 워크플로우의 구조</div>
+    <div class="hl-sub">여러 부서·출처에서 수집된 문서를 분류 기준에 따라 정리하고 하나의 통합 문서로 생산하는 타입. 외부 체인과 내부망 체인을 병렬로 설계하는 것이 기본 원칙이다.</div>
+    <div class="hl-bar"></div>
+  </div>
+  <div class="hl-rule"></div>
+  <div class="bd col2">
+    <div class="col">
+      <div class="sh"><span class="sh-n">STRUCTURE</span><span class="sh-t">타입 01의 구조 정의</span></div><div class="sh-line"></div>
+      <table class="mtbl">
+        <thead><tr><th style="width:120px">항목</th><th>정의</th></tr></thead>
+        <tbody>
+          <tr><td>INPUT</td><td class="q">다수의 문서 파일 (한글·PDF·엑셀 등)</td></tr>
+          <tr><td>CHAIN</td><td class="q">분류 → 요약 → 통합 정리 → 포맷 출력</td></tr>
+          <tr><td>GATE</td><td class="q">분류 결과 확인 · 통합 문서 발송 전 결재</td></tr>
+          <tr><td>OUTPUT</td><td class="q">통합 보고서 · 주간/월간 집계 · 부서 취합본</td></tr>
+        </tbody>
+      </table>
+      <div class="grow">
+        <div class="pit">
+          <div class="pit-lb">DESIGN RULE</div>
+          <div class="pit-h">체인 도구는 3개 이하로 시작한다</div>
+          <div class="pit-d">도구가 늘어날수록 병목·형식 불일치 확률이 높아진다. 병목이 명확해진 뒤에만 도구를 추가한다.</div>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">DUAL PATH</span><span class="sh-t">외부·내부 두 경로를 함께 설계한다</span></div><div class="sh-line"></div>
+      <div class="co">
+        <div class="co-lb">EXTERNAL</div>
+        <div class="co-main">비식별 데이터 · 외부 SaaS 체인</div>
+        <p>속도·UX 장점. 외부 서버에 데이터가 전송되므로 개인정보·비공개 자료는 비식별화 필수.</p>
+      </div>
+      <div class="co">
+        <div class="co-lb">INTERNAL</div>
+        <div class="co-main">민감 데이터 · 로컬/내부망 체인</div>
+        <p>외부 통신 0. 감사 추적이 단순하다. 4~5차시에서 이 경로를 파이썬 코드로 구현한다.</p>
+      </div>
+      <div class="grow">
+        <div class="next">
+          <div class="next-k">SELECTION RULE</div>
+          <div class="next-t">"같은 데이터를 외부 이메일로 보낼 수 있는가" — 보낼 수 없으면 내부망 체인. 모호한 경우에는 내부망 쪽으로 기운다.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">03 · 메타 프롬프트 설계와 AI 서비스 워크플로우 오케스트레이션</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">010 / 032</span></div></div>
+</div></div>
+<div class="stage"><div class="slide" data-title="B-01 Example">
+  <div class="hbar"><div class="hbar-l">PART B-01 · EXAMPLE · 강사 교체 가능</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 03</div></div>
+  <div class="hl">
+    <div class="hl-kicker">PART B-01 · 실습 예시 — 강사가 부서·기관별 사례로 교체 가능</div>
+    <div class="hl-title">TYPE 01 예시 — 주간 보고 취합</div>
+    <div class="hl-sub">아래는 대표 실습 예시이다. 강사는 수강생의 부서·업무 맥락에 맞는 사례로 교체할 수 있다. 구조(입력→체인→게이트→출력)를 유지하되 구체적 도구와 데이터를 교체하는 방식으로 운영한다.</div>
+    <div class="hl-bar"></div>
+  </div>
+  <div class="hl-rule"></div>
+  <div class="bd col2">
+    <div class="col">
+      <div class="sh"><span class="sh-n">EXAMPLE</span><span class="sh-t">대표 실습 시나리오 · 강사 교체 가능</span></div><div class="sh-line"></div>
+      <table class="mtbl">
+        <thead><tr><th style="width:120px">항목</th><th>내용</th></tr></thead>
+        <tbody>
+          <tr><td>시나리오</td><td class="q">주간 보고 취합 — 5개 팀의 주간 보고서를 하나의 취합 보고서로 정리</td></tr>
+          <tr><td>서비스 체인</td><td class="q">Claude(분류·요약) → NotebookLM(통합 Q&A) → Gamma(슬라이드)</td></tr>
+          <tr><td>내부망 대안</td><td class="q">내부망 대안: Ollama(요약) → pyhwpx(HWP 출력)</td></tr>
+        </tbody>
+      </table>
+      <div class="grow">
+        <div class="co">
+          <div class="co-lb">INSTRUCTOR NOTE</div>
+          <div class="co-main">이 예시는 대표 사례이다 — 강사가 부서별 사례로 교체할 수 있다</div>
+          <p>수강생 구성(중앙/지자체/교육청 등)에 따라 입력 데이터·도구·출력물을 교체한다. 타입의 <strong>구조(INPUT → CHAIN → GATE → OUTPUT)</strong>는 유지한다.</p>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">PRACTICE TEMPLATE</span><span class="sh-t">수강생 실습 기록 양식</span></div><div class="sh-line"></div>
+      <table class="mtbl">
+        <thead><tr><th style="width:120px">항목</th><th>기재란 (EDIT 모드에서 직접 수정)</th></tr></thead>
+        <tbody>
+          <tr><td>내 시나리오</td><td class="q">________________</td></tr>
+          <tr><td>입력</td><td class="q">________________</td></tr>
+          <tr><td>서비스 체인</td><td class="q">[도구1] → [도구2] → [도구3]</td></tr>
+          <tr><td>사람 게이트</td><td class="q">________________</td></tr>
+          <tr><td>출력</td><td class="q">________________</td></tr>
+          <tr><td>외부/내부</td><td class="q">□ 외부 체인 &nbsp; □ 내부망 체인</td></tr>
+        </tbody>
+      </table>
+      <div class="grow">
+        <div class="pit">
+          <div class="pit-lb">TYPE 01 핵심 체크</div>
+          <div class="pit-h">분류 결과 확인 · 통합 문서 발송 전 결재</div>
+          <div class="pit-d">이 타입에서 사람이 반드시 개입해야 하는 지점이다. 레시피 카드에 게이트 위치를 명시한다.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">03 · 메타 프롬프트 설계와 AI 서비스 워크플로우 오케스트레이션</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">011 / 032</span></div></div>
+</div></div>
+<div class="stage"><div class="slide" data-title="B-02 데이터 분석">
+  <div class="hbar"><div class="hbar-l">PART B-02 · TYPE 02</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 03</div></div>
+  <div class="hl">
+    <div class="hl-kicker">PART B-02 · 워크플로우 타입 02 · 데이터 분석</div>
+    <div class="hl-title">TYPE 02 — 데이터 분석형 워크플로우의 구조</div>
+    <div class="hl-sub">정량 데이터(CSV·엑셀)를 통계 처리·시각화하고 인사이트를 추출해 보고용 자료로 변환하는 타입. 외부 체인과 내부망 체인을 병렬로 설계하는 것이 기본 원칙이다.</div>
+    <div class="hl-bar"></div>
+  </div>
+  <div class="hl-rule"></div>
+  <div class="bd col2">
+    <div class="col">
+      <div class="sh"><span class="sh-n">STRUCTURE</span><span class="sh-t">타입 02의 구조 정의</span></div><div class="sh-line"></div>
+      <table class="mtbl">
+        <thead><tr><th style="width:120px">항목</th><th>정의</th></tr></thead>
+        <tbody>
+          <tr><td>INPUT</td><td class="q">CSV · 엑셀 파일 (공공데이터포털 · 내부 집계표)</td></tr>
+          <tr><td>CHAIN</td><td class="q">통계 처리 → 차트 생성 → 인사이트 추출 → 보고서/PPT</td></tr>
+          <tr><td>GATE</td><td class="q">축·피벗 방향 확인 · 수치 원본 대조</td></tr>
+          <tr><td>OUTPUT</td><td class="q">차트 포함 보고서 · 대시보드 · 브리핑 PPT</td></tr>
+        </tbody>
+      </table>
+      <div class="grow">
+        <div class="pit">
+          <div class="pit-lb">DESIGN RULE</div>
+          <div class="pit-h">체인 도구는 3개 이하로 시작한다</div>
+          <div class="pit-d">도구가 늘어날수록 병목·형식 불일치 확률이 높아진다. 병목이 명확해진 뒤에만 도구를 추가한다.</div>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">DUAL PATH</span><span class="sh-t">외부·내부 두 경로를 함께 설계한다</span></div><div class="sh-line"></div>
+      <div class="co">
+        <div class="co-lb">EXTERNAL</div>
+        <div class="co-main">비식별 데이터 · 외부 SaaS 체인</div>
+        <p>속도·UX 장점. 외부 서버에 데이터가 전송되므로 개인정보·비공개 자료는 비식별화 필수.</p>
+      </div>
+      <div class="co">
+        <div class="co-lb">INTERNAL</div>
+        <div class="co-main">민감 데이터 · 로컬/내부망 체인</div>
+        <p>외부 통신 0. 감사 추적이 단순하다. 4~5차시에서 이 경로를 파이썬 코드로 구현한다.</p>
+      </div>
+      <div class="grow">
+        <div class="next">
+          <div class="next-k">SELECTION RULE</div>
+          <div class="next-t">"같은 데이터를 외부 이메일로 보낼 수 있는가" — 보낼 수 없으면 내부망 체인. 모호한 경우에는 내부망 쪽으로 기운다.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">03 · 메타 프롬프트 설계와 AI 서비스 워크플로우 오케스트레이션</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">012 / 032</span></div></div>
+</div></div>
+<div class="stage"><div class="slide" data-title="B-02 Example">
+  <div class="hbar"><div class="hbar-l">PART B-02 · EXAMPLE · 강사 교체 가능</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 03</div></div>
+  <div class="hl">
+    <div class="hl-kicker">PART B-02 · 실습 예시 — 강사가 부서·기관별 사례로 교체 가능</div>
+    <div class="hl-title">TYPE 02 예시 — 공공데이터 CSV 10종 → 지역별 비교 차트 + 인사이트 → 발표 슬라이드</div>
+    <div class="hl-sub">아래는 대표 실습 예시이다. 강사는 수강생의 부서·업무 맥락에 맞는 사례로 교체할 수 있다. 구조(입력→체인→게이트→출력)를 유지하되 구체적 도구와 데이터를 교체하는 방식으로 운영한다.</div>
+    <div class="hl-bar"></div>
+  </div>
+  <div class="hl-rule"></div>
+  <div class="bd col2">
+    <div class="col">
+      <div class="sh"><span class="sh-n">EXAMPLE</span><span class="sh-t">대표 실습 시나리오 · 강사 교체 가능</span></div><div class="sh-line"></div>
+      <table class="mtbl">
+        <thead><tr><th style="width:120px">항목</th><th>내용</th></tr></thead>
+        <tbody>
+          <tr><td>시나리오</td><td class="q">공공데이터 CSV 10종 → 지역별 비교 차트 + 인사이트 → 발표 슬라이드</td></tr>
+          <tr><td>서비스 체인</td><td class="q">Julius AI(차트) → NotebookLM(해석) → Gamma(PPT)</td></tr>
+          <tr><td>내부망 대안</td><td class="q">내부망 대안: pandas+matplotlib → Ollama(요약) → HTML 대시보드</td></tr>
+        </tbody>
+      </table>
+      <div class="grow">
+        <div class="co">
+          <div class="co-lb">INSTRUCTOR NOTE</div>
+          <div class="co-main">이 예시는 대표 사례이다 — 강사가 부서별 사례로 교체할 수 있다</div>
+          <p>수강생 구성(중앙/지자체/교육청 등)에 따라 입력 데이터·도구·출력물을 교체한다. 타입의 <strong>구조(INPUT → CHAIN → GATE → OUTPUT)</strong>는 유지한다.</p>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">PRACTICE TEMPLATE</span><span class="sh-t">수강생 실습 기록 양식</span></div><div class="sh-line"></div>
+      <table class="mtbl">
+        <thead><tr><th style="width:120px">항목</th><th>기재란 (EDIT 모드에서 직접 수정)</th></tr></thead>
+        <tbody>
+          <tr><td>내 시나리오</td><td class="q">________________</td></tr>
+          <tr><td>입력</td><td class="q">________________</td></tr>
+          <tr><td>서비스 체인</td><td class="q">[도구1] → [도구2] → [도구3]</td></tr>
+          <tr><td>사람 게이트</td><td class="q">________________</td></tr>
+          <tr><td>출력</td><td class="q">________________</td></tr>
+          <tr><td>외부/내부</td><td class="q">□ 외부 체인 &nbsp; □ 내부망 체인</td></tr>
+        </tbody>
+      </table>
+      <div class="grow">
+        <div class="pit">
+          <div class="pit-lb">TYPE 02 핵심 체크</div>
+          <div class="pit-h">축·피벗 방향 확인 · 수치 원본 대조</div>
+          <div class="pit-d">이 타입에서 사람이 반드시 개입해야 하는 지점이다. 레시피 카드에 게이트 위치를 명시한다.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">03 · 메타 프롬프트 설계와 AI 서비스 워크플로우 오케스트레이션</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">013 / 032</span></div></div>
+</div></div>
+<div class="stage"><div class="slide" data-title="B-03 문서 변환">
+  <div class="hbar"><div class="hbar-l">PART B-03 · TYPE 03</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 03</div></div>
+  <div class="hl">
+    <div class="hl-kicker">PART B-03 · 워크플로우 타입 03 · 문서 변환</div>
+    <div class="hl-title">TYPE 03 — 문서 변환형 워크플로우의 구조</div>
+    <div class="hl-sub">하나의 원본 문서를 독자·매체에 따라 복수의 형태로 재구성하는 타입. 톤·분량·포맷이 독자에 따라 달라진다. 외부 체인과 내부망 체인을 병렬로 설계하는 것이 기본 원칙이다.</div>
+    <div class="hl-bar"></div>
+  </div>
+  <div class="hl-rule"></div>
+  <div class="bd col2">
+    <div class="col">
+      <div class="sh"><span class="sh-n">STRUCTURE</span><span class="sh-t">타입 03의 구조 정의</span></div><div class="sh-line"></div>
+      <table class="mtbl">
+        <thead><tr><th style="width:120px">항목</th><th>정의</th></tr></thead>
+        <tbody>
+          <tr><td>INPUT</td><td class="q">정책 보고서 · 법령 해설 · 기획안 등 원본 1건</td></tr>
+          <tr><td>CHAIN</td><td class="q">독자별 톤 전환 → 포맷 재구성 → 매체별 출력</td></tr>
+          <tr><td>GATE</td><td class="q">법령·수치·고유명사 원본 대조 · 대국민 발행물 최종 검토</td></tr>
+          <tr><td>OUTPUT</td><td class="q">전문가 보고서 / 주민 안내문 / SNS 카드뉴스 / 영상 스크립트</td></tr>
+        </tbody>
+      </table>
+      <div class="grow">
+        <div class="pit">
+          <div class="pit-lb">DESIGN RULE</div>
+          <div class="pit-h">체인 도구는 3개 이하로 시작한다</div>
+          <div class="pit-d">도구가 늘어날수록 병목·형식 불일치 확률이 높아진다. 병목이 명확해진 뒤에만 도구를 추가한다.</div>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">DUAL PATH</span><span class="sh-t">외부·내부 두 경로를 함께 설계한다</span></div><div class="sh-line"></div>
+      <div class="co">
+        <div class="co-lb">EXTERNAL</div>
+        <div class="co-main">비식별 데이터 · 외부 SaaS 체인</div>
+        <p>속도·UX 장점. 외부 서버에 데이터가 전송되므로 개인정보·비공개 자료는 비식별화 필수.</p>
+      </div>
+      <div class="co">
+        <div class="co-lb">INTERNAL</div>
+        <div class="co-main">민감 데이터 · 로컬/내부망 체인</div>
+        <p>외부 통신 0. 감사 추적이 단순하다. 4~5차시에서 이 경로를 파이썬 코드로 구현한다.</p>
+      </div>
+      <div class="grow">
+        <div class="next">
+          <div class="next-k">SELECTION RULE</div>
+          <div class="next-t">"같은 데이터를 외부 이메일로 보낼 수 있는가" — 보낼 수 없으면 내부망 체인. 모호한 경우에는 내부망 쪽으로 기운다.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">03 · 메타 프롬프트 설계와 AI 서비스 워크플로우 오케스트레이션</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">014 / 032</span></div></div>
+</div></div>
+<div class="stage"><div class="slide" data-title="B-03 Example">
+  <div class="hbar"><div class="hbar-l">PART B-03 · EXAMPLE · 강사 교체 가능</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 03</div></div>
+  <div class="hl">
+    <div class="hl-kicker">PART B-03 · 실습 예시 — 강사가 부서·기관별 사례로 교체 가능</div>
+    <div class="hl-title">TYPE 03 예시 — 정책 보고서 → ① 주민 안내문(초등 6학년 수준) ② SNS 카드뉴스 ③ 2분 영상 스크립트</div>
+    <div class="hl-sub">아래는 대표 실습 예시이다. 강사는 수강생의 부서·업무 맥락에 맞는 사례로 교체할 수 있다. 구조(입력→체인→게이트→출력)를 유지하되 구체적 도구와 데이터를 교체하는 방식으로 운영한다.</div>
+    <div class="hl-bar"></div>
+  </div>
+  <div class="hl-rule"></div>
+  <div class="bd col2">
+    <div class="col">
+      <div class="sh"><span class="sh-n">EXAMPLE</span><span class="sh-t">대표 실습 시나리오 · 강사 교체 가능</span></div><div class="sh-line"></div>
+      <table class="mtbl">
+        <thead><tr><th style="width:120px">항목</th><th>내용</th></tr></thead>
+        <tbody>
+          <tr><td>시나리오</td><td class="q">정책 보고서 → ① 주민 안내문(초등 6학년 수준) ② SNS 카드뉴스 ③ 2분 영상 스크립트</td></tr>
+          <tr><td>서비스 체인</td><td class="q">Claude(변환) → Ideogram(카드뉴스 이미지) → ElevenLabs(내레이션)</td></tr>
+          <tr><td>내부망 대안</td><td class="q">행안부 공문서 가이드 6대 체크포인트 · pyhwpx 자동 출력 4차시 연결</td></tr>
+        </tbody>
+      </table>
+      <div class="grow">
+        <div class="co">
+          <div class="co-lb">INSTRUCTOR NOTE</div>
+          <div class="co-main">이 예시는 대표 사례이다 — 강사가 부서별 사례로 교체할 수 있다</div>
+          <p>수강생 구성(중앙/지자체/교육청 등)에 따라 입력 데이터·도구·출력물을 교체한다. 타입의 <strong>구조(INPUT → CHAIN → GATE → OUTPUT)</strong>는 유지한다.</p>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">PRACTICE TEMPLATE</span><span class="sh-t">수강생 실습 기록 양식</span></div><div class="sh-line"></div>
+      <table class="mtbl">
+        <thead><tr><th style="width:120px">항목</th><th>기재란 (EDIT 모드에서 직접 수정)</th></tr></thead>
+        <tbody>
+          <tr><td>내 시나리오</td><td class="q">________________</td></tr>
+          <tr><td>입력</td><td class="q">________________</td></tr>
+          <tr><td>서비스 체인</td><td class="q">[도구1] → [도구2] → [도구3]</td></tr>
+          <tr><td>사람 게이트</td><td class="q">________________</td></tr>
+          <tr><td>출력</td><td class="q">________________</td></tr>
+          <tr><td>외부/내부</td><td class="q">□ 외부 체인 &nbsp; □ 내부망 체인</td></tr>
+        </tbody>
+      </table>
+      <div class="grow">
+        <div class="pit">
+          <div class="pit-lb">TYPE 03 핵심 체크</div>
+          <div class="pit-h">법령·수치·고유명사 원본 대조 · 대국민 발행물 최종 검토</div>
+          <div class="pit-d">이 타입에서 사람이 반드시 개입해야 하는 지점이다. 레시피 카드에 게이트 위치를 명시한다.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">03 · 메타 프롬프트 설계와 AI 서비스 워크플로우 오케스트레이션</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">015 / 032</span></div></div>
+</div></div>
+<div class="stage"><div class="slide" data-title="B-04 논문 리서치">
+  <div class="hbar"><div class="hbar-l">PART B-04 · TYPE 04</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 03</div></div>
+  <div class="hl">
+    <div class="hl-kicker">PART B-04 · 워크플로우 타입 04 · 논문 리서치</div>
+    <div class="hl-title">TYPE 04 — 논문 리서치형 워크플로우의 구조</div>
+    <div class="hl-sub">정책 근거 확보를 위해 웹 트렌드·학술 논문·심층 학습을 분업시키는 타입. 각 도구가 담당하는 단계가 구분된다. 외부 체인과 내부망 체인을 병렬로 설계하는 것이 기본 원칙이다.</div>
+    <div class="hl-bar"></div>
+  </div>
+  <div class="hl-rule"></div>
+  <div class="bd col2">
+    <div class="col">
+      <div class="sh"><span class="sh-n">STRUCTURE</span><span class="sh-t">타입 04의 구조 정의</span></div><div class="sh-line"></div>
+      <table class="mtbl">
+        <thead><tr><th style="width:120px">항목</th><th>정의</th></tr></thead>
+        <tbody>
+          <tr><td>INPUT</td><td class="q">리서치 주제 · 키워드 · 정책 질문</td></tr>
+          <tr><td>CHAIN</td><td class="q">트렌드 검색 → 논문 선별 → 심층 학습·정리</td></tr>
+          <tr><td>GATE</td><td class="q">출처 원문 클릭 대조 · 환각 검증</td></tr>
+          <tr><td>OUTPUT</td><td class="q">근거 기반 정책 메모 · 리서치 요약 · 팟캐스트</td></tr>
+        </tbody>
+      </table>
+      <div class="grow">
+        <div class="pit">
+          <div class="pit-lb">DESIGN RULE</div>
+          <div class="pit-h">체인 도구는 3개 이하로 시작한다</div>
+          <div class="pit-d">도구가 늘어날수록 병목·형식 불일치 확률이 높아진다. 병목이 명확해진 뒤에만 도구를 추가한다.</div>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">DUAL PATH</span><span class="sh-t">외부·내부 두 경로를 함께 설계한다</span></div><div class="sh-line"></div>
+      <div class="co">
+        <div class="co-lb">EXTERNAL</div>
+        <div class="co-main">비식별 데이터 · 외부 SaaS 체인</div>
+        <p>속도·UX 장점. 외부 서버에 데이터가 전송되므로 개인정보·비공개 자료는 비식별화 필수.</p>
+      </div>
+      <div class="co">
+        <div class="co-lb">INTERNAL</div>
+        <div class="co-main">민감 데이터 · 로컬/내부망 체인</div>
+        <p>외부 통신 0. 감사 추적이 단순하다. 4~5차시에서 이 경로를 파이썬 코드로 구현한다.</p>
+      </div>
+      <div class="grow">
+        <div class="next">
+          <div class="next-k">SELECTION RULE</div>
+          <div class="next-t">"같은 데이터를 외부 이메일로 보낼 수 있는가" — 보낼 수 없으면 내부망 체인. 모호한 경우에는 내부망 쪽으로 기운다.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">03 · 메타 프롬프트 설계와 AI 서비스 워크플로우 오케스트레이션</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">016 / 032</span></div></div>
+</div></div>
+<div class="stage"><div class="slide" data-title="B-04 Example">
+  <div class="hbar"><div class="hbar-l">PART B-04 · EXAMPLE · 강사 교체 가능</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 03</div></div>
+  <div class="hl">
+    <div class="hl-kicker">PART B-04 · 실습 예시 — 강사가 부서·기관별 사례로 교체 가능</div>
+    <div class="hl-title">TYPE 04 예시 — 스마트시티 벤치마킹</div>
+    <div class="hl-sub">아래는 대표 실습 예시이다. 강사는 수강생의 부서·업무 맥락에 맞는 사례로 교체할 수 있다. 구조(입력→체인→게이트→출력)를 유지하되 구체적 도구와 데이터를 교체하는 방식으로 운영한다.</div>
+    <div class="hl-bar"></div>
+  </div>
+  <div class="hl-rule"></div>
+  <div class="bd col2">
+    <div class="col">
+      <div class="sh"><span class="sh-n">EXAMPLE</span><span class="sh-t">대표 실습 시나리오 · 강사 교체 가능</span></div><div class="sh-line"></div>
+      <table class="mtbl">
+        <thead><tr><th style="width:120px">항목</th><th>내용</th></tr></thead>
+        <tbody>
+          <tr><td>시나리오</td><td class="q">스마트시티 벤치마킹 — 해외 사례 5건 + 논문 10편 → 정책 메모 1건</td></tr>
+          <tr><td>서비스 체인</td><td class="q">Perplexity(트렌드+출처) → Elicit(논문) → NotebookLM(학습·팟캐스트)</td></tr>
+          <tr><td>내부망 대안</td><td class="q">출처 자동 첨부가 공공 보고의 핵심 자산. 환각 가능성 항상 존재.</td></tr>
+        </tbody>
+      </table>
+      <div class="grow">
+        <div class="co">
+          <div class="co-lb">INSTRUCTOR NOTE</div>
+          <div class="co-main">이 예시는 대표 사례이다 — 강사가 부서별 사례로 교체할 수 있다</div>
+          <p>수강생 구성(중앙/지자체/교육청 등)에 따라 입력 데이터·도구·출력물을 교체한다. 타입의 <strong>구조(INPUT → CHAIN → GATE → OUTPUT)</strong>는 유지한다.</p>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">PRACTICE TEMPLATE</span><span class="sh-t">수강생 실습 기록 양식</span></div><div class="sh-line"></div>
+      <table class="mtbl">
+        <thead><tr><th style="width:120px">항목</th><th>기재란 (EDIT 모드에서 직접 수정)</th></tr></thead>
+        <tbody>
+          <tr><td>내 시나리오</td><td class="q">________________</td></tr>
+          <tr><td>입력</td><td class="q">________________</td></tr>
+          <tr><td>서비스 체인</td><td class="q">[도구1] → [도구2] → [도구3]</td></tr>
+          <tr><td>사람 게이트</td><td class="q">________________</td></tr>
+          <tr><td>출력</td><td class="q">________________</td></tr>
+          <tr><td>외부/내부</td><td class="q">□ 외부 체인 &nbsp; □ 내부망 체인</td></tr>
+        </tbody>
+      </table>
+      <div class="grow">
+        <div class="pit">
+          <div class="pit-lb">TYPE 04 핵심 체크</div>
+          <div class="pit-h">출처 원문 클릭 대조 · 환각 검증</div>
+          <div class="pit-d">이 타입에서 사람이 반드시 개입해야 하는 지점이다. 레시피 카드에 게이트 위치를 명시한다.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">03 · 메타 프롬프트 설계와 AI 서비스 워크플로우 오케스트레이션</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">017 / 032</span></div></div>
+</div></div>
+<div class="stage"><div class="slide" data-title="B-05 이미지 콘텐츠">
+  <div class="hbar"><div class="hbar-l">PART B-05 · TYPE 05</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 03</div></div>
+  <div class="hl">
+    <div class="hl-kicker">PART B-05 · 워크플로우 타입 05 · 이미지 콘텐츠</div>
+    <div class="hl-title">TYPE 05 — 이미지 콘텐츠형 워크플로우의 구조</div>
+    <div class="hl-sub">정책 홍보 포스터·카드뉴스·행사 배너 등 시각 콘텐츠를 AI 이미지 생성 도구로 제작하는 타입. 외부 체인과 내부망 체인을 병렬로 설계하는 것이 기본 원칙이다.</div>
+    <div class="hl-bar"></div>
+  </div>
+  <div class="hl-rule"></div>
+  <div class="bd col2">
+    <div class="col">
+      <div class="sh"><span class="sh-n">STRUCTURE</span><span class="sh-t">타입 05의 구조 정의</span></div><div class="sh-line"></div>
+      <table class="mtbl">
+        <thead><tr><th style="width:120px">항목</th><th>정의</th></tr></thead>
+        <tbody>
+          <tr><td>INPUT</td><td class="q">정책 메시지 · 슬로건 · 텍스트 원고</td></tr>
+          <tr><td>CHAIN</td><td class="q">프롬프트 설계 → 이미지 생성 → 텍스트 합성 → 검수</td></tr>
+          <tr><td>GATE</td><td class="q">저작권·초상권·로고 유사성 확인 · 생성 로그 보존</td></tr>
+          <tr><td>OUTPUT</td><td class="q">홍보 포스터 · 카드뉴스 5장 · SNS 배너</td></tr>
+        </tbody>
+      </table>
+      <div class="grow">
+        <div class="pit">
+          <div class="pit-lb">DESIGN RULE</div>
+          <div class="pit-h">체인 도구는 3개 이하로 시작한다</div>
+          <div class="pit-d">도구가 늘어날수록 병목·형식 불일치 확률이 높아진다. 병목이 명확해진 뒤에만 도구를 추가한다.</div>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">DUAL PATH</span><span class="sh-t">외부·내부 두 경로를 함께 설계한다</span></div><div class="sh-line"></div>
+      <div class="co">
+        <div class="co-lb">EXTERNAL</div>
+        <div class="co-main">비식별 데이터 · 외부 SaaS 체인</div>
+        <p>속도·UX 장점. 외부 서버에 데이터가 전송되므로 개인정보·비공개 자료는 비식별화 필수.</p>
+      </div>
+      <div class="co">
+        <div class="co-lb">INTERNAL</div>
+        <div class="co-main">민감 데이터 · 로컬/내부망 체인</div>
+        <p>외부 통신 0. 감사 추적이 단순하다. 4~5차시에서 이 경로를 파이썬 코드로 구현한다.</p>
+      </div>
+      <div class="grow">
+        <div class="next">
+          <div class="next-k">SELECTION RULE</div>
+          <div class="next-t">"같은 데이터를 외부 이메일로 보낼 수 있는가" — 보낼 수 없으면 내부망 체인. 모호한 경우에는 내부망 쪽으로 기운다.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">03 · 메타 프롬프트 설계와 AI 서비스 워크플로우 오케스트레이션</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">018 / 032</span></div></div>
+</div></div>
+<div class="stage"><div class="slide" data-title="B-05 Example">
+  <div class="hbar"><div class="hbar-l">PART B-05 · EXAMPLE · 강사 교체 가능</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 03</div></div>
+  <div class="hl">
+    <div class="hl-kicker">PART B-05 · 실습 예시 — 강사가 부서·기관별 사례로 교체 가능</div>
+    <div class="hl-title">TYPE 05 예시 — 정책 홍보 카드뉴스 5장</div>
+    <div class="hl-sub">아래는 대표 실습 예시이다. 강사는 수강생의 부서·업무 맥락에 맞는 사례로 교체할 수 있다. 구조(입력→체인→게이트→출력)를 유지하되 구체적 도구와 데이터를 교체하는 방식으로 운영한다.</div>
+    <div class="hl-bar"></div>
+  </div>
+  <div class="hl-rule"></div>
+  <div class="bd col2">
+    <div class="col">
+      <div class="sh"><span class="sh-n">EXAMPLE</span><span class="sh-t">대표 실습 시나리오 · 강사 교체 가능</span></div><div class="sh-line"></div>
+      <table class="mtbl">
+        <thead><tr><th style="width:120px">항목</th><th>내용</th></tr></thead>
+        <tbody>
+          <tr><td>시나리오</td><td class="q">정책 홍보 카드뉴스 5장 — 핵심 메시지별 배경 이미지 생성 + 한글 삽입</td></tr>
+          <tr><td>서비스 체인</td><td class="q">ChatGPT(메시지 정리) → Ideogram(한글 이미지) → Canva(레이아웃)</td></tr>
+          <tr><td>내부망 대안</td><td class="q">AI 생성 이미지 저작권 귀속은 법적 미확정. 공공 발행물에는 보수적 기준 적용.</td></tr>
+        </tbody>
+      </table>
+      <div class="grow">
+        <div class="co">
+          <div class="co-lb">INSTRUCTOR NOTE</div>
+          <div class="co-main">이 예시는 대표 사례이다 — 강사가 부서별 사례로 교체할 수 있다</div>
+          <p>수강생 구성(중앙/지자체/교육청 등)에 따라 입력 데이터·도구·출력물을 교체한다. 타입의 <strong>구조(INPUT → CHAIN → GATE → OUTPUT)</strong>는 유지한다.</p>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">PRACTICE TEMPLATE</span><span class="sh-t">수강생 실습 기록 양식</span></div><div class="sh-line"></div>
+      <table class="mtbl">
+        <thead><tr><th style="width:120px">항목</th><th>기재란 (EDIT 모드에서 직접 수정)</th></tr></thead>
+        <tbody>
+          <tr><td>내 시나리오</td><td class="q">________________</td></tr>
+          <tr><td>입력</td><td class="q">________________</td></tr>
+          <tr><td>서비스 체인</td><td class="q">[도구1] → [도구2] → [도구3]</td></tr>
+          <tr><td>사람 게이트</td><td class="q">________________</td></tr>
+          <tr><td>출력</td><td class="q">________________</td></tr>
+          <tr><td>외부/내부</td><td class="q">□ 외부 체인 &nbsp; □ 내부망 체인</td></tr>
+        </tbody>
+      </table>
+      <div class="grow">
+        <div class="pit">
+          <div class="pit-lb">TYPE 05 핵심 체크</div>
+          <div class="pit-h">저작권·초상권·로고 유사성 확인 · 생성 로그 보존</div>
+          <div class="pit-d">이 타입에서 사람이 반드시 개입해야 하는 지점이다. 레시피 카드에 게이트 위치를 명시한다.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">03 · 메타 프롬프트 설계와 AI 서비스 워크플로우 오케스트레이션</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">019 / 032</span></div></div>
+</div></div>
+<div class="stage"><div class="slide" data-title="B-06 영상 파이프라인">
+  <div class="hbar"><div class="hbar-l">PART B-06 · TYPE 06</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 03</div></div>
+  <div class="hl">
+    <div class="hl-kicker">PART B-06 · 워크플로우 타입 06 · 영상 파이프라인</div>
+    <div class="hl-title">TYPE 06 — 영상 파이프라인형 워크플로우의 구조</div>
+    <div class="hl-sub">텍스트 원고에서 스크립트·내레이션·영상 클립·자막 편집까지를 AI 도구 체인으로 처리하는 타입. 외부 체인과 내부망 체인을 병렬로 설계하는 것이 기본 원칙이다.</div>
+    <div class="hl-bar"></div>
+  </div>
+  <div class="hl-rule"></div>
+  <div class="bd col2">
+    <div class="col">
+      <div class="sh"><span class="sh-n">STRUCTURE</span><span class="sh-t">타입 06의 구조 정의</span></div><div class="sh-line"></div>
+      <table class="mtbl">
+        <thead><tr><th style="width:120px">항목</th><th>정의</th></tr></thead>
+        <tbody>
+          <tr><td>INPUT</td><td class="q">정책 보고서 · 스크립트 원고 · 핵심 메시지</td></tr>
+          <tr><td>CHAIN</td><td class="q">스크립트 작성 → TTS 음성 → 영상 클립 → 자막·편집</td></tr>
+          <tr><td>GATE</td><td class="q">초상권·음성 복제 동의 · 언캐니밸리 검수 · 딥페이크 방지</td></tr>
+          <tr><td>OUTPUT</td><td class="q">2분 정책 홍보 영상 · 3분 교육 시리즈 · 15초 SNS 클립</td></tr>
+        </tbody>
+      </table>
+      <div class="grow">
+        <div class="pit">
+          <div class="pit-lb">DESIGN RULE</div>
+          <div class="pit-h">체인 도구는 3개 이하로 시작한다</div>
+          <div class="pit-d">도구가 늘어날수록 병목·형식 불일치 확률이 높아진다. 병목이 명확해진 뒤에만 도구를 추가한다.</div>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">DUAL PATH</span><span class="sh-t">외부·내부 두 경로를 함께 설계한다</span></div><div class="sh-line"></div>
+      <div class="co">
+        <div class="co-lb">EXTERNAL</div>
+        <div class="co-main">비식별 데이터 · 외부 SaaS 체인</div>
+        <p>속도·UX 장점. 외부 서버에 데이터가 전송되므로 개인정보·비공개 자료는 비식별화 필수.</p>
+      </div>
+      <div class="co">
+        <div class="co-lb">INTERNAL</div>
+        <div class="co-main">민감 데이터 · 로컬/내부망 체인</div>
+        <p>외부 통신 0. 감사 추적이 단순하다. 4~5차시에서 이 경로를 파이썬 코드로 구현한다.</p>
+      </div>
+      <div class="grow">
+        <div class="next">
+          <div class="next-k">SELECTION RULE</div>
+          <div class="next-t">"같은 데이터를 외부 이메일로 보낼 수 있는가" — 보낼 수 없으면 내부망 체인. 모호한 경우에는 내부망 쪽으로 기운다.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">03 · 메타 프롬프트 설계와 AI 서비스 워크플로우 오케스트레이션</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">020 / 032</span></div></div>
+</div></div>
+<div class="stage"><div class="slide" data-title="B-06 Example">
+  <div class="hbar"><div class="hbar-l">PART B-06 · EXAMPLE · 강사 교체 가능</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 03</div></div>
+  <div class="hl">
+    <div class="hl-kicker">PART B-06 · 실습 예시 — 강사가 부서·기관별 사례로 교체 가능</div>
+    <div class="hl-title">TYPE 06 예시 — 보고서 → 2분 주민 홍보 영상 (스크립트 → 내레이션 → 영상 클립 조합)</div>
+    <div class="hl-sub">아래는 대표 실습 예시이다. 강사는 수강생의 부서·업무 맥락에 맞는 사례로 교체할 수 있다. 구조(입력→체인→게이트→출력)를 유지하되 구체적 도구와 데이터를 교체하는 방식으로 운영한다.</div>
+    <div class="hl-bar"></div>
+  </div>
+  <div class="hl-rule"></div>
+  <div class="bd col2">
+    <div class="col">
+      <div class="sh"><span class="sh-n">EXAMPLE</span><span class="sh-t">대표 실습 시나리오 · 강사 교체 가능</span></div><div class="sh-line"></div>
+      <table class="mtbl">
+        <thead><tr><th style="width:120px">항목</th><th>내용</th></tr></thead>
+        <tbody>
+          <tr><td>시나리오</td><td class="q">보고서 → 2분 주민 홍보 영상 (스크립트 → 내레이션 → 영상 클립 조합)</td></tr>
+          <tr><td>서비스 체인</td><td class="q">ChatGPT(스크립트) → ElevenLabs(TTS) → Runway(영상) → 편집</td></tr>
+          <tr><td>내부망 대안</td><td class="q">AI 영상은 5~15초 클립 단위. 사람 등장 영상 대신 인포그래픽·모션그래픽이 안전.</td></tr>
+        </tbody>
+      </table>
+      <div class="grow">
+        <div class="co">
+          <div class="co-lb">INSTRUCTOR NOTE</div>
+          <div class="co-main">이 예시는 대표 사례이다 — 강사가 부서별 사례로 교체할 수 있다</div>
+          <p>수강생 구성(중앙/지자체/교육청 등)에 따라 입력 데이터·도구·출력물을 교체한다. 타입의 <strong>구조(INPUT → CHAIN → GATE → OUTPUT)</strong>는 유지한다.</p>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">PRACTICE TEMPLATE</span><span class="sh-t">수강생 실습 기록 양식</span></div><div class="sh-line"></div>
+      <table class="mtbl">
+        <thead><tr><th style="width:120px">항목</th><th>기재란 (EDIT 모드에서 직접 수정)</th></tr></thead>
+        <tbody>
+          <tr><td>내 시나리오</td><td class="q">________________</td></tr>
+          <tr><td>입력</td><td class="q">________________</td></tr>
+          <tr><td>서비스 체인</td><td class="q">[도구1] → [도구2] → [도구3]</td></tr>
+          <tr><td>사람 게이트</td><td class="q">________________</td></tr>
+          <tr><td>출력</td><td class="q">________________</td></tr>
+          <tr><td>외부/내부</td><td class="q">□ 외부 체인 &nbsp; □ 내부망 체인</td></tr>
+        </tbody>
+      </table>
+      <div class="grow">
+        <div class="pit">
+          <div class="pit-lb">TYPE 06 핵심 체크</div>
+          <div class="pit-h">초상권·음성 복제 동의 · 언캐니밸리 검수 · 딥페이크 방지</div>
+          <div class="pit-d">이 타입에서 사람이 반드시 개입해야 하는 지점이다. 레시피 카드에 게이트 위치를 명시한다.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">03 · 메타 프롬프트 설계와 AI 서비스 워크플로우 오케스트레이션</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">021 / 032</span></div></div>
+</div></div>
+<div class="stage"><div class="slide" data-title="Hero Flow Not Tool">
+  <div class="hbar"><div class="hbar-l">KEY INSIGHT · PART B</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 03</div></div>
+  <div style="position:absolute;top:80px;left:80px;right:80px;bottom:80px;background:var(--bg2);padding:80px 90px;display:flex;flex-direction:column;justify-content:center">
+    <div style="font-family:var(--mono);font-size:11.5px;color:var(--acc);letter-spacing:3px;font-weight:700;margin-bottom:18px">KEY INSIGHT · PART B</div>
+    <div style="font-family:var(--serif);font-weight:700;font-size:58px;line-height:1.12;letter-spacing:-0.03em;color:var(--ink)">도구 <span style="color:var(--acc);font-style:italic">단품</span>이 아니라<br><span style="color:var(--acc);font-style:italic">흐름</span>을 설계한다</div>
+    <div style="width:72px;height:3px;background:var(--acc);margin:22px 0 20px"></div>
+    <p style="font-size:17px;color:var(--ink2);line-height:1.75;max-width:1200px">6타입은 도구 추천이 아니라 <strong style="color:var(--ink)">흐름의 구조</strong>를 제시한 것이다. 새 도구가 등장하면 기존 흐름의 해당 단계에 끼워 넣으면 된다. 도구는 교체 가능하지만 흐름 구조는 유지된다.</p>
+    <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-top:36px;max-width:1300px">
+      <div style="border-top:3px solid var(--acc);padding-top:10px"><div style="font-family:var(--mono);font-size:9.5px;color:var(--ink3);letter-spacing:1.5px;font-weight:700">01</div><div style="font-size:13px;color:var(--ink);font-weight:700;margin-top:3px">문서 취합</div></div>
+      <div style="border-top:3px solid var(--acc);padding-top:10px"><div style="font-family:var(--mono);font-size:9.5px;color:var(--ink3);letter-spacing:1.5px;font-weight:700">02</div><div style="font-size:13px;color:var(--ink);font-weight:700;margin-top:3px">데이터 분석</div></div>
+      <div style="border-top:3px solid var(--acc);padding-top:10px"><div style="font-family:var(--mono);font-size:9.5px;color:var(--ink3);letter-spacing:1.5px;font-weight:700">03</div><div style="font-size:13px;color:var(--ink);font-weight:700;margin-top:3px">문서 변환</div></div>
+      <div style="border-top:3px solid var(--acc);padding-top:10px"><div style="font-family:var(--mono);font-size:9.5px;color:var(--ink3);letter-spacing:1.5px;font-weight:700">04</div><div style="font-size:13px;color:var(--ink);font-weight:700;margin-top:3px">리서치</div></div>
+      <div style="border-top:3px solid var(--acc);padding-top:10px"><div style="font-family:var(--mono);font-size:9.5px;color:var(--ink3);letter-spacing:1.5px;font-weight:700">05</div><div style="font-size:13px;color:var(--ink);font-weight:700;margin-top:3px">이미지</div></div>
+      <div style="border-top:3px solid var(--acc);padding-top:10px"><div style="font-family:var(--mono);font-size:9.5px;color:var(--ink3);letter-spacing:1.5px;font-weight:700">06</div><div style="font-size:13px;color:var(--ink);font-weight:700;margin-top:3px">영상</div></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">03 · 메타 프롬프트 설계와 AI 서비스 워크플로우 오케스트레이션</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">022 / 032</span></div></div>
+</div></div><div class="stage"><div class="slide" data-title="Common Patterns">
+  <div class="hbar"><div class="hbar-l">COMMON PATTERNS</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 03</div></div>
+  <div class="hl"><div class="hl-kicker">6타입 공통 패턴 — 사람 개입 · 검증 루프 · 보안 경계 · 8MIN</div><div class="hl-title">6타입을 관통하는 3대 운영 원리</div><div class="hl-sub">6타입을 모두 관통하는 운영 원리가 세 가지다. 이 세 가지를 잡아두면 10번째 타입이 생겨도 같은 방식으로 설계할 수 있다.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col3">
+    <div class="card"><div class="card-k">PATTERN 01 · HUMAN-IN-THE-LOOP</div><div class="card-anchor">AI가 하는 일 +<br>사람이 <em>끊어 들어가는</em> 지점</div><div class="card-body">6타입 모두 <strong>"생성은 AI, 검증·책임은 사람"</strong>이다. 체인 중간에 결재·최종 검토 단계가 반드시 포함된다. 이 지점이 책임 경계. 게이트가 없으면 공공 배포 불가.</div><div class="card-spacer"></div><div class="card-note">"사람 없는 자동 발송" 금지가 공공 AI의 최저선.</div></div>
+    <div class="card dk"><div class="card-k">PATTERN 02 · VERIFICATION LOOP</div><div class="card-anchor">교차 검증 ·<br>원문 대조 · <em>수치 재확인</em></div><div class="card-body">Part A의 교차 검증이 프롬프트 루프. Part B에서는 <strong>원문 페이지 참조 · 수치 재검증 · 체인 간 형식 일관성</strong>이 루프다. 루프 없이는 배포 금지.</div><div class="card-spacer"></div><div class="card-note">최소 1회 검증 루프가 체인에 포함되어야 한다.</div></div>
+    <div class="card"><div class="card-k">PATTERN 03 · SECURITY BOUNDARY</div><div class="card-anchor">외부 체인 vs 내부망 —<br><em>데이터에 따라</em> 둘 다 필요</div><div class="card-body">공공 데이터 → 외부 가능. 민감 데이터 → 내부망. 같은 업무를 <strong>두 경로로 모두 설계</strong>할 줄 알아야 거점리더. 데이터 분류가 출발.</div><div class="card-spacer"></div><div class="card-note">데이터 분류가 선행되지 않으면 보안 경계가 흐려진다.</div></div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">03 · 메타 프롬프트 설계와 AI 서비스 워크플로우 오케스트레이션</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">023 / 032</span></div></div>
+</div></div>
+<div class="stage"><div class="slide" data-title="Failure Patterns">
+  <div class="hbar"><div class="hbar-l">FAILURE PATTERNS</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 03</div></div>
+  <div class="hl"><div class="hl-kicker">실패 패턴 5가지 — 자주 빠지는 오류와 회피 전략 · 8MIN</div><div class="hl-title">현장에서 반복되는 5대 실패 패턴</div><div class="hl-sub">수강생·주무관들이 실제 현장에서 가장 많이 빠지는 함정. 다섯 가지만 미리 알아도 재작업·사고가 크게 줄어든다.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col2w">
+    <div class="col">
+      <div class="sh"><span class="sh-n">F-01~03</span><span class="sh-t">체인 과설계 · 복붙 · 검증 소홀</span></div><div class="sh-line"></div>
+      <div class="pit"><div class="pit-lb">F-01</div><div class="pit-h">도구 5~6개를 한 체인에 끼운다</div><div class="pit-d">도구가 많을수록 병목·형식 불일치 확률 급증. <strong>3개 이하</strong>로 시작하고 병목이 명확할 때만 추가.</div></div>
+      <div class="pit"><div class="pit-lb">F-02</div><div class="pit-h">남의 체인을 그대로 베낀다</div><div class="pit-d">입력·제약·독자가 다르면 체인도 달라야 한다. 남의 레시피를 가져올 때 <strong>"입력·독자·제약" 3칸을 내 맥락으로</strong> 재작성.</div></div>
+      <div class="pit"><div class="pit-lb">F-03</div><div class="pit-h">AI 요약을 원문 대조 없이 제출</div><div class="pit-d">특히 수치·법령·고유명사. 요약 프롬프트에 <strong>"원문 페이지 번호 표시"를 기본 포함</strong>한다.</div></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">F-04~05</span><span class="sh-t">데이터 오류 · 보안 소홀</span></div><div class="sh-line"></div>
+      <div class="pit"><div class="pit-lb">F-04</div><div class="pit-h">데이터 축·피벗 오류 방치</div><div class="pit-d">AI가 그린 차트의 축이 뒤집히거나 합계/평균이 바뀌면 결론이 역전된다. 제출 전 <strong>축·범례·집계 방식 세 가지</strong> 확인.</div></div>
+      <div class="pit"><div class="pit-lb">F-05</div><div class="pit-h">민감 데이터 외부 도구에 업로드</div><div class="pit-d">한 번의 실수로 도구 전체가 금지된다. 업로드 전 <strong>비식별화 자동 치환 규칙</strong>을 설정하고, 체인에 "외부 가능/불가" 칸을 의무화한다.</div></div>
+      <div class="grow">
+        <div class="next"><div class="next-k">DEFENSE FIRST</div><div class="next-t">공공 AI는 <strong>"방어 우선"</strong>이 원칙이다. 빠른 체인보다 안전한 체인. 사고 한 번이면 도구 전체가 막힌다. 거점리더의 1순위는 리스크 관리.</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">03 · 메타 프롬프트 설계와 AI 서비스 워크플로우 오케스트레이션</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">024 / 032</span></div></div>
+</div></div>
+<div class="stage"><div class="slide" data-title="Workshop Sheet">
+  <div class="hbar"><div class="hbar-l">PART C · WORKSHOP</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 03</div></div>
+  <div class="hl"><div class="hl-kicker">PART C · 워크숍 — 내 업무의 워크플로우 1개 설계 · 40MIN</div><div class="hl-title">현업 워크플로우 설계 워크숍</div><div class="hl-sub">1차시 미션 카드의 현업 과제를 6타입 중 적합한 것에 대입한다. 결과물과 서비스 체인 레시피 2가지를 함께 아카이브에 등록한다.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col2w">
+    <div class="col">
+      <div class="sh"><span class="sh-n">RECIPE CARD</span><span class="sh-t">워크플로우 레시피 양식 9칸</span></div><div class="sh-line"></div>
+      <table class="mtbl"><thead><tr><th style="width:130px">필드</th><th>기재 내용</th></tr></thead><tbody>
+        <tr><td>과제명</td><td class="q">해결하려는 업무 명칭</td></tr>
+        <tr><td>타입</td><td class="q">①문서 ②데이터 ③변환 ④리서치 ⑤이미지 ⑥영상</td></tr>
+        <tr><td>입력</td><td class="q">무엇을 넣는가 (파일·형식·분량)</td></tr>
+        <tr><td>서비스 체인</td><td class="q">[도구1] → [도구2] → [도구3]</td></tr>
+        <tr><td>각 도구 역할</td><td class="q">도구별 맡는 일 1줄씩</td></tr>
+        <tr><td>출력</td><td class="q">최종 산출물 형태·수신자</td></tr>
+        <tr><td>사람 개입 지점</td><td class="q">검토·결재가 들어가는 위치</td></tr>
+        <tr><td>보안 구간</td><td class="q">외부/내부 구분 · 비식별 필요 여부</td></tr>
+        <tr><td>미션 카드 연결</td><td class="q">1차시 미션 카드의 어느 필드에 기여하는가</td></tr>
+      </tbody></table>
+      <div class="grow"><div class="co"><div class="co-lb">WRITE TIME</div><div class="co-main">20분 — 레시피 1장 완성</div><p>결과물만 제출하면 재현 불가. <strong>도구·순서·입력·출력·보안·시간</strong>까지 기록해야 동료가 따라할 수 있는 레시피.</p></div></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">DISCUSSION</span><span class="sh-t">발표·토론 4축</span></div><div class="sh-line"></div>
+      <table class="mtbl"><thead><tr><th style="width:130px">토론 축</th><th>질문</th></tr></thead><tbody>
+        <tr><td>대안 도구</td><td class="q">"이 도구 대신 이걸 쓰면 어떤가?"</td></tr>
+        <tr><td>보안 현실</td><td class="q">"내부망에서 가능한가?"</td></tr>
+        <tr><td>자동화 가능성</td><td class="q">"4차시에서 코드로 전환 가능한가?"</td></tr>
+        <tr><td>미션 연결</td><td class="q">"1차시 미션 카드에 기여하는가?"</td></tr>
+      </tbody></table>
+      <div class="card-body" style="color:var(--ink2);margin-top:10px">발표 2분 · 질의 3분 · 총 5분/인. 초점은 "무엇을 찾았나"가 아니라 <strong style="color:var(--ink)">"왜 이 체인인가"</strong>. 앞뒤 연결이 발표의 중심.</div>
+      <div class="grow">
+        <div class="next"><div class="next-k">ARCHIVE</div><div class="next-t">완성된 레시피 + 결과물을 공용 아카이브에 즉시 등록. 동료의 레시피도 열람 가능. <strong>"동료가 찾은 체인을 내 맥락에 변형"</strong> — 1차시 아카이브 운영 원칙의 실행.</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">03 · 메타 프롬프트 설계와 AI 서비스 워크플로우 오케스트레이션</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">025 / 032</span></div></div>
+</div></div>
+<div class="stage"><div class="slide" data-title="Archive Registration">
+  <div class="hbar"><div class="hbar-l">PART C · ARCHIVE</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 03</div></div>
+  <div class="hl"><div class="hl-kicker">PART C · 아카이브 등록과 부서 이식 3주 플랜 · 10MIN</div><div class="hl-title">오늘 만든 자산을 부서에 이식하는 3주 플랜</div><div class="hl-sub">자산이 아카이브에만 쌓이면 의미가 없다. 부서에 실제로 이식되어야 한다. 3주 단위의 최소 실행 플랜을 세운다.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col2">
+    <div class="col">
+      <div class="sh"><span class="sh-n">3-WEEK PLAN</span><span class="sh-t">부서 이식 실행 계획</span></div><div class="sh-line"></div>
+      <div class="ladder" style="flex:1">
+        <div class="ladder-step"><div class="ladder-n">W1</div><div class="ladder-b"><div class="ladder-h">프롬프트 2개를 Custom GPT로 패키징</div><div class="ladder-d">시드 라이브러리에서 부서 업무 적합 2개 선별 → Custom GPT 또는 Claude Project로 패키징 → 본인 테스트.</div></div><div class="ladder-tag">개인</div></div>
+        <div class="ladder-step"><div class="ladder-n">W2</div><div class="ladder-b"><div class="ladder-h">레시피 1개를 동료 1명과 시연</div><div class="ladder-d">가장 적합한 레시피 1개 → 같은 부서 동료 1명에게 시연 → 피드백 수집.</div></div><div class="ladder-tag">1:1</div></div>
+        <div class="ladder-step dk"><div class="ladder-n">W3</div><div class="ladder-b"><div class="ladder-h">피드백 반영 → 아카이브 업데이트</div><div class="ladder-d">개선 버전을 아카이브에 재등록. 프롬프트는 한 번 만들고 끝이 아니라 <strong>분기 단위 개선</strong>.</div></div><div class="ladder-tag">확산</div></div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">OPS CHECKLIST</span><span class="sh-t">운영 체크리스트 7항</span></div><div class="sh-line"></div>
+      <table class="mtbl"><thead><tr><th style="width:40px">#</th><th>점검 항목</th></tr></thead><tbody>
+        <tr><td>①</td><td class="q">프롬프트 시드가 아카이브에 등록됐는가</td></tr>
+        <tr><td>②</td><td class="q">레시피 카드가 9칸 모두 채워졌는가</td></tr>
+        <tr><td>③</td><td class="q">외부/내부 두 경로가 모두 설계됐는가</td></tr>
+        <tr><td>④</td><td class="q">사람 개입 지점(게이트)이 명시됐는가</td></tr>
+        <tr><td>⑤</td><td class="q">보안 구간에 비식별 여부가 기재됐는가</td></tr>
+        <tr><td>⑥</td><td class="q">1차시 미션 카드와 연결됐는가</td></tr>
+        <tr><td>⑦</td><td class="q">3주 이식 플랜 날짜가 잡혔는가</td></tr>
+      </tbody></table>
+      <div class="grow"><div class="next"><div class="next-k">GOAL</div><div class="next-t">3주 뒤 부서에서 "AI 잘 쓰는 사람"으로 인식되기 시작한다. 화려한 도구 소개가 아니라 <strong>"내 업무가 이렇게 짧아졌다"</strong>는 실제 사례 1건이면 충분.</div></div></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">03 · 메타 프롬프트 설계와 AI 서비스 워크플로우 오케스트레이션</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">026 / 032</span></div></div>
+</div></div>
+<div class="stage"><div class="slide" data-title="Discussion">
+  <div class="hbar"><div class="hbar-l">PART C · DISCUSSION</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 03</div></div>
+  <div class="hl"><div class="hl-kicker">PART C · 발표·토론 · 15MIN</div><div class="hl-title">발표의 핵심은 "왜 이 체인인가"의 설명이다</div><div class="hl-sub">도구 이름 나열은 짧은 시간에 끝난다. 핵심은 현재 업무 흐름의 어느 지점에 왜 이 도구를 꽂았는지의 설명이다. 앞뒤 연결이 발표의 중심이 된다.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col2">
+    <div class="col">
+      <div class="sh"><span class="sh-n">PRESENTATION</span><span class="sh-t">발표 2분 · 질의 3분</span></div><div class="sh-line"></div>
+      <table class="mtbl"><thead><tr><th style="width:40px">#</th><th style="width:130px">발표 항목</th><th>내용</th></tr></thead><tbody>
+        <tr><td>①</td><td>과제명·타입</td><td class="q">6타입 중 어느 것인가</td></tr>
+        <tr><td>②</td><td>서비스 체인</td><td class="q">도구 3개 이하의 흐름</td></tr>
+        <tr><td>③</td><td>사람 게이트</td><td class="q">어디에 검토가 들어가는가</td></tr>
+        <tr><td>④</td><td>보안 경로</td><td class="q">외부/내부 어느 쪽인가</td></tr>
+        <tr><td>⑤</td><td>미션 연결</td><td class="q">1차시 미션 카드의 어느 필드에 기여하는가</td></tr>
+      </tbody></table>
+      <div class="grow"><div class="co"><div class="co-lb">PEER REVIEW</div><div class="co-main">동료의 체인에서 내 맥락에 적용 가능한 부분을 메모한다</div><p>발표를 듣는 것이 아니라 <strong>"내 업무에 변형 적용할 조각"</strong>을 찾는 시간. 메모한 내용은 아카이브에 "변형 후보"로 등록.</p></div></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">GUARD QUESTIONS</span><span class="sh-t">검증 질문 5개</span></div><div class="sh-line"></div>
+      <div class="pit"><div class="pit-lb">Q1</div><div class="pit-h">"이 도구 대신 이걸 쓰면?"</div><div class="pit-d">대안 도구 제안 — 같은 체인에 끼울 수 있는 다른 도구를 제시한다.</div></div>
+      <div class="pit"><div class="pit-lb">Q2</div><div class="pit-h">"이 단계에 LLM이 꼭 필요한가?"</div><div class="pit-d">과설계 방지 — 단순 규칙이면 엑셀 함수로 충분할 수 있다.</div></div>
+      <div class="pit"><div class="pit-lb">Q3</div><div class="pit-h">"내부망에서 돌아가는가?"</div><div class="pit-d">보안 현실 검토 — 민감 데이터가 포함되면 내부망 경로가 있어야 한다.</div></div>
+      <div class="pit"><div class="pit-lb">Q4</div><div class="pit-h">"4차시에서 코드로 옮길 수 있겠는가?"</div><div class="pit-d">다음 차시와의 연결 — 수동 체인을 자동화할 여지가 있는가.</div></div>
+      <div class="grow"><div class="pit"><div class="pit-lb">Q5</div><div class="pit-h">"1차시 미션 카드에 실제로 기여하는가?"</div><div class="pit-d">최종 목표 연결 — 미션과 동떨어진 체인은 학습 효과가 반감된다.</div></div></div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">03 · 메타 프롬프트 설계와 AI 서비스 워크플로우 오케스트레이션</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">027 / 032</span></div></div>
+</div></div>
+<div class="stage"><div class="slide" data-title="Ops Checklist">
+  <div class="hbar"><div class="hbar-l">PART C · OPS CHECKLIST</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 03</div></div>
+  <div class="hl"><div class="hl-kicker">PART C · 운영 체크리스트와 Stage A 종합 · 5MIN</div><div class="hl-title">Stage A가 완료되었다 — 재료 창고와 흐름 설계가 갖춰졌다</div><div class="hl-sub">1차시(지형) + 2차시(재료) + 3차시(조립) = Stage A 완료. 코드 없이 가능한 범위를 끝까지 밀어본 상태. 4차시부터 같은 흐름을 파이썬·HTML로 재구성한다.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col2">
+    <div class="col">
+      <div class="sh"><span class="sh-n">STAGE A ASSETS</span><span class="sh-t">누적 산출물 현황</span></div><div class="sh-line"></div>
+      <table class="mtbl"><thead><tr><th style="width:80px">차시</th><th style="width:200px">산출물</th><th>비고</th></tr></thead><tbody>
+        <tr><td>S01</td><td class="q">미션 카드</td><td>수강생 전원</td></tr>
+        <tr><td>S02</td><td class="q">결합 설계서 + 5분 루틴</td><td>수강생 전원 + 공용 1건</td></tr>
+        <tr><td>S03</td><td class="q">프롬프트 시드 (1인 2개)</td><td>공용 라이브러리</td></tr>
+        <tr><td>S03</td><td class="q">워크플로우 레시피</td><td>수강생 전원</td></tr>
+      </tbody></table>
+      <div class="grow"><div class="co"><div class="co-lb">STAGE A · 완료</div><div class="co-main">코드 없이 기획·재료 수집·흐름 설계를 끝까지 밀었다</div><p>이 자산들이 4차시부터 코드로 옮겨지는 대상이다. 레시피가 없는 코딩은 즉흥이고, 즉흥은 대부분 실패한다.</p></div></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">STAGE B PREVIEW</span><span class="sh-t">4차시부터 코드가 시작된다</span></div><div class="sh-line"></div>
+      <div class="ladder" style="flex:1">
+        <div class="ladder-step on"><div class="ladder-n">A</div><div class="ladder-b"><div class="ladder-h">1~3차시 · 재료 창고 + 흐름 설계</div><div class="ladder-d">코드 없이 지형·재료·조립. Stage A 완료 ✓</div></div><div class="ladder-tag">완료</div></div>
+        <div class="ladder-step"><div class="ladder-n">B</div><div class="ladder-b"><div class="ladder-h">4~5차시 · 어시스트 바이브 코딩</div><div class="ladder-d">외부 AI가 쓴 코드를 내부망에서 실행. 오늘의 레시피를 파이썬·HTML·VBA로.</div></div><div class="ladder-tag">다음</div></div>
+        <div class="ladder-step"><div class="ladder-n">C</div><div class="ladder-b"><div class="ladder-h">6차시 · 에이전트 도구 마스터리</div><div class="ladder-d">Claude Code · Cursor. 프롬프트 4단계의 최상위.</div></div><div class="ladder-tag">6주차</div></div>
+        <div class="ladder-step dk"><div class="ladder-n">D</div><div class="ladder-b"><div class="ladder-h">7~8차시 · RAG · API · MCP · 아키텍처</div><div class="ladder-d">부서 단위 배포 가능한 서비스 조립. 8주의 종착점.</div></div><div class="ladder-tag">캡스톤</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">03 · 메타 프롬프트 설계와 AI 서비스 워크플로우 오케스트레이션</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">028 / 032</span></div></div>
+</div></div>
+<div class="stage"><div class="slide" data-title="Hero Closing">
+  <div class="hbar"><div class="hbar-l">CLOSING QUOTE</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 03</div></div>
+  <div style="position:absolute;top:80px;left:80px;right:80px;bottom:80px;background:var(--dk);padding:80px 90px;display:flex;flex-direction:column;justify-content:center;color:var(--on)">
+    <div style="font-family:var(--mono);font-size:11.5px;color:var(--acc3);letter-spacing:3px;font-weight:700;margin-bottom:18px">SESSION 03 · CLOSING QUOTE</div>
+    <div style="font-family:var(--serif);font-weight:700;font-size:56px;line-height:1.12;letter-spacing:-0.03em;color:var(--on)">거점리더는<br>프롬프트를 <span style="color:var(--acc3);font-style:italic">외우는 사람</span>이 아니라<br><span style="color:var(--acc3);font-style:italic">흐름을 짜는 사람</span>이다</div>
+    <div style="width:72px;height:3px;background:var(--acc3);margin:22px 0 20px"></div>
+    <p style="font-size:17px;color:var(--on2);line-height:1.75;max-width:1200px">3차시의 핵심 학습 목표 세 가지. <strong style="color:var(--on)">① 기법 암기 → 메타 생성</strong> · <strong style="color:var(--on)">② 도구 단품 → 서비스 체인</strong> · <strong style="color:var(--on)">③ 개인 프롬프트 → 부서 자산</strong>.</p>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">03 · 메타 프롬프트 설계와 AI 서비스 워크플로우 오케스트레이션</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">029 / 032</span></div></div>
+</div></div>
+<div class="stage"><div class="slide" data-title="Closing Summary">
+  <div class="hbar"><div class="hbar-l">CLOSING ①</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 03</div></div>
+  <div class="hl"><div class="hl-kicker">CLOSING ① · 3차시 정리 · 5MIN</div><div class="hl-title">오늘 다룬 3파트와 남겨야 할 산출물</div><div class="hl-sub">Stage A(재료 창고) 3주가 완료되었다. 메타 프롬프트 시드 · 워크플로우 레시피 · 미션 카드 — 4차시 코드의 출발점이 갖춰졌다.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col3">
+    <div class="card"><div class="card-k">BLOCK 01 · PART A</div><div class="card-anchor">메타 프롬프트 —<br><em>프롬프트 설계</em>를 AI에 위임</div><div class="card-body">상황 기술 → AI 생성 → 교차 검증 3단계. 시스템 프롬프트·Custom GPT·Skills·Gems 메타 생성. 프롬프트 공유 활동으로 부서 시드 라이브러리 구축.</div><div class="card-spacer"></div><div class="card-note">프롬프트는 개인 기술이 아니라 부서 자산이다.</div></div>
+    <div class="card dk"><div class="card-k">BLOCK 02 · PART B</div><div class="card-anchor">워크플로우 <em>6타입</em><br>서비스 체인 시연</div><div class="card-body">문서 취합·데이터 분석·문서 변환·논문 리서치·이미지·영상. 에이전트 도구 없이 서비스 체인만으로 업무를 처리. 공통 패턴 3가지 + 실패 패턴 5가지.</div><div class="card-spacer"></div><div class="card-note">도구 단품이 아니라 흐름을 쓴다.</div></div>
+    <div class="card"><div class="card-k">BLOCK 03 · PART C</div><div class="card-anchor">워크숍 —<br>내 <em>워크플로우</em> 1개 조립</div><div class="card-body">6타입 중 1개를 현업에 대입. 결과물 + 서비스 체인 레시피 2종 제출. 발표·토론. Stage A 완료.</div><div class="card-spacer"></div><div class="card-note">오늘의 레시피가 4차시에서 코드로 옮겨진다.</div></div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">03 · 메타 프롬프트 설계와 AI 서비스 워크플로우 오케스트레이션</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">030 / 032</span></div></div>
+</div></div>
+<div class="stage"><div class="slide" data-title="Closing Next">
+  <div class="hbar"><div class="hbar-l">CLOSING ②</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 03</div></div>
+  <div class="hl"><div class="hl-kicker">CLOSING ② · 4차시 안내 — 어시스트 바이브 코딩 ① · 4MIN</div><div class="hl-title">4차시 예고 — 오늘의 수동 체인이 코드로 전환된다</div><div class="hl-sub">외부망에서 ChatGPT·Claude가 코드를 쓰고, 내부망에서 실행한다. 오늘의 수동 서비스 체인이 파이썬·HTML·Power BI로 옮겨가는 Stage B의 출발.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd col2w">
+    <div class="col">
+      <div class="sh"><span class="sh-n">SESSION 04</span><span class="sh-t">4차시 미리보기</span></div><div class="sh-line"></div>
+      <div class="card dk" style="padding:24px 28px"><div class="card-k">STAGE B START</div><div class="card-anchor">어시스트 바이브 코딩 ① —<br>데이터 <em>시각화와 분석</em></div><div class="card-body">외부망에서 ChatGPT·Claude·Gemini의 어시스트로 코드를 받고, 내부망에서 실행하는 루틴. 파이썬 시각화 · HTML/JS 대시보드 · pandas · scikit-learn. 오늘 만든 B-2 데이터 분석 레시피가 실제 코드로 구현된다.</div></div>
+      <div class="co" style="margin-top:10px"><div class="co-lb">PREREQ</div><div class="co-main">Python venv + Ollama + VS Code</div><p>python -m venv .venv → 활성화 확인. ollama run 테스트. 1차시 환경 세팅 재확인.</p></div>
+      <div class="grow"><div class="pit"><div class="pit-lb">PHILOSOPHY</div><div class="pit-h">왜 에이전트 전에 어시스트인가</div><div class="pit-d">에이전트가 대신 코딩해주면 편하지만 한계를 모른다. 어시스트 코딩으로 <strong>체감·한계를 먼저</strong> 확보한 뒤 6차시 에이전트로 간다.</div></div></div>
+    </div>
+    <div class="col">
+      <div class="sh"><span class="sh-n">BRING</span><span class="sh-t">4차시 준비물</span></div><div class="sh-line"></div>
+      <table class="mtbl"><thead><tr><th style="width:40px">#</th><th>준비물</th></tr></thead><tbody>
+        <tr><td>①</td><td class="q">오늘 만든 <strong>워크플로우 레시피 1장</strong></td></tr>
+        <tr><td>②</td><td class="q">Python 가상환경 동작 확인</td></tr>
+        <tr><td>③</td><td class="q">Ollama 설치 + 테스트 응답 확인</td></tr>
+        <tr><td>④</td><td class="q">VS Code 또는 편집기 설치</td></tr>
+      </tbody></table>
+      <div class="grow">
+        <div class="next"><div class="next-k">3→4 MAPPING</div><div class="next-t">수동 서비스 체인 → 파이썬 스크립트<br>복붙 워크플로우 → 자동 실행<br>외부 Julius AI → 내부 pandas+matplotlib<br>공유 레시피 → .py 모듈 버전 관리<br>발표용 Gamma PPT → HTML 대시보드</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">03 · 메타 프롬프트 설계와 AI 서비스 워크플로우 오케스트레이션</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">031 / 032</span></div></div>
+</div></div>
+<div class="stage"><div class="slide" data-title="Stage Map">
+  <div class="hbar"><div class="hbar-l">8-WEEK STAGE MAP</div><div class="hbar-r">공공 AI 전문인재 양성과정 · Session 03</div></div>
+  <div class="hl"><div class="hl-kicker">8주 로드맵 · Stage A 완료 · 3MIN</div><div class="hl-title">Stage A 완료 — 4차시부터 코드가 시작된다</div><div class="hl-sub">재료 창고를 채우고 흐름을 짰다. 4차시부터 같은 흐름을 코드로 자동화한다. 어시스트 → 에이전트 → 아키텍처 순으로 확장.</div><div class="hl-bar"></div></div>
+  <div class="hl-rule"></div>
+  <div class="bd" style="grid-template-rows:auto 1fr;grid-template-columns:1fr;gap:1px">
+    <div style="background:var(--bg);padding:20px 30px 14px">
+      <div class="sh"><span class="sh-n">8 SESSIONS</span><span class="sh-t">차시별 상태</span></div><div class="sh-line"></div>
+      <div style="display:grid;grid-template-columns:repeat(8,1fr);gap:1px;background:var(--ln2)">
+        <div style="background:var(--bg2);padding:14px 14px"><div style="font-family:var(--mono);font-size:9.5px;color:var(--ink3);letter-spacing:1.5px;font-weight:700">S01 · DONE</div><div style="font-family:var(--serif);font-size:14px;color:var(--ink);font-weight:700;line-height:1.25;margin-top:4px">지형도</div></div>
+        <div style="background:var(--bg2);padding:14px 14px"><div style="font-family:var(--mono);font-size:9.5px;color:var(--ink3);letter-spacing:1.5px;font-weight:700">S02 · DONE</div><div style="font-family:var(--serif);font-size:14px;color:var(--ink);font-weight:700;line-height:1.25;margin-top:4px">재료 창고</div></div>
+        <div style="background:#f0e7d6;padding:14px 14px;border:2px solid var(--acc);margin:-2px"><div style="font-family:var(--mono);font-size:9.5px;color:var(--acc);letter-spacing:1.5px;font-weight:700">S03 · TODAY</div><div style="font-family:var(--serif);font-size:14px;color:var(--ink);font-weight:700;line-height:1.25;margin-top:4px">메타+조립</div></div>
+        <div style="background:var(--bg2);padding:14px 14px"><div style="font-family:var(--mono);font-size:9.5px;color:var(--ink3);letter-spacing:1.5px;font-weight:700">S04 · NEXT</div><div style="font-family:var(--serif);font-size:14px;color:var(--ink);font-weight:700;line-height:1.25;margin-top:4px">바이브 ①</div></div>
+        <div style="background:var(--bg2);padding:14px 14px"><div style="font-family:var(--mono);font-size:9.5px;color:var(--ink3);letter-spacing:1.5px;font-weight:700">S05</div><div style="font-family:var(--serif);font-size:14px;color:var(--ink);font-weight:700;line-height:1.25;margin-top:4px">바이브 ②</div></div>
+        <div style="background:var(--bg2);padding:14px 14px"><div style="font-family:var(--mono);font-size:9.5px;color:var(--ink3);letter-spacing:1.5px;font-weight:700">S06</div><div style="font-family:var(--serif);font-size:14px;color:var(--ink);font-weight:700;line-height:1.25;margin-top:4px">에이전트</div></div>
+        <div style="background:var(--bg2);padding:14px 14px"><div style="font-family:var(--mono);font-size:9.5px;color:var(--ink3);letter-spacing:1.5px;font-weight:700">S07</div><div style="font-family:var(--serif);font-size:14px;color:var(--ink);font-weight:700;line-height:1.25;margin-top:4px">RAG</div></div>
+        <div style="background:var(--dk);padding:14px 14px;color:var(--on)"><div style="font-family:var(--mono);font-size:9.5px;color:var(--acc3);letter-spacing:1.5px;font-weight:700">S08</div><div style="font-family:var(--serif);font-size:14px;color:var(--on);font-weight:700;line-height:1.25;margin-top:4px">MCP·캡스톤</div></div>
+      </div>
+    </div>
+    <div style="background:var(--bg);padding:18px 30px 22px;display:grid;grid-template-columns:1fr 1fr;gap:32px;align-items:stretch">
+      <div>
+        <div class="sh"><span class="sh-n">STAGE MAP</span><span class="sh-t">재료 → 구현 → 운영</span></div><div class="sh-line"></div>
+        <div class="pit"><div class="pit-lb">STAGE A · 완료 ✓</div><div class="pit-h">1~3차시 = 재료 창고 + 흐름 설계</div><div class="pit-d">코드 없이 기획·재료·워크플로우 조립. 오늘로 완료.</div></div>
+        <div class="pit" style="margin-top:8px"><div class="pit-lb">STAGE B · 다음</div><div class="pit-h">4~6차시 = 어시스트 · 자동화 · 에이전트</div><div class="pit-d">실제 도구를 쥐고 업무 자동화를 구축한다.</div></div>
+        <div class="pit" style="margin-top:8px"><div class="pit-lb">STAGE C</div><div class="pit-h">7~8차시 = RAG · MCP · 아키텍처</div><div class="pit-d">운영 수준 마무리. 최종 캡스톤 발표.</div></div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:14px;justify-content:center">
+        <div class="next"><div class="next-k">NEXT WEEK</div><div class="next-t">4차시는 <strong>Stage B의 시작</strong>이다. 오늘의 레시피 1장과 Python 환경을 가져와 서비스 체인을 코드로 전환하는 실습을 수행한다.</div></div>
+        <div class="co"><div class="co-lb">FINAL NOTE</div><div class="co-main">오늘 수고하셨습니다</div><p>재료를 모으고 흐름을 짰다. 다음 주부터는 그 흐름이 코드가 된다. <strong>Stage A의 자산이 Stage B~D까지 입력 자료가 된다</strong> — 오늘이 8주 전체의 기반.</p></div>
+      </div>
+    </div>
+  </div>
+  <div class="fbar"><div class="fbar-l"><span class="fbar-label">MODULE</span><span class="fbar-title">03 · 메타 프롬프트 설계와 AI 서비스 워크플로우 오케스트레이션</span></div><div class="fbar-r"><span class="fbar-label">PAGE</span><span class="fbar-title">032 / 032</span></div></div>
+</div></div>
+</div>
+
+<script>
+(function(){
+  document.querySelectorAll('.toolbar,.deck-nav').forEach(e=>e.remove());
+  const tb = document.createElement('div');
+  tb.className = 'toolbar';
+  tb.innerHTML = `<button onclick="pNav(-1)">◀</button><span class="pg" id="pgInd">1 / 1</span><button onclick="pNav(1)">▶</button><button onclick="window.print()">⬇ PDF</button><button onclick="tFull()">⛶ FULL</button><button id="editBtn" onclick="tEdit()">✎ EDIT</button>`;
+  document.body.appendChild(tb);
+})();
+
+const allSlides = document.querySelectorAll('.slide');
+const allStages = document.querySelectorAll('.stage');
+const deck = document.getElementById('deck');
+
+function fitSlides(){const vw=innerWidth,vh=innerHeight;const r=Math.min(vw/1600,vh/900);allSlides.forEach(s=>{s.style.transform=`scale(${r})`;s.style.transformOrigin='center center'})}
+addEventListener('resize',fitSlides);fitSlides();
+
+function curIdx(){let i=0,m=1e9;allStages.forEach((s,x)=>{const d=Math.abs(s.getBoundingClientRect().top+s.getBoundingClientRect().height/2-innerHeight/2);if(d<m){m=d;i=x}});return i}
+function pNav(dir){const i=curIdx()+dir;if(i>=0&&i<allStages.length)allStages[i].scrollIntoView({behavior:'smooth'})}
+function updPg(){document.getElementById('pgInd').textContent=`${curIdx()+1} / ${allStages.length}`}
+deck.addEventListener('scroll',updPg);updPg();
+function tFull(){if(document.fullscreenElement)document.exitFullscreen();else document.documentElement.requestFullscreen().catch(()=>{})}
+
+let editMode=false;
+function tEdit(){
+  editMode=!editMode;
+  const btn=document.getElementById('editBtn'),tb=document.querySelector('.toolbar');
+  const SEL='.hl-kicker,.hl-title,.hl-sub,.card-k,.card-anchor,.card-body,.card-note,.co-lb,.co-main,.co p,.next-k,.next-t,.pit-lb,.pit-h,.pit-d,.sh-n,.sh-t,.hybrid-k,.hybrid-h,.hybrid-d,.draft-k,.draft-t,.draft-note,.cmp2c-k,.cmp2c-h,.cmp2c-d,.cmp2c-fig,.qd-k,.qd-h,.qd-d,.ladder-h,.ladder-d,.ladder-tag,.tblock-w,.tblock-h,.tblock-d,.tblock-sess,.type-h,.type-d,.type-tag,.flow-box-t,.hbar-l,.hbar-r,.fbar-title,.mtbl td,.mtbl th,h1,p,.slide>div>div>div[style],.slide>div>div>p[style],.slide div[style*="font-size"],.slide span[style*="font-size"]';
+  if(editMode){
+    btn.textContent='✎ EDITING';btn.style.background='#b8532a';btn.style.color='#fff';tb.style.borderBottom='2px solid #b8532a';
+    document.querySelectorAll(SEL).forEach(el=>{el.contentEditable='true';el.style.outline='1px dashed rgba(184,83,42,0.3)';el.style.cursor='text'});
+    deck.style.scrollSnapType='none';
+    sToast('EDIT ON — 텍스트 클릭 수정 · Ctrl+S 저장 · E 또는 ESC로 종료');
+  }else{
+    btn.textContent='✎ EDIT';btn.style.background='';btn.style.color='';tb.style.borderBottom='';
+    document.querySelectorAll('[contenteditable="true"]').forEach(el=>{el.contentEditable='false';el.style.outline='';el.style.cursor=''});
+    deck.style.scrollSnapType='y mandatory';
+    sToast('EDIT OFF — 프레젠테이션 모드');
+  }
+}
+function sToast(m){let t=document.getElementById('toast');if(!t){t=document.createElement('div');t.id='toast';t.style.cssText='position:fixed;bottom:60px;left:50%;transform:translateX(-50%);background:rgba(14,10,6,0.92);color:#ede4d3;font-family:var(--mono,monospace);font-size:11px;letter-spacing:1.5px;padding:10px 24px;border-radius:4px;z-index:300;pointer-events:none;opacity:0;transition:opacity 0.4s';document.body.appendChild(t)}t.textContent=m;t.style.opacity='1';clearTimeout(t._tid);t._tid=setTimeout(()=>{t.style.opacity='0'},3000)}
+
+document.addEventListener('keydown',e=>{
+  if(editMode){
+    if(e.key==='s'&&(e.ctrlKey||e.metaKey)){e.preventDefault();const b=new Blob(['<!DOCTYPE html>\n'+document.documentElement.outerHTML],{type:'text/html'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=document.title.replace(/[^a-zA-Z0-9가-힣\s·_-]/g,'')+'.html';a.click();URL.revokeObjectURL(a.href);sToast('HTML 파일 저장 완료')}
+    if(e.key==='Escape'||e.key==='e'||e.key==='E'){if(!document.activeElement||document.activeElement===document.body)tEdit()}
+    return;
+  }
+  if(e.key==='ArrowRight'||e.key==='ArrowDown'||e.key===' '||e.key==='PageDown'){e.preventDefault();pNav(1)}
+  else if(e.key==='ArrowLeft'||e.key==='ArrowUp'||e.key==='PageUp'){e.preventDefault();pNav(-1)}
+  else if(e.key==='Home'){e.preventDefault();allStages[0].scrollIntoView({behavior:'smooth'})}
+  else if(e.key==='End'){e.preventDefault();allStages[allStages.length-1].scrollIntoView({behavior:'smooth'})}
+  else if(e.key==='f'||e.key==='F11'){e.preventDefault();tFull()}
+  else if(e.key==='Escape'){if(document.fullscreenElement)document.exitFullscreen()}
+  else if(e.key==='e'||e.key==='E'){tEdit()}
+});
+</script>
+<script>/* kg-preview: #<heading> \uc704\uce58\ub85c \uc774\ub3d9 */
+(function(){function norm(t){return (t||'').replace(/\s+/g,'').toLowerCase()}
+function go(){var h=decodeURIComponent(location.hash.slice(1));if(!h)return;var k=norm(h).slice(0,24);if(!k)return;
+var best=null,bl=1e9,els=document.body.querySelectorAll('h1,h2,h3,h4,h5,p,div,span,li,td,text,tspan,section,article');
+for(var i=0;i<els.length;i++){var e=els[i],t=norm(e.textContent);if(t.length<bl&&t.indexOf(k)>-1){best=e;bl=t.length}}
+if(!best)return;var box=best.closest('section,[class*=slide],[class*=page],article')||best;
+box.scrollIntoView({block:'start'});box.style.outline='3px solid #c0504d';box.style.outlineOffset='4px';
+setTimeout(function(){box.style.outline=''},2600)}
+window.addEventListener('load',function(){setTimeout(go,400)});window.addEventListener('hashchange',go)})();</script></body>
+</html>

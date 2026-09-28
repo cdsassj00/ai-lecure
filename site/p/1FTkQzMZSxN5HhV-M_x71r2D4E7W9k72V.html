@@ -1,0 +1,998 @@
+<!doctype html>
+<html lang="ko">
+<head><meta name="robots" content="noindex, nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>티파니앤코 옴니채널팀 생성형 AI 업무 자동화 실습과정</title>
+<style>
+:root{--ink:#202327;--body:#454a50;--muted:#737980;--paper:#fff;--desk:#d9dddf;--line:#d9dfe1;--navy:#071923;--aqua:#71d5cd;--aqua-deep:#087f82;--aqua-pale:#eaf8f6;--warm:#f4f0e9;--gold:#9b7740;--code:#17242b}*{box-sizing:border-box}html,body{margin:0;font-family:"Pretendard Variable",Pretendard,"Noto Sans KR",sans-serif;color:var(--ink);word-break:keep-all;overflow-wrap:break-word}body{background:var(--desk);padding:30px 0 90px}.book{display:flex;flex-direction:column;align-items:center;gap:24px}.page{width:794px;height:1123px;background:var(--paper);position:relative;overflow:hidden;padding:72px 70px 64px;box-shadow:0 15px 35px -24px #182027}.page[hidden]{display:none!important}.editable [data-edit]{outline:1px dashed rgba(8,127,130,.48);outline-offset:2px}.running{position:absolute;left:70px;right:70px;top:28px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line);padding-bottom:9px;font-size:9.5px;letter-spacing:.11em;color:var(--muted)}.running .brand{font-family:Georgia,serif;letter-spacing:.17em;color:var(--ink);font-weight:700}.folio{position:absolute;bottom:24px;left:70px;right:70px;display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--line);padding-top:8px;color:var(--muted);font-size:9px;letter-spacing:.05em}.kicker{font-size:10px;letter-spacing:.16em;color:var(--aqua-deep);font-weight:850;text-transform:uppercase;margin-bottom:11px}h1,h2,h3,p{margin:0}h2{font-size:28px;line-height:1.23;letter-spacing:-.035em;margin-bottom:15px}h3{font-size:17px;line-height:1.35;letter-spacing:-.02em;margin:0 0 8px}.lead{font-size:14.5px;line-height:1.75;color:var(--body);margin-bottom:24px}.body{font-size:12.5px;line-height:1.72;color:var(--body)}.small{font-size:10.5px;line-height:1.62;color:var(--muted)}.section-label{display:flex;align-items:center;gap:9px;font-size:10px;color:var(--aqua-deep);font-weight:850;letter-spacing:.1em;margin-bottom:10px}.section-label:before{content:"";width:23px;height:2px;background:var(--aqua-deep)}
+.cover{background:var(--navy);color:#fff;padding:62px}.cover:before{content:"";position:absolute;width:620px;height:620px;border:1px solid rgba(113,213,205,.18);border-radius:50%;right:-300px;top:-270px}.cover:after{content:"";position:absolute;width:500px;height:500px;border:1px solid rgba(113,213,205,.15);border-radius:50%;left:-350px;bottom:-310px}.cover-head{display:flex;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,.23);padding-bottom:13px;font-size:9.5px;letter-spacing:.15em}.cover-main{position:relative;z-index:1;margin-top:190px}.cover .code{font-size:11px;letter-spacing:.19em;color:var(--aqua);font-weight:800}.cover h1{font-size:47px;line-height:1.14;letter-spacing:-.055em;margin-top:20px}.cover .subtitle{font-size:18px;line-height:1.65;color:#c6d4d9;margin-top:25px;max-width:610px}.cover .route{margin-top:45px;display:grid;grid-template-columns:1fr 40px 1fr 40px 1fr;align-items:center}.cover .route span{border-top:2px solid var(--aqua);padding-top:12px;font-size:12px;line-height:1.5}.cover .route i{text-align:center;color:#718892;font-style:normal}.cover-meta{position:absolute;left:62px;right:62px;bottom:68px;display:flex;justify-content:space-between;color:#b3c3ca;font-size:11px}.cover-meta b{display:block;color:var(--aqua);font-size:9px;letter-spacing:.1em;margin-bottom:5px}.cover .folio{left:62px;right:62px;color:#8298a1;border-color:rgba(255,255,255,.18)}
+.statement{font-size:23px;line-height:1.5;font-weight:750;letter-spacing:-.035em;padding:22px 0 25px;border-top:3px solid var(--navy);border-bottom:1px solid var(--line);margin-bottom:25px}.statement em{font-style:normal;color:var(--aqua-deep)}.prose p{font-size:13px;line-height:1.78;color:var(--body);margin:0 0 15px}.compare{display:grid;grid-template-columns:1fr 1fr;border-top:2px solid var(--navy);border-bottom:2px solid var(--navy);margin:22px 0}.compare>div{padding:18px 19px}.compare>div+div{border-left:1px solid var(--line);background:var(--aqua-pale)}.compare h3{font-size:16px}.compare ul{margin:9px 0 0;padding-left:17px;font-size:11.5px;line-height:1.68;color:var(--body)}
+.workflow{margin-top:24px;border-top:3px solid var(--navy);border-bottom:2px solid var(--navy)}.flow-row{display:grid;grid-template-columns:48px 132px 1fr;border-bottom:1px solid var(--line);min-height:91px}.flow-row:last-child{border-bottom:0}.flow-no{display:flex;align-items:center;justify-content:center;background:#eef1f2;color:var(--aqua-deep);font-size:20px;font-weight:850}.flow-who{padding:15px 13px;font-size:11px;font-weight:800;display:flex;align-items:center;border-right:1px solid var(--line)}.flow-action{padding:14px 17px}.flow-action b{display:block;font-size:13px;margin-bottom:5px}.flow-action p{font-size:11.3px;line-height:1.55;color:var(--body)}.flow-action code{font-family:Consolas,monospace;color:var(--aqua-deep);font-size:10.5px}
+.schedule{width:100%;border-collapse:collapse;margin-top:20px;font-size:11px;line-height:1.48}.schedule th{background:var(--navy);color:#fff;text-align:left;padding:10px 9px;font-size:10px;letter-spacing:.03em}.schedule td{border-bottom:1px solid var(--line);padding:12px 9px;vertical-align:top}.schedule tr:nth-child(even) td{background:#f7f8f8}.schedule .s{width:64px;text-align:center;color:var(--aqua-deep);font-weight:850}.schedule .t{width:64px;text-align:center}.schedule strong{display:block;margin-bottom:4px}.outputs{margin-top:25px;display:grid;grid-template-columns:150px 1fr;border-top:2px solid var(--navy);border-bottom:1px solid var(--line)}.outputs div{padding:13px 15px;border-bottom:1px solid var(--line)}.outputs div:nth-child(odd){background:#eef1f2;font-weight:800;font-size:11px}.outputs div:nth-child(even){font-size:11.5px;color:var(--body)}
+.lab-head{display:grid;grid-template-columns:72px 1fr;gap:18px;align-items:start;margin-bottom:17px}.lab-no{width:64px;height:64px;border:2px solid var(--aqua-deep);display:flex;align-items:center;justify-content:center;color:var(--aqua-deep);font-size:21px;font-weight:850}.lab-head h2{margin:2px 0 6px}.lab-head p{font-size:12.5px;line-height:1.6;color:var(--body)}.io{display:grid;grid-template-columns:1fr 1fr;border-top:2px solid var(--navy);border-bottom:1px solid var(--line);margin:17px 0 19px}.io>div{padding:13px 15px}.io>div+div{border-left:1px solid var(--line);background:#f7f8f8}.io b{display:block;font-size:10px;letter-spacing:.1em;color:var(--aqua-deep);margin-bottom:6px}.io p{font-size:11.5px;line-height:1.5;color:var(--body)}.steps{counter-reset:step;margin:0 0 18px}.step{display:grid;grid-template-columns:34px 1fr;gap:12px;padding:11px 0;border-bottom:1px solid var(--line)}.step:before{counter-increment:step;content:counter(step);width:25px;height:25px;border-radius:50%;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;margin-top:1px}.step b{display:block;font-size:12.5px;margin-bottom:3px}.step p{font-size:11.2px;line-height:1.56;color:var(--body)}.prompt{background:var(--code);color:#eaf1f3;padding:15px 17px;margin:16px 0;border-left:4px solid var(--aqua)}.prompt b{display:block;color:var(--aqua);font-size:10px;letter-spacing:.11em;margin-bottom:7px}.prompt p{font-family:Consolas,"Noto Sans KR",monospace;font-size:10.6px;line-height:1.58}.checkline{border-top:2px solid var(--gold);padding-top:10px;margin-top:15px;font-size:11px;line-height:1.55;color:var(--body)}.checkline b{color:var(--gold)}.code-shape{background:#f2f4f4;border-left:4px solid var(--aqua-deep);padding:13px 15px;margin:15px 0}.code-shape code{font-family:Consolas,monospace;font-size:10.5px;line-height:1.6;color:#2b3e48;white-space:pre-wrap}.error-loop{display:grid;grid-template-columns:1fr 34px 1fr 34px 1fr;align-items:center;margin:20px 0}.error-loop div{min-height:90px;border-top:3px solid var(--aqua-deep);padding:12px 10px;background:#f7f8f8}.error-loop i{text-align:center;font-style:normal;color:var(--aqua-deep);font-size:22px}.error-loop b{display:block;font-size:11px;margin-bottom:5px}.error-loop span{font-size:10.3px;line-height:1.45;color:var(--body)}.matrix{width:100%;border-collapse:collapse;margin-top:17px;font-size:10.8px;line-height:1.45}.matrix th{background:var(--navy);color:#fff;padding:10px;text-align:left}.matrix td{padding:11px 10px;border-bottom:1px solid var(--line);vertical-align:top}.matrix tr:nth-child(even) td{background:#f7f8f8}.matrix .status{font-weight:800;color:var(--aqua-deep)}
+.controls{position:fixed;right:18px;bottom:18px;display:flex;gap:6px;z-index:30;background:rgba(7,25,35,.94);padding:8px;border-radius:6px}.controls button{border:1px solid rgba(255,255,255,.23);background:none;color:#fff;padding:7px 9px;font:600 11px Pretendard;cursor:pointer}.single{padding:0;background:#151d22}.single .book{min-height:100vh;justify-content:center}.single .page{display:none;transform-origin:center}.single .page.active{display:block}.single .controls{opacity:.15}.single .controls:hover{opacity:1}@media print{body{padding:0;background:#fff}.book{display:block}.page{width:210mm;height:297mm;box-shadow:none;page-break-after:always;break-after:page}.controls{display:none}}@page{size:A4 portrait;margin:0}
+.page{padding-left:66px;padding-right:66px}.running,.folio{left:66px;right:66px}h2{font-size:30px}.lead{font-size:15px}.statement{font-size:25px}.prose p{font-size:14px}.compare ul{font-size:12.2px}.flow-row{min-height:101px}.flow-action p{font-size:12px}.schedule{font-size:11.7px}.outputs div:nth-child(even){font-size:12px}.lab-head p{font-size:13.4px}.io p{font-size:12.2px}.step{padding-top:13px;padding-bottom:13px}.step b{font-size:13px}.step p{font-size:12px}.prompt p{font-size:11.3px}.checkline{font-size:11.7px}.code-shape code{font-size:11.1px}.matrix{font-size:11.4px}.tool-list{border-top:3px solid var(--navy);border-bottom:2px solid var(--navy);margin-top:18px}.tool-row{display:grid;grid-template-columns:34px 155px 1fr;border-bottom:1px solid var(--line);min-height:105px}.tool-row:last-child{border-bottom:0}.tool-row>div{padding:13px 12px}.tool-num{background:#eef2f2;color:var(--aqua-deep);font-weight:850;text-align:center}.tool-name{font-size:12.5px;font-weight:800;border-right:1px solid var(--line)}.tool-detail{font-size:11.3px;line-height:1.55;color:var(--body)}.tool-detail b{color:var(--ink)}.core{display:inline-block;font-size:8.8px;color:#fff;background:var(--aqua-deep);padding:2px 5px;margin-bottom:5px;letter-spacing:.05em}
+</style>
+</head>
+<body>
+<main class="book" id="book">
+<section class="page cover">
+<div class="cover-head">
+<span style="font-family:Georgia,serif;letter-spacing:.17em">TIFFANY &amp; CO.</span>
+<span>OMNICHANNEL TEAM · PRACTICAL AI PROGRAM</span>
+</div>
+<div class="cover-main">
+<div class="code">MICROSOFT COPILOT × EASY WORK AUTOMATION</div>
+<h1 data-edit>생성형 AI로 만드는<br>옴니채널 업무 자동화</h1>
+<p class="subtitle" data-edit>URL과 Excel 파일을 넣고 실행 버튼을 눌러 완성하는 SEO·검색광고·CRM 업무 도구 실습</p>
+<div class="route">
+<span data-edit>원하는 결과를<br>말로 설명</span>
+<i>→</i>
+<span data-edit>받은 코드를<br>붙여넣고 실행</span>
+<i>→</i>
+<span data-edit>분석표와<br>화면 완성</span>
+</div>
+</div>
+<div class="cover-meta">
+<span>
+<b>교육 대상</b>티파니앤코 옴니채널팀</span>
+<span>
+<b>교육 시간</b>3시간 × 2회</span>
+<span>
+<b>학습 수준</b>AI 채팅 활용 경험자</span>
+</div>
+<div class="folio">
+<span>AI WORKFLOW HANDBOOK</span>
+<span>01</span>
+</div>
+</section>
+<section class="page">
+<div class="running">
+<span class="brand">TIFFANY &amp; CO.</span>
+<span>생성형 AI 활용 방식</span>
+</div>
+<div class="kicker">HOW GENERATIVE AI IS USED</div>
+<h2 data-edit>코드를 배우는 과정이 아니라 업무 도구를 만드는 과정입니다</h2>
+<div class="statement" data-edit>URL을 붙여넣으면 SEO 점검표가 나오고, Excel 파일을 선택하면 검색광고와 CRM 분석표가 만들어집니다.</div>
+<div class="prose">
+<p data-edit>교육생은 코딩 문법을 외우거나 코드를 처음부터 작성하지 않습니다. 하고 싶은 업무를 Copilot에 말로 설명하고, Copilot이 작성한 코드를 준비된 실행 화면에 붙여넣습니다.</p>
+<p data-edit>수강생이 하는 일은 입력할 URL이나 Excel 파일을 고르고 실행 버튼을 누르는 것입니다. 오류가 나오면 오류 문장을 그대로 복사해 Copilot에 보여주고 수정된 코드를 다시 붙여넣습니다.</p>
+</div>
+<div class="compare">
+<div>
+<h3 data-edit>수강생이 직접 하는 일</h3>
+<ul>
+<li data-edit>분석할 URL이나 Excel 파일 선택</li>
+<li data-edit>Copilot 답변의 코드를 복사</li>
+<li data-edit>실행 버튼을 누르고 결과 확인</li>
+</ul>
+</div>
+<div>
+<h3 data-edit>Copilot이 대신 도와주는 일</h3>
+<ul>
+<li data-edit>필요한 코드를 처음부터 작성</li>
+<li data-edit>오류 원인을 쉬운 말로 설명</li>
+<li data-edit>결과를 표·차트·보고 문장으로 정리</li>
+</ul>
+</div>
+</div>
+<div class="section-label">수강생이 기억할 세 가지</div>
+<div class="body">
+<p data-edit>① URL이나 Excel 파일을 고릅니다　② Copilot이 준 코드를 붙여넣습니다　③ 실행 버튼을 누르고 결과 Excel을 엽니다</p>
+</div>
+<div class="checkline" data-edit>
+<b>한계</b> Copilot이 만든 코드와 분석 결과는 정답을 보장하지 않습니다. 원본 건수, 합계, 표본 행과 결과 파일을 사람이 확인해야 합니다.</div>
+<div class="folio">
+<span>MICROSOFT COPILOT × LOCAL EXECUTION</span>
+<span>02</span>
+</div>
+</section>
+<section class="page">
+<div class="running">
+<span class="brand">TIFFANY &amp; CO.</span>
+<span>공통 실습 방법</span>
+</div>
+<div class="kicker">COMMON LAB WORKFLOW</div>
+<h2 data-edit>URL이나 Excel 파일만 바꾸어 같은 방법으로 실행합니다</h2>
+<p class="lead" data-edit>복잡한 프로그램 사용법을 배우지 않습니다. Copilot이 만든 코드를 준비된 연습 화면에 붙여넣고 위에서부터 실행합니다.</p>
+<div class="workflow">
+<div class="flow-row">
+<div class="flow-no">1</div>
+<div class="flow-who">실무자</div>
+<div class="flow-action">
+<b data-edit>업무와 파일 구조 설명</b>
+<p data-edit>파일명, 시트명, 컬럼명, 원하는 결과, 저장 형식을 Copilot에 전달합니다.</p>
+</div>
+</div>
+<div class="flow-row">
+<div class="flow-no">2</div>
+<div class="flow-who">Copilot Chat</div>
+<div class="flow-action">
+<b data-edit>초보자용 코드와 설명 만들기</b>
+<p data-edit>Copilot이 입력, 분석, 저장 순서로 짧게 나눈 코드를 만들어 줍니다.</p>
+</div>
+</div>
+<div class="flow-row">
+<div class="flow-no">3</div>
+<div class="flow-who">코드 실행 화면</div>
+<div class="flow-action">
+<b data-edit>코드를 붙여넣고 실행 버튼 누르기</b>
+<p data-edit>위쪽 칸부터 차례로 실행합니다. 각 칸 아래에 표의 모양과 처리 건수가 나타납니다.</p>
+</div>
+</div>
+<div class="flow-row">
+<div class="flow-no">4</div>
+<div class="flow-who">실무자 + Copilot</div>
+<div class="flow-action">
+<b data-edit>빨간 오류 문장을 그대로 복사</b>
+<p data-edit>오류 문장을 Copilot에 붙여넣고 “수정할 코드만 다시 달라”고 요청합니다.</p>
+</div>
+</div>
+<div class="flow-row">
+<div class="flow-no">5</div>
+<div class="flow-who">실무자</div>
+<div class="flow-action">
+<b data-edit>수치와 표본 검수</b>
+<p data-edit>원본 건수·합계·중복 수와 결과 파일의 값을 Excel에서 대조합니다.</p>
+</div>
+</div>
+<div class="flow-row">
+<div class="flow-no">6</div>
+<div class="flow-who">Copilot Chat</div>
+<div class="flow-action">
+<b data-edit>반복 실행용으로 정리</b>
+<p data-edit>파일 경로와 기준값을 위쪽 설정 셀로 모으고 사용 설명을 Markdown 셀로 작성합니다.</p>
+</div>
+</div>
+</div>
+<div class="prompt">
+<b>COPILOT 요청의 기본형</b>
+<p data-edit>“저는 코딩을 모릅니다. 복사해서 위에서부터 실행할 수 있도록 코드를 짧은 칸으로 나눠 주세요. 각 칸 위에 제가 무엇을 누르면 되는지 설명하고, 마지막에는 Excel 파일로 저장해 주세요.”</p>
+</div>
+<div class="folio">
+<span>WORKFLOW · ASK BUILD RUN CHECK</span>
+<span>03</span>
+</div>
+</section>
+<section class="page">
+<div class="running">
+<span class="brand">TIFFANY &amp; CO.</span>
+<span>3시간 × 2회 구성</span>
+</div>
+<div class="kicker">CURRICULUM OVERVIEW</div>
+<h2 data-edit>두 회차에서 바로 써볼 수 있는 일곱 가지 도구를 만듭니다</h2>
+<p class="lead" data-edit>설명보다 실행과 검수에 더 많은 시간을 배정합니다. 실데이터 대신 동일한 컬럼 구조의 비식별 샘플을 사용합니다.</p>
+<table class="schedule">
+<thead>
+<tr>
+<th>회차</th>
+<th>실습 워크플로우</th>
+<th>생성형 AI 활용</th>
+<th>실행 환경</th>
+<th>시간</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="s">1회차</td>
+<td>
+<strong data-edit>SEO 근거자료 구조화</strong>
+<span data-edit>가이드·페이지를 체크리스트로 변환</span>
+</td>
+<td data-edit>기준 추출·프롬프트 설계</td>
+<td data-edit>Copilot Chat</td>
+<td class="t">35분</td>
+</tr>
+<tr>
+<td class="s">1회차</td>
+<td>
+<strong data-edit>경쟁사 SEO 수집 노트북</strong>
+<span data-edit>URL의 제목·메타·H태그 수집</span>
+</td>
+<td data-edit>Copilot이 수집 코드 작성·수정</td>
+<td data-edit>준비된 실행 화면</td>
+<td class="t">65분</td>
+</tr>
+<tr>
+<td class="s">1회차</td>
+<td>
+<strong data-edit>검색 키워드 효율 분석</strong>
+<span data-edit>검색량·CPC·CTR·CVR 우선순위</span>
+</td>
+<td data-edit>점수식·차트 코드 생성</td>
+<td data-edit>실행 화면·Excel</td>
+<td class="t">65분</td>
+</tr>
+<tr>
+<td class="s">1회차</td>
+<td>
+<strong data-edit>결과 해석과 재사용</strong>
+</td>
+<td data-edit>해석·검수 질문 생성</td>
+<td data-edit>Copilot Chat</td>
+<td class="t">15분</td>
+</tr>
+<tr>
+<td class="s">2회차</td>
+<td>
+<strong data-edit>CRM 데이터 품질점검</strong>
+<span data-edit>결측·중복·날짜·이상값 진단</span>
+</td>
+<td data-edit>점검 코드·요약문 생성</td>
+<td data-edit>실행 화면·Excel</td>
+<td class="t">40분</td>
+</tr>
+<tr>
+<td class="s">2회차</td>
+<td>
+<strong data-edit>RFM 고객 세분화</strong>
+</td>
+<td data-edit>분석 코드·세그먼트명 생성</td>
+<td data-edit>준비된 실행 화면</td>
+<td class="t">50분</td>
+</tr>
+<tr>
+<td class="s">2회차</td>
+<td>
+<strong data-edit>재구매 가능성 예측</strong>
+</td>
+<td data-edit>모델 코드·평가지표 설명</td>
+<td data-edit>준비된 실행 화면</td>
+<td class="t">45분</td>
+</tr>
+<tr>
+<td class="s">2회차</td>
+<td>
+<strong data-edit>CRM HTML 대시보드</strong>
+</td>
+<td data-edit>HTML·JavaScript 생성</td>
+<td data-edit>브라우저</td>
+<td class="t">45분</td>
+</tr>
+</tbody>
+</table>
+<div class="outputs">
+<div>1회차 산출물</div>
+<div data-edit>SEO 기준표, 경쟁사 비교 Excel, 키워드 우선순위 Excel, 실행 노트북</div>
+<div>2회차 산출물</div>
+<div data-edit>CRM 품질 리포트, RFM Excel, 예측 결과표, 로컬 HTML 대시보드</div>
+</div>
+<div class="folio">
+<span>CURRICULUM · TWO SESSIONS</span>
+<span>04</span>
+</div>
+</section>
+<section class="page">
+<div class="running">
+<span class="brand">TIFFANY &amp; CO.</span>
+<span>1회차 워크플로우 1</span>
+</div>
+<div class="lab-head">
+<div class="lab-no">1</div>
+<div>
+<div class="kicker">SEO SOURCE PACK</div>
+<h2 data-edit>URL을 넣으면 무엇을 확인할지 Copilot과 정하기</h2>
+<p data-edit>Copilot이 참고자료를 요약하는 데서 끝나지 않도록 이후 분석에 반복 사용할 기준표를 만듭니다.</p>
+</div>
+</div>
+<div class="io">
+<div>
+<b>INPUT</b>
+<p data-edit>사내 SEO 가이드, 브랜드 표현 기준, 검색광고 운영 기준, 공개 페이지</p>
+</div>
+<div>
+<b>OUTPUT</b>
+<p data-edit>제목·메타·헤딩·본문·링크·FAQ·CTA를 판단하는 SEO 체크리스트</p>
+</div>
+</div>
+<div class="section-label">실습 흐름</div>
+<div class="steps">
+<div class="step">
+<div>
+<b data-edit>자료의 역할을 먼저 구분합니다</b>
+<p data-edit>SEO 원칙, 브랜드 제한, 분석 대상, 참고 사례를 각각 표시합니다.</p>
+</div>
+</div>
+<div class="step">
+<div>
+<b data-edit>판단 기준의 열을 먼저 요청합니다</b>
+<p data-edit>항목, 확인 위치, 좋은 상태, 문제 상태, 개선 질문, 근거 출처의 여섯 열로 만듭니다.</p>
+</div>
+</div>
+<div class="step">
+<div>
+<b data-edit>문서별 기준을 하나의 표로 병합합니다</b>
+<p data-edit>충돌하는 기준은 삭제하지 않고 출처와 우선순위를 남깁니다.</p>
+</div>
+</div>
+<div class="step">
+<div>
+<b data-edit>샘플 페이지 한 개로 시험합니다</b>
+<p data-edit>평가 문장마다 원문 위치나 HTML 요소를 붙이도록 요청합니다.</p>
+</div>
+</div>
+<div class="step">
+<div>
+<b data-edit>자동으로 확인할 항목을 고릅니다</b>
+<p data-edit>URL, title, description, h1, h2_count, word_count, internal_links 등을 고릅니다.</p>
+</div>
+</div>
+</div>
+<div class="prompt">
+<b>COPILOT에 이렇게 요청</b>
+<p data-edit>“첨부 자료에서 SEO 판단 기준만 추출해 주세요. URL을 넣으면 자동으로 확인할 수 있는 항목과 사람이 직접 읽고 판단할 항목을 구분해 주세요.”</p>
+</div>
+<div class="checkline" data-edit>
+<b>검수</b> 기준이 자료에 실제로 존재하는지 확인합니다. 브랜드 정책과 일반 SEO 권고가 충돌하면 브랜드 정책을 우선합니다.</div>
+<div class="folio">
+<span>SESSION 01 · SEO CONTEXT</span>
+<span>05</span>
+</div>
+</section>
+<section class="page">
+<div class="running">
+<span class="brand">TIFFANY &amp; CO.</span>
+<span>1회차 워크플로우 2</span>
+</div>
+<div class="lab-head">
+<div class="lab-no">2</div>
+<div>
+<div class="kicker">COMPETITOR SEO NOTEBOOK</div>
+<h2 data-edit>URL만 넣어 경쟁사 SEO 비교표 만들기</h2>
+<p data-edit>URL 목록만 바꾸면 여러 페이지의 기본 SEO 요소를 같은 방식으로 수집하고 Excel로 저장합니다.</p>
+</div>
+</div>
+<div class="io">
+<div>
+<b>INPUT</b>
+<p data-edit>공개 URL 목록이 들어 있는 Excel 또는 CSV</p>
+</div>
+<div>
+<b>OUTPUT</b>
+<p data-edit>title, meta description, H1·H2, 본문 길이, 내부링크 수를 담은 Excel</p>
+</div>
+</div>
+<div class="section-label">수강생 화면에 보이는 여섯 개의 실행 칸</div>
+<div class="code-shape">
+<code data-edit>칸 1  URL이 들어 있는 Excel 파일 선택
+칸 2  URL이 몇 개인지 확인
+칸 3  각 페이지가 정상적으로 열리는지 확인
+칸 4  제목·설명·대표 제목·링크 등 SEO 항목 확인
+칸 5  화면에 결과 5개를 먼저 보여주기
+칸 6  SEO_비교결과.xlsx로 저장
+
+기술 참고  Copilot은 Python 수집 코드를 작성합니다.</code>
+</div>
+<div class="steps">
+<div class="step">
+<div>
+<b data-edit>전체 코드를 한 덩어리로 받지 않습니다</b>
+<p data-edit>실패 위치를 찾기 쉽도록 설치·입력·수집·추출·저장을 별도 셀로 요청합니다.</p>
+</div>
+</div>
+<div class="step">
+<div>
+<b data-edit>상태코드와 URL을 항상 출력합니다</b>
+<p data-edit>접근 실패, 리디렉션, 빈 HTML을 정상 데이터로 오인하지 않도록 합니다.</p>
+</div>
+</div>
+<div class="step">
+<div>
+<b data-edit>동적 페이지의 수집 한계를 기록합니다</b>
+<p data-edit>JavaScript 렌더링이나 접근 제한 때문에 없는 항목을 임의로 채우지 않습니다.</p>
+</div>
+</div>
+</div>
+<div class="prompt">
+<b>COPILOT에 이렇게 요청</b>
+<p data-edit>“저는 코딩을 모릅니다. URL이 들어 있는 Excel을 선택하고 실행 버튼만 누르면 되게 만들어 주세요. 열리지 않는 URL이 있어도 멈추지 말고 실패 이유를 별도 시트에 저장해 주세요.”</p>
+</div>
+<div class="checkline" data-edit>
+<b>검수</b> 임의의 URL 3개를 브라우저로 열어 title·H1·링크 수를 직접 대조합니다. 사이트 약관과 robots 정책을 준수합니다.</div>
+<div class="folio">
+<span>SESSION 01 · PYTHON COLLECTION</span>
+<span>06</span>
+</div>
+</section>
+<section class="page">
+<div class="running">
+<span class="brand">TIFFANY &amp; CO.</span>
+<span>1회차 워크플로우 3</span>
+</div>
+<div class="lab-head">
+<div class="lab-no">3</div>
+<div>
+<div class="kicker">KEYWORD VALUE NOTEBOOK</div>
+<h2 data-edit>검색광고 Excel을 넣어 우선 키워드 찾기</h2>
+<p data-edit>검색량만 높은 키워드가 아니라 비용, 클릭, 전환, 검색 의도를 함께 보는 우선순위표를 만듭니다.</p>
+</div>
+</div>
+<div class="io">
+<div>
+<b>INPUT</b>
+<p data-edit>네이버·검색광고 도구에서 내려받은 키워드 Excel 또는 CSV</p>
+</div>
+<div>
+<b>OUTPUT</b>
+<p data-edit>검색 의도 분류, 효율 점수, 우선순위 차트</p>
+</div>
+</div>
+<div class="section-label">값이 바뀌는 과정</div>
+<table class="matrix">
+<thead>
+<tr>
+<th>단계</th>
+<th>Copilot에 맡길 일</th>
+<th>사람이 결정할 일</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="status">정리</td>
+<td data-edit>숫자형 변환, 결측 표시, 중복 통합 코드</td>
+<td data-edit>0과 결측값 처리 기준</td>
+</tr>
+<tr>
+<td class="status">분류</td>
+<td data-edit>예시를 이용한 검색 의도 분류 코드</td>
+<td data-edit>브랜드·선물·제품·정보 기준</td>
+</tr>
+<tr>
+<td class="status">계산</td>
+<td data-edit>정규화, 가중합, 순위 계산 코드</td>
+<td data-edit>검색량·CPC·CTR·CVR 가중치</td>
+</tr>
+<tr>
+<td class="status">표현</td>
+<td data-edit>산점도와 상위 키워드 표 생성</td>
+<td data-edit>예산과 브랜드 전략의 최종 판단</td>
+</tr>
+</tbody>
+</table>
+<div class="code-shape">
+<code data-edit>예시 점수 = 검색량 점수 × 0.25
+          + 예상 CTR 점수 × 0.20
+          + 예상 CVR 점수 × 0.35
+          - CPC 부담 점수 × 0.20
+※ 가중치는 교육용 예시입니다.</code>
+</div>
+<div class="prompt">
+<b>COPILOT에 이렇게 요청</b>
+<p data-edit>“가중치를 코드 맨 위에서 바꿀 수 있게 해 주세요. 모든 지표를 0에서 100 사이로 정규화하고, 가중치를 바꿨을 때 상위 20개 순위 변화를 비교해 주세요.”</p>
+</div>
+<div class="checkline" data-edit>
+<b>검수</b> 상위 키워드의 원래 수치를 함께 표시합니다. 점수가 높아진 이유를 설명할 수 있어야 합니다.</div>
+<div class="folio">
+<span>SESSION 01 · KEYWORD ANALYTICS</span>
+<span>07</span>
+</div>
+</section>
+<section class="page">
+<div class="running">
+<span class="brand">TIFFANY &amp; CO.</span>
+<span>2회차 워크플로우 4</span>
+</div>
+<div class="lab-head">
+<div class="lab-no">4</div>
+<div>
+<div class="kicker">CRM DATA QUALITY</div>
+<h2 data-edit>CRM Excel을 넣어 오류와 빠진 값 찾기</h2>
+<p data-edit>예측 모델보다 먼저 고객·주문 데이터가 계산 가능한 상태인지 확인하는 품질점검 노트북을 만듭니다.</p>
+</div>
+</div>
+<div class="io">
+<div>
+<b>INPUT</b>
+<p data-edit>고객 ID, 주문일, 채널, 카테고리, 결제금액을 포함한 비식별 CRM</p>
+</div>
+<div>
+<b>OUTPUT</b>
+<p data-edit>결측·중복·날짜 오류·음수 금액·이상값과 수정 내역 Excel</p>
+</div>
+</div>
+<div class="steps">
+<div class="step">
+<div>
+<b data-edit>컬럼 사전을 먼저 읽힙니다</b>
+<p data-edit>각 컬럼의 의미, 허용 형식, 결측 허용 여부, 고유 여부를 전달합니다.</p>
+</div>
+</div>
+<div class="step">
+<div>
+<b data-edit>원본을 수정하지 않는 코드를 요청합니다</b>
+<p data-edit>원본 표와 정리된 표를 따로 두고, 수정된 행이 몇 개인지 단계마다 보여줍니다.</p>
+</div>
+</div>
+<div class="step">
+<div>
+<b data-edit>대용량 파일은 필요한 컬럼부터 읽습니다</b>
+<p data-edit>pandas의 usecols, dtype, chunksize 사용 여부를 Copilot에 검토시킵니다.</p>
+</div>
+</div>
+<div class="step">
+<div>
+<b data-edit>수정 전후 건수를 대조합니다</b>
+<p data-edit>행 삭제와 중복 제거가 전체 고객 수를 어떻게 바꿨는지 확인합니다.</p>
+</div>
+</div>
+</div>
+<div class="prompt">
+<b>COPILOT에 이렇게 요청</b>
+<p data-edit>“원본 파일은 덮어쓰지 마세요. 문제 행을 삭제하지 말고 error_type 컬럼을 붙여 별도 시트에 저장하세요. 각 단계에서 전체 행 수와 고객 ID 고유 개수를 출력해 주세요.”</p>
+</div>
+<div class="error-loop">
+<div>
+<b>노트북 실행</b>
+<span data-edit>오류 전문과 현재 셀 확보</span>
+</div>
+<i>→</i>
+<div>
+<b>Copilot 수정</b>
+<span data-edit>원인과 수정 셀만 요청</span>
+</div>
+<i>→</i>
+<div>
+<b>재실행·대조</b>
+<span data-edit>행 수와 합계 확인</span>
+</div>
+</div>
+<div class="checkline" data-edit>
+<b>보안</b> 가명 고객 ID와 샘플 데이터를 사용합니다. 연락처, 주소, 상담 원문은 Copilot 입력에서 제외합니다.</div>
+<div class="folio">
+<span>SESSION 02 · CRM QUALITY</span>
+<span>08</span>
+</div>
+</section>
+<section class="page">
+<div class="running">
+<span class="brand">TIFFANY &amp; CO.</span>
+<span>2회차 워크플로우 5</span>
+</div>
+<div class="lab-head">
+<div class="lab-no">5</div>
+<div>
+<div class="kicker">RFM SEGMENTATION</div>
+<h2 data-edit>구매 이력 Excel을 넣어 고객군과 다음 행동 찾기</h2>
+<p data-edit>최근 구매일, 구매 횟수, 구매금액을 계산해 고객군을 나누고 채널별 실행안을 만듭니다.</p>
+</div>
+</div>
+<div class="io">
+<div>
+<b>INPUT</b>
+<p data-edit>정제된 고객 ID, 주문일, 주문번호, 결제금액, 채널</p>
+</div>
+<div>
+<b>OUTPUT</b>
+<p data-edit>고객별 RFM 점수, 세그먼트, 규모·매출·채널 특성, 권장 액션</p>
+</div>
+</div>
+<div class="section-label">세 값의 계산</div>
+<table class="matrix">
+<thead>
+<tr>
+<th>값</th>
+<th>실행 버튼을 누르면 계산되는 내용</th>
+<th>확인할 점</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="status">R 최근성</td>
+<td data-edit>기준일에서 마지막 구매일까지의 일수</td>
+<td data-edit>분석 기준일이 데이터 기간과 맞는지</td>
+</tr>
+<tr>
+<td class="status">F 빈도</td>
+<td data-edit>고객별 고유 주문번호 개수</td>
+<td data-edit>취소·반품 주문을 제외했는지</td>
+</tr>
+<tr>
+<td class="status">M 금액</td>
+<td data-edit>고객별 유효 결제금액 합계</td>
+<td data-edit>통화·세금·환불 기준이 일관적인지</td>
+</tr>
+</tbody>
+</table>
+<div class="steps">
+<div class="step">
+<div>
+<b data-edit>코드 전에 계산 정의를 확인합니다</b>
+<p data-edit>기준일, 주문 건수, 유효 매출의 정의를 먼저 문장으로 받습니다.</p>
+</div>
+</div>
+<div class="step">
+<div>
+<b data-edit>분위수와 업무 규칙을 비교합니다</b>
+<p data-edit>데이터 분포로 나눈 점수와 실제 고객 기준이 다를 수 있습니다.</p>
+</div>
+</div>
+<div class="step">
+<div>
+<b data-edit>대표 고객을 표본 확인합니다</b>
+<p data-edit>VIP, 신규, 성장, 휴면 위험 등 이름이 구매 이력과 맞는지 대조합니다.</p>
+</div>
+</div>
+</div>
+<div class="prompt">
+<b>COPILOT에 이렇게 요청</b>
+<p data-edit>“세그먼트별 고객 수, 매출 비중, 평균 구매주기, 주요 채널을 요약하고 각 세그먼트 고객 5명을 표본으로 출력해 분류를 검수하게 해 주세요.”</p>
+</div>
+<div class="checkline" data-edit>
+<b>완료 신호</b> 세그먼트 이름, 계산 규칙, 고객 수, 매출 비중, 권장 액션이 한 표에 있으며 원자료로 분류를 재현할 수 있습니다.</div>
+<div class="folio">
+<span>SESSION 02 · RFM SEGMENTATION</span>
+<span>09</span>
+</div>
+</section>
+<section class="page">
+<div class="running">
+<span class="brand">TIFFANY &amp; CO.</span>
+<span>2회차 워크플로우 6</span>
+</div>
+<div class="lab-head">
+<div class="lab-no">6</div>
+<div>
+<div class="kicker">REPURCHASE PREDICTION</div>
+<h2 data-edit>재구매 가능성이 높은 고객을 표로 찾기</h2>
+<p data-edit>정확도 경쟁이 아니라 입력값과 평가 결과를 설명하고 업무 적용 가능성을 판단하는 실습입니다.</p>
+</div>
+</div>
+<div class="io">
+<div>
+<b>INPUT</b>
+<p data-edit>RFM, 구매 간격, 카테고리 수, 채널 수, 과거 재구매 여부</p>
+</div>
+<div>
+<b>OUTPUT</b>
+<p data-edit>재구매 확률, 평가지표, 변수 중요도, 적용 보류 조건</p>
+</div>
+</div>
+<div class="section-label">Copilot과 함께 결정할 모델 흐름</div>
+<div class="code-shape">
+<code data-edit>1  목표 정하기     기준일 이후 90일 안에 다시 구매했는지
+2  자료 나누기     앞쪽 자료로 만들고 뒤쪽 자료로 시험하기
+3  기본 예측       결과를 설명하기 쉬운 방법으로 먼저 계산
+4  비교 예측       다른 계산 방법과 결과 차이 비교
+5  결과 확인       맞춘 고객과 놓친 고객의 수를 표로 확인
+6  저장            고객 ID와 재구매 가능성을 Excel로 저장
+
+기술 참고  Copilot이 Python 예측 코드를 작성합니다.</code>
+</div>
+<div class="prompt">
+<b>COPILOT에 이렇게 요청</b>
+<p data-edit>“데이터 누수를 막기 위해 예측 기준일 이후 정보가 입력 변수에 들어가지 않았는지 검사해 주세요. 평가지표를 비개발자용 문장으로 설명하고 두 종류의 오류를 구분해 주세요.”</p>
+</div>
+<table class="matrix">
+<thead>
+<tr>
+<th>Copilot이 도울 수 있는 일</th>
+<th>Copilot이 결정하면 안 되는 일</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-edit>전처리·모델 코드 초안과 오류 설명</td>
+<td data-edit>고객 접촉 여부와 혜택 수준의 최종 결정</td>
+</tr>
+<tr>
+<td data-edit>평가지표 계산과 그래프 생성</td>
+<td data-edit>검증되지 않은 모델의 운영 배포</td>
+</tr>
+<tr>
+<td data-edit>변수 중요도와 표본 결과 정리</td>
+<td data-edit>민감정보를 이용한 차별적 세분화</td>
+</tr>
+</tbody>
+</table>
+<div class="checkline" data-edit>
+<b>한계</b> 짧은 실습에서 만든 모델은 학습용입니다. 실제 적용 전 데이터 기간, 편향, 비용 대비 효과, 개인정보 기준을 별도로 검토합니다.</div>
+<div class="folio">
+<span>SESSION 02 · PREDICTIVE MODEL</span>
+<span>10</span>
+</div>
+</section>
+<section class="page">
+<div class="running">
+<span class="brand">TIFFANY &amp; CO.</span>
+<span>2회차 워크플로우 7</span>
+</div>
+<div class="lab-head">
+<div class="lab-no">7</div>
+<div>
+<div class="kicker">LOCAL HTML DASHBOARD</div>
+<h2 data-edit>분석 결과 CSV를 넣어 대시보드 열기</h2>
+<p data-edit>노트북이 만든 집계 CSV를 브라우저에서 검색·필터·차트로 확인하는 단일 HTML로 변환합니다.</p>
+</div>
+</div>
+<div class="io">
+<div>
+<b>INPUT</b>
+<p data-edit>개인정보를 제거한 세그먼트·채널·월별 집계 CSV</p>
+</div>
+<div>
+<b>OUTPUT</b>
+<p data-edit>더블클릭으로 실행되는 검색·필터·차트 대시보드</p>
+</div>
+</div>
+<div class="steps">
+<div class="step">
+<div>
+<b data-edit>화면보다 요구사항을 먼저 적습니다</b>
+<p data-edit>사용자, 질문, 필터, 핵심 수치, 차트, 오류 상황, 완료 조건을 전달합니다.</p>
+</div>
+</div>
+<div class="step">
+<div>
+<b data-edit>하나의 HTML로 요청합니다</b>
+<p data-edit>HTML·CSS·JavaScript를 한 파일에 넣고 서버와 외부 전송 없이 동작하게 합니다.</p>
+</div>
+</div>
+<div class="step">
+<div>
+<b data-edit>오류를 재현하는 파일로 수정합니다</b>
+<p data-edit>빈 CSV, 한글 헤더, 날짜 형식 차이, 숫자 쉼표를 차례로 시험합니다.</p>
+</div>
+</div>
+<div class="step">
+<div>
+<b data-edit>원본과 합계를 대조합니다</b>
+<p data-edit>전체 매출과 세그먼트 합계가 노트북·Excel·HTML에서 같은지 확인합니다.</p>
+</div>
+</div>
+</div>
+<div class="prompt">
+<b>COPILOT에 이렇게 요청</b>
+<p data-edit>“외부 CDN과 서버를 사용하지 않는 단일 HTML로 작성해 주세요. 사용자가 CSV를 직접 선택하면 분석하고 파일은 브라우저 밖으로 전송하지 마세요. 필수 컬럼이 없으면 한국어 오류를 보여 주세요.”</p>
+</div>
+<div class="section-label">오류 수정 대화의 형태</div>
+<div class="error-loop">
+<div>
+<b>현상</b>
+<span data-edit>어떤 버튼에서 무엇이 안 되는지</span>
+</div>
+<i>+</i>
+<div>
+<b>증거</b>
+<span data-edit>브라우저 콘솔 오류 전문</span>
+</div>
+<i>+</i>
+<div>
+<b>기대 결과</b>
+<span data-edit>정상일 때 보여야 하는 값</span>
+</div>
+</div>
+<div class="checkline" data-edit>
+<b>완료 신호</b> 새 브라우저에서 다른 샘플 CSV를 넣어도 검색·필터·합계·차트가 정상 작동합니다.</div>
+<div class="folio">
+<span>SESSION 02 · VIBE CODING</span>
+<span>11</span>
+</div>
+</section>
+<section class="page">
+<div class="running">
+<span class="brand">TIFFANY &amp; CO.</span>
+<span>교육 준비와 적용 기준</span>
+</div>
+<div class="kicker">READINESS AND GOVERNANCE</div>
+<h2 data-edit>교육 전에 실행 환경과 샘플 데이터를 확인합니다</h2>
+<p class="lead" data-edit>수강생이 설치 과정에서 막히지 않도록 강의 전에 실행 화면을 준비합니다. 교육생은 URL과 Excel 파일을 선택하고 실행 버튼을 누르는 것부터 시작합니다.</p>
+<table class="matrix">
+<thead>
+<tr>
+<th>확인 항목</th>
+<th>필요 상태</th>
+<th>제한될 때의 대체 방법</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="status">Copilot Chat</td>
+<td data-edit>코드 생성과 긴 오류 메시지 입력 가능</td>
+<td data-edit>강사 시연 후 제공 코드로 실습</td>
+</tr>
+<tr>
+<td class="status">파일 첨부</td>
+<td data-edit>PDF·Excel·CSV 업로드 가능 여부</td>
+<td data-edit>컬럼명과 샘플 20행을 텍스트로 입력</td>
+</tr>
+<tr>
+<td class="status">코드 실행 화면</td>
+<td data-edit>실행 버튼이 있는 연습 화면을 강사가 미리 준비</td>
+<td data-edit>사전 설치된 포터블·관리형 환경</td>
+</tr>
+<tr>
+<td class="status">사전 설치</td>
+<td data-edit>필요한 Python 도구는 강의 전에 설치 완료</td>
+<td data-edit>설치 완료된 공용 실습 PC</td>
+</tr>
+<tr>
+<td class="status">웹 접근</td>
+<td data-edit>공개 URL 접속과 사이트 정책 확인</td>
+<td data-edit>미리 저장한 HTML 샘플 사용</td>
+</tr>
+<tr>
+<td class="status">HTML 실행</td>
+<td data-edit>로컬 HTML·JavaScript 실행 허용</td>
+<td data-edit>강사 시연과 코드 검수로 전환</td>
+</tr>
+</tbody>
+</table>
+<div class="section-label" style="margin-top:28px">필수 실습 자료</div>
+<div class="outputs">
+<div>SEO 샘플</div>
+<div data-edit>공개 URL 10개, SEO 기준 문서, 키워드 데이터 300~1,000행</div>
+<div>CRM 샘플</div>
+<div data-edit>가명 고객·주문 데이터 5,000~30,000행, 컬럼 사전, 분석 기준일</div>
+<div>검수 정답</div>
+<div data-edit>원본 행 수, 고객 수, 주문 수, 매출 합계, 결측·중복 건수</div>
+<div>저장 폴더</div>
+<div data-edit>01_input, 02_notebook, 03_output, 04_dashboard 공통 구조</div>
+</div>
+<div class="checkline" data-edit>
+<b>최종 평가</b> 코드를 외우는 것이 아니라 입력 파일을 바꾸어 다시 실행하고, 오류를 Copilot과 수정하며, 결과가 원본과 일치함을 설명할 수 있는지 확인합니다.</div>
+<div class="folio">
+<span>PREPARATION · SECURITY · VALIDATION</span>
+<span>12</span>
+</div>
+</section>
+<section class="page">
+<div class="running">
+<span class="brand">TIFFANY &amp; CO.</span>
+<span>현업 바이브코딩 과제 SEO 검색광고</span>
+</div>
+<div class="kicker">PRACTICAL TOOL BACKLOG 01</div>
+<h2 data-edit>SEO와 검색광고 담당자가 반복해서 쓸 도구</h2>
+<p class="lead" data-edit>Copilot으로 로컬 실행 코드를 한 번 만들고, 매주 새 파일을 넣어 다시 사용하는 현업 과제입니다.</p>
+<div class="tool-list">
+<div class="tool-row">
+<div class="tool-num">1</div>
+<div class="tool-name" data-edit>
+<span class="core">6시간 핵심</span>
+<br>상품 페이지 대량 SEO 점검기</div>
+<div class="tool-detail" data-edit>
+<b>입력</b> 자사 상품 URL 목록<br>
+<b>작동</b> Copilot이 만든 코드가 제목, 설명, 대표 제목, 이미지 설명, 내부링크를 자동 확인<br>
+<b>결과</b> 누락·중복·길이 초과·접근 오류가 표시된 Excel</div>
+</div>
+<div class="tool-row">
+<div class="tool-num">2</div>
+<div class="tool-name" data-edit>메타 문구·브랜드 용어 검수기</div>
+<div class="tool-detail" data-edit>
+<b>입력</b> 상품명, 카테고리, 메타 제목·설명, 금지·권장 용어표<br>
+<b>코드</b> pandas 규칙 검사와 길이·중복·필수어 확인<br>
+<b>결과</b> 수정 대상과 위반 이유, Copilot용 재작성 요청문</div>
+</div>
+<div class="tool-row">
+<div class="tool-num">3</div>
+<div class="tool-name" data-edit>
+<span class="core">6시간 핵심</span>
+<br>검색어 기회 통합 분석기</div>
+<div class="tool-detail" data-edit>
+<b>입력</b> Search Console 검색어 CSV, 검색광고 검색어·비용·전환 CSV<br>
+<b>코드</b> query 기준 병합, CTR·CVR·CPC·ROAS·자연검색 순위 계산<br>
+<b>결과</b> SEO 강화, 광고 확대, 랜딩 개선, 관찰의 네 가지 실행군</div>
+</div>
+<div class="tool-row">
+<div class="tool-num">4</div>
+<div class="tool-name" data-edit>낭비 검색어·제외 후보 탐색기</div>
+<div class="tool-detail" data-edit>
+<b>입력</b> 검색어별 노출·클릭·비용·전환·매출 보고서<br>
+<b>코드</b> 최소 클릭 수와 비용을 넘었지만 전환이 없는 검색어 탐색<br>
+<b>결과</b> 제외 후보, 확인 필요, 유지로 구분된 검토 목록</div>
+</div>
+<div class="tool-row">
+<div class="tool-num">5</div>
+<div class="tool-name" data-edit>UTM 생성·검수 로컬 HTML</div>
+<div class="tool-detail" data-edit>
+<b>입력</b> 채널·캠페인·소재명 규칙표<br>
+<b>코드</b> 단일 HTML로 URL 생성, 소문자·공백·중복 파라미터 검사<br>
+<b>결과</b> 복사 가능한 UTM URL과 캠페인 운영 CSV</div>
+</div>
+<div class="tool-row">
+<div class="tool-num">6</div>
+<div class="tool-name" data-edit>주간 SEO 변화 비교기</div>
+<div class="tool-detail" data-edit>
+<b>입력</b> 지난주와 이번 주 수집 결과<br>
+<b>코드</b> URL별 신규·삭제·변경 필드 비교와 영향도 점수<br>
+<b>결과</b> title·canonical·H1·구조화 데이터 변경 알림표</div>
+</div>
+</div>
+<div class="checkline" data-edit>
+<b>현업 적용</b> 1번과 3번은 본 과정에서 직접 만들고 나머지는 같은 구조의 후속 과제로 제시합니다.</div>
+<div class="folio">
+<span>VIBE CODING · SEO AND PAID SEARCH</span>
+<span>13</span>
+</div>
+</section>
+<section class="page">
+<div class="running">
+<span class="brand">TIFFANY &amp; CO.</span>
+<span>현업 바이브코딩 과제 옴니채널 CRM</span>
+</div>
+<div class="kicker">PRACTICAL TOOL BACKLOG 02</div>
+<h2 data-edit>옴니채널과 CRM 담당자가 반복해서 쓸 도구</h2>
+<p class="lead" data-edit>채널마다 다른 Excel을 공통 구조로 바꾸고 고객 동의와 제외 조건을 반영한 결과만 내보내는 현업 과제입니다.</p>
+<div class="tool-list">
+<div class="tool-row">
+<div class="tool-num">1</div>
+<div class="tool-name" data-edit>
+<span class="core">6시간 핵심</span>
+<br>채널 주문자료 표준화기</div>
+<div class="tool-detail" data-edit>
+<b>입력</b> 이플래그십·카카오 선물하기 주문 Excel과 컬럼 매핑표<br>
+<b>코드</b> 날짜·주문상태·상품코드·결제금액·취소·환불을 공통 컬럼으로 변환<br>
+<b>결과</b> 통합 주문 파일과 변환 오류 시트</div>
+</div>
+<div class="tool-row">
+<div class="tool-num">2</div>
+<div class="tool-name" data-edit>SKU 매핑·미매칭 탐색기</div>
+<div class="tool-detail" data-edit>
+<b>입력</b> 채널별 상품명·옵션·SKU와 기준 상품 마스터<br>
+<b>코드</b> 정확 일치, 정규화 일치, 유사 후보, 미매칭의 단계별 분류<br>
+<b>결과</b> 자동 매핑 결과와 사람이 확인할 후보 목록</div>
+</div>
+<div class="tool-row">
+<div class="tool-num">3</div>
+<div class="tool-name" data-edit>채널 매출·주문 대사 도구</div>
+<div class="tool-detail" data-edit>
+<b>입력</b> 주문, 취소·환불, 결제, 채널 정산 자료<br>
+<b>코드</b> 주문번호·상품·금액 기준 병합과 차이 원인 분류<br>
+<b>결과</b> 일치, 금액 차이, 상태 차이, 누락 주문 대사표</div>
+</div>
+<div class="tool-row">
+<div class="tool-num">4</div>
+<div class="tool-name" data-edit>
+<span class="core">6시간 핵심</span>
+<br>CRM 타깃 추출·제외 자동화</div>
+<div class="tool-detail" data-edit>
+<b>입력</b> RFM 결과, 캠페인 조건, 수신동의·탈퇴·최근 접촉 제외표<br>
+<b>코드</b> 대상 조건 적용 후 제외 사유를 고객별 기록<br>
+<b>결과</b> 발송 대상, 제외 대상, 조건별 인원 검수표</div>
+</div>
+<div class="tool-row">
+<div class="tool-num">5</div>
+<div class="tool-name" data-edit>캠페인 반응·증분 분석기</div>
+<div class="tool-detail" data-edit>
+<b>입력</b> 발송·대조군, 클릭, 구매, 매출 데이터<br>
+<b>코드</b> 반응률·전환율·객단가·재구매율과 대조군 대비 증분 계산<br>
+<b>결과</b> 캠페인별 성과표와 다음 실험 제안</div>
+</div>
+<div class="tool-row">
+<div class="tool-num">6</div>
+<div class="tool-name" data-edit>
+<span class="core">6시간 핵심</span>
+<br>옴니채널 KPI 대시보드</div>
+<div class="tool-detail" data-edit>
+<b>입력</b> 개인정보가 제거된 일·주·월 집계 CSV<br>
+<b>코드</b> 단일 HTML로 채널·상품군·기간 필터와 매출·주문·CVR·재구매 차트 생성<br>
+<b>결과</b> 서버 없이 브라우저에서 실행되는 대시보드</div>
+</div>
+</div>
+<div class="checkline" data-edit>
+<b>현업 적용</b> 고객 단위 파일은 가명화하고 수신동의·탈퇴·접촉 제외를 타깃 생성 로직 안에 포함합니다.</div>
+<div class="folio">
+<span>VIBE CODING · OMNICHANNEL AND CRM</span>
+<span>14</span>
+</div>
+</section>
+</main>
+<div class="controls">
+<button onclick="toggleEdit()">편집</button>
+<button onclick="saveHtml()">HTML 저장</button>
+<button onclick="window.print()">PDF/인쇄</button>
+<button onclick="singleView()">페이지뷰</button>
+</div>
+<script>
+const pages=[...document.querySelectorAll('.page')];let current=0;function toggleEdit(){document.body.classList.toggle('editable');document.querySelectorAll('[data-edit]').forEach(x=>x.contentEditable=document.body.classList.contains('editable'))}function saveHtml(){const c=document.documentElement.cloneNode(true);c.querySelectorAll('[contenteditable]').forEach(x=>x.removeAttribute('contenteditable'));const b=new Blob(['<!doctype html>\n'+c.outerHTML],{type:'text/html;charset=utf-8'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='tiffany_omnichannel_copilot_curriculum.html';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}function fit(){if(!document.body.classList.contains('single'))return;pages[current].style.transform=`scale(${Math.min(innerWidth/794,innerHeight/1123)})`}function show(n){current=Math.max(0,Math.min(pages.length-1,n));pages.forEach((p,i)=>{p.classList.toggle('active',i===current);p.style.transform=''});fit()}function singleView(){document.body.classList.toggle('single');if(document.body.classList.contains('single'))show(current);else pages.forEach(p=>{p.classList.remove('active');p.style.transform=''})}addEventListener('keydown',e=>{if(!document.body.classList.contains('single'))return;if(e.key==='ArrowRight'||e.key==='PageDown')show(current+1);if(e.key==='ArrowLeft'||e.key==='PageUp')show(current-1);if(e.key==='Home')show(0);if(e.key==='End')show(pages.length-1);if(e.key==='Escape')singleView()});addEventListener('resize',fit);const q=new URLSearchParams(location.search).get('page');if(q){pages.forEach((p,i)=>p.hidden=i!==Math.max(0,Number(q)-1));document.body.style.padding='0'}
+</script>
+<script>/* kg-preview: #<heading> \uc704\uce58\ub85c \uc774\ub3d9 */
+(function(){function norm(t){return (t||'').replace(/\s+/g,'').toLowerCase()}
+function go(){var h=decodeURIComponent(location.hash.slice(1));if(!h)return;var k=norm(h).slice(0,24);if(!k)return;
+var best=null,bl=1e9,els=document.body.querySelectorAll('h1,h2,h3,h4,h5,p,div,span,li,td,text,tspan,section,article');
+for(var i=0;i<els.length;i++){var e=els[i],t=norm(e.textContent);if(t.length<bl&&t.indexOf(k)>-1){best=e;bl=t.length}}
+if(!best)return;var box=best.closest('section,[class*=slide],[class*=page],article')||best;
+box.scrollIntoView({block:'start'});box.style.outline='3px solid #c0504d';box.style.outlineOffset='4px';
+setTimeout(function(){box.style.outline=''},2600)}
+window.addEventListener('load',function(){setTimeout(go,400)});window.addEventListener('hashchange',go)})();</script></body>
+</html>

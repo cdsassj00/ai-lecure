@@ -1,0 +1,641 @@
+<!doctype html>
+<html lang="ko">
+<head><meta name="robots" content="noindex, nofollow">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AI챔피언 전문인재과정 실전평가 1기 이론 문제지</title>
+
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: #d7d7d7;
+      color: #111;
+      font-family: "Noto Sans KR", "Noto Sans", "Malgun Gothic", Arial, sans-serif;
+      font-size: 12.8px;
+      line-height: 1.62;
+    }
+    .toolbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      padding: 10px;
+      background: #1f2937;
+    }
+    .toolbar a, .toolbar button {
+      border: 1px solid #d1d5db;
+      background: #fff;
+      color: #111;
+      font: inherit;
+      font-size: 13px;
+      padding: 6px 10px;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .page {
+      width: 210mm;
+      min-height: 297mm;
+      margin: 16px auto;
+      padding: 15mm 14.5mm 17mm;
+      background: #fff;
+      box-shadow: 0 8px 26px rgba(0, 0, 0, 0.22);
+      position: relative;
+      overflow: visible;
+    }
+    .exam-paper-header {
+      position: relative;
+      margin-bottom: 4mm;
+      padding-bottom: 3.4mm;
+      border-bottom: 2px solid #111;
+      text-align: center;
+    }
+    .exam-year { font-size: 15px; margin-bottom: 2mm; }
+    .exam-page-no {
+      position: absolute;
+      right: 1mm;
+      top: -1mm;
+      font-size: 26px;
+      font-weight: 800;
+      line-height: 1;
+    }
+    .exam-title-row {
+      min-height: 17mm;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+    .exam-title-row h1 {
+      margin: 0;
+      font-size: 31px;
+      line-height: 1;
+      font-weight: 800;
+      letter-spacing: 0;
+    }
+    .exam-pill {
+      position: absolute;
+      left: 0;
+      bottom: 2mm;
+      min-width: 22mm;
+      padding: 1.5mm 3.2mm;
+      border: 1.4px solid #111;
+      border-radius: 999px;
+      background: #fff;
+      font-size: 14px;
+      font-weight: 700;
+      line-height: 1;
+    }
+    .exam-form {
+      left: auto;
+      right: 0;
+      min-width: 20mm;
+      border-radius: 2px;
+      font-size: 16px;
+      font-weight: 800;
+    }
+    .notice {
+      border: 1px solid #111;
+      padding: 4mm 4.5mm;
+      margin-bottom: 5mm;
+      word-break: keep-all;
+    }
+    .student-grid {
+      display: grid;
+      grid-template-columns: 1fr 64mm;
+      gap: 5mm;
+      margin-bottom: 5mm;
+    }
+    .candidate-box { border: 1.5px solid #111; }
+    .candidate-box div {
+      display: grid;
+      grid-template-columns: 21mm 1fr;
+      min-height: 10mm;
+      border-bottom: 1px solid #111;
+    }
+    .candidate-box div:last-child { border-bottom: 0; }
+    .candidate-box b {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #f2f2f2;
+      border-right: 1px solid #111;
+      font-size: 12px;
+    }
+    .summary-table, .answer-table, .rubric-table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+      margin: 3mm 0;
+    }
+    th, td {
+      border: 1px solid #111;
+      padding: 5px 7px;
+      vertical-align: top;
+      word-break: keep-all;
+      overflow-wrap: anywhere;
+    }
+    th { background: #f2f2f2; font-weight: 700; }
+    .section-title {
+      border: 1px solid #111;
+      padding: 3mm 4mm;
+      margin-bottom: 4mm;
+      font-weight: 700;
+    }
+    .section-title h2 {
+      display: inline;
+      margin: 0 4mm 0 0;
+      font-size: 15px;
+    }
+    .section-title p {
+      display: inline;
+      margin: 0;
+      font-size: 12px;
+    }
+    .question-columns {
+      column-count: 2;
+      column-gap: 8.6mm;
+      column-rule: 1.3px solid #111;
+      orphans: 3;
+      widows: 3;
+    }
+    .question {
+      break-inside: avoid;
+      page-break-inside: avoid;
+      margin: 0 0 5mm;
+    }
+    .question-head {
+      display: flex;
+      gap: 2mm;
+      align-items: baseline;
+      margin-bottom: 1.5mm;
+    }
+    .question-head strong {
+      font-size: 16px;
+      font-weight: 800;
+    }
+    .question-head span {
+      color: #444;
+      font-size: 10.5px;
+    }
+    .question-body {
+      margin: 0 0 2mm;
+      font-size: 12.4px;
+      line-height: 1.62;
+      word-break: keep-all;
+      overflow-wrap: anywhere;
+    }
+    .options {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .options li {
+      display: grid;
+      grid-template-columns: 18px 1fr;
+      gap: 4px;
+      margin: 1.05mm 0;
+      font-size: 12.2px;
+      line-height: 1.5;
+    }
+    .option-label {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 16px;
+      height: 16px;
+      border: 1px solid #111;
+      border-radius: 50%;
+      font-size: 10px;
+      font-weight: 700;
+    }
+    .short-answer-lines span {
+      display: block;
+      height: 8mm;
+      border-bottom: 1px solid #111;
+    }
+    .practical-body h2, .practical-body h3 {
+      margin: 4mm 0 2mm;
+      font-size: 16px;
+      border-bottom: 1px solid #111;
+      padding-bottom: 1mm;
+    }
+    .practical-body ul, .practical-body ol { padding-left: 20px; }
+    .practical-body li { margin: 1mm 0; }
+    .file-list code {
+      background: #f4f4f4;
+      border: 1px solid #ddd;
+      padding: 0 3px;
+    }
+    @page { size: A4; margin: 14mm; }
+    @media print {
+      body { background: #fff; }
+      .toolbar { display: none; }
+      .page {
+        width: auto;
+        min-height: auto;
+        margin: 0;
+        padding: 0;
+        box-shadow: none;
+        page-break-after: always;
+      }
+    }
+  </style>
+
+</head>
+<body>
+  <nav class="toolbar">
+    <button type="button" onclick="window.print()">인쇄</button>
+    <a href="#theory">이론 문제</a>
+  </nav>
+  <main>
+
+<section class="page">
+  
+<header class="exam-paper-header">
+  <div class="exam-year">2026학년도 AI 데이터 역량강화 컨설팅사업 실전평가 문제지</div>
+  <div class="exam-page-no">1</div>
+  <div class="exam-title-row">
+    <span class="exam-pill">제 1 교시</span>
+    <h1>실전평가 1기</h1>
+    <span class="exam-pill exam-form">실전형</span>
+  </div>
+</header>
+
+  
+<div class="student-grid">
+  <div class="notice">
+    <p><strong>수험자 유의사항</strong></p>
+    <ol>
+      <li>본 문제지는 1기 실전평가 이론 영역 문제지입니다.</li>
+      <li>정답은 답안지에만 작성하고, 문제지에는 필요한 표시만 하십시오.</li>
+      <li>객관식은 A부터 E까지 보기 중 하나를 선택합니다.</li>
+      <li>단답형은 핵심 용어를 정확히 작성하며, 괄호 안 영문 표기가 요구되면 함께 작성합니다.</li>
+    </ol>
+  </div>
+  <div class="candidate-box">
+    <div><b>수험번호</b><span></span></div>
+    <div><b>성명</b><span></span></div>
+    <div><b>소속</b><span></span></div>
+  </div>
+</div>
+<table class="summary-table">
+  <tbody>
+    <tr><th>시험일</th><td>2026.07.09(목)</td><th>기수</th><td>1기</td></tr>
+    <tr><th>문항 구성</th><td>객관식 30문항 / 단답형 5문항</td><th>총점</th><td>190점</td></tr>
+    <tr><th>난이도</th><td>상 16 / 중 14 / 하 5</td><th>원본</th><td>전문인재 실전평가문제 - 최종선정(1기).csv</td></tr>
+  </tbody>
+</table>
+
+</section>
+
+
+<section class="page" id="theory">
+  
+<header class="exam-paper-header">
+  <div class="exam-year">2026학년도 AI 데이터 역량강화 컨설팅사업 실전평가 문제지</div>
+  <div class="exam-page-no">2</div>
+  <div class="exam-title-row">
+    <span class="exam-pill">제 1 교시</span>
+    <h1>이론 영역</h1>
+    <span class="exam-pill exam-form">실전형</span>
+  </div>
+</header>
+
+  
+<div class="section-title">
+  <h2>이론 평가</h2>
+  <p>1번부터 10번까지 · 객관식/단답형</p>
+</div>
+<div class="question-columns">
+  
+<article class="question 객관식">
+  <div class="question-head"><strong>1.</strong><span>T-E-001 · 서비스구현 · 상 · 5점</span></div>
+  <p class="question-body">공공기관은 폐쇄망 환경에서 JavaScript 기반 업무 자동화를 검토하고 있다. 담당자는 브라우저를 실행하지 않고도 파일 처리, 폴더 제어, 스크립트 실행 등 운영체제 수준의 자동화 기능을 구현하려고 한다. 이 요구사항을 구현하기 위한 기술로 가장 적절한 것은?</p>
+  <ol class="options"><li><span class="option-label">A</span><span>HTML과 CSS만으로 운영체제를 직접 제어하는 방식</span></li><li><span class="option-label">B</span><span>Electron을 이용하여 독립 실행 파일을 만드는 방식</span></li><li><span class="option-label">C</span><span>JavaScript를 브라우저 없이 실행할 수 있도록 하는 런타임 환경(Node.js)</span></li><li><span class="option-label">D</span><span>로컬 LLM을 이용해 JavaScript 코드를 생성하는 방식</span></li></ol>
+</article>
+
+
+<article class="question 객관식">
+  <div class="question-head"><strong>2.</strong><span>T-E-002 · 서비스구현 · 상 · 5점</span></div>
+  <p class="question-body">한 공공기관은 내부 업무용 AI 서비스를 구축하려 한다. 담당자는 HTML 파일 한 장과 무료 정적 호스팅, 경량 데이터베이스를 조합하여 교안 관리 사이트를 구현한 사례를 참고하고 있다. 이 사례가 강조하는 핵심 메시지로 가장 적절한 것은 무엇인가?</p>
+  <ol class="options"><li><span class="option-label">A</span><span>업무 시스템은 반드시 Java 기반의 대규모 프레임워크로 개발해야 한다.</span></li><li><span class="option-label">B</span><span>HTML, LLM, 정적 호스팅, 경량 DB만으로도 목적에 맞는 업무 서비스를 구현할 수 있다.</span></li><li><span class="option-label">C</span><span>생성형 AI는 백엔드 없이 사용할 수 없다.</span></li><li><span class="option-label">D</span><span>무료 서비스는 업무 시스템에 활용할 수 없다.</span></li></ol>
+</article>
+
+
+<article class="question 객관식">
+  <div class="question-head"><strong>3.</strong><span>T-E-003 · 서비스구현 · 상 · 5점</span></div>
+  <p class="question-body">한 기관은 장시간 실행되는 AI 에이전트를 개발하려고 한다. 개발자는 에이전트의 시스템 프롬프트, 도구(MCP 포함), 권한만 정의하고, 세션 관리·샌드박스·도구 실행·컨텍스트 압축·장애 복구 등 실행 인프라는 직접 구축하지 않으려 한다. 이러한 요구사항에 가장 적합한 구현 방식은 무엇인가?</p>
+  <ol class="options"><li><span class="option-label">A</span><span>Agent SDK를 이용하여 실행 환경과 세션을 모두 직접 구현하는 방식</span></li><li><span class="option-label">B</span><span>Claude Managed Agents를 이용하여 실행 인프라를 Anthropic이 관리하는 방식</span></li><li><span class="option-label">C</span><span>로컬 Ollama만으로 클라우드 에이전트를 구성하는 방식</span></li><li><span class="option-label">D</span><span>HTML과 JavaScript만으로 장시간 에이전트를 구현하는 방식</span></li></ol>
+</article>
+
+
+<article class="question 객관식">
+  <div class="question-head"><strong>4.</strong><span>T-E-004 · 서비스구현 · 상 · 5점</span></div>
+  <p class="question-body">한 기관은 폐쇄망에서 직원 검색 시스템을 구축하려 한다. 이름, 소속, 담당업무를 빠르게 검색해야 하지만 외부 LLM이나 벡터DB는 사용할 수 없다. 또한 인터넷 연결 없이 일반 PC에서 동작해야 하며, 사용자가 이름을 일부 잘못 입력해도 원하는 결과를 찾아야 한다. 이러한 요구사항을 가장 효율적으로 구현하는 방식은 무엇인가?</p>
+  <ol class="options"><li><span class="option-label">A</span><span>Embedding과 Vector DB를 구축한 후 LLM으로 응답을 생성한다.</span></li><li><span class="option-label">B</span><span>RSS(XML) 기반 데이터와 Fuse.js 퍼지 검색을 이용하여 브라우저에서 검색한다.</span></li><li><span class="option-label">C</span><span>검색 결과를 모두 OpenAI API로 전송하여 의미 검색을 수행한다.</span></li><li><span class="option-label">D</span><span>모든 데이터를 SQL LIKE 검색만으로 처리한다.</span></li></ol>
+</article>
+
+
+<article class="question 객관식">
+  <div class="question-head"><strong>5.</strong><span>T-E-005 · 생성형AI활용 · 상 · 5점</span></div>
+  <p class="question-body">생성형 AI가 프로젝트별 작업 규칙과 도구 사용 방법을 자동으로 참고하도록 SKILL.md 같은 지침 파일을 구성하려고 한다. 이 방식에 가장 부합하는 개념은 무엇인가?</p>
+  <ol class="options"><li><span class="option-label">A</span><span>Temperature를 높여 다양한 답변을 생성하는 방식</span></li><li><span class="option-label">B</span><span>SKILL.md와 같은 작업 지침 파일을 활용해 AI가 작업 규칙을 자동으로 참조하도록 하는 방식</span></li><li><span class="option-label">C</span><span>컨텍스트 윈도우 크기를 늘려 모든 문제를 해결하는 방식</span></li><li><span class="option-label">D</span><span>모델의 파라미터 수를 증가시켜 정확도를 높이는 방식</span></li></ol>
+</article>
+
+
+<article class="question 객관식">
+  <div class="question-head"><strong>6.</strong><span>T-E-006 · 생성형AI활용 · 상 · 5점</span></div>
+  <p class="question-body">AI 활용 업무에서는 단일 프롬프트보다 프로젝트 규칙, 첨부파일, 메모리, 코드베이스를 함께 제공하는 방식이 중요해지고 있다. 이러한 변화가 나타난 가장 직접적인 이유로 적절한 것은?</p>
+  <ol class="options"><li><span class="option-label">A</span><span>LLM의 Temperature가 자동으로 최적화되기 때문이다.</span></li><li><span class="option-label">B</span><span>최신 LLM은 사용자가 작성한 프롬프트보다 프로젝트 규칙, 첨부파일, 메모리, 코드베이스 등 주변 정보를 함께 활용하여 추론하기 때문이다.</span></li><li><span class="option-label">C</span><span>LLM의 파라미터 수가 증가하여 프롬프트가 더 이상 필요 없어졌기 때문이다.</span></li><li><span class="option-label">D</span><span>프롬프트 엔지니어링이 모든 AI 서비스에서 제거되었기 때문이다.</span></li></ol>
+</article>
+
+
+<article class="question 객관식">
+  <div class="question-head"><strong>7.</strong><span>T-E-007 · 서비스구현 · 중 · 5점</span></div>
+  <p class="question-body">기관 담당자는 620만 건 규모의 민원 원시 데이터를 CSV로 처리할지 Parquet으로 변환할지 기술검증 보고서를 작성하려고 한다. <br>실제 운영 전 성과 기준, 위험 요인, 통제 방법을 판단해야 한다. 이 상황을 해석한 설명으로 가장 적절한 것은?</p>
+  <ol class="options"><li><span class="option-label">A</span><span>파일 확장자가 다를 뿐 성능과 저장 효율에는 차이가 없다</span></li><li><span class="option-label">B</span><span>데이터 크기, 읽기 속도, 압축률, 컬럼 단위 조회 가능성 등을 비교해 저장 형식을 선택해야 한다</span></li><li><span class="option-label">C</span><span>CSV는 사람이 읽기 쉬우므로 대용량 분석에서도 항상 최선이다</span></li><li><span class="option-label">D</span><span>Parquet은 최신 기술이므로 검증 없이 무조건 도입해야 한다</span></li></ol>
+</article>
+
+
+<article class="question 객관식">
+  <div class="question-head"><strong>8.</strong><span>T-E-008 · 데이터분석 · 상 · 5점</span></div>
+  <p class="question-body">기관 담당자는 전체 620만 건을 모두 학습에 사용하기 어렵기 때문에 일부 데이터를 샘플링해 model.pkl 파일을 생성하려고 한다. <br>실제 운영 전 성과 기준, 위험 요인, 통제 방법을 판단해야 한다. 이 상황을 해석한 설명으로 가장 적절한 것은?</p>
+  <ol class="options"><li><span class="option-label">A</span><span>샘플링은 무작위로 조금만 뽑으면 항상 전체 데이터를 대표한다</span></li><li><span class="option-label">B</span><span>연도, 채널, 민원 유형, 재접수 여부 등 주요 분포를 고려해 대표성 있는 샘플을 구성해야 한다</span></li><li><span class="option-label">C</span><span>모델 파일이 생성되면 성능 검증은 생략해도 된다</span></li><li><span class="option-label">D</span><span>샘플 수가 작을수록 모델이 더 빠르고 정확해진다</span></li></ol>
+</article>
+
+
+<article class="question 객관식">
+  <div class="question-head"><strong>9.</strong><span>T-E-009 · 서비스구현 · 하 · 5점</span></div>
+  <p class="question-body">VS Code, opencode, OpenRouter를 활용해 계산기 앱을 만들고 EXE 또는 웹으로 배포하는 과제를 수행한다. 이 과제의 핵심 목적은 무엇인가?</p>
+  <ol class="options"><li><span class="option-label">A</span><span>복잡한 상용 서비스를 한 번에 완성하는 것</span></li><li><span class="option-label">B</span><span>기획, 코딩, 테스트, 배포의 전체 흐름을 작은 MVP로 직접 경험하는 것</span></li><li><span class="option-label">C</span><span>계산기 기능 자체를 외우는 것</span></li><li><span class="option-label">D</span><span>코딩 도구 이름만 암기하는 것</span></li></ol>
+</article>
+
+
+<article class="question 객관식">
+  <div class="question-head"><strong>10.</strong><span>T-E-010 · 서비스구현 · 하 · 5점</span></div>
+  <p class="question-body">GPTs와 MCP, 앱 커넥터를 통해 ChatGPT에 Notion, Gmail, 법령정보 같은 외부 도구를 연결할 수 있다. 이 설명으로 가장 적절한 것은?</p>
+  <ol class="options"><li><span class="option-label">A</span><span>GPT는 외부 도구와 연결할 수 없고 대화만 가능하다</span></li><li><span class="option-label">B</span><span>MCP와 앱 커넥터를 활용하면 GPT가 외부 서비스나 API를 호출해 업무 흐름에 연결될 수 있다</span></li><li><span class="option-label">C</span><span>GPTs를 만들면 모든 보안 검토가 자동으로 완료된다</span></li><li><span class="option-label">D</span><span>외부 도구 연결은 이미지 생성에서만 사용된다</span></li></ol>
+</article>
+
+</div>
+
+</section>
+
+
+<section class="page">
+  
+<header class="exam-paper-header">
+  <div class="exam-year">2026학년도 AI 데이터 역량강화 컨설팅사업 실전평가 문제지</div>
+  <div class="exam-page-no">3</div>
+  <div class="exam-title-row">
+    <span class="exam-pill">제 1 교시</span>
+    <h1>이론 영역</h1>
+    <span class="exam-pill exam-form">실전형</span>
+  </div>
+</header>
+
+  
+<div class="section-title">
+  <h2>이론 평가</h2>
+  <p>11번부터 20번까지 · 객관식/단답형</p>
+</div>
+<div class="question-columns">
+  
+<article class="question 객관식">
+  <div class="question-head"><strong>11.</strong><span>T-E-011 · 생성형AI활용 · 중 · 5점</span></div>
+  <p class="question-body">메타 프롬프트는 업무 상황, 목표, 제약을 제시해 실행용 프롬프트 자체를 AI가 설계하게 하는 방식이다. 이 접근을 해석한 설명으로 가장 적절한 것은?</p>
+  <ol class="options"><li><span class="option-label">A</span><span>AI에게 바로 최종 답변만 요구하고 업무 조건은 생략하는 방식</span></li><li><span class="option-label">B</span><span>업무 상황, 목표, 제약을 먼저 설명하고 그에 맞는 실행용 프롬프트를 AI에게 설계하게 하는 방식</span></li><li><span class="option-label">C</span><span>프롬프트를 짧게 만들기 위해 업무 배경을 모두 제거하는 방식</span></li><li><span class="option-label">D</span><span>생성형 AI가 만든 결과는 검토 없이 바로 공식 문서로 사용하는 방식</span></li></ol>
+</article>
+
+
+<article class="question 객관식">
+  <div class="question-head"><strong>12.</strong><span>T-E-012 · 생성형AI활용 · 중 · 5점</span></div>
+  <p class="question-body">AI가 사용자의 계획을 긍정적으로만 평가하는 아첨 경향을 줄이기 위해 프리모텀 기법이라는 것이 있다. 예를 들어 “이 축제가 성공할까?”라고 묻는 대신 “이 축제를 열었는데 6개월 뒤 아무도 오지 않았다. 그 이유는 무엇인가?”라고 묻는 방식이다. 이 기법의 목적을 가장 잘 설명한 것은?</p>
+  <ol class="options"><li><span class="option-label">A</span><span>AI가 사용자의 의견에 더 강하게 동의하도록 유도하는 것</span></li><li><span class="option-label">B</span><span>실패가 이미 발생했다고 가정해 위험 요인과 약점을 사전에 찾는 것</span></li><li><span class="option-label">C</span><span>미래 예측을 하지 못하도록 모든 가정을 제거하는 것</span></li><li><span class="option-label">D</span><span>AI가 답변을 짧게 만들도록 질문을 단순화하는 것</span></li></ol>
+</article>
+
+
+<article class="question 객관식">
+  <div class="question-head"><strong>13.</strong><span>T-E-013 · LLM · 상 · 5점</span></div>
+  <p class="question-body">LLM의 본질적 한계에 대한 설명으로 가장 정확한 것은?</p>
+  <ol class="options"><li><span class="option-label">A</span><span>학습 데이터가 부족해서 발생하는 일시적 문제이며, 데이터를 늘리면 완전히 해결된다</span></li><li><span class="option-label">B</span><span>인간처럼 이해·판단하는 것이 아니라 학습된 패턴 기반으로 다음에 올 확률이 높은 토큰을 생성할 뿐이므로, 그럴듯하지만 근거 없는 답이 구조적으로 발생할 수 있다</span></li><li><span class="option-label">C</span><span>한국어 같은 저자원 언어에서만 발생하는 문제다</span></li><li><span class="option-label">D</span><span>온도(temperature)를 0으로 설정하면 완전히 제거된다</span></li></ol>
+</article>
+
+
+<article class="question 객관식">
+  <div class="question-head"><strong>14.</strong><span>T-E-014 · RAG · 중 · 5점</span></div>
+  <p class="question-body">RAG 문서 조각을 만들 때 청크 크기와 앞뒤 겹침을 조정해야 한다. 다음 중 청크 크기와 오버랩의 역할을 가장 적절히 설명한 것은?</p>
+  <ol class="options"><li><span class="option-label">A</span><span>chunk_size를 무한히 키우면 문맥이 온전해지므로 검색 품질이 계속 좋아진다</span></li><li><span class="option-label">B</span><span>chunk_size가 너무 작으면 앞뒤 맥락이 끊기고, 너무 크면 무관한 내용이 섞여 임베딩의 의미가 희석된다 — overlap은 경계에서의 문맥 손실을 완화하는 장치다</span></li><li><span class="option-label">C</span><span>chunk_overlap은 클수록 무조건 좋으며 저장 비용에는 영향이 없다</span></li><li><span class="option-label">D</span><span>overlap이 커지면 중복 청크가 검색 결과 다양성을 항상 높인다</span></li></ol>
+</article>
+
+
+<article class="question 객관식">
+  <div class="question-head"><strong>15.</strong><span>T-E-015 · RAG · 하 · 5점</span></div>
+  <p class="question-body">문서 청킹 전략에서 문장·문단의 의미 흐름을 고려해 주제가 바뀌는 지점에서 나누는 방식으로 가장 적절한 것은?</p>
+  <ol class="options"><li><span class="option-label">A</span><span>글자 수 기준으로 일정하게 자른다</span></li><li><span class="option-label">B</span><span>페이지 번호를 기준으로 자른다</span></li><li><span class="option-label">C</span><span>문장·문단의 의미를 비교해 주제가 달라지는 지점에서 자른다</span></li><li><span class="option-label">D</span><span>표 구조를 기준으로 자른다</span></li></ol>
+</article>
+
+
+<article class="question 객관식">
+  <div class="question-head"><strong>16.</strong><span>T-E-016 · 에이전트 · 중 · 5점</span></div>
+  <p class="question-body">다음 요구사항에 가장 적합한 멀티 에이전트 구조는?<br><br>&quot;보고서 작성 업무를 리서치팀(검색·수집·정리 3개 에이전트)과 작성팀(초안·검수 2개 에이전트)으로 나누고, 각 팀에 팀장을 두어 전체 총괄이 팀장들과만 소통하게 하고 싶다.&quot;</p>
+  <ol class="options"><li><span class="option-label">A</span><span>Single</span></li><li><span class="option-label">B</span><span>Network</span></li><li><span class="option-label">C</span><span>Supervisor</span></li><li><span class="option-label">D</span><span>Hierarchical</span></li></ol>
+</article>
+
+
+<article class="question 객관식">
+  <div class="question-head"><strong>17.</strong><span>T-E-017 · 에이전트 · 상 · 5점</span></div>
+  <p class="question-body">Supervisor 구조에서 서브 에이전트를 &#x27;도구(as tools)&#x27;로 등록하는 방식과 일반 핸드오프 방식의 차이로 옳은 것은?</p>
+  <ol class="options"><li><span class="option-label">A</span><span>as tools 방식은 제어권이 서브 에이전트로 완전히 넘어간다</span></li><li><span class="option-label">B</span><span>as tools 방식은 관리자가 함수 호출하듯 서브 에이전트를 부르고 결과만 받으므로 제어가 강하지만, 서브 에이전트의 자율 판단은 제한된다</span></li><li><span class="option-label">C</span><span>핸드오프 방식은 결과 수집이 불가능하다</span></li><li><span class="option-label">D</span><span>두 방식은 제어 흐름이 완전히 동일하다</span></li></ol>
+</article>
+
+
+<article class="question 객관식">
+  <div class="question-head"><strong>18.</strong><span>T-E-018 · 에이전트 · 상 · 5점</span></div>
+  <p class="question-body">핸드오프(Handoff) 설계 3요소에 대한 시나리오 판단이다. 다음 실패 사례의 원인이 되는 요소는?<br><br>&quot;검색 에이전트가 작성 에이전트에게 넘길 때 원문 전체를 그대로 전달해, 작성 에이전트의 컨텍스트가 폭발하고 비용이 급증했다.&quot;</p>
+  <ol class="options"><li><span class="option-label">A</span><span>무엇을(Payload) 설계 실패</span></li><li><span class="option-label">B</span><span>언제(Trigger) 설계 실패</span></li><li><span class="option-label">C</span><span>누구 책임으로(Control) 설계 실패</span></li><li><span class="option-label">D</span><span>핸드오프와 무관한 문제</span></li></ol>
+</article>
+
+
+<article class="question 객관식">
+  <div class="question-head"><strong>19.</strong><span>T-E-019 · 데이터분석 · 중 · 5점</span></div>
+  <p class="question-body">담당자가 &#x27;지역별 평균 생산액을 알려줘&#x27;라고 자연어로 요청하자 AI가 SQL을 만들어 결과 표를 보여 주었다. 이 결과를 업무에 반영하기 전에 가장 먼저 확인해야 할, 가장 근본적인 것은?</p>
+  <ol class="options"><li><span class="option-label">A</span><span>생성된 SQL이 요청대로 &#x27;지역&#x27;으로 묶고 &#x27;평균(AVG)&#x27;을 계산했는지, 그룹 기준과 조회 조건이 질문과 일치하는지 검토한다</span></li><li><span class="option-label">B</span><span>결과로 나온 평균값들이 상식적인 범위 안에 있는지, 유난히 크거나 작은 값이 없는지 살펴본다</span></li><li><span class="option-label">C</span><span>결과 표에 나온 지역 수가 실제 전체 지역 수와 같은지, 누락된 지역이 없는지 확인한다</span></li><li><span class="option-label">D</span><span>쿼리가 참조한 원본 테이블이 최신 데이터로 갱신돼 있는지 확인한다</span></li></ol>
+</article>
+
+
+<article class="question 객관식">
+  <div class="question-head"><strong>20.</strong><span>T-E-020 · 데이터분석 · 상 · 5점</span></div>
+  <p class="question-body">100만 건이 넘는 생산 실적 테이블에서 &#x27;지역코드=? 그리고 연도=?&#x27; 조건으로 조회하는 화면이 자주 쓰이는데 응답이 느리다. 이 조회를 빠르게 하려는 조치로 가장 적절한 것은?</p>
+  <ol class="options"><li><span class="option-label">A</span><span>조회가 느릴 땐 컬럼과 상관없이 인덱스를 많이 만들수록 전반적으로 빨라지므로, 주요 컬럼 전부에 인덱스를 만든다</span></li><li><span class="option-label">B</span><span>자주 함께 조건으로 쓰이는 지역코드와 연도를 하나로 묶은 복합 인덱스를 만들어, 이 조회 패턴에 맞춘다</span></li><li><span class="option-label">C</span><span>인덱스는 조회뿐 아니라 데이터 입력·수정 속도까지 함께 높여 주므로, 성능이 걱정되면 인덱스부터 늘린다</span></li><li><span class="option-label">D</span><span>조회 조건과 상관없이 데이터를 연도 순으로 정렬해 저장하면 인덱스 없이도 같은 효과를 얻는다</span></li></ol>
+</article>
+
+</div>
+
+</section>
+
+
+<section class="page">
+  
+<header class="exam-paper-header">
+  <div class="exam-year">2026학년도 AI 데이터 역량강화 컨설팅사업 실전평가 문제지</div>
+  <div class="exam-page-no">4</div>
+  <div class="exam-title-row">
+    <span class="exam-pill">제 1 교시</span>
+    <h1>이론 영역</h1>
+    <span class="exam-pill exam-form">실전형</span>
+  </div>
+</header>
+
+  
+<div class="section-title">
+  <h2>이론 평가</h2>
+  <p>21번부터 30번까지 · 객관식/단답형</p>
+</div>
+<div class="question-columns">
+  
+<article class="question 객관식">
+  <div class="question-head"><strong>21.</strong><span>T-E-021 · 생성형AI활용 · 중 · 5점</span></div>
+  <p class="question-body">업무 지침을 근거로 답하는 사내 챗봇이 가끔 지침에 없는 내용을 사실처럼 지어내 답한다. 이 문제를 가장 근본적으로 줄이는 방법은?</p>
+  <ol class="options"><li><span class="option-label">A</span><span>시스템 프롬프트에 &#x27;모르는 것은 지어내지 말고 모른다고 답하라&#x27;는 지침을 넣는다</span></li><li><span class="option-label">B</span><span>답변이 나간 뒤 사람이 검수하는 절차를 두어, 틀린 답이 그대로 전달되지 않게 한다</span></li><li><span class="option-label">C</span><span>질문과 관련된 지침 조항을 먼저 검색해 근거로 함께 제공하고, 그 근거 안에서만 답하도록 한다</span></li><li><span class="option-label">D</span><span>더 크고 성능이 좋은 언어모델로 교체해 답변의 전반적 정확도를 높인다</span></li></ol>
+</article>
+
+
+<article class="question 객관식">
+  <div class="question-head"><strong>22.</strong><span>T-E-022 · 생성형AI활용 · 상 · 5점</span></div>
+  <p class="question-body">규정집을 일정 길이로 잘라 검색용 조각으로 만들어 문서 검색 AI에 쓰는데, 한 조항이 조각의 경계에서 잘려 검색이 관련 내용을 놓치는 일이 생긴다. 이 &#x27;경계에서 잘린 문맥&#x27; 문제를 직접 해결하는 방법으로 가장 적절한 것은?</p>
+  <ol class="options"><li><span class="option-label">A</span><span>조각 크기를 더 작게 줄여, 한 조각이 한 문장만 담도록 잘게 나눈다</span></li><li><span class="option-label">B</span><span>조각 크기를 더 크게 늘려, 한 조각이 여러 조항을 통째로 담도록 나눈다</span></li><li><span class="option-label">C</span><span>조각마다 어느 조항에서 왔는지 출처(제목·조항번호)를 함께 붙여 저장한다</span></li><li><span class="option-label">D</span><span>이웃한 조각끼리 앞뒤 내용을 조금씩 겹쳐서 잘라, 경계에서도 문맥이 끊기지 않게 한다</span></li></ol>
+</article>
+
+
+<article class="question 객관식">
+  <div class="question-head"><strong>23.</strong><span>T-E-023 · 서비스구현 · 상 · 5점</span></div>
+  <p class="question-body">인터넷이 되는 PC에서 AI로 간단한 HTML 업무 도구를 만들었다. 이 파일을 인터넷이 차단된 내부망으로 옮겨도 제대로 실행되게 하려면, 반입 전 점검에서 가장 먼저 확인해야 할 것은?</p>
+  <ol class="options"><li><span class="option-label">A</span><span>외부망에서 화면이 정상적으로 보였는지 최종 확인하고, 문제없으면 그대로 반입한다</span></li><li><span class="option-label">B</span><span>파일을 압축해 용량을 줄이고, 백신으로 악성코드 검사를 통과했는지 확인한다</span></li><li><span class="option-label">C</span><span>최신 브라우저에서 열리는지 확인하고, 열리기만 하면 내부망 반입 요건을 충족한 것으로 본다</span></li><li><span class="option-label">D</span><span>외부 서버(CDN)의 라이브러리나 외부 주소 호출에 의존하지 않고, 인터넷 없이 그 파일만으로 동작하는지 확인한다</span></li></ol>
+</article>
+
+
+<article class="question 객관식">
+  <div class="question-head"><strong>24.</strong><span>T-E-024 · 서비스구현 · 중 · 5점</span></div>
+  <p class="question-body">출석률 계산기 웹 도구를 HTML·CSS·JavaScript로 나눠 만든다. 각 기술의 역할을 짝지은 것 중, &#x27;버튼을 눌러 출석률을 계산하고 그 결과를 화면에 갱신하는&#x27; 동작에 해당하는 것은?</p>
+  <ol class="options"><li><span class="option-label">A</span><span>HTML — 입력칸과 버튼, 결과 영역의 뼈대(구조)를 만든다</span></li><li><span class="option-label">B</span><span>JavaScript — 버튼 클릭에 반응해 값을 계산하고 결과 영역의 내용을 바꾼다</span></li><li><span class="option-label">C</span><span>CSS — 결과 숫자의 색과 글꼴 등 겉모습을 꾸민다</span></li><li><span class="option-label">D</span><span>CSS — 결과 영역의 위치와 여백 등 화면 배치를 정한다</span></li></ol>
+</article>
+
+
+<article class="question 객관식">
+  <div class="question-head"><strong>25.</strong><span>T-E-025 · 생성형AI활용 · 중 · 5점</span></div>
+  <p class="question-body">기관 담당자가 민원 문장과 기존 처리 사례를 벡터로 바꿔 유사 사례를 찾으려 한다. 여기서 텍스트를 벡터로 바꾼다는 의미로 가장 적절한 것은?</p>
+  <ol class="options"><li><span class="option-label">A</span><span>보안, 성능, 품질 통제를 생략해 운영 속도만 높이는 방식</span></li><li><span class="option-label">B</span><span>업무 목적과 무관하게 최신 도구를 먼저 도입하는 접근</span></li><li><span class="option-label">C</span><span>검증 기준 없이 결과 화면만 확인해 성공 여부를 판단하는 방식</span></li><li><span class="option-label">D</span><span>텍스트 의미를 벡터 좌표로 변환해 유사도 검색을 가능하게 하는 방식</span></li></ol>
+</article>
+
+
+<article class="question 객관식">
+  <div class="question-head"><strong>26.</strong><span>T-E-026 · 데이터분석 · 중 · 5점</span></div>
+  <p class="question-body">데이터 분석 업무에서는 파일을 바로 읽을지, DB에 적재해 조회할지, 파일 크기 등의 조건에 따라 읽고쓰기 성능이 달라진다. <br>기관 담당자는 &#x27;대용량 원천 파일은 DB 적재하고 필요한 집계만 Python으로 가져온다&#x27;라는 업무 적용을 검토하고 있다. <br>이렇게 검토하는 이유로 적합하지 않은 것은?</p>
+  <ol class="options"><li><span class="option-label">A</span><span>대용량 파일 전체를 매번 Python으로 직접 읽으면 처리 시간이 길어질 수 있기 때문이다.</span></li><li><span class="option-label">B</span><span>DB에서 필요한 조건과 집계만 먼저 처리하면 Python으로 가져오는 데이터량을 줄일 수 있기 때문이다.</span></li><li><span class="option-label">C</span><span>원천 데이터를 DB에 적재하면 조회 기준과 처리 과정을 관리하기 쉬워져 재현성을 높일 수 있기 때문이다.</span></li><li><span class="option-label">D</span><span>DB에 적재하면 원천 데이터의 오류가 자동으로 모두 수정되므로 별도의 데이터 검증이 필요 없기 때문이다.</span></li></ol>
+</article>
+
+
+<article class="question 객관식">
+  <div class="question-head"><strong>27.</strong><span>T-E-027 · 서비스구현 · 상 · 5점</span></div>
+  <p class="question-body">브라우저에 직접 만든 확장 프로그램을 등록하려면 확장 프로그램 관리 화면에서 어떤 설정을 먼저 켜야 하는가?</p>
+  <ol class="options"><li><span class="option-label">A</span><span>다른 스토어의 확장을 허용합니다.</span></li><li><span class="option-label">B</span><span>개발자모드 ON</span></li><li><span class="option-label">C</span><span>개발자모드 OFF</span></li><li><span class="option-label">D</span><span>단축키설정</span></li></ol>
+</article>
+
+
+<article class="question 객관식">
+  <div class="question-head"><strong>28.</strong><span>T-E-028 · 데이터분석 · 중 · 5점</span></div>
+  <p class="question-body">엑셀 파워쿼리에디터가 업무 자동화에서 활용되는 이유로 합당하지 않은 것은?</p>
+  <ol class="options"><li><span class="option-label">A</span><span>반복적으로 발생하는 엑셀 파일을 불러와 정리·변환하는 과정을 자동화할 수 있기 때문이다.</span></li><li><span class="option-label">B</span><span>여러 파일이나 시트의 데이터를 하나로 통합하고, 새 파일이 추가되면 새로고침으로 반영할 수 있기 때문이다.</span></li><li><span class="option-label">C</span><span>데이터 정제 과정이 단계별로 기록되어 같은 작업을 반복 실행하기 쉽기 때문이다.</span></li><li><span class="option-label">D</span><span>파워쿼리에디터를 사용하면 잘못 입력된 데이터가 자동으로 모두 수정되어 별도 검토가 필요 없기 때문이다.</span></li></ol>
+</article>
+
+
+<article class="question 객관식">
+  <div class="question-head"><strong>29.</strong><span>T-E-029 · 서비스구현 · 상 · 5점</span></div>
+  <p class="question-body">Ollama와 같은 로컬 llm을 써야하는 이유로 보기 어려운 것은?</p>
+  <ol class="options"><li><span class="option-label">A</span><span>민감한 업무 데이터를 외부 서버로 보내지 않고 내부 PC나 기관 환경에서 처리할 수 있기 때문이다.</span></li><li><span class="option-label">B</span><span>인터넷 연결이 불안정하거나 외부 AI 서비스 사용이 제한된 환경에서도 활용할 수 있기 때문이다.</span></li><li><span class="option-label">C</span><span>기관 업무에 맞는 모델을 선택하거나 조정해 반복적인 문서 요약, 분류, 초안 작성 등에 활용할 수 있기 때문이다.</span></li><li><span class="option-label">D</span><span>로컬 LLM을 사용하면 모든 답변이 항상 정확해지고, 별도의 검토 없이 공식 문서로 바로 사용할 수 있기 때문이다.</span></li></ol>
+</article>
+
+
+<article class="question 객관식">
+  <div class="question-head"><strong>30.</strong><span>T-E-030 · 서비스구현 · 하 · 5점</span></div>
+  <p class="question-body">HTML 대시보드 시안을 먼저 만들어 업무시간 절감, 사용성, 내부망 보안, 오류 관리 가능성을 점검하려 한다. 이 단계의 성격으로 가장 적절한 것은?</p>
+  <ol class="options"><li><span class="option-label">A</span><span>보안, 성능, 품질 통제를 생략해 운영 속도만 높이는 방식</span></li><li><span class="option-label">B</span><span>업무 목적과 무관하게 최신 도구를 먼저 도입하는 접근</span></li><li><span class="option-label">C</span><span>검증 기준 없이 결과 화면만 확인해 성공 여부를 판단하는 방식</span></li><li><span class="option-label">D</span><span>브라우저에서 HTML, CSS, JavaScript를 빠르게 실험하고 결과를 확인하는 개발 방식</span></li></ol>
+</article>
+
+</div>
+
+</section>
+
+
+<section class="page">
+  
+<header class="exam-paper-header">
+  <div class="exam-year">2026학년도 AI 데이터 역량강화 컨설팅사업 실전평가 문제지</div>
+  <div class="exam-page-no">5</div>
+  <div class="exam-title-row">
+    <span class="exam-pill">제 1 교시</span>
+    <h1>이론 영역</h1>
+    <span class="exam-pill exam-form">실전형</span>
+  </div>
+</header>
+
+  
+<div class="section-title">
+  <h2>이론 평가</h2>
+  <p>31번부터 35번까지 · 객관식/단답형</p>
+</div>
+<div class="question-columns">
+  
+<article class="question 단답형">
+  <div class="question-head"><strong>31.</strong><span>T-E-031 · AI기초 · 중 · 5점</span></div>
+  <p class="question-body">트랜스포머에서 단어 간 관련도를 계산하기 위해 사용하는 세 가지 벡터를 각각 무엇이라고 하는가?</p>
+  <div class="short-answer-lines"><span></span><span></span><span></span></div>
+</article>
+
+
+<article class="question 단답형">
+  <div class="question-head"><strong>32.</strong><span>T-E-032 · 서비스구현 · 중 · 5점</span></div>
+  <p class="question-body">620만 건 규모의 민원 데이터를 CSV 대신 컬럼 단위 조회와 압축 효율이 좋은 파일 형식으로 변환하려고 한다. 대용량 분석에 자주 활용되는 이 파일 형식은 무엇인가? (영어 철자 P로 시작, 7자)</p>
+  <div class="short-answer-lines"><span></span><span></span><span></span></div>
+</article>
+
+
+<article class="question 단답형">
+  <div class="question-head"><strong>33.</strong><span>T-E-033 · 데이터분석 · 상 · 10점</span></div>
+  <p class="question-body">관계형 데이터베이스에서 SQL로 데이터를 분석할 때, 일반 집계(GROUP BY)처럼 여러 행을 하나로 합쳐 버리지 않고, 각 행은 그대로 둔 채 그 행이 속한 구간을 대상으로 순위·누적합·이동평균 등을 계산해 행마다 결과를 함께 남기는 함수들을 통칭하여 무엇이라고 하는가?</p>
+  <div class="short-answer-lines"><span></span><span></span><span></span><span></span><span></span></div>
+</article>
+
+
+<article class="question 단답형">
+  <div class="question-head"><strong>34.</strong><span>T-E-034 · 에이전트 · 중 · 10점</span></div>
+  <p class="question-body"> 여러 에이전트의 작업 순서·분기·병렬 실행을 전체적으로 지휘·조율하는 것을 가리키는 용어는? (한글 또는 영어)</p>
+  <div class="short-answer-lines"><span></span><span></span><span></span><span></span><span></span></div>
+</article>
+
+
+<article class="question 단답형">
+  <div class="question-head"><strong>35.</strong><span>T-E-035 · RAG · 하 · 10점</span></div>
+  <p class="question-body">RAG에서 한 조각(chunk)에 담을 최대 텍스트 길이를 뜻하는 설정값은 무엇인가? (한글 또는 영어)</p>
+  <div class="short-answer-lines"><span></span><span></span><span></span><span></span><span></span></div>
+</article>
+
+</div>
+
+</section>
+
+  </main>
+<script>/* kg-preview: #<heading> \uc704\uce58\ub85c \uc774\ub3d9 */
+(function(){function norm(t){return (t||'').replace(/\s+/g,'').toLowerCase()}
+function go(){var h=decodeURIComponent(location.hash.slice(1));if(!h)return;var k=norm(h).slice(0,24);if(!k)return;
+var best=null,bl=1e9,els=document.body.querySelectorAll('h1,h2,h3,h4,h5,p,div,span,li,td,text,tspan,section,article');
+for(var i=0;i<els.length;i++){var e=els[i],t=norm(e.textContent);if(t.length<bl&&t.indexOf(k)>-1){best=e;bl=t.length}}
+if(!best)return;var box=best.closest('section,[class*=slide],[class*=page],article')||best;
+box.scrollIntoView({block:'start'});box.style.outline='3px solid #c0504d';box.style.outlineOffset='4px';
+setTimeout(function(){box.style.outline=''},2600)}
+window.addEventListener('load',function(){setTimeout(go,400)});window.addEventListener('hashchange',go)})();</script></body>
+</html>

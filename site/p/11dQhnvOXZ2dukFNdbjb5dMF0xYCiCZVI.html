@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head><meta name="robots" content="noindex, nofollow">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>R&D 행정의 디지털 르네상스: 한국연구재단과 생성형 AI</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    
+    <!-- Chosen Palette: Warm Neutrals & Intelligent Blue -->
+    <!-- Background: #FAFAF9 (Warm Gray/Stone 50) -->
+    <!-- Primary Text: #1C1917 (Stone 900) -->
+    <!-- Primary Brand: #1E3A8A (Blue 900 - Trust/Authority) -->
+    <!-- Secondary Brand: #0D9488 (Teal 600 - Innovation/AI) -->
+    <!-- Accent: #BE123C (Rose 700 - Issues/Urgency) -->
+
+    <!-- Application Structure Plan: 
+         The app is designed as an "Executive Dashboard" for NRF stakeholders. 
+         Instead of a linear book format, it uses a tabbed dashboard layout representing the 5 core pillars (Efficiency, Fairness, Diversity, Transparency, Strategy).
+         Users start at an "Executive Summary" (Intro), then explore each pillar interactively.
+         Rationale: This structure transforms abstract arguments into tangible "modules" of change, allowing users to simulate the "Before vs. After" scenarios described in the book.
+    -->
+
+    <!-- Visualization & Content Choices:
+         1. Intro: Text & Key Metrics -> Establish Vision.
+         2. Efficiency: Bar Chart (Chart.js) -> Compare "Manual vs. AI" time allocation. Shows dramatic efficiency gain.
+         3. Fairness: Scatter Plot (Chart.js) -> Simulate "Semantic Matching". Shows how AI finds true experts based on context (closeness) vs keyword matching.
+         4. Diversity: Line/Area Chart (Chart.js) -> "The Long Tail". Highlights the shift from "Winner-takes-all" to supporting diverse research.
+         5. Transparency: Interactive Text Transformer (DOM) -> Demonstrates "Plain Language" conversion. Direct engagement with the concept.
+         6. Strategy: Radar Chart (Chart.js) -> "Scenario Planning". Compares "Intuition-based" vs "Data-driven" strategic outcomes across 5 dimensions.
+         
+         All choices confirm NO SVG graphics and NO Mermaid JS used.
+    -->
+
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #FAFAF9; /* Stone 50 */
+            color: #1C1917; /* Stone 900 */
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px; /* Controlled max width */
+            margin: 0 auto;
+            height: 350px; /* Default height */
+        }
+        @media (max-width: 768px) {
+            .chart-container {
+                height: 300px;
+            }
+        }
+        .nav-item.active {
+            background-color: #E7E5E4; /* Stone 200 */
+            border-left: 4px solid #1E3A8A; /* Blue 900 */
+            font-weight: 700;
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="antialiased min-h-screen flex flex-col md:flex-row">
+
+    <!-- Navigation Sidebar -->
+    <aside class="w-full md:w-64 bg-white border-r border-stone-200 flex-shrink-0 flex flex-col z-20 sticky top-0 md:h-screen shadow-sm">
+        <div class="p-6 border-b border-stone-100">
+            <h1 class="text-xl font-black text-blue-900 leading-tight">NRF<br><span class="text-teal-600">Digital Renaissance</span></h1>
+            <p class="text-xs text-stone-500 mt-2">생성형 AI 도입 전략 보고서</p>
+        </div>
+        <nav class="flex-1 overflow-y-auto py-4">
+            <ul class="space-y-1">
+                <li>
+                    <button onclick="navigate('intro')" class="nav-item w-full text-left px-6 py-3 text-stone-600 hover:bg-stone-50 transition-colors flex items-center active" id="nav-intro">
+                        <span class="mr-3">🏠</span> 개요: 혁신의 필요성
+                    </button>
+                </li>
+                <li>
+                    <button onclick="navigate('efficiency')" class="nav-item w-full text-left px-6 py-3 text-stone-600 hover:bg-stone-50 transition-colors flex items-center" id="nav-efficiency">
+                        <span class="mr-3">⚡</span> 1. 행정 효율화
+                    </button>
+                </li>
+                <li>
+                    <button onclick="navigate('fairness')" class="nav-item w-full text-left px-6 py-3 text-stone-600 hover:bg-stone-50 transition-colors flex items-center" id="nav-fairness">
+                        <span class="mr-3">⚖️</span> 2. 평가 공정성
+                    </button>
+                </li>
+                <li>
+                    <button onclick="navigate('diversity')" class="nav-item w-full text-left px-6 py-3 text-stone-600 hover:bg-stone-50 transition-colors flex items-center" id="nav-diversity">
+                        <span class="mr-3">🌈</span> 3. 연구 다양성
+                    </button>
+                </li>
+                <li>
+                    <button onclick="navigate('transparency')" class="nav-item w-full text-left px-6 py-3 text-stone-600 hover:bg-stone-50 transition-colors flex items-center" id="nav-transparency">
+                        <span class="mr-3">💎</span> 4. 투명성 & 소통
+                    </button>
+                </li>
+                <li>
+                    <button onclick="navigate('strategy')" class="nav-item w-full text-left px-6 py-3 text-stone-600 hover:bg-stone-50 transition-colors flex items-center" id="nav-strategy">
+                        <span class="mr-3">🔭</span> 5. 미래 전략
+                    </button>
+                </li>
+            </ul>
+        </nav>
+        <div class="p-6 border-t border-stone-100 text-xs text-stone-400">
+            &copy; 2024 NRF Future Strategy
+        </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 p-6 md:p-10 overflow-y-auto bg-stone-50 h-screen" id="main-content">
+        
+        <!-- INTRO SECTION -->
+        <section id="intro" class="section-view fade-in max-w-4xl mx-auto">
+            <header class="mb-12 text-center md:text-left">
+                <span class="inline-block px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-semibold mb-4">Vision 2025</span>
+                <h2 class="text-4xl md:text-5xl font-black text-stone-800 mb-6 leading-tight">
+                    R&D 행정의 본질을<br>회복할 시간입니다.
+                </h2>
+                <p class="text-lg text-stone-600 leading-relaxed mb-8">
+                    지금 한국연구재단(NRF)은 "서류의 산"에 갇혀 있습니다. 
+                    <br class="hidden md:inline">실무자는 행정에 지치고, 연구자는 절차에 좌절합니다.
+                    <br><br>
+                    이 인터랙티브 보고서는 <strong>'생성형 AI'</strong>라는 도구를 통해 
+                    어떻게 NRF가 관리 기관을 넘어 <strong>연구자 중심의 전략 기관</strong>으로 
+                    거듭날 수 있는지 5가지 핵심 변화를 보여줍니다.
+                </p>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+                    <div class="bg-white p-4 rounded-xl shadow-sm border border-stone-100 text-center">
+                        <div class="text-3xl font-bold text-teal-600">80%</div>
+                        <div class="text-xs text-stone-500 mt-1">행정 시간 절감</div>
+                    </div>
+                    <div class="bg-white p-4 rounded-xl shadow-sm border border-stone-100 text-center">
+                        <div class="text-3xl font-bold text-blue-600">Zero</div>
+                        <div class="text-xs text-stone-500 mt-1">인적 평가 편향</div>
+                    </div>
+                    <div class="bg-white p-4 rounded-xl shadow-sm border border-stone-100 text-center">
+                        <div class="text-3xl font-bold text-indigo-600">Long-tail</div>
+                        <div class="text-xs text-stone-500 mt-1">소외 연구 발굴</div>
+                    </div>
+                    <div class="bg-white p-4 rounded-xl shadow-sm border border-stone-100 text-center">
+                        <div class="text-3xl font-bold text-rose-600">Trust</div>
+                        <div class="text-xs text-stone-500 mt-1">대국민 신뢰 회복</div>
+                    </div>
+                </div>
+                <button onclick="navigate('efficiency')" class="bg-blue-900 text-white px-8 py-4 rounded-lg font-bold hover:bg-blue-800 transition-colors shadow-lg">
+                    변화 시작하기 →
+                </button>
+            </header>
+        </section>
+
+        <!-- ARGUMENT 1: EFFICIENCY -->
+        <section id="efficiency" class="section-view hidden fade-in max-w-4xl mx-auto">
+            <div class="mb-8">
+                <h2 class="text-3xl font-bold text-stone-800 mb-2">1. 행정의 본질 회복</h2>
+                <p class="text-stone-600">실무자들이 '틀린 그림 찾기' 같은 단순 반복 업무에서 벗어나, 연구자와 소통하고 전략을 기획하는 본질적인 업무로 돌아갑니다.</p>
+            </div>
+
+            <!-- Content Grid -->
+            <div class="grid md:grid-cols-2 gap-8 mb-10">
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-stone-200">
+                    <h3 class="text-lg font-bold text-stone-800 mb-4 flex items-center">
+                        <span class="bg-rose-100 text-rose-600 p-2 rounded-lg mr-3 text-sm">현재 (AS-IS)</span>
+                        실무자의 하루
+                    </h3>
+                    <p class="text-sm text-stone-600 mb-4">
+                        A연구원은 오늘 50개의 제안서를 열어봤지만, 내용은 한 줄도 읽지 못했습니다.
+                        오직 <span class="text-rose-600 font-semibold">형식 요건 검토</span>에만 8시간을 썼기 때문입니다.
+                    </p>
+                    <ul class="space-y-2 text-sm text-stone-500">
+                        <li class="flex items-center">❌ 오탈자/서식 확인 (4hr)</li>
+                        <li class="flex items-center">❌ 필수 서류 누락 체크 (3hr)</li>
+                        <li class="flex items-center">❌ 단순 규정 전화 응대 (1hr)</li>
+                    </ul>
+                </div>
+                <div class="bg-blue-50 p-6 rounded-2xl shadow-sm border border-blue-100">
+                    <h3 class="text-lg font-bold text-blue-900 mb-4 flex items-center">
+                        <span class="bg-teal-100 text-teal-700 p-2 rounded-lg mr-3 text-sm">미래 (TO-BE)</span>
+                        AI 비서 도입 후
+                    </h3>
+                    <p class="text-sm text-blue-800 mb-4">
+                        AI가 1만 건의 제안서를 <span class="text-teal-600 font-bold">1시간 만에 전수 검토</span>했습니다.
+                        확보된 시간에 A연구원은 랩(Lab)을 방문합니다.
+                    </p>
+                    <ul class="space-y-2 text-sm text-blue-700">
+                        <li class="flex items-center">✅ AI 사전 스크리닝 (자동)</li>
+                        <li class="flex items-center">✅ 챗봇 민원 자동 응대 (자동)</li>
+                        <li class="flex items-center">✨ <strong>연구 현장 방문 및 기획 (New)</strong></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Chart Section -->
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-stone-200">
+                <h3 class="text-lg font-bold text-stone-800 mb-2">업무 시간 재분배 시뮬레이션</h3>
+                <p class="text-sm text-stone-500 mb-6">AI 도입 시 단순 행정 업무가 급감하고, 전략/기획 업무 비중이 대폭 상승합니다.</p>
+                <div class="chart-container">
+                    <canvas id="efficiencyChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- ARGUMENT 2: FAIRNESS -->
+        <section id="fairness" class="section-view hidden fade-in max-w-4xl mx-auto">
+            <div class="mb-8">
+                <h2 class="text-3xl font-bold text-stone-800 mb-2">2. 평가의 공정성 혁신</h2>
+                <p class="text-stone-600">학연·지연을 배제하고, 제안서의 '문맥(Context)'을 이해하는 AI 매칭 시스템으로 최적의 평가자를 선정합니다.</p>
+            </div>
+
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-stone-200 mb-8">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
+                    <div>
+                        <h3 class="text-lg font-bold text-stone-800">평가자 매칭 시뮬레이션</h3>
+                        <p class="text-sm text-stone-500 mt-1">키워드 매칭(기존) vs. AI 임베딩 매칭(미래) 비교</p>
+                    </div>
+                    <div class="mt-4 md:mt-0 flex space-x-2">
+                        <button onclick="updateFairnessChart('keyword')" class="px-4 py-2 bg-stone-200 text-stone-700 rounded-lg text-sm font-medium hover:bg-stone-300 transition">기존: 키워드 검색</button>
+                        <button onclick="updateFairnessChart('ai')" class="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 shadow-md transition">미래: AI 문맥 분석</button>
+                    </div>
+                </div>
+                
+                <div class="chart-container">
+                    <canvas id="fairnessChart"></canvas>
+                </div>
+                <div class="mt-4 p-4 bg-stone-50 rounded-lg text-sm text-stone-600 border border-stone-200" id="fairness-explanation">
+                    <span class="font-bold">현재 상태:</span> 단순히 'AI'라는 단어가 들어간 연구자를 모두 검색합니다. 비전문가가 포함되거나, 이해관계자(같은 학교 등)가 섞일 위험이 큽니다.
+                </div>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="p-5 bg-white border border-stone-200 rounded-xl">
+                    <div class="text-teal-600 text-2xl mb-2">🔍</div>
+                    <h4 class="font-bold text-stone-800 mb-2">이해관계 네트워크 분석</h4>
+                    <p class="text-sm text-stone-600">AI는 논문 공저자, 과거 프로젝트 이력 등 수백만 건의 데이터를 교차 검증하여 '보이지 않는 카르텔'까지 사전에 필터링합니다.</p>
+                </div>
+                <div class="p-5 bg-white border border-stone-200 rounded-xl">
+                    <div class="text-blue-600 text-2xl mb-2">📝</div>
+                    <h4 class="font-bold text-stone-800 mb-2">평가 의견 중립성 보조</h4>
+                    <p class="text-sm text-stone-600">평가 위원의 소견서에서 감정적이거나 모호한 표현을 AI가 감지하여, 객관적인 근거 중심으로 재작성하도록 유도합니다.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ARGUMENT 3: DIVERSITY -->
+        <section id="diversity" class="section-view hidden fade-in max-w-4xl mx-auto">
+            <div class="mb-8">
+                <h2 class="text-3xl font-bold text-stone-800 mb-2">3. 연구의 다양성 확보</h2>
+                <p class="text-stone-600">인기 분야에만 예산이 쏠리는 '마태 효과'를 극복하고, AI의 시선으로 숨겨진 '롱테일(Long-tail)' 혁신 연구를 발굴합니다.</p>
+            </div>
+
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-stone-200 mb-8">
+                <h3 class="text-lg font-bold text-stone-800 mb-2">연구 과제 분포 (Long Tail)</h3>
+                <p class="text-sm text-stone-500 mb-6">현재는 상위 인기 키워드(Head)에만 지원이 집중되지만, AI는 긴 꼬리(Tail) 부분의 융합/기초 연구 가치를 발견합니다.</p>
+                <div class="chart-container">
+                    <canvas id="diversityChart"></canvas>
+                </div>
+            </div>
+
+            <div class="bg-gradient-to-r from-stone-800 to-stone-700 text-white p-8 rounded-2xl shadow-lg">
+                <h3 class="text-xl font-bold mb-4">AI Writing Assistant: 기회의 평등</h3>
+                <p class="text-stone-300 mb-6 leading-relaxed">
+                    "아이디어는 혁신적인데, 제안서 작성이 서툰 지방 대학의 늙은 교수님."<br>
+                    과거에는 탈락했을지 모릅니다. 하지만 이제 AI 멘토가 논리적 구조를 잡아주고 표현을 다듬어 줍니다.
+                    AI는 연구자의 '배경'이 아닌 '아이디어' 그 자체를 봅니다.
+                </p>
+                <div class="flex items-center space-x-4">
+                    <div class="h-2 flex-1 bg-stone-600 rounded-full overflow-hidden">
+                        <div class="h-full bg-teal-400 w-3/4"></div>
+                    </div>
+                    <span class="text-sm font-medium text-teal-400">신진 연구자 선정률 예측: +35%</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- ARGUMENT 4: TRANSPARENCY -->
+        <section id="transparency" class="section-view hidden fade-in max-w-4xl mx-auto">
+            <div class="mb-8">
+                <h2 class="text-3xl font-bold text-stone-800 mb-2">4. 투명성과 소통</h2>
+                <p class="text-stone-600">어려운 행정 용어와 과학 기술을 AI가 '누구나 이해할 수 있는 언어'로 통역하여 국민의 신뢰를 얻습니다.</p>
+            </div>
+
+            <!-- Interactive Demo: Plain Language -->
+            <div class="grid md:grid-cols-2 gap-8 mb-10">
+                <!-- Before -->
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-stone-200 flex flex-col">
+                    <div class="mb-4 flex items-center justify-between">
+                        <h3 class="font-bold text-stone-700">📄 원본 보고서 (난해함)</h3>
+                        <span class="text-xs bg-stone-100 px-2 py-1 rounded text-stone-500">연구자 작성</span>
+                    </div>
+                    <div class="flex-1 bg-stone-50 p-4 rounded-lg text-xs text-stone-500 font-mono leading-relaxed mb-4 border border-stone-100">
+                        "본 연구는 고분자 전해질 막 연료전지의 산소 환원 반응(ORR) 촉매 활성을 증대시키기 위해 백금-니켈 합금 나노입자의 표면 구조 제어 및 리간드 효과를 규명하고, 이를 통해 MEA 성능을 0.8V에서 1.5A/cm² 이상 달성함을 목적으로..."
+                    </div>
+                    <div class="text-center text-stone-400 text-sm">국민: "무슨 말인지 하나도 모르겠어요." 😓</div>
+                </div>
+
+                <!-- Action Button (Mobile centered, Desktop centered vertically) -->
+                <div class="md:hidden flex justify-center py-2">
+                    <button id="translateBtn" class="bg-blue-600 text-white px-6 py-2 rounded-full shadow-lg">⬇️ AI 번역 ⬇️</button>
+                </div>
+
+                <!-- After -->
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-blue-200 flex flex-col relative overflow-hidden">
+                    <div class="absolute top-0 right-0 bg-blue-600 text-white text-xs px-3 py-1 rounded-bl-lg font-bold">AI Generated</div>
+                    <div class="mb-4">
+                        <h3 class="font-bold text-blue-900">✨ 대국민 요약 (쉬운 말)</h3>
+                    </div>
+                    <div id="ai-summary-box" class="flex-1 bg-blue-50 p-4 rounded-lg text-sm text-blue-900 leading-relaxed mb-4 border border-blue-100 transition-all duration-500">
+                        <div class="flex items-center justify-center h-full text-blue-300">
+                            <button onclick="runTranslation()" class="bg-white border border-blue-200 text-blue-600 px-4 py-2 rounded-lg hover:bg-blue-50 transition shadow-sm">
+                                AI로 쉽게 바꿔보기 (클릭)
+                            </button>
+                        </div>
+                    </div>
+                    <div class="text-center text-blue-600 text-sm">국민: "아, 더 싼 수소차를 만드는 기술이군요!" 😃</div>
+                </div>
+            </div>
+
+            <!-- Accounting Section -->
+            <div class="bg-stone-800 text-stone-300 p-6 rounded-2xl">
+                <h3 class="text-white text-lg font-bold mb-4">🤖 지능형 정산 내비게이션</h3>
+                <div class="flex items-start space-x-4">
+                    <div class="bg-stone-700 p-3 rounded-lg text-2xl">🧾</div>
+                    <div>
+                        <p class="mb-2">연구자가 영수증 사진을 찍으면 AI가 즉시 분석합니다.</p>
+                        <div class="bg-rose-900/30 border border-rose-800 p-3 rounded text-rose-200 text-sm">
+                            <span class="font-bold">⚠️ AI 경고:</span> "박사님, 이 영수증은 '회의비' 규정(주말 사용 제한)에 위반될 소지가 90%입니다. 평일 사용 내역인지 소명해 주세요."
+                        </div>
+                        <p class="mt-2 text-xs text-stone-500">→ 감사 적발(처벌)이 아닌 사전 예방(가이드) 시스템으로 전환</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ARGUMENT 5: STRATEGY -->
+        <section id="strategy" class="section-view hidden fade-in max-w-4xl mx-auto">
+            <div class="mb-8">
+                <h2 class="text-3xl font-bold text-stone-800 mb-2">5. 미래 전략 수립</h2>
+                <p class="text-stone-600">인간의 직관을 넘어, 전 세계 데이터를 집어삼킨 AI가 '글로벌 기술 지도'를 그리고 대한민국의 생존 전략을 시뮬레이션합니다.</p>
+            </div>
+
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-stone-200 mb-8">
+                <div class="flex justify-between items-end mb-4">
+                    <h3 class="text-lg font-bold text-stone-800">국가 R&D 경쟁력 시뮬레이션</h3>
+                    <div class="text-sm">
+                        <span class="inline-block w-3 h-3 bg-stone-300 rounded-full mr-1"></span> 현재(직관)
+                        <span class="inline-block w-3 h-3 bg-teal-500 rounded-full ml-3 mr-1"></span> AI전략 도입후
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <canvas id="strategyChart"></canvas>
+                </div>
+                <div class="mt-6 text-center">
+                    <p class="text-stone-600 text-sm italic">
+                        "AI는 우리가 놓치고 있던 <strong>'글로벌 협력'</strong>과 <strong>'미래 기술 선점'</strong> 기회를 데이터로 증명했습니다."
+                    </p>
+                </div>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-4">
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-stone-100">
+                    <div class="font-bold text-stone-800 mb-1">Fast Follower</div>
+                    <div class="text-xs text-stone-500 mb-3">남을 따라가는 전략</div>
+                    <div class="h-2 bg-stone-100 rounded-full"><div class="h-full bg-stone-400 w-full rounded-full"></div></div>
+                    <div class="text-right text-xs text-stone-400 mt-1">종료됨</div>
+                </div>
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-stone-100 relative overflow-hidden">
+                     <div class="absolute inset-0 bg-blue-50 opacity-50"></div>
+                     <div class="relative z-10">
+                        <div class="font-bold text-blue-900 mb-1">First Mover</div>
+                        <div class="text-xs text-blue-600 mb-3">선도하는 전략</div>
+                        <div class="h-2 bg-blue-200 rounded-full"><div class="h-full bg-blue-600 w-1/4 animate-pulse rounded-full"></div></div>
+                        <div class="text-right text-xs text-blue-600 mt-1">진행 중 (25%)</div>
+                     </div>
+                </div>
+                <div class="bg-teal-600 p-4 rounded-xl shadow-sm border border-teal-600 text-white">
+                    <div class="font-bold mb-1">AI Driven</div>
+                    <div class="text-xs text-teal-100 mb-3">데이터 기반 초격차</div>
+                    <div class="h-2 bg-teal-800 rounded-full"><div class="h-full bg-white w-full rounded-full"></div></div>
+                    <div class="text-right text-xs text-teal-100 mt-1">목표 달성 가능</div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        // State Management
+        let currentSection = 'intro';
+        
+        // Navigation Logic
+        function navigate(sectionId) {
+            // Update UI State
+            document.querySelectorAll('.section-view').forEach(el => el.classList.add('hidden'));
+            document.getElementById(sectionId).classList.remove('hidden');
+            
+            document.querySelectorAll('.nav-item').forEach(el => {
+                el.classList.remove('active', 'bg-stone-100', 'border-l-4', 'border-blue-900', 'font-bold');
+            });
+            const navBtn = document.getElementById(`nav-${sectionId}`);
+            if(navBtn) navBtn.classList.add('active');
+
+            currentSection = sectionId;
+            
+            // Scroll to top
+            document.getElementById('main-content').scrollTop = 0;
+
+            // Trigger animations/charts if needed
+            if(sectionId === 'transparency') {
+                resetTranslation();
+            }
+        }
+
+        // --- CHART CONFIGURATIONS ---
+
+        // 1. Efficiency Chart (Bar)
+        const ctxEff = document.getElementById('efficiencyChart').getContext('2d');
+        const efficiencyChart = new Chart(ctxEff, {
+            type: 'bar',
+            data: {
+                labels: ['단순 규정 검토', '제안서 형식 확인', '전화/민원 응대', '연구 현장 방문', '기획/전략 수립'],
+                datasets: [
+                    {
+                        label: '현재 (인간 단독)',
+                        data: [8, 8, 4, 1, 1], // Hours or Units of effort
+                        backgroundColor: '#E11D48', // Rose 600
+                        borderRadius: 4
+                    },
+                    {
+                        label: '미래 (AI 협업)',
+                        data: [1, 1, 1, 8, 8], // Shifted effort
+                        backgroundColor: '#0D9488', // Teal 600
+                        borderRadius: 4
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'bottom' },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return context.dataset.label + ': ' + context.raw + ' 시간 투입';
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: { 
+                        beginAtZero: true,
+                        title: { display: true, text: '업무 비중 (시간)' }
+                    }
+                }
+            }
+        });
+
+        // 2. Fairness Chart (Scatter Simulation)
+        const ctxFair = document.getElementById('fairnessChart').getContext('2d');
+        
+        // Data for "Keyword Match" (Clustered poorly, purely visual sim)
+        const keywordData = Array.from({length: 30}, () => ({
+            x: Math.random() * 100,
+            y: Math.random() * 100,
+            r: 5
+        }));
+
+        // Data for "AI Embedding" (Clustered by context/color)
+        const aiData = [
+            {x: 50, y: 50, r: 15, type: 'Target Proposal'}, // Center
+            {x: 48, y: 52, r: 8, type: 'True Expert'},
+            {x: 52, y: 49, r: 8, type: 'True Expert'},
+            {x: 50, y: 55, r: 8, type: 'True Expert'},
+            // Distant irrelevant matches
+            {x: 10, y: 10, r: 5, type: 'Noise'}, 
+            {x: 90, y: 90, r: 5, type: 'Noise'}
+        ];
+
+        let fairnessChart = new Chart(ctxFair, {
+            type: 'scatter',
+            data: {
+                datasets: [{
+                    label: '연구자 풀(Pool)',
+                    data: keywordData,
+                    backgroundColor: '#A8A29E' // Stone 400
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            label: (ctx) => '연구자 ID: ' + Math.floor(Math.random()*1000)
+                        }
+                    },
+                    annotation: {
+                        // Just for visual logic if using plugin, but keeping vanilla chartjs for safety
+                    }
+                },
+                scales: {
+                    x: { display: false },
+                    y: { display: false }
+                }
+            }
+        });
+
+        function updateFairnessChart(mode) {
+            const explainDiv = document.getElementById('fairness-explanation');
+            if (mode === 'keyword') {
+                fairnessChart.data.datasets = [{
+                    label: '키워드 매칭',
+                    data: keywordData,
+                    backgroundColor: function(ctx) {
+                        // Random red highlights to simulate errors/bias
+                        return Math.random() > 0.8 ? '#E11D48' : '#A8A29E'; 
+                    },
+                    pointRadius: 6
+                }];
+                explainDiv.innerHTML = '<span class="font-bold text-rose-600">현재 상태:</span> 단순히 키워드만 일치하면 매칭됩니다. <span class="text-rose-600">빨간 점</span>은 전문성이 없거나 이해관계가 있는 부적절한 평가자를 의미합니다.';
+            } else {
+                // Generate clustered data around center (50,50)
+                const smartData = Array.from({length: 40}, (_, i) => {
+                    if(i === 0) return {x: 50, y: 50, r: 20}; // Target
+                    // Experts are close
+                    if(i < 6) return {x: 50 + (Math.random()-0.5)*10, y: 50 + (Math.random()-0.5)*10, r: 8};
+                    // Others are filtered out (faded)
+                    return {x: Math.random()*100, y: Math.random()*100, r: 3};
+                });
+
+                fairnessChart.data.datasets = [{
+                    label: 'AI 문맥 분석',
+                    data: smartData,
+                    backgroundColor: function(ctx) {
+                        const val = ctx.raw;
+                        if (!val) return '#A8A29E';
+                        if (val.r === 20) return '#1E3A8A'; // Target (Blue)
+                        if (val.r === 8) return '#0D9488'; // Expert (Teal)
+                        return '#E7E5E4'; // Noise (Light Gray)
+                    },
+                    pointRadius: (ctx) => ctx.raw.r
+                }];
+                explainDiv.innerHTML = '<span class="font-bold text-blue-600">미래 모델:</span> AI가 제안서의 문맥(파란점)을 이해하고, 가장 적합한 <span class="text-teal-600 font-bold">진짜 전문가(청록색)</span>만 정밀하게 추천합니다. 나머지는 자동 필터링됩니다.';
+            }
+            fairnessChart.update();
+        }
+
+        // 3. Diversity Chart (Long Tail)
+        const ctxDiv = document.getElementById('diversityChart').getContext('2d');
+        
+        // Generating Long Tail Data
+        const tailLabels = Array.from({length: 50}, (_, i) => i);
+        const tailDataCurrent = tailLabels.map(i => Math.max(0, 100 - (i * 5))); // Steep drop
+        const tailDataFuture = tailLabels.map(i => Math.max(0, 80 - (i * 2))); // Flatter distribution
+
+        new Chart(ctxDiv, {
+            type: 'line',
+            data: {
+                labels: tailLabels,
+                datasets: [
+                    {
+                        label: '현재 예산 분포 (승자 독식)',
+                        data: tailDataCurrent,
+                        borderColor: '#E11D48',
+                        backgroundColor: 'rgba(225, 29, 72, 0.1)',
+                        fill: true,
+                        tension: 0.4
+                    },
+                    {
+                        label: 'AI 도입 후 (다양성 확보)',
+                        data: tailDataFuture,
+                        borderColor: '#0D9488',
+                        backgroundColor: 'rgba(13, 148, 136, 0.1)',
+                        fill: true,
+                        tension: 0.4
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    tooltip: {
+                        intersect: false,
+                        callbacks: {
+                            title: () => '연구 주제 순위',
+                            label: (ctx) => ctx.dataset.label === 'AI 도입 후 (다양성 확보)' && ctx.dataIndex > 20 ? '발굴된 소외 연구' : '' 
+                        }
+                    },
+                    legend: { position: 'top' }
+                },
+                scales: {
+                    x: { display: false, title: {display: true, text: '연구 주제 (인기도 순)'} },
+                    y: { beginAtZero: true, title: {display: true, text: '지원 규모'} }
+                },
+                elements: { point: { radius: 0 } }
+            }
+        });
+
+        // 4. Transparency Interaction
+        function runTranslation() {
+            const container = document.getElementById('ai-summary-box');
+            container.innerHTML = `
+                <div class="space-y-3 fade-in">
+                    <p><strong>💡 AI 요약 결과:</strong></p>
+                    <p>"수소차는 비싼 백금 촉매를 사용해서 가격이 비쌉니다. 이 연구팀은 백금 사용량을 줄이면서도 성능은 더 뛰어난 <strong>새로운 합금 기술</strong>을 개발했습니다."</p>
+                    <p>"성공한다면 수소차 가격을 <strong>획기적으로 낮출 수 있습니다.</strong>"</p>
+                </div>
+            `;
+        }
+
+        function resetTranslation() {
+            const container = document.getElementById('ai-summary-box');
+            if(container) {
+                container.innerHTML = `
+                    <div class="flex items-center justify-center h-full text-blue-300">
+                        <button onclick="runTranslation()" class="bg-white border border-blue-200 text-blue-600 px-4 py-2 rounded-lg hover:bg-blue-50 transition shadow-sm">
+                            AI로 쉽게 바꿔보기 (클릭)
+                        </button>
+                    </div>
+                `;
+            }
+        }
+
+        // 5. Strategy Chart (Radar)
+        const ctxStrat = document.getElementById('strategyChart').getContext('2d');
+        new Chart(ctxStrat, {
+            type: 'radar',
+            data: {
+                labels: ['글로벌 트렌드 예측', '융합 연구 기획', '공백 기술 발굴', '해외 협력 매칭', '예산 효율성'],
+                datasets: [
+                    {
+                        label: '현재 (인간 직관)',
+                        data: [40, 50, 30, 40, 60],
+                        borderColor: '#A8A29E',
+                        backgroundColor: 'rgba(168, 162, 158, 0.2)',
+                    },
+                    {
+                        label: '미래 (AI 데이터 기반)',
+                        data: [95, 90, 95, 85, 90],
+                        borderColor: '#1E3A8A', // Blue 900
+                        backgroundColor: 'rgba(30, 58, 138, 0.2)',
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scale: {
+                    min: 0,
+                    max: 100,
+                    ticks: { display: false } // Hide numbers for cleaner look
+                }
+            }
+        });
+
+    </script>
+<script>/* kg-preview: #<heading> \uc704\uce58\ub85c \uc774\ub3d9 */
+(function(){function norm(t){return (t||'').replace(/\s+/g,'').toLowerCase()}
+function go(){var h=decodeURIComponent(location.hash.slice(1));if(!h)return;var k=norm(h).slice(0,24);if(!k)return;
+var best=null,bl=1e9,els=document.body.querySelectorAll('h1,h2,h3,h4,h5,p,div,span,li,td,text,tspan,section,article');
+for(var i=0;i<els.length;i++){var e=els[i],t=norm(e.textContent);if(t.length<bl&&t.indexOf(k)>-1){best=e;bl=t.length}}
+if(!best)return;var box=best.closest('section,[class*=slide],[class*=page],article')||best;
+box.scrollIntoView({block:'start'});box.style.outline='3px solid #c0504d';box.style.outlineOffset='4px';
+setTimeout(function(){box.style.outline=''},2600)}
+window.addEventListener('load',function(){setTimeout(go,400)});window.addEventListener('hashchange',go)})();</script></body>
+</html>

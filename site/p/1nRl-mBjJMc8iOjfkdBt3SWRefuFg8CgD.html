@@ -1,0 +1,947 @@
+<!doctype html>
+<html lang="ko">
+<head><meta name="robots" content="noindex, nofollow">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>LLM Agent Harness Flow</title>
+<style>
+:root{
+  --ink:#101828;
+  --muted:#667085;
+  --line:#d9e3f0;
+  --panel:#ffffff;
+  --bg:#f6f8fb;
+
+  --blue:#2563eb;
+  --blue-2:#dbeafe;
+  --blue-3:#eff6ff;
+
+  --red:#dc5b50;
+  --red-2:#fee2e2;
+  --red-3:#fff1f0;
+
+  --green:#0f766e;
+  --green-2:#ccfbf1;
+  --green-3:#f0fdfa;
+
+  --yellow:#f6c453;
+  --yellow-2:#fff3c4;
+
+  --shadow:0 28px 80px rgba(15,23,42,.13);
+  --soft-shadow:0 14px 44px rgba(15,23,42,.08);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  color:var(--ink);
+  font-family:"Pretendard","Apple SD Gothic Neo","Malgun Gothic",system-ui,-apple-system,BlinkMacSystemFont,sans-serif;
+  background:
+    radial-gradient(circle at 10% 0%,rgba(37,99,235,.08),transparent 28%),
+    radial-gradient(circle at 92% 15%,rgba(20,184,166,.09),transparent 30%),
+    linear-gradient(180deg,#fff 0%,#f7f9fd 42%,#fff 100%);
+  overflow-x:hidden;
+}
+.topbar{
+  position:fixed;
+  z-index:50;
+  top:0; left:0; right:0;
+  height:64px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 28px;
+  background:rgba(255,255,255,.82);
+  border-bottom:1px solid rgba(148,163,184,.25);
+  backdrop-filter:blur(16px);
+}
+.brand{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-size:18px;
+  font-weight:950;
+  letter-spacing:-.04em;
+}
+.brand-mark{
+  width:28px;
+  height:28px;
+  display:grid;
+  place-items:center;
+  border-radius:9px;
+  background:#111827;
+  color:#fff;
+  font-size:14px;
+}
+.stage-pill{
+  display:flex;
+  align-items:center;
+  gap:9px;
+  padding:8px 13px;
+  border-radius:999px;
+  background:#fff;
+  border:1px solid rgba(148,163,184,.35);
+  font-size:13px;
+  font-weight:800;
+  color:#475467;
+}
+.stage-dot{
+  width:9px;
+  height:9px;
+  border-radius:99px;
+  background:var(--blue);
+  box-shadow:0 0 0 5px rgba(37,99,235,.13);
+}
+
+.hero{
+  min-height:100vh;
+  display:grid;
+  grid-template-columns:minmax(0,1.05fr) minmax(420px,.95fr);
+  gap:44px;
+  align-items:center;
+  padding:116px 6vw 64px;
+}
+.hero h1{
+  margin:0 0 24px;
+  font-size:clamp(44px,6vw,84px);
+  line-height:.98;
+  letter-spacing:-.085em;
+}
+.hero p{
+  margin:0 0 32px;
+  max-width:780px;
+  font-size:clamp(18px,2vw,24px);
+  line-height:1.68;
+  color:#475467;
+  word-break:keep-all;
+}
+.actions{display:flex;gap:12px;flex-wrap:wrap}
+.btn{
+  border:0;
+  border-radius:16px;
+  padding:15px 20px;
+  font-size:16px;
+  font-weight:900;
+  text-decoration:none;
+  cursor:pointer;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+}
+.btn.primary{background:#111827;color:#fff}
+.btn.secondary{background:#fff;color:#1f2937;border:1px solid #d7e0ec}
+.hero-card{
+  position:relative;
+  min-height:480px;
+  border-radius:34px;
+  border:1px solid rgba(148,163,184,.25);
+  background:
+    linear-gradient(140deg,rgba(255,255,255,.94),rgba(248,250,252,.9)),
+    radial-gradient(circle at 30% 20%,rgba(254,226,226,.75),transparent 24%),
+    radial-gradient(circle at 75% 70%,rgba(219,234,254,.85),transparent 32%);
+  box-shadow:var(--shadow);
+  overflow:hidden;
+}
+.hero-card svg{width:100%;height:100%;position:absolute;inset:0}
+.hero-badge{
+  position:absolute;
+  left:22px;
+  top:22px;
+  z-index:2;
+  padding:9px 13px;
+  border-radius:999px;
+  background:#fff;
+  border:1px solid rgba(148,163,184,.3);
+  font-size:13px;
+  font-weight:900;
+  color:#475467;
+}
+
+.scrolly{
+  position:relative;
+  min-height:900vh;
+}
+.sticky{
+  position:sticky;
+  top:64px;
+  height:calc(100vh - 64px);
+  padding:24px 4vw;
+  display:grid;
+  grid-template-columns:minmax(680px,1fr) 390px;
+  gap:24px;
+  align-items:stretch;
+  z-index:2;
+}
+.canvas{
+  position:relative;
+  min-height:560px;
+  border-radius:34px;
+  border:1px solid rgba(148,163,184,.25);
+  background:
+    radial-gradient(circle at 18% 20%,rgba(254,226,226,.72),transparent 24%),
+    radial-gradient(circle at 74% 18%,rgba(204,251,241,.62),transparent 27%),
+    radial-gradient(circle at 80% 80%,rgba(219,234,254,.82),transparent 31%),
+    #fff;
+  box-shadow:var(--shadow);
+  overflow:hidden;
+}
+.canvas svg{
+  width:100%;
+  height:100%;
+  display:block;
+}
+.side{
+  min-height:560px;
+  border-radius:34px;
+  background:rgba(255,255,255,.94);
+  border:1px solid rgba(148,163,184,.28);
+  box-shadow:var(--shadow);
+  padding:26px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  overflow:hidden;
+}
+.side-kicker{
+  display:inline-flex;
+  align-self:flex-start;
+  align-items:center;
+  gap:8px;
+  margin-bottom:14px;
+  padding:8px 12px;
+  border-radius:999px;
+  background:#f8fafc;
+  border:1px solid #e2e8f0;
+  color:#475467;
+  font-size:13px;
+  font-weight:900;
+}
+.side h2{
+  margin:0 0 14px;
+  font-size:clamp(29px,3vw,42px);
+  line-height:1.1;
+  letter-spacing:-.065em;
+}
+.side p{
+  margin:0;
+  color:#475467;
+  font-size:17px;
+  line-height:1.68;
+  word-break:keep-all;
+}
+.key-box{
+  margin-top:22px;
+  padding:16px;
+  border-radius:18px;
+  background:#f8fafc;
+  border:1px solid #e5edf7;
+  color:#334155;
+  font-size:15px;
+  line-height:1.6;
+  word-break:keep-all;
+}
+.step-list{
+  margin-top:22px;
+  display:grid;
+  gap:8px;
+}
+.step-item{
+  display:grid;
+  grid-template-columns:28px 1fr;
+  gap:9px;
+  align-items:center;
+  padding:9px;
+  border-radius:14px;
+  color:#94a3b8;
+  background:transparent;
+  transition:.25s ease;
+}
+.step-num{
+  width:28px;height:28px;
+  display:grid;place-items:center;
+  border-radius:10px;
+  background:#f1f5f9;
+  font-size:12px;
+  font-weight:950;
+}
+.step-title{
+  font-size:13px;
+  font-weight:900;
+  letter-spacing:-.02em;
+}
+body[data-stage="0"] .step-item[data-i="0"],
+body[data-stage="1"] .step-item[data-i="1"],
+body[data-stage="2"] .step-item[data-i="2"],
+body[data-stage="3"] .step-item[data-i="3"],
+body[data-stage="4"] .step-item[data-i="4"],
+body[data-stage="5"] .step-item[data-i="5"],
+body[data-stage="6"] .step-item[data-i="6"],
+body[data-stage="7"] .step-item[data-i="7"]{
+  color:#111827;
+  background:#eef5ff;
+}
+body[data-stage="0"] .step-item[data-i="0"] .step-num,
+body[data-stage="1"] .step-item[data-i="1"] .step-num,
+body[data-stage="2"] .step-item[data-i="2"] .step-num,
+body[data-stage="3"] .step-item[data-i="3"] .step-num,
+body[data-stage="4"] .step-item[data-i="4"] .step-num,
+body[data-stage="5"] .step-item[data-i="5"] .step-num,
+body[data-stage="6"] .step-item[data-i="6"] .step-num,
+body[data-stage="7"] .step-item[data-i="7"] .step-num{
+  background:#2563eb;
+  color:#fff;
+}
+.controls{
+  margin-top:20px;
+}
+.progress{
+  height:9px;
+  border-radius:99px;
+  background:#eef2f7;
+  overflow:hidden;
+}
+.progress span{
+  display:block;
+  height:100%;
+  width:0%;
+  border-radius:99px;
+  background:linear-gradient(90deg,#dc5b50,#0f766e,#2563eb);
+  transition:width .45s cubic-bezier(.2,.8,.2,1);
+}
+.control-row{
+  display:flex;
+  gap:10px;
+  margin-top:14px;
+}
+.control-row button{
+  flex:1;
+  border:1px solid #d7e0ec;
+  background:#fff;
+  border-radius:14px;
+  padding:11px 12px;
+  font-weight:900;
+  cursor:pointer;
+}
+
+.scroll-hint{
+  position:absolute;
+  left:50%;
+  bottom:18px;
+  transform:translateX(-50%);
+  display:flex;
+  gap:8px;
+  align-items:center;
+  padding:9px 12px;
+  border-radius:999px;
+  background:rgba(255,255,255,.86);
+  border:1px solid rgba(148,163,184,.3);
+  font-size:12px;
+  font-weight:900;
+  color:#64748b;
+  pointer-events:none;
+}
+.mouse{
+  width:17px;height:26px;
+  border:2px solid #94a3b8;
+  border-radius:999px;
+  position:relative;
+}
+.mouse:after{
+  content:"";
+  position:absolute;
+  left:50%;top:5px;
+  width:3px;height:6px;
+  border-radius:99px;
+  background:#94a3b8;
+  transform:translateX(-50%);
+  animation:wheel 1.4s infinite;
+}
+@keyframes wheel{
+  0%{opacity:0;transform:translate(-50%,0)}
+  30%{opacity:1}
+  100%{opacity:0;transform:translate(-50%,8px)}
+}
+
+.step-trigger{
+  position:relative;
+  height:100vh;
+  z-index:1;
+  pointer-events:none;
+}
+.step-trigger:first-of-type{margin-top:-100vh}
+.sr-only{
+  position:absolute;
+  width:1px;height:1px;
+  padding:0;margin:-1px;
+  overflow:hidden;
+  clip:rect(0,0,0,0);
+  white-space:nowrap;border:0;
+}
+
+.end{
+  padding:90px 6vw 110px;
+  text-align:center;
+}
+.end h2{
+  margin:0 0 18px;
+  font-size:clamp(36px,5vw,62px);
+  letter-spacing:-.075em;
+}
+.end p{
+  max-width:840px;
+  margin:0 auto 28px;
+  color:#475467;
+  font-size:20px;
+  line-height:1.72;
+  word-break:keep-all;
+}
+
+.txt{font-family:"Pretendard","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;font-weight:950;letter-spacing:-.045em}
+.small{font-family:"Pretendard","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;font-weight:800}
+.hand{font-family:"Comic Sans MS","Nanum Pen Script","Malgun Gothic",cursive;font-weight:900}
+
+[data-part]{
+  transition:opacity .5s ease, transform .5s ease, filter .5s ease;
+  transform-box:fill-box;
+  transform-origin:center;
+}
+body[data-stage="0"] [data-part]{opacity:.82}
+body[data-stage="1"] [data-part],
+body[data-stage="2"] [data-part],
+body[data-stage="3"] [data-part],
+body[data-stage="4"] [data-part],
+body[data-stage="5"] [data-part],
+body[data-stage="6"] [data-part]{opacity:.16;filter:grayscale(.2)}
+body[data-stage="7"] [data-part]{opacity:.94}
+
+body[data-stage="1"] #llmOnly,
+body[data-stage="1"] #cloudTitle,
+body[data-stage="1"] #answerBubble,
+body[data-stage="1"] #badge1{opacity:1;filter:none;transform:scale(1.02)}
+
+body[data-stage="2"] #llmOnly,
+body[data-stage="2"] #agentLoop,
+body[data-stage="2"] #loopNodes,
+body[data-stage="2"] #cloudTools,
+body[data-stage="2"] #badge2{opacity:1;filter:none;transform:scale(1.02)}
+
+body[data-stage="3"] #moveToPc,
+body[data-stage="3"] #pcShell,
+body[data-stage="3"] #localAgent,
+body[data-stage="3"] #badge3{opacity:1;filter:none;transform:scale(1.02)}
+
+body[data-stage="4"] #pcShell,
+body[data-stage="4"] #localAgent,
+body[data-stage="4"] #harnessCore,
+body[data-stage="4"] #agentToHarness,
+body[data-stage="4"] #badge4{opacity:1;filter:none;transform:scale(1.02)}
+
+body[data-stage="5"] #pcShell,
+body[data-stage="5"] #localAgent,
+body[data-stage="5"] #harnessCore,
+body[data-stage="5"] #internalTools,
+body[data-stage="5"] #internalCalls,
+body[data-stage="5"] #badge5{opacity:1;filter:none;transform:scale(1.02)}
+
+body[data-stage="6"] #pcShell,
+body[data-stage="6"] #localAgent,
+body[data-stage="6"] #harnessCore,
+body[data-stage="6"] #externalTools,
+body[data-stage="6"] #externalCalls,
+body[data-stage="6"] #badge6{opacity:1;filter:none;transform:scale(1.02)}
+
+body[data-stage="7"] #finalLoop,
+body[data-stage="7"] #badge7{opacity:1;filter:none;transform:scale(1.02)}
+
+.draw{
+  stroke-dasharray:1000;
+  stroke-dashoffset:1000;
+  animation:draw 1.35s ease forwards;
+}
+body[data-stage="0"] .draw{animation:none;stroke-dashoffset:0}
+@keyframes draw{to{stroke-dashoffset:0}}
+
+.pulse{
+  animation:pulse 1.8s ease-in-out infinite;
+}
+@keyframes pulse{
+  0%,100%{transform:scale(1)}
+  50%{transform:scale(1.035)}
+}
+.spin{
+  animation:spin 7.5s linear infinite;
+  transform-origin:center;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+@media (max-width:1180px){
+  .hero{grid-template-columns:1fr;padding-top:96px}
+  .hero-card{min-height:390px}
+  .sticky{
+    position:relative;
+    top:auto;
+    height:auto;
+    grid-template-columns:1fr;
+  }
+  .canvas{height:660px}
+  .side{min-height:auto}
+  .scrolly{min-height:auto}
+  .step-trigger{
+    height:1px;
+    margin:0;
+  }
+}
+@media (max-width:720px){
+  .topbar{padding:0 16px}
+  .stage-pill{display:none}
+  .hero{padding:92px 18px 42px}
+  .hero h1{font-size:42px}
+  .hero-card{min-height:320px}
+  .sticky{padding:18px}
+  .canvas{height:560px;min-height:560px;border-radius:24px}
+  .side{border-radius:24px;padding:20px}
+  .step-list{grid-template-columns:1fr 1fr}
+  .step-item{grid-template-columns:24px 1fr;padding:8px}
+  .step-num{width:24px;height:24px}
+  .step-title{font-size:12px}
+}
+</style>
+</head>
+<body data-stage="0">
+<header class="topbar">
+  <div class="brand"><span class="brand-mark">H</span> LLM Harness Flow</div>
+  <div class="stage-pill"><span class="stage-dot"></span><span id="stageLabel">0. 전체 맵</span></div>
+</header>
+
+<section class="hero" id="top">
+  <div>
+    <h1>LLM은 생각하고,<br>Agent는 반복하고,<br>Harness는 연결한다</h1>
+    <p>
+      이전 밑그림 없이도 바로 이해되도록 구조를 다시 정리했습니다.
+      스크롤 팝업은 제거하고, 오른쪽 설명 패널만 단계별로 바뀌게 만들어 겹침 없이 설명 흐름이 보이도록 구성했습니다.
+    </p>
+    <div class="actions">
+      <a class="btn primary" href="#story">애니메이션 시작</a>
+      <button class="btn secondary" onclick="goStage(1)">1단계부터 보기</button>
+    </div>
+  </div>
+  <div class="hero-card" aria-label="LLM Agent Harness hero diagram">
+    <div class="hero-badge">Simple Flow Map</div>
+    <svg viewBox="0 0 720 520">
+      <defs>
+        <marker id="heroArrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+          <path d="M0,0 L10,5 L0,10 z" fill="#2563eb"/>
+        </marker>
+      </defs>
+      <rect x="54" y="95" width="150" height="100" rx="24" fill="#fff1f0" stroke="#dc5b50" stroke-width="2"/>
+      <text x="129" y="139" text-anchor="middle" class="txt" font-size="25" fill="#dc5b50">LLM</text>
+      <text x="129" y="169" text-anchor="middle" class="small" font-size="14" fill="#dc5b50">답변 생성</text>
+
+      <rect x="274" y="80" width="170" height="130" rx="28" fill="#fff7d6" stroke="#f6c453" stroke-width="2"/>
+      <text x="359" y="132" text-anchor="middle" class="txt" font-size="25" fill="#9a6400">Agent</text>
+      <text x="359" y="162" text-anchor="middle" class="small" font-size="14" fill="#9a6400">Tool + Loop</text>
+
+      <rect x="514" y="60" width="150" height="170" rx="30" fill="#eff6ff" stroke="#2563eb" stroke-width="2"/>
+      <text x="589" y="115" text-anchor="middle" class="txt" font-size="25" fill="#2563eb">내 PC</text>
+      <text x="589" y="148" text-anchor="middle" class="small" font-size="14" fill="#2563eb">Workspace</text>
+      <text x="589" y="176" text-anchor="middle" class="small" font-size="14" fill="#2563eb">Harness</text>
+
+      <path d="M204,145 C232,145 246,145 274,145" fill="none" stroke="#2563eb" stroke-width="4" marker-end="url(#heroArrow)"/>
+      <path d="M444,145 C475,145 486,145 514,145" fill="none" stroke="#2563eb" stroke-width="4" marker-end="url(#heroArrow)"/>
+
+      <rect x="116" y="318" width="120" height="62" rx="18" fill="#dbeafe" stroke="#2563eb"/>
+      <text x="176" y="356" text-anchor="middle" class="small" font-size="15" fill="#2563eb">내부 도구</text>
+      <rect x="300" y="318" width="120" height="62" rx="18" fill="#ccfbf1" stroke="#0f766e"/>
+      <text x="360" y="356" text-anchor="middle" class="small" font-size="15" fill="#0f766e">Harness</text>
+      <rect x="484" y="318" width="120" height="62" rx="18" fill="#fee2e2" stroke="#dc5b50"/>
+      <text x="544" y="356" text-anchor="middle" class="small" font-size="15" fill="#dc5b50">외부 도구</text>
+      <path d="M300,349 C272,349 260,349 236,349" fill="none" stroke="#2563eb" stroke-width="3" marker-end="url(#heroArrow)"/>
+      <path d="M420,349 C448,349 460,349 484,349" fill="none" stroke="#2563eb" stroke-width="3" marker-end="url(#heroArrow)"/>
+    </svg>
+  </div>
+</section>
+
+<main class="scrolly" id="story">
+  <section class="sticky">
+    <div class="canvas">
+      <svg viewBox="0 0 1440 820" role="img" aria-label="LLM Agent Harness Tool Calling Flow">
+        <defs>
+          <marker id="arrowBlue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+            <path d="M0,0 L10,5 L0,10 z" fill="#2563eb"/>
+          </marker>
+          <marker id="arrowRed" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+            <path d="M0,0 L10,5 L0,10 z" fill="#dc5b50"/>
+          </marker>
+          <marker id="arrowGreen" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+            <path d="M0,0 L10,5 L0,10 z" fill="#0f766e"/>
+          </marker>
+          <filter id="glowBlue" x="-40%" y="-40%" width="180%" height="180%">
+            <feGaussianBlur stdDeviation="7" result="blur"/>
+            <feColorMatrix in="blur" type="matrix" values="0 0 1 0 .10 0 0 1 0 .34 0 0 1 0 .93 0 0 0 .42 0"/>
+            <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+          <filter id="glowRed" x="-40%" y="-40%" width="180%" height="180%">
+            <feGaussianBlur stdDeviation="7" result="blur"/>
+            <feColorMatrix in="blur" type="matrix" values="1 0 0 0 .85 0 1 0 0 .24 0 0 1 0 .20 0 0 0 .42 0"/>
+            <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+          <filter id="glowGreen" x="-40%" y="-40%" width="180%" height="180%">
+            <feGaussianBlur stdDeviation="7" result="blur"/>
+            <feColorMatrix in="blur" type="matrix" values="0 0 1 0 .05 0 1 0 0 .50 0 0 1 0 .44 0 0 0 .42 0"/>
+            <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+        </defs>
+
+        <text x="720" y="52" text-anchor="middle" class="txt" font-size="34" fill="#101828">LLM → Agent Loop → Local Workspace → Harness → Tool Calling</text>
+        <text x="720" y="84" text-anchor="middle" class="small" font-size="16" fill="#667085">팝업 없이, 오른쪽 설명 패널과 다이어그램만 단계별로 변화합니다</text>
+
+        <!-- Stage 1: LLM only -->
+        <g id="llmOnly" data-part filter="url(#glowRed)">
+          <rect x="70" y="160" width="310" height="230" rx="34" fill="#fff1f0" stroke="#dc5b50" stroke-width="2.4"/>
+          <text id="cloudTitle" data-part x="225" y="196" text-anchor="middle" class="txt" font-size="22" fill="#dc5b50">Cloud Model</text>
+          <circle cx="225" cy="278" r="67" fill="#fff3c4" stroke="#dc5b50" stroke-width="2.2"/>
+          <text x="225" y="288" text-anchor="middle" class="hand" font-size="48" fill="#dc5b50">LLM</text>
+          <text x="225" y="355" text-anchor="middle" class="small" font-size="17" fill="#dc5b50">텍스트 이해 · 추론 · 답변</text>
+        </g>
+
+        <g id="answerBubble" data-part>
+          <rect x="100" y="420" width="250" height="78" rx="20" fill="#ffffff" stroke="#dc5b50" stroke-width="1.6"/>
+          <text x="225" y="452" text-anchor="middle" class="txt" font-size="18" fill="#dc5b50">답변은 가능</text>
+          <text x="225" y="480" text-anchor="middle" class="small" font-size="14" fill="#dc5b50">하지만 직접 실행은 아직 아님</text>
+        </g>
+
+        <!-- Stage 2: Agent loop -->
+        <g id="agentLoop" data-part filter="url(#glowRed)">
+          <rect x="52" y="118" width="348" height="445" rx="40" fill="none" stroke="#dc5b50" stroke-width="3" stroke-dasharray="12 10"/>
+          <text x="225" y="128" text-anchor="middle" class="txt" font-size="21" fill="#dc5b50">LLM + Tool + Loop Agent</text>
+          <g class="spin">
+            <path d="M142,245 C177,185 276,176 324,229" fill="none" stroke="#dc5b50" stroke-width="4" marker-end="url(#arrowRed)"/>
+            <path d="M329,335 C286,397 177,390 138,328" fill="none" stroke="#dc5b50" stroke-width="4" marker-end="url(#arrowRed)"/>
+          </g>
+        </g>
+        <g id="loopNodes" data-part>
+          <rect x="83" y="210" width="90" height="44" rx="14" fill="#fff" stroke="#dc5b50"/>
+          <text x="128" y="238" text-anchor="middle" class="small" font-size="14" fill="#dc5b50">계획</text>
+          <rect x="276" y="210" width="90" height="44" rx="14" fill="#fff" stroke="#dc5b50"/>
+          <text x="321" y="238" text-anchor="middle" class="small" font-size="14" fill="#dc5b50">호출</text>
+          <rect x="276" y="368" width="90" height="44" rx="14" fill="#fff" stroke="#dc5b50"/>
+          <text x="321" y="396" text-anchor="middle" class="small" font-size="14" fill="#dc5b50">관찰</text>
+          <rect x="83" y="368" width="90" height="44" rx="14" fill="#fff" stroke="#dc5b50"/>
+          <text x="128" y="396" text-anchor="middle" class="small" font-size="14" fill="#dc5b50">수정</text>
+        </g>
+        <g id="cloudTools" data-part>
+          <rect x="76" y="592" width="96" height="54" rx="14" fill="#fff3c4" stroke="#dc5b50"/>
+          <text x="124" y="625" text-anchor="middle" class="small" font-size="14" fill="#dc5b50">검색</text>
+          <rect x="184" y="592" width="96" height="54" rx="14" fill="#fff3c4" stroke="#dc5b50"/>
+          <text x="232" y="625" text-anchor="middle" class="small" font-size="14" fill="#dc5b50">문서</text>
+          <rect x="292" y="592" width="96" height="54" rx="14" fill="#fff3c4" stroke="#dc5b50"/>
+          <text x="340" y="625" text-anchor="middle" class="small" font-size="14" fill="#dc5b50">API</text>
+        </g>
+
+        <!-- Stage 3: Move to PC -->
+        <g id="moveToPc" data-part>
+          <path d="M398,292 C460,238 524,226 596,262" fill="none" stroke="#2563eb" stroke-width="5" marker-end="url(#arrowBlue)" class="draw"/>
+          <text x="496" y="216" text-anchor="middle" class="txt" font-size="20" fill="#2563eb">작업공간이 내 PC로 들어옴</text>
+        </g>
+
+        <!-- PC Shell -->
+        <g id="pcShell" data-part filter="url(#glowBlue)">
+          <rect x="570" y="130" width="790" height="560" rx="40" fill="#ffffff" stroke="#2563eb" stroke-width="2.6"/>
+          <text x="620" y="184" class="txt" font-size="30" fill="#2563eb">내 PC Local Workspace</text>
+          <text x="620" y="214" class="small" font-size="15" fill="#667085">IDE · Terminal · Browser · Filesystem · Automation Runtime</text>
+        </g>
+
+        <g id="localAgent" data-part filter="url(#glowBlue)">
+          <rect x="626" y="260" width="250" height="174" rx="30" fill="#eff6ff" stroke="#2563eb" stroke-width="2.2"/>
+          <circle cx="751" cy="326" r="52" fill="#fff3c4" stroke="#2563eb" stroke-width="2"/>
+          <text x="751" y="335" text-anchor="middle" class="hand" font-size="38" fill="#2563eb">LLM</text>
+          <text x="751" y="395" text-anchor="middle" class="txt" font-size="18" fill="#2563eb">Local Agent Core</text>
+        </g>
+
+        <!-- Stage 4: Harness -->
+        <g id="harnessCore" data-part filter="url(#glowGreen)">
+          <rect x="935" y="222" width="132" height="348" rx="28" fill="#f0fdfa" stroke="#0f766e" stroke-width="3"/>
+          <text x="1001" y="398" text-anchor="middle" class="txt" font-size="28" fill="#0f766e" transform="rotate(-90 1001 398)">HARNESS</text>
+          <text x="1001" y="529" text-anchor="middle" class="small" font-size="14" fill="#0f766e">권한 · 실행 · 결과</text>
+        </g>
+        <g id="agentToHarness" data-part>
+          <path d="M876,332 C900,335 914,344 935,356" fill="none" stroke="#0f766e" stroke-width="4" marker-end="url(#arrowGreen)" class="draw"/>
+          <path d="M935,457 C904,462 888,454 860,430" fill="none" stroke="#0f766e" stroke-width="4" marker-end="url(#arrowGreen)" class="draw"/>
+          <text x="905" y="312" text-anchor="middle" class="small" font-size="15" fill="#0f766e">tool call</text>
+          <text x="902" y="492" text-anchor="middle" class="small" font-size="15" fill="#0f766e">result</text>
+        </g>
+
+        <!-- Stage 5: Internal tools -->
+        <g id="internalTools" data-part>
+          <rect x="622" y="492" width="118" height="64" rx="16" fill="#dbeafe" stroke="#2563eb" stroke-width="1.7"/>
+          <text x="681" y="518" text-anchor="middle" class="txt" font-size="16" fill="#2563eb">OS</text>
+          <text x="681" y="540" text-anchor="middle" class="small" font-size="12" fill="#2563eb">명령체계</text>
+
+          <rect x="760" y="492" width="118" height="64" rx="16" fill="#dbeafe" stroke="#2563eb" stroke-width="1.7"/>
+          <text x="819" y="532" text-anchor="middle" class="txt" font-size="16" fill="#2563eb">Python</text>
+
+          <rect x="622" y="578" width="118" height="64" rx="16" fill="#dbeafe" stroke="#2563eb" stroke-width="1.7"/>
+          <text x="681" y="604" text-anchor="middle" class="txt" font-size="16" fill="#2563eb">Files</text>
+          <text x="681" y="626" text-anchor="middle" class="small" font-size="12" fill="#2563eb">Excel · PDF</text>
+
+          <rect x="760" y="578" width="118" height="64" rx="16" fill="#dbeafe" stroke="#2563eb" stroke-width="1.7"/>
+          <text x="819" y="604" text-anchor="middle" class="txt" font-size="16" fill="#2563eb">Browser</text>
+          <text x="819" y="626" text-anchor="middle" class="small" font-size="12" fill="#2563eb">Local</text>
+
+          <text x="750" y="676" text-anchor="middle" class="txt" font-size="18" fill="#2563eb">내부 도구 호출</text>
+        </g>
+        <g id="internalCalls" data-part>
+          <path d="M935,438 C865,455 767,474 681,492" fill="none" stroke="#2563eb" stroke-width="3.4" marker-end="url(#arrowBlue)" class="draw"/>
+          <path d="M935,456 C883,466 850,478 819,492" fill="none" stroke="#2563eb" stroke-width="3.4" marker-end="url(#arrowBlue)" class="draw"/>
+          <path d="M935,478 C844,514 770,548 681,578" fill="none" stroke="#2563eb" stroke-width="3.4" marker-end="url(#arrowBlue)" class="draw"/>
+          <path d="M935,496 C878,522 850,550 819,578" fill="none" stroke="#2563eb" stroke-width="3.4" marker-end="url(#arrowBlue)" class="draw"/>
+        </g>
+
+        <!-- Stage 6: External tools -->
+        <g id="externalTools" data-part>
+          <rect x="1134" y="244" width="150" height="64" rx="16" fill="#fff1f0" stroke="#dc5b50" stroke-width="1.7"/>
+          <text x="1209" y="282" text-anchor="middle" class="txt" font-size="16" fill="#dc5b50">외부문서</text>
+
+          <rect x="1134" y="328" width="150" height="64" rx="16" fill="#fff1f0" stroke="#dc5b50" stroke-width="1.7"/>
+          <text x="1209" y="366" text-anchor="middle" class="txt" font-size="16" fill="#dc5b50">WEB</text>
+
+          <rect x="1134" y="412" width="150" height="64" rx="16" fill="#fff1f0" stroke="#dc5b50" stroke-width="1.7"/>
+          <text x="1209" y="438" text-anchor="middle" class="txt" font-size="16" fill="#dc5b50">외부 앱</text>
+          <text x="1209" y="458" text-anchor="middle" class="small" font-size="12" fill="#dc5b50">사이트</text>
+
+          <rect x="1134" y="496" width="150" height="64" rx="16" fill="#fff1f0" stroke="#dc5b50" stroke-width="1.7"/>
+          <text x="1209" y="522" text-anchor="middle" class="txt" font-size="16" fill="#dc5b50">API</text>
+          <text x="1209" y="542" text-anchor="middle" class="small" font-size="12" fill="#dc5b50">SaaS</text>
+
+          <text x="1209" y="606" text-anchor="middle" class="txt" font-size="18" fill="#dc5b50">외부 도구 호출</text>
+        </g>
+        <g id="externalCalls" data-part>
+          <path d="M1067,320 C1090,288 1108,278 1134,276" fill="none" stroke="#dc5b50" stroke-width="3.4" marker-end="url(#arrowRed)" class="draw"/>
+          <path d="M1067,360 C1090,360 1108,360 1134,360" fill="none" stroke="#dc5b50" stroke-width="3.4" marker-end="url(#arrowRed)" class="draw"/>
+          <path d="M1067,424 C1090,436 1108,442 1134,444" fill="none" stroke="#dc5b50" stroke-width="3.4" marker-end="url(#arrowRed)" class="draw"/>
+          <path d="M1067,500 C1096,516 1115,524 1134,528" fill="none" stroke="#dc5b50" stroke-width="3.4" marker-end="url(#arrowRed)" class="draw"/>
+        </g>
+
+        <!-- Final Result Loop -->
+        <g id="finalLoop" data-part>
+          <path d="M225,390 C332,522 474,586 626,575" fill="none" stroke="#2563eb" stroke-width="4" stroke-dasharray="10 10" marker-end="url(#arrowBlue)" class="draw"/>
+          <path d="M1284,528 C1356,622 1206,724 1002,570" fill="none" stroke="#0f766e" stroke-width="4" stroke-dasharray="10 10" marker-end="url(#arrowGreen)" class="draw"/>
+          <path d="M681,556 C628,650 801,735 1001,570" fill="none" stroke="#0f766e" stroke-width="4" stroke-dasharray="10 10" marker-end="url(#arrowGreen)" class="draw"/>
+        </g>
+
+        <!-- Badges -->
+        <g id="badge1" data-part>
+          <rect x="92" y="704" width="258" height="54" rx="27" fill="#fff1f0" stroke="#dc5b50"/>
+          <text x="221" y="738" text-anchor="middle" class="txt" font-size="19" fill="#dc5b50">① LLM: 답변 생성</text>
+        </g>
+        <g id="badge2" data-part>
+          <rect x="90" y="704" width="322" height="54" rx="27" fill="#fff1f0" stroke="#dc5b50"/>
+          <text x="251" y="738" text-anchor="middle" class="txt" font-size="19" fill="#dc5b50">② Agent: Tool + Loop</text>
+        </g>
+        <g id="badge3" data-part>
+          <rect x="594" y="704" width="360" height="54" rx="27" fill="#eff6ff" stroke="#2563eb"/>
+          <text x="774" y="738" text-anchor="middle" class="txt" font-size="19" fill="#2563eb">③ 내 PC Workspace 진입</text>
+        </g>
+        <g id="badge4" data-part>
+          <rect x="888" y="704" width="316" height="54" rx="27" fill="#f0fdfa" stroke="#0f766e"/>
+          <text x="1046" y="738" text-anchor="middle" class="txt" font-size="19" fill="#0f766e">④ Harness가 연결</text>
+        </g>
+        <g id="badge5" data-part>
+          <rect x="586" y="704" width="358" height="54" rx="27" fill="#eff6ff" stroke="#2563eb"/>
+          <text x="765" y="738" text-anchor="middle" class="txt" font-size="19" fill="#2563eb">⑤ 내부 도구 호출</text>
+        </g>
+        <g id="badge6" data-part>
+          <rect x="1080" y="704" width="318" height="54" rx="27" fill="#fff1f0" stroke="#dc5b50"/>
+          <text x="1239" y="738" text-anchor="middle" class="txt" font-size="19" fill="#dc5b50">⑥ 외부 도구 호출</text>
+        </g>
+        <g id="badge7" data-part>
+          <rect x="440" y="748" width="600" height="56" rx="28" fill="#101828"/>
+          <text x="740" y="783" text-anchor="middle" class="txt" font-size="20" fill="#fff">LLM + Agent Loop + Harness = 실행 자동화</text>
+        </g>
+      </svg>
+      <div class="scroll-hint"><span class="mouse"></span><span>스크롤로 단계 전환</span></div>
+    </div>
+
+    <aside class="side">
+      <div>
+        <div class="side-kicker" id="sideKicker">0 / 7 · 전체 맵</div>
+        <h2 id="panelTitle">전체 구조를 한 번에 보기</h2>
+        <p id="panelDesc">
+          시작은 단순 LLM입니다. 여기에 Tool과 Loop가 붙으면 Agent가 되고, 작업공간이 내 PC로 들어오면 하네스가 내부 도구와 외부 도구 호출을 연결합니다.
+        </p>
+        <div class="key-box" id="panelKey">
+          핵심 흐름: LLM → Tool+Loop Agent → 내 PC Workspace → Harness → 내부/외부 Tool Calling → 결과 반환.
+        </div>
+
+        <div class="step-list" aria-label="단계 목록">
+          <div class="step-item" data-i="0"><div class="step-num">0</div><div class="step-title">전체 맵</div></div>
+          <div class="step-item" data-i="1"><div class="step-num">1</div><div class="step-title">LLM 단독</div></div>
+          <div class="step-item" data-i="2"><div class="step-num">2</div><div class="step-title">Agent Loop</div></div>
+          <div class="step-item" data-i="3"><div class="step-num">3</div><div class="step-title">내 PC 진입</div></div>
+          <div class="step-item" data-i="4"><div class="step-num">4</div><div class="step-title">Harness</div></div>
+          <div class="step-item" data-i="5"><div class="step-num">5</div><div class="step-title">내부 도구</div></div>
+          <div class="step-item" data-i="6"><div class="step-num">6</div><div class="step-title">외부 도구</div></div>
+          <div class="step-item" data-i="7"><div class="step-num">7</div><div class="step-title">최종 루프</div></div>
+        </div>
+      </div>
+
+      <div class="controls">
+        <div class="progress"><span id="progressFill"></span></div>
+        <div class="control-row">
+          <button type="button" onclick="prevStage()">이전</button>
+          <button type="button" onclick="nextStage()">다음</button>
+        </div>
+      </div>
+    </aside>
+  </section>
+
+  <section class="step-trigger" data-frame="0"><span class="sr-only">전체 맵</span></section>
+  <section class="step-trigger" data-frame="1"><span class="sr-only">LLM 단독</span></section>
+  <section class="step-trigger" data-frame="2"><span class="sr-only">Agent Loop</span></section>
+  <section class="step-trigger" data-frame="3"><span class="sr-only">내 PC 진입</span></section>
+  <section class="step-trigger" data-frame="4"><span class="sr-only">Harness</span></section>
+  <section class="step-trigger" data-frame="5"><span class="sr-only">내부 도구</span></section>
+  <section class="step-trigger" data-frame="6"><span class="sr-only">외부 도구</span></section>
+  <section class="step-trigger" data-frame="7"><span class="sr-only">최종 루프</span></section>
+</main>
+
+<section class="end">
+  <h2>겹침 없는 설명 구조</h2>
+  <p>
+    스크롤용 팝업 카드를 제거하고, 화면은 왼쪽 다이어그램과 오른쪽 설명 패널로만 나눴습니다.
+    그래서 발표 중에도 설명 영역이 흔들리거나 겹치지 않고, 단계별 핵심만 안정적으로 보여줄 수 있습니다.
+  </p>
+  <a class="btn primary" href="#top">처음으로 돌아가기</a>
+</section>
+
+<script>
+const steps = [
+  {
+    label:"0. 전체 맵",
+    kicker:"0 / 7 · 전체 맵",
+    title:"전체 구조를 한 번에 보기",
+    desc:"시작은 단순 LLM입니다. 여기에 Tool과 Loop가 붙으면 Agent가 되고, 작업공간이 내 PC로 들어오면 하네스가 내부 도구와 외부 도구 호출을 연결합니다.",
+    key:"핵심 흐름: LLM → Tool+Loop Agent → 내 PC Workspace → Harness → 내부/외부 Tool Calling → 결과 반환."
+  },
+  {
+    label:"1. LLM 단독",
+    kicker:"1 / 7 · LLM",
+    title:"LLM은 먼저 답변을 생성한다",
+    desc:"LLM 단독 상태에서는 텍스트를 이해하고, 추론하고, 설명합니다. 하지만 이 단계만으로는 내 PC의 파일을 열거나 프로그램을 실행하거나 웹을 직접 조작하지 않습니다.",
+    key:"비유: LLM 단독은 ‘말하는 두뇌’입니다. 아직 손발, 도구, 반복 실행 루프가 붙지 않은 상태입니다."
+  },
+  {
+    label:"2. Agent Loop",
+    kicker:"2 / 7 · Agent Loop",
+    title:"Tool과 Loop가 붙으면 Agent가 된다",
+    desc:"Agent는 LLM에 도구 호출과 반복 루프가 결합된 구조입니다. 계획하고, 도구를 호출하고, 결과를 관찰하고, 다시 수정하면서 작업을 진행합니다.",
+    key:"핵심 루프: 계획 → Tool Call → 결과 관찰 → 수정 → 재시도. 이 반복 구조가 Agent의 본질입니다."
+  },
+  {
+    label:"3. 내 PC 진입",
+    kicker:"3 / 7 · Local Workspace",
+    title:"LLM/작업공간이 내 PC 안으로 들어온다",
+    desc:"코딩 에이전트나 로컬 자동화 환경에서는 LLM이 단순 대화창에 머무르지 않고, 내 PC의 IDE, 터미널, 브라우저, 파일시스템과 연결된 작업공간 안에서 움직입니다.",
+    key:"관점 전환: 클라우드가 PC를 멀리서 조종한다기보다, LLM 기반 작업공간이 내 PC 안에 들어온다고 설명하면 이해가 쉽습니다."
+  },
+  {
+    label:"4. Harness",
+    kicker:"4 / 7 · Harness",
+    title:"Harness가 Tool Call을 연결한다",
+    desc:"하네스는 LLM이 도구를 직접 만지는 것이 아니라, 정해진 인터페이스를 통해 명령을 보내고 실행 결과를 돌려받게 하는 연결 계층입니다.",
+    key:"하네스의 역할: 권한 통제, 명령 전달, 실행, 로그, 실패 처리, 결과 반환을 담당합니다."
+  },
+  {
+    label:"5. 내부 도구",
+    kicker:"5 / 7 · Internal Tools",
+    title:"내부 도구를 호출한다",
+    desc:"내부 도구는 내 PC 안에 있는 실행 자원입니다. OS 명령, 파이썬, 로컬 파일, 엑셀, PDF, 브라우저 자동화 같은 작업이 여기에 들어갑니다.",
+    key:"예시: 파일명 일괄 변경, 엑셀 데이터 정리, PDF 분리, 파이썬 코드 실행, 브라우저 자동 조작."
+  },
+  {
+    label:"6. 외부 도구",
+    kicker:"6 / 7 · External Tools",
+    title:"외부 도구도 같은 흐름으로 호출한다",
+    desc:"외부 도구는 웹, 외부문서, 외부 사이트, API, SaaS 같은 PC 밖의 자원입니다. 하네스는 내부 도구와 외부 도구 호출을 하나의 작업 흐름 안에서 중계합니다.",
+    key:"예시: 웹 검색, API 호출, SaaS 데이터 조회, 외부 업무시스템 입력, 공공데이터 접근."
+  },
+  {
+    label:"7. 최종 루프",
+    kicker:"7 / 7 · Automation Loop",
+    title:"결과가 다시 Agent에게 돌아오며 자동화가 완성된다",
+    desc:"도구 실행 결과는 다시 LLM Agent에게 돌아갑니다. Agent는 결과를 검증하고, 부족하면 다시 호출하고, 완료되면 사용자에게 최종 결과를 보고합니다.",
+    key:"한 줄 요약: LLM은 판단하고, Agent는 반복하고, Harness는 연결하고, 내 PC와 외부 도구가 실행합니다."
+  }
+];
+
+const body = document.body;
+const stageLabel = document.getElementById("stageLabel");
+const sideKicker = document.getElementById("sideKicker");
+const panelTitle = document.getElementById("panelTitle");
+const panelDesc = document.getElementById("panelDesc");
+const panelKey = document.getElementById("panelKey");
+const progressFill = document.getElementById("progressFill");
+const triggers = [...document.querySelectorAll(".step-trigger")];
+
+function setStage(n, shouldScroll=false){
+  n = Math.max(0, Math.min(7, Number(n) || 0));
+  body.dataset.stage = String(n);
+  const s = steps[n];
+  stageLabel.textContent = s.label;
+  sideKicker.textContent = s.kicker;
+  panelTitle.textContent = s.title;
+  panelDesc.textContent = s.desc;
+  panelKey.textContent = s.key;
+  progressFill.style.width = `${(n / 7) * 100}%`;
+  if(shouldScroll){
+    triggers[n]?.scrollIntoView({behavior:"smooth", block:"center"});
+  }
+}
+function nextStage(){ setStage(Number(body.dataset.stage || 0) + 1, true); }
+function prevStage(){ setStage(Number(body.dataset.stage || 0) - 1, true); }
+function goStage(n){ setStage(n, true); }
+
+window.goStage = goStage;
+window.nextStage = nextStage;
+window.prevStage = prevStage;
+
+const observer = new IntersectionObserver((entries)=>{
+  entries.forEach(entry=>{
+    if(entry.isIntersecting){
+      setStage(entry.target.dataset.frame);
+    }
+  });
+},{threshold:.55});
+
+triggers.forEach(t=>observer.observe(t));
+
+document.querySelectorAll(".step-item").forEach(item=>{
+  item.addEventListener("click",()=>{
+    setStage(item.dataset.i, true);
+  });
+  item.style.cursor = "pointer";
+});
+
+window.addEventListener("keydown",(e)=>{
+  if(e.key === "ArrowDown" || e.key === "PageDown"){
+    e.preventDefault();
+    nextStage();
+  }
+  if(e.key === "ArrowUp" || e.key === "PageUp"){
+    e.preventDefault();
+    prevStage();
+  }
+});
+
+setStage(0);
+</script>
+<script>/* kg-preview: #<heading> \uc704\uce58\ub85c \uc774\ub3d9 */
+(function(){function norm(t){return (t||'').replace(/\s+/g,'').toLowerCase()}
+function go(){var h=decodeURIComponent(location.hash.slice(1));if(!h)return;var k=norm(h).slice(0,24);if(!k)return;
+var best=null,bl=1e9,els=document.body.querySelectorAll('h1,h2,h3,h4,h5,p,div,span,li,td,text,tspan,section,article');
+for(var i=0;i<els.length;i++){var e=els[i],t=norm(e.textContent);if(t.length<bl&&t.indexOf(k)>-1){best=e;bl=t.length}}
+if(!best)return;var box=best.closest('section,[class*=slide],[class*=page],article')||best;
+box.scrollIntoView({block:'start'});box.style.outline='3px solid #c0504d';box.style.outlineOffset='4px';
+setTimeout(function(){box.style.outline=''},2600)}
+window.addEventListener('load',function(){setTimeout(go,400)});window.addEventListener('hashchange',go)})();</script></body>
+</html>

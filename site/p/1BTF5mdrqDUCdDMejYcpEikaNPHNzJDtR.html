@@ -1,0 +1,2062 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head><meta name="robots" content="noindex, nofollow">
+<meta charset="UTF-8">
+<title>Learning Roadmap Editor</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Montserrat:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.2/jspdf.umd.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --teal:#1a7c6e;--teal2:#2a9d8f;--teal3:#3dbfb0;
+  --dark:#1e2c2c;--panel:#192424;--panel2:#1e2e2e;
+}
+html,body{height:100%;overflow:hidden;background:#0f1a1a;font-family:'Noto Sans KR',sans-serif;color:#c8dede;}
+
+/* ══ APP LAYOUT ══ */
+.app{display:grid;grid-template-rows:46px 1fr;grid-template-columns:200px 1fr 270px;height:100vh;}
+
+/* ── TOPBAR ── */
+.topbar{
+  grid-column:1/-1;display:flex;align-items:center;gap:8px;padding:0 14px;
+  background:#090f0f;border-bottom:1px solid #1a2e2e;z-index:100;
+}
+.tb-logo{font-family:'Montserrat',sans-serif;font-weight:900;font-size:13px;color:#3dbfb0;letter-spacing:2px;}
+.sep{width:1px;height:20px;background:#1a3030;margin:0 4px;}
+.tb-btn{padding:5px 12px;border-radius:6px;border:1px solid #1e3535;background:transparent;color:#6aacac;font-size:11px;font-family:'Montserrat',sans-serif;font-weight:700;cursor:pointer;transition:.15s;white-space:nowrap;}
+.tb-btn:hover{background:#1a2e2e;color:#3dbfb0;}
+.tb-btn.green{background:#1a7c6e;color:#fff;border-color:#2a9d8f;}
+.tb-btn.green:hover{background:#2a9d8f;}
+.tb-nav{display:flex;gap:3px;}
+.tb-nav button{width:28px;height:28px;border-radius:5px;border:1px solid #1e3535;background:transparent;color:#6aacac;cursor:pointer;transition:.15s;font-size:14px;display:flex;align-items:center;justify-content:center;}
+.tb-nav button:hover{background:#1a2e2e;}
+.tb-nav button:disabled{opacity:.2;cursor:default;}
+.tb-info{margin-left:auto;font-family:'Montserrat',sans-serif;font-size:11px;color:#3a5a5a;}
+
+/* ── LEFT SLIDES PANEL ── */
+.panel-l{background:var(--panel);border-right:1px solid #1a2e2e;display:flex;flex-direction:column;overflow:hidden;}
+.ph{padding:9px 12px;font-family:'Montserrat',sans-serif;font-size:9px;font-weight:700;letter-spacing:1.5px;color:#4a7070;border-bottom:1px solid #1a2e2e;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+.ph button{background:transparent;border:1px solid #1e4040;color:#4a8888;border-radius:4px;padding:2px 8px;font-size:9px;font-weight:700;cursor:pointer;font-family:'Montserrat',sans-serif;}
+.ph button:hover{background:#1a2e2e;}
+.slides-list{flex:1;overflow-y:auto;padding:8px;display:flex;flex-direction:column;gap:6px;}
+.slides-list::-webkit-scrollbar{width:3px;}
+.slides-list::-webkit-scrollbar-thumb{background:#1a3535;}
+.sthumb{border-radius:7px;overflow:hidden;cursor:pointer;border:2px solid transparent;transition:.15s;position:relative;aspect-ratio:16/9;background:#1e3030;}
+.sthumb:hover{border-color:#2a7070;}
+.sthumb.on{border-color:#3dbfb0;box-shadow:0 0 0 1px #3dbfb0;}
+.sthumb-inner{width:100%;height:100%;background:linear-gradient(135deg,#d5ece7,#e5f3ef);display:flex;flex-direction:column;}
+.sthumb-hdr{height:16%;background:#1a7c6e;display:flex;align-items:center;padding:0 5px;}
+.sthumb-t{font-family:'Montserrat',sans-serif;font-size:4.5px;font-weight:900;color:#fff;letter-spacing:.5px;}
+.sthumb-body{flex:1;display:flex;align-items:center;justify-content:center;font-size:6px;color:#1a7c6e;font-weight:700;opacity:.6;}
+.sthumb-n{position:absolute;bottom:3px;left:5px;font-size:8px;font-weight:700;font-family:'Montserrat',sans-serif;color:rgba(255,255,255,.35);}
+
+/* ── CANVAS ── */
+.canvas-area{background:#111c1c;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;position:relative;}
+.canvas-wrap{transform-origin:center center;position:relative;}
+.slide-canvas{width:1920px;height:1080px;overflow:hidden;position:relative;}
+.zoombar{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:5px;background:#090f0f;border:1px solid #1a2e2e;border-radius:20px;padding:3px 10px;z-index:50;}
+.zoombar button{width:22px;height:22px;border-radius:50%;border:none;background:transparent;color:#5aacac;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;transition:.15s;}
+.zoombar button:hover{background:#1a2e2e;}
+.zpct{font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;color:#4a8888;min-width:36px;text-align:center;}
+
+/* ── RIGHT PANEL ── */
+.panel-r{background:var(--panel);border-left:1px solid #1a2e2e;display:flex;flex-direction:column;overflow:hidden;}
+.ptabs{display:flex;border-bottom:1px solid #1a2e2e;flex-shrink:0;}
+.ptab{flex:1;padding:9px 0;text-align:center;font-family:'Montserrat',sans-serif;font-size:9px;font-weight:700;letter-spacing:1px;color:#4a6666;cursor:pointer;border-bottom:2px solid transparent;transition:.15s;}
+.ptab.on{color:#3dbfb0;border-bottom-color:#3dbfb0;}
+.pbody{flex:1;overflow-y:auto;padding:12px;}
+.pbody::-webkit-scrollbar{width:3px;}
+.pbody::-webkit-scrollbar-thumb{background:#1a3535;}
+.plabel{font-family:'Montserrat',sans-serif;font-size:9px;font-weight:700;letter-spacing:1.5px;color:#2a9d8f;text-transform:uppercase;margin-bottom:5px;display:block;}
+.pinput,.ptarea{width:100%;background:#0a1818;border:1px solid #1a3535;border-radius:5px;color:#a0c8c8;font-family:'Noto Sans KR',sans-serif;font-size:11px;padding:6px 9px;outline:none;transition:.15s;resize:vertical;}
+.pinput:focus,.ptarea:focus{border-color:#2a9d8f;}
+.ptarea{min-height:55px;line-height:1.6;}
+.psec{margin-bottom:13px;}
+.prow{display:flex;gap:7px;}
+.prow .psec{flex:1;}
+.pdiv{height:1px;background:#1a2e2e;margin:11px 0;}
+.papply{width:100%;padding:8px;background:#1a7c6e;border:none;border-radius:6px;color:#fff;font-family:'Montserrat',sans-serif;font-weight:700;font-size:10px;letter-spacing:1px;cursor:pointer;margin-top:4px;transition:.15s;}
+.papply:hover{background:#2a9d8f;}
+.papply.ok{background:#1a5a40;}
+
+/* ── FULLSCREEN ── */
+.fs{display:none;position:fixed;inset:0;z-index:9000;background:#060c0c;flex-direction:column;align-items:center;justify-content:center;}
+.fs.on{display:flex;}
+.fs-slide{position:relative;overflow:hidden;}
+.fs-inner{width:1920px;height:1080px;transform-origin:top left;position:absolute;top:0;left:0;}
+.fs-nav-bar{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:10px;background:rgba(0,0,0,.55);border-radius:999px;padding:7px 18px;backdrop-filter:blur(8px);}
+.fs-nav-bar button{width:34px;height:34px;border-radius:50%;border:1px solid rgba(255,255,255,.2);background:transparent;color:rgba(255,255,255,.7);font-size:17px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.15s;}
+.fs-nav-bar button:hover{background:rgba(255,255,255,.1);}
+.fs-nav-bar button:disabled{opacity:.2;cursor:default;}
+.fs-pg{font-family:'Montserrat',sans-serif;font-size:11px;color:rgba(255,255,255,.45);}
+.fs-x{position:fixed;top:14px;right:16px;background:rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.6);border-radius:7px;padding:5px 12px;font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;cursor:pointer;backdrop-filter:blur(4px);}
+.fs-x:hover{color:#fff;}
+
+/* ── CTX MENU ── */
+.ctx{position:fixed;background:#0a1414;border:1px solid #1a3535;border-radius:8px;box-shadow:0 8px 36px rgba(0,0,0,.5);z-index:8000;min-width:155px;overflow:hidden;animation:cpop .1s ease;display:none;}
+@keyframes cpop{from{opacity:0;transform:scale(.93)}to{opacity:1;transform:scale(1)}}
+.ctx-colors{display:flex;gap:4px;padding:8px 10px;flex-wrap:wrap;}
+.cdot{width:19px;height:19px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:.1s;flex-shrink:0;}
+.cdot:hover{transform:scale(1.25);}
+.csep{height:1px;background:#1a2e2e;}
+.citem{padding:7px 12px;font-size:11px;color:#7ab8b8;cursor:pointer;font-family:'Montserrat',sans-serif;font-weight:600;letter-spacing:.5px;transition:.1s;display:flex;align-items:center;gap:6px;}
+.citem:hover{background:#1a2828;color:#fff;}
+.citem.del{color:#d06060;}
+.citem.del:hover{background:#220e0e;}
+
+/* ── OWNER DOT on chip ── */
+.chip-wrap{display:flex;align-items:flex-start;gap:4px;margin-bottom:3px;}
+.owner-dot{
+  width:18px;height:18px;border-radius:50%;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  font-size:8px;font-weight:900;color:#fff;margin-top:2px;
+  font-family:'Montserrat',sans-serif;letter-spacing:0;
+}
+
+/* ── SLIDE TYPE MODAL ── */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9500;align-items:center;justify-content:center;backdrop-filter:blur(4px);}
+.modal-bg.on{display:flex;}
+.modal{background:#0f1a1a;border:1px solid #1a3535;border-radius:14px;padding:28px 32px;min-width:360px;box-shadow:0 20px 60px rgba(0,0,0,.5);}
+.modal h3{font-family:'Montserrat',sans-serif;font-size:13px;font-weight:800;color:#3dbfb0;letter-spacing:2px;margin-bottom:20px;}
+.modal-types{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;}
+.modal-type{
+  padding:16px 12px;border-radius:10px;border:1.5px solid #1a3535;
+  background:#0a1414;cursor:pointer;text-align:center;transition:.15s;
+}
+.modal-type:hover{border-color:#2a9d8f;background:#0f1e1e;}
+.modal-type .mt-icon{font-size:28px;margin-bottom:6px;}
+.modal-type .mt-title{font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;color:#3dbfb0;margin-bottom:3px;}
+.modal-type .mt-desc{font-size:10px;color:#4a7070;line-height:1.4;}
+.modal-cancel{width:100%;padding:8px;background:transparent;border:1px solid #1a3535;border-radius:7px;color:#4a7070;font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;cursor:pointer;transition:.15s;}
+.modal-cancel:hover{border-color:#2a9d8f;color:#3dbfb0;}
+
+/* ── CTX owner section ── */
+.ctx-owners{display:flex;gap:5px;padding:7px 10px;align-items:center;}
+.ctx-owner-dot{width:22px;height:22px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:900;color:#fff;font-family:'Montserrat',sans-serif;border:2px solid transparent;transition:.12s;flex-shrink:0;}
+.ctx-owner-dot:hover{transform:scale(1.2);border-color:#fff;}
+.ctx-owner-dot.none-dot{background:#1a3535;color:#4a8080;border:2px dashed #2a4040;}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:58px;left:50%;transform:translateX(-50%);background:rgba(26,124,110,.9);color:#fff;font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;letter-spacing:1px;padding:6px 16px;border-radius:999px;pointer-events:none;opacity:0;transition:opacity .3s;z-index:500;white-space:nowrap;}
+.toast.on{opacity:1;}
+
+/* ══ INLINE EDIT GLOW ══ */
+[contenteditable]:hover{outline:2px dashed rgba(61,191,176,.35);border-radius:3px;cursor:text;}
+[contenteditable]:focus{outline:2px solid rgba(61,191,176,.75);border-radius:3px;background:rgba(255,255,255,.1);}
+.s1circ[contenteditable]:hover{outline:3px dashed rgba(61,191,176,.4);border-radius:50%;}
+.s1circ[contenteditable]:focus{outline:3px solid rgba(61,191,176,.8);border-radius:50%;background:rgba(255,255,255,.95);}
+
+/* ══════════════════════════════════════════════════
+   SHARED SLIDE SHELL (s3~s8 공통)
+══════════════════════════════════════════════════ */
+.slide-shell{width:100%;height:100%;position:relative;overflow:hidden;background:linear-gradient(145deg,#d6ebe6 0%,#e4f2ee 45%,#cbe5de 100%);}
+.shell-hdr{position:absolute;top:0;left:0;right:0;height:78px;background:linear-gradient(90deg,#155e5e,#1a7c6e 60%,#1e8080);padding:8px 36px;display:flex;align-items:center;gap:0;z-index:5;}
+.shell-hdr-texts{display:flex;flex-direction:column;}
+.shell-sub{font-size:11px;color:rgba(255,255,255,.75);}
+.shell-title{font-family:'Montserrat',sans-serif;font-size:36px;font-weight:900;color:#fff;letter-spacing:3px;line-height:1;}
+.shell-date{font-family:'Montserrat',sans-serif;font-size:14px;color:rgba(255,255,255,.6);margin-top:2px;}
+.shell-badge{margin-left:auto;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:999px;padding:8px 24px;font-family:'Montserrat',sans-serif;font-size:14px;font-weight:700;color:#fff;letter-spacing:1px;}
+.shell-body{position:absolute;top:78px;left:0;right:0;bottom:0;overflow:hidden;}
+
+/* ══════════════════════════════════════════════════
+   SLIDE 3 — 연간 교육 계획 캘린더
+══════════════════════════════════════════════════ */
+.annual-wrap{width:100%;height:100%;padding:4px 10px;overflow:hidden;}
+.annual-tbl{width:100%;height:1px;border-collapse:separate;border-spacing:2px;table-layout:fixed;}
+.annual-tbl colgroup col.col-cat{width:135px;}
+.annual-tbl colgroup col.col-name{width:210px;}
+.annual-tbl colgroup col.col-type{width:78px;}
+.annual-tbl colgroup col.col-m{/* auto, 12 cols share remaining ~1490px ≈ 124px each */}
+.ath{background:#1e2c2c;color:#fff;font-family:'Montserrat',sans-serif;font-size:14px;font-weight:700;letter-spacing:.3px;text-align:center;padding:5px 2px;border-radius:5px;}
+.ath.cat-hdr{font-size:14px;}
+.atd-cat{
+  background:#1a7c6e;color:#fff;border-radius:7px;
+  text-align:center;vertical-align:middle;
+  font-size:15px;font-weight:700;letter-spacing:.3px;
+  padding:4px 5px;line-height:1.25;
+}
+.atd-name{
+  background:rgba(255,255,255,.65);border-radius:7px;
+  vertical-align:middle;padding:3px 6px;
+  font-size:14px;font-weight:600;color:#1e2c2c;
+}
+.atd-type{
+  background:rgba(255,255,255,.4);border-radius:7px;
+  vertical-align:middle;text-align:center;
+  font-size:13px;font-weight:600;color:#3a6060;
+  padding:2px;line-height:1.25;
+}
+.atd-m{
+  border-radius:5px;vertical-align:middle;text-align:center;
+  font-size:11px;font-weight:600;color:#1e2c2c;
+  padding:1px;line-height:1.2;cursor:text;
+}
+.atd-m.active{color:#2a4040;}
+.atd-m.strong{color:#1a2828;font-weight:700;}
+.atd-m.light{background:rgba(0,0,0,.02);}
+.atd-m.light:hover{background:rgba(0,0,0,.06);outline:1px dashed rgba(26,124,110,.3);}
+.atd-m.light:focus{background:rgba(255,255,255,.9);outline:2px solid rgba(61,191,176,.7);}
+
+/* ══════════════════════════════════════════════════
+   SLIDES 5~8 — 카테고리 상세 카드
+══════════════════════════════════════════════════ */
+.catd-grid{display:grid;gap:8px;padding:8px 16px;height:100%;}
+.catd-card{
+  background:rgba(255,255,255,.7);border-radius:10px;
+  padding:8px 12px;display:flex;flex-direction:column;gap:3px;
+  border-left:5px solid #1a7c6e;
+  box-shadow:0 2px 8px rgba(26,124,110,.08);
+  overflow:hidden;
+}
+.catd-top-row{display:flex;align-items:center;gap:8px;justify-content:space-between;}
+.catd-card-name{font-family:'Montserrat',sans-serif;font-size:20px;font-weight:800;color:#1e2c2c;line-height:1.15;flex:1;min-width:0;}
+.catd-card-type-badge{display:inline-block;padding:2px 10px;border-radius:999px;font-size:15px;font-weight:700;font-family:'Montserrat',sans-serif;letter-spacing:.5px;}
+.catd-meta{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
+.catd-meta-item{display:flex;align-items:center;gap:3px;font-size:15px;color:#3a6060;}
+.catd-meta-label{font-size:13px;font-weight:700;font-family:'Montserrat',sans-serif;color:#7aacac;letter-spacing:.5px;text-transform:uppercase;}
+.catd-owners{display:flex;gap:3px;cursor:pointer;padding:1px 3px;border-radius:6px;transition:.15s;flex-shrink:0;}
+.catd-owners:hover{background:rgba(26,124,110,.12);}
+.catd-owner-dot{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:900;color:#fff;font-family:'Montserrat',sans-serif;}
+.catd-owner-dot.sub{outline:2px solid rgba(255,255,255,.7);}
+.catd-content{font-size:16px;color:#3a5050;line-height:1.45;border-top:1px solid rgba(26,124,110,.1);padding-top:3px;flex:1;overflow:hidden;}
+.catd-section-header{
+  background:#1a7c6e;color:#fff;border-radius:10px;
+  padding:8px 16px;display:flex;align-items:center;gap:12px;
+  font-family:'Montserrat',sans-serif;font-size:20px;font-weight:800;letter-spacing:1.5px;
+  grid-column:1/-1;
+}
+.catd-section-count{background:rgba(255,255,255,.2);border-radius:999px;padding:3px 10px;font-size:13px;}
+
+/* ══════════════════════════════════════════════════
+   SLIDE 1 — pixel-accurate VALUE SYSTEM
+══════════════════════════════════════════════════ */
+.s1-wrap{width:100%;height:100%;position:relative;overflow:hidden;background:linear-gradient(145deg,#d6ebe6 0%,#e4f2ee 45%,#cbe5de 100%);}
+
+/* teal header bar */
+.s1-hdrbar{position:absolute;top:0;left:0;right:0;height:108px;background:#1a7c6e;padding:18px 58px;display:flex;flex-direction:column;justify-content:center;}
+.s1-hsub{font-size:17px;color:rgba(255,255,255,.8);letter-spacing:.5px;margin-bottom:4px;}
+.s1-hrow{display:flex;align-items:baseline;gap:18px;}
+.s1-htitle{font-family:'Montserrat',sans-serif;font-size:58px;font-weight:900;color:#fff;letter-spacing:5px;line-height:1;}
+.s1-hdate{font-family:'Montserrat',sans-serif;font-size:19px;color:rgba(255,255,255,.65);}
+
+/* olive young logo + line + badge row */
+.s1-logoline{position:absolute;top:140px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:0;white-space:nowrap;}
+.s1-oy{display:flex;flex-direction:column;align-items:flex-start;gap:0;}
+.s1-oy-name{font-family:'Montserrat',sans-serif;font-weight:900;font-size:20px;color:#1a7c6e;letter-spacing:1px;}
+.s1-oy-leaf{width:14px;height:14px;background:#e8b84b;border-radius:50%;display:inline-block;margin:0 2px;}
+.s1-oy-sub{font-size:15px;font-weight:500;color:#2a9d8f;}
+.s1-hline{width:60px;height:2px;background:#aaccc8;margin:0 16px;}
+.s1-badge{background:#1e2c2c;color:#fff;border-radius:999px;padding:11px 52px;font-size:27px;font-weight:700;letter-spacing:2px;box-shadow:0 4px 18px rgba(0,0,0,.2);}
+
+/* mission */
+.s1-mission{position:absolute;top:218px;left:50%;transform:translateX(-50%);text-align:center;white-space:nowrap;}
+.s1-mvlabel{font-family:'Montserrat',sans-serif;font-size:20px;font-weight:700;color:#1e2c2c;letter-spacing:3px;margin-bottom:4px;}
+.s1-mvtext{font-size:56px;font-weight:700;color:#1a7c6e;letter-spacing:1px;}
+
+/* decorative ribbon waves */
+.s1-deco{position:absolute;top:210px;left:50%;transform:translateX(-50%);width:900px;height:500px;pointer-events:none;z-index:1;}
+
+/* venn circles */
+.s1-circles{position:absolute;top:380px;left:50%;transform:translateX(-50%);width:780px;height:450px;z-index:3;}
+.s1circ{position:absolute;border-radius:50%;display:flex;align-items:center;justify-content:center;text-align:center;font-family:'Montserrat',sans-serif;font-weight:800;font-size:26px;line-height:1.15;letter-spacing:1px;color:#1a7c6e;background:rgba(255,255,255,.88);border:4px solid #1a7c6e;backdrop-filter:blur(4px);transition:.15s;}
+.s1circ:hover{background:rgba(255,255,255,.98);}
+.c-story{width:248px;height:248px;left:0;top:28px;}
+.c-smart{width:248px;height:248px;right:0;top:28px;}
+.c-brand{width:248px;height:248px;left:50%;transform:translateX(-50%);top:170px;}
+.c-core{width:172px;height:172px;left:50%;transform:translateX(-50%);top:105px;border:4px solid #1e2c2c;color:#1e2c2c;font-size:20px;background:rgba(255,255,255,.96);z-index:10;box-shadow:0 10px 36px rgba(0,0,0,.14);}
+
+/* strategy panels */
+.s1-strat-l{position:absolute;top:430px;left:50px;width:410px;z-index:2;}
+.s1-strat-r{position:absolute;top:430px;right:50px;width:410px;z-index:2;}
+.s1-strat-b{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);width:700px;z-index:2;}
+.strat-title{font-family:'Montserrat',sans-serif;font-size:15px;font-weight:800;color:#1a7c6e;letter-spacing:2px;margin-bottom:12px;}
+.sitem{display:flex;gap:12px;margin-bottom:11px;align-items:flex-start;}
+.snum{width:28px;height:28px;flex-shrink:0;border-radius:50%;border:2px solid #1a7c6e;color:#1a7c6e;font-size:15px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:2px;background:rgba(255,255,255,.6);}
+.stxt{font-size:19px;color:#2c4040;line-height:1.55;}
+
+/* ══════════════════════════════════════════════════
+   SLIDE 2 — TABLE-BASED ROADMAP GRID
+══════════════════════════════════════════════════ */
+.s2-wrap{width:100%;height:100%;position:relative;overflow:hidden;background:linear-gradient(145deg,#d6ebe6 0%,#e4f2ee 45%,#cbe5de 100%);}
+.s2-hdrbar{position:absolute;top:0;left:0;right:0;height:108px;background:#1a7c6e;padding:12px 40px;display:flex;align-items:center;z-index:5;}
+.s2-htexts{display:flex;flex-direction:column;}
+.s2-hsub{font-size:14px;color:rgba(255,255,255,.78);}
+.s2-hrow{display:flex;align-items:baseline;gap:14px;}
+.s2-htitle{font-family:'Montserrat',sans-serif;font-size:48px;font-weight:900;color:#fff;letter-spacing:5px;line-height:1;}
+.s2-hdate{font-family:'Montserrat',sans-serif;font-size:16px;color:rgba(255,255,255,.65);}
+
+/* legend box top-right */
+.s2-legend{position:absolute;top:112px;right:20px;background:rgba(255,255,255,.9);border:1.5px solid rgba(26,124,110,.2);border-radius:10px;padding:9px 14px;z-index:10;backdrop-filter:blur(4px);}
+.s2-leg-row{display:flex;gap:16px;margin-bottom:5px;}
+.s2-leg-row:last-child{margin-bottom:0;}
+.s2-li{display:flex;align-items:center;gap:5px;font-size:11.5px;color:#2c4040;white-space:nowrap;}
+.s2-ld{width:26px;height:13px;border-radius:3px;flex-shrink:0;}
+.s2-names{display:flex;gap:10px;margin-top:6px;border-top:1px solid rgba(26,124,110,.15);padding-top:6px;}
+.s2-name{display:flex;align-items:center;gap:4px;font-size:11.5px;color:#2c4040;}
+.name-dot{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#fff;flex-shrink:0;}
+
+/* direction labels strip — aligned with data columns */
+.s2-dirs{
+  position:absolute;top:112px;left:260px;right:340px;height:38px;
+  display:grid;grid-template-columns:repeat(3,1fr);
+  align-items:center;z-index:4;
+}
+.s2-dir-group{display:flex;align-items:center;justify-content:center;gap:6px;}
+.s2-dir-label{font-family:'Montserrat',sans-serif;font-size:15px;font-weight:900;color:rgba(36,54,50,.45);letter-spacing:2px;}
+.dir-arr{font-size:20px;color:rgba(36,54,50,.3);font-weight:300;}
+
+/* ── TABLE LAYOUT ── */
+.s2-tbl-wrap{
+  position:absolute;top:154px;left:18px;right:18px;bottom:10px;
+}
+.s2-tbl{
+  width:100%;height:100%;
+  border-collapse:separate;border-spacing:5px;
+  table-layout:fixed;
+}
+/* column widths */
+.s2-tbl colgroup col:nth-child(1){width:110px;}
+.s2-tbl colgroup col:nth-child(2){width:148px;}
+
+/* header row cells — pill shape */
+.th-pill{
+  background:#1e2c2c;color:#fff;
+  border-radius:999px;
+  font-family:'Montserrat',sans-serif;font-size:13px;font-weight:700;letter-spacing:.5px;
+  text-align:center;vertical-align:middle;
+  padding:0 8px;height:50px;
+  white-space:nowrap;
+}
+.th-pill.oy{background:#1a7c6e;font-size:11px;line-height:1.3;}
+.th-pill.empty{background:transparent;}
+
+/* row label cells */
+.td-rowlbl{
+  background:#1a7c6e;color:#fff;border-radius:10px;
+  font-family:'Montserrat',sans-serif;font-size:14px;font-weight:800;letter-spacing:.5px;
+  text-align:center;vertical-align:middle;line-height:1.3;
+}
+
+/* CUSTOMIZED LEARNING cell — rowspan 4 */
+.td-custom{
+  background:rgba(26,124,110,.1);border:1.5px solid rgba(26,124,110,.25);border-radius:10px;
+  vertical-align:middle;text-align:center;
+}
+.td-custom-inner{
+  writing-mode:vertical-lr;text-orientation:mixed;
+  display:inline-block;
+  font-size:20px;font-weight:700;color:#1a7c6e;letter-spacing:4px;line-height:1.4;
+}
+
+/* data cells */
+.g-cell{
+  background:rgba(255,255,255,.52);border-radius:10px;
+  padding:5px 6px;vertical-align:top;
+  position:relative;transition:.12s;
+}
+.g-cell:hover{background:rgba(255,255,255,.78);}
+.g-cell-inner{display:flex;flex-direction:column;gap:3px;height:100%;}
+
+/* chips */
+.chip{display:block;padding:4px 10px;border-radius:18px;font-size:13px;font-weight:600;line-height:1.3;text-align:center;cursor:pointer;transition:.12s;outline:none;word-break:keep-all;}
+.chip:hover{filter:brightness(1.08);}
+.chip.editing{box-shadow:0 0 0 2px #3dbfb0,0 3px 10px rgba(0,0,0,.15);cursor:text;}
+.chip[contenteditable]:focus{background:rgba(255,255,255,.95)!important;color:#1e2c2c!important;outline:2px solid #3dbfb0!important;}
+.c-green{background:#1a7c6e;color:#fff;}
+.c-teal{background:#2a9d8f;color:#fff;}
+.c-lteal{background:#cce8e4;color:#1a5858;border:1.5px solid #2a9d8f;}
+.c-yellow{background:#fef3c7;color:#7c5300;border:1.5px solid #f5c842;}
+.c-pink{background:#fce8f4;color:#82155e;border:1.5px solid #e879b8;}
+.c-dashed{background:transparent;color:#1a7c6e;border:2px dashed #2a9d8f;}
+.c-dark{background:#1e2c2c;color:#fff;}
+.c-memo{background:rgba(255,255,255,.55);color:#3a5050;border:1.5px solid #b0cece;}
+.chip-add{display:none;padding:3px 0;border-radius:12px;margin-top:1px;background:rgba(26,124,110,.07);border:1.5px dashed rgba(26,124,110,.25);color:rgba(26,124,110,.4);font-size:10px;font-weight:700;text-align:center;cursor:pointer;transition:.12s;}
+.chip-add:hover{background:rgba(26,124,110,.15);color:#1a7c6e;border-color:#1a7c6e;}
+.g-cell:hover .chip-add{display:block;}
+
+/* ══ SLIDE 3 — 연간계획 / SLIDE 4 — R&R ══════════════════ */
+/* shared shell already defined above */
+/* R&R Table */
+.rr-tbl-wrap{position:absolute;top:130px;left:18px;right:18px;bottom:6px;overflow-y:auto;overflow-x:hidden;}
+.rr-tbl{width:100%;height:1px;border-collapse:separate;border-spacing:1px;table-layout:fixed;}
+.rr-tbl td,.rr-tbl th{height:auto;max-height:none;}
+.rr-th{
+  background:#1e2c2c;color:#fff;border-radius:4px;
+  font-family:'Montserrat',sans-serif;font-weight:700;letter-spacing:.3px;
+  text-align:center;vertical-align:middle;padding:2px 2px;line-height:1.15;
+}
+.rr-th.teal{background:#1a7c6e;}
+.rr-th.pill{border-radius:999px;}
+.rr-cat1{background:#1a7c6e;color:#fff;border-radius:4px;font-weight:800;text-align:center;vertical-align:middle;padding:1px 2px;line-height:1.15;}
+.rr-cat2{background:rgba(26,124,110,.15);border:1px solid rgba(26,124,110,.3);border-radius:4px;font-weight:700;color:#1a4040;text-align:center;vertical-align:middle;padding:1px;line-height:1.15;}
+.rr-task{background:rgba(255,255,255,.65);border-radius:4px;padding:1px 4px;vertical-align:middle;}
+.rr-task-name{font-weight:700;color:#1a2e2e;line-height:1.15;}
+.rr-target{background:rgba(255,255,255,.5);border-radius:4px;color:#2c4040;text-align:center;vertical-align:middle;padding:1px 2px;line-height:1.15;}
+.rr-content{background:rgba(255,255,255,.5);border-radius:4px;color:#2c4040;vertical-align:middle;padding:1px 4px;line-height:1.2;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;}
+.rr-cycle{background:rgba(42,157,143,.12);border-radius:4px;font-weight:700;color:#1a5050;text-align:center;vertical-align:middle;font-family:'Montserrat',sans-serif;padding:1px;}
+.rr-owner-cell{background:rgba(255,255,255,.4);border-radius:4px;text-align:center;vertical-align:middle;padding:0px;}
+.rr-owner-cell.main-cell{background:rgba(26,124,110,.12);}
+.rr-dot{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;font-size:9px;font-weight:900;color:#fff;font-family:'Montserrat',sans-serif;margin:0;}
+.rr-dot.sub-dot{width:18px;height:18px;font-size:8px;outline:1.5px solid rgba(255,255,255,.7);}
+.rr-tbl [contenteditable]:focus{outline:1.5px solid rgba(61,191,176,.7);border-radius:3px;background:rgba(255,255,255,.15);padding:inherit;}
+.rr-tbl [contenteditable]:hover{outline:1px dashed rgba(61,191,176,.3);border-radius:3px;}
+.rr-legend{position:absolute;top:92px;right:20px;background:rgba(255,255,255,.92);border:1.5px solid rgba(26,124,110,.2);border-radius:10px;padding:5px 10px;z-index:10;display:flex;gap:10px;align-items:center;}
+.rr-legend-item{display:flex;align-items:center;gap:4px;font-size:13px;color:#2c4040;font-weight:600;}
+
+
+/* ══ PRINT / PDF ══════════════════════════════════ */
+@media print {
+  @page { size: landscape; margin: 0; }
+  *, *::before, *::after {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
+  }
+  html,body {
+    width: 100% !important; height: auto !important;
+    overflow: visible !important; background: #fff !important;
+    margin: 0 !important; padding: 0 !important;
+  }
+  .app, .topbar, .panel-l, .panel-r, .zoombar, .fs, .ctx, .modal-bg, .toast, #catOwnerPicker { display: none !important; }
+  #print-frame {
+    display: block !important; position: static !important;
+    width: 100vw !important; overflow: visible !important;
+  }
+  .print-slide {
+    width: 100vw !important; height: 100vh !important;
+    overflow: hidden !important; position: relative !important;
+    display: block !important;
+    page-break-after: always; break-after: page;
+  }
+  .print-slide:last-child { page-break-after: avoid; break-after: avoid; }
+  .print-slide-inner {
+    width: 1920px; height: 1080px;
+    transform-origin: top left;
+    transform: scale(var(--print-scale, 0.52));
+    position: absolute; top: 0; left: 0;
+  }
+}
+#print-frame { display:none; }
+</style>
+</head>
+<body>
+
+<!-- PRINT FRAME (hidden, shown only on print) -->
+<div id="print-frame"></div>
+
+<div class="app">
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <span class="tb-logo">LRM</span><div class="sep"></div>
+  <button class="tb-btn green" onclick="openFS()">▶ 전체화면 발표</button>
+  <button class="tb-btn" onclick="downloadPDF()">⬇ PDF 다운로드</button>
+  <button class="tb-btn" onclick="resetData()" style="color:#d08060;border-color:#3a2525">↺ 초기화</button>
+  <div class="sep"></div>
+  <div class="tb-nav">
+    <button id="btnP" onclick="go(cur-1)">←</button>
+    <button id="btnN" onclick="go(cur+1)">→</button>
+  </div>
+  <span class="tb-info" id="tbInfo">1 / 2</span>
+</div>
+
+<!-- LEFT -->
+<div class="panel-l">
+  <div class="ph"><span>SLIDES</span></div>
+  <div class="slides-list" id="slidesList"></div>
+</div>
+
+<!-- CANVAS -->
+<div class="canvas-area" id="ca">
+  <div class="canvas-wrap" id="cw">
+    <div class="slide-canvas" id="sc"></div>
+  </div>
+  <div class="zoombar">
+    <button onclick="sz(zoom-.1)">−</button>
+    <span class="zpct" id="zpct">50%</span>
+    <button onclick="sz(zoom+.1)">＋</button>
+    <button onclick="fz()" style="font-size:9px;font-family:Montserrat,sans-serif;font-weight:700;width:auto;padding:0 8px;border-radius:10px;">FIT</button>
+  </div>
+</div>
+
+<!-- RIGHT -->
+<div class="panel-r">
+  <div class="ptabs">
+    <div class="ptab on" id="tabSlide" onclick="stab('slide')">속성</div>
+  </div>
+  <div class="pbody" id="pb"></div>
+</div>
+
+</div>
+
+<!-- FULLSCREEN -->
+<div class="fs" id="fs">
+  <div class="fs-slide" id="fss">
+    <div class="fs-inner" id="fsi"></div>
+  </div>
+  <button class="fs-x" onclick="closeFS()">✕ 닫기 (ESC)</button>
+  <div class="fs-nav-bar">
+    <button id="fsbp" onclick="fsn(-1)">←</button>
+    <span class="fs-pg" id="fspg">1 / 2</span>
+    <button id="fsbn" onclick="fsn(1)">→</button>
+  </div>
+</div>
+
+<!-- CTX -->
+<div class="ctx" id="ctx">
+  <div class="ctx-colors" id="ctxc"></div>
+  <div class="csep"></div>
+  <div style="padding:4px 10px 2px;font-family:Montserrat,sans-serif;font-size:9px;font-weight:700;color:#3a6060;letter-spacing:1px">담당자</div>
+  <div class="ctx-owners" id="ctxOwners"></div>
+  <div class="csep"></div>
+  <div class="citem" onclick="ctxDup()">⧉ 복사</div>
+  <div class="csep"></div>
+  <div class="citem del" onclick="ctxDel()">✕ 삭제</div>
+</div>
+
+<!-- CATDETAIL OWNER PICKER -->
+<div class="ctx" id="catOwnerPicker" style="min-width:190px">
+  <div style="padding:6px 10px 4px;font-family:Montserrat,sans-serif;font-size:10px;font-weight:700;color:#3dbfb0;letter-spacing:1px">주담당 (클릭 토글)</div>
+  <div class="csep"></div>
+  <div id="catOwnerMain" style="padding:6px 10px;display:flex;flex-wrap:wrap;gap:6px"></div>
+  <div class="csep"></div>
+  <div style="padding:6px 10px 4px;font-family:Montserrat,sans-serif;font-size:10px;font-weight:700;color:#7aacac;letter-spacing:1px">부담당</div>
+  <div id="catOwnerSub" style="padding:4px 10px 8px;display:flex;flex-wrap:wrap;gap:6px"></div>
+</div>
+
+<!-- SLIDE TYPE MODAL -->
+<div class="modal-bg" id="typeModal">
+  <div class="modal">
+    <h3>슬라이드 타입 선택</h3>
+    <div class="modal-types">
+      <div class="modal-type" onclick="doAddSlide('value')">
+        <div class="mt-icon">⭕</div>
+        <div class="mt-title">가치체계</div>
+        <div class="mt-desc">원형 Venn + 전략 3열<br>Mission & Vision</div>
+      </div>
+      <div class="modal-type" onclick="doAddSlide('roadmap')">
+        <div class="mt-icon">📊</div>
+        <div class="mt-title">교육 로드맵</div>
+        <div class="mt-desc">간트 표 형식<br>행·열 칩 편집</div>
+      </div>
+    </div>
+    <button class="modal-cancel" onclick="closeModal()">취소</button>
+  </div>
+</div>
+
+<div class="toast" id="toast">클릭 수정 · Enter 완료 · 우클릭 색상/삭제</div>
+<div class="pdf-progress" id="pdfProg" style="display:none">
+  <div class="pp-title">PDF 생성 중</div>
+  <div class="pp-bar"><div class="pp-fill" id="pdfFill" style="width:0%"></div></div>
+  <div class="pp-text" id="pdfText">준비 중...</div>
+</div>
+
+<script>
+/* ══════════════════════════════════════
+   OWNERS
+══════════════════════════════════════ */
+const OWNERS=[
+  {k:'ye',  label:'김혜경님',char:'혜',bg:'#e8554a'},
+  {k:'ram', label:'김우람님',char:'람',bg:'#4caf50'},
+  {k:'yeon',label:'안성연님',char:'연',bg:'#2196f3'},
+  {k:'sung',label:'성중현님',char:'성',bg:'#f5a623'},
+];
+const OMAP=Object.fromEntries(OWNERS.map(o=>[o.k,o]));
+
+/* Restore saved owners */
+(function restoreOwners(){
+  try{
+    const saved=JSON.parse(localStorage.getItem('lrm8_owners'));
+    if(saved&&Array.isArray(saved)&&saved.length){
+      OWNERS.length=0;
+      saved.forEach(o=>{OWNERS.push(o);OMAP[o.k]=o;});
+    }
+  }catch(e){}
+})();
+
+/* ══════════════════════════════════════
+   CHIP COLOR PALETTE
+══════════════════════════════════════ */
+const COLORS=[
+  {k:'c-green', bg:'#1a7c6e',label:'브랜드사업본부'},
+  {k:'c-teal',  bg:'#2a9d8f',label:'글로벌사업부'},
+  {k:'c-lteal', bg:'#cce8e4',label:'라이트틸'},
+  {k:'c-yellow',bg:'#fef3c7',label:'실무'},
+  {k:'c-pink',  bg:'#fce8f4',label:'위탁입사'},
+  {k:'c-dashed',bg:'transparent',label:'진행예정'},
+  {k:'c-dark',  bg:'#1e2c2c',label:'공통'},
+  {k:'c-memo',  bg:'rgba(255,255,255,.6)',label:'메모'},
+];
+
+/* ══════════════════════════════════════
+   SLIDE DATA  (o= owner key)
+══════════════════════════════════════ */
+const DEF=[
+ {id:'s1',label:'가치체계',type:'value',data:{
+  topSub:'브사본의 미래를 여는 열쇠 , 교육과 성장을 위한 로드맵',
+  topTitle:'LEARNING ROADMAP',topDate:'2024.10.01',
+  org:'OLIVE YOUNG',orgSub:'브랜드사업본부',
+  badge:'교육파트 가치체계',
+  mvLabel:'MISSION&VISION',mvText:'채널을 넘어, 브랜드로',
+  c1:'STORY\nSELLER',c2:'SMART\nWORK',c3:'BRAND\nMIND',cCore:'CORE VALUE',
+  slTitle:'STRATEGE',srTitle:'STRATEGE',sbTitle:'STRATEGE',
+  sl:['구성원 브랜드로열티 확보를 위한 브랜드교육의 일상화','함께 나누고 성장하는 조직문화 확산을 위한 활동','브랜드철학 및 히스토리 콘텐츠 제작을 통한 교육접근성 확대'],
+  sr:['자신의 직무에서 전문성 함양을 위한 역량개발 지원','TRENDY한 최신 필수 역량습득 (AI 및 OFFICE)','똑똑하게 일하는 조직문화 향상을 위한 캠페인/교육 확충'],
+  sb:['종사원 제품개발 스토리, 제품 과학성 교육의 활성화','영업본부와 협업을 통한 올리브영 브랜드 세일즈 강화','제품 히스토리 콘텐츠 제작을 통한 교육접근성 확대'],
+ }},
+ {id:'s2',label:'로드맵',type:'roadmap',data:{
+  topSub:'브사본의 미래를 여는 열쇠 , 교육과 성장을 위한 로드맵',
+  topTitle:'LEARNING ROADMAP',topDate:'2024.10.01',
+  cols:['핵심 경쟁력 강화','글로벌 경쟁력 강화','온보딩','실무 역량 강화','리더십','조직문화'],
+  rows:['JOB &\nHUMAN','BRAND','PRODUCT','CHANNEL'],
+  cells:[
+   // row 0 JOB&HUMAN
+   [
+    [{t:'브랜드사업본부\n전 직원대상\n글로벌 사업의 이해',c:'c-dashed',o:'ye'},{t:'브랜드사업본부\n전 직원대상\n글로벌 사업의 이해',c:'c-dashed',o:'ram'}],
+    [{t:'글로벌 S-CLASS',c:'c-teal',o:'ram'},{t:'글로벌사업부대상',c:'c-lteal'}],
+    [{t:'실무자 OJT/멘토링',c:'c-green',o:'ye'},{t:'실무자 경력입사대상',c:'c-lteal'},{t:'리더 OJT/멘토링',c:'c-pink',o:'ye'},{t:'리더급 경력입사대상',c:'c-lteal'},{t:'OY비즈니스',c:'c-yellow',o:'ram'},{t:'경력입사자대상',c:'c-lteal'}],
+    [{t:'BM운영실무',c:'c-green',o:'ye'},{t:'BM팀대상',c:'c-lteal'},{t:'본부 운영실무',c:'c-teal',o:'yeon'},{t:'지원팀대상',c:'c-lteal'},{t:'러닝픽',c:'c-memo',o:'yeon'},{t:'리테일사업본부',c:'c-lteal'}],
+    [{t:'브랜드소개자료',c:'c-yellow',o:'ye'},{t:'브랜드사업본부 전직원',c:'c-lteal'},{t:'에듀파우치',c:'c-yellow',o:'yeon'},{t:'전직원대상',c:'c-lteal'},{t:'KSF배포',c:'c-green',o:'yeon'},{t:'전직원대상',c:'c-lteal'}],
+    [{t:'전략공유회',c:'c-green',o:'ram'},{t:'워크숍',c:'c-pink',o:'ye'},{t:'본부이벤트',c:'c-yellow',o:'ye'}],
+   ],
+   // row 1 BRAND
+   [
+    [{t:'올리브영 상품의 이해',c:'c-yellow',o:'ye'},{t:'브랜드사업본부 전직원',c:'c-lteal'},{t:'전략상품 교육',c:'c-yellow',o:'yeon'},{t:'리테일사업본부',c:'c-lteal'}],
+    [{t:'글로벌 브랜드 교육',c:'c-teal',o:'ye'},{t:'글로벌사업부대상',c:'c-lteal'},{t:'글로벌파트너교육',c:'c-teal',o:'ye'},{t:'글로벌파트너사',c:'c-lteal'}],
+    [{t:'OJT/멘토링과정에서\n브랜드 소개 및\n핵심제품 강의내용 포함',c:'c-memo'}],
+    [{t:'브랜드전략의 이해',c:'c-dark',o:'sung'},{t:'AI업무활용',c:'c-dark',o:'sung'},{t:'엑셀·PPT스킬업',c:'c-dark',o:'sung'},{t:'퍼스널컬러',c:'c-dark',o:'sung'},{t:'MBTI분석',c:'c-dark',o:'sung'},{t:'비즈니스매너',c:'c-dark',o:'sung'}],
+    [{t:'파트 공통 업무\n(주/부 분장)',c:'c-memo',o:'yeon'}],
+    [{t:'브랜드사업본부\n전 직원대상\n글로벌 사업의 이해',c:'c-dashed',o:'ye'}],
+   ],
+   // row 2 PRODUCT
+   [
+    [{t:'브랜드 크루',c:'c-yellow',o:'ye'},{t:'리테일사업본부',c:'c-lteal'},{t:'Curator 입문교육',c:'c-yellow',o:'yeon'},{t:'리테일사업본부',c:'c-lteal'}],
+    [{t:'NPD데이',c:'c-dashed',o:'ye'},{t:'글로벌B2B사업부',c:'c-lteal'},{t:'글로벌전략상품교육',c:'c-teal',o:'ye'},{t:'글로벌B2B사업부',c:'c-lteal'}],
+    [{t:'본부OJT교육',c:'c-green',o:'ye'},{t:'신규 입사자',c:'c-lteal'},{t:'인사이트 데이',c:'c-dashed',o:'ram'},{t:'본부 신규 BM',c:'c-lteal'}],
+    [{t:'관리품 발주관리',c:'c-dark',o:'yeon'},{t:'교육비용결산',c:'c-dark',o:'yeon'},{t:'키워드조사',c:'c-dark',o:'yeon'},{t:'본부 연간\n교육계획 수립',c:'c-dark',o:'ye'}],
+    [{t:'OY비즈니스',c:'c-yellow',o:'ram'},{t:'전사 신규입사자',c:'c-lteal'},{t:'MD/BM입문교육',c:'c-yellow',o:'ye'},{t:'MD/BM',c:'c-lteal'}],
+    [{t:'신제품 출시기념\n종사원대상\n홍보자료/이벤트',c:'c-dashed',o:'ram'}],
+   ],
+   // row 3 CHANNEL
+   [
+    [{t:'전문 프로모터 교육',c:'c-yellow',o:'ye'},{t:'리테일사업본부',c:'c-lteal'},{t:'관광상권 특화교육',c:'c-yellow',o:'yeon'},{t:'리테일사업본부',c:'c-lteal'}],
+    [{t:'글로벌 ONLYONE\n브랜드 교육',c:'c-teal',o:'ram'},{t:'글로벌B2B사업부',c:'c-lteal'},{t:'해외법인 교육\n(중·일·미)',c:'c-dashed',o:'ye'},{t:'해외법인',c:'c-lteal'}],
+    [{t:'온보딩 슬랙 운영',c:'c-dashed',o:'ram'},{t:'온보딩 컨플루언스',c:'c-dashed',o:'ye'},{t:'리더OJT교육',c:'c-green',o:'ye'},{t:'신규 리더',c:'c-lteal'}],
+    [{t:'인사이트 리포트',c:'c-memo',o:'ye'},{t:'월간ONLYONE',c:'c-memo',o:'ram'},{t:'올영픽KSF',c:'c-memo',o:'yeon'}],
+    [{t:'CS대응 강화교육',c:'c-yellow',o:'ye'},{t:'CX팀/고객센터',c:'c-lteal'},{t:'러닝셀(러닝콘)',c:'c-yellow',o:'ye'},{t:'전 구성원',c:'c-lteal'}],
+    [{t:'밍글링 활동',c:'c-pink',o:'ram'},{t:'멘토링 프로그램',c:'c-pink',o:'yeon'},{t:'업브랜딩 위원회',c:'c-pink',o:'ye'}],
+   ],
+  ],
+ }},
+ {id:'s3a',label:'연간계획 1/2',type:'annual',data:{
+  topSub:'브사본의 미래를 여는 열쇠 , 교육과 성장을 위한 로드맵',
+  topTitle:'LEARNING ROADMAP',topDate:'2024.10.01',
+  badge:'2024 연간 교육운영계획 (1/2)',
+  groups:[
+   {cat:'국내\n세일즈\n강화',color:'#1a7c6e',rows:[
+    {name:'전략상품교육',type:'오프라인',m:[1,2,3,4,5,6,7,8,9,10,11],notes:{1:'7회(CG/BOH)',2:'2회(BOH/RR)',3:'8회(WM/BOH)',4:'8회(BG)',5:'8회',6:'8회',7:'8회',8:'8회',9:'8회',10:'8회',11:'8회'}},
+    {name:'Curator 입문교육',type:'오프라인',m:[1,3,5,7,10,12],notes:{1:'2회',3:'2회',5:'2회',7:'2회',10:'2회',12:'2회'}},
+    {name:'브랜드 크루',type:'오프라인',m:[5,6,7,8,9,10,11,12],notes:{5:'발대식·1차',6:'동향청취',7:'동향청취',8:'2차교육',9:'동향청취',10:'동향청취',11:'3차교육',12:'4차·수료식'}},
+    {name:'전문 프로모터 교육',type:'오프라인',m:[1,2,3,4,5],notes:{1:'2회',2:'1회',3:'2회',4:'2회',5:'2회'}},
+    {name:'관광상권 특화교육',type:'오프라인',m:[1],notes:{1:'1회(ALL)'}},
+    {name:'지역특화상품 교육',type:'오프라인',m:[1],notes:{1:'1회(RR)'}},
+    {name:'오픈매장 교육',type:'오프라인',m:[],notes:{}},
+    {name:'러닝픽',type:'오프라인',m:[6,8,9],notes:{6:'1회(미정)',8:'1회(WM)',9:'1회(BOH)'}},
+    {name:'AM커미티',type:'오프라인',m:[5,8,11],notes:{5:'1회',8:'1회',11:'1회'}},
+    {name:'HSM커미티',type:'오프라인',m:[5,8,11],notes:{5:'1회',8:'1회',11:'1회'}},
+    {name:'크루서비스기본과정',type:'온/오프',m:[5,8,11],notes:{5:'1회',8:'1회',11:'1회'}},
+    {name:'브랜드파우치',type:'온라인',m:[1,2,3,4,5,6,7,8,9,10,11,12],notes:{1:'1회(탄탄)',2:'1회(아포맨)',3:'1회(BG)',4:'1회(BOH)',5:'1회',6:'1회',7:'1회',8:'1회',9:'1회',10:'1회',11:'1회',12:'1회'}},
+    {name:'월간ONLYONE',type:'온라인',m:[1,2,3,4,5,6,7,8,9,10,11,12],notes:{1:'1회(ALL)',2:'1회(ALL)',3:'1회(ALL)',4:'1회(ALL)',5:'1회(ALL)',6:'1회(ALL)',7:'1회(ALL)',8:'1회(ALL)',9:'1회(ALL)',10:'1회(ALL)',11:'1회(ALL)',12:'1회(ALL)'}},
+    {name:'올영픽KSF',type:'온라인',m:[3,6,9,12],notes:{3:'1회',6:'1회',9:'1회',12:'1회'}},
+    {name:'인사이트 리포트',type:'온라인',m:[1,2,3,4,5,6,7,8,9,10,11,12],notes:{1:'2회',2:'1회',3:'2회',4:'2회',5:'2회',6:'2회',7:'2회',8:'2회',9:'2회',10:'2회',11:'2회',12:'1회'}},
+   ]},
+   {cat:'글로벌\n세일즈\n강화',color:'#2a6e6e',rows:[
+    {name:'글로벌전략상품교육',type:'오프라인',m:[5,7,9,11],notes:{5:'1회(전략브랜드)',7:'1회(전략브랜드)',9:'1회(전략브랜드)',11:'1회(전략브랜드)'}},
+    {name:'NPD데이',type:'오프라인',m:[5,6,7,8,9,10,11,12],notes:{5:'1회(ALL)',6:'1회(ALL)',7:'1회(ALL)',8:'1회(ALL)',9:'1회(ALL)',10:'1회(ALL)',11:'1회(ALL)',12:'1회(ALL)'}},
+    {name:'글로벌파트너교육',type:'온/오프',m:[1,2,3,5,6,7,8,9,10,11,12],notes:{1:'1회(면세점)',2:'2회(서울·제주)',3:'3회(서울·제주·태국)',5:'1회',6:'1회',7:'1회',8:'1회',9:'1회',10:'1회',11:'1회',12:'1회'}},
+    {name:'해외법인교육(중,일,미)',type:'온/오프',m:[3,4,5],notes:{3:'1회(일본)',4:'1회(중국)',5:'1회(미국)'}},
+    {name:'글로벌 ONLYONE브랜드교육',type:'온라인',m:[1,2,3,4,5,6,7,8,9,10,11,12],notes:{1:'1회(ALL)',2:'1회(ALL)',3:'1회(ALL)',4:'1회(ALL)',5:'1회(ALL)',6:'1회(ALL)',7:'1회(ALL)',8:'1회(ALL)',9:'1회(ALL)',10:'1회(ALL)',11:'1회(ALL)',12:'1회(ALL)'}},
+   ]},
+   {cat:'온보딩\n리텐션\n강화',color:'#1e5e5e',rows:[
+    {name:'본부OJT교육',type:'오프라인',m:[1,2,4,5,6,7,8,9,10,11,12],notes:{1:'1회(1/7)',2:'1회(2/25)',4:'1회',5:'1회',6:'1회',7:'1회',8:'1회',9:'1회',10:'1회',11:'1회',12:'1회'}},
+    {name:'리더OJT교육',type:'오프라인',m:[],notes:{}},
+    {name:'BM운영실무 교육',type:'오프라인',m:[5,11],notes:{5:'1회',11:'1회'}},
+    {name:'인사이트 데이',type:'오프라인',m:[5,11],notes:{5:'1회',11:'1회'}},
+    {name:'온보딩 컨플루언스 운영',type:'온라인',m:[],notes:{}},
+    {name:'온보딩 슬랙 운영',type:'온라인',m:[1,2,3,4,5,6,7,8,9,10,11,12],notes:{1:'1회',2:'1회',3:'1회',4:'1회',5:'1회',6:'1회',7:'1회',8:'1회',9:'1회',10:'1회',11:'1회',12:'1회'}},
+    {name:'기타 이벤트성 교육',type:'온/오프',m:[],notes:{}},
+   ]},
+   {cat:'교육\n운영\n관리',color:'#2c4444',rows:[
+    {name:'관리품 발주관리',type:'-',m:[1,2,3,4,5,6,7,8,9,10,11,12],notes:{1:'1회',2:'1회',3:'1회',4:'1회',5:'1회',6:'1회',7:'1회',8:'1회',9:'1회',10:'1회',11:'1회',12:'1회'}},
+    {name:'교육비용결산',type:'-',m:[1,2,3,4,5,6,7,8,9,10,11,12],notes:{1:'1회',2:'1회',3:'1회',4:'1회',5:'1회',6:'1회',7:'1회',8:'1회',9:'1회',10:'1회',11:'1회',12:'1회'}},
+    {name:'키워드조사',type:'-',m:[1,2,3,4,5,6,7,8,9,10,11,12],notes:{1:'1회',2:'1회',3:'1회',4:'1회',5:'1회',6:'1회',7:'1회',8:'1회',9:'1회',10:'1회',11:'1회',12:'1회'}},
+   ]},
+   {cat:'조직문화\n활동',color:'#1a5e70',rows:[
+    {name:'올리브영 어워즈 시상제도',type:'-',m:[12],notes:{12:'1회'}},
+    {name:'본부 수시 시상제도',type:'-',m:[6,11],notes:{6:'1회',11:'1회'}},
+    {name:'업브랜딩 위원회',type:'-',m:[6,9,12],notes:{6:'1회',9:'1회',12:'1회'}},
+    {name:'전략공유회',type:'-',m:[6,9,12],notes:{6:'1회',9:'1회',12:'1회'}},
+    {name:'승진자 티미팅',type:'-',m:[3],notes:{3:'승진달 진행'}},
+    {name:'본부 이벤트',type:'-',m:[3,6,9,12],notes:{3:'1회',6:'1회',9:'1회',12:'1회'}},
+    {name:'밍글링 활동',type:'-',m:[1,3,4,5,6,7,8,9,10,11,12],notes:{1:'1회',3:'1회',4:'1회',5:'1회',6:'1회',7:'1회',8:'1회',9:'1회',10:'1회',11:'1회',12:'1회'}},
+    {name:'멘토링 프로그램',type:'-',m:[5,8,11],notes:{5:'1회',8:'1회',11:'1회'}},
+   ]},
+  ]
+ }},
+ {id:'s3b',label:'연간계획 2/2',type:'annual',data:{
+  topSub:'브사본의 미래를 여는 열쇠 , 교육과 성장을 위한 로드맵',
+  topTitle:'LEARNING ROADMAP',topDate:'2024.10.01',
+  badge:'2024 연간 교육운영계획 (2/2)',
+  groups:[
+   {cat:'본부\n운영\n관리',color:'#244444',rows:[
+    {name:'조직도&인원현황',type:'-',m:[1,2,3,4,5,6,7,8,9,10,11,12],notes:{1:'1회',2:'1회',3:'1회',4:'1회',5:'1회',6:'1회',7:'1회',8:'1회',9:'1회',10:'1회',11:'1회',12:'1회'}},
+    {name:'본부 구성원 R&R',type:'-',m:[1,2,3,4,5,6,7,8,9,10,11,12],notes:{1:'1회',2:'1회',3:'1회',4:'1회',5:'1회',6:'1회',7:'1회',8:'1회',9:'1회',10:'1회',11:'1회',12:'1회'}},
+    {name:'입사자 상견례',type:'-',m:[],notes:{}},
+    {name:'상품 IN&OUT',type:'-',m:[1,2,3,4,5,6,7,8,9,10,11,12],notes:{1:'1회',2:'1회',3:'1회',4:'1회',5:'1회',6:'1회',7:'1회',8:'1회',9:'1회',10:'1회',11:'1회',12:'1회'}},
+    {name:'본부 외부교육 관리',type:'-',m:[],notes:{}},
+    {name:'의무교육관리(안전·컴플라이언스)',type:'-',m:[5,6,9,11],notes:{5:'산업안전보건교육',6:'컴플라이언스교육',9:'산업안전보건교육',11:'컴플라이언스교육'}},
+   ]},
+   {cat:'전사\n협업',color:'#1a4e60',rows:[
+    {name:'OY비즈니스',type:'오프라인',m:[1,2,3,4,5,6,7,8,9,10,11,12],notes:{1:'1회',2:'1회',3:'1회',4:'1회',5:'1회',6:'1회',7:'1회',8:'1회',9:'1회',10:'1회',11:'1회',12:'1회'}},
+    {name:'CS 대응 강화 교육',type:'오프라인',m:[5,8,11],notes:{5:'1회',8:'1회',11:'1회'}},
+    {name:'MD/BM 입문 교육',type:'오프라인',m:[4,11],notes:{4:'1회(4/20)',11:'1회'}},
+    {name:'공채신입사원 교육',type:'오프라인',m:[1,7],notes:{1:'1회(1/21)',7:'1회'}},
+    {name:'경영리더 오리엔테이션',type:'오프라인',m:[],notes:{}},
+    {name:'법인 교육',type:'오프라인',m:[3],notes:{3:'1회(일본)'}},
+    {name:'러닝셀(러닝콘)',type:'오프라인',m:[],notes:{}},
+    {name:'파트너스 위크',type:'오프라인',m:[8,9,10,11],notes:{8:'자료대응',9:'자료대응',10:'자료대응',11:'행사'}},
+   ]},
+  ]
+ }},
+ {id:'s4a',label:'R&R (1/2)',type:'rrmap',data:{
+  topSub:'브사본의 미래를 여는 열쇠 , 교육과 성장을 위한 로드맵',
+  topTitle:'업무별 R&R',topDate:'2024.10.01',
+  subtitle:'브랜드사업본부 교육파트 업무 분장 (1/2)',
+  groups:[
+   {cat:'교육 기획',items:[
+    {cat2:'-',task:'연간교육계획수립',target:'-',content:'본부 전략 下, 세일즈 강화 및 구성원 역량 강화를 위한 연간 교육 계획 수립 및 과정 개발',cycle:'연',owners:['ye'],cosub:''}
+   ]},
+   {cat:'브랜드 소개자료',items:[
+    {cat2:'-',task:'브랜드 소개자료',target:'-',content:'브랜드 소개자료 취합/관리 및 브랜드 개편에 따른 소개자료 작성 및 업데이트',cycle:'수시',owners:['ye'],cosub:'김우람/안성연'}
+   ]},
+   {cat:'국내 세일즈 강화',items:[
+    {cat2:'오프라인',task:'전략상품교육',target:'리테일사업본부',content:'전사 프로모션 대응 및 브랜드 주력 상품 지식 함양을 위한 브랜드 교육계획수립/과정개발/진행/운영',cycle:'월',owners:['yeon'],cosub:'김혜경/김우람'},
+    {cat2:'오프라인',task:'Curator 입문 교육',target:'리테일사업본부',content:'글로벌向및 육성 브랜드 로열티 전파 및 카운셀링 역량 향상을 위한 교육계획수립/과정개발/진행/운영',cycle:'격월',owners:['yeon'],cosub:'김우람'},
+    {cat2:'오프라인',task:'브랜드 크루',target:'리테일사업본부',content:'ONLYONE 브랜드 전문가 양성 및 현장-본부 소통 체계 강화 교육계획수립/과정개발/진행/운영',cycle:'분기',owners:['ye','yeon'],cosub:'김우람'},
+    {cat2:'오프라인',task:'전문 프로모터 교육',target:'리테일사업본부',content:'바이오힐 보 브랜드 전문 응대 역량 강화 및 현장 대응 스킬업 교육계획수립/과정개발/진행/운영',cycle:'격주',owners:['ye'],cosub:'안성연'},
+    {cat2:'오프라인',task:'관광상권 특화교육',target:'리테일사업본부',content:'글로벌관광상권 주력 브랜드 매출 극대화 교육계획수립/과정개발/진행/운영',cycle:'분기',owners:['yeon'],cosub:'김혜경'},
+    {cat2:'오프라인',task:'지역특화상품 교육',target:'리테일사업본부',content:'지역 특화 상품 세일즈 대응 교육계획수립/과정개발/진행/운영',cycle:'비정기',owners:['yeon'],cosub:'김혜경'},
+    {cat2:'오프라인',task:'오픈매장 교육',target:'리테일사업본부',content:'오픈 매장 상권 특화 교육계획수립/과정개발/진행/운영',cycle:'비정기',owners:['yeon'],cosub:'김혜경'},
+    {cat2:'오프라인',task:'러닝픽',target:'리테일사업본부',content:"브랜드 방향성 안내 및 '세일즈&서비스' 연계 과정개발/진행/운영",cycle:'분기',owners:['yeon'],cosub:'김혜경'},
+    {cat2:'오프라인',task:'AM커미티',target:'리테일사업본부',content:'(신설) 전사 전략 연계한 브랜드 사업의 방향성 공유 및 현장 의견 수렴 진행/운영',cycle:'분기',owners:['ye'],cosub:'안성연'},
+    {cat2:'오프라인',task:'HSM커미티',target:'리테일사업본부',content:'(신설) 브랜드 운영 방향성 공유 및 현장 니즈 의견 청취 진행/운영',cycle:'분기',owners:['yeon'],cosub:'김혜경'},
+    {cat2:'온/오프라인',task:'크루서비스기본과정',target:'리테일사업본부',content:'(신설) 고객 접점 현장 구성원 교육을 통한 브랜드 카운셀링 역량 향상 과정개발/진행/운영',cycle:'분기',owners:['yeon'],cosub:'김우람'},
+    {cat2:'온라인',task:'브랜드파우치',target:'리테일·브랜드사업본부',content:'브랜드 소개, 전략상품의 이해도를 높이기 위한 교육계획수립/과정개발/진행/운영',cycle:'월',owners:['yeon','ram'],cosub:'김혜경'},
+    {cat2:'온라인',task:'월간ONLYONE',target:'리테일·브랜드사업본부',content:'국내 세일즈 지원을 위한 정기적 브랜드별 상품 정보 제공',cycle:'월',owners:['ram'],cosub:'김혜경'},
+    {cat2:'온라인',task:'올영픽KSF',target:'리테일사업본부',content:'파워팩, 올영픽 주력 상품 카테고리 교육 자료 지원',cycle:'분기',owners:['yeon'],cosub:'김우람'},
+    {cat2:'온라인',task:'인사이트 리포트',target:'리테일·브랜드사업본부',content:'月 정기 온/오프라인 교육 통한 상품 개발, 운영, 프로모션, 개선 의견 본부 전파 진행',cycle:'월',owners:['ye','ram','yeon'],cosub:''},
+   ]},
+   {cat:'글로벌 세일즈 강화',items:[
+    {cat2:'오프라인',task:'글로벌전략상품교육',target:'글로벌B2B사업부',content:'글로벌 세일즈 지원을 위한 브랜드&상품 교육계획수립/과정개발/진행/운영',cycle:'격월',owners:['ye','ram'],cosub:''},
+    {cat2:'오프라인',task:'NPD데이',target:'글로벌B2B사업부',content:'(신설) 글로벌向 신상품 개발을 위한 브랜드 전략 신상품 공유 및 의견 청취 활동 기획/운영',cycle:'격월',owners:['ye'],cosub:'김우람/안성연'},
+    {cat2:'온/오프라인',task:'글로벌파트너교육',target:'글로벌파트너사',content:'글로벌 채널 확장 지원을 위한 브랜드&상품 교육계획수립/과정개발/진행/운영',cycle:'월',owners:['ye','ram'],cosub:''},
+    {cat2:'온/오프라인',task:'해외법인 교육(중,일,미)',target:'해외법인',content:'해외법인 중심 세일즈 지원을 위한 브랜드&상품 교육 과정개발/진행',cycle:'비정기',owners:['ye'],cosub:'김우람'},
+    {cat2:'온라인',task:'글로벌 ONLYONE브랜드 교육',target:'글로벌B2B사업부',content:'글로벌 채널 확장 및 세일즈 지원을 위한 정기적 브랜드/상품 자료(영문 번역본) 발행',cycle:'월',owners:['ram'],cosub:''},
+   ]},
+   {cat:'온보딩/리텐션 강화',items:[
+    {cat2:'오프라인',task:'본부OJT교육',target:'본부 신규 입사자',content:'본부 신규 입사자의 빠른 조직 정착 및 리텐션 강화를 위한 교육계획수립/과정개발/진행/운영',cycle:'월',owners:['ye','ram'],cosub:''},
+    {cat2:'오프라인',task:'리더OJT교육',target:'본부 신규 리더',content:'본부 신규 리더의 빠른 조직 정착 및 리텐션 강화를 위한 교육계획수립/과정개발/진행/운영',cycle:'비정기',owners:['ye'],cosub:'김우람'},
+    {cat2:'오프라인',task:'BM운영실무 교육',target:'본부 신규 BM',content:'본부 신규 BM의 빠른 실무 적응을 위한 교육계획수립/과정개발/진행/운영',cycle:'반기',owners:['ye','ram'],cosub:''},
+    {cat2:'오프라인',task:'인사이트 데이',target:'본부 신규 BM',content:'(신설) 본부 내 개발/운영역량 강화를 위한 트렌드 조사 및 공유 활동 (뷰티박람회/팝업스토어 등)',cycle:'반기',owners:['ram'],cosub:'김혜경'},
+    {cat2:'온라인',task:'온보딩 컨플루언스 운영',target:'본부 신규 입사자',content:'(신설) 신규 입사자 온보딩 정보 및 자료 제공을 위한 컨플루언스 페이지 운영',cycle:'수시',owners:['ye'],cosub:'김우람'},
+    {cat2:'온라인',task:'온보딩 슬랙 운영',target:'본부 신규 입사자',content:'(신설) 신규 입사자 온보딩 및 소통을 위한 슬랙 채널 운영',cycle:'월',owners:['ram'],cosub:'김혜경'},
+    {cat2:'온/오프라인',task:'기타 이벤트성 교육',target:'교육별 상이',content:'본부 내 니즈에 따른 비정기적 교육계획수립/과정개발/진행/운영 (브랜드원교육, 리더십함양교육 등)',cycle:'비정기',owners:['ye','ram','yeon'],cosub:''},
+   ]},
+  ]
+ }},
+ {id:'s4b',label:'R&R (2/2)',type:'rrmap',data:{
+  topSub:'브사본의 미래를 여는 열쇠 , 교육과 성장을 위한 로드맵',
+  topTitle:'업무별 R&R',topDate:'2024.10.01',
+  subtitle:'브랜드사업본부 교육파트 업무 분장 (2/2)',
+  groups:[
+   {cat:'교육 운영 관리',items:[
+    {cat2:'-',task:'관리품 발주관리',target:'-',content:'국내/외 세일즈 교육 진행을 위한 관리품 발주 및 재고 현황 정기 관리',cycle:'월',owners:['yeon'],cosub:'성중현'},
+    {cat2:'-',task:'교육비용결산',target:'-',content:'교육 예산 관리, 월 별 사용 내역 집행',cycle:'월',owners:['yeon'],cosub:'김우람'},
+    {cat2:'-',task:'키워드조사',target:'-',content:'트렌드 분석 및 정기 교육 대응, NB브랜드/상품 키워드 조사 및 자료 관리',cycle:'월',owners:['yeon'],cosub:'김혜경'},
+   ]},
+   {cat:'조직문화 활동',items:[
+    {cat2:'-',task:'올리브영 어워즈 시상제도',target:'-',content:'전사 시상 제도 대응, 후보자 및 자료 취합/선정 과정 운영',cycle:'연',owners:['ye'],cosub:'김우람'},
+    {cat2:'-',task:'본부 수시 시상제도',target:'브랜드사업본부',content:'본부 수시 시상제도 기획/운영',cycle:'반기',owners:['ye','ram'],cosub:''},
+    {cat2:'-',task:'업브랜딩 위원회',target:'브랜드사업본부',content:'본부 조직문화 개선을 위한 위원회 구성 및 회의 기획/운영',cycle:'분기',owners:['ye','ram'],cosub:'김혜경'},
+    {cat2:'-',task:'전략공유회',target:'브랜드사업본부',content:'전략/목표 공유 및 소통 위한 본부 전체 회의 기획/운영',cycle:'분기',owners:['ram'],cosub:'김혜경'},
+    {cat2:'-',task:'승진자 티미팅',target:'승진자',content:'승진자 축하 및 역할안내를 위한 티미팅 기획/운영',cycle:'연',owners:['ye'],cosub:'김우람'},
+    {cat2:'-',task:'본부 이벤트',target:'브랜드사업본부',content:'본부 내 니즈에 따른 선물 증정 등 이벤트 진행',cycle:'분기',owners:['ye','ram','yeon'],cosub:''},
+    {cat2:'-',task:'밍글링 활동',target:'브랜드사업본부',content:'본부 내 네트워킹을 위한 활동 기획/운영',cycle:'월',owners:['ram'],cosub:'김혜경'},
+    {cat2:'-',task:'멘토링 프로그램',target:'본부 신규 입사자',content:'(신설) 신규 입사자 조직적응 및 직무이해 향상을 위한 프로그램 기획/운영',cycle:'분기',owners:['yeon'],cosub:'김우람'},
+   ]},
+   {cat:'본부 운영 관리',items:[
+    {cat2:'-',task:'조직도&인원현황',target:'브랜드사업본부',content:'매월 정기적 본부 조직도/인원현황 관리/업데이트',cycle:'월',owners:['ram'],cosub:'김혜경'},
+    {cat2:'-',task:'본부 구성원 R&R',target:'브랜드사업본부',content:'매월 정기적 본부 구성원 R&R 관리/업데이트',cycle:'월',owners:['ye'],cosub:'김우람'},
+    {cat2:'-',task:'입사자 상견례',target:'브랜드사업본부',content:'리더-신규입사자 소통 위한 미팅 어레인지 및 진행',cycle:'비정기',owners:['ye','ram'],cosub:''},
+    {cat2:'-',task:'상품 IN&OUT',target:'브랜드사업본부',content:'매월 정기적 각 브랜드별 상품 IN&OUT 취합/공유',cycle:'월',owners:['ram'],cosub:'성중현'},
+    {cat2:'-',task:'본부 외부교육 관리',target:'브랜드사업본부',content:'본부 내 필요 외부교육 취합 및 교육 비용 관리',cycle:'비정기',owners:['ye'],cosub:'김우람'},
+    {cat2:'-',task:'의무교육 관리(안전교육,컴플라이언스교육)',target:'브랜드사업본부',content:'본부 내 의무 교육 수료 독려 및 수료율 관리',cycle:'분기',owners:['ye'],cosub:'김우람'},
+   ]},
+   {cat:'전사 협업',items:[
+    {cat2:'오프라인',task:'OY비즈니스',target:'전사 신규 입사자',content:'ONLYONE브랜드사업 이해 교육 과정개발/진행',cycle:'월',owners:['ram'],cosub:'김혜경'},
+    {cat2:'오프라인',task:'CS 대응 강화 교육',target:'CX팀/고객센터',content:'BM업무 지원 및 고객대응 브랜드/상품 교육계획수립/과정개발/진행/운영',cycle:'분기',owners:['ye','ram'],cosub:''},
+    {cat2:'오프라인',task:'MD/BM 입문 교육',target:'MD/BM',content:'전사 MD/BM 업무 이해 및 협업 향상을 위한 BM업무의 이해 교육 대응',cycle:'반기',owners:['ye'],cosub:'김우람'},
+    {cat2:'오프라인',task:'공채신입사원 교육',target:'공채신입사원',content:'브랜드사업본부의 이해 교육 과정개발/진행',cycle:'반기',owners:['ye'],cosub:'김우람'},
+    {cat2:'오프라인',task:'경영리더 오리엔테이션',target:'신규 임원',content:'브랜드사업본부 오리엔테이션 과정개발/진행',cycle:'비정기',owners:['ye'],cosub:'김우람'},
+    {cat2:'오프라인',task:'법인 교육',target:'해외법인',content:'브랜드사업본부의 이해 교육 과정개발/진행',cycle:'비정기',owners:['ye'],cosub:'김우람'},
+    {cat2:'오프라인',task:'러닝셀(러닝콘)',target:'올리브영 全 구성원',content:'ONLYONE브랜드의 모든 것 교육 과정개발/진행',cycle:'비정기',owners:['ye'],cosub:'김우람/안성연'},
+    {cat2:'오프라인',task:'파트너스 위크',target:'교육별 상이',content:'본부 및 협력사 커뮤니케이션 / 요청 자료 대응',cycle:'연',owners:['ye'],cosub:'김우람'},
+   ]},
+  ]
+ }},
+ {id:'s5',label:'국내 세일즈 강화',type:'catdetail',data:{
+  topSub:'브사본의 미래를 여는 열쇠 , 교육과 성장을 위한 로드맵',
+  topTitle:'LEARNING ROADMAP',topDate:'2024.10.01',
+  badge:'국내 세일즈 강화 교육',
+  accentColor:'#1a7c6e',
+  sections:[{
+   title:'국내 세일즈 강화 교육',count:15,
+   items:[
+    {name:'전략상품교육',type:'오프라인',target:'리테일사업본부',cycle:'분기',owners:['yeon'],co:'ye',content:'판사 프로모션 내용 및 브랜드 전략상품 교육. 가/강/운영 일정 맞춤 진행'},
+    {name:'Curator 입문교육',type:'오프라인',target:'리테일사업본부',cycle:'특정',owners:['yeon'],co:'ram',content:'글로벌 육성 브랜드 교육. 올리브영 브랜드 플래그십 역량 향상 교육 과정 기획/진행/운영'},
+    {name:'브랜드 크루',type:'오프라인',target:'리테일사업본부',cycle:'분기',owners:['ye','yeon'],co:'ram',content:'OLIVOYE 브랜드 입장에서 스토리텔링 전달. 브랜드 소개 교육 과정 기획/진행/운영'},
+    {name:'전문 프로모터 교육',type:'오프라인',target:'리테일사업본부',cycle:'격주',owners:['ye'],co:'yeon',content:'바이오힐 브랜드의 역량 향상을 위한 역량 개발 교육. 과정 기획/진행/운영'},
+    {name:'관광상권 특화교육',type:'오프라인',target:'리테일사업본부',cycle:'분기',owners:['yeon'],co:'',content:'글로벌 관광상권 교육. 해외 고객 응대 교육 과정 기획/진행/운영'},
+    {name:'지역특화/상품 교육',type:'오프라인',target:'리테일사업본부',cycle:'비정기',owners:['yeon'],co:'',content:'기역 특화 상품 이슈 대응 교육 과정 기획/진행/운영'},
+    {name:'오픈매장 교육',type:'오프라인',target:'리테일사업본부',cycle:'비정기',owners:['yeon'],co:'',content:'오픈 매장 상품 및 서비스 교육 과정 기획/진행/운영'},
+    {name:'러닝픽',type:'오프라인',target:'리테일사업본부',cycle:'분기',owners:['yeon'],co:'',content:'브랜드 방향성 안내 및 세일즈 서비스 역량 강화 기획/진행/운영'},
+    {name:'AM커미티',type:'오프라인',target:'리테일사업본부',cycle:'분기',owners:['ye'],co:'yeon',content:'(신입) 전사 전략 역량 함양을 위한 사업부 동향 공유 및 외부 의견 소통 기획/운영'},
+    {name:'HSM커미티',type:'오프라인',target:'리테일사업본부',cycle:'분기',owners:['yeon'],co:'',content:'(신입) 전략 방향성 공유 및 외부 니즈 의견 기획/운영'},
+    {name:'크루서비스기본과정',type:'온/오프라인',target:'리테일사업본부',cycle:'분기',owners:['yeon'],co:'',content:'(신입) 각각 업무 연구 및 사업부 교육을 통한 크루 역량 향상 기획/진행/운영'},
+    {name:'브랜드파우치',type:'온라인',target:'리테일·브랜드사업본부',cycle:'월',owners:['yeon','ram'],co:'',content:'브랜드 소개 강점들이 이커머스 중심 브랜드 소개 교육 과정 기획/진행/운영'},
+    {name:'올/ONLYONE',type:'온라인',target:'리테일·브랜드사업본부',cycle:'월',owners:['ram'],co:'',content:'국내 세일즈 자립을 위한 글로벌 브랜드 상품 강보자료 기록'},
+    {name:'올영KSF',type:'온라인',target:'-',cycle:'분기',owners:['ram'],co:'',content:'분기 상품 상품 키워드(가이드) 제작 및 기여 자원'},
+    {name:'인사이트 리포트',type:'온라인',target:'리테일·브랜드사업본부',cycle:'월',owners:['ye','ram','yeon'],co:'',content:'月 기준 오프라인 교육 현황 상황 별 운영 프로세스 가선의건 분석 완과 진행'},
+   ]
+  }]
+ }},
+ {id:'s6',label:'글로벌·온보딩',type:'catdetail',data:{
+  topSub:'브사본의 미래를 여는 열쇠 , 교육과 성장을 위한 로드맵',
+  topTitle:'LEARNING ROADMAP',topDate:'2024.10.01',
+  badge:'글로벌 세일즈 강화 · 온보딩/리텐션 강화',
+  accentColor:'#1e5e6e',
+  sections:[
+   {title:'글로벌 세일즈 강화 교육',count:5,items:[
+    {name:'글로벌전략상품교육',type:'오프라인',target:'글로벌·브랜드사업부',cycle:'격월',owners:['ye','ram'],co:'',content:'글로벌 지점을 위한 브랜드스 상품 교육 과정 기획/진행/운영'},
+    {name:'NPD데이',type:'오프라인',target:'글로벌B2B사업부',cycle:'격월',owners:['ram'],co:'',content:'(신입) 출시선 산속 물을 위한 신상품 공유 및 외부 의견 소통 기억 기획/운영'},
+    {name:'글로벌파트너교육',type:'온/오프라인',target:'글로벌파트너사',cycle:'월',owners:['ye','ram'],co:'',content:'글로벌 가능 확기 지점을 위한 브랜드스 상품 교육 과정 기획/진행/운영'},
+    {name:'해외법인교육(중·일·미)',type:'온/오프라인',target:'해외법인',cycle:'비정기',owners:['ye'],co:'ram',content:'해외법인 운영 서비 지점을 위한 브랜드스 상품 교육 과정/진행'},
+    {name:'글로벌 ONLYONE브랜드교육',type:'온라인',target:'글로벌·브랜드사업부',cycle:'월',owners:['ram'],co:'',content:'적정을 위한 체크보다/상품 교육 콘텐츠 기획·담당'},
+   ]},
+   {title:'온보딩/리텐션 강화',count:7,items:[
+    {name:'본부OJT교육',type:'오프라인',target:'본부 신규 입사자',cycle:'월',owners:['ye','ram'],co:'',content:'본부 신규 입사자의 브레인 조직 각인 및 리텐션 강화를 위한 교육 과정 기획/진행/운영'},
+    {name:'리더OJT교육',type:'오프라인',target:'본부 신규 리더',cycle:'비정기',owners:['ye'],co:'ram',content:'본부 신규 리더 입사자의 브레인 조직 각인 및 리텐션 강화 교육 과정 기획/진행/운영'},
+    {name:'BM운영업무교육',type:'오프라인',target:'본부 신규 BM',cycle:'반기',owners:['ye','ram'],co:'',content:'본부 신규 BM 일반 업무 교육 과정 기획/진행/운영'},
+    {name:'인사이트 데이',type:'오프라인',target:'본부 신규 BM',cycle:'반기',owners:['ram'],co:'',content:'(신입) 본부 내가/운영역량을 위한 브레인 데이터 조사 및 공유 활동 (레터/빅뱀클럽/업스트로이 등)'},
+    {name:'온보딩 컨플루언스 운영',type:'온라인',target:'본부 신규 입사자',cycle:'수시',owners:['ye'],co:'ram',content:'(신입) 신규 입사자 온보딩 정보 및 기초 자원을 위한 컨플루언스 페이지 운영'},
+    {name:'온보딩 슬랙 운영',type:'온라인',target:'-',cycle:'수시',owners:['sung'],co:'',content:'신규 입사자 연관 슬랙채널 관리'},
+    {name:'기타 이벤트성 교육',type:'온/오프라인',target:'교육별 상이',cycle:'비정기',owners:['ye','ram','yeon'],co:'',content:'본부 내 니즈에 따른 비정기적 교육 과정 기획/진행/운영 (브랜드집중교육, 리더십함양교육 등)'},
+   ]}
+  ]
+ }},
+ {id:'s7',label:'조직문화·운영',type:'catdetail',data:{
+  topSub:'브사본의 미래를 여는 열쇠 , 교육과 성장을 위한 로드맵',
+  topTitle:'LEARNING ROADMAP',topDate:'2024.10.01',
+  badge:'조직문화 활동 · 교육운영관리 · 본부운영관리',
+  accentColor:'#1a5870',
+  sections:[
+   {title:'조직문화 활동',count:8,items:[
+    {name:'올리브영 어워즈 시상제도',type:'-',target:'-',cycle:'연',owners:['ye'],co:'ram',content:'전사 시상제도 대응 후보자 자발 수입/선정 과정 진행'},
+    {name:'본부 수시 시상제도',type:'-',target:'브랜드사업본부',cycle:'반기',owners:['ye','ram'],co:'',content:'브랜드사업본부 자선/직명 시기에 맞게 위원회 구성 및 회의 기획/운영'},
+    {name:'업브랜딩 위원회',type:'-',target:'브랜드사업본부',cycle:'분기',owners:['ram'],co:'',content:'브랜드 조직문화 자선을 위한 위원회 구성 및 회의 기획/운영'},
+    {name:'전략공유회',type:'-',target:'브랜드사업본부',cycle:'분기',owners:['ram'],co:'',content:'간략/품목 공유 및 소통을 위한 본부 전역 회의 기획/운영'},
+    {name:'승진자 티밍',type:'-',target:'승진자',cycle:'연',owners:['ram'],co:'',content:'승진자 유희의 역량/안내를 위한 티밍 기획/운영'},
+    {name:'본부 이벤트',type:'-',target:'브랜드사업본부',cycle:'분기',owners:['ye','ram','yeon'],co:'',content:'본부 내 니즈에 따른 선물 등행 등 이벤트 진행'},
+    {name:'밍글링 활동',type:'-',target:'브랜드사업본부',cycle:'월',owners:['ram'],co:'',content:'본부 내 소통을 위한 밍글링 기획/운영'},
+    {name:'멘토링 프로그램',type:'-',target:'본부 신규 입사자',cycle:'분기',owners:['yeon'],co:'',content:'(신입) 신규 입사자 조직 정착의 역할 개선을 위한 프로그램 기획/운영'},
+   ]},
+   {title:'교육 운영 관리',count:3,items:[
+    {name:'관리품 발주관리',type:'-',target:'-',cycle:'월',owners:['yeon'],co:'sung',content:'국내/외 세일즈 교육 진행을 위한 관리품 발주 및 재고 관리 정기 관리'},
+    {name:'교육비용결산',type:'-',target:'-',cycle:'월',owners:['yeon'],co:'',content:'교육/여산 집행 후 별 사용 내역 집계'},
+    {name:'키워드조사',type:'-',target:'-',cycle:'월',owners:['yeon'],co:'',content:'트렌드 분석 및 정기적 교육 대응 (브랜드/상품 키워드 조사 작업 자료 관리)'},
+   ]},
+   {title:'본부 운영 관리',count:6,items:[
+    {name:'조직도&인원현황',type:'-',target:'브랜드사업본부',cycle:'월',owners:['ram'],co:'',content:'이름/직명 등 분석의 브랜드 조직/인원 현황 관리/업이트'},
+    {name:'본부 구성원 R&R',type:'-',target:'브랜드사업본부',cycle:'월',owners:['ye'],co:'ram',content:'파실 장기적 본부 구성원 R&R 관리/업이트'},
+    {name:'입사자 상견례',type:'-',target:'브랜드사업본부',cycle:'비정기',owners:['ye','ram'],co:'',content:'리더-신규입사자 소통 허밀 티밍 일정/진행 담당'},
+    {name:'상품 IN&OUT',type:'-',target:'브랜드사업본부',cycle:'월',owners:['sung'],co:'',content:'수시 장기와 그 브랜드/원몇 상품 IN&OUT 수집/관리'},
+    {name:'본부 외부교육 관리',type:'-',target:'브랜드사업본부',cycle:'비정기',owners:['ye'],co:'ram',content:'수시 장기적 본부 외부교육 신청 및 교육비 비용 관리'},
+    {name:'의무교육 관리',type:'-',target:'브랜드사업본부',cycle:'분기',owners:['ye'],co:'ram',content:'본부 내 의무 교육 소프로화 및 소메를 관리'},
+   ]},
+  ]
+ }},
+ {id:'s8',label:'전사 협업',type:'catdetail',data:{
+  topSub:'브사본의 미래를 여는 열쇠 , 교육과 성장을 위한 로드맵',
+  topTitle:'LEARNING ROADMAP',topDate:'2024.10.01',
+  badge:'전사 협업',
+  accentColor:'#1a4e70',
+  sections:[{
+   title:'전사 협업',count:8,
+   items:[
+    {name:'OY비즈니스',type:'오프라인',target:'전사 신규 입사자',cycle:'월',owners:['ram'],co:'',content:'OI/LYOI 이렇 이해 교육 과정 기획/진행'},
+    {name:'CS 대응 강화 교육',type:'오프라인',target:'OY혈/각석선',cycle:'분기',owners:['ye','ram'],co:'',content:'BM업무 지원 및 고객다응 브랜드/상품 교육 과정 기획/진행/운영'},
+    {name:'MD/BM 입문교육',type:'오프라인',target:'MD/BM',cycle:'반기',owners:['ram'],co:'',content:'전사 MD/BM 입문 이해를 위한 협업 활용을 위한 BM교문의 이해 교육 대응'},
+    {name:'공채신입사원 교육',type:'오프라인',target:'공채/사원',cycle:'분기',owners:['ram'],co:'',content:'브랜드사업본부의 이해 교육 과정 기획/진행'},
+    {name:'경영리더 오리엔테이션',type:'오프라인',target:'신규 임원',cycle:'비정기',owners:['ye'],co:'ram',content:'브랜드사업본부 소라이엔테이션 과정 기획/진행/진행'},
+    {name:'법인 교육',type:'오프라인',target:'해외법인',cycle:'분기',owners:['ye'],co:'ram',content:'브랜드사업본부의 이해 교육 과정 기획/진행'},
+    {name:'러닝셀(러닝콘)',type:'오프라인',target:'올리브영소수구성원',cycle:'비정기',owners:['ram','yeon'],co:'',content:'OI/LYOI 브랜드의 도문 기류 교육 과정 기획/진행'},
+    {name:'파트너스 워크',type:'오프라인',target:'교육팀 상이',cycle:'연',owners:['ye'],co:'',content:'본부 협업사 커뮤니케이션 / 강당 자료 대응'},
+   ]
+  }]
+ }},
+];
+
+let slides=JSON.parse(localStorage.getItem('lrm8')||'null')||JSON.parse(JSON.stringify(DEF));
+let cur=0,zoom=.5,fsIdx=0,ctxChip=null,activeTab='slide';
+
+/* ══ ZOOM ══ */
+function fz(){
+  const ca=document.getElementById('ca');
+  const z=Math.min((ca.clientWidth-40)/1920,(ca.clientHeight-56)/1080);
+  sz(Math.round(z*20)/20);
+}
+function sz(z){
+  zoom=Math.min(Math.max(z,.1),1.5);
+  const cw=document.getElementById('cw');
+  cw.style.transform=`scale(${zoom})`;
+  cw.style.width='1920px';cw.style.height='1080px';
+  document.getElementById('zpct').textContent=Math.round(zoom*100)+'%';
+}
+window.addEventListener('resize',fz);
+
+/* ══ RENDER ══ */
+function go(i){
+  if(i<0||i>=slides.length)return;
+  cur=i;
+  const s=slides[i];
+  const el=document.getElementById('sc');
+  el.className='slide-canvas';
+  if(s.type==='value')   {el.innerHTML=buildS1(s.data);bindS1(s.data);}
+  if(s.type==='roadmap') {el.innerHTML=buildS2(s.data);bindS2(i);}
+  if(s.type==='annual')  {el.innerHTML=buildAnnual(s.data);bindShell(s.data);}
+  if(s.type==='rrmap')   {el.innerHTML=buildS3(s.data);bindShell(s.data);}
+  if(s.type==='catdetail'){el.innerHTML=buildCatDetail(s.data);bindShell(s.data);}
+  chrome();buildProp();
+}
+
+/* Shared inline edit bind for shell slides (annual, rrmap, catdetail) */
+function bindShell(d){
+  // Header fields
+  document.querySelectorAll('[data-shk]').forEach(el=>{
+    el.addEventListener('blur',()=>{d[el.dataset.shk]=el.innerText.trim();save();});
+    el.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();el.blur();}});
+  });
+  // Annual table cells
+  document.querySelectorAll('[data-gk]').forEach(el=>{
+    el.addEventListener('blur',()=>{
+      const {gk,gi,ri,m}=el.dataset;
+      const group=d.groups&&d.groups[+gi];
+      if(!group)return;
+      if(gk==='cat'){group.cat=el.innerText.trim().replace(/<br>/g,'\n');}
+      else if(gk==='name'&&group.rows[+ri]){group.rows[+ri].name=el.innerText.trim();}
+      else if(gk==='type'&&group.rows[+ri]){group.rows[+ri].type=el.innerText.trim();}
+      else if(gk==='month'&&group.rows[+ri]){
+        const row=group.rows[+ri]; const mn=+m;
+        const txt=el.innerText.trim();
+        if(!row.notes)row.notes={};
+        if(!row.m)row.m=[];
+        if(txt&&txt!==''){
+          if(!row.m.includes(mn))row.m.push(mn);
+          row.notes[mn]=txt==='●'?undefined:txt;
+        } else {
+          row.m=row.m.filter(x=>x!==mn);
+          delete row.notes[mn];
+        }
+      }
+      save();
+    });
+    el.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();el.blur();}});
+  });
+  // RR table cells
+  document.querySelectorAll('[data-rrk]').forEach(el=>{
+    el.addEventListener('blur',()=>{
+      const {rrk,ri}=el.dataset;
+      const flatRows=[];
+      (d.groups||[]).forEach(g=>g.items.forEach(item=>flatRows.push(item)));
+      const item=flatRows[+ri];
+      if(!item)return;
+      if(rrk==='cat'){/* cat spans, skip direct edit for now */}
+      else if(rrk==='cat2')item.cat2=el.innerText.trim();
+      else if(rrk==='task')item.task=el.innerText.trim();
+      else if(rrk==='target')item.target=el.innerText.trim();
+      else if(rrk==='content')item.content=el.innerText.trim();
+      else if(rrk==='cycle')item.cycle=el.innerText.trim();
+      save();
+    });
+    el.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();el.blur();}});
+  });
+  // Catdetail card cells
+  document.querySelectorAll('[data-cdk]').forEach(el=>{
+    el.addEventListener('blur',()=>{
+      const {cdk,si,ii}=el.dataset;
+      const sec=d.sections&&d.sections[+si];
+      if(!sec)return;
+      const item=sec.items&&sec.items[+ii];
+      if(!item)return;
+      item[cdk]=el.innerText.trim();
+      save();
+    });
+    el.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();el.blur();}});
+  });
+  // Catdetail section headers
+  document.querySelectorAll('[data-csk]').forEach(el=>{
+    el.addEventListener('blur',()=>{
+      const sec=d.sections&&d.sections[+el.dataset.csk];
+      if(sec)sec.title=el.innerText.replace(/\d+개 과정/,'').trim();
+      save();
+    });
+    el.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();el.blur();}});
+  });
+  // Catdetail owner picker
+  document.querySelectorAll('.catd-owners[data-cosi]').forEach(el=>{
+    el.addEventListener('click',e=>{
+      e.stopPropagation();
+      showCatOwnerPicker(el,+el.dataset.cosi,+el.dataset.coii);
+    });
+  });
+}
+
+/* ══ SLIDE 3 BUILD — 연간 교육 계획 캘린더 ══ */
+/* Convert hex color to pastel versions */
+function hexToPastel(hex,strength){
+  // strength: 0.2 = very light, 0.4 = medium pastel
+  const r=parseInt(hex.slice(1,3),16),g=parseInt(hex.slice(3,5),16),b=parseInt(hex.slice(5,7),16);
+  const mix=(c,s)=>Math.round(c*s+255*(1-s));
+  return `rgb(${mix(r,strength)},${mix(g,strength)},${mix(b,strength)})`;
+}
+
+function buildAnnual(d){
+  const MONTHS=['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'];
+  // Count total rows for height calc
+  const totalRows=d.groups.reduce((a,g)=>a+g.rows.length,0);
+  
+  let tbody='';
+  d.groups.forEach((g,gi)=>{
+    const pStrong=hexToPastel(g.color||'#1a7c6e',0.45);
+    const pActive=hexToPastel(g.color||'#1a7c6e',0.25);
+    g.rows.forEach((row,ri)=>{
+      const isFirst=ri===0;
+      tbody+=`<tr>`;
+      if(isFirst){
+        tbody+=`<td class="atd-cat" rowspan="${g.rows.length}" style="background:${g.color}" contenteditable="true" data-gk="cat" data-gi="${gi}" spellcheck="false">${g.cat.replace(/\n/g,'<br>')}</td>`;
+      }
+      tbody+=`<td class="atd-name" contenteditable="true" data-gk="name" data-gi="${gi}" data-ri="${ri}" spellcheck="false">${row.name}</td>`;
+      tbody+=`<td class="atd-type" contenteditable="true" data-gk="type" data-gi="${gi}" data-ri="${ri}" spellcheck="false">${row.type}</td>`;
+      for(let m=1;m<=12;m++){
+        const active=row.m&&row.m.includes(m);
+        const note=row.notes&&row.notes[m];
+        let cls='atd-m';
+        let content='';
+        let sty='';
+        if(active&&note){cls+=' strong';content=note;sty=`background:${pStrong};color:#1a2828;font-weight:700`;}
+        else if(active){cls+=' active';content='●';sty=`background:${pActive};color:#2a4040`;}
+        else{cls+=' light';}
+        tbody+=`<td class="${cls}" style="${sty}" contenteditable="true" data-gk="month" data-gi="${gi}" data-ri="${ri}" data-m="${m}" spellcheck="false">${content}</td>`;
+      }
+      tbody+=`</tr>`;
+    });
+  });
+
+  return`<div class="slide-shell">
+  <div class="shell-hdr">
+    <div class="shell-hdr-texts">
+      <div class="shell-sub" contenteditable="true" data-shk="topSub" spellcheck="false">${d.topSub}</div>
+      <div style="display:flex;align-items:baseline;gap:14px">
+        <div class="shell-title" contenteditable="true" data-shk="topTitle" spellcheck="false">${d.topTitle}</div>
+        <div class="shell-date" contenteditable="true" data-shk="topDate" spellcheck="false">${d.topDate}</div>
+      </div>
+    </div>
+    <div class="shell-badge" contenteditable="true" data-shk="badge" spellcheck="false">${d.badge||'연간 교육계획'}</div>
+  </div>
+  <div class="shell-body">
+    <div class="annual-wrap">
+      <table class="annual-tbl">
+        <colgroup>
+          <col class="col-cat">
+          <col class="col-name">
+          <col class="col-type">
+          ${[...Array(12)].map(()=>'<col class="col-m">').join('')}
+        </colgroup>
+        <thead>
+          <tr>
+            <th class="ath cat-hdr">구분</th>
+            <th class="ath">교육명</th>
+            <th class="ath">방식</th>
+            ${MONTHS.map(m=>`<th class="ath">${m}</th>`).join('')}
+          </tr>
+        </thead>
+        <tbody>${tbody}</tbody>
+      </table>
+    </div>
+  </div>
+</div>`;
+}
+
+/* ══ SLIDE 5~8 BUILD — 카테고리 상세 ══ */
+function buildCatDetail(d){
+  const accent=d.accentColor||'#1a7c6e';
+  const typeBg={'오프라인':'rgba(26,124,110,.15)','온라인':'rgba(42,157,143,.15)','온/오프라인':'rgba(30,94,110,.12)','-':'rgba(200,200,200,.15)'};
+  const typeFg={'오프라인':'#1a5e5e','온라인':'#1a7070','온/오프라인':'#1a5060','-':'#6a8080'};
+
+  // Always 3 columns for consistent layout across slides 5-8
+  const COLS=3;
+
+  let html='';
+  d.sections.forEach((sec,si)=>{
+    html+=`<div class="catd-section-header" style="border-left:5px solid ${accent};grid-column:1/-1" contenteditable="true" spellcheck="false" data-csk="${si}">
+      ${sec.title}<span class="catd-section-count" style="pointer-events:none">${sec.count}개 과정</span>
+    </div>`;
+    sec.items.forEach((item,ii)=>{
+      const ownerDots=(item.owners||[]).map(k=>{
+        const o=OMAP[k]; if(!o)return'';
+        return`<div class="catd-owner-dot" style="background:${o.bg}" title="${o.label}">${o.char}</div>`;
+      }).join('');
+      const coKey=item.co;
+      const coOwnerDot=coKey&&OMAP[coKey]
+        ?`<div class="catd-owner-dot sub" style="background:${OMAP[coKey].bg}" title="${OMAP[coKey].label}(부)">${OMAP[coKey].char}</div>`:'';
+      const bg=typeBg[item.type]||typeBg['-'];
+      const fg=typeFg[item.type]||typeFg['-'];
+      html+=`<div class="catd-card" style="border-left-color:${accent}">
+        <div class="catd-top-row">
+          <div class="catd-card-name" contenteditable="true" spellcheck="false" data-cdk="name" data-si="${si}" data-ii="${ii}">${item.name}</div>
+          <div class="catd-owners" data-cosi="${si}" data-coii="${ii}" title="클릭하여 담당자 변경">${ownerDots}${coOwnerDot}${!ownerDots&&!coOwnerDot?'<span style="font-size:9px;color:#aaa">+</span>':''}</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
+          <span class="catd-card-type-badge" style="background:${bg};color:${fg}" contenteditable="true" spellcheck="false" data-cdk="type" data-si="${si}" data-ii="${ii}">${item.type}</span>
+          <span style="font-size:15px;color:#5a7070"><span style="font-family:Montserrat,sans-serif;font-size:12px;font-weight:700;letter-spacing:.5px;color:#7aacac;text-transform:uppercase">대상</span> <span contenteditable="true" spellcheck="false" data-cdk="target" data-si="${si}" data-ii="${ii}">${item.target||'-'}</span></span>
+          <span style="font-size:15px;color:#5a7070"><span style="font-family:Montserrat,sans-serif;font-size:12px;font-weight:700;letter-spacing:.5px;color:#7aacac;text-transform:uppercase">주기</span> <span contenteditable="true" spellcheck="false" data-cdk="cycle" data-si="${si}" data-ii="${ii}">${item.cycle}</span></span>
+        </div>
+        <div class="catd-content" contenteditable="true" spellcheck="false" data-cdk="content" data-si="${si}" data-ii="${ii}">${item.content||''}</div>
+      </div>`;
+    });
+  });
+
+  return`<div class="slide-shell">
+  <div class="shell-hdr" style="background:linear-gradient(90deg,${accent},${accent}cc 60%,${accent}99)">
+    <div class="shell-hdr-texts">
+      <div class="shell-sub" contenteditable="true" data-shk="topSub" spellcheck="false">${d.topSub}</div>
+      <div style="display:flex;align-items:baseline;gap:14px">
+        <div class="shell-title" contenteditable="true" data-shk="topTitle" spellcheck="false">${d.topTitle}</div>
+        <div class="shell-date" contenteditable="true" data-shk="topDate" spellcheck="false">${d.topDate}</div>
+      </div>
+    </div>
+    <div class="shell-badge" contenteditable="true" data-shk="badge" spellcheck="false">${d.badge||''}</div>
+  </div>
+  <div class="shell-body">
+    <div style="position:absolute;top:4px;right:16px;display:flex;gap:8px;align-items:center;z-index:10;background:rgba(255,255,255,.12);border-radius:6px;padding:3px 10px">
+      ${OWNERS.map(o=>`<div style="display:flex;align-items:center;gap:3px;font-size:12px;color:rgba(255,255,255,.85)">
+        <div style="width:18px;height:18px;border-radius:50%;background:${o.bg};display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:900;color:#fff;font-family:Montserrat,sans-serif">${o.char}</div>
+        ${o.label}</div>`).join('')}
+      <div style="font-size:11px;color:rgba(255,255,255,.6);padding-left:6px;border-left:1px solid rgba(255,255,255,.2);font-weight:600">● 주 ◐ 부</div>
+    </div>
+    <div class="catd-grid" style="grid-template-columns:repeat(${COLS},1fr);padding-top:36px;overflow-y:auto;align-content:start">
+      ${html}
+    </div>
+  </div>
+</div>`;
+}
+
+/* ══ SLIDE 4 BUILD — R&R (업무 분장) ══ */
+const RR_COL_DEFAULTS=[
+  {name:'분류',    w:130, fs:13},
+  {name:'방식',    w:90,  fs:12},
+  {name:'주요항목', w:200, fs:13},
+  {name:'대상',    w:145, fs:12},
+  {name:'세부내용', w:0,   fs:12},
+  {name:'주기',    w:72,  fs:12},
+  {name:'주담당',  w:90,  fs:12},
+  {name:'부담당',  w:90,  fs:12},
+];
+function rrCols(d){
+  // Reset if missing, wrong length, or old version
+  if(!d.colCfg||d.colCfg.length!==8||!d._colVer||d._colVer<3){
+    d.colCfg=JSON.parse(JSON.stringify(RR_COL_DEFAULTS));
+    d._colVer=3;
+  }
+  return d.colCfg;
+}
+
+function buildS3(d){
+  const cols=rrCols(d);
+  const rows=[];
+  (d.groups||[]).forEach(g=>{
+    g.items.forEach((item,ii)=>{
+      rows.push({ cat:g.cat, catSpan:ii===0?g.items.length:0, item });
+    });
+  });
+
+  const dot=(k,isSub)=>{
+    const o=OMAP[k]; if(!o)return'';
+    return `<div class="rr-dot${isSub?' sub-dot':''}" style="background:${o.bg}" title="${o.label}">${o.char}</div>`;
+  };
+
+  const cfs=(ci)=>`font-size:${cols[ci].fs}px`;
+
+  const tbody=rows.map((r,rowIdx)=>{
+    const catTd=r.catSpan>0
+      ?`<td class="rr-cat1" rowspan="${r.catSpan}" contenteditable="true" data-rrk="cat" data-ri="${rowIdx}" spellcheck="false" style="${cfs(0)}">${r.cat}</td>`:'';
+    const cat2Val=r.item.cat2||'-';
+    const mainDots=(r.item.owners||[]).map(k=>dot(k,false)).join('');
+    let coDots='';
+    const cosubStr=r.item.cosub||'';
+    if(cosubStr){
+      OWNERS.forEach(o=>{
+        if(cosubStr.includes(o.label.replace('님',''))){ coDots+=dot(o.k,true); }
+      });
+      if(!coDots) coDots=`<span style="font-size:${cols[7].fs}px;color:#5a7070">${cosubStr}</span>`;
+    }
+    return `<tr>
+      ${catTd}
+      <td class="rr-cat2" contenteditable="true" data-rrk="cat2" data-ri="${rowIdx}" spellcheck="false" style="${cfs(1)}">${cat2Val}</td>
+      <td class="rr-task"><div class="rr-task-name" contenteditable="true" data-rrk="task" data-ri="${rowIdx}" spellcheck="false" style="${cfs(2)}">${r.item.task}</div></td>
+      <td class="rr-target" contenteditable="true" data-rrk="target" data-ri="${rowIdx}" spellcheck="false" style="${cfs(3)}">${r.item.target||'-'}</td>
+      <td class="rr-content" contenteditable="true" data-rrk="content" data-ri="${rowIdx}" spellcheck="false" style="${cfs(4)}">${r.item.content||'-'}</td>
+      <td class="rr-cycle" contenteditable="true" data-rrk="cycle" data-ri="${rowIdx}" spellcheck="false" style="${cfs(5)}">${r.item.cycle}</td>
+      <td class="rr-owner-cell ${mainDots?'main-cell':''}">${mainDots}</td>
+      <td class="rr-owner-cell ${coDots?'main-cell':''}">${coDots}</td>
+    </tr>`;
+  }).join('');
+
+  const colgroup=cols.map((c,i)=>c.w>0?`<col style="width:${c.w}px">`:'<col>').join('\n        ');
+
+  return`<div class="slide-shell">
+  <div class="shell-hdr">
+    <div class="shell-hdr-texts">
+      <div class="shell-sub" contenteditable="true" data-shk="topSub" spellcheck="false">${d.topSub}</div>
+      <div style="display:flex;align-items:baseline;gap:14px">
+        <div class="shell-title" contenteditable="true" data-shk="topTitle" spellcheck="false">${d.topTitle||'업무별 R&R'}</div>
+        <div class="shell-date" contenteditable="true" data-shk="topDate" spellcheck="false">${d.topDate}</div>
+      </div>
+    </div>
+    <div class="shell-badge" contenteditable="true" data-shk="subtitle" spellcheck="false">${d.subtitle||'브랜드사업본부 교육파트 업무분장'}</div>
+  </div>
+  <div class="rr-legend">
+    ${OWNERS.map(o=>`<div class="rr-legend-item"><div class="rr-dot" style="background:${o.bg}">${o.char}</div>${o.label}</div>`).join('')}
+    <div style="border-left:1px solid rgba(26,124,110,.2);padding-left:12px;font-size:13px;color:#4a7070;font-weight:600">● 주담당&nbsp;&nbsp;◐ 부담당</div>
+  </div>
+  <div class="rr-tbl-wrap">
+    <table class="rr-tbl">
+      <colgroup>
+        ${colgroup}
+      </colgroup>
+      <thead>
+        <tr>
+          <th class="rr-th teal" style="${cfs(0)}">${cols[0].name}</th>
+          <th class="rr-th" style="${cfs(1)}">${cols[1].name}</th>
+          <th class="rr-th" style="${cfs(2)}">${cols[2].name}</th>
+          <th class="rr-th" style="${cfs(3)}">${cols[3].name}</th>
+          <th class="rr-th" style="${cfs(4)}">${cols[4].name}</th>
+          <th class="rr-th" style="${cfs(5)}">${cols[5].name}</th>
+          <th class="rr-th pill" style="background:rgba(26,112,110,.85);${cfs(6)}">${cols[6].name}</th>
+          <th class="rr-th pill" style="background:rgba(26,112,110,.6);${cfs(7)}">${cols[7].name}</th>
+        </tr>
+      </thead>
+      <tbody>${tbody}</tbody>
+    </table>
+  </div>
+</div>`;
+}
+
+/* ══ SLIDE 1 BUILD ══ */
+function buildS1(d){
+  const ci=(cls,k,v)=>`<div class="s1circ ${cls}" contenteditable="true" data-sk="${k}" spellcheck="false">${br(v)}</div>`;
+  const si=(arr,lk)=>arr.map((t,i)=>`<div class="sitem"><div class="snum">${i+1}</div><div class="stxt" contenteditable="true" data-sl="${lk}" data-si="${i}" spellcheck="false">${t}</div></div>`).join('');
+  return`<div class="s1-wrap">
+  <!-- HEADER BAR -->
+  <div class="s1-hdrbar">
+    <div class="s1-hsub" contenteditable="true" data-sk="topSub" spellcheck="false">${d.topSub}</div>
+    <div class="s1-hrow">
+      <div class="s1-htitle" contenteditable="true" data-sk="topTitle" spellcheck="false">${d.topTitle}</div>
+      <div class="s1-hdate" contenteditable="true" data-sk="topDate" spellcheck="false">${d.topDate}</div>
+    </div>
+  </div>
+
+  <!-- LOGO + LINE + BADGE -->
+  <div class="s1-logoline">
+    <div class="s1-oy">
+      <div style="display:flex;align-items:center;gap:2px">
+        <span class="s1-oy-name" contenteditable="true" data-sk="org" spellcheck="false">${d.org}</span>
+        <span class="s1-oy-leaf"></span>
+      </div>
+      <span class="s1-oy-sub" contenteditable="true" data-sk="orgSub" spellcheck="false">${d.orgSub}</span>
+    </div>
+    <div class="s1-hline"></div>
+    <div class="s1-badge" contenteditable="true" data-sk="badge" spellcheck="false">${d.badge}</div>
+  </div>
+
+  <!-- MISSION -->
+  <div class="s1-mission">
+    <div class="s1-mvlabel" contenteditable="true" data-sk="mvLabel" spellcheck="false">${d.mvLabel}</div>
+    <div class="s1-mvtext" contenteditable="true" data-sk="mvText" spellcheck="false">${d.mvText}</div>
+  </div>
+
+  <!-- RIBBON WAVE SVG -->
+  <svg class="s1-deco" viewBox="0 0 900 500" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="r1" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0%" stop-color="#ff9eb5" stop-opacity=".7"/>
+        <stop offset="40%" stop-color="#ffcc88" stop-opacity=".6"/>
+        <stop offset="100%" stop-color="#88ddcc" stop-opacity=".5"/>
+      </linearGradient>
+      <linearGradient id="r2" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0%" stop-color="#66ccff" stop-opacity=".55"/>
+        <stop offset="50%" stop-color="#99ffcc" stop-opacity=".5"/>
+        <stop offset="100%" stop-color="#ccff88" stop-opacity=".4"/>
+      </linearGradient>
+      <linearGradient id="r3" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0%" stop-color="#cc88ff" stop-opacity=".45"/>
+        <stop offset="100%" stop-color="#ff88cc" stop-opacity=".4"/>
+      </linearGradient>
+      <linearGradient id="r4" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0%" stop-color="#ffee66" stop-opacity=".5"/>
+        <stop offset="100%" stop-color="#66eeff" stop-opacity=".45"/>
+      </linearGradient>
+      <linearGradient id="r5" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0%" stop-color="#ff6688" stop-opacity=".4"/>
+        <stop offset="100%" stop-color="#ffaa44" stop-opacity=".35"/>
+      </linearGradient>
+    </defs>
+    <!-- Mountain/triangle shape -->
+    <polygon points="450,80 330,340 570,340" fill="rgba(160,140,210,.22)"/>
+    <polygon points="450,110 355,340 545,340" fill="rgba(140,120,190,.18)"/>
+    <!-- Flowing ribbon strokes -->
+    <path d="M50 380 C 200 180, 350 420, 450 300 C 550 180, 700 400, 850 220" stroke="url(#r1)" stroke-width="44" fill="none" stroke-linecap="round"/>
+    <path d="M50 400 C 210 200, 360 440, 450 320 C 540 200, 710 420, 850 250" stroke="url(#r2)" stroke-width="32" fill="none" stroke-linecap="round"/>
+    <path d="M50 420 C 220 220, 370 455, 450 340 C 530 220, 720 435, 850 275" stroke="url(#r3)" stroke-width="22" fill="none" stroke-linecap="round"/>
+    <path d="M50 360 C 190 160, 340 400, 450 280 C 560 160, 690 380, 850 195" stroke="url(#r4)" stroke-width="16" fill="none" stroke-linecap="round"/>
+    <path d="M50 440 C 230 235, 380 465, 450 355 C 520 235, 730 445, 850 295" stroke="url(#r5)" stroke-width="10" fill="none" stroke-linecap="round"/>
+  </svg>
+
+  <!-- CIRCLES -->
+  <div class="s1-circles">
+    ${ci('c-story','c1',d.c1)}
+    ${ci('c-core','cCore',d.cCore)}
+    ${ci('c-smart','c2',d.c2)}
+    ${ci('c-brand','c3',d.c3)}
+  </div>
+
+  <!-- STRATEGY LEFT -->
+  <div class="s1-strat-l">
+    <div class="strat-title" contenteditable="true" data-sk="slTitle" spellcheck="false">${d.slTitle||'STRATEGE'}</div>
+    ${si(d.sl,'sl')}
+  </div>
+
+  <!-- STRATEGY RIGHT -->
+  <div class="s1-strat-r">
+    <div class="strat-title" contenteditable="true" data-sk="srTitle" spellcheck="false">${d.srTitle||'STRATEGE'}</div>
+    ${si(d.sr,'sr')}
+  </div>
+
+  <!-- STRATEGY BOTTOM -->
+  <div class="s1-strat-b">
+    <div class="strat-title" style="text-align:center" contenteditable="true" data-sk="sbTitle" spellcheck="false">${d.sbTitle||'STRATEGE'}</div>
+    ${si(d.sb,'sb')}
+  </div>
+</div>`;
+}
+function bindS1(d){
+  document.querySelectorAll('[data-sk]').forEach(el=>{
+    el.addEventListener('focus',toast);
+    el.addEventListener('blur',()=>{d[el.dataset.sk]=el.innerText.trim();save();});
+    el.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();el.blur();}});
+  });
+  document.querySelectorAll('[data-sl]').forEach(el=>{
+    el.addEventListener('focus',toast);
+    el.addEventListener('blur',()=>{d[el.dataset.sl][+el.dataset.si]=el.innerText.trim();save();});
+    el.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();el.blur();}});
+  });
+}
+
+/* ══ SLIDE 2 BUILD ══ */
+function buildS2(d){
+  const mkChips=(chips,ri,ci)=>{
+    if(!chips||!chips.length) return `<div class="chip-add" data-r="${ri}" data-c="${ci}">+ 추가</div>`;
+    return chips.map((ch,pi)=>{
+      const owner=ch.o?OMAP[ch.o]:null;
+      const dot=owner?`<span class="owner-dot" style="background:${owner.bg};min-width:18px">${owner.char}</span>`:'';
+      return `<div class="chip-wrap"><div class="chip ${ch.c}" data-r="${ri}" data-c="${ci}" data-p="${pi}" contenteditable="true" spellcheck="false" style="flex:1">${br(ch.t)}</div>${dot}</div>`;
+    }).join('')+`<div class="chip-add" data-r="${ri}" data-c="${ci}">+ 추가</div>`;
+  };
+
+  // Build table rows
+  let tbody='';
+  d.rows.forEach((row,ri)=>{
+    tbody+=`<tr>`;
+    // Row label — editable
+    tbody+=`<td class="td-rowlbl" contenteditable="true" spellcheck="false" data-s2r="${ri}">${br(row)}</td>`;
+    // CUSTOMIZED LEARNING — only on first row with rowspan=4, editable
+    if(ri===0){
+      tbody+=`<td class="td-custom" rowspan="4"><div class="td-custom-inner" contenteditable="true" spellcheck="false" data-s2custom="1">CUSTOMIZED LEARNING<br><br><span style="font-size:15px;opacity:.65;letter-spacing:2px">사업부 요청교육</span></div></td>`;
+    }
+    // 6 data columns
+    for(let ci=0;ci<6;ci++){
+      const chips=(d.cells[ri]&&d.cells[ri][ci])||[];
+      tbody+=`<td class="g-cell" data-r="${ri}" data-c="${ci}"><div class="g-cell-inner">${mkChips(chips,ri,ci)}</div></td>`;
+    }
+    tbody+=`</tr>`;
+  });
+
+  return`<div class="s2-wrap">
+  <!-- HEADER BAR -->
+  <div class="s2-hdrbar">
+    <div class="s2-htexts">
+      <div class="s2-hsub">${d.topSub}</div>
+      <div class="s2-hrow">
+        <div class="s2-htitle">${d.topTitle}</div>
+        <div class="s2-hdate">${d.topDate}</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DIRECTION LABELS -->
+  <div class="s2-dirs">
+    <div class="s2-dir-group"><span class="dir-arr">←</span><span class="s2-dir-label">CORE COMPETENCE</span></div>
+    <div class="s2-dir-group"><span class="dir-arr">←</span><span class="s2-dir-label">FUNDAMENTAL</span></div>
+    <div class="s2-dir-group"><span class="s2-dir-label">SUPPORT</span></div>
+  </div>
+
+  <!-- LEGEND -->
+  <div class="s2-legend">
+    <div class="s2-leg-row">
+      <div class="s2-li"><div class="s2-ld" style="background:#cce8e4;border:1.5px solid #2a9d8f"></div>글로벌사업부</div>
+      <div class="s2-li"><div class="s2-ld" style="background:#d4ede9;border:1.5px solid #2a9d8f"></div>실무</div>
+      <div class="s2-li"><div class="s2-ld" style="border:2px dashed #2a9d8f;background:transparent"></div>진행예정</div>
+    </div>
+    <div class="s2-leg-row">
+      <div class="s2-li"><div class="s2-ld" style="background:#1a7c6e"></div>브랜드사업본부</div>
+      <div class="s2-li"><div class="s2-ld" style="background:#fce8f4;border:1.5px solid #e879b8"></div>위탁입사자</div>
+      <div class="s2-li"><div class="s2-ld" style="background:#1e2c2c"></div>공통</div>
+    </div>
+    <div class="s2-names">
+      ${OWNERS.map(o=>`<div class="s2-name"><div class="name-dot" style="background:${o.bg}">${o.char}</div>${o.label}</div>`).join('')}
+    </div>
+  </div>
+
+  <!-- TABLE -->
+  <div class="s2-tbl-wrap">
+    <table class="s2-tbl">
+      <colgroup>
+        <col style="width:110px">
+        <col style="width:130px">
+        <col><col><col><col><col><col>
+      </colgroup>
+      <thead>
+        <tr>
+          <th class="th-pill oy">OLIVE YOUNG<br><span style="font-size:10px;opacity:.8;font-weight:500">브랜드사업본부</span></th>
+          <th class="th-pill empty"></th>
+          ${d.cols.map(c=>`<th class="th-pill">${c}</th>`).join('')}
+        </tr>
+      </thead>
+      <tbody>${tbody}</tbody>
+    </table>
+  </div>
+</div>`;
+}
+
+function renderPills(d){/* no-op: table handles layout */}
+
+function bindS2(si){
+  const d=slides[si].data;
+  /* Row label inline edit */
+  document.querySelectorAll('[data-s2r]').forEach(el=>{
+    el.addEventListener('blur',()=>{
+      const ri=+el.dataset.s2r;
+      d.rows[ri]=el.innerText.trim().replace(/\n/g,'\n');
+      save();
+    });
+    el.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();el.blur();}});
+  });
+  /* CUSTOMIZED LEARNING text edit */
+  document.querySelectorAll('[data-s2custom]').forEach(el=>{
+    el.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();el.blur();}});
+  });
+  /* Chips */
+  document.querySelectorAll('.chip').forEach(el=>{
+    el.addEventListener('focus',()=>{el.classList.add('editing');toast();});
+    el.addEventListener('blur',()=>{
+      el.classList.remove('editing');
+      const r=+el.dataset.r,c=+el.dataset.c,p=+el.dataset.p;
+      if(!d.cells[r])d.cells[r]=[];
+      if(!d.cells[r][c])d.cells[r][c]=[];
+      const txt=el.innerText.trim();
+      if(!txt){d.cells[r][c].splice(p,1);save();go(si);}
+      else{d.cells[r][c][p].t=txt;save();}
+    });
+    el.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();el.blur();}});
+    el.addEventListener('contextmenu',e=>{e.preventDefault();e.stopPropagation();ctxChip=el;showCtx(e.clientX,e.clientY);});
+  });
+  document.querySelectorAll('.chip-add').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      const r=+btn.dataset.r,c=+btn.dataset.c;
+      if(!d.cells[r])d.cells[r]=[];
+      if(!d.cells[r][c])d.cells[r][c]=[];
+      d.cells[r][c].push({t:'새 항목',c:'c-lteal'});
+      save();go(si);
+      setTimeout(()=>{
+        const all=document.querySelectorAll(`.chip[data-r="${r}"][data-c="${c}"]`);
+        if(all.length)all[all.length-1].focus();
+      },40);
+    });
+  });
+}
+
+/* ══ FULLSCREEN ══ */
+function openFS(){
+  fsIdx=cur;
+  document.getElementById('fs').classList.add('on');
+  renderFS();
+}
+function closeFS(){document.getElementById('fs').classList.remove('on');}
+function fsn(d){fsIdx=Math.max(0,Math.min(slides.length-1,fsIdx+d));renderFS();}
+function renderFS(){
+  const s=slides[fsIdx];
+  const fss=document.getElementById('fss');
+  const fsi=document.getElementById('fsi');
+  // Size the slide container to fill screen maintaining 16:9
+  const vw=window.innerWidth,vh=window.innerHeight;
+  const sc=Math.min(vw/1920,vh/1080);
+  const fw=1920*sc,fh=1080*sc;
+  fss.style.cssText=`width:${fw}px;height:${fh}px;position:relative;overflow:hidden;`;
+  fsi.style.transform=`scale(${sc})`;
+  fsi.style.transformOrigin='top left';
+  fsi.style.width='1920px';fsi.style.height='1080px';
+  if(s.type==='value')    fsi.innerHTML=buildS1(s.data);
+  if(s.type==='roadmap')  fsi.innerHTML=buildS2(s.data);
+  if(s.type==='annual')   fsi.innerHTML=buildAnnual(s.data);
+  if(s.type==='rrmap')    fsi.innerHTML=buildS3(s.data);
+  if(s.type==='catdetail')fsi.innerHTML=buildCatDetail(s.data);
+  document.getElementById('fspg').textContent=`${fsIdx+1} / ${slides.length}`;
+  document.getElementById('fsbp').disabled=fsIdx===0;
+  document.getElementById('fsbn').disabled=fsIdx===slides.length-1;
+}
+window.addEventListener('resize',()=>{if(document.getElementById('fs').classList.contains('on'))renderFS();});
+
+/* ══ CHROME ══ */
+function chrome(){
+  document.getElementById('tbInfo').textContent=`${cur+1} / ${slides.length}`;
+  document.getElementById('btnP').disabled=cur===0;
+  document.getElementById('btnN').disabled=cur===slides.length-1;
+  const el=document.getElementById('slidesList');
+  el.innerHTML=slides.map((s,i)=>`
+    <div class="sthumb ${i===cur?'on':''}" onclick="go(${i})">
+      <div class="sthumb-inner">
+        <div class="sthumb-hdr"><span class="sthumb-t">${s.data.topTitle}</span></div>
+        <div class="sthumb-body">${s.label}</div>
+      </div>
+      <span class="sthumb-n">${i+1}</span>
+    </div>`).join('');
+}
+
+/* ══ CONTEXT MENU ══ */
+function showCtx(x,y){
+  const m=document.getElementById('ctx');
+  // Color dots
+  document.getElementById('ctxc').innerHTML=COLORS.map(c=>
+    `<div class="cdot" style="background:${c.bg};border:2px solid ${c.bg==='transparent'?'#2a9d8f':c.bg}" onclick="ctxColor('${c.k}')" title="${c.label}"></div>`
+  ).join('');
+  // Owner dots
+  const curOwner=ctxChip?slides[cur].data.cells[+ctxChip.dataset.r][+ctxChip.dataset.c][+ctxChip.dataset.p].o:null;
+  document.getElementById('ctxOwners').innerHTML=
+    `<div class="ctx-owner-dot none-dot ${!curOwner?'border-color:#3dbfb0':''}" onclick="ctxOwner(null)" title="담당자 없음">✕</div>`+
+    OWNERS.map(o=>
+      `<div class="ctx-owner-dot ${curOwner===o.k?'outline:2px solid #fff;':''}" style="background:${o.bg};${curOwner===o.k?'outline:3px solid #fff;':''}" onclick="ctxOwner('${o.k}')" title="${o.label}">${o.char}</div>`
+    ).join('');
+  m.style.display='block';
+  m.style.left=Math.min(x,window.innerWidth-180)+'px';
+  m.style.top=Math.min(y,window.innerHeight-200)+'px';
+}
+function ctxOwner(ownerKey){
+  if(!ctxChip)return;
+  const r=+ctxChip.dataset.r,c=+ctxChip.dataset.c,p=+ctxChip.dataset.p;
+  if(ownerKey) slides[cur].data.cells[r][c][p].o=ownerKey;
+  else delete slides[cur].data.cells[r][c][p].o;
+  save();go(cur);hideCtx();
+}
+function hideCtx(){document.getElementById('ctx').style.display='none';document.getElementById('catOwnerPicker').style.display='none';}
+document.addEventListener('click',e=>{
+  if(e.target.closest('#ctx')||e.target.closest('#catOwnerPicker')||e.target.closest('.catd-owners')||e.target.closest('.panel-r'))return;
+  hideCtx();
+},true);
+
+/* ══ CATDETAIL OWNER PICKER ══ */
+let _catOwnerTarget=null; // {si, ii}
+function showCatOwnerPicker(el,si,ii){
+  _catOwnerTarget={si,ii};
+  const d=slides[cur].data;
+  const sec=d.sections&&d.sections[si];
+  if(!sec)return;
+  const item=sec.items&&sec.items[ii];
+  if(!item)return;
+  const owners=item.owners||[];
+  const coKey=item.co||'';
+  // Main owners
+  document.getElementById('catOwnerMain').innerHTML=OWNERS.map(o=>{
+    const active=owners.includes(o.k);
+    return`<div class="ctx-owner-dot" style="background:${o.bg};${active?'outline:3px solid #3dbfb0;':'opacity:.4;'}" data-cow="${o.k}" data-cotype="main" title="${o.label}">${o.char}</div>`;
+  }).join('');
+  // Sub owners
+  document.getElementById('catOwnerSub').innerHTML=
+    `<div class="ctx-owner-dot none-dot" data-cow="" data-cotype="sub" title="없음" style="${!coKey?'outline:2px solid #3dbfb0;':''}">✕</div>`+
+    OWNERS.map(o=>{
+      const active=coKey===o.k;
+      return`<div class="ctx-owner-dot" style="background:${o.bg};${active?'outline:3px solid #7aacac;':'opacity:.4;'}" data-cow="${o.k}" data-cotype="sub" title="${o.label}">${o.char}</div>`;
+    }).join('');
+  // Bind clicks
+  document.querySelectorAll('#catOwnerMain .ctx-owner-dot, #catOwnerSub .ctx-owner-dot').forEach(dot=>{
+    dot.addEventListener('click',e=>{
+      e.stopPropagation();
+      const key=dot.dataset.cow;
+      const type=dot.dataset.cotype;
+      const t=_catOwnerTarget;if(!t)return;
+      const item2=slides[cur].data.sections[t.si].items[t.ii];
+      if(type==='main'){
+        if(!item2.owners)item2.owners=[];
+        if(item2.owners.includes(key)) item2.owners=item2.owners.filter(k=>k!==key);
+        else item2.owners.push(key);
+      } else {
+        item2.co=key||'';
+      }
+      save();go(cur);
+      // Re-show picker at same position
+      setTimeout(()=>{
+        const newEl=document.querySelector(`.catd-owners[data-cosi="${t.si}"][data-coii="${t.ii}"]`);
+        if(newEl) showCatOwnerPicker(newEl,t.si,t.ii);
+      },50);
+    });
+  });
+  const pk=document.getElementById('catOwnerPicker');
+  const rect=el.getBoundingClientRect();
+  pk.style.display='block';
+  pk.style.left=Math.min(rect.right+5,window.innerWidth-200)+'px';
+  pk.style.top=Math.min(rect.top,window.innerHeight-250)+'px';
+}
+function ctxColor(k){
+  if(!ctxChip)return;
+  ctxChip.className='chip '+k+' editing';
+  const r=+ctxChip.dataset.r,c=+ctxChip.dataset.c,p=+ctxChip.dataset.p;
+  slides[cur].data.cells[r][c][p].c=k;
+  save();hideCtx();
+}
+function ctxDup(){
+  if(!ctxChip)return;
+  const r=+ctxChip.dataset.r,c=+ctxChip.dataset.c,p=+ctxChip.dataset.p;
+  const o={...slides[cur].data.cells[r][c][p]};
+  slides[cur].data.cells[r][c].splice(p+1,0,o);
+  save();go(cur);hideCtx();
+}
+function ctxDel(){
+  if(!ctxChip)return;
+  const r=+ctxChip.dataset.r,c=+ctxChip.dataset.c,p=+ctxChip.dataset.p;
+  slides[cur].data.cells[r][c].splice(p,1);
+  save();go(cur);hideCtx();
+}
+
+/* ══ PROPERTIES PANEL ══ */
+function stab(t){
+  activeTab=t;
+  buildProp();
+}
+function buildProp(){
+  const pb=document.getElementById('pb');
+  const s=slides[cur];
+  if(s.type==='value')    { pb.innerHTML=propS1(s.data); return; }
+  if(s.type==='roadmap')  { pb.innerHTML=propS2(s.data); bindOwnerPanel(); return; }
+  if(s.type==='annual')   { pb.innerHTML=propAnnual(s.data); return; }
+  if(s.type==='rrmap')    { pb.innerHTML=propRR(s.data); bindOwnerPanel(); return; }
+  if(s.type==='catdetail'){ pb.innerHTML=propCat(s.data); bindOwnerPanel(); return; }
+  pb.innerHTML='';
+}
+function propAnnual(d){ return `
+  <div class="psec"><span class="plabel">헤더 부제목</span><input class="pinput" id="p_topSub" value="${esc(d.topSub||'')}"></div>
+  <div class="prow">
+    <div class="psec"><span class="plabel">타이틀</span><input class="pinput" id="p_topTitle" value="${esc(d.topTitle||'')}"></div>
+    <div class="psec"><span class="plabel">날짜</span><input class="pinput" id="p_topDate" value="${esc(d.topDate||'')}"></div>
+  </div>
+  <div class="psec"><span class="plabel">배지</span><input class="pinput" id="p_badge" value="${esc(d.badge||'')}"></div>
+  <div class="pdiv"></div>
+  <div style="color:#5a9090;font-size:10px;line-height:1.7"><p>● 활성 월 표시 / 텍스트 있으면 강조</p><p>세부 일정은 소스 데이터에서 수정하세요.</p></div>
+  <button class="papply" onclick="applyAnnual()">▶ 적용</button>`;}
+function propRR(d){ 
+  const cols=rrCols(d);
+  const colRows=cols.map((c,i)=>{
+    const wLabel=c.w>0?c.w+'px':'자동';
+    return `<div style="margin-bottom:8px;padding:6px 8px;background:#0a1818;border-radius:6px;border:1px solid #1a3535">
+      <div style="font-size:11px;font-weight:700;color:#3dbfb0;margin-bottom:4px;font-family:Montserrat,sans-serif">${c.name}</div>
+      <div style="display:flex;align-items:center;gap:6px;margin-bottom:3px">
+        <span style="font-size:9px;color:#5a8888;width:28px;flex-shrink:0">너비</span>
+        <input type="range" min="0" max="400" value="${c.w}" data-rrcol="${i}" data-rrprop="w" style="flex:1;accent-color:#2a9d8f;height:14px">
+        <span style="font-size:10px;color:#7aacac;width:38px;text-align:right;font-family:Montserrat,sans-serif" id="rr_w_v${i}">${wLabel}</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px">
+        <span style="font-size:9px;color:#5a8888;width:28px;flex-shrink:0">글꼴</span>
+        <input type="range" min="8" max="24" value="${c.fs}" data-rrcol="${i}" data-rrprop="fs" style="flex:1;accent-color:#2a9d8f;height:14px">
+        <span style="font-size:10px;color:#7aacac;width:38px;text-align:right;font-family:Montserrat,sans-serif" id="rr_fs_v${i}">${c.fs}px</span>
+      </div>
+    </div>`;
+  }).join('');
+  return `
+  <div class="psec"><span class="plabel">제목</span><input class="pinput" id="p_topTitle" value="${esc(d.topTitle||'')}"></div>
+  <div class="psec"><span class="plabel">부제목/배지</span><input class="pinput" id="p_subtitle" value="${esc(d.subtitle||'')}"></div>
+  <div class="psec"><span class="plabel">날짜</span><input class="pinput" id="p_topDate" value="${esc(d.topDate||'')}"></div>
+  <div class="pdiv"></div>
+  <div class="psec"><span class="plabel">컬럼별 너비 / 폰트 조절</span>
+    <p style="font-size:9px;color:#4a7070;margin-bottom:6px">너비 0 = 나머지 공간 자동 배분</p>
+    ${colRows}
+  </div>
+  <button class="papply" onclick="applyRR()">▶ 적용</button>
+  <div class="pdiv"></div>
+  ${ownerMgmtHTML()}`;}
+function propCat(d){ return `
+  <div class="psec"><span class="plabel">부제목</span><input class="pinput" id="p_topSub" value="${esc(d.topSub||'')}"></div>
+  <div class="prow">
+    <div class="psec"><span class="plabel">타이틀</span><input class="pinput" id="p_topTitle" value="${esc(d.topTitle||'')}"></div>
+    <div class="psec"><span class="plabel">날짜</span><input class="pinput" id="p_topDate" value="${esc(d.topDate||'')}"></div>
+  </div>
+  <div class="psec"><span class="plabel">배지</span><input class="pinput" id="p_badge" value="${esc(d.badge||'')}"></div>
+  <div class="pdiv"></div>
+  <div style="color:#5a9090;font-size:10px;margin-bottom:6px">강조색</div>
+  <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px">
+    ${['#1a7c6e','#1e5e6e','#1a5870','#1a4e70','#1a6050'].map(c=>`<div style="width:24px;height:24px;border-radius:50%;background:${c};cursor:pointer;border:3px solid ${(d.accentColor||'#1a7c6e')===c?'#fff':'transparent'}" onclick="setCatAccent('${c}')"></div>`).join('')}
+  </div>
+  <button class="papply" onclick="applyCat()" style="margin-bottom:8px">▶ 적용</button>
+  <div class="pdiv"></div>
+  ${ownerMgmtHTML()}`;}
+function applyAnnual(){
+  const d=slides[cur].data;
+  ['topSub','topTitle','topDate','badge'].forEach(k=>{const v=g('p_'+k);if(v!==null)d[k]=v;});
+  save();go(cur);flash();
+}
+function applyRR(){
+  const d=slides[cur].data;
+  ['topTitle','topDate'].forEach(k=>{const v=g('p_'+k);if(v!==null)d[k]=v;});
+  const sub=g('p_subtitle'); if(sub!==null) d.subtitle=sub;
+  save();go(cur);flash();
+}
+function applyCat(){
+  const d=slides[cur].data;
+  ['topSub','topTitle','topDate','badge'].forEach(k=>{const v=g('p_'+k);if(v!==null)d[k]=v;});
+  save();go(cur);flash();
+}
+function setCatAccent(color){
+  slides[cur].data.accentColor=color; save(); go(cur); buildProp();
+}
+/* ══ OWNER MANAGEMENT ══ */
+function ownerMgmtHTML(){
+  return `<div class="psec"><span class="plabel">담당자 관리</span>
+    <div id="owner-list" style="display:flex;flex-direction:column;gap:5px;margin-bottom:6px">
+      ${OWNERS.map((o,i)=>`<div style="display:flex;align-items:center;gap:4px">
+        <div style="width:20px;height:20px;border-radius:50%;background:${o.bg};flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:900;color:#fff;font-family:Montserrat,sans-serif">${o.char}</div>
+        <input class="pinput" id="ow_label_${i}" value="${o.label}" style="flex:1;font-size:10px;padding:3px 6px">
+        <input class="pinput" id="ow_char_${i}" value="${o.char}" style="width:30px;font-size:10px;padding:3px;text-align:center">
+        <input type="color" id="ow_bg_${i}" value="${o.bg}" style="width:24px;height:24px;border:none;border-radius:4px;cursor:pointer;background:transparent;padding:0">
+        ${OWNERS.length>1?`<button class="ow-del-btn" data-oidx="${i}" style="width:20px;height:20px;border-radius:50%;border:1px solid #3a2020;background:transparent;color:#d06060;font-size:11px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0" title="삭제">✕</button>`:''}
+      </div>`).join('')}
+    </div>
+    <div style="display:flex;gap:5px">
+      <button class="papply" id="btn-apply-owners" style="margin-bottom:4px;background:#1a4e6e;flex:1">👤 담당자 저장</button>
+      <button class="papply" id="btn-add-owner" style="margin-bottom:4px;background:#1a5040;flex:0 0 auto;padding:8px 12px" title="담당자 추가">＋</button>
+    </div>
+    <div class="pdiv"></div>
+  </div>`;
+}
+/* Bind owner panel events — event delegation on #pb */
+(function(){
+  const pb=document.getElementById('pb');
+  pb.addEventListener('click',e=>{
+    const delBtn=e.target.closest('.ow-del-btn');
+    if(delBtn){
+      e.stopPropagation();
+      removeOwner(+delBtn.dataset.oidx);
+      return;
+    }
+    if(e.target.id==='btn-apply-owners'||e.target.closest('#btn-apply-owners')){
+      e.stopPropagation();
+      applyOwners();
+      return;
+    }
+    if(e.target.id==='btn-add-owner'||e.target.closest('#btn-add-owner')){
+      e.stopPropagation();
+      addOwner();
+      return;
+    }
+  });
+  /* Range slider live update for R&R column config */
+  pb.addEventListener('input',e=>{
+    if(e.target.type==='range'&&e.target.dataset.rrcol!==undefined){
+      const ci=+e.target.dataset.rrcol;
+      const prop=e.target.dataset.rrprop;
+      const val=+e.target.value;
+      const d=slides[cur].data;
+      if(!d.colCfg)rrCols(d);
+      d.colCfg[ci][prop]=val;
+      // Update value label
+      if(prop==='w'){
+        const lbl=document.getElementById('rr_w_v'+ci);
+        if(lbl)lbl.textContent=val>0?val+'px':'자동';
+      } else {
+        const lbl=document.getElementById('rr_fs_v'+ci);
+        if(lbl)lbl.textContent=val+'px';
+      }
+    }
+  });
+  /* Apply on slider mouseup/touchend */
+  pb.addEventListener('change',e=>{
+    if(e.target.type==='range'&&e.target.dataset.rrcol!==undefined){
+      save();go(cur);
+    }
+  });
+})();
+function bindOwnerPanel(){/* now handled by delegation above */}
+function addOwner(){
+  const newKey='u'+Date.now().toString(36);
+  const hues=['#9c27b0','#ff5722','#009688','#795548','#607d8b','#e91e63','#3f51b5','#00bcd4'];
+  const bg=hues[OWNERS.length%hues.length];
+  const newOwner={k:newKey,label:'새 담당자',char:'新',bg:bg};
+  OWNERS.push(newOwner);
+  OMAP[newKey]=newOwner;
+  save();buildProp();
+}
+function removeOwner(idx){
+  if(OWNERS.length<=1)return;
+  const removed=OWNERS.splice(idx,1)[0];
+  delete OMAP[removed.k];
+  // Clean up references in ALL slide types
+  slides.forEach(s=>{
+    if(s.type==='roadmap'&&s.data.cells){
+      s.data.cells.forEach(row=>row&&row.forEach(col=>col&&col.forEach(ch=>{if(ch.o===removed.k)delete ch.o;})));
+    }
+    if(s.type==='catdetail'&&s.data.sections){
+      s.data.sections.forEach(sec=>sec.items&&sec.items.forEach(item=>{
+        if(item.owners) item.owners=item.owners.filter(k=>k!==removed.k);
+        if(item.co===removed.k) item.co='';
+      }));
+    }
+  });
+  save();go(cur);
+}
+function applyOwners(){
+  OWNERS.forEach((o,i)=>{
+    const label=document.getElementById('ow_label_'+i);
+    const char=document.getElementById('ow_char_'+i);
+    const bg=document.getElementById('ow_bg_'+i);
+    if(label) o.label=label.value.trim();
+    if(char) o.char=char.value.trim().slice(0,2);
+    if(bg) o.bg=bg.value;
+    OMAP[o.k]=o;
+  });
+  save();go(cur);
+  const btn=document.getElementById('owner-list')?.nextElementSibling;
+  if(btn){btn.textContent='✓ 저장됨';setTimeout(()=>{btn.textContent='👤 담당자 저장';},1500);}
+}
+
+function propS1(d){return`
+  <div class="psec"><span class="plabel">헤더</span>
+    <input class="pinput" id="p_topSub" value="${esc(d.topSub)}" placeholder="부제목">
+    <div style="height:5px"></div>
+    <div class="prow">
+      <div class="psec"><input class="pinput" id="p_topTitle" value="${esc(d.topTitle)}"></div>
+      <div class="psec"><input class="pinput" id="p_topDate" value="${esc(d.topDate)}"></div>
+    </div>
+  </div>
+  <div class="pdiv"></div>
+  <div class="psec"><span class="plabel">기관 / 배지</span>
+    <div class="prow">
+      <div class="psec"><input class="pinput" id="p_org" value="${esc(d.org)}"></div>
+      <div class="psec"><input class="pinput" id="p_orgSub" value="${esc(d.orgSub)}"></div>
+    </div>
+    <div style="height:5px"></div>
+    <input class="pinput" id="p_badge" value="${esc(d.badge)}">
+  </div>
+  <div class="pdiv"></div>
+  <div class="psec"><span class="plabel">미션 & 비전</span>
+    <input class="pinput" id="p_mvLabel" value="${esc(d.mvLabel)}">
+    <div style="height:5px"></div>
+    <input class="pinput" id="p_mvText" value="${esc(d.mvText)}">
+  </div>
+  <div class="pdiv"></div>
+  <div class="psec"><span class="plabel">원 텍스트</span>
+    <div class="prow">
+      <div class="psec"><label class="plabel">왼쪽</label><input class="pinput" id="p_c1" value="${esc((d.c1||'').replace(/\n/g,' '))}"></div>
+      <div class="psec"><label class="plabel">오른쪽</label><input class="pinput" id="p_c2" value="${esc((d.c2||'').replace(/\n/g,' '))}"></div>
+    </div>
+    <div class="prow" style="margin-top:5px">
+      <div class="psec"><label class="plabel">하단</label><input class="pinput" id="p_c3" value="${esc((d.c3||'').replace(/\n/g,' '))}"></div>
+      <div class="psec"><label class="plabel">코어</label><input class="pinput" id="p_cCore" value="${esc((d.cCore||'').replace(/\n/g,' '))}"></div>
+    </div>
+  </div>
+  <div class="pdiv"></div>
+  <div class="psec"><span class="plabel">왼쪽 전략 (줄마다 1항목)</span><textarea class="ptarea" id="p_sl">${(d.sl||[]).join('\n')}</textarea></div>
+  <div class="psec"><span class="plabel">오른쪽 전략</span><textarea class="ptarea" id="p_sr">${(d.sr||[]).join('\n')}</textarea></div>
+  <div class="psec"><span class="plabel">하단 중앙 전략</span><textarea class="ptarea" id="p_sb">${(d.sb||[]).join('\n')}</textarea></div>
+  <button class="papply" onclick="applyS1()">▶ 적용</button>`;}
+function propS2(d){return`
+  <div class="psec"><span class="plabel">헤더</span>
+    <input class="pinput" id="p_topSub" value="${esc(d.topSub)}">
+    <div style="height:5px"></div>
+    <div class="prow">
+      <div class="psec"><input class="pinput" id="p_topTitle" value="${esc(d.topTitle)}"></div>
+      <div class="psec"><input class="pinput" id="p_topDate" value="${esc(d.topDate)}"></div>
+    </div>
+  </div>
+  <div class="pdiv"></div>
+  <div class="psec"><span class="plabel">컬럼 헤더 (6개·줄마다)</span><textarea class="ptarea" id="p_cols">${(d.cols||[]).join('\n')}</textarea></div>
+  <div class="psec"><span class="plabel">행 라벨 (4개·줄마다)</span><textarea class="ptarea" id="p_rows">${(d.rows||[]).join('\n')}</textarea></div>
+  <p style="font-size:10px;color:#3a5858;margin-top:6px">* 칩은 슬라이드에서 직접 클릭·편집</p>
+  <button class="papply" onclick="applyS2()" style="margin-top:10px">▶ 적용</button>
+  <div class="pdiv"></div>
+  ${ownerMgmtHTML()}`;}
+
+function g(id){const e=document.getElementById(id);return e?e.value:'';}
+function applyS1(){
+  const d=slides[cur].data;
+  d.topSub=g('p_topSub');d.topTitle=g('p_topTitle');d.topDate=g('p_topDate');
+  d.org=g('p_org');d.orgSub=g('p_orgSub');d.badge=g('p_badge');
+  d.mvLabel=g('p_mvLabel');d.mvText=g('p_mvText');
+  d.c1=g('p_c1').replace(/ /,'\n');d.c2=g('p_c2').replace(/ /,'\n');
+  d.c3=g('p_c3').replace(/ /,'\n');d.cCore=g('p_cCore');
+  d.sl=g('p_sl').split('\n').filter(Boolean);
+  d.sr=g('p_sr').split('\n').filter(Boolean);
+  d.sb=g('p_sb').split('\n').filter(Boolean);
+  save();go(cur);flash();
+}
+function applyS2(){
+  const d=slides[cur].data;
+  d.topSub=g('p_topSub');d.topTitle=g('p_topTitle');d.topDate=g('p_topDate');
+  d.cols=g('p_cols').split('\n').filter(Boolean);
+  d.rows=g('p_rows').split('\n').filter(Boolean);
+  save();go(cur);flash();
+}
+function flash(){
+  const b=document.querySelector('.papply');
+  if(!b)return;
+  b.textContent='✓ 저장됨';b.classList.add('ok');
+  setTimeout(()=>{b.textContent='▶ 적용';b.classList.remove('ok');},1500);
+}
+
+/* ══ PDF DOWNLOAD ══ */
+async function downloadPDF(){
+  const prog=document.getElementById('pdfProg');
+  const fill=document.getElementById('pdfFill');
+  const text=document.getElementById('pdfText');
+  prog.style.display='block';
+  fill.style.width='0%';
+  text.textContent='렌더링 준비 중...';
+
+  const frame=document.getElementById('print-frame');
+  frame.innerHTML='';
+  frame.style.cssText='display:block;position:fixed;left:0;top:0;width:1920px;height:1080px;z-index:-9999;opacity:0;pointer-events:none;overflow:hidden;';
+
+  const {jsPDF}=window.jspdf;
+  const pdf=new jsPDF({orientation:'landscape',unit:'mm',format:[285.75,508]});
+
+  for(let i=0;i<slides.length;i++){
+    const s=slides[i];
+    fill.style.width=Math.round((i/slides.length)*100)+'%';
+    text.textContent=`슬라이드 ${i+1}/${slides.length} 캡처 중...`;
+
+    frame.innerHTML='';
+    const div=document.createElement('div');
+    div.style.cssText='width:1920px;height:1080px;overflow:hidden;position:relative;';
+    if(s.type==='value')    div.innerHTML=buildS1(s.data);
+    if(s.type==='roadmap')  div.innerHTML=buildS2(s.data);
+    if(s.type==='annual')   div.innerHTML=buildAnnual(s.data);
+    if(s.type==='rrmap')    div.innerHTML=buildS3(s.data);
+    if(s.type==='catdetail')div.innerHTML=buildCatDetail(s.data);
+    frame.appendChild(div);
+
+    await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));
+    await document.fonts.ready;
+    await new Promise(r=>setTimeout(r,250));
+
+    const canvas=await html2canvas(div,{
+      width:1920,height:1080,scale:1.5,
+      useCORS:true,allowTaint:true,
+      backgroundColor:'#ffffff',logging:false,
+    });
+
+    const imgData=canvas.toDataURL('image/jpeg',0.92);
+    if(i>0) pdf.addPage([285.75,508],'landscape');
+    pdf.addImage(imgData,'JPEG',0,0,508,285.75);
+  }
+
+  fill.style.width='100%';
+  text.textContent='PDF 저장 중...';
+  await new Promise(r=>setTimeout(r,100));
+  pdf.save('Learning_Roadmap.pdf');
+
+  frame.innerHTML='';
+  frame.style.cssText='display:none;';
+  setTimeout(()=>{prog.style.display='none';},1200);
+}
+
+/* ══ (슬라이드 추가 비활성화 — 향후 자료 기반 생성) ══ */
+function addSlide(){ /* disabled */ }
+function closeModal(){ document.getElementById('typeModal').classList.remove('on'); }
+function doAddSlide(){ closeModal(); }
+
+/* ══ UTILS ══ */
+function resetData(){
+  /* Two-click reset: first click arms, second click fires */
+  const btn=document.querySelector('[onclick="resetData()"]');
+  if(btn&&!btn.dataset.armed){
+    btn.dataset.armed='1';
+    btn.textContent='⚠ 정말 초기화?';
+    btn.style.color='#ff4444';btn.style.borderColor='#ff4444';
+    setTimeout(()=>{btn.dataset.armed='';btn.textContent='↺ 초기화';btn.style.color='#d08060';btn.style.borderColor='#3a2525';},3000);
+    return;
+  }
+  localStorage.removeItem('lrm8');
+  localStorage.removeItem('lrm8_owners');
+  location.reload();
+}
+function save(){localStorage.setItem('lrm8',JSON.stringify(slides));localStorage.setItem('lrm8_owners',JSON.stringify(OWNERS));}
+function br(s){return(s||'').replace(/\n/g,'<br>');}
+function esc(s){return String(s||'').replace(/"/g,'&quot;').replace(/</g,'&lt;');}
+let _tt;
+function toast(){
+  const el=document.getElementById('toast');el.classList.add('on');
+  clearTimeout(_tt);_tt=setTimeout(()=>el.classList.remove('on'),2500);
+}
+
+/* ══ KEYBOARD ══ */
+document.addEventListener('keydown',e=>{
+  if(document.getElementById('fs').classList.contains('on')){
+    if(['ArrowRight','ArrowDown','PageDown'].includes(e.key))fsn(1);
+    if(['ArrowLeft','ArrowUp','PageUp'].includes(e.key))fsn(-1);
+    if(e.key==='Escape')closeFS();
+    return;
+  }
+  if(document.activeElement&&document.activeElement.isContentEditable)return;
+  if(['ArrowRight','ArrowDown'].includes(e.key))go(cur+1);
+  if(['ArrowLeft','ArrowUp'].includes(e.key))go(cur-1);
+});
+
+/* ══ INIT ══ */
+window.addEventListener('load',()=>{fz();go(0);});
+</script>
+<script>/* kg-preview: #<heading> \uc704\uce58\ub85c \uc774\ub3d9 */
+(function(){function norm(t){return (t||'').replace(/\s+/g,'').toLowerCase()}
+function go(){var h=decodeURIComponent(location.hash.slice(1));if(!h)return;var k=norm(h).slice(0,24);if(!k)return;
+var best=null,bl=1e9,els=document.body.querySelectorAll('h1,h2,h3,h4,h5,p,div,span,li,td,text,tspan,section,article');
+for(var i=0;i<els.length;i++){var e=els[i],t=norm(e.textContent);if(t.length<bl&&t.indexOf(k)>-1){best=e;bl=t.length}}
+if(!best)return;var box=best.closest('section,[class*=slide],[class*=page],article')||best;
+box.scrollIntoView({block:'start'});box.style.outline='3px solid #c0504d';box.style.outlineOffset='4px';
+setTimeout(function(){box.style.outline=''},2600)}
+window.addEventListener('load',function(){setTimeout(go,400)});window.addEventListener('hashchange',go)})();</script></body>
+</html>

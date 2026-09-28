@@ -1,0 +1,1178 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head><meta name="robots" content="noindex, nofollow">
+<meta charset="UTF-8">
+<title>AI와 함께 쓰는 구글스프레드시트 (50장)</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root{
+    --bg:#f5f6f8; --surf:#ffffff; --tint:#e5e9ef; --tint2:#d7dde6;
+    --hair:#d7dee8; --hair2:#c3cedb;
+    --ink:#102139; --body:#3d4c60; --mut:#68758a; --faint:#93a1b3;
+    --blue:#b94a48; --cyan:#943539; --green:#2e7d5b; --amber:#c38424;
+    --coral:#b94a48; --navy:#101827;
+    --gG:#2e8a5c; --gB:#4266a3; --gK:#141b28;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{background:#c8ccd3}
+  body{font-family:'Pretendard Variable',Pretendard,'Noto Sans KR','Malgun Gothic',sans-serif;
+       color:var(--ink);-webkit-font-smoothing:antialiased}
+  .deck{display:flex;flex-direction:column;align-items:center;gap:28px;padding:28px 0}
+  body.shot .deck{padding:0;gap:0}
+
+  /* ---------- slide frame ---------- */
+  .slide{width:1280px;height:720px;position:relative;overflow:hidden;flex:none;
+    background:
+      radial-gradient(760px 380px at 88% -10%, rgba(185,74,72,.05), transparent 60%),
+      var(--bg);
+    display:grid;grid-template-rows:auto 1fr auto auto;row-gap:14px;
+    padding:28px 48px 0}
+  .slide::before{content:'';position:absolute;inset:0 0 auto 0;height:4px;pointer-events:none;
+    background:linear-gradient(90deg,var(--gG) 0 33.3%,var(--gB) 33.3% 66.6%,var(--gK) 66.6% 100%)}
+
+  /* ---------- header ---------- */
+  .head{display:grid;grid-template-columns:1fr auto;column-gap:24px;align-items:end;
+    margin:-28px -48px 0;padding:24px 48px 14px;
+    background:linear-gradient(180deg,#e5e9ef 0%,#eef1f5 100%);
+    border-bottom:2px solid #bdc7d4}
+  .slide{word-break:keep-all;overflow-wrap:break-word}
+  .kick{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+  .kick .no{font-weight:900;font-size:12px;letter-spacing:.1em;color:#fff;
+    background:var(--blue);padding:3px 9px;border-radius:3px}
+  .kick .lb{font-weight:800;font-size:12.5px;letter-spacing:.2em;color:var(--blue);text-transform:uppercase}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1.2px;line-height:1.16;color:#102139}
+  h1 em{font-style:normal;color:var(--blue)}
+  h1 em.g{color:var(--green)} h1 em.a{color:var(--amber)} h1 em.c{color:var(--coral)} h1 em.f{color:var(--faint)}
+  .headsub{margin-top:7px;font-size:15px;color:var(--body);font-weight:500}
+  .headsub b{color:var(--ink);font-weight:800}
+  .brand{text-align:right;padding-bottom:3px}
+  .brand .t1{font-weight:900;font-size:13px;letter-spacing:.08em;color:var(--ink)}
+  .brand .t1 span{color:var(--blue)}
+  .brand .t2{font-size:11px;color:var(--mut);margin-top:3px;letter-spacing:.04em}
+
+  /* ---------- open sections (no boxes) ---------- */
+  .main{display:grid;row-gap:14px;min-height:0}
+  .sec{display:grid;grid-template-rows:auto 1fr;min-height:0;row-gap:9px}
+  .sl{display:flex;align-items:center;gap:10px}
+  .sl .tx{flex:none;font-weight:900;font-size:13.5px;letter-spacing:.02em;color:var(--ink)}
+  .sl .tx i{font-style:normal;color:var(--blue)}
+  .sl .sx{flex:none;font-size:12px;color:var(--mut);font-weight:500}
+  .sl .ln{flex:1;border-top:1px solid var(--hair2)}
+  .sl .tag{flex:none;font-size:11px;font-weight:800;color:var(--coral);
+    border:1px solid rgba(185,74,72,.42);border-radius:20px;padding:2.5px 11px;letter-spacing:.03em;background:#faeeed}
+
+  /* open step (typography-led, no border) */
+  .flow{display:grid;min-height:0}
+  .step{display:flex;flex-direction:column;min-height:0;padding:4px 2px 0;position:relative}
+  .step .cno{font-size:11px;font-weight:900;letter-spacing:.12em;color:var(--mut);margin-bottom:5px}
+  .step .ct{font-weight:800;font-size:16.5px;letter-spacing:-.4px;line-height:1.28;color:var(--ink)}
+  .step .cs{font-size:13px;color:var(--body);line-height:1.55;margin-top:7px}
+  .step .cs b{color:var(--ink);font-weight:800}
+  .step .cf{margin-top:auto;padding-top:9px;font-size:11.5px;color:var(--mut)}
+  .step .cf b{color:var(--blue);font-weight:800}
+  .stepno{position:absolute;top:0;right:6px;font-size:30px;font-weight:900;color:var(--hair2);line-height:1}
+  .arrow{align-self:center;justify-self:center;color:var(--hair2);font-size:22px;font-weight:900}
+
+  /* highlighted step = only these get a surface */
+  .step.hot{background:linear-gradient(180deg,#f8ecea,#fbf4f3);border-radius:12px;
+    padding:12px 14px 12px;border:1px solid #e5c8c5}
+  .step.hot .cno{color:var(--blue)} .step.hot .stepno{color:#e8cfcc;top:8px;right:12px}
+  .step.hotg{background:linear-gradient(180deg,#e8f0ea,#f4f8f5);border-radius:12px;
+    padding:12px 14px 12px;border:1px solid #c8dcce}
+  .step.hotg .cno{color:var(--green)} .step.hotg .stepno{color:#bfd8c8;top:8px;right:12px}
+
+  .chips{display:flex;flex-wrap:wrap;gap:7px}
+  .chip{font-size:12px;font-weight:700;color:var(--body);background:var(--tint);
+    border:1px solid var(--hair);border-radius:20px;padding:4px 12px;white-space:nowrap}
+  .chip.on{color:#fff;background:var(--blue);border-color:var(--blue);font-weight:800}
+
+  /* ---------- anchor bar (single strong element) ---------- */
+  .anchor{height:54px;border-radius:11px;display:flex;align-items:center;gap:14px;padding:0 20px;
+    background:linear-gradient(92deg,var(--navy),#1d2940);color:#fff;
+    box-shadow:0 8px 20px -10px rgba(16,28,51,.45)}
+  .anchor .k{flex:none;font-size:11px;font-weight:900;letter-spacing:.16em;color:var(--navy);
+    background:#ffc9c5;border-radius:4px;padding:4px 10px}
+  .anchor .t{font-size:16.5px;font-weight:800;letter-spacing:-.2px}
+  .anchor .t b{color:#ffc9c5}
+  .anchor .r{margin-left:auto;font-size:12px;color:#aab6ca;font-weight:600;text-align:right}
+  .anchor.coral{background:linear-gradient(92deg,#B23A24,var(--coral))}
+  .anchor.coral .k{background:#FFD9CF;color:#8F2D1B}
+  .anchor.coral .t b{color:#FFE1B8}
+  .anchor.coral .r{color:#FFD3C7}
+
+  /* ---------- footer ---------- */
+  .foot{height:34px;display:flex;align-items:center;gap:12px;border-top:1px solid var(--hair);
+    font-size:10.5px;color:var(--faint);letter-spacing:.04em}
+  .foot .pg{margin-left:auto;font-weight:900;color:var(--mut);font-size:11.5px}
+  .foot .pg b{color:var(--blue)}
+
+  /* ============ KEYNOTE v2 (s1~s5) — 편집본 V3 디자인 시스템 ============ */
+  .slide.key{display:flex;flex-direction:column;padding:0}
+  .slide.key::before{display:none}
+  .key .ktop{height:44px;flex:none;display:flex;align-items:center;justify-content:space-between;
+    padding:0 46px;background:var(--navy)}
+  .key .kt1{font-size:12.5px;font-weight:700;color:#f3ede2;letter-spacing:.2px}
+  .key .kt1 small{font-size:10px;color:rgba(243,237,226,.42);font-weight:600;letter-spacing:1px;margin-left:7px}
+  .key .kt2{font-size:10.5px;font-weight:600;letter-spacing:1.2px;color:rgba(243,237,226,.55)}
+  .key .khdr{flex:none;background:var(--tint);padding:20px 50px 18px;border-bottom:1.5px solid var(--hair2)}
+  .key .keyebrow{font-size:10.5px;font-weight:900;letter-spacing:1.7px;color:var(--cyan);
+    margin-bottom:6px;text-transform:uppercase}
+  .key .ktitle{font-size:30px;font-weight:900;color:#102139;letter-spacing:-1.15px;line-height:1.16}
+  .key .kbody{flex:1;display:flex;align-items:center;padding:0 96px 30px 50px;min-height:0}
+  .key .krow{display:grid;grid-template-columns:240px 1fr;align-items:start;width:100%}
+  .key .knum{font-size:110px;font-weight:900;color:#d3dae4;line-height:.9;text-align:center;
+    padding-top:6px;letter-spacing:-5px}
+  .key .ktxt{display:flex;flex-direction:column;gap:18px;max-width:880px}
+  .key .ktxt h2{font-size:33px;font-weight:900;color:#102139;line-height:1.38;letter-spacing:-1.2px}
+  .key .ktxt h2 em{font-style:normal;color:var(--blue)}
+  .key .ktxt h2 .h2tag{display:block;font-size:16px;font-weight:800;letter-spacing:-.3px;
+    color:#2e7d5b;margin-top:12px}
+  .key .ktxt h2 .h2tag i{font-style:normal;color:var(--mut);font-weight:600}
+  .key .ktxt h2 em.g{color:#2e7d5b} .key .ktxt h2 em.a{color:var(--amber)} .key .ktxt h2 em.c{color:var(--cyan)}
+  .key .ktxt p{font-size:15px;color:var(--body);line-height:1.8;font-weight:400}
+  .key .ktxt p b{color:var(--cyan);font-weight:700}
+  .key .kpg{position:absolute;right:30px;bottom:13px;font-size:13.5px;font-weight:700;color:var(--blue)}
+
+  /* ============ SLIDE 06 · 전수 현황 ============ */
+  .s6x-main{grid-template-rows:.66fr 1fr}
+  .s6x-top{display:grid;grid-template-columns:.9fr 1.15fr .8fr 1.5fr 1.45fr;gap:12px}
+  .stat6{background:var(--surf);border:1px solid var(--hair);border-radius:10px;display:flex;
+    flex-direction:column;align-items:center;justify-content:center;gap:7px;text-align:center;
+    box-shadow:0 4px 12px -9px rgba(16,33,57,.16)}
+  .stat6 .n{font-size:26px;font-weight:900;letter-spacing:-1px;color:#4266a3}
+  .stat6.g .n{color:#2e8a5c}.stat6.a .n{color:#c38424}
+  .stat6 .l{font-size:11.8px;color:var(--mut);font-weight:600;padding:0 8px}
+  .role{background:var(--tint);border:1px solid var(--hair);border-radius:10px;padding:11px 15px;
+    display:flex;flex-direction:column;gap:6px;justify-content:center}
+  .role .rt{font-size:14px;font-weight:800;color:var(--ink)}
+  .role .rt small{font-size:11px;color:var(--mut);font-weight:700;margin-left:6px}
+  .role .ri{font-size:11.8px;line-height:1.62;color:var(--body)}
+  .s6x-rows{display:grid;grid-template-rows:repeat(5,1fr);row-gap:8px;min-height:0}
+  .agrow{display:grid;grid-template-columns:158px 132px 1.18fr 1.12fr;gap:14px;align-items:center;
+    background:var(--surf);border:1px solid var(--hair);border-left:4px solid #4266a3;border-radius:8px;
+    padding:4px 16px;min-height:0;box-shadow:0 3px 10px -8px rgba(16,33,57,.14)}
+  .agrow .ag{font-size:15px;font-weight:900;letter-spacing:-.3px;color:var(--ink)}
+  .agrow .sz{font-size:13px;font-weight:800}
+  .agrow .cfg{font-size:12.4px;color:var(--body);line-height:1.4}
+  .agrow .sch{font-size:11.8px;color:var(--mut);line-height:1.4}
+
+  /* ============ SLIDE 08 · 도구 오케스트레이션 맵 ============ */
+  .s7x-main{display:grid;grid-template-columns:1fr 1fr 1fr;grid-template-rows:1fr 1fr;
+    column-gap:16px;row-gap:16px;position:relative;min-height:0}
+  .s7x-main::before{content:'';position:absolute;inset:-6px;border-radius:10px;
+    background-image:radial-gradient(#c3cddd 1.1px,transparent 1.1px);background-size:24px 24px;opacity:.55}
+  .npanel{background:rgba(255,255,255,.92);border:1px solid var(--hair);border-radius:11px;padding:11px 14px;
+    display:flex;flex-direction:column;gap:8px;min-height:0;z-index:2;
+    box-shadow:0 4px 12px -9px rgba(16,33,57,.18)}
+  .npanel .nh{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:900;letter-spacing:-.2px;color:var(--ink)}
+  .npanel .nh .dot{width:9px;height:9px;border-radius:50%;flex:none}
+  .npanel .nh small{margin-left:auto;font-size:9.5px;color:var(--mut);font-weight:700}
+  .npanel .nchips{display:flex;flex-wrap:wrap;gap:6px;flex:1;align-content:center;min-height:0}
+  .npanel .chip{font-size:11.4px;font-weight:700;padding:3.5px 10px;border-radius:15px;
+    background:var(--tint);border:1px solid var(--hair2);color:var(--body);white-space:nowrap}
+  .nmidcol{grid-column:2;grid-row:1/3;display:flex;flex-direction:column;justify-content:space-between;min-height:0;z-index:2}
+  .nmidcol .npanel{flex:0 0 33.5%}
+  .nhubwrap{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;z-index:4}
+  .nethub{width:212px;height:212px;border-radius:50%;display:flex;flex-direction:column;align-items:center;
+    justify-content:center;text-align:center;gap:6px;padding:20px;
+    background:radial-gradient(circle at 36% 28%,#22314f,#0d1626 72%);
+    box-shadow:0 16px 36px -12px rgba(16,24,39,.6),0 0 0 9px rgba(16,24,39,.07),0 0 0 1px rgba(16,24,39,.3)}
+  .nethub .k{font-size:9px;font-weight:900;letter-spacing:2.2px;color:#ffc9c5}
+  .nethub .t{font-size:16.5px;font-weight:900;letter-spacing:-.5px;color:#fff;line-height:1.3}
+  .nethub .s{font-size:10px;color:#b9c2d4;line-height:1.5}
+  .nethub .s b{color:#e8b571;font-weight:800}
+
+  /* ============ COVER ============ */
+  .slide.cover{grid-template-rows:auto 1fr auto auto}
+  .cover .head{margin:0;padding:0;background:none;border-bottom:none}
+  .cover h1{font-size:70px;letter-spacing:-2.4px;line-height:1.12}
+  .cv-mid{display:flex;flex-direction:column;justify-content:center;gap:20px}
+  .cv-sub{font-size:19px;color:var(--body);font-weight:500;line-height:1.6;max-width:980px}
+  .cv-sub b{color:var(--ink);font-weight:800}
+  .cv-agenda{display:grid;grid-template-columns:1fr 1fr 1fr 1.12fr;gap:12px}
+  .cv-item{background:var(--surf);border:1px solid var(--hair);border-radius:12px;
+    padding:16px 18px;display:flex;flex-direction:column;gap:6px;
+    box-shadow:0 6px 18px -12px rgba(16,28,51,.18)}
+  .cv-item .k{font-size:11px;font-weight:900;letter-spacing:.14em;color:var(--blue)}
+  .cv-item .t{font-size:17.5px;font-weight:800;letter-spacing:-.3px;color:var(--ink)}
+  .cv-item .s{font-size:12px;color:var(--mut);line-height:1.45}
+  .cv-item.ask{background:linear-gradient(160deg,#faeeed,#FFFFFF);border-color:rgba(185,74,72,.5)}
+  .cv-item.ask .k{color:var(--coral)}
+  .cv-stats{display:flex;gap:40px;padding-top:6px}
+  .cv-stats .st{display:flex;flex-direction:column;gap:4px;padding-left:16px;border-left:2px solid var(--hair2)}
+  .cv-stats .n{font-size:27px;font-weight:900;letter-spacing:-.5px;color:var(--blue)}
+  .cv-stats .n i{font-style:normal;font-size:15px;color:var(--body);font-weight:800}
+  .cv-stats .l{font-size:12px;color:var(--mut);font-weight:600}
+
+  /* ============ SLIDE 1 ============ */
+  .s1-main{grid-template-rows:1.04fr 1fr}
+  .s1-models{display:flex;align-items:center;gap:9px;border-bottom:1px solid var(--hair);padding-bottom:2px}
+  .s1-models .lb{font-weight:800;font-size:13.5px;flex:none;color:var(--ink)}
+  .s1-models .lb i{font-style:normal;color:var(--blue)}
+  .s1-models .note{margin-left:auto;font-size:12px;color:var(--mut);font-weight:600;flex:none}
+  .s1-steps{grid-template-columns:1fr 34px 1fr 34px 1.14fr;column-gap:0}
+  .s1-steps .step:not(.hot):not(.hotg){border-top:2px solid var(--hair2);padding-top:10px}
+
+  /* ============ SLIDE 2 ============ */
+  .s2-main{grid-template-rows:1fr 1.02fr}
+  .s2-eq{grid-template-columns:1fr 40px 1fr 40px 1.3fr 46px .74fr}
+  .s2-eq .step:not(.hotg){border-top:2px solid var(--hair2);padding-top:10px}
+  .op{align-self:center;justify-self:center;font-size:28px;font-weight:900;color:var(--hair2)}
+  .s2-sum{background:linear-gradient(165deg,var(--green),#1f5c42);border-radius:12px;color:#fff;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:12px;
+    box-shadow:0 10px 22px -12px rgba(46,125,91,.45)}
+  .s2-sum .b{font-size:20px;font-weight:900;letter-spacing:-.3px}
+  .s2-sum .s{font-size:11.5px;color:#d5ead9;margin-top:6px;line-height:1.45;font-weight:600}
+  .s2-low{grid-template-columns:1.18fr 1fr 1fr;column-gap:24px}
+
+  /* ============ SLIDE 3 ============ */
+  .s3-main{grid-template-rows:1.12fr 1fr}
+  .s3-cycle{grid-template-columns:1fr 26px 1fr 26px 1fr 26px 1fr 26px 1.08fr}
+  .s3-cycle .step:not(.hot){border-top:2px solid var(--hair2);padding-top:10px}
+  .s3-cycle .step .ct{font-size:15px}
+  .s3-cycle .step .cs{font-size:12.2px;margin-top:5px}
+  .loopnote{grid-column:1 / -1;display:flex;align-items:center;gap:10px;font-size:12px;
+    color:var(--mut);font-weight:600;padding-top:8px}
+  .loopnote .ln{flex:1;border-top:1.5px dashed var(--hair2);position:relative}
+  .loopnote .ln::before{content:'◀';position:absolute;left:-2px;top:-8px;color:var(--faint);font-size:10px}
+  .s3-low{grid-template-columns:1fr 1fr;column-gap:24px}
+  .s3-low .step:not(.hot){border-top:2px solid var(--hair2);padding-top:10px}
+
+  /* ============ SLIDE 4 ============ */
+  .s4-main{grid-template-rows:1fr 1.05fr}
+  .s4-domains{grid-template-columns:1fr 1fr 1fr;column-gap:24px}
+  .s4-domains .step:not(.hot){border-top:2px solid var(--hair2);padding-top:10px}
+  .s4-verify{grid-template-columns:1fr 28px 1fr 28px 1fr 28px 1fr}
+  .s4-verify .step:not(.hot){border-top:2px solid var(--hair2);padding-top:10px}
+  .s4-trend{display:flex;align-items:center;gap:11px;border-top:1px solid var(--hair);padding-top:10px}
+  .s4-trend .lb{font-weight:800;font-size:13px;flex:none}
+  .s4-trend .lb i{font-style:normal;color:var(--green)}
+
+  /* ============ SLIDE 5 ============ */
+  .s5-main{grid-template-rows:1.55fr .45fr}
+  .s5-cases{grid-template-columns:1fr 1fr 1fr;column-gap:16px}
+  .case{display:grid;grid-template-rows:auto 1fr 1.3fr auto;background:var(--surf);
+    border:1px solid var(--hair);border-radius:14px;padding:14px 17px;gap:6px;min-height:0;
+    box-shadow:0 6px 18px -12px rgba(16,28,51,.18)}
+  .case .nm{display:flex;align-items:baseline;gap:9px;padding-bottom:8px;border-bottom:1px solid var(--hair)}
+  .case .nm .t{font-size:19px;font-weight:900;letter-spacing:-.4px}
+  .case .nm .e{font-size:11px;color:var(--mut);font-weight:700}
+  .case .row{display:grid;grid-template-columns:40px 1fr;gap:10px;align-items:center;min-height:0}
+  .case .row .k{font-size:11px;font-weight:900;letter-spacing:.05em;align-self:center}
+  .case .row.pb .k{color:var(--coral)} .case .row.sv .k{color:var(--green)} .case .row.hm .k{color:var(--amber)}
+  .case .row .v{font-size:12.8px;color:var(--body);line-height:1.5;
+    border-left:1px solid var(--hair);padding-left:11px}
+  .case .row .v b{color:var(--ink);font-weight:800}
+  .case .tech{display:flex;align-items:center;gap:6px;font-size:10.8px;color:var(--mut);font-weight:700;
+    padding-top:9px;border-top:1px solid var(--hair);flex-wrap:wrap}
+  .case .tech b{color:var(--blue);font-weight:800}
+  .s5-demo{grid-template-columns:1fr 1fr 1fr;column-gap:24px}
+  .s5-demo .dm{display:flex;align-items:center;gap:15px;border-top:2px solid var(--hair2);padding-top:12px}
+  .s5-demo .dn{font-size:30px;font-weight:900;color:var(--blue);flex:none;line-height:1}
+  .s5-demo .dt{font-size:14px;font-weight:600;line-height:1.5;color:var(--body)}
+  .s5-demo .dt b{color:var(--ink);font-size:15.5px;font-weight:800}
+
+  /* ============ SLIDE 6 ============ */
+  .s6-main{grid-template-columns:330px 30px 1fr 30px 296px;position:relative;min-height:0}
+  .col{display:grid;grid-template-rows:26px 1fr;min-height:0;row-gap:9px}
+  .colh{display:flex;align-items:center;gap:8px;font-weight:900;font-size:13px;letter-spacing:.02em;
+    border-bottom:2px solid var(--ink);padding-bottom:7px}
+  .colh .dot{width:8px;height:8px;border-radius:50%;background:var(--blue)}
+  .colh small{color:var(--mut);font-weight:600;font-size:11px;margin-left:auto}
+  .colbody{display:grid;row-gap:0;min-height:0}
+  .cap{display:flex;flex-direction:column;justify-content:center;min-height:0;
+    border-bottom:1px solid var(--hair);padding:2px 2px}
+  .cap:last-child{border-bottom:none}
+  .cap .t{font-size:12.8px;font-weight:800;letter-spacing:-.3px;line-height:1.22;color:var(--ink)}
+  .cap .t i{font-style:normal;color:var(--blue);font-weight:900;font-size:10px;letter-spacing:.06em;margin-right:6px}
+  .cap .s{font-size:9.8px;color:var(--mut);margin-top:1px;line-height:1.3}
+  .colbody.trks{row-gap:9px}
+  .trk{background:var(--surf);border:1px solid var(--hair);border-radius:11px;
+    display:grid;grid-template-columns:96px 1fr;min-height:0;overflow:hidden;
+    box-shadow:0 4px 12px -9px rgba(16,28,51,.16)}
+  .trk .tl{display:flex;flex-direction:column;justify-content:center;gap:2px;padding:8px 12px;
+    border-right:1px solid var(--hair)}
+  .trk .tl .t{font-size:13.5px;font-weight:900;letter-spacing:-.2px}
+  .trk .tl .s{font-size:9.8px;color:var(--mut);font-weight:700;line-height:1.32}
+  .trk .tr{display:grid;gap:6px;padding:8px 10px;align-content:center}
+  .sub3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+  .sub2{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+  .subj{background:var(--tint);border-radius:8px;padding:6px 9px;min-width:0}
+  .subj .c{font-size:9.6px;font-weight:900;color:var(--blue);letter-spacing:.06em}
+  .subj .t{font-size:11.8px;font-weight:800;line-height:1.24;letter-spacing:-.2px;margin-top:1px;
+    word-break:keep-all;color:var(--ink)}
+  .subj .r{font-size:9.4px;color:var(--mut);margin-top:2px;font-weight:700}
+  .subj .r b{color:var(--amber)}
+  .colbody.grds{row-gap:9px}
+  .grade{border-radius:12px;padding:12px 15px;display:flex;flex-direction:column;min-height:0;color:#fff}
+  .grade .g{font-size:19px;font-weight:900;letter-spacing:.02em;line-height:1}
+  .grade .r{font-size:12px;font-weight:800;margin-top:4px;opacity:.92}
+  .grade .d{font-size:11.4px;line-height:1.45;margin-top:6px;opacity:.88}
+  .grade .ev{margin-top:auto;padding-top:7px;border-top:1px solid rgba(255,255,255,.3);
+    font-size:10.8px;font-weight:800;letter-spacing:.01em}
+  .grade.G{background:linear-gradient(160deg,#2e8a5c,#1f6644);box-shadow:0 10px 22px -13px rgba(46,138,92,.4)}
+  .grade.B{background:linear-gradient(160deg,#4266a3,#2f4c85);box-shadow:0 10px 22px -13px rgba(66,102,163,.4)}
+  .grade.K{background:linear-gradient(160deg,#1c2331,#0d1320);box-shadow:0 10px 22px -13px rgba(20,27,40,.5)}
+  svg.wires{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:3;overflow:visible}
+
+  /* ============ SLIDE 7 ============ */
+  .s7-main{grid-template-rows:48px 1fr 64px}
+  .s7-score{display:grid;grid-template-columns:210px 96px 186px 186px 210px 1fr;align-items:stretch;
+    border-radius:11px;overflow:hidden;background:var(--navy);color:#fff;
+    box-shadow:0 8px 20px -12px rgba(16,28,51,.5)}
+  .s7-score>div{display:flex;flex-direction:column;justify-content:center;padding:0 15px;
+    border-right:1px solid rgba(255,255,255,.14)}
+  .s7-score .h{background:rgba(255,255,255,.08);font-weight:900;font-size:13.5px}
+  .s7-score .h small{font-size:10px;color:#9aa8c0;font-weight:700}
+  .s7-score .p .n{font-size:15.5px;font-weight:900}
+  .s7-score .p .l{font-size:10px;color:#9aa8c0;font-weight:700}
+  .s7-score .p.i .n{color:#cdd6e4} .s7-score .p.a .n{color:#ffc9c5}
+  .s7-score .p.b .n{color:#a8d8b9} .s7-score .p.c .n{color:#e7c17c}
+  .s7-score .cond{border-right:none;align-items:flex-end}
+  .s7-score .cond .n{font-size:14.5px;font-weight:900}
+  .s7-score .cond .l{font-size:10px;color:#9aa8c0;font-weight:700}
+  .mtx{display:grid;grid-template-columns:116px 1.18fr 1.18fr 1.18fr 1.02fr;
+    grid-template-rows:24px 1fr 1fr 1fr;column-gap:14px;row-gap:0;min-height:0}
+  .mh{display:flex;align-items:center;font-size:11px;font-weight:900;letter-spacing:.06em;color:var(--mut)}
+  .mrow-line{border-bottom:1px solid var(--hair)}
+  .mg{display:flex;flex-direction:column;justify-content:center;min-height:0;padding:6px 0}
+  .mg .g{font-size:17px;font-weight:900;letter-spacing:.02em}
+  .mg .s{font-size:10px;font-weight:700;margin-top:3px;line-height:1.35;color:var(--mut)}
+  .mg.G .g{color:var(--gG)} .mg.B .g{color:var(--gB)} .mg.K .g{color:var(--gK)}
+  .mc{display:flex;flex-direction:column;justify-content:center;min-height:0;padding:6px 0}
+  .mc .t{font-size:13px;font-weight:800;letter-spacing:-.2px;line-height:1.32;color:var(--ink)}
+  .mc .s{font-size:11px;color:var(--mut);line-height:1.4;margin-top:3px}
+  .mc .m{font-size:10.2px;font-weight:800;color:var(--faint);margin-top:5px;letter-spacing:.01em}
+  .mc .m b{color:var(--amber)}
+  .mc.ev .t{color:var(--amber);font-size:12.2px}
+  .mc.ev{border-left:1px solid var(--hair);padding-left:14px}
+  .s7-relay{display:grid;grid-template-columns:1.3fr 28px 1fr 28px 1.2fr;min-height:0}
+  .relay{display:flex;flex-direction:column;justify-content:center;border-top:2px solid var(--hair2);padding-top:9px}
+  .relay .t{font-size:14px;font-weight:900;letter-spacing:-.2px;color:var(--ink)}
+  .relay .t b{color:var(--green)}
+  .relay .s{font-size:11.5px;color:var(--mut);margin-top:3px;line-height:1.35;font-weight:600}
+
+  /* ---------- presentation mode ---------- */
+  .ptools{position:fixed;right:18px;bottom:16px;z-index:60;display:flex;align-items:center;gap:8px;user-select:none}
+  .ptools .hintxt{font-size:11px;color:#7d8698;font-weight:700;margin-right:4px;letter-spacing:.02em;
+    background:rgba(255,255,255,.8);border-radius:14px;padding:4px 10px}
+  .ptools button{appearance:none;border:none;cursor:pointer;font-family:inherit;
+    display:flex;align-items:center;gap:6px;border-radius:22px;padding:10px 16px;
+    font-size:12.5px;font-weight:800;letter-spacing:.02em;
+    background:rgba(16,28,51,.9);color:#fff;box-shadow:0 8px 24px rgba(0,0,0,.28)}
+  .ptools button:hover{background:#1d2940}
+  .ptools button.primary{background:#b94a48}
+  .ptools button.primary:hover{background:#943539}
+  .ptools button.on{background:#B23A24}
+  body.shot .ptools,body.present .ptools{display:none}
+  @media print{.ptools{display:none}}
+  body.editing .slide{outline:2px dashed #b94a48;outline-offset:-3px;cursor:text}
+  body.editing .slide:focus{outline:2px dashed #b94a48}
+  body.present{overflow:hidden;background:#070d18}
+  body.present .phint{display:none}
+  body.present .deck{padding:0;gap:0}
+  body.present .slide{display:none}
+  body.present .slide.cur{display:grid;position:fixed;left:50%;top:50%;margin:0;
+    transform:translate(-50%,-50%) scale(var(--sc,1));box-shadow:0 30px 80px rgba(0,0,0,.5)}
+  body.present .slide.cur .a-el{opacity:0;transform:translateY(16px)}
+  body.present .slide.cur .a-el.anchor{transform:translateY(24px)}
+  body.present .slide.cur.reveal .a-el{opacity:1;transform:none;
+    transition:opacity .55s ease,transform .55s cubic-bezier(.2,.75,.25,1);
+    transition-delay:var(--d,0ms)}
+
+  /* ---------- print / PDF ---------- */
+  @page{size:1280px 720px;margin:0}
+  @media print{
+    html,body{background:var(--bg)}
+    .deck{padding:0;gap:0}
+    .slide{page-break-after:always;break-inside:avoid;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  }
+
+  /* ===== ssjhtml2 확장 컴포넌트 (구글시트 덱) ===== */
+  .main.gm{display:flex;flex-direction:column;gap:12px;min-height:0}
+  .gm>.sjtbl,.gm>.csrow,.gm>.colsx,.gm>.agx{flex:1 1 0;min-height:0}
+  .cc>.sjtbl,.cc>.csrow{flex:1 1 0;min-height:0}
+  .cscell{display:flex;flex-direction:column;justify-content:center}
+  .strip6{display:flex;gap:11px}
+  .strip6 .stat6{flex:1}
+  .agx{display:flex;align-items:center;gap:13px;background:var(--surf);
+    border:1px solid var(--hair);border-left:4px solid var(--blue);
+    border-radius:0 9px 9px 0;padding:9px 15px}
+  .agx .tm{font:800 13px/1 Pretendard,'Noto Sans KR',sans-serif;color:var(--blue);
+    width:34px;flex-shrink:0;letter-spacing:.3px}
+  .agx .mo{width:172px;flex-shrink:0;font-size:16px;font-weight:800;
+    color:var(--ink);line-height:1.26}
+  .agx .ct{flex:1;font-size:14px;font-weight:500;line-height:1.5;color:var(--body)}
+  .agx .ct b{color:var(--cyan);font-weight:800}
+  .csrow{display:flex;gap:6px;align-items:stretch;--bar:var(--blue)}
+  .cshead{width:142px;flex-shrink:0;background:var(--tint);border-left:4px solid var(--bar);
+    padding:7px 11px;display:flex;flex-direction:column;justify-content:center;
+    border-radius:0 6px 6px 0}
+  .cshead small{font-size:9px;font-weight:800;color:var(--mut);letter-spacing:1.1px}
+  .cshead b{font-size:15.5px;font-weight:800;line-height:1.24;color:var(--ink);margin-top:2px}
+  .cscell{flex:1;background:var(--surf);border:1px solid var(--hair);border-radius:6px;
+    padding:6px 10px;min-width:0}
+  .cscell em{display:block;font-size:10.4px;font-style:normal;font-weight:800;
+    color:var(--cyan);letter-spacing:.7px;margin-bottom:2px}
+  .cscell p{font-size:14px;font-weight:500;line-height:1.5;color:var(--body)}
+  .cscell p b{color:var(--ink);font-weight:800}
+  .cscell.out{background:#f5ecec;border-color:#dcc3c2}
+  .cscell.out em{color:var(--cyan)}
+  .dflow{display:flex;align-items:stretch}
+  .dstep{flex:1;background:var(--surf);border:1px solid var(--hair);border-radius:6px;
+    padding:6px 10px;position:relative;margin-right:17px;min-width:0}
+  .dstep:last-child{margin-right:0}
+  .dstep:after{content:'▶';position:absolute;right:-14px;top:50%;transform:translateY(-50%);
+    color:var(--hair2);font-size:9px}
+  .dstep:last-child:after{display:none}
+  .dstep .dn{font:800 10.4px/1 Pretendard,'Noto Sans KR',sans-serif;color:var(--blue);letter-spacing:.5px}
+  .dstep b{display:block;font-size:14px;font-weight:800;color:var(--ink);margin:2px 0 2px;line-height:1.26}
+  .dstep p{font-size:12.2px;font-weight:500;line-height:1.42;color:var(--body)}
+  .dstep.fin{background:var(--navy);border-color:var(--navy)}
+  .dstep.fin b{color:#fff}.dstep.fin p{color:#b6bece}.dstep.fin .dn{color:var(--amber)}
+  .codebx{background:var(--navy);border-radius:9px;padding:9px 15px}
+  .codebx .ctit{font-size:10.6px;font-weight:800;color:var(--amber);letter-spacing:1.5px;margin-bottom:5px}
+  .codebx pre{margin:0;font:600 13.8px/1.66 Consolas,'Pretendard Variable',Pretendard,'Noto Sans KR',monospace;
+    white-space:pre-wrap;word-break:break-all;color:#eef3fa;letter-spacing:.1px}
+  .codebx pre b{color:#ffb3ac;font-weight:800}
+  .codebx pre i{color:#bcc8dd;font-style:normal}
+  table.sjtbl{width:100%;border-collapse:collapse}
+  .sjtbl tbody tr{height:12%}
+  .sjtbl.rh2 tbody tr{height:56px}
+  .sjtbl td.c1{font-weight:800;color:var(--ink);white-space:nowrap}
+  .sjtbl th{background:var(--navy);color:#fff;font-size:12px;font-weight:800;
+    padding:7px 13px;text-align:left;letter-spacing:.3px;border:1px solid var(--navy)}
+  .sjtbl td{border:1px solid var(--hair);background:var(--surf);padding:7.5px 13px;
+    font-size:14px;font-weight:500;line-height:1.44;color:var(--body);vertical-align:middle}
+  .sjtbl tr:nth-child(even) td{background:var(--bg)}
+  .sjtbl td b{color:var(--ink);font-weight:800}
+  .sjtbl td code{font:600 12.4px/1.48 Consolas,monospace;background:var(--tint);
+    padding:.5px 4px;border-radius:3px;color:var(--cyan);word-break:break-all}
+  .sjtbl tr.gr td{background:var(--tint);font-weight:800;color:var(--ink);font-size:12.4px}
+  .cellcode{font:600 12.4px/1.48 Consolas,monospace;background:var(--tint);
+    padding:.5px 5px;border-radius:3px;color:var(--cyan)}
+  .colsx{display:flex;gap:10px;min-height:0}
+  .colsx>.cc{flex:1;display:flex;flex-direction:column;gap:8px;min-width:0}
+  .seclb{font-size:11.2px;font-weight:900;color:var(--cyan);letter-spacing:1.6px}
+  .slide.cmpct .sjtbl td{font-size:11.6px;padding:4.5px 10px}
+  .slide.cmpct .sjtbl td code,.slide.cmpct .cscell p code,.slide.cmpct .cellcode{font-size:10.6px}
+  .slide.cmpct .cscell p{font-size:11.8px}
+  .slide.cmpct .codebx pre{font-size:12.4px;line-height:1.56}
+  .slide.cmpct .dstep b{font-size:11.8px}
+  .slide.cmpct .dstep p{font-size:10.4px}
+  .slide.cmpct .agx .ct{font-size:11.8px}
+  .cscell p code,.agx .ct code,.dstep p code{font:600 12.4px/1.48 Consolas,monospace;
+    background:var(--tint);padding:.5px 4px;border-radius:3px;color:var(--cyan);word-break:break-all}
+
+  @media print{body{zoom:1!important}}
+  </style>
+</head>
+<body>
+<div class="deck">
+
+<section class="slide cover" id="s1">
+  <div class="head"><div>
+    <div class="kick"><span class="no">CDSA</span><span class="lb">CORPORATE TRAINING · 4H</span></div>
+  </div><div class="brand"><div class="t1">GOOGLE <span>SHEETS</span></div><div class="t2">AI와 함께 쓰는 구글스프레드시트</div></div></div>
+  <div class="cv-mid">
+    <h1>AI와 함께 쓰는<br><em class="c">구글스프레드시트</em></h1>
+    <div class="cv-sub">협업 기반 · 구글 전용 함수 · Gemini와 =AI() · 피벗과 Looker Studio · 확장 프로그램 · Apps Script 자동화 —<br>구글 시트의 기능 전체를 4시간에 실습 순서로 다룹니다.</div>
+    <div class="cv-stats"><div class="st"><span class="n">4</span><span class="l">세션 × 50분</span></div><div class="st"><span class="n">25+</span><span class="l">구글 전용 함수</span></div><div class="st"><span class="n">60+</span><span class="l">복붙용 수식·코드</span></div><div class="st"><span class="n">7</span><span class="l">자동화 시나리오</span></div></div>
+  </div>
+  <div class="cv-agenda"><div class="cv-item"><span class="k">S1 · 협업 기반</span><span class="t">시트를 같이 쓰는 법</span><span class="s">공유·권한 → 댓글·버전 → 스마트칩·서식</span></div><div class="cv-item"><span class="k">S2 · 전용 함수</span><span class="t">시트를 DB처럼</span><span class="s">ARRAYFORMULA · QUERY · IMPORTRANGE · REGEX</span></div><div class="cv-item"><span class="k">S3 · AI와 시각화</span><span class="t">분류·요약·대시보드</span><span class="s">Gemini · =AI() · 피벗 · Looker Studio</span></div><div class="cv-item ask"><span class="k">S4 · 자동화</span><span class="t">시트가 스스로 일하게</span><span class="s">부가기능 · Apps Script · AI 코드 작성</span></div></div>
+  <div class="foot"><span>신성진 · CDSA 한국데이터사이언티스트협회</span><span>GOOGLE SHEETS × GENERATIVE AI</span><span class="pg">표지</span></div>
+</section>
+<section class="slide" id="s2">
+<div class="head"><div><div class="kick"><span class="no">02</span><span class="lb">과정 안내</span></div><h1>4시간 전체 로드맵</h1><div class="headsub">세션 4개로 진행합니다. 협업 기반을 먼저 깔고, 함수 → AI·시각화 → 자동화 순서로 쌓아 올립니다.</div></div><div class="brand"><div class="t1">GOOGLE <span>SHEETS</span></div><div class="t2">AI와 함께 쓰는 구글스프레드시트</div></div></div>
+<div class="main gm"><div class="strip6"><div class="stat6"><div class="n">50분</div><div class="l">세션당 진행</div></div><div class="stat6 g"><div class="n">10분</div><div class="l">세션당 실습·휴식</div></div><div class="stat6 a"><div class="n">1개</div><div class="l">공용 실습 시트</div></div><div class="stat6"><div class="n">100%</div><div class="l">수식 복붙 실습</div></div></div><div class="agx" style="border-left-color:#4266a3"><span class="tm" style="color:#4266a3">S1</span><span class="mo">협업 기반 <br>+ 입력·서식</span><span class="ct"><b>04–14장</b> · 엑셀과의 구조 차이 → 공유·권한 → 동시편집·댓글·할당 → 버전 기록 → 필터 보기 → 데이터 확인 → 스마트칩 → 조건부 서식 → 표·타임라인</span></div><div class="agx" style="border-left-color:#2e8a5c"><span class="tm" style="color:#2e8a5c">S2</span><span class="mo">구글 전용 함수</span><span class="ct"><b>15–26장</b> · ARRAYFORMULA → QUERY(기본·집계) → IMPORTRANGE → FILTER·SORT·UNIQUE → REGEX 3형제 → IMPORT 4형제 → LAMBDA 계열 → 조합 레시피 5선</span></div><div class="agx" style="border-left-color:#c38424"><span class="tm" style="color:#c38424">S3</span><span class="mo">AI + 시각화</span><span class="ct"><b>27–37장</b> · Gemini 사이드 패널 → =AI() 함수 → ChatGPT·Claude에 시트 데이터 넘기기 → 검증 수칙 → 피벗 → 차트·슬라이서 → SPARKLINE → Looker Studio</span></div><div class="agx" style="border-left-color:#b94a48"><span class="tm" style="color:#b94a48">S4</span><span class="mo">확장 + 자동화</span><span class="ct"><b>38–50장</b> · 마켓플레이스 부가기능 → Apps Script(맞춤 함수·트리거·Gmail 연동·웹앱) → AI로 코드 작성 → 통합 시나리오 → 실무 체크리스트</span></div><div class="csrow" style="--bar:#141b28"><div class="cshead" style="border-left-color:#141b28"><small>준비</small><b>오늘 필요한 것</b></div><div class="cscell"><em>환경</em><p>크롬 브라우저 + <b>회사 구글 계정</b> — 전사 Gemini Enterprise 구독 환경이라 시트 우측 상단 ✦ 패널을 그대로 실습합니다</p></div><div class="cscell out"><em>실습 시트</em><p>배포 URL 접속 → 파일 › 사본 만들기 — <b>사본에서</b> 실습합니다. 원본은 읽기 전용</p></div></div></div>
+<div class="anchor"><span class="k">진행 방식</span><span class="t">모든 수식·프롬프트·코드는 슬라이드 그대로 복사해 실습 시트에 붙여넣으며 진행합니다</span><span class="r">실습 시트: 현장 URL 배포</span></div>
+<div class="foot"><span>AI와 함께 쓰는 구글스프레드시트</span><span>CDSA · 한국데이터사이언티스트협회</span><span class="pg"><b>02</b> / 50</span></div>
+</section>
+<section class="slide" id="s3">
+<div class="head"><div><div class="kick"><span class="no">03</span><span class="lb">과정 안내</span></div><h1>엑셀과 구글 시트 — 구조가 다른 지점 5가지</h1><div class="headsub">기능 대부분은 겹칩니다. 갈라지는 지점은 이 5가지이고, 오늘 과정 전체가 이 차이 위에서 진행됩니다.</div></div><div class="brand"><div class="t1">GOOGLE <span>SHEETS</span></div><div class="t2">AI와 함께 쓰는 구글스프레드시트</div></div></div>
+<div class="main gm"><div class="csrow" style="--bar:#4266a3"><div class="cshead" style="border-left-color:#4266a3"><small>저장</small><b>파일 vs URL</b></div><div class="cscell"><em>엑셀</em><p>내 PC의 .xlsx <b>파일</b>. 저장을 눌러야 반영</p></div><div class="cscell out"><em>구글 시트</em><p>클라우드의 <b>URL 하나</b>. 입력 즉시 자동 저장 — 저장 버튼 자체가 없음</p></div></div><div class="csrow" style="--bar:#2e8a5c"><div class="cshead" style="border-left-color:#2e8a5c"><small>협업</small><b>주고받기 vs 동시 편집</b></div><div class="cscell"><em>엑셀</em><p>메일로 파일을 주고받으며 "최종_진짜최종.xlsx" 버전이 늘어남</p></div><div class="cscell out"><em>구글 시트</em><p>같은 URL에서 <b>동시 편집</b>. 다른 사람 커서가 실시간으로 보임</p></div></div><div class="csrow" style="--bar:#c38424"><div class="cshead" style="border-left-color:#c38424"><small>이력</small><b>덮어쓰기 vs 버전 기록</b></div><div class="cscell"><em>엑셀</em><p>덮어쓰면 이전 상태는 사라짐</p></div><div class="cscell out"><em>구글 시트</em><p><b>전체 버전 기록 + 셀 단위 수정 기록</b> 자동 보존, 언제든 복원</p></div></div><div class="csrow" style="--bar:#6f5aa8"><div class="cshead" style="border-left-color:#6f5aa8"><small>확장</small><b>VBA vs Apps Script</b></div><div class="cscell"><em>엑셀</em><p>VBA 매크로 — 내 PC 안에서만 동작</p></div><div class="cscell out"><em>구글 시트</em><p><b>Apps Script</b>(JavaScript) — Gmail·캘린더·드라이브와 클라우드에서 연동</p></div></div><div class="csrow" style="--bar:#b94a48"><div class="cshead" style="border-left-color:#b94a48"><small>AI</small><b>별도 구독 vs 내장</b></div><div class="cscell"><em>엑셀</em><p>Copilot — Microsoft 365 별도 애드온</p></div><div class="cscell out"><em>구글 시트</em><p><b>Gemini 사이드 패널 + =AI() 함수</b>가 시트 안에 내장 (Workspace 플랜)</p></div></div><div class="csrow" style="--bar:#141b28"><div class="cshead" style="border-left-color:#141b28"><small>오프라인</small><b>끊겨도 되는가</b></div><div class="cscell"><em>엑셀</em><p>설치형 — 네트워크와 무관하게 동작</p></div><div class="cscell out"><em>구글 시트</em><p>크롬 오프라인 설정 시 편집 가능 — 재접속하면 자동 동기화, 충돌분은 버전 기록으로 확인</p></div></div></div>
+<div class="anchor"><span class="k">한계도 확인</span><span class="t">셀 한도 1,000만 개 — 초대형 데이터는 엑셀·BigQuery 영역. 그 전까지의 실무는 구글 시트가 빠릅니다</span><span class="r">오늘 실습 데이터: 주문 500행</span></div>
+<div class="foot"><span>AI와 함께 쓰는 구글스프레드시트</span><span>CDSA · 한국데이터사이언티스트협회</span><span class="pg"><b>03</b> / 50</span></div>
+</section>
+<section class="slide key" id="s4">
+  <div class="ktop">
+    <span class="kt1">AI와 함께 쓰는 구글스프레드시트<small>GOOGLE SHEETS × GENERATIVE AI</small></span>
+    <span class="kt2">CDSA · 한국데이터사이언티스트협회 · 기업 실무 4시간</span>
+  </div>
+  <div class="khdr">
+    <div class="keyebrow">PART 1 · 슬라이드 05 – 09 · 소요 약 25분 · 실습 권한 설정 · 필터 보기 만들기</div>
+    <div class="ktitle">협업 기반</div>
+  </div>
+  <div class="kbody"><div class="krow">
+    <div class="knum">01</div>
+    <div class="ktxt">
+      <h2>협업 기반<br><em>시트를 "같이" 쓰는 법</em></h2>
+      <p>기능을 배우기 전에, 여러 명이 한 시트를 깨뜨리지 않고 쓰는 규칙부터 세팅합니다. 여기가 엑셀과 가장 크게 갈라지는 구간입니다.</p>
+      <p><b>다루는 범위</b> — 공유·권한 3단계 · 시트·범위 보호 · 댓글·@멘션·할당 · 버전 기록·셀 수정 기록 · 필터 vs 필터 보기 · 데이터 확인(드롭다운·체크박스)</p>
+    </div>
+  </div></div>
+  <span class="kpg">04</span>
+</section>
+<section class="slide" id="s5">
+<div class="head"><div><div class="kick"><span class="no">05</span><span class="lb">PART 1 · 협업 기반</span></div><h1>공유와 권한 — 사고의 90%는 여기서 막습니다</h1><div class="headsub">우측 상단 <b>공유</b> 버튼 하나에 권한 3단계 × 링크 범위 3단계가 들어 있습니다. 조합을 정확히 알고 배포합니다.</div></div><div class="brand"><div class="t1">GOOGLE <span>SHEETS</span></div><div class="t2">AI와 함께 쓰는 구글스프레드시트</div></div></div>
+<div class="main gm"><div class="dflow"><div class="dstep"><span class="dn">01</span><b>공유 버튼</b><p>우측 상단 파란 버튼 클릭</p></div><div class="dstep"><span class="dn">02</span><b>대상 지정</b><p>이메일 추가 또는 링크 복사</p></div><div class="dstep"><span class="dn">03</span><b>권한 선택</b><p>뷰어 / 댓글 작성자 / 편집자</p></div><div class="dstep"><span class="dn">04</span><b>범위 확인</b><p>제한됨 · 조직 · 링크 소유자 전체</p></div><div class="dstep fin"><span class="dn">05</span><b>보내기</b><p>알림 메일과 함께 전송</p></div></div><table class="sjtbl "><thead><tr><th style="width:150px">구분</th><th>할 수 있는 것</th><th>실무 배정 기준</th></tr></thead><tbody><tr><td class="c1"><b>뷰어</b></td><td>보기만 가능. 필터 보기·다운로드는 설정에 따라 허용</td><td>외부 보고용 — 결과만 보여줄 때</td></tr><tr><td class="c1"><b>댓글 작성자</b></td><td>보기 + 댓글·제안. 셀 값은 못 바꿈</td><td><b>외부 협력사 기본값</b> — 의견은 받되 데이터는 보호</td></tr><tr><td class="c1"><b>편집자</b></td><td>모든 수정 + 공유 설정 변경(제한 가능)</td><td>같은 팀 실무자만</td></tr><tr class="gr"><td colspan="3">링크 공유 범위 — 누구에게 열리는가</td></tr><tr><td class="c1">제한됨</td><td>추가된 계정만 접근</td><td>기본값. 명단 관리가 되는 문서</td></tr><tr><td class="c1">조직 내 링크</td><td>회사 계정 전체에 링크로 열림</td><td>사내 위키·공지형 시트</td></tr><tr><td class="c1">링크가 있는 모든 사용자</td><td>링크만 알면 누구나</td><td><b>외부 유출 경로 1위</b> — 꼭 필요할 때만</td></tr></tbody></table><div class="csrow" style="--bar:#b94a48"><div class="cshead" style="border-left-color:#b94a48"><small>추가 잠금</small><b>보호와 차단</b></div><div class="cscell"><em>시트·범위 보호</em><p>데이터 › 시트 및 범위 보호 — 수식 열·원본 탭을 편집자에게서도 잠금 (경고만 / 권한 제한 선택)</p></div><div class="cscell out"><em>다운로드·복사 차단</em><p>공유 › 톱니 설정 — 뷰어·댓글 작성자의 다운로드·인쇄·복사 해제</p></div></div></div>
+<div class="anchor"><span class="k">실무 규칙</span><span class="t">외부 공유 기본값 = 댓글 작성자 + 제한됨. "링크가 있는 모든 사용자 + 편집자"는 금지 조합입니다</span><span class="r">공유 › 톱니 아이콘</span></div>
+<div class="foot"><span>AI와 함께 쓰는 구글스프레드시트</span><span>CDSA · 한국데이터사이언티스트협회</span><span class="pg"><b>05</b> / 50</span></div>
+</section>
+<section class="slide" id="s6">
+<div class="head"><div><div class="kick"><span class="no">06</span><span class="lb">PART 1 · 협업 기반</span></div><h1>동시 편집과 댓글 — 메일 왕복을 시트 안으로</h1><div class="headsub">수정 요청을 메일로 보내지 않습니다. 셀에 댓글을 달고, @로 사람을 지정하고, 할당해서 종결까지 시트 안에서 처리합니다.</div></div><div class="brand"><div class="t1">GOOGLE <span>SHEETS</span></div><div class="t2">AI와 함께 쓰는 구글스프레드시트</div></div></div>
+<div class="main gm"><div class="dflow"><div class="dstep"><span class="dn">01</span><b>셀 선택</b><p>피드백할 셀·범위 클릭</p></div><div class="dstep"><span class="dn">02</span><b>댓글 달기</b><p>Ctrl+Alt+M 또는 우클릭 › 댓글</p></div><div class="dstep"><span class="dn">03</span><b>@멘션</b><p>@이름 입력 → 상대에게 메일 발송</p></div><div class="dstep"><span class="dn">04</span><b>할당</b><p>[할당] 체크 → 처리 담당자 지정</p></div><div class="dstep fin"><span class="dn">05</span><b>완료 처리</b><p>담당자가 ✓ 누르면 스레드 종결</p></div></div><table class="sjtbl "><thead><tr><th style="width:128px">기능</th><th style="width:250px">사용 방법</th><th>실무 포인트</th></tr></thead><tbody><tr><td class="c1">실시간 커서</td><td>자동 — 접속자 색상 커서 표시</td><td>누가 어느 셀을 보는지 즉시 확인, 우측 상단 아바타 클릭 시 해당 위치로 이동</td></tr><tr><td class="c1">댓글 스레드</td><td>셀 우상단 노란 삼각형</td><td>대화가 셀에 붙어 남음 — 히스토리가 곧 업무 기록</td></tr><tr><td class="c1"><b>할당</b></td><td>댓글 입력창 하단 체크박스</td><td>"누가 처리할지"가 명시됨. 할당받은 사람 화면에 작업 목록으로 집계</td></tr><tr><td class="c1">이모지 반응</td><td>댓글에 이모지</td><td>"확인했음"을 답글 없이 처리</td></tr><tr><td class="c1">전체 댓글함</td><td>우측 상단 말풍선 아이콘</td><td>미해결 댓글만 필터 — 회의 전 잔여 이슈 점검</td></tr><tr><td class="c1">메모 (Shift+F2)</td><td>삽입 › 메모</td><td>알림·스레드 없는 정적 주석 — 협의가 필요하면 메모가 아니라 댓글</td></tr><tr><td class="c1">댓글 링크</td><td>댓글 ⋮ › 이 댓글 링크 받기</td><td>특정 스레드로 바로 가는 URL — 메신저로 공유</td></tr><tr><td class="c1">알림 설정</td><td>도구 › 알림 설정</td><td>수정·댓글 발생 시 메일 수신 주기 선택</td></tr></tbody></table></div>
+<div class="anchor"><span class="k">바꾸는 습관</span><span class="t">"3행 단가 확인 부탁해요" 메일 대신 — 해당 셀에 댓글 + @멘션 + 할당. 요청·처리·종결이 한 셀에 남습니다</span><span class="r">Ctrl+Alt+M</span></div>
+<div class="foot"><span>AI와 함께 쓰는 구글스프레드시트</span><span>CDSA · 한국데이터사이언티스트협회</span><span class="pg"><b>06</b> / 50</span></div>
+</section>
+<section class="slide" id="s7">
+<div class="head"><div><div class="kick"><span class="no">07</span><span class="lb">PART 1 · 협업 기반</span></div><h1>버전 기록 — "누가 언제 뭘 바꿨나"가 전부 남습니다</h1><div class="headsub">구글 시트에는 "다른 이름으로 저장"이 필요 없습니다. 파일 전체의 시점 복원과 셀 하나의 수정 이력을 나눠서 씁니다.</div></div><div class="brand"><div class="t1">GOOGLE <span>SHEETS</span></div><div class="t2">AI와 함께 쓰는 구글스프레드시트</div></div></div>
+<div class="main gm"><table class="sjtbl "><thead><tr><th style="width:150px">무엇</th><th style="width:360px">경로</th><th>실무 쓰임</th></tr></thead><tbody><tr><td class="c1"><b>전체 버전 기록</b></td><td>파일 › 버전 기록 › 버전 기록 보기 <code>Ctrl+Alt+Shift+H</code></td><td>시점별 스냅숏 — 누가·언제·어디를 바꿨는지 색상으로 표시</td></tr><tr><td class="c1">버전 이름 지정</td><td>버전 기록 화면에서 ⋮ › 이름 지정</td><td>"경영 보고 제출본" 같은 마일스톤을 이름으로 고정</td></tr><tr><td class="c1">해당 버전 복원</td><td>버전 선택 › 상단 [이 버전 복원]</td><td>복원해도 이후 기록이 사라지지 않음 — 복원 자체도 기록됨</td></tr><tr><td class="c1"><b>셀 수정 기록</b></td><td>셀 우클릭 › 수정 기록 표시</td><td>이 셀 하나의 변경 이력만 — "이 숫자 누가 바꿨어?"의 정답</td></tr><tr><td class="c1">사본 만들기</td><td>파일 › 사본 만들기</td><td>실험용 분기 — 원본 URL과 완전히 분리</td></tr></tbody></table><div class="dflow"><div class="dstep"><span class="dn">01</span><b>사고 발생</b><p>누군가 수식 열을 값으로 덮어씀</p></div><div class="dstep"><span class="dn">02</span><b>기록 열기</b><p>Ctrl+Alt+Shift+H</p></div><div class="dstep"><span class="dn">03</span><b>시점 선택</b><p>사고 직전 버전 클릭 — 변경분 색상 확인</p></div><div class="dstep fin"><span class="dn">04</span><b>복원</b><p>[이 버전 복원] — 이후 작업분은 버전 기록에 그대로 보존</p></div></div><div class="csrow" style="--bar:#c38424"><div class="cshead" style="border-left-color:#c38424"><small>주의</small><b>복원 전 확인</b></div><div class="cscell" style="flex:2"><em>복원 범위</em><p>복원은 <b>파일 전체</b>가 그 시점으로 돌아갑니다. 특정 시트만 살리려면 — 버전 화면에서 해당 범위 복사 → 현재 버전에 붙여넣기</p></div></div></div>
+<div class="anchor"><span class="k">핵심</span><span class="t">실수 복구 때문에 백업 파일을 만들 필요가 없습니다. 대신 제출 시점마다 버전 이름을 지정해 두세요</span><span class="r">Ctrl+Alt+Shift+H</span></div>
+<div class="foot"><span>AI와 함께 쓰는 구글스프레드시트</span><span>CDSA · 한국데이터사이언티스트협회</span><span class="pg"><b>07</b> / 50</span></div>
+</section>
+<section class="slide" id="s8">
+<div class="head"><div><div class="kick"><span class="no">08</span><span class="lb">PART 1 · 협업 기반</span></div><h1>필터 vs 필터 보기 — 공유 시트에서 싸우지 않는 법</h1><div class="headsub">기본 필터는 <b>모든 사람의 화면</b>을 바꿉니다. 공유 시트에서는 나만 보는 가상 뷰, 필터 보기를 씁니다.</div></div><div class="brand"><div class="t1">GOOGLE <span>SHEETS</span></div><div class="t2">AI와 함께 쓰는 구글스프레드시트</div></div></div>
+<div class="main gm"><div class="csrow" style="--bar:#141b28"><div class="cshead" style="border-left-color:#141b28"><small>기본 필터</small><b>데이터 › 필터 만들기</b></div><div class="cscell"><em>동작</em><p>정렬·숨김이 <b>전원에게 적용</b> — 내가 정렬하면 옆 사람 화면도 바뀜</p></div><div class="cscell"><em>용도</em><p>혼자 쓰는 시트, 또는 전원 합의된 정렬 상태 고정</p></div></div><div class="csrow" style="--bar:#2e8a5c"><div class="cshead" style="border-left-color:#2e8a5c"><small>필터 보기</small><b>데이터 › 필터 보기</b></div><div class="cscell out"><em>동작</em><p><b>나에게만 보이는 가상 뷰</b> — 원본 순서·타인 화면 불변. 테두리가 검게 변해 구분</p></div><div class="cscell out"><em>용도</em><p>공유 시트에서 각자 자기 조건으로 보기 — 이름 저장·재사용</p></div></div><div class="dflow"><div class="dstep"><span class="dn">01</span><b>만들기</b><p>데이터 › 필터 보기 › 새 필터 보기</p></div><div class="dstep"><span class="dn">02</span><b>조건 설정</b><p>열 헤더 깔때기로 값·조건·색상 필터</p></div><div class="dstep"><span class="dn">03</span><b>이름 지정</b><p>좌상단 이름 입력 — "서울·30만 이상"</p></div><div class="dstep"><span class="dn">04</span><b>공유</b><p>이 상태의 URL 복사 → 동료도 같은 뷰로 진입</p></div><div class="dstep fin"><span class="dn">05</span><b>종료</b><p>우상단 ✕ — 원본은 그대로</p></div></div><table class="sjtbl "><thead><tr><th style="width:300px">상황</th><th style="width:170px">선택</th><th>이유</th></tr></thead><tbody><tr><td class="c1">혼자 분석 중</td><td>기본 필터</td><td>화면 충돌 없음 — 아무거나 사용 가능</td></tr><tr><td class="c1">공유 시트에서 내 조건으로 보기</td><td><b>필터 보기</b></td><td>타인 화면 불변 + 조건 저장</td></tr><tr><td class="c1">같은 조건을 동료에게 전달</td><td>필터 보기 + URL</td><td>링크 하나로 동일 뷰 재현</td></tr></tbody></table></div>
+<div class="anchor"><span class="k">사고 방지</span><span class="t">공유 시트에서 기본 필터로 정렬하는 순간 전원의 화면이 바뀝니다 — 필터 보기가 기본 습관</span><span class="r">데이터 › 필터 보기</span></div>
+<div class="foot"><span>AI와 함께 쓰는 구글스프레드시트</span><span>CDSA · 한국데이터사이언티스트협회</span><span class="pg"><b>08</b> / 50</span></div>
+</section>
+<section class="slide" id="s9">
+<div class="head"><div><div class="kick"><span class="no">09</span><span class="lb">PART 1 · 협업 기반</span></div><h1>데이터 확인 — 입력을 규칙으로 통제합니다</h1><div class="headsub">"서울/서울시/seoul"이 섞이면 뒤의 모든 집계가 깨집니다. 입력 단계에서 규칙으로 막는 기능이 데이터 확인입니다.</div></div><div class="brand"><div class="t1">GOOGLE <span>SHEETS</span></div><div class="t2">AI와 함께 쓰는 구글스프레드시트</div></div></div>
+<div class="main gm"><div class="dflow"><div class="dstep"><span class="dn">01</span><b>범위 선택</b><p>규칙 걸 열 선택 — 예: K열 상태</p></div><div class="dstep"><span class="dn">02</span><b>규칙 추가</b><p>데이터 › 데이터 확인 › 규칙 추가</p></div><div class="dstep"><span class="dn">03</span><b>기준 선택</b><p>드롭다운·체크박스·날짜·맞춤 수식</p></div><div class="dstep"><span class="dn">04</span><b>거부/경고</b><p>잘못된 입력 거부 또는 경고 표시</p></div><div class="dstep fin"><span class="dn">05</span><b>배포</b><p>열 전체 적용 — 이후 입력은 규칙 안에서만</p></div></div><table class="sjtbl "><thead><tr><th style="width:186px">규칙 유형</th><th style="width:232px">설정</th><th>실무 예</th></tr></thead><tbody><tr><td class="c1">드롭다운 (항목 직접)</td><td>값 나열 + 칩 색상 지정</td><td>상태 열: <b>대기 · 진행 · 완료 · 보류</b> — 색상 칩으로</td></tr><tr><td class="c1">드롭다운 (범위 참조)</td><td>기준 시트의 목록 범위 지정</td><td>담당자 목록 시트를 참조 — 명단 수정 시 자동 반영</td></tr><tr><td class="c1">체크박스</td><td>삽입 › 체크박스</td><td>완료 플래그, 참석 여부 — TRUE/FALSE로 집계 가능</td></tr><tr><td class="c1">날짜·숫자 조건</td><td>유효 날짜 / 사이 값</td><td>납기일: 오늘 이후만 허용, 수량: 1~999</td></tr><tr><td class="c1">맞춤 수식</td><td>수식이 TRUE일 때만 허용</td><td>아래 수식 참고 — 중복 차단, 형식 검증</td></tr><tr><td class="c1">거부 vs 경고</td><td>입력 거부 / 경고 표시</td><td>원천 차단은 거부, 예외 허용 업무는 경고</td></tr></tbody></table><div class="codebx"><div class="ctit">맞춤 수식 예시 — 데이터 확인 › 맞춤 수식</div><pre><b>=COUNTIF(A:A,A1)=1</b>          <i>주문번호 중복 입력 차단</i>
+<b>=REGEXMATCH(C1,"^C[0-9]{3}$")</b>  <i>고객ID를 C+숫자3자리 형식으로 강제</i></pre></div></div>
+<div class="anchor"><span class="k">원칙</span><span class="t">자유 입력을 허용한 열은 반드시 오염됩니다. 상태·분류·담당 열은 예외 없이 드롭다운으로</span><span class="r">데이터 › 데이터 확인</span></div>
+<div class="foot"><span>AI와 함께 쓰는 구글스프레드시트</span><span>CDSA · 한국데이터사이언티스트협회</span><span class="pg"><b>09</b> / 50</span></div>
+</section>
+<section class="slide key" id="s10">
+  <div class="ktop">
+    <span class="kt1">AI와 함께 쓰는 구글스프레드시트<small>GOOGLE SHEETS × GENERATIVE AI</small></span>
+    <span class="kt2">CDSA · 한국데이터사이언티스트협회 · 기업 실무 4시간</span>
+  </div>
+  <div class="khdr">
+    <div class="keyebrow">PART 2 · 슬라이드 11 – 14 · 소요 약 25분 · 실습 프로젝트 트래커 만들기</div>
+    <div class="ktitle">입력과 서식</div>
+  </div>
+  <div class="kbody"><div class="krow">
+    <div class="knum">02</div>
+    <div class="ktxt">
+      <h2>입력과 서식<br><em>시트를 "대시보드처럼" 보이게</em></h2>
+      <p>스마트칩으로 사람·파일·일정을 셀에 넣고, 조건부 서식으로 상태가 색으로 드러나게 만듭니다. 함수 없이 되는 시각화 구간입니다.</p>
+      <p><b>다루는 범위</b> — 스마트칩 7종 (@ 하나로) · 조건부 서식 — 기본 규칙 · 조건부 서식 — 맞춤 수식 행 강조 · 표(테이블) 변환 · 타임라인 뷰</p>
+    </div>
+  </div></div>
+  <span class="kpg">10</span>
+</section>
+<section class="slide" id="s11">
+<div class="head"><div><div class="kick"><span class="no">11</span><span class="lb">PART 2 · 입력과 서식</span></div><h1>스마트칩 — 셀에 @ 하나로 사람·파일·일정을 넣습니다</h1><div class="headsub">셀에 <b>@</b>를 입력하면 텍스트가 아니라 "살아 있는 객체"가 들어갑니다. 프로젝트 트래커가 함수 없이 만들어지는 이유입니다.</div></div><div class="brand"><div class="t1">GOOGLE <span>SHEETS</span></div><div class="t2">AI와 함께 쓰는 구글스프레드시트</div></div></div>
+<div class="main gm"><table class="sjtbl "><thead><tr><th style="width:150px">칩</th><th style="width:215px">입력</th><th>셀에서 하는 일</th></tr></thead><tbody><tr><td class="c1"><b>사람 칩</b></td><td>@이름 또는 @이메일</td><td>마우스 오버 → 프로필 카드: 메일 보내기·일정 잡기·메시지 바로 실행</td></tr><tr><td class="c1"><b>파일 칩</b></td><td>@파일명 (드라이브 검색)</td><td>문서 미리보기 + 클릭 열기 — URL 복사·붙여넣기 후 칩 변환도 가능</td></tr><tr><td class="c1">일정 칩</td><td>@일정명 (캘린더 검색)</td><td>회의 시간·참석자 확인, 회의록 문서 연결</td></tr><tr><td class="c1">장소 칩</td><td>@장소명</td><td>지도 미리보기 + 경로 찾기</td></tr><tr><td class="c1">평점 칩</td><td>삽입 › 스마트 칩 › 평점</td><td>★ 1~5 — 벤더 평가·우선순위 표기</td></tr><tr><td class="c1">타이머·스톱워치</td><td>삽입 › 스마트 칩</td><td>셀 안에서 시간 측정 — 작업 소요 기록</td></tr><tr><td class="c1">URL 칩</td><td>링크 붙여넣기 → Tab</td><td>주소가 문서·영상 제목이 보이는 칩으로 변환 — 표가 깔끔해짐</td></tr><tr><td class="c1">드롭다운 칩</td><td>@드롭다운</td><td>9장의 데이터 확인 드롭다운을 즉석 삽입</td></tr></tbody></table><div class="csrow" style="--bar:#4266a3"><div class="cshead" style="border-left-color:#4266a3"><small>실무 조합</small><b>프로젝트 트래커 열 구성</b></div><div class="cscell" style="flex:2"><em>구성</em><p>작업명(텍스트) + <b>담당(사람 칩)</b> + <b>산출물(파일 칩)</b> + <b>회의(일정 칩)</b> + 상태(드롭다운 칩) + 완료(체크박스)</p></div><div class="cscell out"><em>효과</em><p>이름·링크를 복사해 다니지 않고, 시트 한 장이 팀 포털이 됨</p></div></div></div>
+<div class="anchor"><span class="k">한 줄 사용법</span><span class="t">셀에서 @만 기억하면 됩니다 — 사람·파일·일정·장소가 전부 @ 뒤에서 검색됩니다</span><span class="r">셀 입력: @</span></div>
+<div class="foot"><span>AI와 함께 쓰는 구글스프레드시트</span><span>CDSA · 한국데이터사이언티스트협회</span><span class="pg"><b>11</b> / 50</span></div>
+</section>
+<section class="slide" id="s12">
+<div class="head"><div><div class="kick"><span class="no">12</span><span class="lb">PART 2 · 입력과 서식</span></div><h1>조건부 서식 ① — 상태가 색으로 먼저 보이게</h1><div class="headsub">숫자를 읽기 전에 색이 먼저 말하게 합니다. 서식 › 조건부 서식에서 규칙을 걸면 값이 바뀔 때마다 색이 따라 바뀝니다.</div></div><div class="brand"><div class="t1">GOOGLE <span>SHEETS</span></div><div class="t2">AI와 함께 쓰는 구글스프레드시트</div></div></div>
+<div class="main gm"><div class="dflow"><div class="dstep"><span class="dn">01</span><b>범위 선택</b><p>예: H2:H501 총매출</p></div><div class="dstep"><span class="dn">02</span><b>규칙 열기</b><p>서식 › 조건부 서식</p></div><div class="dstep"><span class="dn">03</span><b>조건 선택</b><p>단일 색상 또는 색상 스케일</p></div><div class="dstep"><span class="dn">04</span><b>서식 지정</b><p>채우기·글자색·굵기</p></div><div class="dstep fin"><span class="dn">05</span><b>규칙 누적</b><p>여러 규칙 — 위 규칙이 우선</p></div></div><table class="sjtbl "><thead><tr><th style="width:176px">규칙</th><th style="width:250px">조건 예</th><th>실무 쓰임</th></tr></thead><tbody><tr><td class="c1">텍스트 포함</td><td>상태(K열)에 "취소" 포함</td><td>취소 주문 행 빨간 배경</td></tr><tr><td class="c1">보다 큼 / 작음</td><td>&gt; 1,000,000</td><td>고액 주문 강조</td></tr><tr><td class="c1">사이</td><td>300,000 ~ 999,999</td><td>중간 구간 별도 색</td></tr><tr><td class="c1">날짜 기준</td><td>지난 7일 이내</td><td>최근 주문만 하이라이트</td></tr><tr><td class="c1">비어 있음</td><td>셀이 비어 있음</td><td>누락 입력을 노란색으로 — 마감 전 점검</td></tr><tr><td class="c1"><b>색상 스케일</b></td><td>최소 흰색 → 최대 진초록</td><td>열 전체가 히트맵이 됨 — 매출 분포가 한눈에</td></tr></tbody></table><div class="csrow" style="--bar:#c38424"><div class="cshead" style="border-left-color:#c38424"><small>권장 조합</small><b>주문 시트 기본 3규칙</b></div><div class="cscell"><em>①</em><p>상태 "취소됨" → 행 연빨강</p></div><div class="cscell"><em>②</em><p>총매출 색상 스케일 → 히트맵</p></div><div class="cscell"><em>③</em><p>빈 셀 → 노랑 (누락 점검)</p></div></div></div>
+<div class="anchor"><span class="k">핵심</span><span class="t">조건부 서식은 장식이 아니라 <b>점검 자동화</b>입니다 — 이상값·누락·마감이 스스로 표시됩니다</span><span class="r">서식 › 조건부 서식</span></div>
+<div class="foot"><span>AI와 함께 쓰는 구글스프레드시트</span><span>CDSA · 한국데이터사이언티스트협회</span><span class="pg"><b>12</b> / 50</span></div>
+</section>
+<section class="slide" id="s13">
+<div class="head"><div><div class="kick"><span class="no">13</span><span class="lb">PART 2 · 입력과 서식</span></div><h1>조건부 서식 ② — 맞춤 수식으로 "행 전체" 강조</h1><div class="headsub">실무의 진짜 요구는 셀이 아니라 <b>행</b>입니다. "취소된 주문은 행 전체를 빨갛게" — 맞춤 수식 + $ 고정 하나로 끝납니다.</div></div><div class="brand"><div class="t1">GOOGLE <span>SHEETS</span></div><div class="t2">AI와 함께 쓰는 구글스프레드시트</div></div></div>
+<div class="main gm"><div class="codebx"><div class="ctit">행 전체 강조 — 적용 범위 A2:J501, 맞춤 수식</div><pre><b>=$K2="취소됨"</b>                        <i>K열이 취소됨이면 그 행 전체 강조 — 열만 $로 고정</i>
+<b>=COUNTIF($A$2:$A$501,$A2)&gt;1</b>           <i>주문번호 중복 행 전부 표시</i>
+<b>=AND($B2&lt;&gt;"", TODAY()-$B2&gt;=30)</b>        <i>주문 후 30일 경과 — 장기 미처리 점검</i>
+<b>=ISNUMBER(SEARCH("이어폰",$D2))</b>        <i>상품명에 특정 키워드 포함된 행</i>
+<b>=WEEKDAY($B2,2)&gt;=6</b>                    <i>주말 주문 행 — 월=1 기준, 6·7이 토·일</i></pre></div><table class="sjtbl "><thead><tr><th style="width:176px">$ 고정 원리</th><th style="width:250px">작성</th><th>효과</th></tr></thead><tbody><tr><td class="c1"><b>$열 + 행 미고정</b></td><td><code>$K2</code></td><td>행마다 자기 행의 J열을 봄 → <b>행 전체 강조의 표준형</b></td></tr><tr><td class="c1">열 미고정 + $행</td><td><code>H$2</code></td><td>모든 행이 2행만 참조 — 헤더 기준 비교에 사용</td></tr><tr><td class="c1">기준 셀</td><td>범위의 좌상단(A2) 기준으로 작성</td><td>A2에 맞게 쓰면 나머지 행·열은 자동 상대 이동</td></tr></tbody></table><div class="csrow" style="--bar:#b94a48"><div class="cshead" style="border-left-color:#b94a48"><small>자주 나는 오류</small><b>원인 → 처치</b></div><div class="cscell"><em>첫 행만 색칠됨</em><p>$를 열 앞에 안 붙임 — <code>J2</code> → <code>$K2</code></p></div><div class="cscell out"><em>전부 색칠됨</em><p>수식을 A2가 아닌 A1 기준으로 작성 — 범위 시작 행과 수식 행 번호를 맞출 것</p></div></div></div>
+<div class="anchor"><span class="k">공식</span><span class="t">행 전체 강조 = 적용 범위를 전체 열로 + 수식은 $열행 형태 + 범위 첫 행 기준 작성</span><span class="r">서식 › 조건부 서식 › 맞춤 수식</span></div>
+<div class="foot"><span>AI와 함께 쓰는 구글스프레드시트</span><span>CDSA · 한국데이터사이언티스트협회</span><span class="pg"><b>13</b> / 50</span></div>
+</section>
+<section class="slide" id="s14">
+<div class="head"><div><div class="kick"><span class="no">14</span><span class="lb">PART 2 · 입력과 서식</span></div><h1>표 변환과 타임라인 — 클릭 두 번의 구조화</h1><div class="headsub">범위를 "표"로 선언하면 서식·필터·유형이 자동으로 잡히고, 날짜 열이 있으면 타임라인(간트) 뷰가 클릭으로 생성됩니다.</div></div><div class="brand"><div class="t1">GOOGLE <span>SHEETS</span></div><div class="t2">AI와 함께 쓰는 구글스프레드시트</div></div></div>
+<div class="main gm"><div class="colsx"><div class="cc"><div class="seclb">표(테이블)로 변환</div><div class="dflow"><div class="dstep"><span class="dn">01</span><b>범위 선택</b><p>데이터 안 아무 셀</p></div><div class="dstep"><span class="dn">02</span><b>변환</b><p>서식 › 표로 변환</p></div><div class="dstep fin"><span class="dn">03</span><b>완성</b><p>서식·필터·유형 자동</p></div></div><table class="sjtbl "><thead><tr><th style="width:176px">자동으로 얻는 것</th><th>내용</th></tr></thead><tbody><tr><td class="c1">교차 색상·헤더 고정</td><td>읽기 서식 자동 적용</td></tr><tr><td class="c1">열 유형 지정</td><td>날짜·드롭다운·체크박스 열 단위 강제</td></tr><tr><td class="c1">필터 버튼 내장</td><td>헤더마다 필터·정렬</td></tr><tr><td class="c1"><b>그룹화 보기</b></td><td>상태별·담당별 접이식 보기 전환</td></tr><tr><td class="c1">표 이름 참조</td><td>수식에서 <code>주문표[총매출]</code>처럼 참조</td></tr><tr><td class="c1">자동 확장</td><td>표 바로 아래 행에 입력하면 자동 편입 — 서식·열 유형 규칙 승계</td></tr><tr><td class="c1">변환 해제</td><td>표 메뉴 › 범위로 되돌리기 — 서식은 남고 표 기능만 해제</td></tr></tbody></table></div><div class="cc"><div class="seclb">타임라인 뷰 (간트 대용)</div><div class="dflow"><div class="dstep"><span class="dn">01</span><b>삽입</b><p>삽입 › 타임라인</p></div><div class="dstep"><span class="dn">02</span><b>열 매핑</b><p>시작일·종료일 열 지정</p></div><div class="dstep fin"><span class="dn">03</span><b>완성</b><p>막대 일정 뷰 생성</p></div></div><table class="sjtbl "><thead><tr><th style="width:130px">설정</th><th>내용</th></tr></thead><tbody><tr><td class="c1">카드 필드</td><td>제목·담당·색상 기준 열 선택</td></tr><tr><td class="c1">확대/축소</td><td>일 · 주 · 월 · 분기 단위 전환</td></tr><tr><td class="c1">카드 클릭</td><td>원본 행과 양방향 연결 — 시트 수정 시 즉시 반영</td></tr><tr><td class="c1">용도</td><td>프로젝트 일정·캠페인 캘린더를 <b>별도 툴 없이</b></td></tr><tr><td class="c1">생성 조건</td><td>시작·종료 열이 <b>날짜 형식</b>이어야 함 — 텍스트 날짜는 인식 불가</td></tr><tr><td class="c1">공유 동작</td><td>보기 권한만 있어도 타임라인 확대·이동 조작 가능</td></tr><tr><td class="c1">한계</td><td>의존관계(선후행) 화살표는 없음 — 그 이상은 전문 툴</td></tr></tbody></table></div></div></div>
+<div class="anchor"><span class="k">포인트</span><span class="t">일정 관리 시트에 시작일·종료일 열만 있으면 간트 차트는 공짜입니다</span><span class="r">서식 › 표로 변환 · 삽입 › 타임라인</span></div>
+<div class="foot"><span>AI와 함께 쓰는 구글스프레드시트</span><span>CDSA · 한국데이터사이언티스트협회</span><span class="pg"><b>14</b> / 50</span></div>
+</section>
+<section class="slide key" id="s15">
+  <div class="ktop">
+    <span class="kt1">AI와 함께 쓰는 구글스프레드시트<small>GOOGLE SHEETS × GENERATIVE AI</small></span>
+    <span class="kt2">CDSA · 한국데이터사이언티스트협회 · 기업 실무 4시간</span>
+  </div>
+  <div class="khdr">
+    <div class="keyebrow">PART 3 · 슬라이드 16 – 26 · 소요 약 50분 · 실습 수식 30개 복붙 · 레시피 탭 완성</div>
+    <div class="ktitle">구글 전용 함수</div>
+  </div>
+  <div class="kbody"><div class="krow">
+    <div class="knum">03</div>
+    <div class="ktxt">
+      <h2>구글 전용 함수<br><em>시트를 데이터베이스처럼</em></h2>
+      <p>엑셀과 겹치는 함수는 건너뜁니다. 구글 시트에만 있거나 구글 시트에서 먼저 만들어진 함수만 골라, 주문 데이터 500행으로 전부 실습합니다.</p>
+      <p><b>다루는 범위</b> — ARRAYFORMULA · QUERY 기본·집계·피벗 · IMPORTRANGE · FILTER · SORT · UNIQUE · SPLIT · REGEX 3형제 · IMPORT 4형제 · GOOGLEFINANCE 계열 · LET · LAMBDA · BYROW · 조합 레시피 5선</p>
+    </div>
+  </div></div>
+  <span class="kpg">15</span>
+</section>
+<section class="slide" id="s16">
+<div class="head"><div><div class="kick"><span class="no">16</span><span class="lb">PART 3 · 구글 전용 함수</span></div><h1>구글 전용 함수 지형도 — 오늘 다룰 25개</h1><div class="headsub">영역 8개로 나눠서 갑니다. 각 행의 장 번호가 실습 순서입니다. 모든 예시는 아래 실습 스키마 기준으로 통일합니다.</div></div><div class="brand"><div class="t1">GOOGLE <span>SHEETS</span></div><div class="t2">AI와 함께 쓰는 구글스프레드시트</div></div></div>
+<div class="main gm"><table class="sjtbl "><thead><tr><th style="width:128px">영역</th><th style="width:430px">함수</th><th>한 줄 정의 · 실습 장</th></tr></thead><tbody><tr class="gr"><td colspan="3">실습 시트 스키마 — 주문 A1:K501 (헤더 1행) · A 주문번호 · B 주문일 · C 고객ID · D 상품명 · E 카테고리 · F 단가 · G 수량 · H 총매출 · I 지역 · J 판매채널 · K 상태</td></tr><tr><td class="c1">배열 확장</td><td><b>ARRAYFORMULA</b></td><td>한 셀 수식을 열 전체로 확장 — <b>17장</b></td></tr><tr><td class="c1">질의</td><td><b>QUERY</b></td><td>SQL처럼 골라·묶어·피벗 — <b>18·19장</b></td></tr><tr><td class="c1">시트 연결</td><td><b>IMPORTRANGE</b></td><td>다른 파일을 실시간 참조 — <b>20장</b></td></tr><tr><td class="c1">동적 추출</td><td>FILTER · SORT · SORTN · UNIQUE · FLATTEN</td><td>조건 추출·정렬·중복 제거 — <b>21장</b></td></tr><tr><td class="c1">텍스트·패턴</td><td>SPLIT · TEXTJOIN · REGEXMATCH · EXTRACT · REPLACE</td><td>쪼개고 합치고 패턴으로 뽑기 — <b>22장</b></td></tr><tr><td class="c1">웹 수집</td><td>IMPORTHTML · IMPORTXML · IMPORTDATA · IMPORTFEED</td><td>웹 표·RSS를 시트로 — <b>23장</b></td></tr><tr><td class="c1">구글 서비스</td><td>GOOGLEFINANCE · GOOGLETRANSLATE · IMAGE</td><td>주가·환율·번역·이미지 — <b>24장</b></td></tr><tr><td class="c1">최신 배열</td><td>LET · LAMBDA · MAP · BYROW · REDUCE</td><td>이름 붙이기·행 단위 계산 — <b>25장</b></td></tr><tr class="gr"><td colspan="3">엑셀과 공용이라 오늘 건너뛰는 것 — SUMIFS · COUNTIFS · XLOOKUP · IFERROR · 피벗 테이블 (기존 지식 그대로 사용)</td></tr></tbody></table></div>
+<div class="anchor"><span class="k">기준 고정</span><span class="t">이후 모든 수식의 열 문자는 위 스키마 기준입니다 — 실습 시트와 슬라이드가 1:1로 맞습니다</span><span class="r">실습 시트: 주문 탭</span></div>
+<div class="foot"><span>AI와 함께 쓰는 구글스프레드시트</span><span>CDSA · 한국데이터사이언티스트협회</span><span class="pg"><b>16</b> / 50</span></div>
+</section>
+<section class="slide" id="s17">
+<div class="head"><div><div class="kick"><span class="no">17</span><span class="lb">PART 3 · 구글 전용 함수</span></div><h1>ARRAYFORMULA — 한 셀로 열 전체를 계산합니다</h1><div class="headsub">500행 드래그 복사는 오늘로 끝냅니다. 수식 하나가 배열 전체에 적용되고, 새 행이 생기면 자동으로 따라갑니다.</div></div><div class="brand"><div class="t1">GOOGLE <span>SHEETS</span></div><div class="t2">AI와 함께 쓰는 구글스프레드시트</div></div></div>
+<div class="main gm"><div class="codebx"><div class="ctit">L열에 검증금액(단가×수량) 만들기 — L2 한 셀만 입력</div><pre><b>=ARRAYFORMULA(F2:F501*G2:G501)</b>                       <i>500행이 한 번에 계산됨</i>
+<b>=ARRAYFORMULA(IF(ROW(A:A)=1,"검증금액", IF(A:A="","", F:F*G:G)))</b>
+                                                        <i>헤더 자동 + 빈 행 무시 + 새 행 자동 확장 — 실전형</i>
+<b>=ARRAYFORMULA(IF(B2:B="","",TEXT(B2:B,"YYYY-MM")))</b>    <i>월 키 열 — 19장 월별 집계와 33장 피벗의 재료</i></pre></div><div class="csrow" style="--bar:#4266a3"><div class="cshead" style="border-left-color:#4266a3"><small>비교</small><b>엑셀 습관 vs 시트 방식</b></div><div class="cscell"><em>엑셀 습관</em><p>L2 작성 → 500행 드래그 복사 → 행 추가될 때마다 다시 복사</p></div><div class="cscell out"><em>ARRAYFORMULA</em><p>L2 한 셀 → 전체 적용 → 새 행 자동 — <b>수정도 한 곳</b></p></div></div><table class="sjtbl "><thead><tr><th style="width:150px">규칙</th><th>내용</th></tr></thead><tbody><tr><td class="c1">자동 감싸기</td><td>수식 입력 후 <code>Ctrl+Shift+Enter</code> → ARRAYFORMULA로 자동 래핑</td></tr><tr><td class="c1">공간 확보</td><td>결과가 쏟아질 아래 칸에 값이 있으면 <code>#REF!</code> — 열을 비워둘 것</td></tr><tr><td class="c1">집계는 예외</td><td>SUM·AVERAGE는 배열을 하나로 접음 — 행별 계산은 BYROW(25장)</td></tr><tr><td class="c1">최고 궁합</td><td><b>구글 폼 응답 시트</b> — 응답이 쌓일수록 파생 열이 자동으로 따라감</td></tr></tbody></table></div>
+<div class="anchor"><span class="k">표준 패턴</span><span class="t">행이 계속 늘어나는 시트의 파생 열 = ARRAYFORMULA + IF(A:A="","",…) 조합</span><span class="r">단축키 Ctrl+Shift+Enter</span></div>
+<div class="foot"><span>AI와 함께 쓰는 구글스프레드시트</span><span>CDSA · 한국데이터사이언티스트협회</span><span class="pg"><b>17</b> / 50</span></div>
+</section>
+<section class="slide" id="s18">
+<div class="head"><div><div class="kick"><span class="no">18</span><span class="lb">PART 3 · 구글 전용 함수</span></div><h1>QUERY ① — 시트에 SQL을 씁니다: 고르고, 거르고, 정렬</h1><div class="headsub">함수 하나로 "서울 주문 중 매출 상위 10건의 상품명과 금액"이 나옵니다. 문법은 select · where · order by · limit 네 개면 시작됩니다.</div></div><div class="brand"><div class="t1">GOOGLE <span>SHEETS</span></div><div class="t2">AI와 함께 쓰는 구글스프레드시트</div></div></div>
+<div class="main gm"><div class="codebx"><div class="ctit">기본형 — 새 탭 A1에 입력</div><pre><b>=QUERY(주문!A1:K501, "select D, H where I='서울' order by H desc limit 10", 1)</b>
+                     <i>서울 주문 → 매출 내림차순 → 상위 10건 → 상품명·총매출만</i>
+<b>=QUERY(주문!A1:K501, "select A, B, D, H where H &gt;= 300000 and J = '온라인'", 1)</b>
+                     <i>30만 이상 그리고 온라인 채널 — 조건은 and / or로 연결</i>
+<b>=QUERY(주문!A1:K501, "select A, D, H where D contains '무선'", 1)</b>
+                     <i>부분 일치 — 상품명에 '무선' 포함</i></pre></div><table class="sjtbl "><thead><tr><th style="width:118px">절</th><th style="width:330px">문법</th><th>주의</th></tr></thead><tbody><tr><td class="c1">select</td><td><code>select A, D, H</code> — 가져올 열</td><td>열은 <b>A·B·C 열 문자</b>로 지정 (열 이름 아님)</td></tr><tr><td class="c1">where</td><td><code>where I='서울' and H&gt;=300000</code></td><td>문자열은 <b>작은따옴표</b> · 부분일치는 <code>contains</code>, 패턴은 <code>matches</code></td></tr><tr><td class="c1">order by</td><td><code>order by H desc</code></td><td>desc 내림차순 · asc 오름차순 · 콤마로 다중 정렬</td></tr><tr><td class="c1">limit / offset</td><td><code>limit 10 offset 10</code></td><td>상위 N건 · offset으로 건너뛰기</td></tr><tr><td class="c1">셋째 인수</td><td><code>…", 1)</code></td><td>헤더 행 수 — 1이면 1행을 제목으로 유지</td></tr></tbody></table></div>
+<div class="anchor"><span class="k">감 잡기</span><span class="t">VLOOKUP 다섯 번에 필터 두 번 할 일이 QUERY 한 줄 — 원본이 바뀌면 결과도 자동 갱신</span><span class="r">QUERY = 조회 전용, 원본 불변</span></div>
+<div class="foot"><span>AI와 함께 쓰는 구글스프레드시트</span><span>CDSA · 한국데이터사이언티스트협회</span><span class="pg"><b>18</b> / 50</span></div>
+</section>
+<section class="slide" id="s19">
+<div class="head"><div><div class="kick"><span class="no">19</span><span class="lb">PART 3 · 구글 전용 함수</span></div><h1>QUERY ② — group by와 pivot으로 집계 보고서까지</h1><div class="headsub">합계·건수·교차표를 수식 한 줄로 만듭니다. 피벗 테이블과 결과는 같지만, QUERY는 수식이라 다른 수식과 조립됩니다.</div></div><div class="brand"><div class="t1">GOOGLE <span>SHEETS</span></div><div class="t2">AI와 함께 쓰는 구글스프레드시트</div></div></div>
+<div class="main gm"><div class="codebx"><div class="ctit">집계 3종 — 보고서 탭에 그대로</div><pre><b>=QUERY(주문!A1:K501, "select E, sum(H), count(A) group by E order by sum(H) desc
+        label sum(H) '총매출', count(A) '건수'", 1)</b>      <i>카테고리별 매출·건수 순위표</i>
+<b>=QUERY(주문!A1:K501, "select E, sum(H) group by E pivot J", 1)</b>
+                                                          <i>카테고리 × 판매채널 교차표 — 피벗을 수식으로</i>
+<b>=QUERY(주문!A1:K501, "select month(B)+1, sum(H) group by month(B)
+        label month(B)+1 '월'  format sum(H) '#,##0'", 1)</b>  <i>월별 매출 — month는 0부터라 +1</i></pre></div><table class="sjtbl "><thead><tr><th style="width:118px">절</th><th style="width:300px">문법</th><th>설명</th></tr></thead><tbody><tr><td class="c1">집계 함수</td><td><code>sum · avg · count · max · min</code></td><td>select 안에서 열에 적용 — <code>sum(H)</code></td></tr><tr><td class="c1">group by</td><td><code>group by E</code></td><td>집계의 짝 — select의 비집계 열은 전부 group by에</td></tr><tr><td class="c1">pivot</td><td><code>pivot J</code></td><td>지정 열의 값들을 <b>가로 방향 열</b>로 전개</td></tr><tr><td class="c1">label</td><td><code>label sum(H) '총매출'</code></td><td>결과 헤더 이름 지정</td></tr><tr><td class="c1">format</td><td><code>format sum(H) '#,##0'</code></td><td>천 단위 콤마 등 표시 형식</td></tr></tbody></table></div>
+<div class="anchor"><span class="k">선택 기준</span><span class="t">클릭으로 탐색은 피벗 테이블(33장), 자동 갱신 보고서로 박제는 QUERY — 둘은 용도가 다릅니다</span><span class="r">QUERY ⊃ 집계·피벗</span></div>
+<div class="foot"><span>AI와 함께 쓰는 구글스프레드시트</span><span>CDSA · 한국데이터사이언티스트협회</span><span class="pg"><b>19</b> / 50</span></div>
+</section>
+<section class="slide" id="s20">
+<div class="head"><div><div class="kick"><span class="no">20</span><span class="lb">PART 3 · 구글 전용 함수</span></div><h1>IMPORTRANGE — 다른 파일을 실시간으로 끌어옵니다</h1><div class="headsub">팀별 파일은 그대로 두고, 집계 파일 하나가 전부를 참조합니다. 복사·붙여넣기 없는 통합 대시보드의 뼈대입니다.</div></div><div class="brand"><div class="t1">GOOGLE <span>SHEETS</span></div><div class="t2">AI와 함께 쓰는 구글스프레드시트</div></div></div>
+<div class="main gm"><div class="dflow"><div class="dstep"><span class="dn">01</span><b>원본 URL 복사</b><p>주소창 전체 복사면 충분</p></div><div class="dstep"><span class="dn">02</span><b>수식 입력</b><p>IMPORTRANGE(URL, "탭!범위")</p></div><div class="dstep"><span class="dn">03</span><b>#REF! 클릭</b><p>최초 1회만 나타남</p></div><div class="dstep"><span class="dn">04</span><b>액세스 허용</b><p>수식 작성자 권한으로 연결</p></div><div class="dstep fin"><span class="dn">05</span><b>실시간 연동</b><p>원본 수정 → 즉시 반영</p></div></div><div class="codebx"><div class="ctit">기본형과 QUERY 중첩</div><pre><b>=IMPORTRANGE("https://docs.google.com/spreadsheets/d/원본ID/…", "주문!A1:K501")</b>
+<b>=QUERY(IMPORTRANGE("…원본URL…", "주문!A:K"),
+        "select Col5, sum(Col8) group by Col5", 1)</b>
+        <i>중첩하면 열 표기가 A·B·C가 아니라 <b>Col1·Col2…</b>로 바뀝니다 — E열=Col5, H열=Col8</i></pre></div><table class="sjtbl "><thead><tr><th style="width:128px">주의</th><th>내용</th></tr></thead><tbody><tr><td class="c1">권한 기준</td><td>연결 권한은 <b>수식 작성자</b> 기준 — 작성자가 원본 접근 가능해야 동작</td></tr><tr><td class="c1">열 순서 의존</td><td>원본에서 열을 옮기면 참조가 어긋남 — 원본에 <b>연동용 탭</b>을 고정해 두는 것이 안전</td></tr><tr><td class="c1">속도</td><td>A:K 전체보다 <b>필요한 열만</b> 지정이 빠름 — 연결이 여러 개면 로딩 체감 차이</td></tr><tr><td class="c1">허브 구조</td><td>팀A·팀B·팀C 파일 → 본부 파일이 IMPORTRANGE 3개로 수집 → 그 위에 QUERY 집계</td></tr></tbody></table></div>
+<div class="anchor"><span class="k">구조 전환</span><span class="t">"파일 모아서 합치기" 업무가 사라집니다 — 파일은 나눠 쓰고, 집계는 한 곳이 참조</span><span class="r">최초 1회 액세스 허용</span></div>
+<div class="foot"><span>AI와 함께 쓰는 구글스프레드시트</span><span>CDSA · 한국데이터사이언티스트협회</span><span class="pg"><b>20</b> / 50</span></div>
+</section>
+<section class="slide" id="s21">
+<div class="head"><div><div class="kick"><span class="no">21</span><span class="lb">PART 3 · 구글 전용 함수</span></div><h1>FILTER · SORT · UNIQUE — 조건 추출을 수식으로</h1><div class="headsub">메뉴 필터는 화면을 바꾸지만, 이 함수들은 <b>결과를 새 위치에 쏟아냅니다</b>. 원본은 그대로, 추출 탭이 실시간으로 유지됩니다.</div></div><div class="brand"><div class="t1">GOOGLE <span>SHEETS</span></div><div class="t2">AI와 함께 쓰는 구글스프레드시트</div></div></div>
+<div class="main gm"><table class="sjtbl "><thead><tr><th style="width:104px">함수</th><th style="width:580px">수식</th><th>결과</th></tr></thead><tbody><tr><td class="c1"><b>FILTER</b></td><td><code>=FILTER(주문!A2:K501, 주문!I2:I501="서울", 주문!H2:H501&gt;=300000)</code></td><td>두 조건 모두 만족하는 행 전체 — 조건은 콤마로 계속 추가(AND)</td></tr><tr><td class="c1"><b>SORT</b></td><td><code>=SORT(주문!A2:K501, 8, FALSE)</code></td><td>8번째 열(총매출) 내림차순 정렬 사본</td></tr><tr><td class="c1"><b>SORTN</b></td><td><code>=SORTN(주문!A2:K501, 5, 0, 8, FALSE)</code></td><td>상위 5건만 — 랭킹 보드용</td></tr><tr><td class="c1"><b>UNIQUE</b></td><td><code>=UNIQUE(주문!E2:E501)</code></td><td>카테고리 중복 제거 목록 — 드롭다운 원천으로</td></tr><tr><td class="c1"><b>FLATTEN</b></td><td><code>=FLATTEN(주문!B2:D10)</code></td><td>여러 열·행을 한 열로 폄 — UNIQUE와 조합</td></tr><tr><td class="c1">OR 조건</td><td><code>=FILTER(주문!A2:K501, (주문!I2:I501="서울")+(주문!I2:I501="경기"))</code></td><td>조건을 <b>+</b>로 더하면 OR — 콤마(AND)와 구분</td></tr></tbody></table><div class="codebx"><div class="ctit">조합 한 줄 — 서울 매출 TOP 5</div><pre><b>=SORTN(FILTER(주문!A2:K501, 주문!I2:I501="서울"), 5, 0, 8, FALSE)</b>
+                       <i>FILTER로 거르고 → SORTN으로 상위 5 — 함수는 이렇게 겹쳐 씁니다</i></pre></div><div class="csrow" style="--bar:#2e8a5c"><div class="cshead" style="border-left-color:#2e8a5c"><small>공통 특성</small><b>스필(spill) 함수</b></div><div class="cscell"><em>쏟아짐</em><p>결과가 입력 셀 기준 아래·오른쪽으로 펼쳐짐 — 공간에 값 있으면 #REF!</p></div><div class="cscell out"><em>실시간</em><p>원본 수정 시 추출 결과 자동 갱신 — "추출 보고서" 탭이 항상 최신</p></div></div></div>
+<div class="anchor"><span class="k">표준 구성</span><span class="t">원본 탭은 손대지 않고, 추출·보고 탭은 전부 이 다섯 함수로 구성합니다</span><span class="r">스필 공간 확보 필수</span></div>
+<div class="foot"><span>AI와 함께 쓰는 구글스프레드시트</span><span>CDSA · 한국데이터사이언티스트협회</span><span class="pg"><b>21</b> / 50</span></div>
+</section>
+<section class="slide" id="s22">
+<div class="head"><div><div class="kick"><span class="no">22</span><span class="lb">PART 3 · 구글 전용 함수</span></div><h1>SPLIT · TEXTJOIN · REGEX — 지저분한 텍스트 정리</h1><div class="headsub">붙어 있으면 쪼개고, 흩어져 있으면 합치고, 패턴이 있으면 뽑아냅니다. 데이터 클리닝의 80%가 이 다섯 개입니다.</div></div><div class="brand"><div class="t1">GOOGLE <span>SHEETS</span></div><div class="t2">AI와 함께 쓰는 구글스프레드시트</div></div></div>
+<div class="main gm"><table class="sjtbl "><thead><tr><th style="width:128px">함수</th><th style="width:380px">수식</th><th>하는 일</th></tr></thead><tbody><tr><td class="c1"><b>SPLIT</b></td><td><code>=SPLIT(A2, "-")</code></td><td>"ORD-2024-0001" → 3개 칸으로 분해</td></tr><tr><td class="c1"><b>TEXTJOIN</b></td><td><code>=TEXTJOIN(", ", TRUE, D2:D6)</code></td><td>목록을 한 문장으로 — 빈 셀 무시(TRUE)</td></tr><tr><td class="c1"><b>REGEXMATCH</b></td><td><code>=REGEXMATCH(C2, "^C0")</code></td><td>패턴 일치 여부 TRUE/FALSE — 조건부 서식·FILTER 조건으로</td></tr><tr><td class="c1"><b>REGEXEXTRACT</b></td><td><code>=REGEXEXTRACT(A2, "[0-9]+$")</code></td><td>패턴 부분만 추출 — 주문번호 끝 숫자</td></tr><tr><td class="c1"><b>REGEXREPLACE</b></td><td><code>=REGEXREPLACE(A2, "[^0-9]", "")</code></td><td>패턴 치환 — 숫자 외 전부 제거</td></tr></tbody></table><div class="codebx"><div class="ctit">실전 — 열 전체 클리닝 (ARRAYFORMULA 조합)</div><pre><b>=ARRAYFORMULA(REGEXREPLACE(주문!C2:C501, "[^0-9]", ""))</b>   <i>고객ID에서 숫자만 — 500행 일괄</i>
+<b>=ARRAYFORMULA(TRIM(REGEXREPLACE(주문!D2:D501, "\s+", " ")))</b> <i>상품명 다중 공백 정돈</i>
+<i>정규식 패턴 작성은 외우지 않습니다 — 30장 방식으로 AI에게 "휴대폰 번호 정규식"이라고 요청</i></pre></div><div class="csrow" style="--bar:#6f5aa8"><div class="cshead" style="border-left-color:#6f5aa8"><small>REGEX 최소 문법</small><b>오늘 필요한 것만</b></div><div class="cscell"><em>기호 4개</em><p><code>^</code> 시작 · <code>$</code> 끝 · <code>[0-9]</code> 숫자 1개 · <code>+</code> 1회 이상 반복</p></div><div class="cscell out"><em>부정</em><p><code>[^0-9]</code> = 숫자가 아닌 것 — REPLACE와 조합해 "숫자만 남기기"</p></div></div></div>
+<div class="anchor"><span class="k">클리닝 공식</span><span class="t">오염 열 정리 = ARRAYFORMULA( REGEXREPLACE( 범위, 패턴, "" ) ) 한 줄</span><span class="r">엑셀 대비 최대 차별점</span></div>
+<div class="foot"><span>AI와 함께 쓰는 구글스프레드시트</span><span>CDSA · 한국데이터사이언티스트협회</span><span class="pg"><b>22</b> / 50</span></div>
+</section>
+<section class="slide" id="s23">
+<div class="head"><div><div class="kick"><span class="no">23</span><span class="lb">PART 3 · 구글 전용 함수</span></div><h1>IMPORT 4형제 — 웹 데이터를 시트가 직접 가져옵니다</h1><div class="headsub">매일 아침 열어 보던 웹 표·RSS를 시트가 대신 열게 합니다. 크롤링 코드 없이 함수로 끝나는 범위가 생각보다 넓습니다.</div></div><div class="brand"><div class="t1">GOOGLE <span>SHEETS</span></div><div class="t2">AI와 함께 쓰는 구글스프레드시트</div></div></div>
+<div class="main gm"><table class="sjtbl "><thead><tr><th style="width:128px">함수</th><th style="width:640px">수식</th><th>가져오는 것</th></tr></thead><tbody><tr><td class="c1"><b>IMPORTHTML</b></td><td><code>=IMPORTHTML("https://ko.wikipedia.org/wiki/대한민국의_인구", "table", 1)</code></td><td>웹페이지의 <b>1번째 표</b> 통째로 — 번호 바꿔가며 원하는 표 탐색</td></tr><tr><td class="c1"><b>IMPORTXML</b></td><td><code>=IMPORTXML("페이지URL", "//h2")</code></td><td>XPath로 지정한 요소 — 제목·가격·특정 태그만 정밀 수집</td></tr><tr><td class="c1"><b>IMPORTDATA</b></td><td><code>=IMPORTDATA("https://…/data.csv")</code></td><td>CSV·TSV 직링크 — 공공데이터 파일 URL을 그대로</td></tr><tr><td class="c1"><b>IMPORTFEED</b></td><td><code>=IMPORTFEED("https://news.google.com/rss?hl=ko", "items title", FALSE, 10)</code></td><td>RSS 최신 10건 — 키워드 뉴스 모니터링 탭</td></tr><tr><td class="c1">XPath 찾기</td><td>크롬 요소 우클릭 › 검사 › Copy › <b>Copy XPath</b></td><td>IMPORTXML 두 번째 인수를 손으로 안 짜고 복사로 해결</td></tr></tbody></table><div class="csrow" style="--bar:#b94a48"><div class="cshead" style="border-left-color:#b94a48"><small>제약</small><b>안 되는 것과 대안</b></div><div class="cscell"><em>갱신 주기</em><p>약 1시간 주기 자동 갱신 — 분 단위 실시간 아님</p></div><div class="cscell out"><em>로그인·동적 페이지</em><p>로그인 필요·JavaScript 렌더링 페이지는 불가 — 그 영역은 <b>Apps Script UrlFetchApp(46장)</b></p></div><div class="cscell"><em>안정성</em><p>대상 페이지 구조가 바뀌면 수식이 깨짐 — 핵심 업무는 원본 API 검토</p></div></div><div class="csrow" style="--bar:#c38424"><div class="cshead" style="border-left-color:#c38424"><small>실무 예</small><b>모니터링 탭 구성</b></div><div class="cscell" style="flex:2"><em>구성</em><p>IMPORTFEED 키워드 뉴스 + IMPORTHTML 시세 표 + 수집 시각 열 — 아침 브리핑 시트 자동화</p></div></div></div>
+<div class="anchor"><span class="k">판단 기준</span><span class="t">반복해서 "열어 보는" 웹 데이터가 있다면 우선 IMPORT 함수로 시도 — 안 되면 46장</span><span class="r">갱신 주기 약 1시간</span></div>
+<div class="foot"><span>AI와 함께 쓰는 구글스프레드시트</span><span>CDSA · 한국데이터사이언티스트협회</span><span class="pg"><b>23</b> / 50</span></div>
+</section>
+<section class="slide" id="s24">
+<div class="head"><div><div class="kick"><span class="no">24</span><span class="lb">PART 3 · 구글 전용 함수</span></div><h1>GOOGLEFINANCE · TRANSLATE · IMAGE — 구글 서비스를 함수로</h1><div class="headsub">주가·환율·번역·이미지가 함수 호출 한 번입니다. 구글이 운영하는 데이터가 시트에 직결되어 있습니다.</div></div><div class="brand"><div class="t1">GOOGLE <span>SHEETS</span></div><div class="t2">AI와 함께 쓰는 구글스프레드시트</div></div></div>
+<div class="main gm"><table class="sjtbl "><thead><tr><th style="width:186px">함수</th><th style="width:480px">수식</th><th>결과</th></tr></thead><tbody><tr><td class="c1">GOOGLEFINANCE 현재가</td><td><code>=GOOGLEFINANCE("KRX:035720")</code></td><td>카카오 현재가 — 시세는 <b>지연 제공(참고용)</b></td></tr><tr><td class="c1">GOOGLEFINANCE 환율</td><td><code>=GOOGLEFINANCE("CURRENCY:USDKRW")</code></td><td>달러-원 환율 — 견적서·정산 시트에 직결</td></tr><tr><td class="c1">GOOGLEFINANCE 시계열</td><td><code>=GOOGLEFINANCE("KRX:035720", "price", TODAY()-30, TODAY())</code></td><td>최근 30일 종가 <b>표가 통째로</b> 쏟아짐 — 차트 원천</td></tr><tr><td class="c1">GOOGLETRANSLATE</td><td><code>=GOOGLETRANSLATE(D2, "ko", "en")</code></td><td>상품명 영문화 — ARRAYFORMULA로 열 전체 일괄</td></tr><tr><td class="c1">DETECTLANGUAGE</td><td><code>=DETECTLANGUAGE(B2)</code></td><td>언어 코드 감지 — 다국어 문의 분류 전처리</td></tr><tr><td class="c1">IMAGE</td><td><code>=IMAGE("https://…/logo.png", 1)</code></td><td>셀 안에 이미지 렌더 — 모드 1 맞춤 ~ 4 크기 지정</td></tr><tr><td class="c1">SPARKLINE (예고)</td><td><code>=SPARKLINE(범위)</code></td><td>셀 안 미니 차트 — <b>35장</b>에서 옵션까지 상세</td></tr></tbody></table><div class="codebx"><div class="ctit">조합 실전 — 견적·모니터링 시트에 바로</div><pre><b>=F2*GOOGLEFINANCE("CURRENCY:USDKRW")</b>                    <i>달러 단가 → 원화 환산 열</i>
+<b>=SPARKLINE(QUERY(GOOGLEFINANCE("KRX:035720","price",TODAY()-90,TODAY()), "select Col2 offset 1"))</b>
+                                                          <i>90일 주가 추세를 셀 하나에 — 35장 미리 조합</i></pre></div></div>
+<div class="anchor"><span class="k">실무 직결</span><span class="t">환율 반영 견적 시트 — GOOGLEFINANCE 셀 하나 참조로 수동 조회 업무가 사라집니다</span><span class="r">시세는 지연 데이터 · 투자 판단용 아님</span></div>
+<div class="foot"><span>AI와 함께 쓰는 구글스프레드시트</span><span>CDSA · 한국데이터사이언티스트협회</span><span class="pg"><b>24</b> / 50</span></div>
+</section>
+<section class="slide" id="s25">
+<div class="head"><div><div class="kick"><span class="no">25</span><span class="lb">PART 3 · 구글 전용 함수</span></div><h1>LET · LAMBDA · BYROW — 최신 배열 함수 한 바퀴</h1><div class="headsub">수식에 이름을 붙이고(LET), 1회용 함수를 만들고(LAMBDA), 행 단위로 적용합니다(BYROW). ARRAYFORMULA가 못 넘는 벽을 여기서 넘습니다.</div></div><div class="brand"><div class="t1">GOOGLE <span>SHEETS</span></div><div class="t2">AI와 함께 쓰는 구글스프레드시트</div></div></div>
+<div class="main gm"><table class="sjtbl "><thead><tr><th style="width:110px">함수</th><th style="width:480px">수식</th><th>용도</th></tr></thead><tbody><tr><td class="c1"><b>LET</b></td><td><code>=LET(매출, 주문!H2:H501, AVERAGE(매출)+STDEV(매출))</code></td><td>중간값에 이름 — 긴 수식의 반복 참조 제거·가독성</td></tr><tr><td class="c1"><b>LAMBDA</b></td><td><code>=LAMBDA(x, x*1.1)(F2)</code></td><td>이름 없는 1회용 함수 — 아래 함수들의 재료</td></tr><tr><td class="c1"><b>MAP</b></td><td><code>=MAP(F2:F501, LAMBDA(x, x*1.1))</code></td><td>각 셀에 함수 적용 — 인상 단가 시뮬레이션</td></tr><tr><td class="c1"><b>BYROW</b></td><td><code>=BYROW(F2:H501, LAMBDA(r, MAX(r)))</code></td><td><b>행 단위</b> 계산 — ARRAYFORMULA로 안 되는 행별 MAX</td></tr><tr><td class="c1"><b>REDUCE</b></td><td><code>=REDUCE(0, G2:G501, LAMBDA(a, v, a+v))</code></td><td>누적 계산 — 잔액·재고 러닝토탈형</td></tr><tr><td class="c1">MAKEARRAY</td><td><code>=MAKEARRAY(3, 3, LAMBDA(r, c, r*c))</code></td><td>행·열 규칙으로 표 생성 — 테스트 데이터</td></tr><tr><td class="c1">SCAN</td><td><code>=SCAN(0, 주문!G2:G501, LAMBDA(a, v, a+v))</code></td><td>누적 과정을 <b>모든 행에</b> 표시 — 러닝토탈 열</td></tr><tr><td class="c1">이름 지정 함수</td><td>데이터 › 이름이 지정된 함수</td><td>자주 쓰는 LAMBDA를 <b>=우리회사등급()</b>처럼 등록 — 44장 맞춤 함수의 무코드 버전</td></tr></tbody></table><div class="csrow" style="--bar:#4266a3"><div class="cshead" style="border-left-color:#4266a3"><small>언제 꺼내나</small><b>판단 기준</b></div><div class="cscell"><em>BYROW</em><p>"행마다 MAX·개수·결합" 요구가 오면 — 17장 ARRAYFORMULA의 한계 지점</p></div><div class="cscell out"><em>LET</em><p>같은 범위를 세 번 이상 참조하는 수식이면 이름부터</p></div><div class="cscell"><em>그 외</em><p>MAP·REDUCE는 존재만 기억 — 실무 90%는 17·21장으로 충분</p></div></div></div>
+<div class="anchor"><span class="k">학습 전략</span><span class="t">오늘은 "이런 게 있다"까지 — 필요해지는 순간 30장 방식으로 AI에게 조립을 맡깁니다</span><span class="r">2022+ 신규 함수군</span></div>
+<div class="foot"><span>AI와 함께 쓰는 구글스프레드시트</span><span>CDSA · 한국데이터사이언티스트협회</span><span class="pg"><b>25</b> / 50</span></div>
+</section>
+<section class="slide" id="s26">
+<div class="head"><div><div class="kick"><span class="no">26</span><span class="lb">PART 3 · 구글 전용 함수</span></div><h1>조합 레시피 5선 — 세션 2 최종 정리</h1><div class="headsub">함수는 겹쳐 쓸 때 일이 됩니다. 실무에서 그대로 재사용하는 5줄 — 실습 시트 레시피 탭에서 하나씩 완성합니다.</div></div><div class="brand"><div class="t1">GOOGLE <span>SHEETS</span></div><div class="t2">AI와 함께 쓰는 구글스프레드시트</div></div></div>
+<div class="main gm"><table class="sjtbl rh2"><thead><tr><th style="width:122px">레시피</th><th style="width:560px">수식</th><th>효과</th></tr></thead><tbody><tr><td class="c1">① 팀 파일 통합</td><td><code>=QUERY({IMPORTRANGE("파일A URL","주문!A2:K"); IMPORTRANGE("파일B URL","주문!A2:K")}, "select * where Col1 is not null", 0)</code></td><td>파일 여러 개 → 한 표. <b>{ ; }</b> 세미콜론이 세로 결합</td></tr><tr><td class="c1">② 조건 TOP 5</td><td><code>=SORTN(FILTER(주문!A2:K501, 주문!I2:I501="서울"), 5, 0, 8, FALSE)</code></td><td>지역 거르고 매출 상위 5 — 랭킹 위젯</td></tr><tr><td class="c1">③ 자동 등급</td><td><code>=ARRAYFORMULA(IF(주문!H2:H501="", "", IFS(주문!H2:H501&gt;=1000000, "VIP", 주문!H2:H501&gt;=300000, "우수", TRUE, "일반")))</code></td><td>금액 구간 등급 열 — 새 주문 자동 분류</td></tr><tr><td class="c1">④ 월별 요약</td><td><code>=QUERY(주문!A1:K501, "select month(B)+1, sum(H) group by month(B) label month(B)+1 '월'", 1)</code></td><td>월별 매출 집계 — 차트(34장) 원천</td></tr><tr><td class="c1">⑤ 열 클리닝</td><td><code>=ARRAYFORMULA(TRIM(REGEXREPLACE(주문!D2:D501, "\s+", " ")))</code></td><td>다중 공백 정돈 — 집계 깨짐 예방</td></tr><tr class="gr"><td colspan="3">공통 규칙 — 수식은 항상 별도 결과 탭에 둔다. 원본 탭에는 수식 금지(원본 → 결과 1방향 흐름이 유지보수의 전부)</td></tr></tbody></table><div class="csrow" style="--bar:#2e8a5c"><div class="cshead" style="border-left-color:#2e8a5c"><small>조립 원리</small><b>안→밖 읽기</b></div><div class="cscell"><em>순서</em><p>괄호 안쪽(원천)부터 바깥(가공) 순 — IMPORTRANGE → FILTER → SORTN처럼 <b>재료 → 손질 → 담기</b></p></div><div class="cscell out"><em>디버깅</em><p>안쪽 함수만 따로 셀에 넣어 결과 확인 후 한 겹씩 감쌉니다</p></div><div class="cscell"><em>검증</em><p>①은 <code>=ROWS()</code>로 결합 건수 대조, ④는 총합 교차 검증 — 31장 수칙 선적용</p></div></div></div>
+<div class="anchor"><span class="k">세션 2 완료</span><span class="t">이 5줄이 함수 파트의 시험 범위 — 다음 세션은 이 위에 AI를 얹습니다</span><span class="r">실습 시트: 레시피 탭</span></div>
+<div class="foot"><span>AI와 함께 쓰는 구글스프레드시트</span><span>CDSA · 한국데이터사이언티스트협회</span><span class="pg"><b>26</b> / 50</span></div>
+</section>
+<section class="slide key" id="s27">
+  <div class="ktop">
+    <span class="kt1">AI와 함께 쓰는 구글스프레드시트<small>GOOGLE SHEETS × GENERATIVE AI</small></span>
+    <span class="kt2">CDSA · 한국데이터사이언티스트협회 · 기업 실무 4시간</span>
+  </div>
+  <div class="khdr">
+    <div class="keyebrow">PART 4 · 슬라이드 28 – 31 · 소요 약 25분 · 실습 문의 500건 자동 분류</div>
+    <div class="ktitle">AI in 시트</div>
+  </div>
+  <div class="kbody"><div class="krow">
+    <div class="knum">04</div>
+    <div class="ktxt">
+      <h2>AI in 시트<br><em>Gemini · =AI() · 외부 LLM</em></h2>
+      <p>시트 안에서는 Gemini 사이드 패널과 =AI() 함수를 쓰고, 시트 밖에서는 ChatGPT·Claude에 데이터를 정확히 넘기는 프롬프트 패턴을 씁니다. 마지막에 검증·보안 수칙으로 잠급니다.</p>
+      <p><b>다루는 범위</b> — Gemini 사이드 패널 · 표 자동 생성 · 데이터 요약·이상치 질문 · =AI() 셀 함수 (분류·요약·생성) · ChatGPT·Claude 프롬프트 패턴 · 검증·보안 4수칙</p>
+    </div>
+  </div></div>
+  <span class="kpg">27</span>
+</section>
+<section class="slide" id="s28">
+<div class="head"><div><div class="kick"><span class="no">28</span><span class="lb">PART 4 · AI in 시트</span></div><h1>Gemini 사이드 패널 — 우측 상단 ✦ 하나로 시작</h1><div class="headsub">시트 우측 상단 ✦ Gemini 버튼을 누르면 열려 있는 데이터를 이해하는 패널이 뜹니다. 표를 만들고, 요약하고, 수식을 대신 짭니다.</div></div><div class="brand"><div class="t1">GOOGLE <span>SHEETS</span></div><div class="t2">AI와 함께 쓰는 구글스프레드시트</div></div></div>
+<div class="main gm"><div class="dflow"><div class="dstep"><span class="dn">01</span><b>열기</b><p>우측 상단 ✦ Gemini 클릭</p></div><div class="dstep"><span class="dn">02</span><b>요청</b><p>아래 예시처럼 한국어로 입력</p></div><div class="dstep"><span class="dn">03</span><b>미리보기</b><p>생성 결과를 패널에서 확인</p></div><div class="dstep"><span class="dn">04</span><b>삽입</b><p>[삽입] 클릭 → 시트에 반영</p></div><div class="dstep fin"><span class="dn">05</span><b>반복</b><p>수정 요청으로 다듬기</p></div></div><div class="codebx"><div class="ctit">패널 요청 예시 — 그대로 입력</div><pre><b>"신입 교육 4주 커리큘럼 표를 만들어줘. 열: 주차, 주제, 실습, 준비물"</b>   <i>빈 시트에 표 생성</i>
+<b>"이 시트에서 카테고리별 매출 특징과 이상치를 요약해줘"</b>                  <i>열린 데이터 분석</i>
+<b>"H열 총매출이 F단가×G수량과 다른 행을 찾는 수식을 만들어줘"</b>             <i>수식 코치 — 만들고 설명까지</i></pre></div><table class="sjtbl "><thead><tr><th style="width:150px">할 수 있는 것</th><th>내용</th></tr></thead><tbody><tr><td class="c1">표 생성</td><td>목적·열 구성을 말하면 형식 갖춘 표 생성 — 기획 초안 속도전</td></tr><tr><td class="c1">데이터 요약·질의</td><td>열려 있는 시트 기준 특징·이상치·상위 항목 답변</td></tr><tr><td class="c1">수식 생성·해설</td><td>자연어 → 수식, 남이 쓴 수식 → 한국어 해설</td></tr><tr><td class="c1">대화 이력</td><td>패널 대화는 시트에 남지 않음 — 채택한 결과만 [삽입]으로 반영</td></tr><tr><td class="c1">질문 요령</td><td>한 번에 <b>범위 하나만</b> 참조 — 묻기 전 데이터 범위 안 셀에 커서를 두어야 답이 정확</td></tr><tr><td class="c1">제공 조건</td><td>전사 <b>Gemini Enterprise 구독</b> — 우측 상단 ✦가 보이면 바로 실습. 미노출이면 40장 대안</td></tr></tbody></table></div>
+<div class="anchor"><span class="k">용도 정리</span><span class="t">수식이 막히면 패널에 한국어로 요청 → [삽입] — 오늘 가장 많이 쓸 경로입니다. 단, 수치가 들어간 답은 31장 수칙으로 검증</span><span class="r">우측 상단 ✦</span></div>
+<div class="foot"><span>AI와 함께 쓰는 구글스프레드시트</span><span>CDSA · 한국데이터사이언티스트협회</span><span class="pg"><b>28</b> / 50</span></div>
+</section>
+<section class="slide" id="s29">
+<div class="head"><div><div class="kick"><span class="no">29</span><span class="lb">PART 4 · AI in 시트</span></div><h1>=AI() 함수 — 셀 안에서 Gemini가 돌아갑니다</h1><div class="headsub">분류·요약·생성이 함수가 됐습니다. B2 한 셀에 걸고 아래로 드래그하면, 문의 500건이 일괄 분류됩니다.</div></div><div class="brand"><div class="t1">GOOGLE <span>SHEETS</span></div><div class="t2">AI와 함께 쓰는 구글스프레드시트</div></div></div>
+<div class="main gm"><div class="codebx"><div class="ctit">셀 함수 3형 — 걸고 아래로 드래그</div><pre><b>=AI("다음 고객 문의를 배송·환불·제품·기타 중 하나로만 답해", B2)</b>      <i>분류 — 선택지를 프롬프트에 고정</i>
+<b>=AI("다음 리뷰를 존댓말 한 문장으로 요약해", C2)</b>                      <i>요약 — 길이·톤 지정</i>
+<b>=AI("다음 상품명을 자연스러운 영어 상품명으로 바꿔", D2)</b>              <i>생성 — ARRAYFORMULA 미지원, 드래그로</i></pre></div><table class="sjtbl "><thead><tr><th style="width:104px">활용</th><th>프롬프트 요령</th></tr></thead><tbody><tr><td class="c1">분류</td><td>선택지를 문장 안에 명시 + <b>"중 하나로만 답해"</b> — 자유 서술 차단</td></tr><tr><td class="c1">요약</td><td>"한 문장으로" · "20자 이내로" — 길이를 숫자로 고정</td></tr><tr><td class="c1">추출</td><td>"날짜만 YYYY-MM-DD로" — 출력 형식을 예시로 지정</td></tr><tr><td class="c1">생성</td><td>대상 독자·톤 지정 — "고객 공지 톤으로"</td></tr><tr><td class="c1">다중 셀 참조</td><td><code>=AI("이 행을 한 줄 소개문으로", A2:E2)</code> — 여러 열을 한 번에 입력으로</td></tr></tbody></table><div class="csrow" style="--bar:#c38424"><div class="cshead" style="border-left-color:#c38424"><small>특성</small><b>운영 시 알아둘 것</b></div><div class="cscell"><em>실행</em><p>결과는 재계산마다 갱신되지 않음 — 셀의 <b>새로고침</b> 버튼으로 재실행</p></div><div class="cscell out"><em>한도</em><p>대량 실행은 순차 처리로 시간 소요 · 플랜별 사용량 한도</p></div><div class="cscell"><em>제공</em><p><b>삽입은 되지만 생성은 알파·Labs 사용자만</b> — 구독과 별개인 관리자 설정. 미노출이면 28장 패널 + 40장 부가기능으로 동일 결과</p></div></div></div>
+<div class="anchor"><span class="k">선 긋기</span><span class="t">텍스트 열 다듬기(분류·요약·변환)는 =AI(), 수치 계산·집계는 여전히 일반 함수 — 섞지 않습니다</span><span class="r">수식 입력: =AI(</span></div>
+<div class="foot"><span>AI와 함께 쓰는 구글스프레드시트</span><span>CDSA · 한국데이터사이언티스트협회</span><span class="pg"><b>29</b> / 50</span></div>
+</section>
+<section class="slide" id="s30">
+<div class="head"><div><div class="kick"><span class="no">30</span><span class="lb">PART 4 · AI in 시트</span></div><h1>ChatGPT·Claude에 시트 데이터 넘기기 — 프롬프트 패턴</h1><div class="headsub">외부 AI가 시트를 못 보는 게 아니라, 여러분이 안 보여준 것입니다. 스키마 한 줄 + 샘플 3행 + 출력 형식 — 이 세 가지면 정확히 봅니다.</div></div><div class="brand"><div class="t1">GOOGLE <span>SHEETS</span></div><div class="t2">AI와 함께 쓰는 구글스프레드시트</div></div></div>
+<div class="main gm"><div class="dflow"><div class="dstep"><span class="dn">01</span><b>구조 설명</b><p>범위·헤더·열 의미 한 줄</p></div><div class="dstep"><span class="dn">02</span><b>샘플 첨부</b><p>상위 3행만 복사 붙여넣기</p></div><div class="dstep"><span class="dn">03</span><b>요구 명시</b><p>만들 열·조건을 항목으로</p></div><div class="dstep"><span class="dn">04</span><b>형식 지정</b><p>"탭 구분 한 줄로" 지정</p></div><div class="dstep fin"><span class="dn">05</span><b>붙여넣기</b><p>받은 줄을 L2에 → 완성</p></div></div><div class="codebx"><div class="ctit">실전 프롬프트 — 파생변수 5열 한 번에 (그대로 복사)</div><pre>아래는 구글 시트 주문 데이터 A1:K501의 구조다(헤더 1행).
+A 주문번호 · B 주문일 · C 고객ID · D 상품명 · E 카테고리 · F 단가 · G 수량 · H 총매출 · I 지역 · J 판매채널 · K 상태
+
+[요구] 파생변수 L~P열(연도 · 월 · 분기 · 주말여부 · 매출등급)을 만드는 구글 시트 수식을 작성해줘.
+[형식] <b>L2에 그대로 붙여넣을 수 있게, 수식 5개를 탭으로 구분해 한 줄로 출력해줘.</b>
+[샘플] (상위 3행 붙여넣기)</pre></div><table class="sjtbl "><thead><tr><th style="width:104px">패턴</th><th style="width:340px">요청문</th><th>받는 것</th></tr></thead><tbody><tr><td class="c1">수식 생성</td><td>위 프롬프트 — 구조 + 요구 + 형식</td><td>붙여넣기 즉시 동작하는 수식 세트</td></tr><tr><td class="c1">수식 해석</td><td>"다음 QUERY가 뭘 하는지 절별로 설명해줘" + 수식</td><td>인수인계·검수용 해설</td></tr><tr><td class="c1">오류 해결</td><td>수식 + <b>오류 메시지 전문</b> 붙여넣기</td><td>원인과 수정본 — 메시지를 줄이지 말 것</td></tr><tr><td class="c1">도구 선택</td><td>같은 프롬프트를 <b>사내 승인 도구 먼저</b></td><td>Gemini로 반출 없이 동일 결과 — 외부 도구는 마스킹 후에만</td></tr></tbody></table></div>
+<div class="anchor"><span class="k">핵심 한 줄</span><span class="t">"탭으로 구분해 한 줄로" — 이 형식 지정 하나가 복붙 가능한 답과 못 쓰는 답을 가릅니다</span><span class="r">31장 수칙과 함께 사용</span></div>
+<div class="foot"><span>AI와 함께 쓰는 구글스프레드시트</span><span>CDSA · 한국데이터사이언티스트협회</span><span class="pg"><b>30</b> / 50</span></div>
+</section>
+<section class="slide" id="s31">
+<div class="head"><div><div class="kick"><span class="no">31</span><span class="lb">PART 4 · AI in 시트</span></div><h1>AI 활용 4수칙 — 넣기 전 마스킹, 받은 후 검증</h1><div class="headsub">속도는 AI가 내고 책임은 작성자가 집니다. 이 네 줄만 지키면 사고 없이 속도만 가져갑니다.</div></div><div class="brand"><div class="t1">GOOGLE <span>SHEETS</span></div><div class="t2">AI와 함께 쓰는 구글스프레드시트</div></div></div>
+<div class="main gm"><table class="sjtbl rh2"><thead><tr><th style="width:128px">수칙</th><th style="width:250px">위험</th><th>실무 처치</th></tr></thead><tbody><tr><td class="c1">① 반출 통제</td><td>고객 개인정보·미공개 실적이 외부 AI 서버로 전송</td><td><b>사내 승인 도구(Gemini) 우선</b> · 외부 도구는 이름→ID 등 마스킹 후에만 · 사내 AI 규정 확인</td></tr><tr><td class="c1">② 수치 검증</td><td>그럴듯하지만 틀린 집계</td><td>AI 산출 표는 <b>SUM 교차 검증</b> — 소계 합 = 전체 합 대조를 습관으로</td></tr><tr><td class="c1">③ 환각 대응</td><td>존재하지 않는 함수·옵션 제시</td><td>일단 셀에 넣어보기 → 오류면 <b>메시지 전문으로 재질문</b> — 30장 오류 해결 패턴</td></tr><tr><td class="c1">④ 최신성</td><td>메뉴 위치·제공 범위 수시 변경</td><td>기능이 안 보이면 없는 게 아니라 <b>플랜·언어·버전</b>부터 확인</td></tr><tr><td class="c1">⑤ 권한 회수</td><td>AI 부가기능·스크립트에 준 계정 권한 방치</td><td>분기 1회 myaccount.google.com › 보안에서 미사용 앱 연결 해제 — 39장 절차와 동일</td></tr><tr class="gr"><td colspan="3">책임 원칙 — AI 산출물은 초안이다. 제출본의 숫자 하나하나는 작성자 검증을 거친 것이어야 한다</td></tr></tbody></table><div class="csrow" style="--bar:#b94a48"><div class="cshead" style="border-left-color:#b94a48"><small>마스킹 실전</small><b>반출용 탭 분리</b></div><div class="cscell" style="flex:2"><em>방법</em><p>반출용 탭을 따로 만들고 <code>=ARRAYFORMULA(REGEXREPLACE(주문!C2:C501, "C[0-9]{3}", "ID###"))</code>로 식별자 치환</p></div><div class="cscell out"><em>원칙</em><p>원본 탭은 외부 AI에 붙여넣지 않는다 — 반출은 마스킹 탭에서만</p></div></div></div>
+<div class="anchor"><span class="k">한 줄 요약</span><span class="t">넣기 전 마스킹 · 받은 후 검증 — 이 두 동작이 AI 업무의 안전벨트입니다</span><span class="r">세션 3 전반 공통 적용</span></div>
+<div class="foot"><span>AI와 함께 쓰는 구글스프레드시트</span><span>CDSA · 한국데이터사이언티스트협회</span><span class="pg"><b>31</b> / 50</span></div>
+</section>
+<section class="slide key" id="s32">
+  <div class="ktop">
+    <span class="kt1">AI와 함께 쓰는 구글스프레드시트<small>GOOGLE SHEETS × GENERATIVE AI</small></span>
+    <span class="kt2">CDSA · 한국데이터사이언티스트협회 · 기업 실무 4시간</span>
+  </div>
+  <div class="khdr">
+    <div class="keyebrow">PART 5 · 슬라이드 33 – 37 · 소요 약 25분 · 실습 매출 대시보드 1페이지</div>
+    <div class="ktitle">시각화</div>
+  </div>
+  <div class="kbody"><div class="krow">
+    <div class="knum">05</div>
+    <div class="ktxt">
+      <h2>시각화<br><em>피벗 · 차트 · Looker Studio</em></h2>
+      <p>숫자 표를 읽게 하지 말고 보이게 만듭니다. 시트 안에서는 피벗·차트·SPARKLINE, 시트 밖 배포는 Looker Studio 대시보드로.</p>
+      <p><b>다루는 범위</b> — 피벗 테이블 · 차트 유형 선택 기준 · 슬라이서 필터 · SPARKLINE 미니 차트 · Looker Studio 연결 · 대시보드 구성·공유</p>
+    </div>
+  </div></div>
+  <span class="kpg">32</span>
+</section>
+<section class="slide" id="s33">
+<div class="head"><div><div class="kick"><span class="no">33</span><span class="lb">PART 5 · 시각화</span></div><h1>피벗 테이블 — 클릭으로 하는 교차 집계</h1><div class="headsub">드래그 몇 번으로 "카테고리 × 판매채널 매출 교차표"가 나옵니다. 탐색은 피벗으로 하고, 확정된 표는 QUERY로 박제합니다.</div></div><div class="brand"><div class="t1">GOOGLE <span>SHEETS</span></div><div class="t2">AI와 함께 쓰는 구글스프레드시트</div></div></div>
+<div class="main gm"><div class="dflow"><div class="dstep"><span class="dn">01</span><b>삽입</b><p>범위 클릭 → 삽입 › 피벗 테이블</p></div><div class="dstep"><span class="dn">02</span><b>위치</b><p>새 시트 권장</p></div><div class="dstep"><span class="dn">03</span><b>배치</b><p>행·열·값·필터 드래그</p></div><div class="dstep"><span class="dn">04</span><b>요약 방식</b><p>SUM · COUNT · % 전환</p></div><div class="dstep fin"><span class="dn">05</span><b>갱신</b><p>원본 수정 → 자동 반영</p></div></div><table class="sjtbl "><thead><tr><th style="width:96px">영역</th><th style="width:240px">배치 예</th><th>결과</th></tr></thead><tbody><tr><td class="c1">행</td><td>E 카테고리</td><td>세로축 — 카테고리별 묶음</td></tr><tr><td class="c1">열</td><td>J 판매채널</td><td>가로축 — 채널 교차</td></tr><tr><td class="c1">값</td><td>H 총매출 → SUM</td><td>교차 지점 합계 · <b>값 표시: 총계 대비 %</b>로 구성비 전환</td></tr><tr><td class="c1">필터</td><td>I 지역</td><td>특정 지역만 떼어 보기</td></tr><tr><td class="c1">그룹화</td><td>B 주문일 우클릭 › 월</td><td>일 데이터를 월 단위로 접기</td></tr><tr><td class="c1">추천</td><td>피벗 편집기 상단 [추천]</td><td>자주 쓰는 조합 원클릭</td></tr></tbody></table><div class="csrow" style="--bar:#4266a3"><div class="cshead" style="border-left-color:#4266a3"><small>재정리</small><b>피벗 vs QUERY (19장)</b></div><div class="cscell"><em>피벗</em><p>마우스 탐색 — "이렇게도 저렇게도" 굴려볼 때</p></div><div class="cscell out"><em>QUERY</em><p>수식 박제 — 매주 같은 보고서, 다른 수식과 조립할 때</p></div></div></div>
+<div class="anchor"><span class="k">실습</span><span class="t">카테고리×채널 매출 교차표 + 총계 대비 % — 2분 안에 완성합니다</span><span class="r">삽입 › 피벗 테이블</span></div>
+<div class="foot"><span>AI와 함께 쓰는 구글스프레드시트</span><span>CDSA · 한국데이터사이언티스트협회</span><span class="pg"><b>33</b> / 50</span></div>
+</section>
+<section class="slide" id="s34">
+<div class="head"><div><div class="kick"><span class="no">34</span><span class="lb">PART 5 · 시각화</span></div><h1>차트와 슬라이서 — 유형 선택 기준까지</h1><div class="headsub">차트는 종류 선택이 절반입니다. "무엇을 보여줄 것인가"로 고르고, 슬라이서를 붙여 시트를 대시보드로 만듭니다.</div></div><div class="brand"><div class="t1">GOOGLE <span>SHEETS</span></div><div class="t2">AI와 함께 쓰는 구글스프레드시트</div></div></div>
+<div class="main gm"><table class="sjtbl "><thead><tr><th style="width:176px">보여줄 것</th><th style="width:128px">차트</th><th>이유</th></tr></thead><tbody><tr><td class="c1">시간 흐름·추세</td><td>선 차트</td><td>월별 매출 추이 — 26장 레시피 ④가 원천</td></tr><tr><td class="c1">항목 간 비교</td><td>막대 차트</td><td>카테고리별 매출 순위</td></tr><tr><td class="c1">구성비</td><td>누적 막대</td><td>원형은 항목 5개 이하일 때만 — 그 이상은 누적 막대</td></tr><tr><td class="c1">관계·분포</td><td>산점도</td><td>단가 × 수량 관계, 이상치 발견</td></tr><tr><td class="c1">목표 대비 실적</td><td>콤보 차트</td><td>막대(실적) + 선(목표) 이중축</td></tr><tr><td class="c1">라벨·축</td><td>맞춤설정 › 계열</td><td>데이터 라벨 표시 · 계열별 축 지정 — 단위 다른 두 지표 병기</td></tr></tbody></table><div class="csrow" style="--bar:#2e8a5c"><div class="cshead" style="border-left-color:#2e8a5c"><small>슬라이서</small><b>데이터 › 슬라이서 추가</b></div><div class="cscell"><em>동작</em><p>기준 열 지정 → 시트 위 <b>필터 버튼</b> 생성 — 클릭으로 지역·채널 전환</p></div><div class="cscell out"><em>효과</em><p>같은 원본을 쓰는 <b>차트·피벗이 동시에 필터링</b> — 시트 1장이 대시보드</p></div></div><div class="csrow" style="--bar:#c38424"><div class="cshead" style="border-left-color:#c38424"><small>문서 연동</small><b>차트 내보내기</b></div><div class="cscell"><em>연결 붙여넣기</em><p>차트 복사 → Docs·Slides에 <b>스프레드시트에 연결</b>로 붙여넣기</p></div><div class="cscell out"><em>갱신</em><p>원본 수정 시 문서 쪽 [업데이트] 버튼 — 보고서 숫자 불일치 방지</p></div></div></div>
+<div class="anchor"><span class="k">구성 순서</span><span class="t">피벗(요약) → 차트(시각) → 슬라이서(조작) — 이 3단이 시트 대시보드의 공식입니다</span><span class="r">데이터 › 슬라이서 추가</span></div>
+<div class="foot"><span>AI와 함께 쓰는 구글스프레드시트</span><span>CDSA · 한국데이터사이언티스트협회</span><span class="pg"><b>34</b> / 50</span></div>
+</section>
+<section class="slide" id="s35">
+<div class="head"><div><div class="kick"><span class="no">35</span><span class="lb">PART 5 · 시각화</span></div><h1>SPARKLINE — 셀 한 칸이 차트가 됩니다</h1><div class="headsub">표의 행마다 12개월 추세가 붙습니다. 큰 차트 없이 "표+차트 한 몸" — 대시보드 밀도가 달라집니다.</div></div><div class="brand"><div class="t1">GOOGLE <span>SHEETS</span></div><div class="t2">AI와 함께 쓰는 구글스프레드시트</div></div></div>
+<div class="main gm"><div class="codebx"><div class="ctit">한 셀 차트 4형 — N열에</div><pre><b>=SPARKLINE(B2:M2)</b>                                                  <i>기본 추세선 — 12개월 흐름</i>
+<b>=SPARKLINE(B2:M2, {"charttype","column"; "color","#b94a48"})</b>        <i>미니 막대</i>
+<b>=SPARKLINE(H2, {"charttype","bar"; "max",1000000; "color1","#2e8a5c"})</b> <i>진행률 바 — 목표 100만 대비</i>
+<b>=SPARKLINE(B2:M2, {"charttype","winloss"})</b>                          <i>증감 승패 — 양·음만 표시</i></pre></div><table class="sjtbl "><thead><tr><th style="width:136px">옵션 키</th><th style="width:230px">값</th><th>효과</th></tr></thead><tbody><tr><td class="c1">charttype</td><td>line · column · bar · winloss</td><td>차트 형태 — 기본 line</td></tr><tr><td class="c1">color / color1</td><td>"#b94a48" 등 HEX</td><td>계열 색 — 조건부 서식과 톤 맞춤</td></tr><tr><td class="c1">max / min</td><td>숫자</td><td>bar 진행률의 분모 — 목표값 설정</td></tr><tr><td class="c1">ymin / ymax</td><td>숫자</td><td>line·column의 세로축 고정 — 행 간 비교 기준 통일</td></tr><tr><td class="c1">empty</td><td>"zero" 또는 "ignore"</td><td>중간 빈 달을 0으로 그릴지 건너뛸지 — 결측 표기 방침 통일</td></tr></tbody></table><div class="csrow" style="--bar:#6f5aa8"><div class="cshead" style="border-left-color:#6f5aa8"><small>실무 배치</small><b>KPI 표 표준형</b></div><div class="cscell" style="flex:2"><em>구성</em><p>항목명 · 당월 실적 · <b>진행률 bar</b> · <b>12개월 line</b> — 4열이면 경영 요약 한 장</p></div></div></div>
+<div class="anchor"><span class="k">밀도 원칙</span><span class="t">행 수만큼 차트가 생깁니다 — 15개 지표 추세를 15행으로, 차트 15개 없이</span><span class="r">옵션은 {"키","값"} 중괄호</span></div>
+<div class="foot"><span>AI와 함께 쓰는 구글스프레드시트</span><span>CDSA · 한국데이터사이언티스트협회</span><span class="pg"><b>35</b> / 50</span></div>
+</section>
+<section class="slide" id="s36">
+<div class="head"><div><div class="kick"><span class="no">36</span><span class="lb">PART 5 · 시각화</span></div><h1>Looker Studio — 시트를 대시보드의 데이터 원천으로</h1><div class="headsub">무료 BI 도구 Looker Studio에 시트를 물리면, 시트는 입력·가공을 맡고 보고는 대시보드 URL이 맡습니다.</div></div><div class="brand"><div class="t1">GOOGLE <span>SHEETS</span></div><div class="t2">AI와 함께 쓰는 구글스프레드시트</div></div></div>
+<div class="main gm"><div class="dflow"><div class="dstep"><span class="dn">01</span><b>접속</b><p>lookerstudio.google.com</p></div><div class="dstep"><span class="dn">02</span><b>보고서 생성</b><p>만들기 › 보고서</p></div><div class="dstep"><span class="dn">03</span><b>데이터 연결</b><p>커넥터: Google Sheets</p></div><div class="dstep"><span class="dn">04</span><b>시트·탭 선택</b><p>주문 탭 · 첫 행 헤더 체크</p></div><div class="dstep fin"><span class="dn">05</span><b>필드 검수</b><p>유형·집계 확인 후 캔버스로</p></div></div><table class="sjtbl "><thead><tr><th style="width:136px">체크</th><th>내용</th></tr></thead><tbody><tr><td class="c1">필드 유형</td><td>숫자·날짜·텍스트 자동 감지 — <b>날짜가 텍스트로 잡히면 여기서 수정</b></td></tr><tr><td class="c1">집계 기본값</td><td>합계·평균 등 필드별 기본 집계 지정</td></tr><tr><td class="c1">데이터 갱신</td><td>캐시 기본 15분 — 우상단 새로고침으로 즉시 반영 가능</td></tr><tr><td class="c1">비용</td><td>Looker Studio 기본 기능 무료 — 시트 커넥터 포함</td></tr><tr><td class="c1">소유권</td><td>데이터 소스는 만든 계정에 귀속 — 담당 변경 시 소유자 이전 후 재인증</td></tr><tr><td class="c1">원천 정리</td><td>대시보드용 탭은 <b>1행 헤더 + 세로 누적</b>의 단정한 표로 — 병합·소계 행 금지</td></tr></tbody></table><div class="csrow" style="--bar:#4266a3"><div class="cshead" style="border-left-color:#4266a3"><small>왜 옮기나</small><b>시트 차트의 한계 지점</b></div><div class="cscell"><em>시트 차트</em><p>한 파일 안 보고서 — 보는 사람이 시트에 들어와야 함</p></div><div class="cscell out"><em>Looker</em><p>여러 페이지 · 뷰어 필터 조작 · <b>원본 접근 없이 URL로 열람</b></p></div></div></div>
+<div class="anchor"><span class="k">구조</span><span class="t">시트 = 데이터 입력·가공 / Looker = 보기·배포 — 역할을 나누면 둘 다 단순해집니다</span><span class="r">lookerstudio.google.com</span></div>
+<div class="foot"><span>AI와 함께 쓰는 구글스프레드시트</span><span>CDSA · 한국데이터사이언티스트협회</span><span class="pg"><b>36</b> / 50</span></div>
+</section>
+<section class="slide" id="s37">
+<div class="head"><div><div class="kick"><span class="no">37</span><span class="lb">PART 5 · 시각화</span></div><h1>Looker Studio — 구성 요소와 배포 운영</h1><div class="headsub">스코어카드·시계열·필터 컨트롤 다섯 가지면 실무 대시보드가 섭니다. 배포는 파일 첨부가 아니라 URL과 예약 메일로.</div></div><div class="brand"><div class="t1">GOOGLE <span>SHEETS</span></div><div class="t2">AI와 함께 쓰는 구글스프레드시트</div></div></div>
+<div class="main gm"><table class="sjtbl "><thead><tr><th style="width:150px">구성 요소</th><th>용도</th></tr></thead><tbody><tr><td class="c1"><b>스코어카드</b></td><td>핵심 숫자 1개 크게 — 당월 매출, 주문 건수 (비교 기간 증감 % 옵션)</td></tr><tr><td class="c1">시계열 차트</td><td>기간 추세 — B 주문일 기준</td></tr><tr><td class="c1">막대·표·피벗</td><td>순위와 상세 — 정렬·페이지네이션 내장</td></tr><tr><td class="c1"><b>필터 컨트롤</b></td><td>뷰어가 직접 지역·채널을 골라 봄 — 질문 대응 감소</td></tr><tr><td class="c1">기간 컨트롤</td><td>뷰어가 조회 기간 변경 — "지난달 것도 보여줘" 종료</td></tr><tr><td class="c1">임베드</td><td>파일 › 보고서 삽입 — 사내 포털·노션에 iframe으로 게시</td></tr></tbody></table><div class="dflow"><div class="dstep"><span class="dn">01</span><b>배치</b><p>구성 요소 드래그 배치</p></div><div class="dstep"><span class="dn">02</span><b>테마</b><p>테마·레이아웃 일괄 지정</p></div><div class="dstep"><span class="dn">03</span><b>공유</b><p>링크 공유 또는 뷰어 초대</p></div><div class="dstep"><span class="dn">04</span><b>예약 전송</b><p>공유 › 전송 예약 — 매주 월 PDF 메일</p></div><div class="dstep fin"><span class="dn">05</span><b>운영</b><p>시트만 갱신 → 대시보드 자동 반영</p></div></div><div class="csrow" style="--bar:#2e8a5c"><div class="cshead" style="border-left-color:#2e8a5c"><small>업그레이드</small><b>기존 매출 대시보드가 있다면</b></div><div class="cscell"><em>순서</em><p>① 원천 탭을 1행 헤더 단정한 표로 정리 → ② Looker 연결 → ③ 필터·기간 컨트롤 부착 → ④ 전송 예약</p></div><div class="cscell out"><em>이점</em><p>뷰어는 <b>원본 시트 접근 불필요</b> — 가공 전 데이터 비노출, 편집자와 열람자 분리</p></div></div></div>
+<div class="anchor"><span class="k">보고 체계 전환</span><span class="t">"파일 첨부해 주세요" → "URL 열어 보세요 + 매주 월 자동 PDF" — 세션 3 완성</span><span class="r">공유 › 전송 예약</span></div>
+<div class="foot"><span>AI와 함께 쓰는 구글스프레드시트</span><span>CDSA · 한국데이터사이언티스트협회</span><span class="pg"><b>37</b> / 50</span></div>
+</section>
+<section class="slide key" id="s38">
+  <div class="ktop">
+    <span class="kt1">AI와 함께 쓰는 구글스프레드시트<small>GOOGLE SHEETS × GENERATIVE AI</small></span>
+    <span class="kt2">CDSA · 한국데이터사이언티스트협회 · 기업 실무 4시간</span>
+  </div>
+  <div class="khdr">
+    <div class="keyebrow">PART 6 · 슬라이드 39 – 41 · 소요 약 15분 · 실습 부가기능 1개 설치·제거</div>
+    <div class="ktitle">확장 프로그램</div>
+  </div>
+  <div class="kbody"><div class="krow">
+    <div class="knum">06</div>
+    <div class="ktxt">
+      <h2>확장 프로그램<br><em>남이 만든 기능 얹기</em></h2>
+      <p>구글 시트에 없는 기능은 마켓플레이스에서 설치합니다. 설치 3분, 단 권한 화면을 읽는 눈이 필요합니다. 직접 만들기(PART 7) 전에 기성품부터 확인합니다.</p>
+      <p><b>다루는 범위</b> — 마켓플레이스 설치 절차 · 권한 검토 기준 · GPT for Sheets · Coefficient · YAMM 메일 머지 · Autocrat 문서 자동화 · 부가기능 vs Apps Script vs Zapier</p>
+    </div>
+  </div></div>
+  <span class="kpg">38</span>
+</section>
+<section class="slide" id="s39">
+<div class="head"><div><div class="kick"><span class="no">39</span><span class="lb">PART 6 · 확장 프로그램</span></div><h1>마켓플레이스 — 설치 3분, 권한 검토가 전부</h1><div class="headsub">설치는 쉽습니다. 중요한 건 설치 직전 권한 화면 — 이 앱이 내 데이터의 어디까지 만지는지 거기 다 적혀 있습니다.</div></div><div class="brand"><div class="t1">GOOGLE <span>SHEETS</span></div><div class="t2">AI와 함께 쓰는 구글스프레드시트</div></div></div>
+<div class="main gm"><div class="dflow"><div class="dstep"><span class="dn">01</span><b>열기</b><p>확장 프로그램 › 부가기능 › 설치</p></div><div class="dstep"><span class="dn">02</span><b>검색</b><p>용도 키워드로 검색</p></div><div class="dstep"><span class="dn">03</span><b>검증</b><p>설치 수·리뷰·개발사 확인</p></div><div class="dstep"><span class="dn">04</span><b>권한 검토</b><p>요청 범위 읽기 — 아래 기준</p></div><div class="dstep fin"><span class="dn">05</span><b>설치·실행</b><p>확장 프로그램 메뉴에 등록됨</p></div></div><table class="sjtbl "><thead><tr><th style="width:150px">검토 항목</th><th>확인할 것</th></tr></thead><tbody><tr><td class="c1">설치 수·평점</td><td>수백만 설치 + 최근 리뷰 — 방치된 앱 걸러내기</td></tr><tr><td class="c1">개발사</td><td>공식 파트너인지, 회사 정보·개인정보처리방침이 있는지</td></tr><tr><td class="c1"><b>권한 범위</b></td><td>"현재 시트만" vs <b>"드라이브 전체 읽기" vs "Gmail 발송"</b> — 필요 이상 요구하면 중단</td></tr><tr><td class="c1">데이터 흐름</td><td>외부 서버로 전송되는지 — 사내 데이터 정책과 대조</td></tr><tr><td class="c1">관리자 정책</td><td>회사 Workspace는 관리자가 설치를 제한·허용 목록으로 관리 가능</td></tr><tr><td class="c1">업데이트</td><td>부가기능은 자동 업데이트 — <b>권한 추가 요구 시 재승인 알림</b>이 뜨면 다시 검토</td></tr></tbody></table><div class="csrow" style="--bar:#b94a48"><div class="cshead" style="border-left-color:#b94a48"><small>철수 절차</small><b>제거는 두 곳</b></div><div class="cscell"><em>부가기능 제거</em><p>확장 프로그램 › 부가기능 관리 › 제거</p></div><div class="cscell out"><em>권한 회수</em><p>myaccount.google.com › 보안 › 서드파티 앱 — <b>계정 연결 자체를 끊기</b></p></div></div></div>
+<div class="anchor"><span class="k">원칙</span><span class="t">권한 화면이 곧 계약서 — "드라이브 전체"를 요구하는 단순 도구는 설치하지 않습니다</span><span class="r">확장 프로그램 › 부가기능</span></div>
+<div class="foot"><span>AI와 함께 쓰는 구글스프레드시트</span><span>CDSA · 한국데이터사이언티스트협회</span><span class="pg"><b>39</b> / 50</span></div>
+</section>
+<section class="slide" id="s40">
+<div class="head"><div><div class="kick"><span class="no">40</span><span class="lb">PART 6 · 확장 프로그램</span></div><h1>실무 부가기능 5선 — 이름을 알아두는 것이 절반</h1><div class="headsub">필요할 때 검색할 이름이 있는 사람과 없는 사람의 속도 차이입니다. 다섯 개만 외웁니다.</div></div><div class="brand"><div class="t1">GOOGLE <span>SHEETS</span></div><div class="t2">AI와 함께 쓰는 구글스프레드시트</div></div></div>
+<div class="main gm"><table class="sjtbl "><thead><tr><th style="width:190px">부가기능</th><th>하는 일</th><th style="width:176px">과금 구조</th></tr></thead><tbody><tr><td class="c1"><b>GPT for Sheets &amp; Docs</b></td><td><code>=GPT()</code> 계열 함수로 셀에서 GPT 호출 — 29장 =AI() 미제공 환경의 대안, 모델 선택 가능</td><td>API 키 기반 사용량 과금</td></tr><tr><td class="c1"><b>Coefficient</b></td><td>Salesforce · DB · GA4 데이터를 시트로 <b>예약 동기화</b> — 수동 내보내기 제거</td><td>무료 + 유료 플랜</td></tr><tr><td class="c1"><b>YAMM</b></td><td>시트 명단으로 Gmail <b>개인화 대량 발송</b>(메일 머지) — 오픈 추적 열 자동 기록</td><td>일 발송량 기준 과금</td></tr><tr><td class="c1"><b>Autocrat</b></td><td>시트 행 → 문서·PDF 자동 생성 — 수료증·계약서·안내문 대량 발행</td><td>무료</td></tr><tr><td class="c1"><b>Supermetrics</b></td><td>광고·마케팅 채널 성과 데이터 자동 수집 — 마케팅 리포트 원천</td><td>유료</td></tr></tbody></table><div class="csrow" style="--bar:#c38424"><div class="cshead" style="border-left-color:#c38424"><small>선택 팁</small><b>대안 검색법</b></div><div class="cscell"><em>같은 용도 비교</em><p>마켓플레이스에서 용도 키워드 검색 → 설치 수 순 상위 3개 비교 — 한 제품에 고정하지 않기</p></div><div class="cscell out"><em>AI로 탐색</em><p>"구글 시트에서 ○○ 자동화하는 부가기능 비교해줘" — 30장 패턴으로</p></div></div><div class="csrow" style="--bar:#6f5aa8"><div class="cshead" style="border-left-color:#6f5aa8"><small>운영 팁</small><b>설치 이후 관리</b></div><div class="cscell"><em>팀 표준화</em><p>공용 부가기능 목록을 정해 공지 — 개인별 제각각 설치가 유지보수 비용이 됨</p></div><div class="cscell out"><em>성능</em><p>부가기능이 많으면 시트 로딩 지연 — 분기마다 미사용 제거(39장 절차)</p></div></div></div>
+<div class="anchor"><span class="k">기준선</span><span class="t">기성품이 정확히 맞으면 설치가 최선 — 안 맞는 지점부터가 다음 파트, Apps Script입니다</span><span class="r">설치 전 39장 권한 검토</span></div>
+<div class="foot"><span>AI와 함께 쓰는 구글스프레드시트</span><span>CDSA · 한국데이터사이언티스트협회</span><span class="pg"><b>40</b> / 50</span></div>
+</section>
+<section class="slide" id="s41">
+<div class="head"><div><div class="kick"><span class="no">41</span><span class="lb">PART 6 · 확장 프로그램</span></div><h1>부가기능 vs Apps Script vs Zapier·Make — 갈림길 정리</h1><div class="headsub">자동화 수단은 세 갈래입니다. "누가 만들었나 · 얼마나 맞춤인가 · 무엇을 연결하나"로 가릅니다.</div></div><div class="brand"><div class="t1">GOOGLE <span>SHEETS</span></div><div class="t2">AI와 함께 쓰는 구글스프레드시트</div></div></div>
+<div class="main gm"><div class="csrow" style="--bar:#4266a3"><div class="cshead" style="border-left-color:#4266a3"><small>부가기능</small><b>남이 만든 기성품</b></div><div class="cscell"><em>강점</em><p>설치 3분 · 검증된 UI · 유지보수 불필요</p></div><div class="cscell"><em>한계</em><p>우리 프로세스에 안 맞는 부분은 수정 불가 · 구독 비용 · 데이터 외부 경유</p></div><div class="cscell out"><em>이럴 때</em><p>표준 업무(메일 머지·데이터 동기화)가 제품과 정확히 일치할 때</p></div></div><div class="csrow" style="--bar:#2e8a5c"><div class="cshead" style="border-left-color:#2e8a5c"><small>Apps Script</small><b>우리가 만드는 맞춤</b></div><div class="cscell"><em>강점</em><p><b>무료</b> · 시트·Gmail·캘린더 완전 맞춤 · 데이터가 구글 안에 머무름</p></div><div class="cscell"><em>한계</em><p>만들고 고치는 사람이 필요 — 단, 48장 AI 작성법이 문턱을 낮춤</p></div><div class="cscell out"><em>이럴 때</em><p>우리 규칙이 특수하거나, 시트 중심 자동화이거나, 비용 없이 갈 때</p></div></div><div class="csrow" style="--bar:#6f5aa8"><div class="cshead" style="border-left-color:#6f5aa8"><small>Zapier · Make</small><b>SaaS 연결 배선</b></div><div class="cscell"><em>강점</em><p>수백 개 외부 서비스(Slack·노션·결제) 연결을 노코드로</p></div><div class="cscell"><em>한계</em><p>실행 건수 과금 · 로직이 외부 플랫폼에 종속</p></div><div class="cscell out"><em>이럴 때</em><p>구글 밖 서비스 3개 이상을 한 흐름으로 묶을 때</p></div></div><div class="csrow" style="--bar:#c38424"><div class="cshead" style="border-left-color:#c38424"><small>실전 대입</small><b>주간 보고 자동화라면</b></div><div class="cscell"><em>판단</em><p>사내 양식이라 기성품 없음 → <b>Apps Script</b> — 19장 QUERY + 46장 발송 + 45장 트리거 조합</p></div><div class="cscell out"><em>데이터가 외부 SaaS면</em><p>Coefficient로 시트 동기화(40장) 후 같은 Script 파이프라인 재사용</p></div></div><div class="dflow"><div class="dstep"><span class="dn">01</span><b>질문 1</b><p>기성품이 정확히 해결하나? → 부가기능</p></div><div class="dstep"><span class="dn">02</span><b>질문 2</b><p>시트·구글 중심 + 맞춤 필요? → Apps Script</p></div><div class="dstep"><span class="dn">03</span><b>질문 3</b><p>외부 SaaS 다중 연결? → Zapier · Make</p></div><div class="dstep fin"><span class="dn">04</span><b>결론</b><p>오늘의 다음 단계 = Apps Script</p></div></div></div>
+<div class="anchor"><span class="k">갈림길 요약</span><span class="t">정확히 맞는 기성품 > 시트 중심 맞춤은 Apps Script > 다중 SaaS는 Zapier — 순서대로 검토합니다</span><span class="r">다음: PART 7</span></div>
+<div class="foot"><span>AI와 함께 쓰는 구글스프레드시트</span><span>CDSA · 한국데이터사이언티스트협회</span><span class="pg"><b>41</b> / 50</span></div>
+</section>
+<section class="slide key" id="s42">
+  <div class="ktop">
+    <span class="kt1">AI와 함께 쓰는 구글스프레드시트<small>GOOGLE SHEETS × GENERATIVE AI</small></span>
+    <span class="kt2">CDSA · 한국데이터사이언티스트협회 · 기업 실무 4시간</span>
+  </div>
+  <div class="khdr">
+    <div class="keyebrow">PART 7 · 슬라이드 43 – 48 · 소요 약 30분 · 실습 타임스탬프 자동화 설치</div>
+    <div class="ktitle">Apps Script</div>
+  </div>
+  <div class="kbody"><div class="krow">
+    <div class="knum">07</div>
+    <div class="ktxt">
+      <h2>Apps Script<br><em>시트가 스스로 일하게</em></h2>
+      <p>시트에 붙어 있는 JavaScript 실행 환경입니다. 맞춤 함수 → 트리거 → Gmail·캘린더 연동 → 웹앱까지, 코드는 AI가 쓰고 여러분은 요구와 검증을 맡습니다.</p>
+      <p><b>다루는 범위</b> — 편집기 열기·권한 승인 · 맞춤 함수 (@customfunction) · 트리거 onEdit·시간 기반 · Gmail·캘린더·드라이브 연동 · HTML 서비스 — 사이드바·웹앱 · AI로 코드 작성 루프</p>
+    </div>
+  </div></div>
+  <span class="kpg">42</span>
+</section>
+<section class="slide" id="s43">
+<div class="head"><div><div class="kick"><span class="no">43</span><span class="lb">PART 7 · Apps Script</span></div><h1>Apps Script — 시트에 붙어 있는 JavaScript</h1><div class="headsub">확장 프로그램 메뉴에서 편집기가 열립니다. VBA의 자리이지만 클라우드에서 돌기 때문에, 내 PC가 꺼져 있어도 실행됩니다.</div></div><div class="brand"><div class="t1">GOOGLE <span>SHEETS</span></div><div class="t2">AI와 함께 쓰는 구글스프레드시트</div></div></div>
+<div class="main gm"><div class="dflow"><div class="dstep"><span class="dn">01</span><b>열기</b><p>확장 프로그램 › Apps Script</p></div><div class="dstep"><span class="dn">02</span><b>작성</b><p>편집기에 함수 작성</p></div><div class="dstep"><span class="dn">03</span><b>실행</b><p>상단 ▶ 실행 클릭</p></div><div class="dstep"><span class="dn">04</span><b>권한 승인</b><p>최초 1회 — 계정 확인</p></div><div class="dstep fin"><span class="dn">05</span><b>확인</b><p>시트·실행 로그에서 결과</p></div></div><table class="sjtbl "><thead><tr><th style="width:118px">개념</th><th>내용</th></tr></thead><tbody><tr><td class="c1">언어</td><td>JavaScript — 웹에서 가장 자료 많은 언어, AI가 가장 잘 쓰는 언어</td></tr><tr><td class="c1">귀속</td><td>이 시트에 붙은 스크립트(컨테이너 바인드) — 시트 복사 시 함께 복사</td></tr><tr><td class="c1">핵심 객체</td><td><code>SpreadsheetApp</code> 시트 · <code>GmailApp</code> 메일 · <code>CalendarApp</code> 일정 · <code>DriveApp</code> 파일</td></tr><tr><td class="c1">비용</td><td><b>무료</b> — 별도 서버·구독 없음</td></tr><tr><td class="c1">실행 한도</td><td>1회 실행 최대 6분 · 일일 총량은 계정 유형별 — 대량 배치는 분할 설계</td></tr><tr><td class="c1">로그</td><td><code>Logger.log(값)</code> → 편집기 실행 로그에서 확인 — 디버깅 기본기</td></tr></tbody></table><div class="codebx"><div class="ctit">첫 실행 — 동작 확인용 3줄</div><pre>function 동작확인() {
+  SpreadsheetApp.getActiveSpreadsheet().toast("Apps Script 연결 완료");
+}                                  <i>▶ 실행 → 권한 승인 → 시트 우하단 알림 확인</i></pre></div><div class="csrow" style="--bar:#4266a3"><div class="cshead" style="border-left-color:#4266a3"><small>VBA와 차이</small><b>핵심 한 가지</b></div><div class="cscell" style="flex:2"><em>클라우드 실행</em><p>매일 09시 트리거는 <b>PC를 꺼도 실행</b> — 자동화가 사람 근태와 분리됩니다</p></div></div></div>
+<div class="anchor"><span class="k">진입 규칙</span><span class="t">오늘 코드는 전부 복붙 — 문법 공부는 뒤로, 48장에서 AI에게 작성을 넘기는 법까지 갑니다</span><span class="r">확장 프로그램 › Apps Script</span></div>
+<div class="foot"><span>AI와 함께 쓰는 구글스프레드시트</span><span>CDSA · 한국데이터사이언티스트협회</span><span class="pg"><b>43</b> / 50</span></div>
+</section>
+<section class="slide" id="s44">
+<div class="head"><div><div class="kick"><span class="no">44</span><span class="lb">PART 7 · Apps Script</span></div><h1>맞춤 함수 — 회사 규칙을 함수 이름으로</h1><div class="headsub">수수료율·등급 기준처럼 회사마다 다른 규칙을 함수로 박제합니다. 담당자마다 다른 계산식 문제가 함수 하나로 끝납니다.</div></div><div class="brand"><div class="t1">GOOGLE <span>SHEETS</span></div><div class="t2">AI와 함께 쓰는 구글스프레드시트</div></div></div>
+<div class="main gm"><div class="codebx"><div class="ctit">편집기에 붙여넣기 → 시트에서 바로 호출</div><pre>/** 부가세 포함가를 계산합니다. @customfunction */
+function 부가세포함(금액) {
+  return 금액 * 1.1;
+}                                          <i>시트에서 <b>=부가세포함(H2)</b> — 자동완성에 설명 노출</i>
+
+/** 매출 등급을 판정합니다. @customfunction */
+function 매출등급(매출) {
+  if (매출 &gt;= 1000000) return "VIP";
+  if (매출 &gt;= 300000)  return "우수";
+  return "일반";
+}                                          <i>26장 레시피 ③의 IFS를 회사 표준 함수로 승격</i></pre></div><table class="sjtbl "><thead><tr><th style="width:176px">규칙</th><th>내용</th></tr></thead><tbody><tr><td class="c1"><code>@customfunction</code></td><td>주석에 넣으면 시트 자동완성에 등록 — 팀원도 이름만 치면 사용</td></tr><tr><td class="c1">범위 인수</td><td><code>=매출등급(H2:H501)</code>처럼 범위가 오면 2차원 배열로 들어옴 — 배열 처리 필요</td></tr><tr><td class="c1">재계산 조건</td><td>인수가 바뀔 때만 재실행 — 시각·랜덤성 값 반환에는 부적합</td></tr><tr><td class="c1">표준화 효과</td><td>등급표가 바뀌면 <b>코드 한 곳</b>만 수정 — 전 시트 일괄 반영</td></tr></tbody></table></div>
+<div class="anchor"><span class="k">실무 승격</span><span class="t">자주 쓰는 IF 덩어리를 발견하면 맞춤 함수 후보 — 이름이 곧 사내 용어가 됩니다</span><span class="r">/** @customfunction */</span></div>
+<div class="foot"><span>AI와 함께 쓰는 구글스프레드시트</span><span>CDSA · 한국데이터사이언티스트협회</span><span class="pg"><b>44</b> / 50</span></div>
+</section>
+<section class="slide" id="s45">
+<div class="head"><div><div class="kick"><span class="no">45</span><span class="lb">PART 7 · Apps Script</span></div><h1>트리거 — "언제 실행할지"를 시트에 맡깁니다</h1><div class="headsub">자동화의 심장입니다. 셀이 바뀔 때, 매주 월 09시에, 폼이 제출될 때 — 사람이 버튼을 누르지 않아도 코드가 돕니다.</div></div><div class="brand"><div class="t1">GOOGLE <span>SHEETS</span></div><div class="t2">AI와 함께 쓰는 구글스프레드시트</div></div></div>
+<div class="main gm"><table class="sjtbl "><thead><tr><th style="width:150px">트리거</th><th style="width:176px">발동 시점</th><th>대표 용도</th></tr></thead><tbody><tr><td class="c1"><b>onOpen</b> (단순)</td><td>시트를 여는 순간</td><td>상단에 맞춤 메뉴 추가 — 팀 도구 모음</td></tr><tr><td class="c1"><b>onEdit</b> (단순)</td><td>셀이 수정되는 순간</td><td>상태 변경 <b>타임스탬프</b> · 입력 감사 로그</td></tr><tr><td class="c1"><b>시간 기반</b> (설치형)</td><td>분·시간·일·주 단위 예약</td><td>매주 월 09:00 요약 메일 — PC 꺼져도 실행</td></tr><tr><td class="c1"><b>폼 제출</b> (설치형)</td><td>응답 도착 즉시</td><td>접수 알림 · 자동 회신</td></tr><tr class="gr"><td colspan="3">설치형 등록 — 편집기 좌측 ⏰ 트리거 › 트리거 추가 › 함수·이벤트·주기 선택</td></tr></tbody></table><div class="codebx"><div class="ctit">오늘의 설치 실습 — 완료 타임스탬프</div><pre>function onEdit(e) {
+  const r = e.range, sh = r.getSheet();
+  if (sh.getName() == "주문" &amp;&amp; r.getColumn() == 11 &amp;&amp; e.value == "완료") {
+    r.offset(0, 1).setValue(new Date());   <i>K열(11번째)이 "완료"가 되는 순간 L열에 시각</i>
+  }
+}</pre></div><div class="csrow" style="--bar:#c38424"><div class="cshead" style="border-left-color:#c38424"><small>주의</small><b>단순 vs 설치형</b></div><div class="cscell"><em>단순 트리거</em><p>onOpen·onEdit — 함수 이름만 맞으면 자동 연결, 단 권한 낮음(메일 발송 불가)</p></div><div class="cscell out"><em>설치형</em><p>⏰ 메뉴에서 등록 — <b>메일·외부 호출 가능</b>, 시간 예약 가능</p></div></div></div>
+<div class="anchor"><span class="k">설계 습관</span><span class="t">자동화 요구는 "무엇을(함수) + 언제(트리거)"로 쪼개서 정의합니다 — 48장 AI 요청서의 골격</span><span class="r">편집기 좌측 ⏰</span></div>
+<div class="foot"><span>AI와 함께 쓰는 구글스프레드시트</span><span>CDSA · 한국데이터사이언티스트협회</span><span class="pg"><b>45</b> / 50</span></div>
+</section>
+<section class="slide" id="s46">
+<div class="head"><div><div class="kick"><span class="no">46</span><span class="lb">PART 7 · Apps Script</span></div><h1>서비스 연동 — 시트가 메일을 보내고 일정을 잡습니다</h1><div class="headsub">SpreadsheetApp 옆에 GmailApp·CalendarApp·DriveApp이 나란히 있습니다. 시트 데이터가 구글 서비스 전체의 입력이 됩니다.</div></div><div class="brand"><div class="t1">GOOGLE <span>SHEETS</span></div><div class="t2">AI와 함께 쓰는 구글스프레드시트</div></div></div>
+<div class="main gm"><table class="sjtbl "><thead><tr><th style="width:96px">서비스</th><th style="width:136px">객체</th><th>실무 예</th></tr></thead><tbody><tr><td class="c1">Gmail</td><td><code>GmailApp</code></td><td>시트 명단 개인화 발송 · 미납 안내 · 주간 요약 메일</td></tr><tr><td class="c1">캘린더</td><td><code>CalendarApp</code></td><td>마감일 열 → 팀 캘린더 일정 자동 등록</td></tr><tr><td class="c1">드라이브</td><td><code>DriveApp</code></td><td>월별 폴더 생성 · 시트를 PDF로 저장·보관</td></tr><tr><td class="c1">문서</td><td><code>DocumentApp</code></td><td>행 데이터로 계약서·안내문 채우기 — 40장 Autocrat의 수제 버전</td></tr><tr><td class="c1">외부 API</td><td><code>UrlFetchApp</code></td><td>23장 IMPORT 한계 구간(로그인·동적 페이지·사내 API) 돌파</td></tr></tbody></table><div class="codebx"><div class="ctit">주간 요약 메일 골격 — 45장 시간 트리거(매주 월 09:00)에 연결</div><pre>function 주간요약발송() {
+  const v = SpreadsheetApp.getActiveSpreadsheet()
+              .getSheetByName("보고서").getRange("A1:B6").getValues();
+  const body = v.map(r =&gt; r.join(" : ")).join("\n");   <i>19장 QUERY 결과 범위를 본문으로</i>
+  GmailApp.sendEmail("team@company.com", "주간 매출 요약", body);
+}</pre></div><div class="csrow" style="--bar:#b94a48"><div class="cshead" style="border-left-color:#b94a48"><small>권한 메모</small><b>승인 화면 재등장</b></div><div class="cscell"><em>이유</em><p>메일·캘린더는 시트보다 넓은 권한 — 최초 실행 시 추가 승인 요청</p></div><div class="cscell out"><em>통제</em><p>발송 전 <b>수신자를 본인 메일로 테스트</b> → 검증 후 실제 명단 교체</p></div></div></div>
+<div class="anchor"><span class="k">연결 완성</span><span class="t">19장 QUERY 요약 + 이 코드 + 45장 시간 트리거 = 월요일 아침 보고 자동화 3종 세트</span><span class="r">GmailApp.sendEmail</span></div>
+<div class="foot"><span>AI와 함께 쓰는 구글스프레드시트</span><span>CDSA · 한국데이터사이언티스트협회</span><span class="pg"><b>46</b> / 50</span></div>
+</section>
+<section class="slide" id="s47">
+<div class="head"><div><div class="kick"><span class="no">47</span><span class="lb">PART 7 · Apps Script</span></div><h1>HTML 서비스 — 시트 위에 화면을 얹습니다</h1><div class="headsub">입력자가 시트를 직접 열 필요가 없어집니다. 사이드바·팝업·독립 웹 페이지를 만들고, 뒤에서는 시트가 저장소로 돕니다.</div></div><div class="brand"><div class="t1">GOOGLE <span>SHEETS</span></div><div class="t2">AI와 함께 쓰는 구글스프레드시트</div></div></div>
+<div class="main gm"><table class="sjtbl "><thead><tr><th style="width:104px">형태</th><th style="width:260px">띄우는 법</th><th>용도</th></tr></thead><tbody><tr><td class="c1">사이드바</td><td><code>ui.showSidebar(html)</code></td><td>시트 안 보조 패널 — 검색·입력 도우미, 43장 onOpen 메뉴와 연결</td></tr><tr><td class="c1">대화상자</td><td><code>ui.showModalDialog(html, 제목)</code></td><td>확인·설정 팝업 — 실행 전 옵션 받기</td></tr><tr><td class="c1"><b>웹앱</b></td><td><code>doGet()</code> + 배포</td><td><b>독립 URL 페이지</b> — 시트를 백엔드로 쓰는 입력·조회 화면, 폼보다 자유</td></tr></tbody></table><div class="codebx"><div class="ctit">웹앱 최소 골격 — form.html과 한 쌍</div><pre>function doGet() {
+  return HtmlService.createHtmlOutputFromFile("form");   <i>편집기 + › HTML 파일 form 작성</i>
+}
+<i>배포 › 새 배포 › 유형: 웹 앱 › 실행 계정·액세스 범위 선택 → URL 발급</i></pre></div><div class="dflow"><div class="dstep"><span class="dn">01</span><b>화면 작성</b><p>편집기에서 HTML 파일 추가</p></div><div class="dstep"><span class="dn">02</span><b>doGet 연결</b><p>파일을 웹 응답으로 반환</p></div><div class="dstep"><span class="dn">03</span><b>배포</b><p>새 배포 › 웹 앱</p></div><div class="dstep"><span class="dn">04</span><b>범위 설정</b><p>나만 → 조직 → 전체 순 확대</p></div><div class="dstep fin"><span class="dn">05</span><b>운영</b><p>접속 입력 → 시트에 축적</p></div></div><div class="csrow" style="--bar:#6f5aa8"><div class="cshead" style="border-left-color:#6f5aa8"><small>보안 원칙</small><b>공개 범위 = 노출 범위</b></div><div class="cscell"><em>시작값</em><p>액세스는 <b>조직 내</b>부터 — "모든 사용자"는 외부 공개와 동일</p></div><div class="cscell out"><em>버전</em><p>수정 후엔 배포 관리에서 새 버전 게시 — URL 유지</p></div></div></div>
+<div class="anchor"><span class="k">활용 판단</span><span class="t">"시트 열지 말고 이 페이지로 입력하세요" — 오입력·서식 파손을 화면 단에서 차단합니다</span><span class="r">배포 › 새 배포 › 웹 앱</span></div>
+<div class="foot"><span>AI와 함께 쓰는 구글스프레드시트</span><span>CDSA · 한국데이터사이언티스트협회</span><span class="pg"><b>47</b> / 50</span></div>
+</section>
+<section class="slide" id="s48">
+<div class="head"><div><div class="kick"><span class="no">48</span><span class="lb">PART 7 · Apps Script</span></div><h1>AI로 코드 작성 — 요구서를 쓰면 코드가 옵니다</h1><div class="headsub">문법을 외우지 않습니다. 시트 구조 · 원하는 동작 · 트리거, 세 항목을 채운 요구서를 AI에게 주고, 오류 메시지로 왕복합니다.</div></div><div class="brand"><div class="t1">GOOGLE <span>SHEETS</span></div><div class="t2">AI와 함께 쓰는 구글스프레드시트</div></div></div>
+<div class="main gm"><div class="codebx"><div class="ctit">요구서 템플릿 — ChatGPT · Claude · Gemini 공용 (그대로 복사)</div><pre>구글 Apps Script 코드를 작성해줘.
+[시트 구조] "주문" 탭 A1:K501, 헤더 1행 — A 주문번호 · B 주문일 · … · K 상태
+[원하는 동작] ① K열이 "완료"로 바뀌면 L열에 완료 시각 기록
+             ② 매주 월 09시, 카테고리별 매출 요약을 team@company.com으로 발송
+[트리거] ①은 onEdit, ②는 시간 기반(매주 월 09:00)
+[조건] 한 파일에 전체 코드로 · 함수 이름은 한글로 · 각 줄에 // 설명 주석</pre></div><div class="dflow"><div class="dstep"><span class="dn">01</span><b>요구서 전송</b><p>위 템플릿 채워서</p></div><div class="dstep"><span class="dn">02</span><b>붙여넣기</b><p>편집기에 전체 교체</p></div><div class="dstep"><span class="dn">03</span><b>실행·승인</b><p>▶ 실행 + 권한 승인</p></div><div class="dstep"><span class="dn">04</span><b>오류 왕복</b><p>오류 메시지 전문 재질문</p></div><div class="dstep fin"><span class="dn">05</span><b>트리거 등록</b><p>⏰에서 시간 트리거 연결</p></div></div><table class="sjtbl "><thead><tr><th style="width:250px">요령</th><th>이유</th></tr></thead><tbody><tr><td class="c1">시트 구조를 반드시 첫 줄에</td><td>열 번호 착오가 오류의 절반 — 스키마가 있으면 <code>getColumn()==11</code>을 정확히 잡음</td></tr><tr><td class="c1">동작과 트리거를 분리 서술</td><td>45장 설계 습관 — "무엇을 + 언제"가 코드 구조를 결정</td></tr><tr><td class="c1">"한 파일 전체 코드" 지정</td><td>조각 답변 방지 — 복붙 1회로 동작</td></tr><tr><td class="c1">수정 요청엔 기존 코드 첨부</td><td>부분 수정 시 전체 코드 + 바꿀 점 — 문맥 유실 방지</td></tr></tbody></table></div>
+<div class="anchor"><span class="k">역할 정리</span><span class="t">여러분 = 요구 정의와 검증(31장 수칙) · AI = 문법과 구현 — 이 분업이 비개발 자동화의 표준입니다</span><span class="r">오류는 전문 복사가 원칙</span></div>
+<div class="foot"><span>AI와 함께 쓰는 구글스프레드시트</span><span>CDSA · 한국데이터사이언티스트협회</span><span class="pg"><b>48</b> / 50</span></div>
+</section>
+<section class="slide" id="s49">
+<div class="head"><div><div class="kick"><span class="no">49</span><span class="lb">마무리</span></div><h1>통합 시나리오 — 오늘 배운 것만으로 파이프라인 완성</h1><div class="headsub">새로 배울 것 없이, 오늘 슬라이드의 재조합입니다. 문의 접수부터 월요일 보고까지 사람 손이 닿는 곳은 예외 처리뿐입니다.</div></div><div class="brand"><div class="t1">GOOGLE <span>SHEETS</span></div><div class="t2">AI와 함께 쓰는 구글스프레드시트</div></div></div>
+<div class="main gm"><div class="dflow"><div class="dstep"><span class="dn">01</span><b>① 접수</b><p>구글 폼 응답 → 시트 자동 축적</p></div><div class="dstep"><span class="dn">02</span><b>② 정제</b><p>데이터 확인 + ARRAYFORMULA 파생</p></div><div class="dstep"><span class="dn">03</span><b>③ 분류</b><p>=AI()로 문의 유형 자동 태깅</p></div><div class="dstep"><span class="dn">04</span><b>④ 집계</b><p>QUERY 카테고리·주간 요약</p></div><div class="dstep"><span class="dn">05</span><b>⑤ 배포</b><p>Looker Studio URL·예약 PDF</p></div><div class="dstep fin"><span class="dn">06</span><b>⑥ 알림</b><p>Apps Script 월 09시 요약 메일</p></div></div><table class="sjtbl "><thead><tr><th style="width:96px">단계</th><th>사용 기능</th><th style="width:212px">참조 장</th></tr></thead><tbody><tr><td class="c1">① 접수</td><td>구글 폼 → 응답 시트 (행 자동 추가)</td><td>17장 궁합 · 45장 폼 트리거</td></tr><tr><td class="c1">② 정제</td><td>드롭다운·맞춤 수식 검증 + 파생 열 자동 확장</td><td>09 · 13 · 17장</td></tr><tr><td class="c1">③ 분류</td><td>=AI("…중 하나로만", 셀) — 미제공 환경은 GPT for Sheets</td><td>29 · 40장</td></tr><tr><td class="c1">④ 집계</td><td>QUERY group by · pivot — 보고서 탭 박제</td><td>19 · 26장</td></tr><tr><td class="c1">⑤ 배포</td><td>시트 연결 대시보드 + 필터 컨트롤 + 전송 예약</td><td>36 · 37장</td></tr><tr><td class="c1">⑥ 알림</td><td>GmailApp + 시간 트리거 — 코드는 48장 요구서로</td><td>45 · 46 · 48장</td></tr></tbody></table><div class="csrow" style="--bar:#2e8a5c"><div class="cshead" style="border-left-color:#2e8a5c"><small>투입 산출</small><b>구축 견적</b></div><div class="cscell"><em>구축</em><p>오늘 수식·코드 복붙 기준 <b>반나절</b> — 신규 학습 0</p></div><div class="cscell out"><em>운영</em><p>주간 수작업 취합·발송 시간이 0으로 — 남는 일은 예외 응대와 판단</p></div></div></div>
+<div class="anchor"><span class="k">구조 감각</span><span class="t">도구를 더 배우는 게 아니라, 배운 6개를 배선하는 문제였습니다 — 이 그림을 자기 업무명으로 다시 그려보세요</span><span class="r">실습 시트: 파이프라인 탭</span></div>
+<div class="foot"><span>AI와 함께 쓰는 구글스프레드시트</span><span>CDSA · 한국데이터사이언티스트협회</span><span class="pg"><b>49</b> / 50</span></div>
+</section>
+<section class="slide" id="s50">
+<div class="head"><div><div class="kick"><span class="no">50</span><span class="lb">마무리</span></div><h1>실무 체크리스트 — 내일 시트 열면 하는 10가지</h1><div class="headsub">과정 요약 대신 작업 목록을 드립니다. 전부 오늘 실습한 그대로이고, 하나에 10분을 넘지 않습니다.</div></div><div class="brand"><div class="t1">GOOGLE <span>SHEETS</span></div><div class="t2">AI와 함께 쓰는 구글스프레드시트</div></div></div>
+<div class="main gm"><table class="sjtbl "><thead><tr><th style="width:40px">✓</th><th>내일 바로 할 일</th><th style="width:104px">참조</th></tr></thead><tbody><tr><td class="c1">□</td><td>공유 기본값 점검 — 외부는 "댓글 작성자 + 제한됨"으로</td><td>05장</td></tr><tr><td class="c1">□</td><td>제일 자주 보는 시트에 <b>필터 보기</b> 1개 저장</td><td>08장</td></tr><tr><td class="c1">□</td><td>상태 열을 드롭다운(데이터 확인)으로 교체</td><td>09장</td></tr><tr><td class="c1">□</td><td>"취소됨" 행 전체 강조 — 맞춤 수식 <code>=$K2="취소됨"</code></td><td>13장</td></tr><tr><td class="c1">□</td><td>드래그 복사 열 1개를 ARRAYFORMULA로 전환</td><td>17장</td></tr><tr><td class="c1">□</td><td>주간 보고표를 QUERY 한 줄로 박제</td><td>19장</td></tr><tr><td class="c1">□</td><td>팀 파일 1개를 IMPORTRANGE로 연결 — 허브 시작</td><td>20장</td></tr><tr><td class="c1">□</td><td>=AI() 분류 10행 테스트 (미제공이면 GPT for Sheets)</td><td>29 · 40장</td></tr><tr><td class="c1">□</td><td>Looker Studio에 시트 연결 — 스코어카드 1개</td><td>36장</td></tr><tr><td class="c1">□</td><td>onEdit 타임스탬프 설치 — 48장 요구서 그대로</td><td>45 · 48장</td></tr></tbody></table><div class="csrow" style="--bar:#141b28"><div class="cshead" style="border-left-color:#141b28"><small>마무리</small><b>자료와 문의</b></div><div class="cscell"><em>이 자료</em><p>상단 도구로 <b>편집·PDF 저장·전체화면 발표</b> 가능 — 팀 공유용으로 그대로 사용</p></div><div class="cscell out"><em>후속</em><p>과정·자문 문의 — <b>CDSA 한국데이터사이언티스트협회 · 신성진</b></p></div></div></div>
+<div class="anchor"><span class="k">마지막 한 줄</span><span class="t">이번 주에 세 개만 실행해도 다음 주 업무 시간이 달라집니다 — 시트 주소만 있으면 전부 10분 작업입니다</span><span class="r">수고하셨습니다</span></div>
+<div class="foot"><span>AI와 함께 쓰는 구글스프레드시트</span><span>CDSA · 한국데이터사이언티스트협회</span><span class="pg"><b>50</b> / 50</span></div>
+</section>
+
+</div>
+
+<script>
+// ---- per-slide shot mode: ?slide=N ----
+(function(){
+  const p = new URLSearchParams(location.search).get('slide');
+  if(p){
+    document.body.classList.add('shot');
+    document.querySelectorAll('.slide').forEach((s,i)=>{ if(i+1!==+p) s.style.display='none'; });
+    window.scrollTo(0,0);
+  }
+})();
+
+// ---- presentation mode (P / ▶버튼 / 더블클릭 진입, Esc 종료) ----
+(function(){
+  if(document.body.classList.contains('shot')) return;
+  const slides=[...document.querySelectorAll('.slide')];
+  let cur=0, present=false;
+  const SEL='.head .kick,.head h1,.head .headsub,.head .brand,.s1-models,.sl,.step,.arrow,.op,'+
+            '.s2-sum,.s2-big,.case,.dm,.s4-trend,.loopnote,.colh,.cap,.trk,.grade,'+
+            '.s7-score,.mtx>*,.relay,.anchor,.cover h1,.cv-sub,.cv-item,.cv-stats .st,.ktop,.keyebrow,.ktitle,.knum,.ktxt h2,.ktxt p,.stat6,.role,.agrow,.npanel,.nethub,.csrow,.dstep,.codebx,.sjtbl,.seclb,.agx,.strip6,.colsx';
+  let editing=false;
+  const bar=document.createElement('div');
+  bar.className='ptools';
+  bar.innerHTML='<span class="hintxt">P 발표 · ←→ 이동 · Esc 종료</span>'+
+    '<button type="button" data-act="edit">✏ 편집</button>'+
+    '<button type="button" data-act="save">💾 저장 HTML</button>'+
+    '<button type="button" data-act="pdf">📄 PDF</button>'+
+    '<button type="button" class="primary" data-act="play">▶ 발표</button>';
+  document.body.appendChild(bar);
+  const btnEdit=bar.querySelector('[data-act="edit"]');
+  function setEdit(on){
+    editing=on;
+    document.body.classList.toggle('editing',on);
+    document.querySelectorAll('.slide').forEach(s=>{
+      if(on) s.setAttribute('contenteditable','true');
+      else s.removeAttribute('contenteditable');
+    });
+    btnEdit.classList.toggle('on',on);
+    btnEdit.textContent=on?'✔ 편집 완료':'✏ 편집';
+    if(!on && typeof drawWires==='function') setTimeout(drawWires,60);
+  }
+  function saveHTML(){
+    if(editing) setEdit(false);
+    const clone=document.documentElement.cloneNode(true);
+    clone.querySelectorAll('.ptools').forEach(e=>e.remove());
+    clone.querySelectorAll('[contenteditable]').forEach(e=>e.removeAttribute('contenteditable'));
+    clone.querySelectorAll('.a-el').forEach(e=>{
+      e.classList.remove('a-el'); e.style.removeProperty('--d');
+      if(!e.getAttribute('style')) e.removeAttribute('style');
+    });
+    const b=clone.querySelector('body'); if(b) b.removeAttribute('class');
+    clone.querySelectorAll('.slide').forEach(s=>{
+      s.classList.remove('cur','reveal');
+      s.style.removeProperty('--sc'); s.style.removeProperty('display');
+      if(!s.getAttribute('style')) s.removeAttribute('style');
+    });
+    const svg=clone.querySelector('svg.wires');
+    if(svg){svg.innerHTML='';svg.removeAttribute('viewBox');}
+    const html='<!DOCTYPE html>\n'+clone.outerHTML;
+    const a=document.createElement('a');
+    a.href=URL.createObjectURL(new Blob([html],{type:'text/html;charset=utf-8'}));
+    const d=new Date(), z=n=>String(n).padStart(2,'0');
+    a.download='AI챔피언_키노트_수정_'+d.getFullYear()+z(d.getMonth()+1)+z(d.getDate())+'_'+z(d.getHours())+z(d.getMinutes())+'.html';
+    a.click(); URL.revokeObjectURL(a.href);
+  }
+  bar.addEventListener('click',e=>{
+    const btn=e.target.closest('button'); if(!btn) return;
+    const act=btn.dataset.act;
+    if(act==='edit') setEdit(!editing);
+    else if(act==='save') saveHTML();
+    else if(act==='pdf'){ if(editing) setEdit(false); setTimeout(()=>window.print(),120); }
+    else if(act==='play'){ if(editing) setEdit(false); enter(); }
+  });
+  function mark(slide){
+    slide.querySelectorAll(SEL).forEach((e,i)=>{
+      e.classList.add('a-el');
+      e.style.setProperty('--d',Math.min(i*55,1500)+'ms');
+    });
+  }
+  function fit(){
+    const sc=Math.min(innerWidth/1280,innerHeight/720);
+    slides.forEach(s=>s.style.setProperty('--sc',sc));
+  }
+  function animateWires(slide){
+    const svg=slide.querySelector('svg.wires'); if(!svg) return;
+    svg.querySelectorAll('path').forEach((p,i)=>{
+      try{
+        const L=p.getTotalLength(); if(!L) return;
+        p.style.strokeDasharray=L; p.style.strokeDashoffset=L; p.style.transition='none';
+        requestAnimationFrame(()=>{
+          p.style.transition='stroke-dashoffset .9s ease '+(600+i*35)+'ms';
+          p.style.strokeDashoffset='0';
+        });
+      }catch(err){}
+    });
+    svg.querySelectorAll('circle').forEach((c,i)=>{
+      c.style.opacity='0'; c.style.transition='none';
+      requestAnimationFrame(()=>{
+        c.style.transition='opacity .4s ease '+(1000+i*35)+'ms';
+        c.style.opacity='1';
+      });
+    });
+  }
+  function show(n){
+    cur=Math.max(0,Math.min(slides.length-1,n));
+    slides.forEach((s,i)=>{s.classList.toggle('cur',i===cur);s.classList.remove('reveal');});
+    const s=slides[cur];
+    mark(s);
+    if(typeof drawWires==='function') drawWires(); if(typeof drawNet==='function') drawNet();
+    requestAnimationFrame(()=>requestAnimationFrame(()=>{
+      s.classList.add('reveal');
+      animateWires(s);
+    }));
+  }
+  function enter(){
+    if(present) return;
+    let idx=0;
+    slides.forEach((s,i)=>{ if(s.getBoundingClientRect().top < innerHeight/2) idx=i; });
+    present=true; document.body.classList.add('present'); fit();
+    show(idx);
+    if(document.documentElement.requestFullscreen)
+      document.documentElement.requestFullscreen().catch(()=>{});
+  }
+  function exit(){
+    if(!present) return;
+    present=false; document.body.classList.remove('present');
+    slides.forEach(s=>s.classList.remove('cur','reveal'));
+    if(document.fullscreenElement) document.exitFullscreen().catch(()=>{});
+    if(typeof drawWires==='function') setTimeout(drawWires,60);
+    slides[cur].scrollIntoView();
+  }
+  document.addEventListener('dblclick',()=>{ if(!present && !editing) enter(); });
+  addEventListener('resize',()=>{ if(present) fit(); });
+  document.addEventListener('fullscreenchange',()=>{ if(!document.fullscreenElement) exit(); });
+  document.addEventListener('keydown',e=>{
+    if(editing){ if(e.key==='Escape') setEdit(false); return; }
+    if(!present){
+      if(e.key==='p'||e.key==='P'){ enter(); return; }
+      if(e.key==='ArrowRight'||e.key==='PageDown'){ cur=Math.min(slides.length-1,cur+1); slides[cur].scrollIntoView({behavior:'smooth'}); }
+      else if(e.key==='ArrowLeft'||e.key==='PageUp'){ cur=Math.max(0,cur-1); slides[cur].scrollIntoView({behavior:'smooth'}); }
+      return;
+    }
+    if(e.key==='Escape'){ exit(); return; }
+    if(e.key==='ArrowRight'||e.key==='PageDown'||e.key===' '||e.key==='Enter'){ e.preventDefault(); show(cur+1); }
+    else if(e.key==='ArrowLeft'||e.key==='PageUp'){ e.preventDefault(); show(cur-1); }
+    else if(e.key==='Home'){ show(0); }
+    else if(e.key==='End'){ show(slides.length-1); }
+  });
+  // ?present=1 로 열면 바로 발표 모드
+  if(new URLSearchParams(location.search).get('present')) setTimeout(enter,120);
+})();
+
+// ---- slide 6 flowchart wires (measured coordinates) ----
+function drawWires(){
+  const map=document.getElementById('wiremap'); if(!map) return;
+  const s6=document.getElementById('s6'); if(s6.style.display==='none') return;
+  const svg=document.getElementById('wires6');
+  const mr=map.getBoundingClientRect();
+  svg.setAttribute('viewBox','0 0 '+mr.width+' '+mr.height);
+  const R=id=>{const r=document.getElementById(id).getBoundingClientRect();
+    return {l:r.left-mr.left, r:r.right-mr.left, t:r.top-mr.top, b:r.bottom-mr.top,
+            cy:r.top-mr.top+r.height/2};};
+  const caps=['cap1','cap2','cap3','cap4','cap5','cap6','cap7','cap8','cap9','cap10'].map(R);
+  const trks=['trk1','trk2','trk3','trk4'].map(R);
+  const busX=caps[0].r+15;
+  const BUS='#c3cad6';
+  let paths=[];
+  caps.forEach(c=>paths.push(`<path d="M ${c.r} ${c.cy} H ${busX}" stroke="${BUS}" stroke-width="1.6" fill="none"/>`));
+  paths.push(`<path d="M ${busX} ${caps[0].cy} V ${caps[9].cy}" stroke="${BUS}" stroke-width="1.6" fill="none"/>`);
+  trks.forEach(t=>{
+    paths.push(`<path d="M ${busX} ${t.cy} H ${t.l}" stroke="${BUS}" stroke-width="1.6" fill="none"/>`);
+    paths.push(`<circle cx="${t.l}" cy="${t.cy}" r="2.8" fill="#a4aec0"/>`);
+  });
+  const g=R('grdG'), b=R('grdB'), k=R('grdK');
+  const wire=(t,gr,col,w)=>{
+    const x1=t.r, y1=t.cy, x2=gr.l, y2=gr.cy, mx=(x1+x2)/2;
+    paths.push(`<path d="M ${x1} ${y1} C ${mx} ${y1}, ${mx} ${y2}, ${x2} ${y2}" stroke="${col}" stroke-width="${w}" fill="none" opacity="0.85"/>`);
+    paths.push(`<circle cx="${x2}" cy="${y2}" r="3.2" fill="${col}"/>`);
+  };
+  wire(trks[0],g,'#ccd4e0',1.4); wire(trks[0],b,'#ccd4e0',1.4); wire(trks[0],k,'#ccd4e0',1.4);
+  wire(trks[1],g,'#2e8a5c',2.8);
+  wire(trks[2],b,'#4266a3',2.8);
+  wire(trks[3],k,'#1c2331',2.8);
+  svg.innerHTML=paths.join('');
+}
+function drawNet(){
+  const map=document.getElementById('netmap'); if(!map) return;
+  const sl=document.getElementById('s7x'); if(!sl||sl.style.display==='none') return;
+  const svg=document.getElementById('wires8'); if(!svg) return;
+  const mr=map.getBoundingClientRect(); if(mr.width<10) return;
+  svg.setAttribute('viewBox','0 0 '+mr.width+' '+mr.height);
+  const hb=document.getElementById('nethub').getBoundingClientRect();
+  const hx=hb.left-mr.left+hb.width/2, hy=hb.top-mr.top+hb.height/2;
+  const specs=[['np1','#b94a48'],['np2','#4266a3'],['np3','#2e8a5c'],['np4','#c38424'],['np5','#141b28'],['np6','#6f5aa8']];
+  let p='';
+  p+='<circle cx="'+hx+'" cy="'+hy+'" r="146" fill="none" stroke="#aab8cc" stroke-width="1" stroke-dasharray="3 7" opacity="0.65"/>';
+  p+='<circle cx="'+hx+'" cy="'+hy+'" r="188" fill="none" stroke="#b8c4d6" stroke-width="1" stroke-dasharray="2 9" opacity="0.4"/>';
+  specs.forEach(function(sp){
+    const r=document.getElementById(sp[0]).getBoundingClientRect();
+    const cx=r.left-mr.left+r.width/2, cy=r.top-mr.top+r.height/2;
+    const mx=(hx+cx)/2;
+    p+='<path d="M '+hx+' '+hy+' C '+mx+' '+hy+', '+mx+' '+cy+', '+cx+' '+cy+'" stroke="'+sp[1]+'" stroke-width="2.5" fill="none" opacity="0.85"/>';
+    const dx=cx-hx, dy=cy-hy, L=Math.hypot(dx,dy)||1;
+    p+='<circle cx="'+(hx+dx/L*118)+'" cy="'+(hy+dy/L*118)+'" r="3.6" fill="'+sp[1]+'"/>';
+    p+='<circle cx="'+(hx+dx/L*146)+'" cy="'+(hy+dy/L*146)+'" r="2.2" fill="'+sp[1]+'" opacity="0.65"/>';
+  });
+  svg.innerHTML=p;
+}
+window.addEventListener('load',drawNet);
+window.addEventListener('resize',drawNet);
+if(document.fonts&&document.fonts.ready){document.fonts.ready.then(()=>{drawWires();drawNet();});}
+window.addEventListener('load',drawWires);
+window.addEventListener('resize',drawWires);
+</script>
+<script>
+(function(){
+  if(new URLSearchParams(location.search).get('slide')) return;
+  function fit(){
+    if(document.body.classList.contains('present')){document.body.style.zoom='';return;}
+    var w=window.innerWidth;
+    document.body.style.zoom=(w&&w<1336)?(w/1336):'';
+  }
+  new MutationObserver(fit).observe(document.body,{attributes:true,attributeFilter:['class']});
+  addEventListener('resize',fit);
+  addEventListener('beforeprint',function(){document.body.style.zoom='';});
+  addEventListener('afterprint',fit);
+  fit();
+})();
+</script>
+<script>/* kg-preview: #<heading> \uc704\uce58\ub85c \uc774\ub3d9 */
+(function(){function norm(t){return (t||'').replace(/\s+/g,'').toLowerCase()}
+function go(){var h=decodeURIComponent(location.hash.slice(1));if(!h)return;var k=norm(h).slice(0,24);if(!k)return;
+var best=null,bl=1e9,els=document.body.querySelectorAll('h1,h2,h3,h4,h5,p,div,span,li,td,text,tspan,section,article');
+for(var i=0;i<els.length;i++){var e=els[i],t=norm(e.textContent);if(t.length<bl&&t.indexOf(k)>-1){best=e;bl=t.length}}
+if(!best)return;var box=best.closest('section,[class*=slide],[class*=page],article')||best;
+box.scrollIntoView({block:'start'});box.style.outline='3px solid #c0504d';box.style.outlineOffset='4px';
+setTimeout(function(){box.style.outline=''},2600)}
+window.addEventListener('load',function(){setTimeout(go,400)});window.addEventListener('hashchange',go)})();</script></body>
+</html>

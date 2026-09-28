@@ -1,0 +1,1114 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head><meta name="robots" content="noindex, nofollow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EduAdmin AI — 교감 업무 혁신 플랫폼</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700;900&family=Noto+Sans+KR:wght@300;400;500;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1a2e;
+    --ink-light: #2d2d4e;
+    --paper: #f5f0e8;
+    --paper-warm: #ede8dc;
+    --accent: #c84b31;
+    --accent2: #2e7d59;
+    --accent3: #1a5fa8;
+    --gold: #c9a84c;
+    --line: rgba(26,26,46,0.12);
+    --mono: 'DM Mono', monospace;
+    --serif: 'Noto Serif KR', serif;
+    --sans: 'Noto Sans KR', sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--sans);
+    overflow-x: hidden;
+  }
+
+  /* ── NOISE TEXTURE OVERLAY ── */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none; z-index: 9999; opacity: 0.4;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 20px 48px;
+    background: rgba(245,240,232,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--line);
+    z-index: 100;
+  }
+  .nav-logo {
+    font-family: var(--serif);
+    font-size: 20px; font-weight: 900;
+    letter-spacing: -0.5px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .nav-logo .badge {
+    background: var(--accent);
+    color: white; font-size: 10px;
+    font-family: var(--mono);
+    padding: 2px 7px; border-radius: 3px;
+    letter-spacing: 1px;
+  }
+  .nav-links { display: flex; gap: 36px; }
+  .nav-links a {
+    text-decoration: none; color: var(--ink);
+    font-size: 13px; font-weight: 500;
+    letter-spacing: 0.3px;
+    opacity: 0.7; transition: opacity 0.2s;
+  }
+  .nav-links a:hover { opacity: 1; }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    padding: 120px 48px 80px;
+    gap: 60px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::after {
+    content: '';
+    position: absolute; right: -100px; top: 50%;
+    transform: translateY(-50%);
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(200,75,49,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-tag {
+    font-family: var(--mono); font-size: 11px;
+    letter-spacing: 3px; color: var(--accent);
+    text-transform: uppercase; margin-bottom: 24px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .hero-tag::before {
+    content: '';
+    width: 32px; height: 1px;
+    background: var(--accent);
+    display: block;
+  }
+  .hero h1 {
+    font-family: var(--serif);
+    font-size: clamp(40px, 5vw, 68px);
+    font-weight: 900;
+    line-height: 1.1;
+    letter-spacing: -2px;
+    margin-bottom: 28px;
+  }
+  .hero h1 em {
+    font-style: normal;
+    color: var(--accent);
+    display: block;
+  }
+  .hero-desc {
+    font-size: 16px; line-height: 1.8;
+    color: var(--ink); opacity: 0.7;
+    max-width: 460px;
+    margin-bottom: 48px;
+  }
+  .hero-actions { display: flex; gap: 16px; flex-wrap: wrap; }
+  .btn-primary {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 14px 32px;
+    font-size: 14px; font-weight: 700;
+    border: none; cursor: pointer;
+    letter-spacing: 0.5px;
+    transition: all 0.2s;
+    font-family: var(--sans);
+  }
+  .btn-primary:hover {
+    background: var(--accent);
+    transform: translateY(-2px);
+  }
+  .btn-secondary {
+    background: transparent;
+    color: var(--ink);
+    padding: 14px 32px;
+    font-size: 14px; font-weight: 500;
+    border: 1.5px solid var(--ink);
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: var(--sans);
+  }
+  .btn-secondary:hover { background: var(--ink); color: var(--paper); }
+
+  /* HERO RIGHT — STATS CARD */
+  .hero-visual {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 16px; animation: fadeUp 0.8s 0.3s both;
+  }
+  .stat-card {
+    background: white;
+    border: 1px solid var(--line);
+    padding: 24px;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s;
+  }
+  .stat-card:hover { transform: translateY(-4px); }
+  .stat-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 3px;
+  }
+  .stat-card.red::before { background: var(--accent); }
+  .stat-card.green::before { background: var(--accent2); }
+  .stat-card.blue::before { background: var(--accent3); }
+  .stat-card.gold::before { background: var(--gold); }
+  .stat-card.wide { grid-column: 1 / -1; }
+  .stat-num {
+    font-family: var(--serif); font-size: 42px; font-weight: 900;
+    letter-spacing: -2px; line-height: 1;
+    margin-bottom: 6px;
+  }
+  .stat-card.red .stat-num { color: var(--accent); }
+  .stat-card.green .stat-num { color: var(--accent2); }
+  .stat-card.blue .stat-num { color: var(--accent3); }
+  .stat-card.gold .stat-num { color: var(--gold); }
+  .stat-label { font-size: 12px; opacity: 0.6; font-weight: 500; }
+  .stat-detail {
+    font-family: var(--mono); font-size: 10px;
+    opacity: 0.4; margin-top: 8px;
+  }
+  .live-ticker {
+    display: flex; gap: 16px; flex-wrap: wrap;
+  }
+  .ticker-item {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 12px;
+  }
+  .ticker-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--accent2);
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.8); }
+  }
+
+  /* ── SECTION COMMON ── */
+  section { padding: 80px 48px; }
+  .section-eyebrow {
+    font-family: var(--mono); font-size: 11px;
+    letter-spacing: 3px; color: var(--accent);
+    text-transform: uppercase; margin-bottom: 16px;
+  }
+  .section-title {
+    font-family: var(--serif); font-size: clamp(28px, 4vw, 44px);
+    font-weight: 900; letter-spacing: -1.5px;
+    line-height: 1.15; margin-bottom: 16px;
+  }
+  .section-sub {
+    font-size: 15px; opacity: 0.65;
+    max-width: 560px; line-height: 1.7;
+    margin-bottom: 56px;
+  }
+
+  /* ── PAIN POINTS ── */
+  .pain-section {
+    background: var(--ink);
+    color: var(--paper);
+  }
+  .pain-section .section-eyebrow { color: var(--accent); }
+  .pain-section .section-sub { opacity: 0.6; }
+  .pain-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; }
+  .pain-item {
+    background: rgba(255,255,255,0.04);
+    padding: 40px 32px;
+    border: 1px solid rgba(255,255,255,0.07);
+    transition: background 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+  .pain-item:hover { background: rgba(255,255,255,0.08); }
+  .pain-num {
+    font-family: var(--mono); font-size: 56px; font-weight: 500;
+    color: rgba(255,255,255,0.06);
+    position: absolute; top: 16px; right: 24px;
+    line-height: 1;
+  }
+  .pain-icon { font-size: 28px; margin-bottom: 16px; }
+  .pain-title { font-size: 16px; font-weight: 700; margin-bottom: 10px; }
+  .pain-desc { font-size: 13px; opacity: 0.55; line-height: 1.7; }
+
+  /* ── FEATURES / MODULES ── */
+  .features-section { background: var(--paper-warm); }
+  .modules-grid { display: grid; gap: 24px; }
+  .module-row {
+    display: grid;
+    grid-template-columns: 1fr 1.8fr;
+    gap: 0;
+    background: white;
+    border: 1px solid var(--line);
+    overflow: hidden;
+    transition: box-shadow 0.3s;
+  }
+  .module-row:hover {
+    box-shadow: 8px 8px 0 var(--ink);
+  }
+  .module-meta {
+    padding: 48px 40px;
+    border-right: 1px solid var(--line);
+    display: flex; flex-direction: column;
+    justify-content: space-between;
+  }
+  .module-num {
+    font-family: var(--mono); font-size: 11px;
+    letter-spacing: 2px; opacity: 0.4;
+    margin-bottom: 16px;
+  }
+  .module-icon-big { font-size: 48px; margin-bottom: 20px; }
+  .module-name {
+    font-family: var(--serif);
+    font-size: 22px; font-weight: 900;
+    letter-spacing: -0.5px;
+    margin-bottom: 12px;
+  }
+  .module-tag {
+    display: inline-block;
+    font-family: var(--mono); font-size: 9px;
+    letter-spacing: 1.5px; text-transform: uppercase;
+    padding: 4px 10px;
+    border: 1px solid var(--ink);
+    opacity: 0.5;
+  }
+  .module-content { padding: 48px 40px; }
+  .module-desc { font-size: 14px; opacity: 0.65; line-height: 1.8; margin-bottom: 28px; }
+  .feature-list { display: flex; flex-direction: column; gap: 14px; }
+  .feature-item {
+    display: flex; gap: 14px; align-items: flex-start;
+  }
+  .feature-bullet {
+    width: 20px; height: 20px;
+    background: var(--ink); color: var(--paper);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 9px; font-weight: 700; font-family: var(--mono);
+    flex-shrink: 0; margin-top: 2px;
+  }
+  .feature-item.accent .feature-bullet { background: var(--accent); }
+  .feature-item.green .feature-bullet { background: var(--accent2); }
+  .feature-item.blue .feature-bullet { background: var(--accent3); }
+  .feature-text { font-size: 13px; line-height: 1.6; }
+  .feature-text strong { font-weight: 700; display: block; margin-bottom: 2px; }
+
+  /* ── DEMO SECTION ── */
+  .demo-section { padding: 80px 48px; }
+  .demo-container {
+    background: var(--ink);
+    border-radius: 0;
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    min-height: 560px;
+    border: 2px solid var(--ink);
+  }
+  .demo-sidebar {
+    background: rgba(255,255,255,0.04);
+    border-right: 1px solid rgba(255,255,255,0.1);
+    padding: 0;
+  }
+  .demo-sidebar-title {
+    padding: 24px 20px 16px;
+    font-family: var(--mono); font-size: 10px;
+    letter-spacing: 2px; color: rgba(255,255,255,0.4);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .demo-nav-item {
+    padding: 14px 20px;
+    font-size: 13px; color: rgba(255,255,255,0.6);
+    cursor: pointer; transition: all 0.2s;
+    display: flex; align-items: center; gap: 10px;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+  .demo-nav-item:hover,
+  .demo-nav-item.active {
+    background: rgba(255,255,255,0.08);
+    color: white;
+  }
+  .demo-nav-item.active { border-left: 3px solid var(--accent); }
+  .demo-nav-icon { font-size: 14px; }
+  .demo-main {
+    padding: 32px;
+    color: white;
+    display: none;
+  }
+  .demo-main.active { display: block; }
+  .demo-header {
+    display: flex; justify-content: space-between;
+    align-items: center; margin-bottom: 28px;
+  }
+  .demo-title {
+    font-family: var(--serif); font-size: 22px;
+    font-weight: 900; letter-spacing: -0.5px;
+  }
+  .demo-date {
+    font-family: var(--mono); font-size: 11px;
+    opacity: 0.4;
+  }
+
+  /* DOCUMENT LIST */
+  .doc-list { display: flex; flex-direction: column; gap: 10px; }
+  .doc-item {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.08);
+    padding: 16px 20px;
+    display: flex; align-items: center;
+    gap: 16px; cursor: pointer;
+    transition: all 0.2s;
+  }
+  .doc-item:hover { background: rgba(255,255,255,0.1); }
+  .doc-priority {
+    width: 6px; height: 6px; border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .doc-priority.high { background: #ef4444; }
+  .doc-priority.med { background: var(--gold); }
+  .doc-priority.low { background: var(--accent2); }
+  .doc-info { flex: 1; }
+  .doc-name { font-size: 13px; font-weight: 500; margin-bottom: 4px; }
+  .doc-meta { font-family: var(--mono); font-size: 10px; opacity: 0.4; }
+  .doc-deadline {
+    font-family: var(--mono); font-size: 10px;
+    padding: 3px 8px; border: 1px solid;
+  }
+  .doc-deadline.urgent { color: #ef4444; border-color: #ef4444; }
+  .doc-deadline.normal { color: rgba(255,255,255,0.4); border-color: rgba(255,255,255,0.2); }
+  .ai-summary-box {
+    background: rgba(200,75,49,0.15);
+    border: 1px solid rgba(200,75,49,0.3);
+    padding: 20px; margin-top: 20px;
+  }
+  .ai-label {
+    font-family: var(--mono); font-size: 9px;
+    letter-spacing: 2px; color: var(--accent);
+    margin-bottom: 10px;
+  }
+  .ai-text { font-size: 12px; line-height: 1.7; opacity: 0.8; }
+
+  /* CLASS OBSERVATION */
+  .obs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .obs-card {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.08);
+    padding: 20px;
+  }
+  .obs-teacher { font-size: 14px; font-weight: 700; margin-bottom: 8px; }
+  .obs-subject {
+    font-family: var(--mono); font-size: 10px;
+    opacity: 0.4; margin-bottom: 14px;
+  }
+  .obs-score-bar {
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .obs-score-row { display: flex; align-items: center; gap: 10px; }
+  .obs-score-label { font-size: 11px; opacity: 0.6; width: 60px; flex-shrink: 0; }
+  .obs-bar-bg {
+    flex: 1; height: 4px;
+    background: rgba(255,255,255,0.1);
+    position: relative;
+  }
+  .obs-bar-fill {
+    position: absolute; left: 0; top: 0; bottom: 0;
+    transition: width 1s ease;
+  }
+  .obs-bar-fill.good { background: var(--accent2); }
+  .obs-bar-fill.warn { background: var(--gold); }
+  .obs-bar-fill.bad { background: var(--accent); }
+  .obs-score-num { font-family: var(--mono); font-size: 10px; opacity: 0.6; width: 24px; }
+  .obs-status {
+    margin-top: 12px; padding: 6px 10px;
+    font-family: var(--mono); font-size: 9px;
+    letter-spacing: 1px; text-transform: uppercase;
+  }
+  .obs-status.needs-attention { background: rgba(200,75,49,0.2); color: var(--accent); }
+  .obs-status.good-status { background: rgba(46,125,89,0.2); color: #4ade80; }
+
+  /* DUTY ROSTER */
+  .duty-table {
+    width: 100%; border-collapse: collapse;
+    font-size: 12px;
+  }
+  .duty-table th {
+    font-family: var(--mono); font-size: 9px;
+    letter-spacing: 1px; text-transform: uppercase;
+    opacity: 0.4; padding: 8px 12px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    text-align: left;
+  }
+  .duty-table td {
+    padding: 12px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    vertical-align: middle;
+  }
+  .status-badge {
+    display: inline-block; padding: 2px 8px;
+    font-family: var(--mono); font-size: 9px;
+    letter-spacing: 0.5px;
+  }
+  .status-badge.ok { background: rgba(46,125,89,0.2); color: #4ade80; }
+  .status-badge.warn { background: rgba(201,168,76,0.2); color: var(--gold); }
+  .status-badge.err { background: rgba(200,75,49,0.2); color: var(--accent); }
+
+  /* ── ROADMAP ── */
+  .roadmap-section { background: white; }
+  .roadmap-timeline {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0; position: relative;
+  }
+  .roadmap-timeline::before {
+    content: '';
+    position: absolute; top: 28px; left: 0; right: 0;
+    height: 2px; background: var(--line);
+    z-index: 0;
+  }
+  .roadmap-phase {
+    padding: 0 24px 40px 0;
+    position: relative; z-index: 1;
+  }
+  .phase-dot {
+    width: 56px; height: 56px;
+    border: 2px solid var(--ink);
+    background: var(--paper);
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--mono); font-size: 12px; font-weight: 500;
+    margin-bottom: 20px;
+    position: relative;
+  }
+  .phase-dot.active {
+    background: var(--ink); color: var(--paper);
+  }
+  .phase-dot.accent { border-color: var(--accent); color: var(--accent); }
+  .phase-dot.accent.active { background: var(--accent); color: white; border-color: var(--accent); }
+  .phase-period {
+    font-family: var(--mono); font-size: 10px;
+    letter-spacing: 1px; opacity: 0.4;
+    margin-bottom: 8px;
+  }
+  .phase-title { font-weight: 700; margin-bottom: 10px; font-size: 14px; }
+  .phase-items { font-size: 12px; opacity: 0.6; line-height: 1.8; }
+
+  /* ── CTA ── */
+  .cta-section {
+    background: var(--accent);
+    color: white;
+    text-align: center;
+    padding: 100px 48px;
+  }
+  .cta-section .section-title { color: white; }
+  .cta-section .section-eyebrow { color: rgba(255,255,255,0.7); }
+  .btn-cta {
+    background: white; color: var(--accent);
+    padding: 16px 48px;
+    font-family: var(--serif); font-size: 16px; font-weight: 900;
+    border: none; cursor: pointer;
+    transition: all 0.2s; letter-spacing: -0.3px;
+  }
+  .btn-cta:hover { transform: translateY(-3px); box-shadow: 0 12px 40px rgba(0,0,0,0.2); }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--ink-light); color: rgba(255,255,255,0.5);
+    padding: 48px;
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 12px; font-family: var(--mono);
+    letter-spacing: 0.5px;
+  }
+  footer strong { color: white; }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .fade-in { animation: fadeUp 0.7s both; }
+  .fade-in-d1 { animation-delay: 0.1s; }
+  .fade-in-d2 { animation-delay: 0.2s; }
+  .fade-in-d3 { animation-delay: 0.3s; }
+  .fade-in-d4 { animation-delay: 0.4s; }
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--paper); }
+  ::-webkit-scrollbar-thumb { background: var(--ink); opacity: 0.3; }
+
+  @media (max-width: 900px) {
+    nav { padding: 16px 24px; }
+    .nav-links { display: none; }
+    .hero { grid-template-columns: 1fr; padding: 100px 24px 60px; }
+    .hero-visual { display: none; }
+    section { padding: 60px 24px; }
+    .pain-grid { grid-template-columns: 1fr; }
+    .module-row { grid-template-columns: 1fr; }
+    .module-meta { border-right: none; border-bottom: 1px solid var(--line); }
+    .demo-container { grid-template-columns: 1fr; }
+    .demo-sidebar { display: none; }
+    .roadmap-timeline { grid-template-columns: 1fr 1fr; }
+    footer { flex-direction: column; gap: 16px; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">
+    EduAdmin AI
+    <span class="badge">BETA</span>
+  </div>
+  <div class="nav-links">
+    <a href="#pain">문제 인식</a>
+    <a href="#modules">핵심 기능</a>
+    <a href="#demo">데모</a>
+    <a href="#roadmap">도입 로드맵</a>
+  </div>
+  <button class="btn-primary" style="font-size:12px; padding:10px 20px;" onclick="alert('데모 신청이 접수되었습니다.')">데모 신청</button>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-left fade-in">
+    <div class="hero-tag">교감 업무 혁신 플랫폼</div>
+    <h1>
+      공문 더미에서
+      <em>벗어나는</em>
+      단 하나의 도구
+    </h1>
+    <p class="hero-desc">
+      공문 자동 분류·요약부터 수업 관찰 기록 관리, 교직원 복무 현황까지—
+      교감 선생님이 매일 씨름하는 행정 업무를 AI가 대신 처리합니다.
+      진짜 교육에 집중할 시간을 돌려드립니다.
+    </p>
+    <div class="hero-actions">
+      <button class="btn-primary" onclick="document.getElementById('demo').scrollIntoView({behavior:'smooth'})">라이브 데모 보기</button>
+      <button class="btn-secondary" onclick="document.getElementById('modules').scrollIntoView({behavior:'smooth'})">기능 살펴보기</button>
+    </div>
+  </div>
+
+  <div class="hero-visual fade-in fade-in-d2">
+    <div class="stat-card red">
+      <div class="stat-num">127</div>
+      <div class="stat-label">이번 달 수신 공문</div>
+      <div class="stat-detail">AI 자동 분류 완료: 98%</div>
+    </div>
+    <div class="stat-card green">
+      <div class="stat-num">2.3h</div>
+      <div class="stat-label">일평균 절감 시간</div>
+      <div class="stat-detail">행정 업무 → 교육 활동</div>
+    </div>
+    <div class="stat-card blue">
+      <div class="stat-num">34</div>
+      <div class="stat-label">교직원 복무 현황</div>
+      <div class="stat-detail">실시간 출결·연가 추적</div>
+    </div>
+    <div class="stat-card gold">
+      <div class="stat-num">8</div>
+      <div class="stat-label">수업 관찰 예정</div>
+      <div class="stat-detail">다음 30일 이내 대상</div>
+    </div>
+    <div class="stat-card wide" style="padding:20px 24px;">
+      <div class="stat-label" style="margin-bottom:12px; font-weight:700;">오늘 처리 현황</div>
+      <div class="live-ticker">
+        <div class="ticker-item"><div class="ticker-dot"></div> 공문 12건 수신 대기</div>
+        <div class="ticker-item"><div class="ticker-dot" style="background:var(--accent3)"></div> 김○○ 교사 조퇴 승인 대기</div>
+        <div class="ticker-item"><div class="ticker-dot" style="background:var(--gold)"></div> 3학년 영어 수업 관찰 D-3</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PAIN POINTS -->
+<section id="pain" class="pain-section">
+  <div class="section-eyebrow">문제 정의</div>
+  <h2 class="section-title" style="color: var(--paper);">교감 선생님의<br>하루는 왜 이렇게 바쁜가</h2>
+  <p class="section-sub">행정 업무가 교육 본질을 침식하는 3가지 구조적 문제</p>
+
+  <div class="pain-grid">
+    <div class="pain-item">
+      <div class="pain-num">01</div>
+      <div class="pain-icon">📨</div>
+      <div class="pain-title">공문 폭증과 분류 지옥</div>
+      <div class="pain-desc">하루 평균 20~40건의 공문. 교육청·교육부·각 부서에서 쏟아지는 공문을 읽고, 분류하고, 담당자에게 전달하는 데만 2시간 이상이 소요됩니다. 중요한 공문을 놓치는 실수도 빈번합니다.</div>
+    </div>
+    <div class="pain-item">
+      <div class="pain-num">02</div>
+      <div class="pain-icon">👁️</div>
+      <div class="pain-title">수업 관찰의 형식화</div>
+      <div class="pain-desc">수업을 대충 진행하는 교사를 발견해도 체계적인 관찰 기록이 없으면 피드백이 어렵습니다. 매년 반복되는 형식적인 수업 참관으로는 실질적 개선을 이끌 수 없습니다.</div>
+    </div>
+    <div class="pain-item">
+      <div class="pain-num">03</div>
+      <div class="pain-icon">📋</div>
+      <div class="pain-title">복무 관리의 사각지대</div>
+      <div class="pain-desc">교직원 연가·조퇴·외출 현황을 수기로 관리하다 보니 오류가 생깁니다. 규정 위반을 사후에 발견하면 이미 패턴이 고착된 상태이고, 예방적 관리가 불가능합니다.</div>
+    </div>
+  </div>
+</section>
+
+<!-- MODULES -->
+<section id="modules" class="features-section">
+  <div class="section-eyebrow">핵심 기능</div>
+  <h2 class="section-title">AI가 대신 처리하는<br>3가지 핵심 업무</h2>
+  <p class="section-sub">교감 선생님이 직접 겪는 세 가지 핵심 고통을 AI로 해결합니다.</p>
+
+  <div class="modules-grid">
+
+    <!-- MODULE 1: 공문 -->
+    <div class="module-row">
+      <div class="module-meta">
+        <div>
+          <div class="module-num">MODULE 01</div>
+          <div class="module-icon-big">📨</div>
+          <div class="module-name">AI 공문<br>자동 분류 시스템</div>
+        </div>
+        <div class="module-tag">Document AI</div>
+      </div>
+      <div class="module-content">
+        <p class="module-desc">수신된 공문을 AI가 즉시 읽고 분류·요약·우선순위를 지정합니다. 담당 교사 자동 배정, 마감일 추출, 조치 필요 여부 판단까지 자동화됩니다.</p>
+        <div class="feature-list">
+          <div class="feature-item accent">
+            <div class="feature-bullet">→</div>
+            <div class="feature-text"><strong>3줄 요약 자동 생성</strong>20~30장 공문도 30초 안에 핵심만 추출. 읽을지 말지 판단 가능.</div>
+          </div>
+          <div class="feature-item accent">
+            <div class="feature-bullet">→</div>
+            <div class="feature-text"><strong>긴급도 자동 판별</strong>마감일·법령 근거·필수 조치 여부를 분석해 빨강/노랑/초록 3단계로 구분.</div>
+          </div>
+          <div class="feature-item accent">
+            <div class="feature-bullet">→</div>
+            <div class="feature-text"><strong>담당 부서 자동 배정</strong>공문 내용을 분석해 교무·연구·생활지도 등 담당 교사에게 자동 전달.</div>
+          </div>
+          <div class="feature-item accent">
+            <div class="feature-bullet">→</div>
+            <div class="feature-text"><strong>회신 초안 자동 작성</strong>표준 공문 양식에 맞춘 회신 초안을 AI가 먼저 작성, 교감은 검토·서명만.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODULE 2: 수업 관찰 -->
+    <div class="module-row">
+      <div class="module-meta">
+        <div>
+          <div class="module-num">MODULE 02</div>
+          <div class="module-icon-big">🔍</div>
+          <div class="module-name">수업 관찰<br>AI 기록 분석</div>
+        </div>
+        <div class="module-tag">Teaching Quality</div>
+      </div>
+      <div class="module-content">
+        <p class="module-desc">체계적인 수업 관찰 체크리스트와 AI 분석으로 교사별 수업 패턴을 시각화합니다. 감정이 아닌 데이터로 피드백하고, 개선 이력을 관리합니다.</p>
+        <div class="feature-list">
+          <div class="feature-item green">
+            <div class="feature-bullet">→</div>
+            <div class="feature-text"><strong>구조화된 관찰 체크리스트</strong>학습목표 제시, 학생 참여도, 피드백 질 등 15개 항목으로 표준화된 관찰 기록.</div>
+          </div>
+          <div class="feature-item green">
+            <div class="feature-bullet">→</div>
+            <div class="feature-text"><strong>교사별 시계열 분석</strong>1회성이 아닌 학기별 변화 추이 추적. 개선 여부를 수치로 확인.</div>
+          </div>
+          <div class="feature-item green">
+            <div class="feature-bullet">→</div>
+            <div class="feature-text"><strong>AI 피드백 리포트 자동 생성</strong>관찰 데이터 기반으로 맞춤형 피드백 문서 초안을 생성해 면담 준비 시간 단축.</div>
+          </div>
+          <div class="feature-item green">
+            <div class="feature-bullet">→</div>
+            <div class="feature-text"><strong>우수 수업 사례 아카이브</strong>잘하는 선생님의 방법론을 데이터로 쌓아 연수 자료로 활용.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODULE 3: 복무 관리 -->
+    <div class="module-row">
+      <div class="module-meta">
+        <div>
+          <div class="module-num">MODULE 03</div>
+          <div class="module-icon-big">📅</div>
+          <div class="module-name">교직원 복무<br>스마트 관리</div>
+        </div>
+        <div class="module-tag">HR Intelligence</div>
+      </div>
+      <div class="module-content">
+        <p class="module-desc">교직원의 연가·조퇴·외출·출장 현황을 실시간으로 시각화합니다. 패턴 이상 감지, 규정 준수 여부 자동 체크로 사각지대를 없앱니다.</p>
+        <div class="feature-list">
+          <div class="feature-item blue">
+            <div class="feature-bullet">→</div>
+            <div class="feature-text"><strong>실시간 부재 현황 대시보드</strong>오늘 몇 명이 어디 있는지 한눈에. 수업 결손 위험 자동 알림.</div>
+          </div>
+          <div class="feature-item blue">
+            <div class="feature-bullet">→</div>
+            <div class="feature-text"><strong>이상 패턴 자동 감지</strong>특정 요일·기간에 반복되는 조퇴·결근 패턴을 AI가 먼저 포착해 알림.</div>
+          </div>
+          <div class="feature-item blue">
+            <div class="feature-bullet">→</div>
+            <div class="feature-text"><strong>연가 잔여일 자동 계산</strong>교직원별 연가 소진율, 잔여일, 사용 권장 시기를 자동 관리.</div>
+          </div>
+          <div class="feature-item blue">
+            <div class="feature-bullet">→</div>
+            <div class="feature-text"><strong>복무 규정 위반 사전 경보</strong>규정 상 허용 범위 초과 전에 사전 알림으로 갈등 없이 예방적 관리.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- INTERACTIVE DEMO -->
+<section id="demo" style="padding: 80px 48px; background: var(--paper-warm);">
+  <div class="section-eyebrow">라이브 데모</div>
+  <h2 class="section-title">실제 화면을<br>직접 경험해보세요</h2>
+  <p class="section-sub">아래 메뉴를 클릭해 각 기능의 실제 인터페이스를 확인하세요.</p>
+
+  <div class="demo-container">
+    <div class="demo-sidebar">
+      <div class="demo-sidebar-title">NAVIGATION</div>
+      <div class="demo-nav-item active" onclick="switchDemo('doc')">
+        <span class="demo-nav-icon">📨</span> 공문 관리
+      </div>
+      <div class="demo-nav-item" onclick="switchDemo('obs')">
+        <span class="demo-nav-icon">🔍</span> 수업 관찰
+      </div>
+      <div class="demo-nav-item" onclick="switchDemo('duty')">
+        <span class="demo-nav-icon">📅</span> 복무 현황
+      </div>
+    </div>
+
+    <!-- DEMO: 공문 관리 -->
+    <div class="demo-main active" id="demo-doc">
+      <div class="demo-header">
+        <div class="demo-title">공문 처리 현황</div>
+        <div class="demo-date">2025년 6월 8일 (월)</div>
+      </div>
+      <div class="doc-list">
+        <div class="doc-item" onclick="showAISummary(this, '교육부 학교생활기록부 기재요령 안내: 2학기부터 자유학기제 활동 기재 방식이 변경됩니다. 생활기록부 담당 교사에게 즉시 공유 필요. 마감: 6월 15일까지 이행계획서 제출 요망.')">
+          <div class="doc-priority high"></div>
+          <div class="doc-info">
+            <div class="doc-name">학교생활기록부 기재요령 변경 안내</div>
+            <div class="doc-meta">발신: 부산광역시교육청 / AI분류: 학사관리 → 교무부</div>
+          </div>
+          <div class="doc-deadline urgent">D-7</div>
+        </div>
+        <div class="doc-item" onclick="showAISummary(this, '2025년 2학기 교원능력개발평가 계획 안내: 9월~11월 평가 일정 확정. 학교 자체 계획 수립 후 8월 말까지 제출. 학생 평가단 구성 기준 변경사항 포함.')">
+          <div class="doc-priority med"></div>
+          <div class="doc-info">
+            <div class="doc-name">2025 교원능력개발평가 계획 안내</div>
+            <div class="doc-meta">발신: 부산남부교육지원청 / AI분류: 교원평가 → 교감 직접처리</div>
+          </div>
+          <div class="doc-deadline normal">D-54</div>
+        </div>
+        <div class="doc-item" onclick="showAISummary(this, '학교폭력 예방교육 실적 보고 요청: 상반기 학교폭력 예방교육 실시 실적을 6월 20일까지 나이스(NEIS)에 입력 요망. 담당: 생활지도부장.')">
+          <div class="doc-priority high"></div>
+          <div class="doc-info">
+            <div class="doc-name">상반기 학교폭력 예방교육 실적 보고</div>
+            <div class="doc-meta">발신: 부산광역시교육청 / AI분류: 생활지도 → 생활지도부</div>
+          </div>
+          <div class="doc-deadline urgent">D-12</div>
+        </div>
+        <div class="doc-item" onclick="showAISummary(this, '2025 학교 탄소중립 우수사례 공모: 참여 선택사항. 에너지 절감 사례 있을 경우 8월까지 제출 가능. 특별한 조치 불필요.')">
+          <div class="doc-priority low"></div>
+          <div class="doc-info">
+            <div class="doc-name">2025 학교 탄소중립 우수사례 공모</div>
+            <div class="doc-meta">발신: 교육부 / AI분류: 참고문서 (조치불요)</div>
+          </div>
+          <div class="doc-deadline normal">선택</div>
+        </div>
+      </div>
+      <div class="ai-summary-box" id="ai-summary-box" style="display:none;">
+        <div class="ai-label">▸ AI SUMMARY</div>
+        <div class="ai-text" id="ai-summary-text"></div>
+      </div>
+    </div>
+
+    <!-- DEMO: 수업 관찰 -->
+    <div class="demo-main" id="demo-obs">
+      <div class="demo-header">
+        <div class="demo-title">수업 관찰 현황 (2025년 상반기)</div>
+        <div class="demo-date">전체 관찰 대상: 18명</div>
+      </div>
+      <div class="obs-grid">
+        <div class="obs-card">
+          <div class="obs-teacher">김○○ 교사 (국어)</div>
+          <div class="obs-subject">3학년 1반 / 마지막 관찰: 2025.04.12</div>
+          <div class="obs-score-bar">
+            <div class="obs-score-row">
+              <div class="obs-score-label">수업준비</div>
+              <div class="obs-bar-bg"><div class="obs-bar-fill good" style="width:88%"></div></div>
+              <div class="obs-score-num">88</div>
+            </div>
+            <div class="obs-score-row">
+              <div class="obs-score-label">학생참여</div>
+              <div class="obs-bar-bg"><div class="obs-bar-fill good" style="width:82%"></div></div>
+              <div class="obs-score-num">82</div>
+            </div>
+            <div class="obs-score-row">
+              <div class="obs-score-label">피드백질</div>
+              <div class="obs-bar-bg"><div class="obs-bar-fill good" style="width:90%"></div></div>
+              <div class="obs-score-num">90</div>
+            </div>
+          </div>
+          <div class="obs-status good-status">✓ 우수 수업</div>
+        </div>
+        <div class="obs-card">
+          <div class="obs-teacher">이○○ 교사 (수학)</div>
+          <div class="obs-subject">2학년 3반 / 마지막 관찰: 2025.03.20</div>
+          <div class="obs-score-bar">
+            <div class="obs-score-row">
+              <div class="obs-score-label">수업준비</div>
+              <div class="obs-bar-bg"><div class="obs-bar-fill warn" style="width:55%"></div></div>
+              <div class="obs-score-num">55</div>
+            </div>
+            <div class="obs-score-row">
+              <div class="obs-score-label">학생참여</div>
+              <div class="obs-bar-bg"><div class="obs-bar-fill bad" style="width:38%"></div></div>
+              <div class="obs-score-num">38</div>
+            </div>
+            <div class="obs-score-row">
+              <div class="obs-score-label">피드백질</div>
+              <div class="obs-bar-bg"><div class="obs-bar-fill bad" style="width:42%"></div></div>
+              <div class="obs-score-num">42</div>
+            </div>
+          </div>
+          <div class="obs-status needs-attention">⚠ 개선 필요 — 면담 권고</div>
+        </div>
+        <div class="obs-card">
+          <div class="obs-teacher">박○○ 교사 (영어)</div>
+          <div class="obs-subject">1학년 2반 / 마지막 관찰: 2025.05.08</div>
+          <div class="obs-score-bar">
+            <div class="obs-score-row">
+              <div class="obs-score-label">수업준비</div>
+              <div class="obs-bar-bg"><div class="obs-bar-fill good" style="width:76%"></div></div>
+              <div class="obs-score-num">76</div>
+            </div>
+            <div class="obs-score-row">
+              <div class="obs-score-label">학생참여</div>
+              <div class="obs-bar-bg"><div class="obs-bar-fill warn" style="width:68%"></div></div>
+              <div class="obs-score-num">68</div>
+            </div>
+            <div class="obs-score-row">
+              <div class="obs-score-label">피드백질</div>
+              <div class="obs-bar-bg"><div class="obs-bar-fill good" style="width:72%"></div></div>
+              <div class="obs-score-num">72</div>
+            </div>
+          </div>
+          <div class="obs-status good-status">✓ 양호</div>
+        </div>
+        <div class="obs-card">
+          <div class="obs-teacher">최○○ 교사 (과학)</div>
+          <div class="obs-subject">3학년 4반 / 마지막 관찰: 2025.02.14</div>
+          <div class="obs-score-bar">
+            <div class="obs-score-row">
+              <div class="obs-score-label">수업준비</div>
+              <div class="obs-bar-bg"><div class="obs-bar-fill warn" style="width:61%"></div></div>
+              <div class="obs-score-num">61</div>
+            </div>
+            <div class="obs-score-row">
+              <div class="obs-score-label">학생참여</div>
+              <div class="obs-bar-bg"><div class="obs-bar-fill warn" style="width:58%"></div></div>
+              <div class="obs-score-num">58</div>
+            </div>
+            <div class="obs-score-row">
+              <div class="obs-score-label">피드백질</div>
+              <div class="obs-bar-bg"><div class="obs-bar-fill warn" style="width:64%"></div></div>
+              <div class="obs-score-num">64</div>
+            </div>
+          </div>
+          <div class="obs-status needs-attention">⚠ 재관찰 필요 (4개월 경과)</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DEMO: 복무 현황 -->
+    <div class="demo-main" id="demo-duty">
+      <div class="demo-header">
+        <div class="demo-title">복무 현황 대시보드</div>
+        <div class="demo-date">오늘 재교 인원: 28 / 34명</div>
+      </div>
+      <table class="duty-table">
+        <thead>
+          <tr>
+            <th>교직원</th>
+            <th>담당 과목</th>
+            <th>오늘 상태</th>
+            <th>연가 잔여</th>
+            <th>이번달 특이사항</th>
+            <th>AI 경보</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>이○○ (수학)</td>
+            <td>2학년</td>
+            <td><span class="status-badge ok">재교 중</span></td>
+            <td>12일</td>
+            <td>없음</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td>정○○ (국어)</td>
+            <td>1학년</td>
+            <td><span class="status-badge warn">오전 조퇴</span></td>
+            <td>8일</td>
+            <td>조퇴 2회</td>
+            <td><span style="color: var(--gold); font-size:11px;">⚡ 월요일 패턴</span></td>
+          </tr>
+          <tr>
+            <td>박○○ (체육)</td>
+            <td>전학년</td>
+            <td><span class="status-badge ok">재교 중</span></td>
+            <td>3일</td>
+            <td>없음</td>
+            <td><span style="color: var(--accent); font-size:11px;">⚠ 연가 소진임박</span></td>
+          </tr>
+          <tr>
+            <td>최○○ (미술)</td>
+            <td>전학년</td>
+            <td><span class="status-badge err">출장 (연수)</span></td>
+            <td>15일</td>
+            <td>출장 1회</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td>강○○ (영어)</td>
+            <td>3학년</td>
+            <td><span class="status-badge warn">병가</span></td>
+            <td>11일</td>
+            <td>병가 3일째</td>
+            <td><span style="color: var(--accent); font-size:11px;">⚠ 대체수업 필요</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ROADMAP -->
+<section id="roadmap" class="roadmap-section">
+  <div class="section-eyebrow">도입 로드맵</div>
+  <h2 class="section-title">4단계로 완성하는<br>AI 업무 혁신</h2>
+  <p class="section-sub">한 번에 모든 것을 바꾸지 않아도 됩니다. 단계적으로 도입하며 익숙해집니다.</p>
+
+  <div class="roadmap-timeline">
+    <div class="roadmap-phase">
+      <div class="phase-dot active">1</div>
+      <div class="phase-period">1~2개월차</div>
+      <div class="phase-title">공문 AI 도입</div>
+      <div class="phase-items">
+        Claude AI 공문 요약<br>
+        분류 체계 구축<br>
+        긴급도 자동 판별<br>
+        담당자 배정 룰 셋업
+      </div>
+    </div>
+    <div class="roadmap-phase">
+      <div class="phase-dot accent">2</div>
+      <div class="phase-period">2~3개월차</div>
+      <div class="phase-title">수업 관찰 체계화</div>
+      <div class="phase-items">
+        관찰 체크리스트 표준화<br>
+        교사별 프로파일 구축<br>
+        AI 피드백 리포트 연동<br>
+        면담 준비 자동화
+      </div>
+    </div>
+    <div class="roadmap-phase">
+      <div class="phase-dot">3</div>
+      <div class="phase-period">3~4개월차</div>
+      <div class="phase-title">복무 관리 통합</div>
+      <div class="phase-items">
+        NEIS 연동 추진<br>
+        실시간 현황판 구축<br>
+        이상 패턴 알림 설정<br>
+        월간 리포트 자동화
+      </div>
+    </div>
+    <div class="roadmap-phase">
+      <div class="phase-dot">4</div>
+      <div class="phase-period">5개월차~</div>
+      <div class="phase-title">전교 확산 & 고도화</div>
+      <div class="phase-items">
+        교사 자율 활용 확대<br>
+        학부모 소통 AI 연동<br>
+        데이터 기반 학교 운영<br>
+        우수사례 공유
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="section-eyebrow">지금 시작하기</div>
+  <h2 class="section-title" style="color:white; margin-bottom:16px;">행정 업무는 AI에게,<br>교육은 선생님에게</h2>
+  <p style="color:rgba(255,255,255,0.75); font-size:15px; margin-bottom:40px;">
+    데모 신청 후 2주 무료 체험 — 설치 없이 브라우저에서 바로 시작
+  </p>
+  <button class="btn-cta" onclick="alert('데모 신청이 완료되었습니다!\n담당자가 1일 이내 연락드립니다.')">무료 데모 신청하기 →</button>
+</section>
+
+<footer>
+  <div><strong>EduAdmin AI</strong> — 교감 업무 혁신 플랫폼</div>
+  <div>Built with Claude AI · 2025</div>
+  <div>중학교 교감 업무 전용 솔루션</div>
+</footer>
+
+<script>
+  function switchDemo(type) {
+    document.querySelectorAll('.demo-nav-item').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.demo-main').forEach(el => el.classList.remove('active'));
+    event.currentTarget.classList.add('active');
+    document.getElementById('demo-' + type).classList.add('active');
+  }
+
+  function showAISummary(el, text) {
+    const box = document.getElementById('ai-summary-box');
+    const textEl = document.getElementById('ai-summary-text');
+    document.querySelectorAll('.doc-item').forEach(d => d.style.background = '');
+    el.style.background = 'rgba(200,75,49,0.1)';
+    textEl.textContent = '⟳ AI 분석 중...';
+    box.style.display = 'block';
+    setTimeout(() => { textEl.textContent = text; }, 600);
+  }
+
+  // Scroll fade-in
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.style.opacity = '1'; e.target.style.transform = 'translateY(0)'; }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.module-row, .pain-item, .roadmap-phase').forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(20px)';
+    el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+    observer.observe(el);
+  });
+</script>
+
+<script>/* kg-preview: #<heading> \uc704\uce58\ub85c \uc774\ub3d9 */
+(function(){function norm(t){return (t||'').replace(/\s+/g,'').toLowerCase()}
+function go(){var h=decodeURIComponent(location.hash.slice(1));if(!h)return;var k=norm(h).slice(0,24);if(!k)return;
+var best=null,bl=1e9,els=document.body.querySelectorAll('h1,h2,h3,h4,h5,p,div,span,li,td,text,tspan,section,article');
+for(var i=0;i<els.length;i++){var e=els[i],t=norm(e.textContent);if(t.length<bl&&t.indexOf(k)>-1){best=e;bl=t.length}}
+if(!best)return;var box=best.closest('section,[class*=slide],[class*=page],article')||best;
+box.scrollIntoView({block:'start'});box.style.outline='3px solid #c0504d';box.style.outlineOffset='4px';
+setTimeout(function(){box.style.outline=''},2600)}
+window.addEventListener('load',function(){setTimeout(go,400)});window.addEventListener('hashchange',go)})();</script></body>
+</html>

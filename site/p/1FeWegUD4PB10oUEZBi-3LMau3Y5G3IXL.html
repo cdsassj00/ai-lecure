@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head><meta name="robots" content="noindex, nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>4회차 — 바이브 코딩 1: 데이터 시각화 (데이터 사이언스 풀 사이클)</title>
+<link rel="preconnect" href="https://cdnjs.cloudflare.com">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+<style>
+:root{
+  --bg:#fafaf6; --panel:#ffffff; --ink:#1b1e24; --ink-soft:#5a6069; --ink-faint:#8b919b;
+  --line:#e7e6df; --line-soft:#f0efe9;
+  --teal:#127c71; --teal-d:#0c5249; --teal-bg:#e6f4f1;
+  --amber:#b9722a; --amber-bg:#fbf1e4;
+  --red:#c0392b; --red-bg:#fbe9e7;
+  --code-bg:#f6f6f0;
+  --mono:ui-monospace,"SF Mono","Cascadia Code","JetBrains Mono",Consolas,monospace;
+  --sans:-apple-system,BlinkMacSystemFont,"Pretendard","Apple SD Gothic Neo","Segoe UI","Malgun Gothic",sans-serif;
+  --rad:12px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);
+  font-size:16px;line-height:1.72;-webkit-font-smoothing:antialiased}
+
+/* layout */
+.shell{display:grid;grid-template-columns:300px minmax(0,1fr);max-width:1240px;margin:0 auto}
+.print-toc{display:none}
+.side{position:sticky;top:0;align-self:start;height:100vh;overflow-y:auto;
+  padding:30px 22px 60px;border-right:1px solid var(--line)}
+.main{min-width:0;padding:46px 60px 120px;max-width:880px}
+
+/* sidebar */
+.brand{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--teal);margin-bottom:6px}
+.brand-t{font-weight:700;font-size:17px;line-height:1.35;margin:0 0 4px}
+.brand-s{font-size:12.5px;color:var(--ink-faint);margin:0 0 24px;line-height:1.5}
+nav a{display:block;text-decoration:none;color:var(--ink-soft);border-left:2px solid transparent;
+  padding:3px 0 3px 12px;font-size:13.5px;transition:color .15s,border-color .15s}
+nav a:hover{color:var(--ink)}
+nav a.nav-h1{margin-top:16px;font-weight:700;color:var(--ink);font-size:13px;
+  font-family:var(--mono);letter-spacing:.02em}
+nav a.nav-h2{font-size:13px}
+nav a.active{color:var(--teal-d);border-left-color:var(--teal);font-weight:600}
+
+/* headings */
+h1.modhead{font-size:13px;font-family:var(--mono);letter-spacing:.06em;text-transform:uppercase;
+  color:var(--teal);margin:72px 0 0;padding-top:28px;border-top:2px solid var(--ink);
+  font-weight:700}
+h1.modhead::after{content:attr(data-full);display:block;font-family:var(--sans);
+  font-size:30px;letter-spacing:-.01em;text-transform:none;color:var(--ink);
+  margin-top:8px;font-weight:750;line-height:1.2}
+h1.modhead{font-size:0}            /* hide raw, show via ::after */
+h1.modhead.intro{font-size:13px}
+h2{font-size:21px;font-weight:720;letter-spacing:-.01em;margin:46px 0 14px;
+  padding-bottom:8px;border-bottom:1px solid var(--line)}
+h3{font-size:16.5px;font-weight:700;margin:32px 0 10px;color:var(--ink)}
+h2.starred,h3.starred{color:var(--teal-d)}
+h2.starred::before,h3.starred::before{content:"★ ";color:var(--teal);font-size:.85em}
+h2.starred,h3.starred{}
+.main h1:first-of-type{margin-top:0}
+
+p{margin:12px 0}
+a{color:var(--teal-d)}
+strong{font-weight:700;color:var(--ink)}
+ul,ol{padding-left:22px;margin:12px 0}
+li{margin:5px 0}
+hr{border:none;border-top:1px solid var(--line);margin:40px 0}
+
+/* intro hero */
+.hero{background:linear-gradient(135deg,#0c5249,#127c71);color:#eafaf6;
+  border-radius:16px;padding:34px 36px;margin:0 0 14px}
+.hero .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.16em;
+  text-transform:uppercase;color:#9fdfd2;margin-bottom:10px}
+.hero h1{font-size:32px;line-height:1.18;margin:0 0 12px;font-weight:780;letter-spacing:-.02em}
+.hero p{margin:0;color:#cfeee7;font-size:14.5px;line-height:1.6}
+
+/* tables */
+table{width:100%;border-collapse:collapse;margin:18px 0;font-size:14px;
+  border:1px solid var(--line);border-radius:var(--rad);overflow:hidden}
+thead th{background:var(--teal-bg);color:var(--teal-d);text-align:left;
+  font-weight:700;padding:10px 13px;font-size:13px}
+td{padding:10px 13px;border-top:1px solid var(--line-soft);vertical-align:top}
+tbody tr:nth-child(even){background:#fbfbf8}
+.tablescroll{overflow-x:auto}
+
+/* code */
+.codewrap{margin:16px 0;border:1px solid var(--line);border-radius:var(--rad);
+  overflow:hidden;background:var(--code-bg)}
+.codebar{display:flex;justify-content:space-between;align-items:center;
+  padding:7px 12px;background:#efeee7;border-bottom:1px solid var(--line)}
+.codelang{font-family:var(--mono);font-size:11px;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink-faint);font-weight:600}
+.copybtn{font-family:var(--mono);font-size:11px;border:1px solid var(--line);
+  background:#fff;color:var(--ink-soft);padding:3px 11px;border-radius:6px;cursor:pointer;
+  transition:all .15s}
+.copybtn:hover{border-color:var(--teal);color:var(--teal-d)}
+.copybtn.ok{background:var(--teal);color:#fff;border-color:var(--teal)}
+.codewrap pre{margin:0;padding:0}
+pre code,pre.hljs{display:block;padding:15px 16px;overflow-x:auto;
+  font-family:var(--mono);font-size:13px;line-height:1.6;background:var(--code-bg)!important}
+:not(pre)>code{font-family:var(--mono);font-size:.88em;background:#eeede6;
+  padding:1.5px 6px;border-radius:5px;color:var(--teal-d);white-space:nowrap}
+
+/* mermaid */
+pre.mermaid{background:var(--panel);border:1px solid var(--line);border-radius:var(--rad);
+  padding:22px;margin:20px 0;text-align:center;overflow-x:auto;line-height:1.4}
+
+/* callouts */
+.callout{position:relative;margin:18px 0;padding:14px 18px 14px 18px;border-radius:10px;
+  border-left:4px solid var(--ink-faint);background:#f4f4ee;font-size:14.5px}
+.callout p{margin:8px 0}
+.callout p:first-of-type{margin-top:0}
+.callout p:last-child{margin-bottom:0}
+.callout-badge{display:inline-block;font-family:var(--mono);font-size:10.5px;
+  letter-spacing:.1em;text-transform:uppercase;font-weight:700;
+  padding:2px 9px;border-radius:20px;margin-bottom:8px}
+.callout-note{border-left-color:#9aa0a8;background:#f3f3ee}
+.callout-note .callout-badge{background:#e4e4dd;color:#5a6069}
+.callout-key{border-left-color:var(--teal);background:var(--teal-bg)}
+.callout-key .callout-badge{background:var(--teal);color:#fff}
+.callout-warn{border-left-color:var(--amber);background:var(--amber-bg)}
+.callout-warn .callout-badge{background:var(--amber);color:#fff}
+.callout-add{border-left-color:var(--teal-d);background:#e9f3f1}
+.callout-add .callout-badge{background:var(--teal-d);color:#fff}
+
+/* topbar (mobile) */
+.topbar{display:none}
+
+@media (max-width:880px){
+  .shell{grid-template-columns:1fr}
+  .side{position:fixed;z-index:40;top:0;left:0;width:84%;max-width:320px;height:100vh;
+    background:var(--panel);transform:translateX(-105%);transition:transform .25s;
+    box-shadow:0 0 40px rgba(0,0,0,.18)}
+  .side.open{transform:translateX(0)}
+  .main{padding:70px 22px 90px}
+  .topbar{display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:30;
+    background:rgba(250,250,246,.92);backdrop-filter:blur(8px);
+    padding:12px 18px;border-bottom:1px solid var(--line)}
+  .menubtn{font-family:var(--mono);font-size:13px;border:1px solid var(--line);
+    background:#fff;padding:6px 12px;border-radius:8px;cursor:pointer}
+  .topbar .tt{font-family:var(--mono);font-size:12px;color:var(--teal);letter-spacing:.05em}
+  .scrim{display:none;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:35}
+  .scrim.show{display:block}
+  h1.modhead::after{font-size:25px}
+  .hero h1{font-size:25px}
+  .main{max-width:100%}
+}
+
+/* ── 인쇄 / PDF 저장 (출력 시 목차 먼저 → 본문) ── */
+@media print{
+  @page{margin:14mm 12mm}
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .topbar,.scrim,.menubtn,.copybtn{display:none!important}
+  .shell{display:block;max-width:none}
+  /* 화면용 사이드바는 인쇄에서 완전히 숨김 (변환 불안정 → 빈 페이지 방지) */
+  .side{display:none!important}
+  /* 인쇄 전용 목차: 본문 맨 앞 일반 블록으로 깔끔히 출력 후 페이지 넘김 */
+  .print-toc{display:block!important;break-after:page;page-break-after:always}
+  .print-toc .ptoc-title{font-size:19pt;font-weight:800;color:#0c5249;letter-spacing:-.01em;
+    margin:0 0 16px;padding-bottom:10px;border-bottom:2px solid #127c71}
+  .print-toc a{display:block;color:#1b1e24;text-decoration:none;padding:3px 0;font-size:11.5pt;border:none}
+  .print-toc a.nav-h1{margin-top:13px;font-weight:700;color:#0c5249;font-size:12.5pt}
+  .print-toc a.nav-h2{padding-left:16px;color:#3a3f47}
+  /* 본문 */
+  .main{padding:0;max-width:none}
+  body{font-size:10.5pt;line-height:1.5;background:#fff}
+  a{text-decoration:none;color:inherit}
+  .hero{break-inside:avoid;background:#fff!important;color:#1b1e24!important;
+    border:none;border-bottom:2px solid #127c71;border-radius:0;
+    padding:0 0 14px!important;margin:0 0 18px}
+  .hero .eyebrow{color:#127c71!important}
+  .hero h1{color:#0c5249!important}
+  .hero p{color:#444!important}
+  /* 주제 헤더가 페이지 맨 아래 외롭게 걸리지 않게만 (새 페이지 강제는 빼서 빈 페이지 방지) */
+  h1.modhead{break-after:avoid;page-break-after:avoid}
+  h2,h3{break-after:avoid;page-break-after:avoid}
+  /* 코드·콜아웃·표·다이어그램은 페이지 중간에서 잘리지 않게 */
+  .codewrap,.callout,pre.mermaid,.tablescroll,table{break-inside:avoid;page-break-inside:avoid}
+  pre code,pre.hljs{white-space:pre-wrap;word-break:break-word}
+  pre.mermaid{text-align:center;border:1px solid #ddd;padding:12px 8px;margin:14px auto}
+  pre.mermaid svg{max-width:100%!important;height:auto!important;
+    max-height:200mm!important;display:inline-block!important}
+  .codewrap{border-color:#ccc}
+}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <button class="menubtn" id="menubtn" aria-label="목차 열기">☰ 목차</button>
+  <span class="tt">강의노트 · 보강판</span>
+</div>
+<div class="scrim" id="scrim"></div>
+<div class="shell">
+  <aside class="side" id="side">
+    <div class="brand">강의노트 · 04회차</div>
+    <p class="brand-t">4회차 — 바이브 코딩 1: 데이터 시각화 (데이터 사이언스 풀 사이클)</p>
+    <p class="brand-s">현장 강의 · 기술 보강판</p>
+    <nav id="nav">
+<a class="nav-h1" href="#part-1">Part 1. 오전 — 데이터 사이언스 &#x27;지도&#x27; 그리기</a>
+<a class="nav-h2" href="#1-vs">1. 데이터 사이언스란 — 통계 vs 컴퓨터과학, 그리고 도메인</a>
+<a class="nav-h2" href="#2">2. 알아야 할 기본기 스택</a>
+<a class="nav-h2" href="#3-5">3. 데이터 사이언스 5단계 프레임워크</a>
+<a class="nav-h2" href="#4">4. 민간 데이터 직군 지도</a>
+<a class="nav-h2" href="#5">5. 트렌드 한 바퀴</a>
+<a class="nav-h1" href="#part-2-ax-mba">Part 2. 오후 — 공공 AX MBA 케이스 풀 사이클 실습</a>
+<a class="nav-h2" href="#6-620">6. 케이스 셋업 — 민원 데이터 620만 건</a>
+<a class="nav-h2" href="#7-prd">7. 딜리버러블 &amp;amp; PRD / 문제 정의</a>
+<a class="nav-h2" href="#8-colab">8. 실습 환경 — Colab + 구글 드라이브</a>
+<a class="nav-h2" href="#9-csv-parquet-db">9. 데이터 엔지니어링 — CSV → Parquet → DB</a>
+<a class="nav-h2" href="#10-rag">10. RAG 청킹 전략 — 실무에서 품질을 가르는 곳</a>
+<a class="nav-h2" href="#11-ai">11. AI 부채 — &quot;기술 부채보다 까다로운&quot;</a>
+<a class="nav-h2" href="#12">12. 시각화</a>
+<a class="nav-h2" href="#13">13. 모델링 — 머신러닝 기초 한 바퀴</a>
+<a class="nav-h2" href="#14-slm-ai">14. 마무리 — 폐쇄망·SLM·소버린 AI</a>
+<a class="nav-h1" href="#_1">부록 — 도구 · 개념 맵</a>
+<a class="nav-h2" href="#_2">검색 보강 출처</a>
+    </nav>
+  </aside>
+  <main class="main" id="main">
+<nav class="print-toc">
+<div class="ptoc-title">목차</div>
+<a class="nav-h1" href="#part-1">Part 1. 오전 — 데이터 사이언스 &#x27;지도&#x27; 그리기</a>
+<a class="nav-h2" href="#1-vs">1. 데이터 사이언스란 — 통계 vs 컴퓨터과학, 그리고 도메인</a>
+<a class="nav-h2" href="#2">2. 알아야 할 기본기 스택</a>
+<a class="nav-h2" href="#3-5">3. 데이터 사이언스 5단계 프레임워크</a>
+<a class="nav-h2" href="#4">4. 민간 데이터 직군 지도</a>
+<a class="nav-h2" href="#5">5. 트렌드 한 바퀴</a>
+<a class="nav-h1" href="#part-2-ax-mba">Part 2. 오후 — 공공 AX MBA 케이스 풀 사이클 실습</a>
+<a class="nav-h2" href="#6-620">6. 케이스 셋업 — 민원 데이터 620만 건</a>
+<a class="nav-h2" href="#7-prd">7. 딜리버러블 &amp;amp; PRD / 문제 정의</a>
+<a class="nav-h2" href="#8-colab">8. 실습 환경 — Colab + 구글 드라이브</a>
+<a class="nav-h2" href="#9-csv-parquet-db">9. 데이터 엔지니어링 — CSV → Parquet → DB</a>
+<a class="nav-h2" href="#10-rag">10. RAG 청킹 전략 — 실무에서 품질을 가르는 곳</a>
+<a class="nav-h2" href="#11-ai">11. AI 부채 — &quot;기술 부채보다 까다로운&quot;</a>
+<a class="nav-h2" href="#12">12. 시각화</a>
+<a class="nav-h2" href="#13">13. 모델링 — 머신러닝 기초 한 바퀴</a>
+<a class="nav-h2" href="#14-slm-ai">14. 마무리 — 폐쇄망·SLM·소버린 AI</a>
+<a class="nav-h1" href="#_1">부록 — 도구 · 개념 맵</a>
+<a class="nav-h2" href="#_2">검색 보강 출처</a>
+</nav>
+    <div class="hero">
+      <div class="eyebrow">Lecture Note · 기술 보강판</div>
+      <h1>4회차 — 바이브 코딩 1: 데이터 시각화 (데이터 사이언스 풀 사이클)</h1>
+      <p>현장 강의를 기술적으로 보강한 학습 레퍼런스 — 강사의 의도는 살리고, 빠지거나 틀린 기술은 정확히 채웠습니다.</p>
+    </div>
+
+<p>이 강의 하나로 무엇을 할 수 있게 하려는가 →
+<strong>"데이터 분석/데이터 사이언스의 전체 스펙트럼(질문→수집→EDA→모델링→스토리텔링, 그리고 엔지니어링→분석→시각화→모델링→배포의 풀 사이클)을 AI를 적극 써서 한 바퀴 돌려보고, '직접 푸는 사람'을 넘어 '시나리오와 데이터를 설계해 오케스트레이션하는 리더'의 관점을 잡는 것."</strong></p>
+<blockquote class="callout callout-key"><span class="callout-badge">핵심</span>
+<p>★ 이 회차는 강사가 직접 <strong>2부로</strong> 짰다. <strong>오전 = 데이터 사이언스 '지도' 그리기</strong>(무엇이고, 누가 하고, 트렌드는 뭔가), <strong>오후 = 공공 AX MBA 케이스로 풀 사이클 실습</strong>(엔지니어링→분석→시각화→모델링). 그래서 이 노트도 위계를 지어내지 않고 그 2부 구조를 그대로 따른다. 관통하는 태도 한 줄: <strong>"AI로 진입장벽은 무너졌다. 그래서 더 따져야 한다 — 데이터 품질·청킹·검증·AI 부채. 그리고 푸는 사람보다 설계하는 리더가 돼라."</strong></p>
+<p><strong>보강 안내</strong> — 강사가 결과만 보여주고 건너뛴 부분은 실제 동작하는 명령어·코드로 채웠고, 헷갈리는 용어는 정의를 달았다. 강사가 이름만 흘린 강의·도구·인물은 웹으로 확인해 <code>(검색 보강)</code>으로 표시했다. 운영성 멘트(점심·쉬는시간·녹화 사고 등)는 노트에서 뺐고, 학습에 도움 되는 일화·사례는 살렸다.</p>
+</blockquote>
+<hr/>
+<h1 class="modhead" data-full="Part 1. 오전 — 데이터 사이언스 '지도' 그리기" id="part-1">Part 1. 오전 — 데이터 사이언스 '지도' 그리기</h1>
+<h2 id="1-vs">1. 데이터 사이언스란 — 통계 vs 컴퓨터과학, 그리고 도메인</h2>
+<p>데이터 사이언스는 <strong>멀티 디서플리너리(multidisciplinary, 여러 학문이 섞인)</strong> 분야다. 느낌대로 데이터를 끌어다 쓰는 게 아니라 과학적 방법으로 접근하는, 수십 년 정립된 학문이라는 게 출발점.</p>
+<p>역사적으로 두 진영이 끝없이 충돌했다.</p>
+<ul>
+<li><strong>통계</strong> — 샘플링으로 모수를 추정한다(출구조사 30~40개로 전체 득표율 추정). R 같은 통계 언어가 발달.</li>
+<li><strong>컴퓨터과학</strong> — "다 때려넣고 다 계산한다." 빅데이터(3V: Volume·Velocity·Variety)와 무어의 법칙으로 CPU·GPU 값이 떨어지면서 득세. 머신러닝 알고리즘 안에 통계가 패키징되고, <strong>파이썬</strong>으로 표준이 잡혔다.</li>
+</ul>
+<blockquote class="callout callout-key"><span class="callout-badge">핵심</span>
+<p>★ <strong>진짜 중요한 한 축은 따로 있다 — 도메인 엑스퍼트(domain expert).</strong> 통계든 컴공이든 "예측 91점, 92점" 경쟁에만 혈안이면 정작 실무에서 안 먹힌다. 업을 가장 잘 아는 사람(여비 처리면 그 담당자)이 빠지면 모델이 아무리 좋아도 말짱 도루묵. LLM이 없던 시절엔 이들이 "감은 있는데 내가 못 하니까" 개발자에게 부탁하거나 엑셀로 돌렸는데, 지금은 그 장벽이 무너졌다.</p>
+</blockquote>
+<p><strong>알아둘 권위자들</strong> (검색 보강 포함):
+- <strong>요슈아 벤지오 / 제프리 힌턴 / 얀 르쿤</strong> — 딥러닝 3대 대부. 힌턴은 <strong>백프로파게이션(backpropagation, 오차를 거꾸로 전파해 가중치를 학습시키는 알고리즘)</strong> 연구로 2024년 노벨 물리학상.
+- <strong>앤드류 응(Andrew Ng)</strong> — 스탠퍼드 교수, <strong>Coursera</strong> 창업. 그의 '머신러닝' 강의가 입문 클래식(자막 있음, 무료 청강 가능, 인증서는 유료).
+- <strong>조경현</strong> — 한국 출신 NLP 대가, 벤지오·르쿤과 공동 연구, 메타 AI 리서치에도 참여.</p>
+<h2 id="2">2. 알아야 할 기본기 스택</h2>
+<p>연구자까지 가려면 공부할 게 많지만, 리더가 상식으로 깔아둘 것들:</p>
+<ul>
+<li><strong>선형대수(linear algebra)</strong> — 딥러닝의 행렬 연산(닷 프로덕트, dot product)이 다 여기서 나온다. 요즘 무시되지만 펀더멘털.</li>
+<li><strong>DB</strong> — 백엔드엔 항상 DB가 물려 있다. 절대 안 없어지는 기술.</li>
+<li><strong>통계 기초</strong> — 추론통계, 베이즈 정리(나이브 베이즈 분류기) 등.</li>
+<li><strong>IT 베이직</strong> — 인코딩/디코딩 같은 것에 익숙해지기.</li>
+<li><strong>NLP vs 컴퓨터 비전</strong> — 예전엔 AI의 두 축. NLP(자연어 처리)의 대표 분야가 기계 번역(machine translation)인데 GPT 이후 거의 게임 끝. 비전은 <strong>OpenCV</strong>·오브젝트 디텍션으로 붐이 먼저 왔고, NLP는 RNN→CNN→<strong>트랜스포머</strong>로 도약.</li>
+<li><strong>빅데이터</strong> — 일반인이 떠올리는 빅데이터와 엔지니어 단위는 차원이 다르다. 테라 단위가 하루에 쏟아지면 <code>read_csv</code>로는 절대 안 된다. <strong>Hadoop·Spark</strong>로 분산 처리, 스트리밍은 <strong>Kafka</strong>(넷플릭스發).</li>
+</ul>
+<blockquote class="callout callout-add"><span class="callout-badge">보강</span>
+<p>보강 — <strong>메타인지로 AI에 묻기.</strong> 논문이 수학 기호로 빽빽해도, 이제 abstract만 떼서 "이 두 번째 실험이 뭘 설계한 건지 모르겠다"고 AI에 물으면 된다. "내가 뭘 모르는지"를 아는 메타인지가 AI 시대의 핵심 효율이다.</p>
+</blockquote>
+<h2 id="3-5">3. 데이터 사이언스 5단계 프레임워크</h2>
+<p>실리콘밸리 데이터 사이언티스트들이 쓰는 접근. 강사가 정리한 다섯 단계:</p>
+<div class="codewrap"><div class="codebar"><span class="codelang">code</span><button class="copybtn" type="button">복사</button></div><pre class="mermaid">flowchart LR
+  Q["① 흥미로운 질문"] --&gt; C["② 데이터 수집"]
+  C --&gt; E["③ EDA&lt;br/&gt;(제로베이스 탐색)"]
+  E --&gt; M["④ 모델링&lt;br/&gt;(전체의 10%)"]
+  M --&gt; T["⑤ 스토리텔링&lt;br/&gt;(끝까지 남는 역량)"]
+</pre></div>
+<ul>
+<li><strong>① 흥미로운 질문(interesting question)</strong> — 한국 사람들이 제일 어려워한다. 잘 맞히려고 질문을 쉽게 깔고 뒤를 화려하게 하려는 성향. 미국은 "No가 없으니까" 달의 주기와 조석 데이터를 짬뽕시키는 식의 자유로운 상상으로 접근. <strong>업무에서 마주치는 골목길 같은 작은 질문</strong>(예: PPT→PDF 변환 자동화)에서 찾는 게 중요.</li>
+<li><strong>③ EDA(Exploratory Data Analysis, 탐색적 데이터 분석)</strong> — 가정 없이 데이터를 있는 그대로 본다. "이 변수는 이렇네, 결측값 많네." 제로베이스·크리티컬 마인드셋.</li>
+<li><strong>④ 모델링</strong> — 제일 재밌지만 <strong>프로젝트의 10%도 안 된다.</strong> 정해진 모델을 쓰니까. 앞단의 지저분한 전처리(천만 줄을 잘라 나누는 노가다)가 성패를 가른다.</li>
+<li><strong>⑤ 스토리텔링</strong> — AI 시대에 끝까지 남을 역량.</li>
+</ul>
+<blockquote class="callout callout-key"><span class="callout-badge">핵심</span>
+<p>★ <strong>스토리텔링이 왜 핵심인가.</strong> 유발 하라리의 『사피엔스』는 글로벌하게 "다 아는 사실 나열"이라 많이 까였지만, 그가 압도적 스토리텔러라 사랑받는다(시공간을 바꿔 흡입력을 만든다). 모든 영화 대본이 참고한다는 『천의 얼굴을 가진 영웅』처럼, 스토리에는 일반화된 패턴이 있다. <strong>분석 결과도 어떤 기세로 이야기하느냐에 따라 공감이 갈린다.</strong> AI가 문체는 흉내 내도, 사람 대 사람의 공감은 우리 몫. (UX도 같다 — 토스의 거대한 UX팀이 끊임없이 A/B 테스트로 "왜 이 버튼을 안 쓰세요?"를 묻는 이유.)</p>
+</blockquote>
+<h2 id="4">4. 민간 데이터 직군 지도</h2>
+<p>LLM 이전엔 경계가 뚜렷했고 지금은 모호해졌지만, 역할 분담을 알아두면 협업·외주 협상에 유리하다.</p>
+<div class="codewrap"><div class="codebar"><span class="codelang">code</span><button class="copybtn" type="button">복사</button></div><pre class="mermaid">flowchart LR
+  PO["기획자 / PO&lt;br/&gt;서비스·로그 설계"] --&gt; DE["데이터 엔지니어&lt;br/&gt;ETL · 파이프라인"]
+  DE --&gt; DA["데이터 분석가(DA)&lt;br/&gt;SQL · 시각화"]
+  DA --&gt; DS["데이터 사이언티스트&lt;br/&gt;논문 · 모델링"]
+  DS --&gt; OPS["MLOps / LLMOps&lt;br/&gt;운영 · 하네스"]
+</pre></div>
+<ul>
+<li><strong>기획자 / PO(Product Owner)</strong> — 어떤 서비스·기능을 만들지 설계(예: 쿠팡 새벽배송 프로덕트), 로그를 어떻게 남길지 잡는다.</li>
+<li><strong>데이터 엔지니어</strong> — <strong>ETL(Extract·Transform·Load)</strong> 파이프라인으로 데이터를 창고에 쌓는다. 화려함은 없지만 뒷단에서 시스템이 안 깨지게, 모니터링하며 어마어마하게 일한다.</li>
+<li><strong>데이터 분석가(DA)</strong> — 쌓인 DB에 <strong>SQL</strong> 쿼리를 날려 JOIN·집계해서 보고용 분석. 마케터가 마케팅테크(MarTech)로 많이 유입.</li>
+<li><strong>데이터 사이언티스트</strong> — 알고리즘을 알고 예측/분류. <strong>논문 스터디</strong>가 일상. 새 모델(비전 트랜스포머 등)이 뜨면 빠르게 본다.</li>
+<li><strong>MLOps / LLMOps / AIOps 엔지니어</strong> — 모델을 운영에 심어 안 끊기게 돌린다. <strong>하네스(harness)</strong> 전체를 본다. AI 지식보다 컴공 지식이 많은 편(서버·스토리지·아키텍처).</li>
+</ul>
+<blockquote class="callout callout-add"><span class="callout-badge">보강</span>
+<p>보강 — <strong>Papers with Code &amp; SOTA.</strong> <a href="https://paperswithcode.com">paperswithcode.com</a>은 논문과 구현 코드(GitHub)를 같이 주는 사이트. AI 팀은 새 논문이 뜨면 레포를 fork/clone해 GPU에 올려 우리 도메인에서 몇 점 나오는지 평가한다. <strong>SOTA(State Of The Art)</strong> = 현재 1등·최신. "지금 SOTA가 Claude냐 GPT냐"처럼 쓴다.</p>
+<p>보강 — <strong>3관점을 삼각형으로.</strong> 1등 IT 기업('네카라쿠배당토')의 구조는 대개 <strong>엔지니어 + 기획자(PO) + 디자이너</strong> 셋. 코딩이 재밌어 빠지더라도, 서비스를 하려면 <strong>디자인(감성·UX)</strong>, <strong>기획(사용자 니즈·requirement를 집요하게 파기)</strong>, <strong>엔지니어링</strong> 세 관점을 늘 함께 그려야 한다.</p>
+</blockquote>
+<h2 id="5">5. 트렌드 한 바퀴</h2>
+<p>먼저 큰 그림: <strong>AI ⊃ 머신러닝 ⊃ 딥러닝</strong> (AI가 가장 넓은 개념, 그 안에 ML, 그 안에 DL).</p>
+<p><strong>피지컬 AI(Physical AI)</strong> — 실물로 들어오는 AI.
+- <strong>현대차 + 보스턴 다이내믹스 '아틀라스(Atlas)'</strong>의 월드컵 축구 캠페인 영상(이노션 기획). 손흥민 동작을 학습시켰고, 일부러 실패→다시 일으키는 장면으로 공감을 짠다 — 이게 피지컬 AI를 와닿게 하는 스토리텔링.
+- 테슬라의 <strong>오브젝트 디텍션(object detection)</strong> — 사람·사물에 네모 박스를 그려 인식하는 자율주행 기술.
+- <strong>드론</strong>은 <strong>라즈베리 파이(Raspberry Pi)</strong> 같은 환경에서 코딩해 띄운다.</p>
+<p><strong>최신 동향</strong> (검색 보강):
+- <strong>메타 AI + 레이밴·오클리 스마트글라스</strong> — meta.ai는 강사 평으로 아직 별로(한글 깨짐)지만, 스마트글라스는 의외로 잘나간다. 『History of the Future』는 이 기술을 만든 고졸 청년이 메타에 인수되기까지의 일화.
+- <strong>AI 타임즈</strong> — 국내 AI 소식 매일 체크 추천.
+- <strong>구글 I/O &amp; Gemini</strong> — 컨퍼런스에서 라인업을 싹 갈아엎었다. Gemini 3.1 Flash(라이트) 등 공개, <strong>Gemini 3.5 Pro는 내부 테스트 중 미공개</strong>. (검색 보강: 2026년 구글이 Gemini 3.x 세대로 개편 중.)
+- <strong>Antigravity 2.0</strong> — 구글의 코딩 플랫폼이 <strong>두 제품으로 분리</strong>됐다. ① <strong>Antigravity IDE</strong>(VS Code 같은 비주얼 코딩) ② <strong>Antigravity AI Agent</strong>(파일·폴더 개념 없이 채팅만 하는 헤드리스 에이전트, Gemini 3.5 Flash/Pro 기반). 자동 마이그레이션이 잘 안 돼 새로 까는 걸 권함. 무료는 Flash 모델만, Pro는 유료. (검색 보강: codingchefs·geeky-gadgets, 2026년 5월 분리.)</p>
+<blockquote class="callout callout-key"><span class="callout-badge">핵심</span>
+<p>★ <strong>안드레이 카파시(Andrej Karpathy) 어록</strong> (검색 보강) — 테슬라 FSD/오토파일럿 비전을 만들고 OpenAI 창립 멤버였던 그가 <strong>2026년 5월 19일 Anthropic 합류</strong>(Claude로 다음 세대 프리트레이닝을 가속하는 팀, Eureka Labs 22개월을 접고). 세계 최고 엔지니어가 던진 말들:
+- <strong>"가장 핫한 개발 언어는 영어(자연어)다."</strong> 코드를 몰라도 된다. <strong>생각의 명료함·정밀도</strong>가 코딩 실력보다 중요한 시대.
+- <strong>"AI는 기업이 아닌 개인에게 더 큰 힘을 주는 첫 기술이다."</strong> 역사상 모든 기술은 정부·대기업이 먼저 쥐었는데, AI는 처음으로 그 공식을 뒤집었다.
+- <strong>"지금 AI 채팅창은 1960년대 메인프레임 터미널 수준."</strong> 개인용 컴퓨터·마우스·아이폰에 해당하는 건 아직 발명도 안 됐다. <strong>LLM 자체가 새로운 운영체제(OS)</strong> — 텍스트로 검색·계산·코드실행 등 모든 도구를 조율하는 중심 두뇌.
+- <strong>"코드는 이제 공짜고, 일회용이고, 버려도 된다."</strong> 짜는 비용이 0에 가까워지면 코드는 평생 유지보수할 자산이 아니라 쓰고 버리는 냅킨.
+- <strong>"세계 최고인 나도 뒤처진 느낌을 받는다 — 네 불안은 무능의 증거가 아니라 시대가 빠른 것."</strong> 지금 있는 걸 제대로 <strong>연결(오케스트레이션)</strong>만 해도 10배는 세진다.</p>
+</blockquote>
+<hr/>
+<h1 class="modhead" data-full="Part 2. 오후 — 공공 AX MBA 케이스 풀 사이클 실습" id="part-2-ax-mba">Part 2. 오후 — 공공 AX MBA 케이스 풀 사이클 실습</h1>
+<h2 id="6-620">6. 케이스 셋업 — 민원 데이터 620만 건</h2>
+<p>강사가 만든 <strong>'퍼블릭 AX MBA 케이스 스터디'</strong>. 가칭 '국민서비스진흥원'(보건복지부 산하 준정부기관)의 민원 처리 문제.</p>
+<ul>
+<li>연 120만 건, 4개 채널(포털·콜센터·방문·앱), 민원 6개 대분류·240개 세부유형.</li>
+<li>민원 만족도 평가 87개 기관 중 61등, <strong>재접수율 18.7%</strong>(유사기관 평균 9.3%의 두 배). 재접수의 73%가 72시간 내.</li>
+<li>5년치 <strong>약 620만 건</strong>(34개 필드, 약 700~800MB CSV)이 온프레미스 오라클 DB/CSV에 적재. 코드 체계 개편·결측으로 바로 분석 불가.</li>
+<li>분석팀 4명에 전담 엔지니어 없음 → SQL·엑셀 '노가다'로 건당 3~5일, 재현성 없음.</li>
+</ul>
+<blockquote class="callout callout-key"><span class="callout-badge">핵심</span>
+<p>★ <strong>이 케이스 데이터는 AI가 합성(생성)한 것이다 — '역설계'.</strong> 강사는 시나리오를 먼저 짜고, 거기 맞는 데이터를 프롬프트로 생성시켰다(620만 줄을 20만씩 찍으며 생성, 결측·재접수 분포까지 현실적으로 섞고, 품질 검증 리포트와 CSV/Parquet 변환까지 한 방에). <strong>리더가 가져갈 관점은 "직접 푸는 사람"이 아니라 "시나리오+데이터를 설계해 제공·오케스트레이션하는 사람"이다.</strong></p>
+<p>보강 — <strong>합성 데이터의 실전 가치(폐쇄망 우회).</strong> 보안상 실데이터를 못 빼낼 때, 엑셀 <strong>헤더 컬럼만</strong> 스크린샷으로 주거나 기억하는 필드값으로 "이 기관 데이터 비슷하게 500줄만 가상 생성해줘" 하면 된다. 그러면 바깥(폐쇄망 밖)에서 테스트·조립해 안으로 들여올 수 있다. 코드는 모듈화해 <strong>PyInstaller</strong> 등으로 보안에 안 걸리는 형태로 돌리는 방법도.</p>
+</blockquote>
+<h2 id="7-prd">7. 딜리버러블 &amp; PRD / 문제 정의</h2>
+<p>강사가 정한 딜리버러블(끝점을 먼저 상상하는 게 중요 — 분석은 빠지면 시간만 간다):</p>
+<ol>
+<li><strong>AI 파워드 PRD</strong> 작성</li>
+<li><strong>Parquet vs CSV 기술 검증</strong>(PoC) 리포트</li>
+<li><strong>SQLite 적재 + SQL</strong> 쿼리 확인</li>
+<li><strong>EDA·시각화</strong></li>
+<li><strong>예측 모델</strong>(랜덤포레스트·XGBoost·LightGBM 앙상블)</li>
+<li>(욕심) 프론트엔드 샘플 서빙 → <strong>Ollama 로컬 LLM</strong>까지 엔드 투 엔드</li>
+</ol>
+<p><strong>PRD(Product Requirement Document)</strong> = 요구사항 정의서. 케이스의 페인포인트를 보고 필요한 기능·서버·통신을 기획 관점으로 적는다. 회사마다 양식이 다르니 정답은 없지만 기본은 "요구사항을 잘 정리".</p>
+<blockquote class="callout callout-key"><span class="callout-badge">핵심</span>
+<p>★ <strong>PRD의 핵심 두 가지.</strong> ① <strong>KPI는 반드시 숫자로</strong>(quantify). ② <strong>아웃 오브 스코프(out of scope, "이건 안 한다")를 명시</strong>하라. 이걸 안 적으면 자꾸 끼워넣다 끝이 없어진다. PRD는 거의 <strong>SOW(Scope of Work, 작업 범위)</strong> = 계약서에 가깝게 디테일하게.</p>
+</blockquote>
+<p><strong>문제 정의 프레임워크들</strong> (AI에 프롬프트로 심으면 강력):
+- <strong>『기획의 정석』식</strong> — 최상의 이상적 꼴과 현재 As-Is의 <strong>갭(차이)을 파고든다.</strong> "왜 차이가 나는가"로 원인을 빼고, 우선순위로 가능/불가능을 나눠 풀 수 있는 스코프를 정의.
+- <strong>As-Is / To-Be</strong> — 현재와 향후.
+- <strong>P&amp;S(Problem &amp; Solution)</strong> — 솔루션을 다각도로.
+- <strong>맥킨지 7 steps</strong> — 신입이 6개월 배우는 무적 프레임워크. 문제 기술 → <strong>이슈 트리(issue tree)</strong> → <strong>key/non-key 구분</strong>(= 스코프 아웃) → WBS 워크플랜 → 가설·종합 → 장표 수렴.</p>
+<blockquote class="callout callout-key"><span class="callout-badge">핵심</span>
+<p>★ <strong>AX 리더의 포지션.</strong> "내 머리로 다 한다"가 아니라, <strong>이미 초고수들이 만든 프레임워크를 큐레이션해 프롬프트로 엮는 것.</strong> "탑티어 컨설팅 펌 프레임워크 30개 줘 → 우리 상황에 맞는 5개 꼽아 → 그걸로 PRD 만들어"처럼 메타 관점으로 부린다. (맥킨지는 전략은 강해도 IT/시스템 requirement는 약한데, 그 빈틈도 LLM이 메운다.)</p>
+</blockquote>
+<h2 id="8-colab">8. 실습 환경 — Colab + 구글 드라이브</h2>
+<p>웹에서 바로 되는 <strong>구글 코랩(Colab)</strong>으로 시연(VS Code·opencode·Antigravity로 해도 무방). 코랩은 구글 드라이브가 기본적으로 안 붙어 있어 마운트가 필요하다.</p>
+<div class="codewrap"><div class="codebar"><span class="codelang">python</span><button class="copybtn" type="button">복사</button></div><pre><code class="language-python"># 1) 구글 드라이브 마운트 (왼쪽에 폴더가 생기고 액세스 허용을 묻는다)
+from google.colab import drive
+drive.mount("/content/drive")
+# 2) 파일 경로 확인: 왼쪽 폴더에서 점 3개(⋮) → 'Copy path'
+#    예) /content/drive/MyDrive/&lt;폴더&gt;/complaints.csv
+</code></pre></div>
+<blockquote class="callout callout-key"><span class="callout-badge">핵심</span>
+<p>★ 환경 세팅은 "가장 편한 상태"로 먼저 박아두는 게 중요하다. 계속 환경을 만지면 분석 자체에 집중이 안 된다.</p>
+<p>보강 — <strong>현장 베스트 케이스(공유).</strong> 한 수강생은 <strong>Codex + Claude Code에 병렬 에이전트 10개</strong>(에이전트 A~H로 일을 쪼개)를 펴서 PRD→엔지니어링→서빙·검증까지 <strong>한 큐에</strong> 끝냈다. 또 한 명은 <strong>MCP로 Notion을 연동</strong>해 각 과제를 별도 페이지로 자동 정리(TensorFlow.js 웹 서빙까지). 강사도 "강의하면서 처음 봤다"며 멈칫. → <strong>플랜을 먼저 설계하고 작업을 덩어리로 쪼개 병렬 에이전트에 위임</strong>하는 게 핵심.</p>
+</blockquote>
+<h2 id="9-csv-parquet-db">9. 데이터 엔지니어링 — CSV → Parquet → DB</h2>
+<p>실습의 척추. 큰 CSV를 그냥 읽지 말고 빅데이터식으로 다뤄보자.</p>
+<div class="codewrap"><div class="codebar"><span class="codelang">code</span><button class="copybtn" type="button">복사</button></div><pre class="mermaid">flowchart LR
+  C["CSV 원본&lt;br/&gt;620만 건"] --&gt; P["Parquet 변환&lt;br/&gt;(빠른 적재)"]
+  P --&gt; D["SQLite / 오라클&lt;br/&gt;DB 적재"]
+  D --&gt; A["EDA · SQL 집계 · 시각화"]
+  D --&gt; M["모델링&lt;br/&gt;(앙상블 예측)"]
+  A --&gt; S["대시보드 / 보고"]
+  M --&gt; S
+</pre></div>
+<p><strong>(A) Parquet vs CSV 속도 검증</strong> — Parquet은 컬럼 기반의 빅데이터 형식. 클라우드 전처리에선 거의 기본.</p>
+<div class="codewrap"><div class="codebar"><span class="codelang">python</span><button class="copybtn" type="button">복사</button></div><pre><code class="language-python">import pandas as pd, time
+df = pd.read_csv("complaints.csv")                 # (먼저 한 번 로드)
+df.to_parquet("complaints.parquet")                # 변환 (pip install pyarrow)
+
+t = time.time(); pd.read_csv("complaints.csv");      csv_t = time.time() - t
+t = time.time(); pd.read_parquet("complaints.parquet"); pq_t = time.time() - t
+print(f"CSV {csv_t:.2f}s vs Parquet {pq_t:.2f}s → {csv_t/pq_t:.1f}배")
+# 강사 환경에선 60만 줄 기준 약 2.6배 빠름
+</code></pre></div>
+<p><strong>(B) SQLite 적재 + SQL</strong> — SQLite는 가벼운 단일파일 DB(원래 모바일용). PoC·로컬에 적합.</p>
+<div class="codewrap"><div class="codebar"><span class="codelang">python</span><button class="copybtn" type="button">복사</button></div><pre><code class="language-python">import sqlite3
+conn = sqlite3.connect("pipeline.db")              # 드라이브에 .db 파일 생성
+df.to_sql("complaints", conn, if_exists="replace", index=False)   # 적재
+top3 = pd.read_sql(
+    "SELECT 민원유형, COUNT(*) c FROM complaints GROUP BY 민원유형 ORDER BY c DESC LIMIT 3", conn)
+print(top3)   # 예: 이의신청 · 급여조정 · 제도문의
+</code></pre></div>
+<blockquote class="callout callout-add"><span class="callout-badge">보강</span>
+<p>보강 — <strong>pandas의 정체.</strong> 이름은 곰 판다가 아니라 계량경제의 <strong>panel data</strong>에서 왔다("파이썬 데이터 분석"의 뜻도 겹친다). 엑셀처럼 다루는 도구이고, 근간은 <strong>NumPy</strong>. 대용량에서 느려지면 판다스를 걷어내고 <strong>NumPy 밑단에서 연산</strong>하면 코드가 바뀌며 한두 배 빨라진다(노하우).</p>
+</blockquote>
+<p><strong>아키텍처 관점</strong> — 로컬에선 한 줄씩 절차형으로 되지만 실전은 서버 단위로 복잡하다. 강사가 Mermaid로 아키텍처 3안을 그려봤다(<code>"...아키텍처를 Mermaid로 도식화해줘"</code>). 핵심 개념:</p>
+<ul>
+<li><strong>랜딩 존(landing zone) / 스테이징(staging)</strong> — 원본을 안 건드리고 중간 단계를 둬 끊김을 막는다.</li>
+<li><strong>ETL vs ELT</strong> — 고전은 Extract→Transform→Load, 실전은 Extract→Load 후 Transform(ELT)도 많다.</li>
+<li><strong>연계 서버</strong> — SAP 같은 운영 DB에 직접 붙으면 전체가 뻥난다. 중간에 연계 서버를 둬 파일을 떨궈주고 가져간다.</li>
+<li><strong>CDC(Change Data Capture, 증분 적재)</strong> — 변경분만 처리. 매번 전체 오버라이트하면 DB에 무리.</li>
+<li><strong>메달리온 아키텍처(Medallion Architecture)</strong> — 미국發 표준. 동·은·금 3층:</li>
+</ul>
+<div class="tablescroll"><table>
+<thead>
+<tr>
+<th>레이어</th>
+<th>내용</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>🥉 브론즈(Bronze)</td>
+<td>원본 그대로 보존 (CSV)</td>
+</tr>
+<tr>
+<td>🥈 실버(Silver)</td>
+<td>정제된 Parquet, 스키마 표준화·결측·중복 처리</td>
+</tr>
+<tr>
+<td>🥇 골드(Gold)</td>
+<td>분석용 집계, 부서별 <strong>데이터 마트(data mart)</strong></td>
+</tr>
+</tbody>
+</table></div>
+<blockquote class="callout callout-warn"><span class="callout-badge">주의</span>
+<p>보강 — <strong>데이터 파이프라인 모니터링: Airflow.</strong> 파이프라인은 장애(끊김)가 가장 흔한 이슈인데, 그 재처리·모니터링을 <strong>Apache Airflow</strong>로 한다(현업 표준). 예전엔 리소스를 많이 먹어 인기가 없었지만 지금도 제일 많이 쓴다.</p>
+<p>보강 — <strong>DB 선택은 리더의 기술 검증 영역.</strong> 오라클(상용), <strong>PostgreSQL</strong>(오픈소스 최다 사용), SQLite/DuckDB(가벼운 PoC용). DB마다 SQL 문법이 조금씩 다르고 <strong>라이선스(MIT냐 GPL이냐, 연 비용)</strong> 이슈가 있다 — 예전엔 찾는 것도 일이었지만 이제 AI에 물으면 바로 나온다(GitHub에 명시).</p>
+<p>보강 — <strong>Matplotlib 한글 깨짐(□□□) 고치기 — 코랩.</strong> 코랩에서 자주 겪는 함정. 코드 스니펫을 떠 두면 편하다.
+<code>python
+!apt-get install -y fonts-nanum -q
+import matplotlib.pyplot as plt, matplotlib.font_manager as fm
+fm.fontManager.addfont("/usr/share/fonts/truetype/nanum/NanumGothic.ttf")
+plt.rcParams["font.family"] = "NanumGothic"
+plt.rcParams["axes.unicode_minus"] = False   # 마이너스 부호 깨짐 방지</code></p>
+</blockquote>
+<h2 id="10-rag">10. RAG 청킹 전략 — 실무에서 품질을 가르는 곳</h2>
+<p>이 케이스를 넘어, 기관이 LLM 사업을 하면 십중팔구 <strong>RAG 챗봇</strong>을 만들게 된다. 그때 진짜 중요한 건 모델보다 <strong>청킹(chunking, 데이터를 어느 단위로 자를지)</strong>이다.</p>
+<blockquote class="callout callout-warn"><span class="callout-badge">주의</span>
+<p>★ <strong>청킹 스트래터지가 RAG 품질의 핵심.</strong> 엔지니어에게 그냥 맡기면 "10줄마다" 기계적으로 자른다 → 검색하면 엉뚱한 답. 맥락(법령이면 조·절 단위)을 살려 잘라야 한다. <strong>구분자를 넣고, 그 옆에 <code>## 맥락 레이블</code>(예: "법인세법 부당행위계산 부인 관련")을 살짝 달아주면 품질이 급상승.</strong> 강사가 은행법·증권법으로 이렇게 했더니 PoC에서 현업 전문가가 던지는 질문에 다 답이 나와 놀랐던 사례.</p>
+<p>⚠ 주의 — <strong>라벨링을 LLM에 시키기는 어렵다.</strong> 우리나라 법은 맥락이 "조금만 봐야 하는 것"과 "뭉뚱그려 한 장을 봐야 하는 것"이 섞여 있어, 기계적으로 자꾸 빗나간다 → 결국 사람이 한다(검수는 막판 말고 미리). 폐쇄망이라 <strong>파운데이션 모델(Foundation Model)</strong> 자체가 약하면 백날 던져도 안 되는 건 안 된다. 파서는 PDF/HWP를 마크다운이나 HTML로 변환하는 모듈을 잘 짜는 게 관건. (업스테이지 등이 RAG·문서 파싱에 강함.)</p>
+</blockquote>
+<h2 id="11-ai">11. AI 부채 — "기술 부채보다 까다로운"</h2>
+<p>AI 타임즈 기사 소개. 기존 <strong>기술 부채</strong>(낡은 아키텍처·스파게티 코드·부실 문서)에 더해, AI 시대엔 새로운 부채가 쌓인다. AI는 다 <strong>확률 기반</strong>이라 오류가 미묘하고 <strong>비선형적</strong>으로 튀어나온다.</p>
+<ul>
+<li><strong>프롬프트 부채</strong> — 잘 먹히던 프롬프트가 어느 날 안 먹힌다. 충돌·버전관리 없이 누적되면 시스템 전체가 불안정. 거기에 <strong>프롬프트 스터핑(stuffing, 맥락을 억지로 욱여넣기)</strong>까지 더하면 유지보수 불가.</li>
+<li><strong>모델 의존성</strong> — "GPT-4.5로 끝냈더니 다음 버전이 나와 답이 다 바뀐다." OpenAI·Anthropic·구글 API에 종속.</li>
+<li><strong>검색 부채</strong> — RAG 리트리버가 잘 땡겨오던 게 흔들리거나, 오래된 정보를 사실처럼 제시(환각보다 위험).</li>
+<li><strong>평가 부채</strong> — LLM이 "잘한다"의 기준이 모호. 기계적 지표(<strong>BLEU score</strong> 등)와 사람 평가가 따로 논다.</li>
+</ul>
+<blockquote class="callout callout-warn"><span class="callout-badge">주의</span>
+<p>보강 — <strong>LLM 평가/모니터링: Langfuse.</strong> LangChain 계열의 모니터링 플랫폼. LLM 서비스 뒤에 붙여 토큰·비용·프롬프트·응답을 다 기록하고, <strong>LLM-as-judge(LLM이 LLM을 평가)</strong> 파이프라인까지 돌린다. <strong>셀프 호스팅이 쉬워</strong> 우리 서버(지금 노트북에도)에 올려볼 수 있다.</p>
+<p>⚠ 주의 — <strong>그래서 룰 기반이 오히려 안전할 수 있다.</strong> AI는 "여기가 고장 날 수도, 안 날 수도 있고요"라 유지보수성(소프트웨어 공학의 핵심)이 흔들린다. AI 업계는 아직 <strong>CI/CD(배포 파이프라인)·QA 같은 검증 표준</strong>이 부족하다. 그래서 등장한 게 <strong>하네스(harness) 엔지니어링</strong> — 자원·프롬프트·사용자·모델버전·에이전트를 전체적으로 묶어 관리. 금융권 폐쇄망(계정계)은 여전히 함부로 못 건드린다.</p>
+</blockquote>
+<h2 id="12">12. 시각화</h2>
+<p><strong>Power BI 애니메이션</strong> — 강사 단골 시연. 전 세계 시가총액 1등의 연도별 변화(MS→엑손모빌→애플→…→엔비디아)를 Power BI로 애니메이션. Tableau로는 거기까진 안 되고 Power BI가 다이내믹하게 잘 만든다.</p>
+<blockquote class="callout callout-add"><span class="callout-badge">보강</span>
+<p>보강 — <strong>시티즌 데이터 사이언티스트 사례(쿠팡이츠).</strong> 개발자도 아닌 배달 기사가 파이썬을 독학해(LLM 없던 시절) 쿠팡이츠 배달 단가를 시간대·지역별로 수집·시각화했다. "단가는 천천히 오르고(분당 100~300원) 급하게 떨어진다(분당 500원)"는 패턴까지 발견. 이런 <strong>다이내믹 프라이싱(dynamic pricing)</strong>은 우버·쿠팡이츠가 수요·공급으로 가격을 실시간 조정하는 최적화 문제(트래블링 세일즈맨 등)와 닿아 있다.</p>
+</blockquote>
+<p><strong>시각화 패키지</strong> — 어떤 차트가 내 데이터를 가장 잘 전달하느냐는 AI에 묻는 게 빠르다("차원과 측정값을 분리해서, 이 오디언스에게 딱 들어오는 차트로").</p>
+<ul>
+<li><strong>Matplotlib</strong> — 파이썬 기본. 안 예쁘고 문법이 까다롭지만 다 그려진다.</li>
+<li><strong>Seaborn</strong> — 통계 시각화, 그나마 예쁨. 갤러리에 코드 스니펫 제공(조인트 플롯, 박스플롯 등).</li>
+<li><strong>Plotly</strong> — <strong>인터랙티브</strong>(클릭·줌). 더 예쁘지만 느릴 수 있다. Plotly Dash로 대시보드.</li>
+<li><strong>Folium</strong> — 지도 시각화. 위경도만 있으면 마커를 다 찍는다.</li>
+</ul>
+<div class="codewrap"><div class="codebar"><span class="codelang">python</span><button class="copybtn" type="button">복사</button></div><pre><code class="language-python">import folium
+m = folium.Map(location=[37.55, 126.98], zoom_start=11)   # 서울 중심
+for name, lat, lon in places:                              # (이름, 위도, 경도)
+    folium.Marker([lat, lon], tooltip=name).add_to(m)
+m.save("seoul.html")    # 단일 HTML로 저장 → 더블클릭하면 지도 열림
+</code></pre></div>
+<blockquote class="callout callout-warn"><span class="callout-badge">주의</span>
+<p>보강 — <strong>프론트엔드 코딩만으로도 시각화.</strong> 파이썬 없이 <strong>HTML/CSS/JS</strong> 단일 파일로 대시보드를 만들 수 있다("가상 데이터로 워드클라우드+차트 대시보드를 HTML 한 파일로 묶어줘"). IDE 없이 <strong>메모장</strong>에 붙여넣고 <code>모든 파일</code>로 <code>dashboard.html</code> 저장 → 더블클릭이면 끝. <strong>Chart.js·Three.js</strong> 같은 강력한 프론트엔드 패키지가 많다.
+⚠ 폐쇄망 함정: 일부 프론트엔드 패키지는 <strong>CDN 통신</strong>이 필요하다. 폐쇄망에선 통신이 안 되니, <strong>CDN 없이 로컬에서 도는 패키지</strong>만 골라 리스트업하고 패키징해 들여와야 한다.</p>
+<p>보강 — <strong>OpenStreetMap.</strong> 빅테크가 지도를 유료화하려 할 때 한 유럽 개발자가 직접 모은 지도를 전 세계에 무료로 푼 프로젝트. Folium과 함께 쓰기 좋고, 학교·체육시설 같은 위치 데이터는 <strong>data.go.kr(공공데이터포털)</strong>에서 위경도를 받아 지도에 뿌리면 된다.</p>
+</blockquote>
+<h2 id="13">13. 모델링 — 머신러닝 기초 한 바퀴</h2>
+<div class="codewrap"><div class="codebar"><span class="codelang">code</span><button class="copybtn" type="button">복사</button></div><pre class="mermaid">flowchart TD
+  ML["머신러닝"] --&gt; SUP["지도학습&lt;br/&gt;(정답 있음)"]
+  ML --&gt; UNS["비지도학습&lt;br/&gt;(정답 없음·군집)"]
+  ML --&gt; RL["강화학습"]
+  SUP --&gt; REG["회귀&lt;br/&gt;(연속값 예측)"]
+  SUP --&gt; CLS["분류&lt;br/&gt;(범주 예측)"]
+</pre></div>
+<ul>
+<li><strong>지도학습(supervised)</strong> — 정답(타겟)이 있다. <strong>회귀(regression)</strong>는 연속값(집값·시험점수·내일 주가) 예측, <strong>분류(classification)</strong>는 범주(개/고양이, 고위험/저위험) 예측. 실전 분류는 binary보다 멀티클래스가 많다.</li>
+<li><strong>비지도학습(unsupervised)</strong> — 타겟 없이 군집을 묶는다(클러스터링).</li>
+<li><strong>강화학습(reinforcement)</strong> — 보상으로 학습.</li>
+</ul>
+<p><strong>핵심 개념들:</strong>
+- <strong>오버피팅/언더피팅</strong> — 모의고사만 외워 수능을 못 풀면 오버피팅, 너무 안 풀어보면 언더피팅. 오버피팅 완화엔 <strong>드롭아웃(dropout)</strong> 등(데이터마다 다르니 돌려보고 판단). 아웃라이어에 덜 흔들리면 <strong>로버스트(robust)·일반화(generalization)</strong> 잘 된 모델.
+- <strong>경사 하강법(gradient descent)</strong> — 오차(잔차)를 줄이며 최적의 선을 찾는다. <strong>로컬 미니마/글로벌 미니마</strong>를 찾는 최적화 문제.
+- <strong>평가 지표</strong> — 회귀는 <strong>MSE·RMSE·MAE·R²</strong>(MSE는 제곱이라 미분 가능 → 경사하강 가능, 이상치에 민감). 분류는 <strong>혼동 행렬(confusion matrix)</strong>에서 accuracy·precision·recall·<strong>F1 score</strong>(프로젝트에서 제일 많이 씀).</p>
+<div class="codewrap"><div class="codebar"><span class="codelang">python</span><button class="copybtn" type="button">복사</button></div><pre><code class="language-python"># 앙상블 — 3개 모델을 soft voting(확률 평균)으로 묶기
+from sklearn.ensemble import RandomForestClassifier, VotingClassifier
+from xgboost import XGBClassifier
+from lightgbm import LGBMClassifier
+
+ens = VotingClassifier(
+    estimators=[("rf", RandomForestClassifier()),
+                ("xgb", XGBClassifier()),
+                ("lgbm", LGBMClassifier())],
+    voting="soft", weights=[1, 1, 1])     # 동일 가중치(0.33씩)
+ens.fit(X_train, y_train)
+
+import joblib
+joblib.dump(ens, "model.pkl")             # 학습 모델을 pickle로 저장
+model = joblib.load("model.pkl")          # 다음엔 학습 없이 즉시 로드
+</code></pre></div>
+<ul>
+<li><strong>피처 엔지니어링(feature engineering)</strong> — 여기서 <strong>피처 = 변수</strong>(개발의 '기능'과 다름). 파생변수를 만들어(곱·나눗셈, 이미지엔 "반지 꼈음" 같은 자연어 묘사 한 줄 추가) 모델이 더 잘 알아먹게. 『머신러닝을 위한 피처 엔지니어링』(O'Reilly) 참고.</li>
+<li><strong>샘플링</strong> — 620만 건을 다 넣기 부담되면 <strong>층화 추출(stratified sampling)</strong>로 레이블별 고르게. 분포가 치우치면(왜도, skewness) 로그 처리 등.</li>
+<li><strong>하이퍼파라미터 튜닝</strong> — 모델 안에서 조정하는 값(예: 최적이 0.15인지)을 <strong>그리드 서치/랜덤 서치</strong>로 찾는다. <strong>AutoML</strong>은 이를 자동화. (요즘은 LLM에 물어도 AutoML 이상으로 모델 추천을 잘 해준다 — 단, 데이터 메타정보를 같이 줘야 하고 <strong>human in the loop</strong>로 검증.)</li>
+<li><strong>체크포인트(checkpoint)</strong> — 학습이 끊겨도 그 시점부터 이어가게 저장(에폭 단위). 안 하면 0부터 다시.</li>
+<li><strong>피처 임포턴스(feature importance)</strong> — 어떤 변수가 예측에 제일 영향을 줬는지.</li>
+</ul>
+<blockquote class="callout callout-key"><span class="callout-badge">핵심</span>
+<p>★ <strong>초보자가 꼭 구분할 것 — LLM은 우리가 학습 못 시킨다.</strong> "LLM을 우리가 학습시킨다"는 틀린 말이다. 우리가 하는 건 <strong>RAG(데이터를 참조)</strong>이지 학습이 아니다. 진짜 '학습'은 백프로파게이션을 수십~수백조 파라미터로 도는 것 — 개인 컴퓨터로는 초기화(initialization)조차 안 된다. 또 모델이 값을 내는 <strong>인퍼런스(inference, 예측)</strong>와 LLM의 <strong>리즈닝(reasoning, CoT=Chain of Thought)</strong>은 전혀 다른 얘기. LLM은 보통 단일 파일이 아니라 분야별 서브셋이 모인 <strong>MoE(Mixture of Experts)</strong> 형태로 트레이닝·튜닝돼 있다.</p>
+</blockquote>
+<h2 id="14-slm-ai">14. 마무리 — 폐쇄망·SLM·소버린 AI</h2>
+<p>현장 Q&amp;A에서 나온, 공공 실무자에게 가장 현실적인 이슈들.</p>
+<ul>
+<li><strong>STT(소방·재난)</strong> — 음성을 텍스트로(Speech-to-Text). 크리티컬한 현장이라 <strong>테스트 설계가 핵심</strong>(사투리·잡음·다양한 사람이 던져도 잘 나오는지). 퍼블릭 STT는 오픈 기준이라, 폐쇄망이면 <strong>SLM(소형 언어모델)</strong>을 Papers with Code 등에서 리서치해 한국어 인식을 벤치마크해야 한다.</li>
+<li><strong>Ollama 로컬 LLM</strong> — 폐쇄망에서 LLM을 직접 띄우는 표준 출발점.</li>
+</ul>
+<div class="codewrap"><div class="codebar"><span class="codelang">Shell</span><button class="copybtn" type="button">복사</button></div><pre><code class="language-bash">ollama run gemma3      # 모델을 받아 바로 대화 (로컬)
+ollama serve           # 로컬 API 서버(http://localhost:11434)로 코드에서 호출
+</code></pre></div>
+<blockquote class="callout callout-warn"><span class="callout-badge">주의</span>
+<p>⚠ 사양 주의 — 강사 경험상 <strong>램 32GB는 돼야</strong> 쓸 만하다. 16GB는 빠듯. 노트북 사양을 먼저 확인하자. (폐쇄망 한국어 STT라면 오픈소스 <strong>faster-whisper</strong>를 로컬에 올려 벤치마크해보는 것도 자연스러운 선택.)</p>
+<p>⚠ 주의 — <strong>소버린(sovereign) AI 현실론.</strong> 한국어는 아직 작은 모델이 "GPT의 70점만 나와도 성공"이라 할 만큼 약하다. 스크래치부터 한국어를 트레이닝(업스테이지·네이버·NC 등)하는데, GPT는 이미 저 멀리 가 있어 비교가 쉽지 않다. 그럼에도 가치는 <strong>보안 프리(폐쇄망에서 그냥 쓸 수 있음)</strong>와 <strong>모델/데이터 주권</strong>(해외 업체가 가격을 200만 원으로 올리거나 특정 국가를 막으면 다 잠식). → <strong>PoC부터 작게.</strong> "비전은 좋은데"로 크게 시작 말고, "이름 말하면 잘 나오나"부터.</p>
+<p>★ <strong>오늘의 숙제(역설계).</strong> 분석을 끝까지 내라는 게 아니라, <strong>각자 기관의 데이터 문제로 케이스 시나리오를 짜고, 거기 맞는 가상 데이터(5MB 정도면 충분)를 생성해 "문제집"을 만들라</strong>는 것. 즉 <strong>문제 출제자(설계자)가 되라.</strong> 직접 코딩은 필수 아님.</p>
+</blockquote>
+<hr/>
+<h1 class="modhead" data-full="부록 — 도구 · 개념 맵" id="_1">부록 — 도구 · 개념 맵</h1>
+<div class="tablescroll"><table>
+<thead>
+<tr>
+<th>분류</th>
+<th>키워드</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>직군</td>
+<td>기획자/PO, 데이터 엔지니어(ETL), DA(SQL), 데이터 사이언티스트, MLOps/LLMOps</td>
+</tr>
+<tr>
+<td>엔지니어링</td>
+<td>CSV→Parquet→SQLite/오라클, Airflow, 메달리온(브론즈·실버·골드), CDC, 데이터 마트</td>
+</tr>
+<tr>
+<td>DB</td>
+<td>오라클, PostgreSQL, SQLite, DuckDB (+라이선스 검토)</td>
+</tr>
+<tr>
+<td>분석/시각화</td>
+<td>pandas(NumPy), Matplotlib, Seaborn, Plotly, Folium, OpenStreetMap, Power BI</td>
+</tr>
+<tr>
+<td>모델링</td>
+<td>회귀/분류, 앙상블(soft voting), pickle, checkpoint, 하이퍼파라미터 튜닝, AutoML, 피처 엔지니어링</td>
+</tr>
+<tr>
+<td>평가</td>
+<td>MSE·RMSE·MAE·R²(회귀), confusion matrix·F1(분류), BLEU·Langfuse·LLM-as-judge(LLM)</td>
+</tr>
+<tr>
+<td>RAG/운영</td>
+<td>청킹 전략·레이블링, 파운데이션 모델, 하네스 엔지니어링, AI 부채</td>
+</tr>
+<tr>
+<td>폐쇄망/로컬</td>
+<td>Ollama(32GB+), SLM, faster-whisper(STT), 합성 데이터, CDN 없는 프론트 패키지</td>
+</tr>
+<tr>
+<td>학습자료</td>
+<td>스탠퍼드 CME 295, 앤드류 응 Coursera, Papers with Code, 렉스 프리드먼 MIT 6.S094</td>
+</tr>
+</tbody>
+</table></div>
+<blockquote class="callout callout-add"><span class="callout-badge">보강</span>
+<p>보강 — <strong>추천 강의(검색 보강).</strong> <strong>스탠퍼드 CME 295 "Transformers &amp; Large Language Models"</strong>(Afshine·Shervine <strong>Amidi 쌍둥이</strong> 교수) — 트랜스포머·셀프어텐션부터 LLM 프롬프팅·파인튜닝·RAG·에이전트·LLM-as-judge까지 한 학기. 자료·시험·치트시트(GitHub <code>afshinea/stanford-cme-295...</code>)가 공개돼 "스탠퍼드 학생처럼" 공부 가능. <strong>렉스 프리드먼 MIT 6.S094</strong>(자율주행·컴퓨터비전)도 클래식. 자막+'YouTube Summary' 플러그인으로 GPT에 던져 스터디.</p>
+</blockquote>
+<h2 id="_2">검색 보강 출처</h2>
+<ul>
+<li>안드레이 카파시 Anthropic 합류(2026-05-19): cnbc.com, en.wikipedia.org/wiki/Andrej_Karpathy</li>
+<li>구글 Antigravity 2.0 분리(IDE / AI Agent, Gemini 3.5): codingchefs.com, geeky-gadgets.com</li>
+<li>스탠퍼드 CME 295(Amidi 쌍둥이 교수): cme295.stanford.edu, github.com/afshinea/stanford-cme-295-transformers-large-language-models</li>
+</ul>
+  </main>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/powershell.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/vbscript.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.9.1/mermaid.min.js"></script>
+<script>
+// 주제 헤더 raw 텍스트를 data-full로 옮겨 ::after 표시
+document.querySelectorAll('h1.modhead').forEach(function(h){
+  h.setAttribute('data-full', h.textContent);
+});
+
+// highlight.js
+if(window.hljs){
+  document.querySelectorAll('.codewrap pre code').forEach(function(b){
+    try{hljs.highlightElement(b);}catch(e){}
+  });
+}
+
+// mermaid
+if(window.mermaid){
+  mermaid.initialize({
+    startOnLoad:true, theme:'base',
+    htmlLabels:false,
+    themeVariables:{
+      fontFamily:'-apple-system,Pretendard,"Malgun Gothic",sans-serif',
+      fontSize:'13px',
+      primaryColor:'#e6f4f1', primaryBorderColor:'#127c71', primaryTextColor:'#0c5249',
+      lineColor:'#9aa0a8', secondaryColor:'#f4f1ea', tertiaryColor:'#fbf1e4',
+      clusterBkg:'#f6f6f0', clusterBorder:'#cfd3cb'
+    },
+    flowchart:{curve:'basis', useMaxWidth:true, htmlLabels:false},
+    sequence:{useMaxWidth:true}
+  });
+}
+
+// 복사 버튼
+document.querySelectorAll('.copybtn').forEach(function(btn){
+  btn.addEventListener('click', function(){
+    var code = btn.closest('.codewrap').querySelector('pre code');
+    var txt = code ? code.innerText : '';
+    navigator.clipboard.writeText(txt).then(function(){
+      btn.textContent='복사됨'; btn.classList.add('ok');
+      setTimeout(function(){btn.textContent='복사'; btn.classList.remove('ok');},1400);
+    });
+  });
+});
+
+// 스크롤 스파이
+var links = Array.from(document.querySelectorAll('#nav a'));
+var map = {};
+links.forEach(function(a){ map[a.getAttribute('href').slice(1)] = a; });
+var heads = Array.from(document.querySelectorAll('.main h1[id], .main h2[id]'));
+var spy = new IntersectionObserver(function(entries){
+  entries.forEach(function(en){
+    if(en.isIntersecting){
+      links.forEach(function(l){l.classList.remove('active');});
+      var act = map[en.target.id];
+      if(act){act.classList.add('active');
+        act.scrollIntoView({block:'nearest'});}
+    }
+  });
+}, {rootMargin:'-10% 0px -75% 0px', threshold:0});
+heads.forEach(function(h){spy.observe(h);});
+
+// 모바일 사이드바
+var side=document.getElementById('side'), scrim=document.getElementById('scrim'),
+    mb=document.getElementById('menubtn');
+function toggle(open){side.classList.toggle('open',open);scrim.classList.toggle('show',open);}
+if(mb){mb.addEventListener('click',function(){toggle(!side.classList.contains('open'));});}
+if(scrim){scrim.addEventListener('click',function(){toggle(false);});}
+links.forEach(function(a){a.addEventListener('click',function(){if(window.innerWidth<=880)toggle(false);});});
+</script>
+<script>/* kg-preview: #<heading> \uc704\uce58\ub85c \uc774\ub3d9 */
+(function(){function norm(t){return (t||'').replace(/\s+/g,'').toLowerCase()}
+function go(){var h=decodeURIComponent(location.hash.slice(1));if(!h)return;var k=norm(h).slice(0,24);if(!k)return;
+var best=null,bl=1e9,els=document.body.querySelectorAll('h1,h2,h3,h4,h5,p,div,span,li,td,text,tspan,section,article');
+for(var i=0;i<els.length;i++){var e=els[i],t=norm(e.textContent);if(t.length<bl&&t.indexOf(k)>-1){best=e;bl=t.length}}
+if(!best)return;var box=best.closest('section,[class*=slide],[class*=page],article')||best;
+box.scrollIntoView({block:'start'});box.style.outline='3px solid #c0504d';box.style.outlineOffset='4px';
+setTimeout(function(){box.style.outline=''},2600)}
+window.addEventListener('load',function(){setTimeout(go,400)});window.addEventListener('hashchange',go)})();</script></body>
+</html>

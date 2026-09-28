@@ -6,7 +6,9 @@
   python kg/query.py doc 삼성전자_20260825          # 문서 카드 + 목차 (--full: 섹션 본문까지)
   python kg/query.py concept 하네스                 # 개념 → 관련 문서·함께 다룬 개념
   python kg/query.py client 행정안전부              # 고객사별 문서
-  python kg/query.py topic [데이터분석]              # 강의 주제별 문서 (인자 없으면 주제 목록)
+  python kg/query.py topics                          # 내용 주제 지도 (대주제 → 소주제, 슬라이드 수)
+  python kg/query.py context "MCP" -n 15 -o ctx.md   # 주제/키워드 → 강의안 작성용 컨텍스트 (슬라이드 원문 모음)
+  python kg/query.py course [데이터분석]             # 과정 묶음별 강의안 목록
   python kg/query.py stats
 """
 from __future__ import annotations
@@ -185,7 +187,7 @@ def cmd_client(a):
         print(f"  · {d['date']}  {d['family']}  ({d['doc_type']}, 섹션 {d['n_sections']})  fileId={d['id']}")
 
 
-def cmd_topic(a):
+def cmd_course(a):
     docs, _, _ = load()
     from vocab import TOPICS
     names = [t[0] for t in TOPICS]
@@ -202,6 +204,63 @@ def cmd_topic(a):
         print(f"## {t} — 문서 {len(ds)}개")
         for d in ds:
             print(f"  · {d['date']}  {d['family']}  ({d['doc_type']}, 섹션 {d['n_sections']})  fileId={d['id']}")
+
+
+def load_topics():
+    return json.loads((G / "topics.json").read_text(encoding="utf-8"))
+
+
+def cmd_topics(a):
+    tm = load_topics()
+    st = tm["stats"]
+    print(f"슬라이드 {st['unique_slides']}장(중복 제거) · 주제 배정 섹션 {st['assigned']}/{st['sections']}")
+    for g in tm["groups"]:
+        print(f"\n■ {g['name']}")
+        for t in sorted(g["subs"], key=lambda t: -t["slides"]):
+            print(f"   {t['id']}  {t['name']:<22} 슬라이드 {t['slides']:>4} · 강의안 {t['lectures']:>3}")
+
+
+def cmd_context(a):
+    """주제 이름(또는 id)이나 키워드 → 새 강의안 작성용 컨텍스트 마크다운."""
+    docs, _, _ = load()
+    tm = load_topics()
+    slides = tm["slides"]
+    subs = [t for g in tm["groups"] for t in g["subs"]]
+    q = a.query.strip()
+    hit = [t for t in subs if q == t["id"] or q.replace(" ", "") in t["name"].replace(" ", "")]
+    if hit:
+        pool, label = [], ", ".join(t["name"] for t in hit)
+        for t in hit:
+            pool += [slides[n] for n in t["order"]]
+    else:
+        ql = q.lower()
+        pool = [s for s in slides if ql in s["h"].lower() or ql in s["x"].lower()]
+        pool.sort(key=lambda s: (ql not in s["h"].lower(), -s["reuse"]))
+        label = f"“{q}” 검색"
+    per, picked = Counter(), []
+    for s in pool:
+        if per[s["d"]] >= a.per_doc or s in picked:
+            continue
+        per[s["d"]] += 1
+        picked.append(s)
+        if len(picked) >= a.n:
+            break
+    if not picked:
+        sys.exit(f"'{q}'에 해당하는 주제나 슬라이드가 없습니다. `python kg/query.py topics`로 주제 목록을 확인하세요.")
+    names = {t["id"]: t["name"] for t in subs}
+    L = [f"# 강의 컨텍스트 — {label}", "",
+         f"> 기존 강의안 {len(per)}개에서 고른 슬라이드 {len(picked)}장. 원문 발췌이므로 새 대상·시간에 맞게 다시 씁니다.", ""]
+    for i, s in enumerate(picked, 1):
+        d = docs.get(s["d"], {})
+        src = " · ".join(x for x in [d.get("page_title") or d.get("family"), s.get("date"), ", ".join(d.get("clients", []))] if x)
+        L += [f"## {i}. {s['h']}", f"- 출처: {src} · fileId `{s['d']}`" + (f" · 강의안 {s['reuse']}개에서 재사용" if s["reuse"] > 1 else ""),
+              f"- 주제: {', '.join(names.get(t, t) for t in s['t'])}", "", s["x"].strip(), ""]
+    out = "\n".join(L)
+    if a.out:
+        Path(a.out).write_text(out, encoding="utf-8")
+        print(f"컨텍스트 저장: {a.out} (슬라이드 {len(picked)}장, 강의안 {len(per)}개)")
+    else:
+        print(out)
 
 
 def cmd_stats(a):
@@ -300,7 +359,10 @@ def main():
     p = sp.add_parser("doc"); p.add_argument("key"); p.add_argument("--full", action="store_true"); p.set_defaults(f=cmd_doc)
     p = sp.add_parser("concept"); p.add_argument("name"); p.add_argument("-k", type=int, default=25); p.set_defaults(f=cmd_concept)
     p = sp.add_parser("client"); p.add_argument("name"); p.set_defaults(f=cmd_client)
-    p = sp.add_parser("topic"); p.add_argument("name", nargs="?"); p.set_defaults(f=cmd_topic)
+    p = sp.add_parser("course"); p.add_argument("name", nargs="?"); p.set_defaults(f=cmd_course)
+    p = sp.add_parser("topics"); p.set_defaults(f=cmd_topics)
+    p = sp.add_parser("context"); p.add_argument("query"); p.add_argument("-n", type=int, default=15)
+    p.add_argument("--per-doc", type=int, default=3); p.add_argument("-o", "--out"); p.set_defaults(f=cmd_context)
     p = sp.add_parser("stats"); p.set_defaults(f=cmd_stats)
     a = ap.parse_args()
     a.f(a)

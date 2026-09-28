@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head><meta name="robots" content="noindex, nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>1회차 — AI 에이전트 시대: 전문가의 태도와 트렌드 지도</title>
+<link rel="preconnect" href="https://cdnjs.cloudflare.com">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+<style>
+:root{
+  --bg:#fafaf6; --panel:#ffffff; --ink:#1b1e24; --ink-soft:#5a6069; --ink-faint:#8b919b;
+  --line:#e7e6df; --line-soft:#f0efe9;
+  --teal:#127c71; --teal-d:#0c5249; --teal-bg:#e6f4f1;
+  --amber:#b9722a; --amber-bg:#fbf1e4;
+  --red:#c0392b; --red-bg:#fbe9e7;
+  --code-bg:#f6f6f0;
+  --mono:ui-monospace,"SF Mono","Cascadia Code","JetBrains Mono",Consolas,monospace;
+  --sans:-apple-system,BlinkMacSystemFont,"Pretendard","Apple SD Gothic Neo","Segoe UI","Malgun Gothic",sans-serif;
+  --rad:12px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);
+  font-size:16px;line-height:1.72;-webkit-font-smoothing:antialiased}
+
+/* layout */
+.shell{display:grid;grid-template-columns:300px minmax(0,1fr);max-width:1240px;margin:0 auto}
+.print-toc{display:none}
+.side{position:sticky;top:0;align-self:start;height:100vh;overflow-y:auto;
+  padding:30px 22px 60px;border-right:1px solid var(--line)}
+.main{min-width:0;padding:46px 60px 120px;max-width:880px}
+
+/* sidebar */
+.brand{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--teal);margin-bottom:6px}
+.brand-t{font-weight:700;font-size:17px;line-height:1.35;margin:0 0 4px}
+.brand-s{font-size:12.5px;color:var(--ink-faint);margin:0 0 24px;line-height:1.5}
+nav a{display:block;text-decoration:none;color:var(--ink-soft);border-left:2px solid transparent;
+  padding:3px 0 3px 12px;font-size:13.5px;transition:color .15s,border-color .15s}
+nav a:hover{color:var(--ink)}
+nav a.nav-h1{margin-top:16px;font-weight:700;color:var(--ink);font-size:13px;
+  font-family:var(--mono);letter-spacing:.02em}
+nav a.nav-h2{font-size:13px}
+nav a.active{color:var(--teal-d);border-left-color:var(--teal);font-weight:600}
+
+/* headings */
+h1.modhead{font-size:13px;font-family:var(--mono);letter-spacing:.06em;text-transform:uppercase;
+  color:var(--teal);margin:72px 0 0;padding-top:28px;border-top:2px solid var(--ink);
+  font-weight:700}
+h1.modhead::after{content:attr(data-full);display:block;font-family:var(--sans);
+  font-size:30px;letter-spacing:-.01em;text-transform:none;color:var(--ink);
+  margin-top:8px;font-weight:750;line-height:1.2}
+h1.modhead{font-size:0}            /* hide raw, show via ::after */
+h1.modhead.intro{font-size:13px}
+h2{font-size:21px;font-weight:720;letter-spacing:-.01em;margin:46px 0 14px;
+  padding-bottom:8px;border-bottom:1px solid var(--line)}
+h3{font-size:16.5px;font-weight:700;margin:32px 0 10px;color:var(--ink)}
+h2.starred,h3.starred{color:var(--teal-d)}
+h2.starred::before,h3.starred::before{content:"★ ";color:var(--teal);font-size:.85em}
+h2.starred,h3.starred{}
+.main h1:first-of-type{margin-top:0}
+
+p{margin:12px 0}
+a{color:var(--teal-d)}
+strong{font-weight:700;color:var(--ink)}
+ul,ol{padding-left:22px;margin:12px 0}
+li{margin:5px 0}
+hr{border:none;border-top:1px solid var(--line);margin:40px 0}
+
+/* intro hero */
+.hero{background:linear-gradient(135deg,#0c5249,#127c71);color:#eafaf6;
+  border-radius:16px;padding:34px 36px;margin:0 0 14px}
+.hero .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.16em;
+  text-transform:uppercase;color:#9fdfd2;margin-bottom:10px}
+.hero h1{font-size:32px;line-height:1.18;margin:0 0 12px;font-weight:780;letter-spacing:-.02em}
+.hero p{margin:0;color:#cfeee7;font-size:14.5px;line-height:1.6}
+
+/* tables */
+table{width:100%;border-collapse:collapse;margin:18px 0;font-size:14px;
+  border:1px solid var(--line);border-radius:var(--rad);overflow:hidden}
+thead th{background:var(--teal-bg);color:var(--teal-d);text-align:left;
+  font-weight:700;padding:10px 13px;font-size:13px}
+td{padding:10px 13px;border-top:1px solid var(--line-soft);vertical-align:top}
+tbody tr:nth-child(even){background:#fbfbf8}
+.tablescroll{overflow-x:auto}
+
+/* code */
+.codewrap{margin:16px 0;border:1px solid var(--line);border-radius:var(--rad);
+  overflow:hidden;background:var(--code-bg)}
+.codebar{display:flex;justify-content:space-between;align-items:center;
+  padding:7px 12px;background:#efeee7;border-bottom:1px solid var(--line)}
+.codelang{font-family:var(--mono);font-size:11px;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink-faint);font-weight:600}
+.copybtn{font-family:var(--mono);font-size:11px;border:1px solid var(--line);
+  background:#fff;color:var(--ink-soft);padding:3px 11px;border-radius:6px;cursor:pointer;
+  transition:all .15s}
+.copybtn:hover{border-color:var(--teal);color:var(--teal-d)}
+.copybtn.ok{background:var(--teal);color:#fff;border-color:var(--teal)}
+.codewrap pre{margin:0;padding:0}
+pre code,pre.hljs{display:block;padding:15px 16px;overflow-x:auto;
+  font-family:var(--mono);font-size:13px;line-height:1.6;background:var(--code-bg)!important}
+:not(pre)>code{font-family:var(--mono);font-size:.88em;background:#eeede6;
+  padding:1.5px 6px;border-radius:5px;color:var(--teal-d);white-space:nowrap}
+
+/* mermaid */
+pre.mermaid{background:var(--panel);border:1px solid var(--line);border-radius:var(--rad);
+  padding:22px;margin:20px 0;text-align:center;overflow-x:auto;line-height:1.4}
+
+/* callouts */
+.callout{position:relative;margin:18px 0;padding:14px 18px 14px 18px;border-radius:10px;
+  border-left:4px solid var(--ink-faint);background:#f4f4ee;font-size:14.5px}
+.callout p{margin:8px 0}
+.callout p:first-of-type{margin-top:0}
+.callout p:last-child{margin-bottom:0}
+.callout-badge{display:inline-block;font-family:var(--mono);font-size:10.5px;
+  letter-spacing:.1em;text-transform:uppercase;font-weight:700;
+  padding:2px 9px;border-radius:20px;margin-bottom:8px}
+.callout-note{border-left-color:#9aa0a8;background:#f3f3ee}
+.callout-note .callout-badge{background:#e4e4dd;color:#5a6069}
+.callout-key{border-left-color:var(--teal);background:var(--teal-bg)}
+.callout-key .callout-badge{background:var(--teal);color:#fff}
+.callout-warn{border-left-color:var(--amber);background:var(--amber-bg)}
+.callout-warn .callout-badge{background:var(--amber);color:#fff}
+.callout-add{border-left-color:var(--teal-d);background:#e9f3f1}
+.callout-add .callout-badge{background:var(--teal-d);color:#fff}
+
+/* topbar (mobile) */
+.topbar{display:none}
+
+@media (max-width:880px){
+  .shell{grid-template-columns:1fr}
+  .side{position:fixed;z-index:40;top:0;left:0;width:84%;max-width:320px;height:100vh;
+    background:var(--panel);transform:translateX(-105%);transition:transform .25s;
+    box-shadow:0 0 40px rgba(0,0,0,.18)}
+  .side.open{transform:translateX(0)}
+  .main{padding:70px 22px 90px}
+  .topbar{display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:30;
+    background:rgba(250,250,246,.92);backdrop-filter:blur(8px);
+    padding:12px 18px;border-bottom:1px solid var(--line)}
+  .menubtn{font-family:var(--mono);font-size:13px;border:1px solid var(--line);
+    background:#fff;padding:6px 12px;border-radius:8px;cursor:pointer}
+  .topbar .tt{font-family:var(--mono);font-size:12px;color:var(--teal);letter-spacing:.05em}
+  .scrim{display:none;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:35}
+  .scrim.show{display:block}
+  h1.modhead::after{font-size:25px}
+  .hero h1{font-size:25px}
+  .main{max-width:100%}
+}
+
+/* ── 인쇄 / PDF 저장 (출력 시 목차 먼저 → 본문) ── */
+@media print{
+  @page{margin:14mm 12mm}
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .topbar,.scrim,.menubtn,.copybtn{display:none!important}
+  .shell{display:block;max-width:none}
+  /* 화면용 사이드바는 인쇄에서 완전히 숨김 (변환 불안정 → 빈 페이지 방지) */
+  .side{display:none!important}
+  /* 인쇄 전용 목차: 본문 맨 앞 일반 블록으로 깔끔히 출력 후 페이지 넘김 */
+  .print-toc{display:block!important;break-after:page;page-break-after:always}
+  .print-toc .ptoc-title{font-size:19pt;font-weight:800;color:#0c5249;letter-spacing:-.01em;
+    margin:0 0 16px;padding-bottom:10px;border-bottom:2px solid #127c71}
+  .print-toc a{display:block;color:#1b1e24;text-decoration:none;padding:3px 0;font-size:11.5pt;border:none}
+  .print-toc a.nav-h1{margin-top:13px;font-weight:700;color:#0c5249;font-size:12.5pt}
+  .print-toc a.nav-h2{padding-left:16px;color:#3a3f47}
+  /* 본문 */
+  .main{padding:0;max-width:none}
+  body{font-size:10.5pt;line-height:1.5;background:#fff}
+  a{text-decoration:none;color:inherit}
+  .hero{break-inside:avoid;background:#fff!important;color:#1b1e24!important;
+    border:none;border-bottom:2px solid #127c71;border-radius:0;
+    padding:0 0 14px!important;margin:0 0 18px}
+  .hero .eyebrow{color:#127c71!important}
+  .hero h1{color:#0c5249!important}
+  .hero p{color:#444!important}
+  /* 주제 헤더가 페이지 맨 아래 외롭게 걸리지 않게만 (새 페이지 강제는 빼서 빈 페이지 방지) */
+  h1.modhead{break-after:avoid;page-break-after:avoid}
+  h2,h3{break-after:avoid;page-break-after:avoid}
+  /* 코드·콜아웃·표·다이어그램은 페이지 중간에서 잘리지 않게 */
+  .codewrap,.callout,pre.mermaid,.tablescroll,table{break-inside:avoid;page-break-inside:avoid}
+  pre code,pre.hljs{white-space:pre-wrap;word-break:break-word}
+  pre.mermaid{text-align:center;border:1px solid #ddd;padding:12px 8px;margin:14px auto}
+  pre.mermaid svg{max-width:100%!important;height:auto!important;
+    max-height:200mm!important;display:inline-block!important}
+  .codewrap{border-color:#ccc}
+}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <button class="menubtn" id="menubtn" aria-label="목차 열기">☰ 목차</button>
+  <span class="tt">강의노트 · 보강판</span>
+</div>
+<div class="scrim" id="scrim"></div>
+<div class="shell">
+  <aside class="side" id="side">
+    <div class="brand">강의노트 · 01회차</div>
+    <p class="brand-t">1회차 — AI 에이전트 시대: 전문가의 태도와 트렌드 지도</p>
+    <p class="brand-s">현장 강의 · 기술 보강판</p>
+    <nav id="nav">
+<a class="nav-h1" href="#ai">오리엔테이션 — 이 시대의 AI 전문가는 누구인가</a>
+<a class="nav-h2" href="#_1">교과서가 없는 &quot;초학문의 시대&quot;</a>
+<a class="nav-h2" href="#knowledge-attitude-">knowledge보다 attitude — 더닝-크루거와 겸손</a>
+<a class="nav-h2" href="#_2">전문가의 좁은 스펙트럼, 그리고 &quot;틈 메우기&quot;</a>
+<a class="nav-h1" href="#_3">미시적 혁신 — 책상 위 문제부터 푼다</a>
+<a class="nav-h2" href="#1">워밍업 문제 ① — 교안 사이트에 접속하라</a>
+<a class="nav-h2" href="#2">워밍업 문제 ② — 압축파일에서 회의 일시 찾기</a>
+<a class="nav-h2" href="#_4">레고 블록 오케스트레이션</a>
+<a class="nav-h1" href="#dx-ax">DX와 AX — 내 언어로 다시 정의하기</a>
+<a class="nav-h1" href="#8">8주 학습 지도 — 무엇을 언제 배우나</a>
+<a class="nav-h1" href="#ai-1">AI 트렌드 지도 ① — 어디서 보고, 어떻게 따라잡나</a>
+<a class="nav-h2" href="#_5">모델 비교·순위 사이트</a>
+<a class="nav-h2" href="#_6">회사 공식 문서를 정독하라</a>
+<a class="nav-h2" href="#_7">지금 잘나가는 모델(빠르게 바뀜)</a>
+<a class="nav-h1" href="#ai-2-llm">AI 트렌드 지도 ② — LLM은 도대체 어떻게 작동하나</a>
+<a class="nav-h2" href="#860">비유: 뉴런 860억 개</a>
+<a class="nav-h2" href="#_8">파라미터 = 곱셈에 쓰는 &quot;가중치&quot;의 개수</a>
+<a class="nav-h2" href="#querykeyvalue">트랜스포머와 Query·Key·Value</a>
+<a class="nav-h2" href="#_9">파라미터 수와 토큰 수</a>
+<a class="nav-h1" href="#aislm">작은 모델의 시대 — 소버린 AI·온디바이스·SLM</a>
+<a class="nav-h2" href="#ai_1">소버린 AI의 핵심은 &quot;모델의 다양성&quot;</a>
+<a class="nav-h2" href="#ai-slm">온디바이스·엣지 AI와 SLM</a>
+<a class="nav-h2" href="#hugging-face-ollama">직접 해보기 — Hugging Face + Ollama</a>
+<a class="nav-h1" href="#_10">멀티모달과 워크플로우 — 결과만 보여준 것 채우기</a>
+<a class="nav-h1" href="#_11">프롬프트에서 컨텍스트·하네스로 — 용어 정리</a>
+<a class="nav-h2" href="#ai_2">메타 프롬프트 — &quot;AI에게 질문을 시켜라&quot;</a>
+<a class="nav-h2" href="#_12">컨텍스트 윈도우 / 컨텍스트 엔지니어링</a>
+<a class="nav-h2" href="#_13">스킬·하네스·규칙 파일</a>
+<a class="nav-h1" href="#ai_3">AI가 내 컴퓨터로 들어온다 — 통합 전략과 에이전트</a>
+<a class="nav-h2" href="#_14">회사별 통합(생태계) 전략</a>
+<a class="nav-h1" href="#_15">부록 — 용어 사전·환경설정·출처</a>
+<a class="nav-h2" href="#_16">용어 빠른 사전</a>
+<a class="nav-h2" href="#_17">환경설정 체크리스트(과제 예고)</a>
+<a class="nav-h2" href="#_18">검색으로 보강·정정한 출처</a>
+    </nav>
+  </aside>
+  <main class="main" id="main">
+<nav class="print-toc">
+<div class="ptoc-title">목차</div>
+<a class="nav-h1" href="#ai">오리엔테이션 — 이 시대의 AI 전문가는 누구인가</a>
+<a class="nav-h2" href="#_1">교과서가 없는 &quot;초학문의 시대&quot;</a>
+<a class="nav-h2" href="#knowledge-attitude-">knowledge보다 attitude — 더닝-크루거와 겸손</a>
+<a class="nav-h2" href="#_2">전문가의 좁은 스펙트럼, 그리고 &quot;틈 메우기&quot;</a>
+<a class="nav-h1" href="#_3">미시적 혁신 — 책상 위 문제부터 푼다</a>
+<a class="nav-h2" href="#1">워밍업 문제 ① — 교안 사이트에 접속하라</a>
+<a class="nav-h2" href="#2">워밍업 문제 ② — 압축파일에서 회의 일시 찾기</a>
+<a class="nav-h2" href="#_4">레고 블록 오케스트레이션</a>
+<a class="nav-h1" href="#dx-ax">DX와 AX — 내 언어로 다시 정의하기</a>
+<a class="nav-h1" href="#8">8주 학습 지도 — 무엇을 언제 배우나</a>
+<a class="nav-h1" href="#ai-1">AI 트렌드 지도 ① — 어디서 보고, 어떻게 따라잡나</a>
+<a class="nav-h2" href="#_5">모델 비교·순위 사이트</a>
+<a class="nav-h2" href="#_6">회사 공식 문서를 정독하라</a>
+<a class="nav-h2" href="#_7">지금 잘나가는 모델(빠르게 바뀜)</a>
+<a class="nav-h1" href="#ai-2-llm">AI 트렌드 지도 ② — LLM은 도대체 어떻게 작동하나</a>
+<a class="nav-h2" href="#860">비유: 뉴런 860억 개</a>
+<a class="nav-h2" href="#_8">파라미터 = 곱셈에 쓰는 &quot;가중치&quot;의 개수</a>
+<a class="nav-h2" href="#querykeyvalue">트랜스포머와 Query·Key·Value</a>
+<a class="nav-h2" href="#_9">파라미터 수와 토큰 수</a>
+<a class="nav-h1" href="#aislm">작은 모델의 시대 — 소버린 AI·온디바이스·SLM</a>
+<a class="nav-h2" href="#ai_1">소버린 AI의 핵심은 &quot;모델의 다양성&quot;</a>
+<a class="nav-h2" href="#ai-slm">온디바이스·엣지 AI와 SLM</a>
+<a class="nav-h2" href="#hugging-face-ollama">직접 해보기 — Hugging Face + Ollama</a>
+<a class="nav-h1" href="#_10">멀티모달과 워크플로우 — 결과만 보여준 것 채우기</a>
+<a class="nav-h1" href="#_11">프롬프트에서 컨텍스트·하네스로 — 용어 정리</a>
+<a class="nav-h2" href="#ai_2">메타 프롬프트 — &quot;AI에게 질문을 시켜라&quot;</a>
+<a class="nav-h2" href="#_12">컨텍스트 윈도우 / 컨텍스트 엔지니어링</a>
+<a class="nav-h2" href="#_13">스킬·하네스·규칙 파일</a>
+<a class="nav-h1" href="#ai_3">AI가 내 컴퓨터로 들어온다 — 통합 전략과 에이전트</a>
+<a class="nav-h2" href="#_14">회사별 통합(생태계) 전략</a>
+<a class="nav-h1" href="#_15">부록 — 용어 사전·환경설정·출처</a>
+<a class="nav-h2" href="#_16">용어 빠른 사전</a>
+<a class="nav-h2" href="#_17">환경설정 체크리스트(과제 예고)</a>
+<a class="nav-h2" href="#_18">검색으로 보강·정정한 출처</a>
+</nav>
+    <div class="hero">
+      <div class="eyebrow">Lecture Note · 기술 보강판</div>
+      <h1>1회차 — AI 에이전트 시대: 전문가의 태도와 트렌드 지도</h1>
+      <p>현장 강의를 기술적으로 보강한 학습 레퍼런스 — 강사의 의도는 살리고, 빠지거나 틀린 기술은 정확히 채웠습니다.</p>
+    </div>
+
+<p>이 강의 하나로 무엇을 할 수 있게 하려는가 →
+<strong>"거대한 AX(수십억짜리 사업)가 아니라 내 책상 위 작은 문제부터 AI로 푸는 마인드셋을 잡고, 그걸 위해 머릿속에 'AI 트렌드 전체 지도'를 심는 것."</strong></p>
+<blockquote class="callout callout-key"><span class="callout-badge">핵심</span>
+<p>★ 1회차는 실습 회차가 아니라 <strong>오리엔테이션 + AI 트렌드 오버뷰 + 환경설정 예고</strong>다. 그래서 이 노트도 위계를 억지로 세우지 않고, 강의에 실제로 있던 <em>나란한 주제들</em>을 그대로 두되 하나의 태도로 꿰었다. 관통하는 태도는 딱 한 줄: <strong>"지식·기술(how)보다 태도(attitude)가 먼저다. 다양한 도구를 겸손하게 모아서 오케스트레이션하라."</strong></p>
+<p><strong>보강 안내</strong> — 강사가 이름을 안 밝히고 넘어간 사이트·도구, 그리고 낡았거나 부정확한 수치는 웹 검색으로 확인해 본문에 녹이고 <code>(검색 보강)</code>으로 표시했다. 출처는 맨 끝 부록에 모았다.</p>
+</blockquote>
+<hr/>
+<h1 class="modhead" data-full="오리엔테이션 — 이 시대의 AI 전문가는 누구인가" id="ai">오리엔테이션 — 이 시대의 AI 전문가는 누구인가</h1>
+<h2 id="_1">교과서가 없는 "초학문의 시대"</h2>
+<p>강사(신성진, 한국데이터사이언티스트협회)가 처음 던진 화두는 <em>"과연 이 시대의 AI 전문가는 누구인가"</em>다. 핵심은 이거야.</p>
+<ul>
+<li><strong>교과서가 없다.</strong> ChatGPT 책을 사면 그 안에는 이미 한물간 모델이 기다리고 있다. GPT-4o로 배웠는데 현장은 5.5다. 기술이 책보다 빨리 바뀐다.</li>
+<li>그래서 <strong>FOMO</strong>(Fear Of Missing Out, 뒤처질까 봐 느끼는 불안)에 시달리거나, 반대로 "여기까지만 알면 돼" 하고 멈춰 선다. 둘 다 위험하다.</li>
+<li>공공(공직자)이 민간보다 AI 활용 역량이 <strong>오히려 높다</strong>는 게 강사의 현장 관찰이다. 외부망·OpenRouter·엔터프라이즈 API를 도입해 직원이 쓰게 하는 지자체가 많다.</li>
+</ul>
+<blockquote class="callout callout-key"><span class="callout-badge">핵심</span>
+<p>★ <strong>AI 전문가의 정의를 스스로 잡아라.</strong> 강사 본인도 "나는 AI 전문가인가? 사실 아니다"라고 말한다. 정답이 없으니 각자 정의를 내리고, 그 정의를 동료에게 전파할 수 있어야 한다는 게 이 과정의 출발점이다.</p>
+</blockquote>
+<h2 id="knowledge-attitude-">knowledge보다 attitude — 더닝-크루거와 겸손</h2>
+<p>강사가 가장 길게 강조한 부분. 초보자가 꼭 기억할 그림이 하나 있다.</p>
+<p><strong>더닝-크루거 효과(Dunning–Kruger effect)</strong> — 조금 배운 사람일수록 자신을 과대평가한다는 심리 현상.</p>
+<div class="codewrap"><div class="codebar"><span class="codelang">code</span><button class="copybtn" type="button">복사</button></div><pre class="mermaid">flowchart LR
+  A["조금 배움"] --&gt; B["우매함의 봉우리&lt;br/&gt;다 안다는 착각"]
+  B --&gt; C["절망의 계곡&lt;br/&gt;모를수록 불안"]
+  C --&gt; D["지속 가능한 전문가&lt;br/&gt;겸손 = 계속 배움"]
+</pre></div>
+<blockquote class="callout callout-key"><span class="callout-badge">핵심</span>
+<p>★ 강사의 한 줄: <strong>"절망의 계곡을 '겸손'으로 바꿔 읽어라."</strong> 진짜 전문가는 만족이 없고 늘 불안하다. 나보다 더 아는 사람, 내가 알던 게 부정당할 순간을 늘 대비하기 때문이다. 그래서 <code>knowledge</code>보다 <code>attitude</code>(세상·현상·문제를 다르게 보는 자세)가 먼저다.</p>
+</blockquote>
+<h2 id="_2">전문가의 좁은 스펙트럼, 그리고 "틈 메우기"</h2>
+<p>한 사람이 소화하는 AI 영역은 좁다. 안드레이 카파시(Andrej Karpathy, "바이브 코딩"이라는 말을 만든 사람) 같은 대가도 전부는 못 다룬다. 그래서 좁은 전문가들이 모이면 반드시 <strong>틈</strong>이 생긴다. 틈을 메우는 방법은 두 가지다.</p>
+<div class="codewrap"><div class="codebar"><span class="codelang">code</span><button class="copybtn" type="button">복사</button></div><pre class="mermaid">flowchart LR
+  G["내 지식의 틈"] --&gt; M1["① 내 원의 지름을 키운다&lt;br/&gt;= 스스로 더 배움"]
+  G --&gt; M2["② 동료가 옆에서 메워준다&lt;br/&gt;= 다양성의 협업"]
+</pre></div>
+<blockquote class="callout callout-add"><span class="callout-badge">보강</span>
+<p><strong>보강 — 용어 한 줄 정리.</strong> 강의에 등장한 카파시의 명언 <em>"망치를 들고 있으면 모든 게 못으로 보인다"</em> 는 도구 편식 경고다(2장에서 워밍업 문제로 다시 나온다). 그리고 <em>바이브 코딩(Vibe Coding)</em> 은 "코드 문법을 몰라도 자연어로 AI에게 시켜서 프로그램을 만드는 방식"을 뜻한다. 이 과정의 핵심 도구가 된다.</p>
+</blockquote>
+<hr/>
+<h1 class="modhead" data-full="미시적 혁신 — 책상 위 문제부터 푼다" id="_3">미시적 혁신 — 책상 위 문제부터 푼다</h1>
+<p>강의 전체를 관통하는 실천 메시지. <strong>거대한 AX(AI Transformation, 수십·수백억짜리 전환사업)에 짓눌리지 말고, 2~5분짜리 작은 문제부터 AI로 풀라</strong>는 것.</p>
+<blockquote class="callout callout-warn"><span class="callout-badge">주의</span>
+<p>⚠ <strong>주의 — "진격의 거인 콤플렉스"를 경계하라.</strong> 강사 표현으로, "몇십억 들여야 AI가 도입된다"는 생각에 빠지면 정작 책상 위 작은 문제를 풀 에너지를 잃는다. AX로만 풀리는 문제는 없다. <strong>기존 레거시(legacy, 이미 쓰던 낡은) 워크플로우 + LLM</strong>을 어떻게 결합하느냐가 진짜 실력이다.</p>
+</blockquote>
+<h2 id="1">워밍업 문제 ① — 교안 사이트에 접속하라</h2>
+<p>강사는 단톡방에 링크를 안 뿌리고, "수단·방법 가리지 말고 알아서 접속하라"는 문제를 냈다. 그 사이트("AI 챔피언 고급 과정 교안 편집기 = 워크벤치")의 정체를 보강하면:</p>
+<div class="tablescroll"><table>
+<thead>
+<tr>
+<th>구성 요소</th>
+<th>정체</th>
+<th>한 줄 설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>HTML</strong></td>
+<td>브라우저에서 도는 화면 언어</td>
+<td>페이지의 뼈대. C드라이브의 .html 파일은 브라우저만 있으면 바로 열린다</td>
+</tr>
+<tr>
+<td><strong>Claude Sonnet</strong></td>
+<td>Anthropic의 LLM</td>
+<td>교안 내용을 생성·수정하는 두뇌</td>
+</tr>
+<tr>
+<td><strong>GitHub Pages</strong></td>
+<td>무료 정적 사이트 호스팅</td>
+<td>깃허브에 올린 HTML을 인터넷 주소로 띄워줌 (검색 보강)</td>
+</tr>
+<tr>
+<td><strong>Supabase</strong></td>
+<td>백엔드 데이터베이스(BaaS)</td>
+<td>'DB' 버튼을 누르면 교안이 여기 저장됐다 다시 불려옴 (검색 보강)</td>
+</tr>
+</tbody>
+</table></div>
+<blockquote class="callout callout-add"><span class="callout-badge">보강</span>
+<p><strong>보강</strong> — 비밀번호는 <code>2026</code>. 강사가 보여주려던 건 <em>"사이트를 만든다"</em> 가 아니라 <em>"HTML 한 장 + LLM + 무료 호스팅 + 가벼운 DB만으로도 우리만의 협업 공간을 만들 수 있다"</em> 는 감각이다. 이게 뒤에 나오는 "HTML 하나로 파생되는 서비스" 이야기와 이어진다.</p>
+</blockquote>
+<h2 id="2">워밍업 문제 ② — 압축파일에서 회의 일시 찾기</h2>
+<p>노션에 올린 압축 파일(50개 문서) 안에서 "인천광역시 규제혁신담당관이 회의한 일시"를 찾는 문제. 누군가는 반디집으로 그냥 풀었고, 누군가는 Codex/ChatGPT에 통째로 맡겼다. <strong>정답은 하나가 아니다.</strong></p>
+<blockquote class="callout callout-warn"><span class="callout-badge">주의</span>
+<p>★ 이 문제의 진짜 메시지: <strong>도구에 매몰되지 마라.</strong> 반디집으로 30초면 풀 일을 굳이 Codex 띄워서 풀면 그게 "망치 들면 다 못으로 보이는" 함정이다. 동시에, 50개 중 어디 있는지 모를 때 <strong>AI로 빠르게 찾는 것</strong>도 미시적 혁신이다. 상황에 맞는 도구를 고르는 판단이 핵심.</p>
+</blockquote>
+<h2 id="_4">레고 블록 오케스트레이션</h2>
+<p>도구(API, RSS, MCP, 플러그인, 스킬, 프롬프트, 첨부파일, Antigravity, Codex, Claude Code…)를 <strong>레고 블록</strong>처럼 모아서 조합하라는 비유. 블록 8개로 수억 개 형상을 만들 수 있듯, 회차마다 배우는 도구를 <em>난이도순 정복</em>이 아니라 <em>조합 가능한 부품</em>으로 쌓으라는 것.</p>
+<blockquote class="callout callout-add"><span class="callout-badge">보강</span>
+<p><strong>보강 — 낯선 도구 이름 빠른 사전</strong> (지금 다 이해할 필요 없음, "이런 게 있구나"면 충분)
+- <strong>API</strong>: 프로그램끼리 정보를 주고받는 약속. AI 모델도 API 키 하나로 불러 쓴다.
+- <strong>RSS</strong>: 사이트의 새 글을 자동으로 받아오는 표준 형식(뉴스/공고 수집에 유용).
+- <strong>MCP</strong> (Model Context Protocol): AI에게 외부 도구·데이터를 연결해주는 표준 규격.
+- <strong>Antigravity / Codex / Claude Code / opencode / Goose</strong>: 내 컴퓨터에서 일하는 코딩 에이전트들(10장에서 설명).</p>
+</blockquote>
+<hr/>
+<h1 class="modhead" data-full="DX와 AX — 내 언어로 다시 정의하기" id="dx-ax">DX와 AX — 내 언어로 다시 정의하기</h1>
+<p>강사가 "여러분은 거점 리더니까 동료에게 개념을 전파할 수 있어야 한다"며 직접 정의한 부분. 외울 게 아니라 <strong>응급실 통증</strong> 비유로 이해하면 된다.</p>
+<div class="codewrap"><div class="codebar"><span class="codelang">code</span><button class="copybtn" type="button">복사</button></div><pre class="mermaid">flowchart LR
+  A["현상&lt;br/&gt;아파 죽겠다(암묵지)"] --&gt; B["DX 디지털화&lt;br/&gt;10점 중 7점으로 정량화"]
+  B --&gt; C["AX 전환&lt;br/&gt;더 세밀한 패턴 분석"]
+  C --&gt; D["생성형 AI&lt;br/&gt;바늘로 찌르는 듯한 통증이&lt;br/&gt;5분 지속(비정형 표현까지)"]
+</pre></div>
+<ul>
+<li><strong>DX (Digital Transformation)</strong>: 인간이 감각으로 아는 현상·암묵지를 <strong>컴퓨터가 알아먹게 정량화</strong>하는 모든 노력. 응급실의 "통증 1~10점"이 딱 그거다. 센서 발달 → 데이터 저장 → 패턴 인식(머신러닝·통계)으로 이어졌다.</li>
+<li><strong>AX (AI Transformation)</strong>: 그 정량 데이터를 <strong>더 디테일하게</strong> 분석하려는 흐름. 생성형 AI가 들어오면서 "7점" 같은 척도를 넘어 <em>"바늘로 찌르는 듯한 통증"</em> 같은 비정형 표현까지 다룰 수 있게 됐다.</li>
+</ul>
+<blockquote class="callout callout-key"><span class="callout-badge">핵심</span>
+<p>★ DX와 AX는 단절된 게 아니라 <strong>한 라인</strong>이다. X는 미국식 약자로 Transformation. 강사 메시지: 당연하게 쓰던 용어도 <em>내 업무·내 현상에 맞춰 스스로 정의</em>해보는 응용력을 키워라.</p>
+</blockquote>
+<hr/>
+<h1 class="modhead" data-full="8주 학습 지도 — 무엇을 언제 배우나" id="8">8주 학습 지도 — 무엇을 언제 배우나</h1>
+<div class="codewrap"><div class="codebar"><span class="codelang">code</span><button class="copybtn" type="button">복사</button></div><pre class="mermaid">flowchart TD
+  W1["1회차&lt;br/&gt;오리엔테이션·AI 트렌드·환경설정"] --&gt; W2["2회차&lt;br/&gt;유명 AI 서비스 50개+ 둘러보기"]
+  W2 --&gt; W3["3회차&lt;br/&gt;LLM 어시스트 워크플로우&lt;br/&gt;엑셀VBA·파이썬·RSS→HTML"]
+  W3 --&gt; W45["4~5회차&lt;br/&gt;업무 자동화·로컬 SLM(Ollama)&lt;br/&gt;코딩 에이전트 설치·활용"]
+  W45 --&gt; W6["MCP·로컬 RAG·백엔드 웹서비스 구현"]
+  W6 --&gt; W7["클라우드 바이브코딩&lt;br/&gt;Lovable·Bolt·v0"]
+  W7 --&gt; W8["개인 프로젝트 · 팀 프로젝트(4주)"]
+</pre></div>
+<p>핵심 설계 의도 두 가지:</p>
+<ol>
+<li><strong>처음엔 코딩 에이전트를 쓰지 않는다.</strong> 3회차까지는 외부 LLM의 <em>어시스트</em>만 받아서(폐쇄망 상황 가정) 내 로컬에서 분석·자동화·바이브코딩을 한다. 이걸 강사는 <strong>"어시스트형 바이브 코딩"</strong> 이라 부른다.</li>
+<li><strong>4회차부터 코딩 에이전트로 전환.</strong> Claude Code·Cursor·Windsurf·opencode·Goose·Antigravity 등을 PC가 허락하는 만큼 설치하고, API·MCP·백엔드를 붙여 서비스까지 만든다.</li>
+</ol>
+<div class="codewrap"><div class="codebar"><span class="codelang">code</span><button class="copybtn" type="button">복사</button></div><pre class="mermaid">flowchart LR
+  subgraph 초반["1~3회차"]
+    A1["외부 LLM에게 코드 받아&lt;br/&gt;내 컴퓨터에서 실행"]
+  end
+  subgraph 후반["4회차~"]
+    A2["코딩 에이전트가&lt;br/&gt;내 파일 직접 읽고 처리"]
+  end
+  초반 --&gt; 후반
+</pre></div>
+<blockquote class="callout callout-warn"><span class="callout-badge">주의</span>
+<p><strong>보강 — 왜 굳이 어려운 순서로 가나?</strong> 폐쇄망/보안망에서는 코딩 에이전트가 막힐 수 있다. <em>"외부에서 LLM 도움으로 코드를 만들어 → 내부로 이식해 실행"</em> 하는 워크플로우를 익혀두면, 망 환경에 상관없이 일할 수 있다. "폐쇄망이니 외부 건 안 배워도 돼"는 강사가 가장 말린 태도.</p>
+<p>⚠ <strong>주의 — 마인드셋을 내려놓아라.</strong> 100억짜리 조달 용역을 기획해도 되지만, 먼저 <strong>혼자 또는 동료 3~4명</strong>으로 풀 수 있는 작은 것부터 꿈꿔라. 예: 압축파일 50개 일괄 해제·요약, 파일명 200개 1초 변경, HWP 표 200개를 1개로 30초 통합, 동료가 쓸 좋은 프롬프트 1개. 프로그래밍을 안 해도 된다.</p>
+</blockquote>
+<hr/>
+<h1 class="modhead" data-full="AI 트렌드 지도 ① — 어디서 보고, 어떻게 따라잡나" id="ai-1">AI 트렌드 지도 ① — 어디서 보고, 어떻게 따라잡나</h1>
+<p>교과서가 없으니 <strong>직접 출처를 보러 다니는 습관</strong>이 곧 실력이다. 강사가 강조한 사이트들.</p>
+<h2 id="_5">모델 비교·순위 사이트</h2>
+<div class="tablescroll"><table>
+<thead>
+<tr>
+<th>사이트</th>
+<th>무엇을 보여주나</th>
+<th>특징</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Artificial Analysis</strong> (artificialanalysis.ai)</td>
+<td>모델별 지능·속도·가격 비교</td>
+<td><strong>자체 독립 벤치마크</strong>를 돌려 비교 (검색 보강)</td>
+</tr>
+<tr>
+<td><strong>LMArena</strong> (lmarena.ai, 옛 Chatbot Arena)</td>
+<td>사람이 두 모델 답을 블라인드로 비교·투표</td>
+<td><strong>Elo 점수</strong> 기반 경험적 순위. 실사용 만족도에 가까움 (검색 보강)</td>
+</tr>
+<tr>
+<td><strong>LifeArchitect Models Table</strong> (lifearchitect.ai/models-table)</td>
+<td>800개+ 모델의 파라미터·토큰 등 데이터 표</td>
+<td><strong>Alan D. Thompson 박사</strong>가 손으로 매일 갱신. <em>기울임 글씨 = 추정치</em>, 보통 글씨 = 공개된 사실 (검색 보강)</td>
+</tr>
+</tbody>
+</table></div>
+<blockquote class="callout callout-warn"><span class="callout-badge">주의</span>
+<p>⚠ <strong>주의 · [정정]</strong> — 강사는 Artificial Analysis를 "논문 지표를 모아놓은 곳"이라 표현했는데, 정확히는 <strong>자기들이 직접 측정한 독립 벤치마크</strong>를 싣는 사이트다. "회사들이 자기 자랑한 논문 모음"과는 다르다. (검색 보강)</p>
+<p><strong>보강 — Models Table 읽는 법.</strong> 표에서 <strong>두 번째 칸이 회사명, 첫 번째 칸이 모델명</strong>이다. 세 번째 줄의 <strong>파라미터</strong>가 핵심(다음 장에서 설명). 구글 시트로 제공돼 'Open in new tab'으로 내 사본을 떠서 쓸 수 있다.</p>
+</blockquote>
+<h2 id="_6">회사 공식 문서를 정독하라</h2>
+<p>ChatGPT만 쓰지 말고 <strong>만든 회사의 개발자 사이트</strong>에 들어가라는 것. 모델 종류·리서치·API 사용법이 다 거기 있다.</p>
+<div class="tablescroll"><table>
+<thead>
+<tr>
+<th>회사</th>
+<th>개발자/문서 사이트</th>
+<th>메모</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>OpenAI</td>
+<td>platform.openai.com / developer.openai.com</td>
+<td>Agent Builder, 어시스턴트, 특화 모델(GPT Image 등)</td>
+</tr>
+<tr>
+<td>Google</td>
+<td>ai.google.dev (Google AI for Developers)</td>
+<td>Gemma·Gemini API, 임베딩 (검색 보강)</td>
+</tr>
+<tr>
+<td>Anthropic</td>
+<td><strong>platform.claude.com</strong> / docs</td>
+<td>Claude API. 최근 "Managed Agents" 등 신기능 (검색 보강: URL 정확)</td>
+</tr>
+</tbody>
+</table></div>
+<blockquote class="callout callout-warn"><span class="callout-badge">주의</span>
+<p>★ <strong>API 키 하나면</strong> 그 회사의 이미지·임베딩·웹검색 모델을 내가 만든 사이트에 심을 수 있다. "임베딩을 꼭 로컬에서 어렵게 할 필요 없이 GPT/Claude/Gemini가 제공하는 임베딩 서비스를 써보는" 식의 감각을 키우라는 게 강사 의도. (단, 내 데이터를 학습에 안 쓴다는 보장 하에.)</p>
+</blockquote>
+<h2 id="_7">지금 잘나가는 모델(빠르게 바뀜)</h2>
+<p>강사가 짚은 분야별 강자 — <strong>순위는 계속 바뀌니 위 사이트로 직접 확인</strong>할 것.</p>
+<ul>
+<li><strong>텍스트 대화 / 웹서치 / 코딩</strong>: Claude가 상위권(LMArena 기준 1~3위). (검색 보강: 모델 세대마다 변동)</li>
+<li><strong>이미지 생성</strong>: GPT Image 2가 나노바나나 2(구글 제미나이 계열 이미지 모델)를 제쳤다는 평. 일관성 유지·세밀 수정이 강점.</li>
+<li><strong>비디오 생성</strong>: ByteDance의 <strong>Seedance</strong>가 열풍. 짧은 프롬프트(제로샷)로도 영상을 만든다.</li>
+</ul>
+<blockquote class="callout callout-warn"><span class="callout-badge">주의</span>
+<p>⚠ <strong>주의</strong> — 이미지·영상 모델 이름(Nano Banana, Seedance, Seedream, Kling, Veo, Sora 2, Higgsfield 등)은 분기마다 바뀐다. 이름 외우기보다 <em>"멀티모달 모델을 한곳에 모아 써볼 수 있는 사이트가 있다"</em> 는 사실만 기억하면 된다(8장 참고).</p>
+</blockquote>
+<hr/>
+<h1 class="modhead" data-full="AI 트렌드 지도 ② — LLM은 도대체 어떻게 작동하나" id="ai-2-llm">AI 트렌드 지도 ② — LLM은 도대체 어떻게 작동하나</h1>
+<p>여기는 강사가 "파라미터가 뭐냐"를 설명하려고 엑셀·사이트를 띄운 부분. <strong>수학 없이</strong> 개념만 잡으면 된다. 초보자에게 가장 중요한 장이라 차근히 보강한다.</p>
+<h2 id="860">비유: 뉴런 860억 개</h2>
+<ul>
+<li>인간 뇌엔 뉴런이 약 <strong>860억 개</strong>, 전체가 약 <strong>20와트</strong>로 돈다. (강사 수치 정확 — 확인됨)</li>
+<li>뉴런 하나하나는 화학물질(나트륨·칼륨)이 오가며 작은 전기를 만들 뿐인데, 860억 개가 모이니 감정·철학·코딩하는 인간이 됐다.</li>
+<li>인공신경망도 같은 발상: <strong>아주 단순한 곱셈·덧셈 단위</strong>를 수천억 개 연결했더니 복잡한 패턴을 이해하더라.</li>
+</ul>
+<h2 id="_8">파라미터 = 곱셈에 쓰는 "가중치"의 개수</h2>
+<p>강사가 CNN(Convolutional Neural Network, 이미지 인식 신경망)으로 손글씨 숫자(0/1)를 맞히는 엑셀 예제를 보여준 게 이거다.</p>
+<ul>
+<li>이미지를 픽셀 숫자로 바꾸고 → 거기에 <strong>가중치(weight)</strong> 를 곱하고 더한다(엑셀의 <code>SUMPRODUCT</code>, 즉 내적). → 결과를 0~1 사이로 눌러서 "1에 가깝나, 0에 가깝나" 판단.</li>
+<li>답이 틀리면 거꾸로 돌아가 가중치를 0.01씩 조금씩 고친다(이게 <em>학습</em>). 이 <strong>가중치 숫자들의 개수 = 파라미터 수</strong>.</li>
+</ul>
+<blockquote class="callout callout-warn"><span class="callout-badge">주의</span>
+<p>★ <strong>파라미터를 1차 방정식으로 이해하기.</strong> <code>Y = WX + b</code>에서 <code>W</code>(기울기·계수)와 <code>b</code>(절편·상수)가 파라미터다. 이런 1차식 수천억 개를 엮은 게 모델. 그래서 <strong>파라미터가 많을수록 복잡한 패턴을 더 잘 이해</strong>한다(= 모델이 "크다").</p>
+<p>⚠ <strong>주의 · [정정]</strong> — 강사가 "3000 빌리언이면 나누기 2 해서 최소 1500 빌리언짜리 1차 방정식"이라 했는데, 이건 어디까지나 <em>직관 비유</em>다. 실제로 편향(<code>b</code>)은 가중치(<code>W</code>)보다 훨씬 적어서 정확히 절반은 아니다. 개념 잡는 용도로만 받아들이자.</p>
+</blockquote>
+<h2 id="querykeyvalue">트랜스포머와 Query·Key·Value</h2>
+<p>강사가 띄운 "유튜브 사이트"의 정체 → <strong>bbycroft.net/llm</strong> (Brendan Bycroft 제작). GPT 스타일 트랜스포머를 3D로 그려 <em>덧셈·곱셈 하나하나</em>까지 보여준다. 화면에 나온 <em>"Data visualization empowers users to…"</em> 문장이 그 데모(GPT-2)다. (검색 보강)</p>
+<div class="codewrap"><div class="codebar"><span class="codelang">code</span><button class="copybtn" type="button">복사</button></div><pre class="mermaid">flowchart LR
+  T["입력 문장"] --&gt; TK["토큰으로 쪼갬"]
+  TK --&gt; EM["임베딩&lt;br/&gt;단어를 좌표(벡터)로"]
+  EM --&gt; TR["트랜스포머 블록 ×N&lt;br/&gt;어텐션 Q·K·V"]
+  TR --&gt; OUT["다음 토큰 확률 예측"]
+  OUT --&gt;|예측 단어를 붙여 반복| TK
+</pre></div>
+<p>강사가 말한 숫자들(768차원, 2304, 12개, 11번)은 <strong>GPT-2 small(약 1.24억 파라미터)</strong> 의 구조다. 풀어보면:</p>
+<ul>
+<li>단어를 <strong>768차원</strong> 좌표(벡터)로 임베딩한다. "비슷한 단어는 좌표가 가깝다"가 핵심.</li>
+<li>그 벡터를 <strong>Query·Key·Value(Q·K·V)</strong> 세 개로 변환한다 → 768 × 3 = <strong>2304</strong>. <em>"data라는 단어가 어떤 단어와 가장 관련 있나"</em> 를 계산하는 게 어텐션(attention).</li>
+<li>이 어텐션 블록이 여러 층(GPT-2 small은 12층) 쌓여서 반복된다.</li>
+</ul>
+<blockquote class="callout callout-add"><span class="callout-badge">보강</span>
+<p><strong>보강 — Key-Value 캐시가 뭐길래.</strong> 대화가 길어질 때 이미 계산한 K·V를 저장해 재사용하는 최적화가 KV 캐시다. "컨텍스트가 길수록 메모리를 먹는다"는 말이 여기서 나온다(9장 컨텍스트 윈도우와 연결).
+더 그림으로 보고 싶으면 <strong>3Blue1Brown</strong>의 신경망·트랜스포머 영상 시리즈도 강력 추천(수식 없이 시각화). (검색 보강)</p>
+</blockquote>
+<h2 id="_9">파라미터 수와 토큰 수</h2>
+<ul>
+<li><strong>파라미터</strong>: 모델의 "방정식 계수" 총개수 = 모델 크기.</li>
+<li><strong>토큰</strong>: 모델이 학습한 단어 조각의 양. 많이 학습할수록 유창하다. (토큰 = 단어가 음절/어절 단위로 쪼개진 조각)</li>
+</ul>
+<blockquote class="callout callout-warn"><span class="callout-badge">주의</span>
+<p>⚠ <strong>주의 · [정정]</strong> — 강사는 "GPT-5.5는 파라미터 약 3000 빌리언(3조)"이라 했는데, <strong>OpenAI는 GPT-4 이후 모델의 파라미터 수를 공식 발표하지 않는다.</strong> "3T"는 외부 추정/체감치이지 공식 수치가 아니다. 체감 기준점으로만 쓰고, 사실로 인용하지 말 것. (검색 보강)</p>
+</blockquote>
+<hr/>
+<h1 class="modhead" data-full="작은 모델의 시대 — 소버린 AI·온디바이스·SLM" id="aislm">작은 모델의 시대 — 소버린 AI·온디바이스·SLM</h1>
+<p>큰 모델 이야기 뒤, 강사가 공직자에게 진짜 권한 건 <strong>작은 모델</strong>이다.</p>
+<h2 id="ai_1">소버린 AI의 핵심은 "모델의 다양성"</h2>
+<ul>
+<li><strong>소버린 AI(Sovereign AI)</strong>: 자국이 통제하는 AI 역량. GPU 같은 하드웨어 자원도 중요하지만, 강사는 <strong>모델의 다양성</strong>(조선·제조·철강·농업 등 우리 도메인 데이터로 튜닝한 다양한 모델 확보)이 진짜 핵심이라고 본다.</li>
+</ul>
+<blockquote class="callout callout-warn"><span class="callout-badge">주의</span>
+<p><strong>보강 · [정정] — 트럼프 vs Anthropic 사건의 실제 내용.</strong> 강사는 "트럼프가 베네수엘라 지도자 검거 때 Claude가 거부하자 내쫓았다"고 기억했는데, 사실관계는 조금 다르다. 실제로는 <strong>미 국방부(DoD)가 Claude를 "모든 합법적 목적(자율무기·국내 대량감시 포함)"에 쓰게 해달라고 요구 → Anthropic이 거부 → 트럼프 행정부가 전 정부기관에 Anthropic 사용 중단 지시 + "공급망 위험(supply chain risk)" 지정 → Anthropic이 연방정부를 상대로 소송(2026년 3월), 1심에서 예비적 금지명령 일부 승소</strong>의 흐름이다. 강사 메시지("특정 모델에 종속되면 위험, 그래서 모델 다양성이 필요")는 그대로 유효하다. (검색 보강)</p>
+</blockquote>
+<h2 id="ai-slm">온디바이스·엣지 AI와 SLM</h2>
+<ul>
+<li><strong>SLM(Small Language Model)</strong>: 작은 언어모델. 1B·4B 같은 크기.</li>
+<li><strong>온디바이스/엣지 AI</strong>: 클라우드 없이 내 폰·라즈베리파이·작은 센서에서 도는 AI. 구글 딥마인드·알리바바 같은 빅테크가 주도하는 트렌드.</li>
+</ul>
+<p>강사가 콕 집은 모델: 구글 <strong>Gemma 3n E4B</strong>.</p>
+<blockquote class="callout callout-add"><span class="callout-badge">보강</span>
+<p><strong>보강</strong> — Gemma 3n E4B는 <strong>원본 8B인데 'effective 4B'</strong> 로 도는 게 특징이다. <strong>MatFormer(Matryoshka Transformer)</strong> 구조로, 큰 모델 안에 작은 모델이 들어있어 메모리·배터리를 아끼면서 추론한다. 10B 미만 최초로 LMArena 1300점을 넘겼다. <em>"이펙티브 4 빌리언"</em> 이 바로 이 뜻. (검색 보강)
+그 외: IBM <strong>Granite 8B</strong>, LG <strong>EXAONE</strong>, 업스테이지 <strong>Solar</strong> 등도 표에 보인다.</p>
+</blockquote>
+<h2 id="hugging-face-ollama">직접 해보기 — Hugging Face + Ollama</h2>
+<p>강사가 "Ollama 1B로 엑셀 함수도 설명시킨다"고 말만 하고 넘어간 부분을 명령어로 채운다.</p>
+<ul>
+<li><strong>Hugging Face</strong>(huggingface.co): 오픈소스 모델 장터. 검색창에 <code>1B</code>처럼 치면 작은 모델이 수만 개. 파일은 보통 <strong>GGUF</strong>(llama.cpp/Ollama가 읽는 양자화 포맷) 확장자.</li>
+<li><strong>로컬 실행기</strong>: Ollama, LM Studio, MSTY, llama.cpp, AnythingLLM 등. 가장 간단한 게 Ollama.</li>
+</ul>
+<div class="codewrap"><div class="codebar"><span class="codelang">Shell</span><button class="copybtn" type="button">복사</button></div><pre><code class="language-bash"># 1) ollama.com 에서 설치한 뒤, 터미널(PowerShell)에서 바로 실행
+ollama run gemma3:1b           # 1B 초경량 — 처음이면 자동 다운로드 후 대화 시작
+ollama run gemma3n:e4b         # 온디바이스용, 추론 가능 (effective 4B)
+ollama pull qwen3:1.7b         # 받아만 두기(실행은 나중에)
+ollama list                    # 설치된 모델 목록
+</code></pre></div>
+<div class="codewrap"><div class="codebar"><span class="codelang">text</span><button class="copybtn" type="button">복사</button></div><pre><code class="language-text"># 실제로 1B에게 시켜볼 프롬프트 예시 (강의에서 보여준 것)
+엑셀 VLOOKUP 함수를 설명하고, 예제 데이터로 풀이 방법까지 보여줘.
+</code></pre></div>
+<blockquote class="callout callout-warn"><span class="callout-badge">주의</span>
+<p><strong>보강 — 폐쇄망 활용 포인트.</strong> 모델 태그(<code>gemma3:1b</code> 등)는 바뀔 수 있으니 <code>ollama.com/library</code>에서 확인. Ollama는 <strong>인터넷 없이 로컬에서</strong> 도니까, 외부망이 막힌 환경에서도 "민원 분류만 잘하는 1~2B 모델" 같은 <em>스페시픽(specific) 작은 모델</em>로 동료 업무의 숨통을 틔울 수 있다. 단, 설치 전 보안 점검은 필수.</p>
+<p>★ 강사의 결론: 큰 모델만 AI가 아니다. <strong>GPU 없는 평범한 PC의 작은 모델 하나로 미시적 문제를 푸는 POC(개념 증명)</strong> 가 지금 시점에 굉장히 중요하다.</p>
+</blockquote>
+<hr/>
+<h1 class="modhead" data-full="멀티모달과 워크플로우 — 결과만 보여준 것 채우기" id="_10">멀티모달과 워크플로우 — 결과만 보여준 것 채우기</h1>
+<p><strong>멀티모달(multimodal)</strong>: 텍스트뿐 아니라 이미지·음성·영상까지 함께 다루는 능력.</p>
+<p>강사 시연: 종이 보고서를 <strong>사진 찍어</strong> "여기에 똑같이 그려줘"라고 하면 GPT Image 2가 문서를 통째로 전사·복제하고, 동시에 <em>"이 문서와 똑같은, HTML 편집 가능 + PDF 저장 사이트를 만들어줘"</em> 로 바이브코딩까지 한다. 이게 <strong>워크플로우</strong> — 프롬프트 한 줄이 아니라 여러 도구를 엮어 문제를 푸는 방식.</p>
+<div class="codewrap"><div class="codebar"><span class="codelang">code</span><button class="copybtn" type="button">복사</button></div><pre class="mermaid">flowchart LR
+  P["종이 문서&lt;br/&gt;사진 촬영"] --&gt; M["멀티모달 모델&lt;br/&gt;GPT Image 2 등"]
+  M --&gt; A["문서 전사·복제"]
+  M --&gt; B["HTML로 동일 양식 생성&lt;br/&gt;편집·PDF저장 가능"]
+  B --&gt; C["로컬 .html&lt;br/&gt;브라우저로 바로 열어 수정"]
+</pre></div>
+<blockquote class="callout callout-add"><span class="callout-badge">보강</span>
+<p><strong>보강 — 왜 HTML을 자꾸 강조하나.</strong> C드라이브의 <code>.html</code>은 브라우저만 있으면 열린다. 자주 쓰는 양식(주간/월간 보고서)을 HTML로 만들어 두고 <strong>작은 4B 모델 하나만 붙여도</strong> 문서를 자동 생성하는 서비스가 된다. 외부 API가 허용되면 더 다양한 AI 서비스로 확장. 1장의 "워크벤치"가 바로 그 예(HTML로만 만든 서비스).</p>
+<p><strong>보강 — 멀티모달 모델 모아 쓰는 곳.</strong> Higgsfield 같은 사이트에 들어가면 GPT Image 2·Nano Banana 2·Seedream·Seedance·Kling·Veo·Sora 2 등을 한곳에서 써볼 수 있다. (이름은 자주 바뀐다 — 8주 과정 중 영상·홍보 제작 때 직접 다룸.)</p>
+</blockquote>
+<hr/>
+<h1 class="modhead" data-full="프롬프트에서 컨텍스트·하네스로 — 용어 정리" id="_11">프롬프트에서 컨텍스트·하네스로 — 용어 정리</h1>
+<p>강사가 "용어 전쟁"이라 부른 부분. <strong>흐름 하나만</strong> 잡으면 된다: 모델이 똑똑해질수록, <em>프롬프트를 잘 쓰는 기술</em>에서 → <em>맥락(컨텍스트)을 잘 떠먹이는 기술</em>로 무게가 옮겨갔다.</p>
+<div class="codewrap"><div class="codebar"><span class="codelang">code</span><button class="copybtn" type="button">복사</button></div><pre class="mermaid">flowchart LR
+  P["프롬프트&lt;br/&gt;문법 잘 써야 답이 좋음"] --&gt; C["컨텍스트 엔지니어링&lt;br/&gt;맥락을 충분히 넣음"]
+  C --&gt; S["스킬 SKILL.md&lt;br/&gt;작업 지침을 파일로 저장"]
+  S --&gt; H["하네스(harness)&lt;br/&gt;지침+도구+권한+코드베이스"]
+</pre></div>
+<h2 id="ai_2">메타 프롬프트 — "AI에게 질문을 시켜라"</h2>
+<p>내가 잘 모르는 주제라 프롬프트 쓰기가 막막할 때, <strong>AI가 먼저 객관식으로 물어보게</strong> 만드는 기법. 강사가 Claude Code의 "플래닝 질문" 방식을 차용한 것.</p>
+<div class="codewrap"><div class="codebar"><span class="codelang">text</span><button class="copybtn" type="button">복사</button></div><pre><code class="language-text">[역할] 너는 보고서 기획 도우미야.
+[작업] "행정안전부 AI 미시적 혁신 운영방안 보고서"를 쓸 건데, 뭘 넣을지 잘 몰라.
+[방식] 보고서에 들어갈 요소를 객관식 10지선다(A~J)로 5문항 만들어 나에게 먼저 질문해줘.
+       내가 각 문항에서 하나씩 고르면, 그 선택을 종합해 '완성된 보고서 작성 프롬프트'를 만들어줘.
+지금부터 질문 시작.
+</code></pre></div>
+<blockquote class="callout callout-key"><span class="callout-badge">핵심</span>
+<p>★ 5문항 × 10지선다면 경우의 수가 <code>10⁵</code>. 내가 원하는 딱 그 주제의 프롬프트로 <strong>분기</strong>시킬 수 있다. 이미지가 막막할 땐 똑같이 <em>"포토그래퍼 전문 기법 10가지로 객관식 질문해줘"</em> 로 응용. (광각·삼분할·웜즈아이뷰·블루아워·얕은 심도 같은 걸 몰라도 AI가 골라준다.)</p>
+<p><strong>보강 — 병렬로 일 시키기.</strong> ChatGPT에서 한 채팅창만 붙들지 말고, 메시지를 <strong>편집·분기</strong>(서브 에이전트처럼)해 여러 인격을 동시에 굴리는 습관도 권한다. 또 만든 프롬프트는 <em>새 창</em>에 옮겨 실행하라 — 만들던 창은 이미 "프롬프트 만드는 맥락"으로 오염돼 엉뚱한 답을 낼 수 있다.</p>
+</blockquote>
+<h2 id="_12">컨텍스트 윈도우 / 컨텍스트 엔지니어링</h2>
+<ul>
+<li><strong>컨텍스트 윈도우(context window)</strong>: 한 대화에서 모델이 한 번에 기억하는 토큰의 총량(질문+답변 누적).</li>
+<li><strong>컨텍스트 엔지니어링</strong>: 정형화된 프롬프트 문법보다, <em>내가 가진 맥락·자료를 최대한 구체적으로 떠먹이는</em> 행위.</li>
+</ul>
+<blockquote class="callout callout-warn"><span class="callout-badge">주의</span>
+<p>⚠ <strong>주의 · [정정]</strong> — 강사는 "컨텍스트 윈도우가 12만 8천 토큰까지, 책 한 권"이라 했는데 이 수치는 <strong>이미 낡았다(GPT-4 Turbo 시절 128K)</strong>. 2026년 기준 <strong>Claude(Opus 4.8/Sonnet 4.6)는 200K가 기본, 100만(1M) 토큰도 일반 제공</strong>, <strong>Gemini는 1M(2M 예정)</strong>. "책 한 권"이 아니라 "책 여러 권" 수준으로 더 커졌다. (검색 보강)</p>
+</blockquote>
+<h2 id="_13">스킬·하네스·규칙 파일</h2>
+<div class="tablescroll"><table>
+<thead>
+<tr>
+<th>용어</th>
+<th>정체</th>
+<th>비유</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>스킬 (SKILL.md)</strong></td>
+<td>"이 작업은 이렇게 해라"는 <strong>작업 지침 파일</strong></td>
+<td>AI에게 미리 쥐여주는 매뉴얼</td>
+</tr>
+<tr>
+<td><strong>하네스 (harness)</strong></td>
+<td>지침 + <strong>도구 호출(tool calling)·파일 권한·코드베이스</strong>까지 묶은 실행 환경</td>
+<td>매뉴얼 + 연장통 + 작업장</td>
+</tr>
+<tr>
+<td><strong>규칙 파일</strong></td>
+<td>CLAUDE.md / AGENTS.md / Cursor·Windsurf Rules</td>
+<td>프로젝트마다 AI가 먼저 읽는 규칙서</td>
+</tr>
+</tbody>
+</table></div>
+<p>예: "행안부 문서 가이드 기반으로 HWPX를 만들어주는 스킬"을 두면, 내가 "보고서 써줘" 한 줄만 던져도 AI가 그 <code>SKILL.md</code>를 읽고 <em>"파이썬 hwpx 라이브러리를 호출하고, 서식은 이렇게"</em> 까지 알아서 처리한다. 이게 다 <strong>컨텍스트</strong>다.</p>
+<blockquote class="callout callout-warn"><span class="callout-badge">주의</span>
+<p>⚠ <strong>주의 — 오버 엔지니어링 경계.</strong> "하네스 안에 또 하네스"를 만들며 용어에 매몰되는 사람들이 있다. 용어 전쟁에 휘둘리지 말고 <strong>흐름</strong>만 기억하라: 컨텍스트가 좋아져서, 제로샷(맨몸 한 줄)만 던져도 AI가 관련 지침을 읽어가며 실행할 수준이 됐다.</p>
+</blockquote>
+<hr/>
+<h1 class="modhead" data-full="AI가 내 컴퓨터로 들어온다 — 통합 전략과 에이전트" id="ai_3">AI가 내 컴퓨터로 들어온다 — 통합 전략과 에이전트</h1>
+<p>마지막 트렌드. AI는 외부 사이트 → 브라우저 → 내 컴퓨터 순으로 점점 안쪽까지 들어온다.</p>
+<div class="codewrap"><div class="codebar"><span class="codelang">code</span><button class="copybtn" type="button">복사</button></div><pre class="mermaid">flowchart LR
+  EX["외부 LLM&lt;br/&gt;ChatGPT·Gemini·Claude"] --&gt; BR["브라우저&lt;br/&gt;Edge의 Copilot·Chrome의 Gemini 사이드바"]
+  BR --&gt; DT["데스크탑 앱&lt;br/&gt;Claude·Codex·Antigravity"]
+  DT --&gt; AG["코딩 에이전트&lt;br/&gt;내 컴퓨터 파일을 직접 읽고 처리"]
+</pre></div>
+<h2 id="_14">회사별 통합(생태계) 전략</h2>
+<ul>
+<li><strong>OpenAI(ChatGPT)</strong>: 자체 플랫폼이 없어 <strong>MCP로 서드파티</strong>(공공데이터포털·법령정보 등)를 붙여 생태계 확장.</li>
+<li><strong>Google(Gemini)</strong>: 시트·코랩·슬라이드·지메일·캘린더 등 <strong>자기 생태계</strong> 안에 통합.</li>
+<li><strong>Anthropic(Claude)</strong>: 엑셀·파워포인트에 들어가고, 스킬·플러그인·Managed Agents 등 <strong>독립 생태계</strong>를 강화. 최근 금융·회계용 엑셀 에이전트로 월가에서 화제.</li>
+</ul>
+<blockquote class="callout callout-add"><span class="callout-badge">보강</span>
+<p><strong>보강 — 에이전틱 AI는 아직 신중하게.</strong> <em>에이전트</em>가 "내가 시킨 자동화를 수행"하는 단계라면, <em>에이전틱(agentic) AI</em>는 "무엇을 할지 <strong>판단·의사결정</strong>까지 맡기는" 단계다. 강사 경험상 아직 불안하다(실제로 에이전트가 파일을 다 지운 적도). 그래서 <strong>사람 승인(approval) 단계</strong>를 끼우는 게 현실적이다.</p>
+<p>★ <strong>공공의 과제 = 거버넌스.</strong> 이 에이전트가 Gemini가 아니라 AI 공통기반(FabriX·네이버 클로바)과 연결된다면 어떻게 운영·통제할지 고민하라. 에이전트를 굴리는 브릿지 파일들은 오픈소스로 많이 나와 있어, <strong>오픈소스 + Gemma 4B로 공공 자체 하네스 시스템</strong>을 만드는 게 좋은 팀 프로젝트가 될 수 있다(= "애자일 AI").</p>
+</blockquote>
+<hr/>
+<h1 class="modhead" data-full="부록 — 용어 사전·환경설정·출처" id="_15">부록 — 용어 사전·환경설정·출처</h1>
+<h2 id="_16">용어 빠른 사전</h2>
+<div class="tablescroll"><table>
+<thead>
+<tr>
+<th>용어</th>
+<th>한 줄 정의</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>바이브 코딩</td>
+<td>문법 몰라도 자연어로 AI에게 시켜 프로그램을 만드는 방식</td>
+</tr>
+<tr>
+<td>DX / AX</td>
+<td>디지털 전환(정량화) / AI 전환(더 세밀한 패턴·비정형까지)</td>
+</tr>
+<tr>
+<td>파라미터</td>
+<td>모델의 곱셈 가중치 개수 = 모델 크기</td>
+</tr>
+<tr>
+<td>토큰</td>
+<td>단어가 쪼개진 조각. 컨텍스트 윈도우의 단위</td>
+</tr>
+<tr>
+<td>임베딩</td>
+<td>단어를 좌표(벡터)로 바꿔 의미 거리를 재는 것</td>
+</tr>
+<tr>
+<td>트랜스포머 / Q·K·V</td>
+<td>LLM의 핵심 구조 / 어텐션에서 관련도를 계산하는 세 벡터</td>
+</tr>
+<tr>
+<td>컨텍스트 윈도우</td>
+<td>한 번에 기억하는 토큰 총량</td>
+</tr>
+<tr>
+<td>컨텍스트 엔지니어링</td>
+<td>맥락·자료를 잘 떠먹여 답을 끌어내는 기술</td>
+</tr>
+<tr>
+<td>SLM / 온디바이스·엣지 AI</td>
+<td>작은 언어모델 / 클라우드 없이 내 기기·센서에서 도는 AI</td>
+</tr>
+<tr>
+<td>GGUF</td>
+<td>로컬 실행기(Ollama 등)가 읽는 모델 양자화 포맷</td>
+</tr>
+<tr>
+<td>MCP</td>
+<td>AI에 외부 도구·데이터를 연결하는 표준 규격</td>
+</tr>
+<tr>
+<td>스킬(SKILL.md) / 하네스</td>
+<td>작업 지침 파일 / 지침+도구+권한까지 묶은 실행 환경</td>
+</tr>
+<tr>
+<td>RAG</td>
+<td>외부 정보를 검색해 LLM 답변에 섞어 신뢰도를 높이는 방식</td>
+</tr>
+<tr>
+<td>소버린 AI</td>
+<td>자국이 통제하는 AI 역량(특히 모델 다양성)</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="_17">환경설정 체크리스트(과제 예고)</h2>
+<p>1회차 과제는 <strong>환경설정 완비</strong>다. 강사가 따로 리스트·가이드를 보낼 예정이지만, 미리 준비하면 좋은 것:</p>
+<ul>
+<li>[ ] <strong>Python</strong> 설치 (대부분 이미 됨)</li>
+<li>[ ] <strong>구글 계정</strong> (가능하면 부계정 — 단, 생년월일을 오늘 날짜로 넣지 말 것: 미성년 처리되어 잠긴다)</li>
+<li>[ ] <strong>코딩 에이전트</strong> 중 PC가 허락하는 것: Claude Code · Codex · Cursor · Windsurf · Gemini용 Antigravity · opencode · Goose</li>
+<li>[ ] <strong>Ollama</strong> (로컬 SLM 실험용) + 작은 모델 1개 받아두기</li>
+<li>[ ] 주요 서비스 계정/구독 상태 점검: ChatGPT · Gemini · Claude (2회차에 50개+ 서비스 투어)</li>
+</ul>
+<blockquote class="callout callout-add"><span class="callout-badge">보강</span>
+<p><strong>보강 — 폐쇄망 대안 한 줄.</strong> 외부망이 막히면 코딩 에이전트 대신 <strong>외부 LLM 어시스트 → 코드 이식 → 로컬 실행</strong> 워크플로우로 간다(4장). 로컬 추론은 <strong>Ollama</strong>, 로컬 STT가 필요하면 <strong>faster-whisper</strong> 같은 오프라인 도구로 같은 일을 할 수 있다.</p>
+</blockquote>
+<h2 id="_18">검색으로 보강·정정한 출처</h2>
+<ul>
+<li>Gemma 3n E4B(MatFormer, effective 4B): <a href="https://ai.google.dev/gemma/docs/gemma-3n">Google AI for Developers</a>, <a href="https://artificialanalysis.ai/models/gemma-3n-e4b">Artificial Analysis</a></li>
+<li>LifeArchitect Models Table (Alan D. Thompson): <a href="https://lifearchitect.ai/models-table/">models-table</a></li>
+<li>LLM 시각화(GPT-2, 768/2304 구조): <a href="https://bbycroft.net/llm">bbycroft.net/llm</a>, <a href="https://github.com/bbycroft/llm-viz">GitHub bbycroft/llm-viz</a></li>
+<li>컨텍스트 윈도우 현황(Claude 200K~1M, Gemini 1M~2M): <a href="https://platform.claude.com/docs/en/build-with-claude/context-windows">Claude Platform Docs</a></li>
+<li>트럼프 행정부 vs Anthropic(국방부 분쟁·소송): <a href="https://en.wikipedia.org/wiki/Anthropic%E2%80%93United_States_Department_of_Defense_dispute">Wikipedia</a>, <a href="https://www.npr.org/2026/03/09/nx-s1-5742548/anthropic-pentagon-lawsuit-amodai-hegseth">NPR</a></li>
+</ul>
+  </main>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/powershell.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/vbscript.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.9.1/mermaid.min.js"></script>
+<script>
+// 주제 헤더 raw 텍스트를 data-full로 옮겨 ::after 표시
+document.querySelectorAll('h1.modhead').forEach(function(h){
+  h.setAttribute('data-full', h.textContent);
+});
+
+// highlight.js
+if(window.hljs){
+  document.querySelectorAll('.codewrap pre code').forEach(function(b){
+    try{hljs.highlightElement(b);}catch(e){}
+  });
+}
+
+// mermaid
+if(window.mermaid){
+  mermaid.initialize({
+    startOnLoad:true, theme:'base',
+    htmlLabels:false,
+    themeVariables:{
+      fontFamily:'-apple-system,Pretendard,"Malgun Gothic",sans-serif',
+      fontSize:'13px',
+      primaryColor:'#e6f4f1', primaryBorderColor:'#127c71', primaryTextColor:'#0c5249',
+      lineColor:'#9aa0a8', secondaryColor:'#f4f1ea', tertiaryColor:'#fbf1e4',
+      clusterBkg:'#f6f6f0', clusterBorder:'#cfd3cb'
+    },
+    flowchart:{curve:'basis', useMaxWidth:true, htmlLabels:false},
+    sequence:{useMaxWidth:true}
+  });
+}
+
+// 복사 버튼
+document.querySelectorAll('.copybtn').forEach(function(btn){
+  btn.addEventListener('click', function(){
+    var code = btn.closest('.codewrap').querySelector('pre code');
+    var txt = code ? code.innerText : '';
+    navigator.clipboard.writeText(txt).then(function(){
+      btn.textContent='복사됨'; btn.classList.add('ok');
+      setTimeout(function(){btn.textContent='복사'; btn.classList.remove('ok');},1400);
+    });
+  });
+});
+
+// 스크롤 스파이
+var links = Array.from(document.querySelectorAll('#nav a'));
+var map = {};
+links.forEach(function(a){ map[a.getAttribute('href').slice(1)] = a; });
+var heads = Array.from(document.querySelectorAll('.main h1[id], .main h2[id]'));
+var spy = new IntersectionObserver(function(entries){
+  entries.forEach(function(en){
+    if(en.isIntersecting){
+      links.forEach(function(l){l.classList.remove('active');});
+      var act = map[en.target.id];
+      if(act){act.classList.add('active');
+        act.scrollIntoView({block:'nearest'});}
+    }
+  });
+}, {rootMargin:'-10% 0px -75% 0px', threshold:0});
+heads.forEach(function(h){spy.observe(h);});
+
+// 모바일 사이드바
+var side=document.getElementById('side'), scrim=document.getElementById('scrim'),
+    mb=document.getElementById('menubtn');
+function toggle(open){side.classList.toggle('open',open);scrim.classList.toggle('show',open);}
+if(mb){mb.addEventListener('click',function(){toggle(!side.classList.contains('open'));});}
+if(scrim){scrim.addEventListener('click',function(){toggle(false);});}
+links.forEach(function(a){a.addEventListener('click',function(){if(window.innerWidth<=880)toggle(false);});});
+</script>
+<script>/* kg-preview: #<heading> \uc704\uce58\ub85c \uc774\ub3d9 */
+(function(){function norm(t){return (t||'').replace(/\s+/g,'').toLowerCase()}
+function go(){var h=decodeURIComponent(location.hash.slice(1));if(!h)return;var k=norm(h).slice(0,24);if(!k)return;
+var best=null,bl=1e9,els=document.body.querySelectorAll('h1,h2,h3,h4,h5,p,div,span,li,td,text,tspan,section,article');
+for(var i=0;i<els.length;i++){var e=els[i],t=norm(e.textContent);if(t.length<bl&&t.indexOf(k)>-1){best=e;bl=t.length}}
+if(!best)return;var box=best.closest('section,[class*=slide],[class*=page],article')||best;
+box.scrollIntoView({block:'start'});box.style.outline='3px solid #c0504d';box.style.outlineOffset='4px';
+setTimeout(function(){box.style.outline=''},2600)}
+window.addEventListener('load',function(){setTimeout(go,400)});window.addEventListener('hashchange',go)})();</script></body>
+</html>

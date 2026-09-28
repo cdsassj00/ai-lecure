@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head><meta name="robots" content="noindex, nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>2회차 — AI 프론티어 탐색: 최전선 도구를 직접 써보고, 직접 만든다</title>
+<link rel="preconnect" href="https://cdnjs.cloudflare.com">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+<style>
+:root{
+  --bg:#fafaf6; --panel:#ffffff; --ink:#1b1e24; --ink-soft:#5a6069; --ink-faint:#8b919b;
+  --line:#e7e6df; --line-soft:#f0efe9;
+  --teal:#127c71; --teal-d:#0c5249; --teal-bg:#e6f4f1;
+  --amber:#b9722a; --amber-bg:#fbf1e4;
+  --red:#c0392b; --red-bg:#fbe9e7;
+  --code-bg:#f6f6f0;
+  --mono:ui-monospace,"SF Mono","Cascadia Code","JetBrains Mono",Consolas,monospace;
+  --sans:-apple-system,BlinkMacSystemFont,"Pretendard","Apple SD Gothic Neo","Segoe UI","Malgun Gothic",sans-serif;
+  --rad:12px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);
+  font-size:16px;line-height:1.72;-webkit-font-smoothing:antialiased}
+
+/* layout */
+.shell{display:grid;grid-template-columns:300px minmax(0,1fr);max-width:1240px;margin:0 auto}
+.print-toc{display:none}
+.side{position:sticky;top:0;align-self:start;height:100vh;overflow-y:auto;
+  padding:30px 22px 60px;border-right:1px solid var(--line)}
+.main{min-width:0;padding:46px 60px 120px;max-width:880px}
+
+/* sidebar */
+.brand{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--teal);margin-bottom:6px}
+.brand-t{font-weight:700;font-size:17px;line-height:1.35;margin:0 0 4px}
+.brand-s{font-size:12.5px;color:var(--ink-faint);margin:0 0 24px;line-height:1.5}
+nav a{display:block;text-decoration:none;color:var(--ink-soft);border-left:2px solid transparent;
+  padding:3px 0 3px 12px;font-size:13.5px;transition:color .15s,border-color .15s}
+nav a:hover{color:var(--ink)}
+nav a.nav-h1{margin-top:16px;font-weight:700;color:var(--ink);font-size:13px;
+  font-family:var(--mono);letter-spacing:.02em}
+nav a.nav-h2{font-size:13px}
+nav a.active{color:var(--teal-d);border-left-color:var(--teal);font-weight:600}
+
+/* headings */
+h1.modhead{font-size:13px;font-family:var(--mono);letter-spacing:.06em;text-transform:uppercase;
+  color:var(--teal);margin:72px 0 0;padding-top:28px;border-top:2px solid var(--ink);
+  font-weight:700}
+h1.modhead::after{content:attr(data-full);display:block;font-family:var(--sans);
+  font-size:30px;letter-spacing:-.01em;text-transform:none;color:var(--ink);
+  margin-top:8px;font-weight:750;line-height:1.2}
+h1.modhead{font-size:0}            /* hide raw, show via ::after */
+h1.modhead.intro{font-size:13px}
+h2{font-size:21px;font-weight:720;letter-spacing:-.01em;margin:46px 0 14px;
+  padding-bottom:8px;border-bottom:1px solid var(--line)}
+h3{font-size:16.5px;font-weight:700;margin:32px 0 10px;color:var(--ink)}
+h2.starred,h3.starred{color:var(--teal-d)}
+h2.starred::before,h3.starred::before{content:"★ ";color:var(--teal);font-size:.85em}
+h2.starred,h3.starred{}
+.main h1:first-of-type{margin-top:0}
+
+p{margin:12px 0}
+a{color:var(--teal-d)}
+strong{font-weight:700;color:var(--ink)}
+ul,ol{padding-left:22px;margin:12px 0}
+li{margin:5px 0}
+hr{border:none;border-top:1px solid var(--line);margin:40px 0}
+
+/* intro hero */
+.hero{background:linear-gradient(135deg,#0c5249,#127c71);color:#eafaf6;
+  border-radius:16px;padding:34px 36px;margin:0 0 14px}
+.hero .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.16em;
+  text-transform:uppercase;color:#9fdfd2;margin-bottom:10px}
+.hero h1{font-size:32px;line-height:1.18;margin:0 0 12px;font-weight:780;letter-spacing:-.02em}
+.hero p{margin:0;color:#cfeee7;font-size:14.5px;line-height:1.6}
+
+/* tables */
+table{width:100%;border-collapse:collapse;margin:18px 0;font-size:14px;
+  border:1px solid var(--line);border-radius:var(--rad);overflow:hidden}
+thead th{background:var(--teal-bg);color:var(--teal-d);text-align:left;
+  font-weight:700;padding:10px 13px;font-size:13px}
+td{padding:10px 13px;border-top:1px solid var(--line-soft);vertical-align:top}
+tbody tr:nth-child(even){background:#fbfbf8}
+.tablescroll{overflow-x:auto}
+
+/* code */
+.codewrap{margin:16px 0;border:1px solid var(--line);border-radius:var(--rad);
+  overflow:hidden;background:var(--code-bg)}
+.codebar{display:flex;justify-content:space-between;align-items:center;
+  padding:7px 12px;background:#efeee7;border-bottom:1px solid var(--line)}
+.codelang{font-family:var(--mono);font-size:11px;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink-faint);font-weight:600}
+.copybtn{font-family:var(--mono);font-size:11px;border:1px solid var(--line);
+  background:#fff;color:var(--ink-soft);padding:3px 11px;border-radius:6px;cursor:pointer;
+  transition:all .15s}
+.copybtn:hover{border-color:var(--teal);color:var(--teal-d)}
+.copybtn.ok{background:var(--teal);color:#fff;border-color:var(--teal)}
+.codewrap pre{margin:0;padding:0}
+pre code,pre.hljs{display:block;padding:15px 16px;overflow-x:auto;
+  font-family:var(--mono);font-size:13px;line-height:1.6;background:var(--code-bg)!important}
+:not(pre)>code{font-family:var(--mono);font-size:.88em;background:#eeede6;
+  padding:1.5px 6px;border-radius:5px;color:var(--teal-d);white-space:nowrap}
+
+/* mermaid */
+pre.mermaid{background:var(--panel);border:1px solid var(--line);border-radius:var(--rad);
+  padding:22px;margin:20px 0;text-align:center;overflow-x:auto;line-height:1.4}
+
+/* callouts */
+.callout{position:relative;margin:18px 0;padding:14px 18px 14px 18px;border-radius:10px;
+  border-left:4px solid var(--ink-faint);background:#f4f4ee;font-size:14.5px}
+.callout p{margin:8px 0}
+.callout p:first-of-type{margin-top:0}
+.callout p:last-child{margin-bottom:0}
+.callout-badge{display:inline-block;font-family:var(--mono);font-size:10.5px;
+  letter-spacing:.1em;text-transform:uppercase;font-weight:700;
+  padding:2px 9px;border-radius:20px;margin-bottom:8px}
+.callout-note{border-left-color:#9aa0a8;background:#f3f3ee}
+.callout-note .callout-badge{background:#e4e4dd;color:#5a6069}
+.callout-key{border-left-color:var(--teal);background:var(--teal-bg)}
+.callout-key .callout-badge{background:var(--teal);color:#fff}
+.callout-warn{border-left-color:var(--amber);background:var(--amber-bg)}
+.callout-warn .callout-badge{background:var(--amber);color:#fff}
+.callout-add{border-left-color:var(--teal-d);background:#e9f3f1}
+.callout-add .callout-badge{background:var(--teal-d);color:#fff}
+
+/* topbar (mobile) */
+.topbar{display:none}
+
+@media (max-width:880px){
+  .shell{grid-template-columns:1fr}
+  .side{position:fixed;z-index:40;top:0;left:0;width:84%;max-width:320px;height:100vh;
+    background:var(--panel);transform:translateX(-105%);transition:transform .25s;
+    box-shadow:0 0 40px rgba(0,0,0,.18)}
+  .side.open{transform:translateX(0)}
+  .main{padding:70px 22px 90px}
+  .topbar{display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:30;
+    background:rgba(250,250,246,.92);backdrop-filter:blur(8px);
+    padding:12px 18px;border-bottom:1px solid var(--line)}
+  .menubtn{font-family:var(--mono);font-size:13px;border:1px solid var(--line);
+    background:#fff;padding:6px 12px;border-radius:8px;cursor:pointer}
+  .topbar .tt{font-family:var(--mono);font-size:12px;color:var(--teal);letter-spacing:.05em}
+  .scrim{display:none;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:35}
+  .scrim.show{display:block}
+  h1.modhead::after{font-size:25px}
+  .hero h1{font-size:25px}
+  .main{max-width:100%}
+}
+
+/* ── 인쇄 / PDF 저장 (출력 시 목차 먼저 → 본문) ── */
+@media print{
+  @page{margin:14mm 12mm}
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .topbar,.scrim,.menubtn,.copybtn{display:none!important}
+  .shell{display:block;max-width:none}
+  /* 화면용 사이드바는 인쇄에서 완전히 숨김 (변환 불안정 → 빈 페이지 방지) */
+  .side{display:none!important}
+  /* 인쇄 전용 목차: 본문 맨 앞 일반 블록으로 깔끔히 출력 후 페이지 넘김 */
+  .print-toc{display:block!important;break-after:page;page-break-after:always}
+  .print-toc .ptoc-title{font-size:19pt;font-weight:800;color:#0c5249;letter-spacing:-.01em;
+    margin:0 0 16px;padding-bottom:10px;border-bottom:2px solid #127c71}
+  .print-toc a{display:block;color:#1b1e24;text-decoration:none;padding:3px 0;font-size:11.5pt;border:none}
+  .print-toc a.nav-h1{margin-top:13px;font-weight:700;color:#0c5249;font-size:12.5pt}
+  .print-toc a.nav-h2{padding-left:16px;color:#3a3f47}
+  /* 본문 */
+  .main{padding:0;max-width:none}
+  body{font-size:10.5pt;line-height:1.5;background:#fff}
+  a{text-decoration:none;color:inherit}
+  .hero{break-inside:avoid;background:#fff!important;color:#1b1e24!important;
+    border:none;border-bottom:2px solid #127c71;border-radius:0;
+    padding:0 0 14px!important;margin:0 0 18px}
+  .hero .eyebrow{color:#127c71!important}
+  .hero h1{color:#0c5249!important}
+  .hero p{color:#444!important}
+  /* 주제 헤더가 페이지 맨 아래 외롭게 걸리지 않게만 (새 페이지 강제는 빼서 빈 페이지 방지) */
+  h1.modhead{break-after:avoid;page-break-after:avoid}
+  h2,h3{break-after:avoid;page-break-after:avoid}
+  /* 코드·콜아웃·표·다이어그램은 페이지 중간에서 잘리지 않게 */
+  .codewrap,.callout,pre.mermaid,.tablescroll,table{break-inside:avoid;page-break-inside:avoid}
+  pre code,pre.hljs{white-space:pre-wrap;word-break:break-word}
+  pre.mermaid{text-align:center;border:1px solid #ddd;padding:12px 8px;margin:14px auto}
+  pre.mermaid svg{max-width:100%!important;height:auto!important;
+    max-height:200mm!important;display:inline-block!important}
+  .codewrap{border-color:#ccc}
+}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <button class="menubtn" id="menubtn" aria-label="목차 열기">☰ 목차</button>
+  <span class="tt">강의노트 · 보강판</span>
+</div>
+<div class="scrim" id="scrim"></div>
+<div class="shell">
+  <aside class="side" id="side">
+    <div class="brand">강의노트 · 02회차</div>
+    <p class="brand-t">2회차 — AI 프론티어 탐색: 최전선 도구를 직접 써보고, 직접 만든다</p>
+    <p class="brand-s">현장 강의 · 기술 보강판</p>
+    <nav id="nav">
+<a class="nav-h1" href="#0">0. 관통하는 태도 — &quot;딸깍의 시대&quot;</a>
+<a class="nav-h1" href="#1-rag-llm-who-am-i">1. RAG를 거꾸로 — LLM 없는 검색 시스템 (&#x27;Who am I&#x27;)</a>
+<a class="nav-h2" href="#rag-vs">보통의 RAG vs 강사의 룰 기반 검색</a>
+<a class="nav-h2" href="#rss-fusejs-bm25">쓰인 부품 — RSS, Fuse.js(퍼지 검색), BM25, 레벤슈타인</a>
+<a class="nav-h1" href="#2">2. 트렌드를 누구보다 빨리 캐치하는 법</a>
+<a class="nav-h2" href="#ai-rss">AI 타임즈 + RSS로 자동 수집</a>
+<a class="nav-h2" href="#_1">&quot;데이터를 어떻게 합법적으로 모으나&quot; — 토스 페이스페이 사례</a>
+<a class="nav-h1" href="#3-gpt">3. 잠깐 개념 정리 — 트랜스포머와 GPT의 역사</a>
+<a class="nav-h1" href="#4-slm">4. SLM(소형 언어모델) 지형 — 숙제 리뷰</a>
+<a class="nav-h1" href="#5">5. 실습 — 개발 환경부터 배포까지 풀 사이클</a>
+<a class="nav-h2" href="#5-1-3">5-1. 개발 환경 3종 세트</a>
+<a class="nav-h2" href="#5-2-exe-github-pages">5-2. 계산기 → EXE → 웹 → GitHub Pages 배포</a>
+<a class="nav-h2" href="#5-3-minimax-m2">5-3. 모델 교체 — MiniMax M2</a>
+<a class="nav-h1" href="#6-chatgpt">6. ChatGPT 깊게 쓰기</a>
+<a class="nav-h2" href="#meta-prompt">메타 프롬프트(meta prompt)</a>
+<a class="nav-h2" href="#claude-in-excel-claude-for-financial-services">Claude in Excel / Claude for Financial Services</a>
+<a class="nav-h2" href="#svg-ppt">SVG로 PPT 장표 자동화 (강사의 비밀 무기)</a>
+<a class="nav-h2" href="#_2">코덱스 · 딥리서치 · 모델 티어</a>
+<a class="nav-h2" href="#mermaid">Mermaid로 다이어그램 그리기</a>
+<a class="nav-h1" href="#7-mcp-gpt">7. MCP와 앱 커넥터 — 도구를 GPT에 붙이기</a>
+<a class="nav-h2" href="#notion">Notion 연동</a>
+<a class="nav-h2" href="#ai-mcp">코리안로 AI — 한국 법령정보 MCP</a>
+<a class="nav-h1" href="#8-gpts">8. GPTs — 나만의 챗봇 만들기</a>
+<a class="nav-h2" href="#gpts">프로젝트 / GPTs와 &#x27;메모리 분리&#x27;</a>
+<a class="nav-h2" href="#gpts-actions-api-open-meteo">GPTs 작업(Actions) — 외부 API 연동 (Open-Meteo)</a>
+<a class="nav-h1" href="#9-gemini">9. 구글 Gemini 생태계</a>
+<a class="nav-h2" href="#gemini">Gemini의 태생 — 멀티모달 + 자체 칩</a>
+<a class="nav-h2" href="#notebooklm">NotebookLM</a>
+<a class="nav-h2" href="#vids">슬라이드 · 마인드맵 · Vids</a>
+<a class="nav-h2" href="#stitch-ai-studio">기획→개발 한 번에 — Stitch → AI Studio → 배포</a>
+<a class="nav-h1" href="#10-lovable">10. 바이브 코딩 — Lovable</a>
+<a class="nav-h1" href="#_3">부록 — 한눈에 보는 도구 맵</a>
+<a class="nav-h2" href="#_4">검색 보강 출처</a>
+    </nav>
+  </aside>
+  <main class="main" id="main">
+<nav class="print-toc">
+<div class="ptoc-title">목차</div>
+<a class="nav-h1" href="#0">0. 관통하는 태도 — &quot;딸깍의 시대&quot;</a>
+<a class="nav-h1" href="#1-rag-llm-who-am-i">1. RAG를 거꾸로 — LLM 없는 검색 시스템 (&#x27;Who am I&#x27;)</a>
+<a class="nav-h2" href="#rag-vs">보통의 RAG vs 강사의 룰 기반 검색</a>
+<a class="nav-h2" href="#rss-fusejs-bm25">쓰인 부품 — RSS, Fuse.js(퍼지 검색), BM25, 레벤슈타인</a>
+<a class="nav-h1" href="#2">2. 트렌드를 누구보다 빨리 캐치하는 법</a>
+<a class="nav-h2" href="#ai-rss">AI 타임즈 + RSS로 자동 수집</a>
+<a class="nav-h2" href="#_1">&quot;데이터를 어떻게 합법적으로 모으나&quot; — 토스 페이스페이 사례</a>
+<a class="nav-h1" href="#3-gpt">3. 잠깐 개념 정리 — 트랜스포머와 GPT의 역사</a>
+<a class="nav-h1" href="#4-slm">4. SLM(소형 언어모델) 지형 — 숙제 리뷰</a>
+<a class="nav-h1" href="#5">5. 실습 — 개발 환경부터 배포까지 풀 사이클</a>
+<a class="nav-h2" href="#5-1-3">5-1. 개발 환경 3종 세트</a>
+<a class="nav-h2" href="#5-2-exe-github-pages">5-2. 계산기 → EXE → 웹 → GitHub Pages 배포</a>
+<a class="nav-h2" href="#5-3-minimax-m2">5-3. 모델 교체 — MiniMax M2</a>
+<a class="nav-h1" href="#6-chatgpt">6. ChatGPT 깊게 쓰기</a>
+<a class="nav-h2" href="#meta-prompt">메타 프롬프트(meta prompt)</a>
+<a class="nav-h2" href="#claude-in-excel-claude-for-financial-services">Claude in Excel / Claude for Financial Services</a>
+<a class="nav-h2" href="#svg-ppt">SVG로 PPT 장표 자동화 (강사의 비밀 무기)</a>
+<a class="nav-h2" href="#_2">코덱스 · 딥리서치 · 모델 티어</a>
+<a class="nav-h2" href="#mermaid">Mermaid로 다이어그램 그리기</a>
+<a class="nav-h1" href="#7-mcp-gpt">7. MCP와 앱 커넥터 — 도구를 GPT에 붙이기</a>
+<a class="nav-h2" href="#notion">Notion 연동</a>
+<a class="nav-h2" href="#ai-mcp">코리안로 AI — 한국 법령정보 MCP</a>
+<a class="nav-h1" href="#8-gpts">8. GPTs — 나만의 챗봇 만들기</a>
+<a class="nav-h2" href="#gpts">프로젝트 / GPTs와 &#x27;메모리 분리&#x27;</a>
+<a class="nav-h2" href="#gpts-actions-api-open-meteo">GPTs 작업(Actions) — 외부 API 연동 (Open-Meteo)</a>
+<a class="nav-h1" href="#9-gemini">9. 구글 Gemini 생태계</a>
+<a class="nav-h2" href="#gemini">Gemini의 태생 — 멀티모달 + 자체 칩</a>
+<a class="nav-h2" href="#notebooklm">NotebookLM</a>
+<a class="nav-h2" href="#vids">슬라이드 · 마인드맵 · Vids</a>
+<a class="nav-h2" href="#stitch-ai-studio">기획→개발 한 번에 — Stitch → AI Studio → 배포</a>
+<a class="nav-h1" href="#10-lovable">10. 바이브 코딩 — Lovable</a>
+<a class="nav-h1" href="#_3">부록 — 한눈에 보는 도구 맵</a>
+<a class="nav-h2" href="#_4">검색 보강 출처</a>
+</nav>
+    <div class="hero">
+      <div class="eyebrow">Lecture Note · 기술 보강판</div>
+      <h1>2회차 — AI 프론티어 탐색: 최전선 도구를 직접 써보고, 직접 만든다</h1>
+      <p>현장 강의를 기술적으로 보강한 학습 레퍼런스 — 강사의 의도는 살리고, 빠지거나 틀린 기술은 정확히 채웠습니다.</p>
+    </div>
+
+<p>이 강의 하나로 무엇을 할 수 있게 하려는가 →
+<strong>"프론티어 모델(LLM) 생태계를 한 바퀴 돌면서 ChatGPT·Claude·Gemini와 그 주변 도구(코딩 에이전트·MCP·GPTs·바이브 코딩)를 직접 설치·연동·배포해보고, '딸깍'으로 진입장벽이 무너진 시대에 '내가 필요한 걸 내가 만드는' 감각을 잡는 것."</strong></p>
+<blockquote class="callout callout-key"><span class="callout-badge">핵심</span>
+<p>★ 이 회차는 <strong>최전선 트렌드 투어 + 손으로 하는 실습</strong>이 섞여 있다. 깔끔한 위계(○○ 3계층 식)가 있는 강의가 아니라 <strong>나란한 주제들</strong>이 쭉 이어지고, 그걸 하나의 태도로 꿴다. 관통하는 태도는 한 줄: <strong>"딸깍의 시대다 — 반대 방향까지 의심하며 직접 써보고, 트렌드를 누구보다 빨리 캐치하고, 결국 남는 건 사람(네트워크)이다."</strong></p>
+<p><strong>보강 안내</strong> — 강사가 이름만 흘리고 넘어간 도구·모델, 그리고 건너뛴 실제 명령어/코드/설정을 채워 넣고, 틀리게 말한 기술 사실은 <code>정정</code>으로 바로잡았다. 웹으로 확인한 항목은 <code>(검색 보강)</code>으로 출처를 밝혔다. <strong>요청대로 이번 회차는 참가자 자기소개 구간을 노트에서 뺐다.</strong></p>
+</blockquote>
+<hr/>
+<h1 class="modhead" data-full='0. 관통하는 태도 — "딸깍의 시대"' id="0">0. 관통하는 태도 — "딸깍의 시대"</h1>
+<p>강사가 강의 내내 반복한 키워드가 <strong>'딸깍'</strong>이다. 자동화/AI로 옛날엔 며칠 걸리던 걸 클릭 한 번에 해내는 상태를 가리키는 말장난인데, 이게 이 회차의 정서다.</p>
+<ul>
+<li><strong>진입장벽이 무너졌다.</strong> 코드 문법을 몰라도 자연어로 시켜서 앱을 만들고 배포한다. 그래서 "먼저 설치하고 한 번이라도 더 돌려본 사람"이 리드를 잡는다.</li>
+<li><strong>반대 방향까지 의심하라.</strong> 다들 "LLM에 벡터 붙여 RAG" 한 방향만 보는데, 강사는 일부러 그 <strong>정반대(룰 기반·LLM 없는 검색)</strong>를 들고 나왔다(1장). "오픈AI 없이 RAG 못 만들어?" 같은 질문을 던지는 게 핵심.</li>
+<li><strong>트렌드를 빠르게 캐치하라.</strong> AI는 교과서가 없다. 먼저 써본 사람이 1등이다(2장).</li>
+<li><strong>결국 남는 건 사람.</strong> 기술 진입장벽이 낮아질수록, 뜻을 같이하는 네트워크가 진짜 자산이다.</li>
+<li><strong>작게 시작하고, 도메인 전문가와 함께하라.</strong> MVP로 작게 시작하고, 업무를 정확히 아는 사람과 짜면 시스템이 간결해진다(7장).</li>
+</ul>
+<hr/>
+<h1 class="modhead" data-full="1. RAG를 거꾸로 — LLM 없는 검색 시스템 ('Who am I')" id="1-rag-llm-who-am-i">1. RAG를 거꾸로 — LLM 없는 검색 시스템 ('Who am I')</h1>
+<p>강사가 수강생 정보를 검색해주는 'Who am I' 시스템을 만들어 보여줬다. 핵심은 <strong>여기에 LLM이 0% 들어갔다</strong>는 것 — "LLM-프리(LLM-free)" 시스템이다.</p>
+<h2 id="rag-vs">보통의 RAG vs 강사의 룰 기반 검색</h2>
+<p>우리가 흔히 듣는 RAG는 단계가 길다. 문서를 잘게 쪼개고(청킹) → 숫자 벡터로 바꾸고(임베딩) → 벡터 DB에 저장 → 질문도 임베딩해서 의미가 가까운 걸 찾아 → LLM이 답을 생성. 강사는 이걸 <strong>정반대로</strong>, 의미를 담는 임베딩 없이 글자 그대로 빠르게 찾는 룰 기반으로 만들었다.</p>
+<div class="codewrap"><div class="codebar"><span class="codelang">code</span><button class="copybtn" type="button">복사</button></div><pre class="mermaid">flowchart TD
+  Q["사용자 질문"] --&gt; R1{"두 갈래"}
+  R1 --&gt;|"흔한 RAG (의미 기반)"| A1["청킹 → 임베딩(모델) → 벡터DB → LLM 생성"]
+  R1 --&gt;|"강사의 LLM-free (룰 기반)"| A2["RSS로 데이터 참조 → Fuse.js 퍼지검색 → 결과 그대로"]
+  A1 --&gt; O1["풍부하지만 느리고&lt;br/&gt;운영·비용 큼"]
+  A2 --&gt; O2["의미는 약하지만&lt;br/&gt;빠르고 폐쇄망에 강함"]
+</pre></div>
+<div class="tablescroll"><table>
+<thead>
+<tr>
+<th>구분</th>
+<th>흔한 RAG (의미 기반)</th>
+<th>강사의 LLM-free (룰 기반)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>핵심 기술</td>
+<td>임베딩 + 벡터 DB + LLM</td>
+<td>RSS(XML) + 퍼지 검색(Fuse.js)</td>
+</tr>
+<tr>
+<td>검색 방식</td>
+<td>시맨틱 서치(의미가 가까운 것)</td>
+<td>글자/문자열 기반 매칭</td>
+</tr>
+<tr>
+<td>장점</td>
+<td>표현이 풍부, 맥락 이해</td>
+<td>빠르다, 명확하다, 폐쇄망에 쉽게 넣음</td>
+</tr>
+<tr>
+<td>단점</td>
+<td>느려질 수 있음, 임베딩 모델·벡터DB·LLM 운영비</td>
+<td>의미를 담지 못함(다국어·동의어 약함)</td>
+</tr>
+</tbody>
+</table></div>
+<blockquote class="callout callout-key"><span class="callout-badge">핵심</span>
+<p>★ <strong>공공·실무에선 "명확한 게 중요"할 때가 많다.</strong> 의미를 두루뭉술 담는 것보다, 한글 파일 안에 적힌 그대로(예: "김태우"라는 글자) 빠르고 정확히 뽑는 게 더 맞는 상황이 있다. 그래서 애매함(fuzzy)을 다루는 기술인데도 결과는 명확하게 떨어지는, 역설적인 조합이다.</p>
+</blockquote>
+<h2 id="rss-fusejs-bm25">쓰인 부품 — RSS, Fuse.js(퍼지 검색), BM25, 레벤슈타인</h2>
+<ul>
+<li><strong>RSS</strong> — 블로그·뉴스 같은 데서 콘텐츠를 XML 형태로 받아오는 오래된 표준. 여기선 데이터 참조 통로로 썼다.</li>
+<li><strong>Fuse.js</strong> — "Lightweight Fuzzy Search", 자바스크립트 라이브러리. npm으로 설치한다. <strong>퍼지(fuzzy)</strong> = "이것도 저것도 아닌" 모호한 정도를 점수로 재는 기법이라, 오타나 부분 일치도 잡아준다.</li>
+<li><strong>레벤슈타인 거리(Levenshtein distance)</strong> — 문자열 두 개가 얼마나 다른지(몇 글자 바꿔야 같아지는지)를 재는 아주 고전적인 방식. 퍼지 검색의 바탕에 깔린다.</li>
+<li><strong>BM25</strong> — 검색 랭킹에서 유명한 룰 기반 알고리즘. 이것도 의미 모델 없이 동작.</li>
+</ul>
+<div class="codewrap"><div class="codebar"><span class="codelang">Shell</span><button class="copybtn" type="button">복사</button></div><pre><code class="language-bash">npm install fuse.js
+</code></pre></div>
+<div class="codewrap"><div class="codebar"><span class="codelang">JavaScript</span><button class="copybtn" type="button">복사</button></div><pre><code class="language-js">// 최소 예시 — 이름/경력 안에서 오타까지 감안해 검색
+import Fuse from "fuse.js";
+const people = [{ name: "김태우", career: "AI 프랙티셔너" }, /* ... */];
+const fuse = new Fuse(people, { keys: ["name", "career"], threshold: 0.4 }); // threshold↑ = 더 느슨
+const hits = fuse.search("김대우"); // 오타여도 "김태우"가 잡힘 (fuzzy)
+</code></pre></div>
+<blockquote class="callout callout-add"><span class="callout-badge">보강</span>
+<p>보강 — <strong>이게 왜 폐쇄망에 강하냐.</strong> Fuse.js·BM25·레벤슈타인은 전부 룰 기반이라 외부 AI API가 필요 없다. 파이썬/JS 라이브러리 한두 개로 패키징해 인터넷 없는 사내망에 넣어도 그대로 돈다. 보안 심사를 통과하기도 쉽다. (의미 기반 RAG는 임베딩 모델·LLM 호출 때문에 통신이 필요해 이 점에서 불리하다.)</p>
+</blockquote>
+<hr/>
+<h1 class="modhead" data-full="2. 트렌드를 누구보다 빨리 캐치하는 법" id="2">2. 트렌드를 누구보다 빨리 캐치하는 법</h1>
+<p>AI는 교과서가 없고 매일 쏟아진다. 강사가 쓰는 "비밀 장소"들을 공유했다.</p>
+<h2 id="ai-rss">AI 타임즈 + RSS로 자동 수집</h2>
+<ul>
+<li><strong>AI 타임즈(AI Times)</strong> — 국내 기준 AI 소식이 가장 빠른 신문. 해외 모델 출시도 유튜브보다 먼저 뜬다. 브라우저 시작 페이지로 걸어두면 하루 한 번은 보게 된다는 게 팁.</li>
+<li><strong>RSS.app</strong> — 아무 사이트(심지어 스레드 같은 SNS)나 주소를 넣으면 RSS(XML) 피드로 <strong>래핑(wrapping)</strong>해주는 서비스. 이걸로 최신 글을 자동으로 땡겨와 나만의 채팅/이메일/슬랙으로 받아볼 수 있다.</li>
+<li><strong>Slack 자동 수집</strong> — 기업들은 유명 IT 기업 테크블로그들의 RSS를 한 채널에 몰아넣어 두고, 쉴 때 한 번씩 본다. "자동화 + API 오케스트레이션"만 잘해도 이런 트렌드 파이프라인이 만들어진다.</li>
+</ul>
+<blockquote class="callout callout-add"><span class="callout-badge">보강</span>
+<p>보강 — <strong>'오픈AI 초이'.</strong> 강사가 강력 추천한 스레드(Threads) 계정. 프로필이 강아지 사진인 익명 계정인데, 최신 AI 소식을 하루 5~10개씩 GIF까지 붙여 뿌린다. 스레드는 메타(인스타그램 회사)가 만든 글 중심 SNS(옛 트위터/X 대항마)이고, 국내에선 특이하게 반말 커뮤니티다. 이런 개인 계정이 공식 신문보다 빠를 때가 많다는 게 포인트.</p>
+</blockquote>
+<h2 id="_1">"데이터를 어떻게 합법적으로 모으나" — 토스 페이스페이 사례</h2>
+<p>기술 자체보다 <strong>기획 한 번이 문제를 푼 사례</strong>로 소개됐다. 토스(Toss)가 <strong>페이스페이(face pay, 얼굴로 결제)</strong>를 밀면서 결제 단말기 시장을 노리는데, 여기 필요한 건 얼굴 인식(<strong>facial recognition</strong>) 모델. 문제는 "수많은 사람 얼굴 데이터를 어떻게 합법적으로 구하나"다.</p>
+<ul>
+<li>보통은 개인정보 동의 문제로 막힌다.</li>
+<li>토스(로 알려진 방식)는 <strong>대형 콘서트 입장 시 암표(부정 입장) 방지</strong>라는 목적을 걸고, 입장장에 얼굴 인식 카메라 + 카드 인증을 붙여 데이터를 합법적으로 모으고, 잘 마스킹해서 학습에 썼다는 식.</li>
+</ul>
+<blockquote class="callout callout-key"><span class="callout-badge">핵심</span>
+<p>★ 교훈: "어떻게든 데이터를 구해서"가 아니라, <strong>사람이 합법적으로 몰리는 상황을 사업으로 설계</strong>해 데이터 문제를 푼 것. 기술이 아니라 기획이 본질을 흔든 사례다.</p>
+</blockquote>
+<hr/>
+<h1 class="modhead" data-full="3. 잠깐 개념 정리 — 트랜스포머와 GPT의 역사" id="3-gpt">3. 잠깐 개념 정리 — 트랜스포머와 GPT의 역사</h1>
+<p>"거점 리더라면 GPT가 어디서 왔는지는 알고 가자"며 강사가 짚은 부분. 초보자가 가장 헷갈리는 용어라 정리해둔다.</p>
+<div class="codewrap"><div class="codebar"><span class="codelang">code</span><button class="copybtn" type="button">복사</button></div><pre class="mermaid">flowchart TD
+  T["트랜스포머(Transformer)&lt;br/&gt;구글, 2017"] --&gt; E["인코더(encoder)&lt;br/&gt;= 이해(NLU)"]
+  T --&gt; D["디코더(decoder)&lt;br/&gt;= 생성(NLG)"]
+  E --&gt; B["BERT 계열&lt;br/&gt;(이해 특화)"]
+  D --&gt; G["GPT 계열&lt;br/&gt;(생성 특화) → ChatGPT"]
+</pre></div>
+<blockquote class="callout callout-note"><span class="callout-badge">참고</span>
+<p>⚠ 정정 — <strong>NLP / NLU / NLG 정리.</strong> 강사가 디코더 영역을 한 번 "NLP"라고 불렀는데, 용어를 정확히 하면: <strong>NLP(자연어 처리)</strong>가 큰 우산이고, 그 아래 <strong>NLU(자연어 이해 — 입력을 해석)</strong>와 <strong>NLG(자연어 생성 — 출력을 만듦)</strong>가 있다. 트랜스포머의 인코더는 NLU 쪽, 디코더는 NLG 쪽에 대응한다고 보면 쉽다. ChatGPT는 디코더 계열(생성 특화).</p>
+<p>보강 — <strong>한 줄 히스토리.</strong> 트랜스포머 논문은 2017년 구글의 <em>"Attention Is All You Need"</em>. 정작 트랜스포머를 처음 만든 건 구글인데, 공개 정책 탓에 선점하지 못했고 오픈AI가 디코더 부분을 픽업해 키웠다. GPT-3까지는 주어진 지문 안에서만 잘 푸는 <strong>인컨텍스트 러닝(in-context learning)</strong> 수준이었는데, 여기에 <strong>RLHF(인간 피드백 기반 강화학습)</strong>를 얹은 GPT-3.5에서 체감 성능이 폭발했고, 그게 2022년 말 ChatGPT 공개로 이어졌다.</p>
+<p>⚠ 정정 — 강의 중 "GPT 5.5 / 5.6" 같은 버전 숫자가 나오는데, 이는 강사가 어림으로 던진 표기다. 모델 버전 숫자는 워낙 빨리·헷갈리게 바뀌니 정확한 제품명으로 외우기보다 <strong>"최신 GPT-5 계열"</strong> 정도로 기억해두는 게 안전하다.</p>
+</blockquote>
+<hr/>
+<h1 class="modhead" data-full="4. SLM(소형 언어모델) 지형 — 숙제 리뷰" id="4-slm">4. SLM(소형 언어모델) 지형 — 숙제 리뷰</h1>
+<p>지난주 숙제가 "SLM(Small Language Model, 소형 언어모델) 조사"였다. 강사가 제출물을 모아 리뷰했다. 등장한 모델들:</p>
+<ul>
+<li><strong>Gemma 4</strong>(구글), <strong>Qwen3 / Qwen2.5</strong>(알리바바) — 최신·인기 라인</li>
+<li><strong>Mistral</strong>(프랑스), <strong>Granite</strong>(IBM), <strong>DeepSeek-OCR</strong>(중국)</li>
+<li>국산: <strong>EXAONE</strong>(LG), <strong>Kanana</strong>(카카오), <strong>42dot</strong>(현대차그룹 — 강사가 의외라고 평한 모델)</li>
+<li><strong>OpenAI Privacy Filter</strong> (← STT가 "Owl/오프네일"로 잘못 들은 그 모델)</li>
+</ul>
+<blockquote class="callout callout-warn"><span class="callout-badge">주의</span>
+<p>보강 — <strong>'Owl / 오프네일 프라이버시 필터'의 정체 = OpenAI Privacy Filter.</strong> STT가 "OpenAI"를 "오프네일/Owl"로 잘못 들은 것이고, 실제 모델명은 <strong>OpenAI Privacy Filter</strong>다(2026년 4월 공개, 오픈소스). <strong>1.5B 파라미터(활성 50M)의 양방향 토큰 분류(token classification) 모델</strong>로, 텍스트를 한 번에 훑어 이름·주소·이메일·전화·URL·날짜·계좌·비밀번호 8개 범주의 개인정보(PII)를 찾아 가린다. 강사의 질문("임베딩 직전이냐 후냐, 분류 모델이냐 회귀 모델이냐")에 대한 답: <strong>사용자가 입력하자마자 도는 분류(classification) 모델</strong>이고, 클라우드 LLM에 보내기 <strong>전 단계</strong>에 두어 개인정보가 밖으로 나가기 전 로컬에서 먼저 마스킹한다. 그래서 <strong>온프레미스(내 노트북/사내 서버) 구동</strong>이 핵심 가치다. (검색 보강: openai.com/index/introducing-openai-privacy-filter, Hugging Face <code>openai/privacy-filter</code>)</p>
+<p>★ <strong>초보자 교훈 — AI의 환각(hallucination).</strong> 강사가 이 모델을 Claude에게 물었더니 "그런 모델 없습니다"라고 답했다고 한다. 하지만 실제로 존재한다. <strong>LLM은 자기 학습 시점 이후이거나 모르는 것을 종종 단정적으로 '없다'고 지어낸다(환각).</strong> "AI가 아니라고 했으니 없는 거겠지"라고 믿지 말고, 한 번 더 직접 확인하는 습관이 필요하다.</p>
+<p>보강 — <strong>이 작은 모델들이 왜 중요한가.</strong> Qwen2.5급 소형 모델은 GPU 없이 <strong>CPU(우리 PC)에서도 돌아간다.</strong> 오픈웨이트(open-weight)라 <strong>허깅페이스(Hugging Face)</strong>에서 누구나 받아 폐쇄망에 넣어 쓸 수 있다. 로컬 구동이 목적이면 <strong>올라마(Ollama)</strong> 같은 도구로 사내망에 올려 서빙하는 게 표준적인 출발점이다.</p>
+</blockquote>
+<hr/>
+<h1 class="modhead" data-full="5. 실습 — 개발 환경부터 배포까지 풀 사이클" id="5">5. 실습 — 개발 환경부터 배포까지 풀 사이클</h1>
+<p>강의의 첫 손풀기 실습. <strong>VS Code + opencode + OpenRouter</strong>로 코딩 환경을 만들고 → 계산기를 만들어 → EXE/웹으로 배포하는 한 바퀴.</p>
+<h2 id="5-1-3">5-1. 개발 환경 3종 세트</h2>
+<div class="codewrap"><div class="codebar"><span class="codelang">code</span><button class="copybtn" type="button">복사</button></div><pre class="mermaid">flowchart LR
+  V["VS Code&lt;br/&gt;(IDE)"] --&gt; O["opencode&lt;br/&gt;(터미널 코딩 에이전트)"]
+  O --&gt; R["OpenRouter&lt;br/&gt;(모델 공급자)"]
+  R --&gt; M["여러 LLM을&lt;br/&gt;하나의 창구로 호출"]
+</pre></div>
+<ul>
+<li><strong>VS Code</strong> — 코드 편집기(IDE). 커서(Cursor)의 근간이기도 하다. <a href="https://code.visualstudio.com">code.visualstudio.com</a>에서 설치.</li>
+<li><strong>opencode</strong> — 터미널에서 도는 오픈소스 AI 코딩 에이전트. VS Code 안 터미널에 띄워 쓴다.</li>
+<li><strong>OpenRouter</strong> — 여러 AI 모델을 <strong>하나의 API 창구</strong>로 묶어주는 모델 공급자. 회사에 배치할 때도 모델 교체가 쉬워진다.</li>
+</ul>
+<p>실제 설치 순서(강사가 "힌트는 Node.js"라고만 하고 넘어간 부분을 채움):</p>
+<div class="codewrap"><div class="codebar"><span class="codelang">Shell</span><button class="copybtn" type="button">복사</button></div><pre><code class="language-bash"># 1) Node.js 18+ 설치 (https://nodejs.org) — opencode를 깔기 위한 런타임 + npm 제공
+node -v                       # v18 이상인지 확인
+
+# 2) opencode 전역 설치  (npm 패키지명은 opencode가 아니라 opencode-ai!)
+npm install -g opencode-ai
+
+# 3) 프로젝트 폴더에서 실행
+opencode
+
+# 4) OpenRouter 연결 — opencode 안에서
+/connect                      # 안내에 따라 OpenRouter API 키 붙여넣기
+#   또는 환경변수로 (Windows, 새 터미널부터 적용)
+setx OPENROUTER_API_KEY "sk-or-..."
+
+# 5) 모델 바꾸기 — opencode 안에서
+/models                       # 목록에서 원하는 모델 선택
+</code></pre></div>
+<blockquote class="callout callout-note"><span class="callout-badge">참고</span>
+<p>⚠ 정정 — 강사는 <em>"Node.js를 깔면 리눅스 환경이 같이 깔린다"</em>고 했는데, 정확히는 아니다. <strong>Node.js는 opencode를 설치·구동하는 런타임(과 npm)을 줄 뿐, 리눅스를 설치해주지 않는다.</strong> opencode는 Windows의 PowerShell에서도 동작하지만, 공식 문서는 호환성 문제를 줄이려면 <strong>WSL(Windows Subsystem for Linux)</strong>에서 쓰길 권장한다. 강사가 느낀 "리눅스 같다"는 인상은 유닉스 셸/WSL 위에서 돌 때의 경험으로 보인다. (검색 보강: opencode.ai 공식 문서, OpenRouter의 opencode 연동 가이드)</p>
+<p>보강 — 코딩 에이전트엔 보통 <strong>Plan 모드(대화·계획)</strong>와 <strong>Build 모드(실제 코딩)</strong>가 있다. Plan에서 무엇을 할지 합의하고 Build로 넘기는 흐름은 거의 모든 코딩 에이전트(Claude Code, Codex 등)에 공통이다.</p>
+</blockquote>
+<h2 id="5-2-exe-github-pages">5-2. 계산기 → EXE → 웹 → GitHub Pages 배포</h2>
+<p>무료 모델(느림)로 시작해도 되지만, 외부 패키지 없이 <strong>파이썬 내장 함수</strong>만으로 간단한 계산기/날짜계산기를 만들게 했다. 그다음 두 갈래로 배포.</p>
+<p><strong>(A) EXE로 묶기 — PyInstaller</strong></p>
+<div class="codewrap"><div class="codebar"><span class="codelang">Shell</span><button class="copybtn" type="button">복사</button></div><pre><code class="language-bash">pip install pyinstaller
+pyinstaller --onefile --noconsole calculator.py   # 단일 .exe, --noconsole은 콘솔창 숨김(GUI용)
+# 결과물: dist/calculator.exe  → 탐색기에서 더블클릭 실행
+</code></pre></div>
+<p><strong>(B) 웹으로 띄우기 — Flask (127.0.0.1:5000)</strong></p>
+<p>강사 화면에 뜬 <code>127.0.0.1:5000</code>은 Flask 기본 포트다. 최소 예시:</p>
+<div class="codewrap"><div class="codebar"><span class="codelang">python</span><button class="copybtn" type="button">복사</button></div><pre><code class="language-python"># app.py
+from flask import Flask, request, render_template_string
+app = Flask(__name__)
+PAGE = """
+&lt;form method=post&gt;&lt;input name=expr value="{{expr}}"&gt;&lt;button&gt;=&lt;/button&gt;&lt;/form&gt;
+&lt;p&gt;결과: {{result}}&lt;/p&gt;
+"""
+@app.route("/", methods=["GET", "POST"])
+def index():
+    expr, result = "", ""
+    if request.method == "POST":
+        expr = request.form["expr"]
+        try:
+            result = eval(expr)           # ⚠ 데모용. 실제 서비스면 eval 금지(보안)!
+        except Exception as e:
+            result = f"오류: {e}"
+    return render_template_string(PAGE, expr=expr, result=result)
+if __name__ == "__main__":
+    app.run(host="127.0.0.1", port=5000)  # http://127.0.0.1:5000
+</code></pre></div>
+<blockquote class="callout callout-warn"><span class="callout-badge">주의</span>
+<p>⚠ 주의 — 위 <code>eval()</code>은 데모를 짧게 보이려 쓴 것. 사용자 입력을 그대로 <code>eval</code> 하면 임의 코드가 실행될 수 있어 <strong>실제 서비스에선 절대 금지</strong>다. 안전한 수식 파서를 쓰거나 연산을 직접 구현해야 한다.</p>
+</blockquote>
+<p><strong>(C) GitHub Pages로 무료 공개</strong></p>
+<p>프론트(HTML/CSS/JS)로 만든 정적 페이지는 GitHub Pages로 공짜 호스팅된다. 주소는 <code>username.github.io</code> 형태.</p>
+<div class="codewrap"><div class="codebar"><span class="codelang">Shell</span><button class="copybtn" type="button">복사</button></div><pre><code class="language-bash">git init &amp;&amp; git add . &amp;&amp; git commit -m "calculator"
+git branch -M main
+git remote add origin https://github.com/&lt;username&gt;/&lt;repo&gt;.git
+git push -u origin main
+# GitHub → 레포 → Settings → Pages → Branch: main / (root) → Save
+# 몇 분 뒤  https://&lt;username&gt;.github.io/&lt;repo&gt;/  로 공개
+</code></pre></div>
+<blockquote class="callout callout-key"><span class="callout-badge">핵심</span>
+<p>★ 강사 의도: 대단한 걸 만드는 게 아니라 <strong>기획 → 코딩 → 테스트 → 배포의 풀 사이클을 MVP로 한 번 겪어보는 것</strong>. 환경 설정이 사람마다 달라 까다로운데, 그 까다로움을 직접 통과해보는 게 이 실습의 진짜 목적이다.</p>
+</blockquote>
+<h2 id="5-3-minimax-m2">5-3. 모델 교체 — MiniMax M2</h2>
+<p>무료 모델은 응답이 느리니, OpenRouter에서 <strong>MiniMax M2</strong>(유료)로 바꿔 속도를 확보하는 실습.</p>
+<blockquote class="callout callout-add"><span class="callout-badge">보강</span>
+<p>보강 — <strong>MiniMax M2.</strong> 중국 MiniMax가 내놓은 오픈웨이트 모델로 코딩·에이전트 작업에 강한 편이라 무료 모델 대신 권한 것. 강사가 말한 "(M2.5)"는 곁가지 표기로 보이고 핵심 모델명은 MiniMax M2. 모델 바꾸는 명령(<code>/models</code>)을 모르면 AI에게 "opencode에서 모델 바꾸는 법" 물어보면 바로 알려준다.</p>
+</blockquote>
+<hr/>
+<h1 class="modhead" data-full="6. ChatGPT 깊게 쓰기" id="6-chatgpt">6. ChatGPT 깊게 쓰기</h1>
+<p>"고급 과정이니 기본 프롬프트는 건너뛰고" 한 단계 위 기능들로 갔다.</p>
+<h2 id="meta-prompt">메타 프롬프트(meta prompt)</h2>
+<p><strong>프롬프트를 위한 프롬프트.</strong> 내가 좋은 프롬프트를 직접 짜기 어려우니, "이런 워크플로우/봇을 만들려는데 거기 맞는 최적의 프롬프트(시스템 프롬프트)를 네가 짜라"고 AI에게 시키는 기법.</p>
+<blockquote class="callout callout-key"><span class="callout-badge">핵심</span>
+<p>★ 프레임워크적 사고와 궁합이 좋다. 마케팅의 3C, 시장성/수익성/경쟁/실행난이도 같은 <strong>틀</strong>을 많이 알수록, 그 틀을 메타 프롬프트에 넣어 결과를 빠르게 뽑는다. 컨설팅이 하던 "프레임으로 사고 → 장표화"를 AI로 가속하는 셈.</p>
+</blockquote>
+<h2 id="claude-in-excel-claude-for-financial-services">Claude in Excel / Claude for Financial Services</h2>
+<blockquote class="callout callout-add"><span class="callout-badge">보강</span>
+<p>보강 — 둘 다 Anthropic의 실제 제품. <strong>Claude in Excel</strong>은 엑셀 안에서 Claude가 셀을 잡아 분석·작성해준다(Claude 프로 계정 연동, 애드인 설치). <strong>Claude for Financial Services</strong>는 밸류에이션·리서치 같은 금융 업무용 B2B 서비스다. 한글도 잘 처리한다.</p>
+</blockquote>
+<h2 id="svg-ppt">SVG로 PPT 장표 자동화 (강사의 비밀 무기)</h2>
+<p>PPT를 AI로 만들 때 이미지로 뽑으면 수정이 안 돼 곤란한데, 강사가 찾은 해법이 <strong>SVG(벡터)로 렌더링해 뽑기</strong>다.</p>
+<ul>
+<li>SVG로 받으면 PPT에 넣고 <strong>우클릭 → 그룹 해제</strong>로 개체별 편집이 된다(이미지와 달리).</li>
+<li>강사 체감상 <strong>Claude가 SVG를 가장 안 깨지게</strong> 만든다(Gemini 등은 다운로드 후 깨지는 경우가 있었다고).</li>
+<li>프롬프트에 컨설팅식 약속을 녹인다: <strong>원페이지 원메시지</strong>, 명확한 <strong>거버닝 센텐스(governing sentence, 그 장표의 한 줄 핵심)</strong>, <strong>As-Is / To-Be</strong>, A4 가로 고정, "반드시 SVG로, PPT에 넣어도 안 깨지게, 3장만".</li>
+<li>컬러는 말로 하기보다 <strong>HEX 색상 코드/브랜드 팔레트</strong>를 직접 주면 잘 따른다. "맥킨지/BCG 스타일로" 같은 지시도 먹힌다.</li>
+</ul>
+<blockquote class="callout callout-add"><span class="callout-badge">보강</span>
+<p>보강 — <strong>plan and execution.</strong> 강사가 언급한 "플랜 앤 익스큐션"은 에이전트가 <strong>계획을 먼저 세우고(plan) → 사용자 승인 후 실행(execution)</strong>하는 구조. 요즘 거의 모든 에이전트 플랫폼(Claude, Codex 등)의 기본 동작이다. Claude의 승인 모드로 직접 체험해볼 수 있다.</p>
+</blockquote>
+<h2 id="_2">코덱스 · 딥리서치 · 모델 티어</h2>
+<ul>
+<li><strong>코덱스(Codex)</strong> — ChatGPT의 코딩 에이전트. 내 GitHub과 연동해야 제 화면이 뜨고, 연동하면 코덱스가 직접 코딩하며 GitHub에 푸시한다.</li>
+<li><strong>딥리서치(Deep Research)</strong> — 한 주제를 <strong>멀티스텝으로 깊게 파고들어</strong> 보고서로 만들어주는 기능. 거의 모든 AI 서비스에 들어와 있다. "활용 방안 5개" 같은 식으로 시킨다.</li>
+<li><strong>모델 티어</strong> — 어느 서비스든 보통 <strong>소형(빠름) / 표준 / 리즈닝(추론, 깊게 생각)</strong> 으로 나뉜다. 예: Gemini의 Flash(소형) / Pro(표준) / 추론 모드. 차이는 모델 크기·레이어·학습 방식.</li>
+</ul>
+<h2 id="mermaid">Mermaid로 다이어그램 그리기</h2>
+<p>ChatGPT가 플로우차트를 그릴 때 따르는 특정 문법이 <strong>머메이드(Mermaid)</strong>다. "머메이드 문법으로 ○○를 N단계 플로우차트로 그려줘"라고 시키면 코드로 그려준다.</p>
+<div class="codewrap"><div class="codebar"><span class="codelang">text</span><button class="copybtn" type="button">복사</button></div><pre><code class="language-text">flowchart TD
+  A[원료] --&gt; B[설계]
+  B --&gt; C[제조]
+  C --&gt; D[패키징]
+  D --&gt; E[유통]
+</code></pre></div>
+<ul>
+<li><strong>Mermaid Live Editor</strong>(<a href="https://mermaid.live">mermaid.live</a>) — 문법을 붙여넣으면 바로 그려지는 무료 에디터.</li>
+<li>활용 팁: 내 하루 업무를 줄글 일기로 쭉 적고 "머메이드로 내 업무 루틴 정리해줘" 하면 깔끔한 흐름도가 나온다.</li>
+</ul>
+<blockquote class="callout callout-add"><span class="callout-badge">보강</span>
+<p>보강 — <strong>폐쇄망용 오프라인 Mermaid 에디터.</strong> 강사는 <code>mermaid.min.js</code> + <code>index.html</code>만으로 <strong>인터넷 없이 도는 머메이드 에디터</strong>를 바이브 코딩으로 만들어 썼다. 프론트엔드 기술이 좋아져서, 이런 도구는 잘 패키징하면 통신 없이도 사내에서 돌릴 수 있다.</p>
+</blockquote>
+<hr/>
+<h1 class="modhead" data-full="7. MCP와 앱 커넥터 — 도구를 GPT에 붙이기" id="7-mcp-gpt">7. MCP와 앱 커넥터 — 도구를 GPT에 붙이기</h1>
+<p>ChatGPT의 <strong>앱(앱 커넥터)</strong> 기능으로 외부 서비스를 붙여 쓴다. 그 바탕 규약이 <strong>MCP(Model Context Protocol)</strong>다.</p>
+<h2 id="notion">Notion 연동</h2>
+<p>ChatGPT 설정에서 노션 앱을 연결하면, ChatGPT 화면에서 노션을 직접 컨트롤할 수 있다.</p>
+<ul>
+<li>연결 후 채팅에서 "더 보기"에 노션이 잡히고, 노션 모드로 전환된다.</li>
+<li>예시 지시: <strong>"노션 데이터베이스로 만들어서 AI 트렌드 팔로우할 사이트 100개 정리해줘"</strong> → 단순 링크 모음이 아니라 카테고리·추천도·난이도·"왜 봐야 하는지"까지 속성(property)으로 채워 정리한다.</li>
+<li>같은 방식으로 Gmail·구글 캘린더 등 여러 개를 동시에 붙일 수 있다("하나씩 붙이면 멀티가 된다" = MCP의 특징).</li>
+</ul>
+<div class="codewrap"><div class="codebar"><span class="codelang">code</span><button class="copybtn" type="button">복사</button></div><pre class="mermaid">flowchart LR
+  U["사용자"] --&gt; C["ChatGPT (호스트)"]
+  C --&gt; M{"MCP / 커넥터"}
+  M --&gt; N["Notion"]
+  M --&gt; G["Gmail / 캘린더"]
+  M --&gt; K["코리안로 AI&lt;br/&gt;(법령 MCP)"]
+</pre></div>
+<h2 id="ai-mcp">코리안로 AI — 한국 법령정보 MCP</h2>
+<p>수강생 중 한 분이 만든 <strong>한국 법령정보 MCP</strong>를 강사가 직접 붙여봤다. 예: "법인세법 52조 부당행위계산의 부인" 조회가 잘 됐다. (인증키 없이도 동작.)</p>
+<p>ChatGPT에 커스텀 MCP 서버를 붙이는 경로(강사가 "숨어 있다"고 한 부분):</p>
+<div class="codewrap"><div class="codebar"><span class="codelang">text</span><button class="copybtn" type="button">복사</button></div><pre><code class="language-text">계정 설정 → 앱(커넥터) → 고급 설정 → 개발자 모드 ON
+→ "앱 만들기" → MCP 서버 URL 입력 → (인증 없음 가능) → 만들기
+→ 채팅창 + 버튼에서 'coriain law(코리안로)' 선택해 사용
+</code></pre></div>
+<blockquote class="callout callout-warn"><span class="callout-badge">주의</span>
+<p>★ <strong>진짜 MCP가 동작했는지 구분법.</strong> 응답 중 <strong>"도구 요청 / 도구 호출(tool call)"</strong> 형식이 떠야 MCP가 실제로 동작한 것. 그게 없이 그냥 웹서치 결과를 긁어오면 MCP가 아니라 웹 검색이다.</p>
+<p>⚠ 주의 — "MCP 쓰면 다 된다"는 너무 선언적이다. 실제론 ① 그 DB가 MCP를 붙일 수 있는지 ② 권한(role)으로 접근되는지 ③ 외부에서 호출 가능한지 ④ 스키마(schema)가 맞는지를 하나하나 따져야 한다. <strong>기술만으로 밀면 헤매고, 도메인 전문가와 함께 업무를 정확히 알면 구조가 간결해진다.</strong></p>
+</blockquote>
+<hr/>
+<h1 class="modhead" data-full="8. GPTs — 나만의 챗봇 만들기" id="8-gpts">8. GPTs — 나만의 챗봇 만들기</h1>
+<h2 id="gpts">프로젝트 / GPTs와 '메모리 분리'</h2>
+<p>GPT의 <strong>프로젝트</strong> 또는 <strong>My GPT(GPTs)</strong>로 나만의 파일·프롬프트를 고정한 전용 봇을 만든다.</p>
+<blockquote class="callout callout-key"><span class="callout-badge">핵심</span>
+<p>★ 강사가 찾아낸 숨은 설정 — 프로젝트의 <strong>'설정(Settings)' → 메모리(memory)</strong>. 기본값이면 다른 대화 맥락이 섞여 들어와 봇이 이상해질 수 있다. 메모리를 이 프로젝트 안에서만 독립적으로 작동하게 분리하면 깔끔해진다. (이 설정이 깊이 숨어 있어 모르고 지나치기 쉽다.)</p>
+</blockquote>
+<p>GPTs 만들기 흐름: <code>GPT 탐색 → GPT 만들기 → Configure(구성)</code>에서 이름·설명·아이콘·시작 버튼(starter)·권장 모델·웹서치/캔버스/이미지 사용 여부를 세팅하고, 시스템 프롬프트를 넣는다. 이 시스템 프롬프트도 <strong>메타 프롬프트로 뽑으면</strong> 빠르다.</p>
+<h2 id="gpts-actions-api-open-meteo">GPTs 작업(Actions) — 외부 API 연동 (Open-Meteo)</h2>
+<p><strong>Actions</strong>는 외부 API를 GPTs에 붙이는 기능. <strong>OpenAPI 스키마(schema)</strong>를 넣으면 GPT가 그 API를 호출한다. 강사는 인증 없이 쓰는 <strong>Open-Meteo</strong>(무료 날씨 API)로 시연했다.</p>
+<div class="codewrap"><div class="codebar"><span class="codelang">Shell</span><button class="copybtn" type="button">복사</button></div><pre><code class="language-bash"># Open-Meteo는 인증키 없이 바로 호출되는 무료 날씨 API
+curl "https://api.open-meteo.com/v1/forecast?latitude=37.57&amp;longitude=126.98&amp;current=temperature_2m"
+</code></pre></div>
+<p>연동 경로: <code>Configure → Actions → New Action</code>에 OpenAPI 스키마 붙여넣기 → <code>Authentication: None</code>. 스키마는 직접 짜기 어려우니 <strong>GPT에게 "Open-Meteo를 GPTs Action에 추가하게 스키마랑 인스트럭션 다 짜줘"</strong>라고 시키면 된다.</p>
+<blockquote class="callout callout-add"><span class="callout-badge">보강</span>
+<p>⚠ 정정/보강 — 강사 화면에 뜬 빨간 에러 <em>"...has unrecognized method ... skipping"</em>는 <strong>스키마 문법이 GPTs가 요구하는 OpenAPI 3.x 규격과 안 맞을 때</strong> 나는 메시지다. 에러 문구를 그대로 GPT에 던져 "이 에러가 난다, 고쳐줘" 하면 대개 잡힌다. 한글 지명이 안 먹으면 영문 지명을 쓰거나, <strong>Geocoding API로 "Seoul"→위경도 변환 후 forecast</strong> 두 단계로 붙이면 안정적이다.</p>
+<p>보강 — 같은 방식으로 <strong>data.go.kr(공공데이터포털)</strong> API를 붙이면 공공정보를 GPT 안에서 바로 다룰 수 있다. 또 GPTs/Actions에는 <strong>스케줄링</strong>도 걸 수 있어("매일 9시에 트렌드 찾아와") 정기 작업으로 만들 수 있다.</p>
+</blockquote>
+<hr/>
+<h1 class="modhead" data-full="9. 구글 Gemini 생태계" id="9-gemini">9. 구글 Gemini 생태계</h1>
+<p>강사가 개인적으로 제일 많이 쓴다는 구글 쪽. 한 바퀴 훑었다.</p>
+<h2 id="gemini">Gemini의 태생 — 멀티모달 + 자체 칩</h2>
+<blockquote class="callout callout-add"><span class="callout-badge">보강</span>
+<p>보강 — ChatGPT는 초기에 <strong>코드·영어 위주로 학습</strong>해 한국어가 약했다(지금은 학습량이 늘어 문제없음). 반면 <strong>Gemini는 태생이 멀티모달</strong> — 이미지 등 다른 데이터와 언어를 동시에 학습한다. 구글은 <strong>TPU 등 칩(하드웨어)을 직접 설계</strong>해 자기 하드웨어에 최적화한다. 초기 이름은 <strong>바드(Bard)</strong>였고, 출시 직후엔 평이 안 좋다가 빠르게 안정됐다.</p>
+</blockquote>
+<ul>
+<li><strong>Gems</strong> — GPTs와 같은 개념의 "나만의 Gemini 봇". <code>새 Gem</code>에서 프롬프트 세팅.</li>
+<li><strong>사주 봇 '폴춘테카' 일화</strong> — 강사가 즉석에서 상수학·종교 등을 섞은 "사주 봐주는 Gem"을 만들고, "이거 사업 되겠다 → 이름 지어줘"로 <em>폴춘테카(Fortuneteca?)</em>라는 이름까지 뽑은 사례. <strong>결과는 매번 다른 확률 모델이라 '잘 맞는다/안 맞는다'가 갈리는 건 사실 랜덤</strong>이라는 점도 같이 짚었다. (서비스 아이디어로서 "고민·운세" 영역의 수요가 있다는 관찰.)</li>
+</ul>
+<h2 id="notebooklm">NotebookLM</h2>
+<p>왼쪽에 자료를 넣으면 가운데에서 요약해주는 직관적 도구. 웹서치·딥리서치도 붙어 있고, <strong>오디오(팟캐스트) 자동 생성</strong>이 유명하다.</p>
+<blockquote class="callout callout-add"><span class="callout-badge">보강</span>
+<p>보강 — 강사 코멘트: 팟캐스트 시장은 서양(스포티파이 등)에선 크지만 국내선 아직 약하다. 구글 같은 글로벌 기획팀은 <strong>"한국인만을 위한 게 아니라 전 세계 페르소나"</strong>를 기본 전제로(제로 베이스) 기획한다는 점이 한국 기획과의 차이.</p>
+</blockquote>
+<h2 id="vids">슬라이드 · 마인드맵 · Vids</h2>
+<ul>
+<li><strong>구글 Vids</strong> — AI 기반 영상 제작/편집 도구(워크스페이스). 영상을 슬라이드처럼 다룬다.</li>
+<li>Gemini에서 <strong>구글 슬라이드/마인드맵/플래시카드/인포그래픽/데이터표(구글 시트)</strong>로 바로 뽑을 수 있다. 마인드맵은 연산이 가벼워 거의 즉시 나온다.</li>
+</ul>
+<h2 id="stitch-ai-studio">기획→개발 한 번에 — Stitch → AI Studio → 배포</h2>
+<div class="codewrap"><div class="codebar"><span class="codelang">code</span><button class="copybtn" type="button">복사</button></div><pre class="mermaid">flowchart LR
+  S["Stitch&lt;br/&gt;(AI UI 디자인)"] --&gt;|"핸드오프(handoff)"| A["AI Studio&lt;br/&gt;(Build = 개발)"]
+  A --&gt; P["배포: AI Studio Publish&lt;br/&gt;또는 Vercel v0"]
+</pre></div>
+<blockquote class="callout callout-add"><span class="callout-badge">보강</span>
+<p>보강 — <strong>구글 Stitch → AI Studio.</strong> Stitch는 구글의 AI UI 디자인 도구(피그마 대항마)로, 프롬프트로 화면 시안을 만들고 <strong>HTML+Tailwind CSS 코드</strong>로 내보내거나 Figma로 붙여넣을 수 있다. 거기서 'AI Studio로 내보내기'를 하면 구글 <strong>AI Studio의 Build</strong>가 그 시안을 받아 백엔드·API까지 붙여 동작 앱으로 만든다. 기획(Stitch)→개발(AI Studio)으로 바통을 넘기는 이 이음매가 <strong>핸드오프(handoff)</strong>. 마지막엔 AI Studio에서 URL 공개하거나 <strong>Vercel v0</strong>로 빼서 배포한다. (검색 보강: developers.googleblog.com Stitch 소개 / Stitch↔AI Studio 워크플로우)</p>
+<p>★ <strong>실전 팁 — AI Studio 무료 배포.</strong> 배포할 때 'Billing / Setup Billing'(결제 설정)으로 가면 안 된다. <strong>'Share'에서 비공개(reject) 버튼을 풀면 그냥 퍼블릭으로 공개</strong>된다(카드 등록 불필요). 설정이 숨어 있을 뿐이다.</p>
+</blockquote>
+<ul>
+<li><strong>구글 Flow</strong> — 구글 랩스의 동영상/이미지 생성 도구. 강사 활용 팁: <strong>PPT 커버 페이지에 짧은 동영상</strong>을 넣으면("계속 재생" 체크) 주목도가 올라가 강의평이 좋아진다.</li>
+</ul>
+<hr/>
+<h1 class="modhead" data-full="10. 바이브 코딩 — Lovable" id="10-lovable">10. 바이브 코딩 — Lovable</h1>
+<p>강사가 제일 많이 쓰는 바이브 코딩 플랫폼.</p>
+<blockquote class="callout callout-add"><span class="callout-badge">보강</span>
+<p>보강 — <strong>Lovable(러버블).</strong> 스웨덴 회사의 바이브 코딩 플랫폼. 프롬프트만으로 <strong>프론트 + 백엔드(기본 백엔드는 Supabase 연동)</strong>까지 붙은 웹앱을 만들어 실제 배포까지 한다. 무료는 하루 약 5프롬프트, 유료는 약 월 20달러.</p>
+</blockquote>
+<p>강사가 Lovable로 직접 만들어 쓰는 것들:
+- <strong>실시간 강의 인터랙션 보드</strong> — 로그인 없이 링크로 접속, 공지 띄우기, <strong>무기명(익명) 채팅</strong>, <strong>실시간 투표("이해하셨나요?")</strong>, 동시 200명까지 테스트. (조용한 정서의 청중과 강사 사이 "중간 지대"를 만든 도구.)
+- <strong>데이터 배포 플랫폼</strong> — 수강생에게 API 키를 발급해 중앙에서 데이터를 받아가게.
+- <strong>주식 백테스팅</strong> — <strong>yfinance</strong> 연동으로 롱숏 트레이딩 백테스트.</p>
+<blockquote class="callout callout-warn"><span class="callout-badge">주의</span>
+<p>⚠ 주의 — <strong>데이터 주권.</strong> 수강생 질문대로 Lovable+Supabase는 <strong>데이터가 외부(클라우드)에 저장</strong>된다. 데이터 주권·보안이 중요한 공공/민감 업무라면 어디에 데이터가 쌓이는지 반드시 확인하고 써야 한다.</p>
+<p>보강 — <strong>증권 자동매매 API.</strong> 한국투자증권·하나투자증권은 오픈 API가 잘 돼 있어, <strong>API 키만 발급받으면(이 발급 과정이 제일 번거롭다) 조회는 물론 매수·매도까지 코드로 가능</strong>. 강사는 100만 원 넣고 자동매매를 돌려 약 3만 원 수익을 봤다는 일화. 취미·학습용으로 권함.</p>
+<p>★ 강사의 마무리 한 줄: <strong>"요즘은 내가 필요한 걸 내가 만들어 쓰는 게 최고다."</strong> 일상/업무에서 겪는 작은 문제를 직접 짜서 풀어보는 것 — 그게 이 회차 전체의 결론이다.</p>
+</blockquote>
+<hr/>
+<h1 class="modhead" data-full="부록 — 한눈에 보는 도구 맵" id="_3">부록 — 한눈에 보는 도구 맵</h1>
+<div class="tablescroll"><table>
+<thead>
+<tr>
+<th>분류</th>
+<th>도구</th>
+<th>한 줄</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>코딩 환경</td>
+<td>VS Code, opencode, OpenRouter</td>
+<td>IDE + 터미널 에이전트 + 모델 창구</td>
+</tr>
+<tr>
+<td>배포</td>
+<td>PyInstaller, Flask, GitHub Pages</td>
+<td>EXE 묶기 / 로컬 웹 / 무료 정적 호스팅</td>
+</tr>
+<tr>
+<td>트렌드</td>
+<td>AI 타임즈, RSS.app, 스레드(오픈AI 초이), Slack</td>
+<td>최신 소식 자동 수집 파이프라인</td>
+</tr>
+<tr>
+<td>검색</td>
+<td>Fuse.js, BM25, 레벤슈타인</td>
+<td>LLM 없는 룰 기반 퍼지 검색</td>
+</tr>
+<tr>
+<td>문서</td>
+<td>Claude in Excel, SVG 장표, Mermaid</td>
+<td>분석·PPT·다이어그램 자동화</td>
+</tr>
+<tr>
+<td>연동</td>
+<td>MCP / 커넥터, GPTs Actions, Open-Meteo, data.go.kr</td>
+<td>외부 도구·API를 챗봇에 붙이기</td>
+</tr>
+<tr>
+<td>구글</td>
+<td>Gemini, Gems, NotebookLM, Vids, Stitch→AI Studio, Flow, v0</td>
+<td>기획→개발→배포 생태계</td>
+</tr>
+<tr>
+<td>바이브 코딩</td>
+<td>Lovable(+Supabase), yfinance, 증권 API</td>
+<td>프롬프트로 실제 서비스 만들기</td>
+</tr>
+<tr>
+<td>SLM/보안</td>
+<td>Qwen·Gemma·EXAONE·Kanana·42dot, OpenAI Privacy Filter, Ollama</td>
+<td>로컬·폐쇄망 구동, 개인정보 마스킹</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="_4">검색 보강 출처</h2>
+<ul>
+<li>opencode 설치·OpenRouter 연동: opencode.ai 공식 문서, OpenRouter "opencode integration" 가이드</li>
+<li>OpenAI Privacy Filter(='Owl/오프네일'): openai.com/index/introducing-openai-privacy-filter, Hugging Face <code>openai/privacy-filter</code></li>
+<li>구글 Stitch → AI Studio 워크플로우: developers.googleblog.com "Introducing Stitch", Stitch↔AI Studio 디자인-투-코드 가이드</li>
+</ul>
+  </main>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/powershell.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/vbscript.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.9.1/mermaid.min.js"></script>
+<script>
+// 주제 헤더 raw 텍스트를 data-full로 옮겨 ::after 표시
+document.querySelectorAll('h1.modhead').forEach(function(h){
+  h.setAttribute('data-full', h.textContent);
+});
+
+// highlight.js
+if(window.hljs){
+  document.querySelectorAll('.codewrap pre code').forEach(function(b){
+    try{hljs.highlightElement(b);}catch(e){}
+  });
+}
+
+// mermaid
+if(window.mermaid){
+  mermaid.initialize({
+    startOnLoad:true, theme:'base',
+    htmlLabels:false,
+    themeVariables:{
+      fontFamily:'-apple-system,Pretendard,"Malgun Gothic",sans-serif',
+      fontSize:'13px',
+      primaryColor:'#e6f4f1', primaryBorderColor:'#127c71', primaryTextColor:'#0c5249',
+      lineColor:'#9aa0a8', secondaryColor:'#f4f1ea', tertiaryColor:'#fbf1e4',
+      clusterBkg:'#f6f6f0', clusterBorder:'#cfd3cb'
+    },
+    flowchart:{curve:'basis', useMaxWidth:true, htmlLabels:false},
+    sequence:{useMaxWidth:true}
+  });
+}
+
+// 복사 버튼
+document.querySelectorAll('.copybtn').forEach(function(btn){
+  btn.addEventListener('click', function(){
+    var code = btn.closest('.codewrap').querySelector('pre code');
+    var txt = code ? code.innerText : '';
+    navigator.clipboard.writeText(txt).then(function(){
+      btn.textContent='복사됨'; btn.classList.add('ok');
+      setTimeout(function(){btn.textContent='복사'; btn.classList.remove('ok');},1400);
+    });
+  });
+});
+
+// 스크롤 스파이
+var links = Array.from(document.querySelectorAll('#nav a'));
+var map = {};
+links.forEach(function(a){ map[a.getAttribute('href').slice(1)] = a; });
+var heads = Array.from(document.querySelectorAll('.main h1[id], .main h2[id]'));
+var spy = new IntersectionObserver(function(entries){
+  entries.forEach(function(en){
+    if(en.isIntersecting){
+      links.forEach(function(l){l.classList.remove('active');});
+      var act = map[en.target.id];
+      if(act){act.classList.add('active');
+        act.scrollIntoView({block:'nearest'});}
+    }
+  });
+}, {rootMargin:'-10% 0px -75% 0px', threshold:0});
+heads.forEach(function(h){spy.observe(h);});
+
+// 모바일 사이드바
+var side=document.getElementById('side'), scrim=document.getElementById('scrim'),
+    mb=document.getElementById('menubtn');
+function toggle(open){side.classList.toggle('open',open);scrim.classList.toggle('show',open);}
+if(mb){mb.addEventListener('click',function(){toggle(!side.classList.contains('open'));});}
+if(scrim){scrim.addEventListener('click',function(){toggle(false);});}
+links.forEach(function(a){a.addEventListener('click',function(){if(window.innerWidth<=880)toggle(false);});});
+</script>
+<script>/* kg-preview: #<heading> \uc704\uce58\ub85c \uc774\ub3d9 */
+(function(){function norm(t){return (t||'').replace(/\s+/g,'').toLowerCase()}
+function go(){var h=decodeURIComponent(location.hash.slice(1));if(!h)return;var k=norm(h).slice(0,24);if(!k)return;
+var best=null,bl=1e9,els=document.body.querySelectorAll('h1,h2,h3,h4,h5,p,div,span,li,td,text,tspan,section,article');
+for(var i=0;i<els.length;i++){var e=els[i],t=norm(e.textContent);if(t.length<bl&&t.indexOf(k)>-1){best=e;bl=t.length}}
+if(!best)return;var box=best.closest('section,[class*=slide],[class*=page],article')||best;
+box.scrollIntoView({block:'start'});box.style.outline='3px solid #c0504d';box.style.outlineOffset='4px';
+setTimeout(function(){box.style.outline=''},2600)}
+window.addEventListener('load',function(){setTimeout(go,400)});window.addEventListener('hashchange',go)})();</script></body>
+</html>

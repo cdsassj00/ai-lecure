@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta name="robots" content="noindex, nofollow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI 전문인재 과정 · 1일차 SLM 모델 조사 보고서</title>
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F1F5F9;
+  --paper:#FFFFFF;
+  --surface:#F8FAFC;
+  --surface-2:#F1F5F9;
+  --border:#E2E8F0;
+  --border-light:#F1F5F9;
+  --ink:#0F172A;
+  --ink-soft:#334155;
+  --ink-mute:#64748B;
+  --ink-faint:#94A3B8;
+  --accent:#2563EB;
+  --accent-deep:#1E40AF;
+  --accent-soft:#EFF6FF;
+  --accent-border:#BFDBFE;
+  --accent-2:#0EA5E9;
+  --highlight:#F59E0B;
+  --code-bg:#F1F5F9;
+  --shadow:0 1px 2px rgba(15,23,42,.04),0 4px 12px rgba(15,23,42,.06);
+  --shadow-md:0 2px 4px rgba(15,23,42,.06),0 12px 32px rgba(15,23,42,.08);
+  --sans:'Pretendard Variable','Pretendard','Inter','Noto Sans KR',sans-serif;
+  --mono:'JetBrains Mono',ui-monospace,Consolas,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+html,body{
+  background:var(--bg);color:var(--ink);
+  font-family:var(--sans);font-size:13pt;line-height:1.85;
+  min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+}
+code{font-family:var(--mono);font-size:.9em;background:var(--code-bg);padding:2px 6px;border-radius:4px;color:var(--accent-deep);font-weight:500}
+
+/* ========== TOOLBAR ========== */
+.tb{
+  position:fixed;top:0;left:0;right:0;height:56px;z-index:200;
+  background:rgba(241,245,249,.88);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:10px;padding:0 22px;
+}
+.tb-brand{font-weight:700;font-size:14px;letter-spacing:-.2px;color:var(--ink)}
+.tb-brand .sub{display:inline-block;margin-left:8px;font-size:10.5px;font-weight:600;letter-spacing:1.8pt;text-transform:uppercase;color:var(--ink-mute)}
+.tb-spacer{flex:1}
+.tb button{
+  height:36px;padding:0 14px;border-radius:7px;cursor:pointer;
+  font:600 12.5px var(--sans);letter-spacing:-.1px;
+  background:var(--paper);border:1px solid var(--border);color:var(--ink-soft);
+  display:inline-flex;align-items:center;gap:6px;transition:all .15s;
+}
+.tb button:hover{background:var(--accent-soft);border-color:var(--accent-border);color:var(--accent-deep)}
+.tb .tb-edit.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.tb .tb-edit.active:hover{background:var(--accent-deep);border-color:var(--accent-deep)}
+.tb .tb-save{background:var(--accent);border-color:var(--accent);color:#fff}
+.tb .tb-save:hover{background:var(--accent-deep);border-color:var(--accent-deep);color:#fff}
+.tb .tb-print{background:var(--ink);border-color:var(--ink);color:#fff}
+.tb .tb-print:hover{background:#000;border-color:#000;color:#fff}
+
+/* ========== PAGE STACK ========== */
+.stack{padding:80px 0 60px;display:flex;flex-direction:column;align-items:center;gap:24px}
+.sheet{
+  width:210mm;min-height:297mm;background:var(--paper);color:var(--ink);
+  padding:22mm 22mm 24mm;position:relative;overflow:hidden;
+  border:1px solid var(--border);border-radius:6px;
+  box-shadow:var(--shadow-md);
+}
+
+/* ========== COVER ========== */
+.cv{padding:0;background:var(--ink);color:#fff;display:flex;flex-direction:column;overflow:hidden;border:none}
+.cv::before{content:"";position:absolute;top:0;left:0;right:0;height:4mm;background:var(--accent);z-index:3}
+.cv-content{flex:1;padding:26mm 22mm 14mm;display:flex;flex-direction:column;justify-content:space-between}
+.cv-top .cv-org{
+  font-family:var(--mono);font-size:8.5pt;letter-spacing:2.8pt;
+  text-transform:uppercase;color:var(--ink-faint);line-height:2;
+}
+.cv-top .cv-org strong{display:block;color:var(--accent-2);font-weight:700;font-size:9pt;margin-bottom:3mm}
+.cv-center .cv-year{
+  font-family:var(--sans);font-weight:500;font-size:18pt;
+  color:var(--accent-2);margin-bottom:5mm;letter-spacing:-.3pt;
+}
+.cv-center .cv-title{
+  font-family:var(--sans);font-weight:800;font-size:38pt;
+  color:#fff;line-height:1.15;letter-spacing:-1.6pt;margin:0 0 6mm;
+}
+.cv-center .cv-rule{width:48mm;height:1.2mm;background:var(--accent);margin:6mm 0}
+.cv-center .cv-doctype{
+  font-family:var(--sans);font-weight:600;font-size:18pt;
+  color:#CBD5E1;margin-bottom:4mm;letter-spacing:-.3pt;
+}
+.cv-center .cv-sub{
+  font-family:var(--sans);font-weight:400;font-size:11.5pt;
+  color:#CBD5E1;line-height:1.7;max-width:135mm;
+}
+.cv-bottom .cv-meta{
+  display:grid;grid-template-columns:1fr 1fr 1fr;
+  border-top:1px solid rgba(255,255,255,.18);padding-top:7mm;gap:8mm;
+}
+.cv-meta .m-l{font:700 7.5pt/1 var(--mono);letter-spacing:2.2pt;text-transform:uppercase;color:var(--accent-2);margin-bottom:3mm}
+.cv-meta .m-v{font-family:var(--sans);font-size:11.5pt;font-weight:600;color:#fff;letter-spacing:-.2pt}
+.cv-foot{
+  background:#fff;color:var(--ink);padding:10mm 22mm 12mm;
+  display:flex;justify-content:space-between;align-items:center;position:relative;
+}
+.cv-foot::before{content:"";position:absolute;top:0;left:0;right:0;height:.6mm;background:var(--accent)}
+.cv-foot-l{font-family:var(--sans);font-weight:700;font-size:13pt;color:var(--ink);letter-spacing:-.2pt}
+.cv-foot-l .sub{display:block;font-size:8.5pt;font-weight:600;color:var(--ink-mute);letter-spacing:1.5pt;text-transform:uppercase;margin-top:2mm;font-family:var(--mono)}
+.cv-foot-r{
+  text-align:right;font:600 7.5pt/1.7 var(--mono);
+  letter-spacing:1.6pt;color:var(--ink-mute);text-transform:uppercase;max-width:80mm;
+}
+
+/* ========== STUDENT INFO BLOCK ========== */
+.id-block{
+  background:linear-gradient(135deg,var(--accent-soft) 0%,var(--paper) 100%);
+  border:1px solid var(--accent-border);border-radius:5px;
+  padding:7mm 8mm;margin:0 0 9mm;
+}
+.id-block .lbl{
+  font:700 8pt/1 var(--mono);letter-spacing:2.2pt;text-transform:uppercase;
+  color:var(--accent-deep);margin-bottom:5mm;
+  display:flex;align-items:center;gap:2mm;
+}
+.id-block .lbl::before{content:"●";font-size:7pt;color:var(--accent)}
+.id-grid{display:grid;grid-template-columns:1fr 1fr;gap:5mm 8mm}
+.id-cell{display:flex;flex-direction:column;gap:2mm}
+.id-cell .k{font:700 7.5pt/1 var(--mono);letter-spacing:1.5pt;color:var(--ink-mute);text-transform:uppercase}
+.id-cell .v{
+  font-family:var(--sans);font-weight:600;font-size:14pt;color:var(--ink);
+  border-bottom:1px solid var(--accent-border);padding:2mm 0 2.5mm;letter-spacing:-.3pt;
+  min-height:10mm;line-height:1.5;
+}
+.id-cell .v[contenteditable=true]:empty::before{
+  content:attr(data-ph);color:var(--ink-faint);font-style:normal;font-weight:400;
+}
+
+/* ========== SECTION ========== */
+.sec{margin:9mm 0 6mm;page-break-inside:avoid}
+.sec h2{
+  font-family:var(--sans);font-weight:700;font-size:14pt;color:var(--ink);
+  letter-spacing:-.3px;padding:0 0 3mm;
+  margin-bottom:4mm;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:5mm;
+}
+.sec h2::before{
+  content:"";display:inline-block;width:3.5pt;height:18pt;
+  background:var(--accent);border-radius:2pt;
+}
+.sec h2 .num{
+  font:700 8.5pt/1 var(--mono);letter-spacing:2pt;text-transform:uppercase;
+  color:var(--accent);background:var(--accent-soft);padding:3pt 8pt;border-radius:4pt;
+  min-width:10mm;text-align:center;
+}
+/* 본문 답변 영역 — 흰 카드 + 명확한 테두리 */
+.sec p,.sec .body{
+  font-size:12pt;line-height:1.95;color:var(--ink);
+  font-weight:400;letter-spacing:-.05pt;
+  margin:3mm 0;text-align:left;min-height:18mm;
+  padding:5mm 6mm;background:var(--surface);
+  border:1px solid var(--border);border-left:3px solid var(--accent);
+  border-radius:0 5px 5px 0;
+}
+.sec .body[contenteditable=true]:empty::before,
+.sec p[contenteditable=true]:empty::before{
+  content:attr(data-ph);color:var(--ink-faint);font-weight:400;
+}
+
+/* ========== TABLES ========== */
+.kv-table{
+  width:100%;border-collapse:collapse;margin:4mm 0 5mm;
+  background:var(--paper);border:1px solid var(--border);border-radius:5px;overflow:hidden;
+}
+.kv-table tr{border-bottom:1px solid var(--border-light)}
+.kv-table tr:last-child{border-bottom:none}
+.kv-table td{padding:4mm 6mm;font-size:11.5pt;line-height:1.75;vertical-align:top}
+.kv-table td.k{
+  font-family:var(--sans);font-weight:700;color:var(--ink);
+  width:48mm;background:var(--surface);
+  letter-spacing:-.1pt;font-size:11pt;
+  border-right:1px solid var(--border);
+}
+.kv-table td.v{color:var(--ink);min-height:8mm;font-weight:400}
+.kv-table td.v[contenteditable=true]:empty::before{
+  content:attr(data-ph);color:var(--ink-faint);font-weight:400;
+}
+
+/* ========== CALLOUT ========== */
+.callout{
+  background:var(--accent-soft);border:1px solid var(--accent-border);
+  border-left:4px solid var(--accent);
+  padding:6mm 8mm;margin:6mm 0;page-break-inside:avoid;border-radius:5px;
+}
+.callout .label{
+  font:700 8pt/1 var(--mono);letter-spacing:2pt;text-transform:uppercase;
+  color:var(--accent-deep);margin-bottom:3.5mm;
+  display:flex;align-items:center;gap:2mm;
+}
+.callout .label::before{content:"●";font-size:7pt;color:var(--accent)}
+.callout p{margin:1.5mm 0;font-size:11pt;color:var(--ink);line-height:1.75;text-align:left}
+
+/* ========== LINK LIST ========== */
+.link-list{margin:4mm 0 0;padding:0;list-style:none;display:flex;flex-direction:column;gap:2mm}
+.link-list li{
+  position:relative;padding:2mm 0 2mm 8mm;
+  font-size:11pt;line-height:1.75;color:var(--ink-soft);
+  border-bottom:1px dashed var(--border);
+}
+.link-list li:last-child{border-bottom:none}
+.link-list li::before{
+  content:"";position:absolute;left:1.5mm;top:4.5mm;
+  width:8pt;height:8pt;background:var(--accent);border-radius:50%;
+}
+
+/* ========== EDIT MODE ========== */
+[contenteditable=true]{
+  outline:1px dashed var(--accent-border);outline-offset:2px;
+  background:var(--accent-soft) !important;
+  border-radius:3px;cursor:text;caret-color:var(--accent);
+}
+[contenteditable=true]:focus{
+  outline:2px solid var(--accent);background:#fff !important;
+  box-shadow:0 0 0 4px rgba(37,99,235,.12);
+}
+body:not(.edit-mode) [contenteditable=true]{
+  outline:none;background:transparent !important;box-shadow:none;
+}
+body:not(.edit-mode) .sec p[contenteditable=true],
+body:not(.edit-mode) .sec .body[contenteditable=true]{
+  background:var(--surface) !important;
+}
+body.edit-mode::after{
+  content:"편집 모드 · 텍스트 클릭 후 입력 · ESC 또는 EDIT 다시 누르면 종료 · Ctrl+S 로 HTML 저장";
+  position:fixed;bottom:24px;left:50%;transform:translateX(-50%);
+  background:var(--ink);color:#fff;padding:11px 22px;border-radius:24px;
+  font:700 10.5px var(--sans);letter-spacing:1.2px;text-transform:uppercase;
+  box-shadow:0 8px 28px rgba(15,23,42,.4);z-index:300;pointer-events:none;
+  border:1px solid var(--accent);
+}
+
+/* ========== PRINT ========== */
+@media print{
+  @page{size:A4 portrait;margin:14mm 14mm 16mm 14mm}
+  @page :first{margin:0}
+  html,body{background:#fff !important}
+  .tb{display:none !important}
+  .stack{padding:0;gap:0}
+  .sheet{
+    width:auto;min-height:auto;box-shadow:none !important;border:none !important;
+    margin:0;padding:0 0 6mm;page-break-after:always;border-radius:0;
+  }
+  .sheet:last-child{page-break-after:auto}
+  .cv{margin:0;padding:0;min-height:297mm;page-break-after:always}
+  .sheet:not(.cv){padding:18mm 18mm 18mm}
+  [contenteditable=true]{outline:none !important;box-shadow:none !important}
+}
+</style>
+</head>
+<body>
+
+<!-- ============================================================ -->
+<!-- TOOLBAR -->
+<!-- ============================================================ -->
+<div class="tb">
+  <div class="tb-brand">SLM 모델 조사 보고서<span class="sub">Day 1 · Assignment</span></div>
+  <div class="tb-spacer"></div>
+  <button class="tb-edit" id="btnEdit" onclick="toggleEdit()">✎ EDIT</button>
+  <button class="tb-save" onclick="saveHtml()">⬇ HTML 저장</button>
+  <button class="tb-print" onclick="window.print()">⬇ PDF 인쇄</button>
+</div>
+
+<div class="stack">
+
+<!-- ============================================================ -->
+<!-- COVER PAGE -->
+<!-- ============================================================ -->
+<section class="sheet cv">
+  <div class="cv-content">
+    <div class="cv-top">
+      <div class="cv-org">
+        <strong>AI 전문인재 과정 · 2026</strong>
+        Public AI Expert Program · Hugging Face SLM Research Report
+      </div>
+    </div>
+
+    <div class="cv-center">
+      <div class="cv-year">Day 1 · Assignment 01</div>
+      <h1 class="cv-title">Hugging Face SLM<br>모델 조사 보고서</h1>
+      <div class="cv-rule"></div>
+      <div class="cv-doctype">기술 분석 · 모델 카드 분해 리포트</div>
+      <div class="cv-sub">Hugging Face에서 1B~7B 규모의 Small Language Model을 선택해 모델 스펙·학습 데이터·튜닝 방식·파라미터 구조·활용 가능성을 분석한 1인 1리포트입니다.</div>
+    </div>
+
+    <div class="cv-bottom">
+      <div class="cv-meta">
+        <div class="m"><div class="m-l">Track</div><div class="m-v">SLM Research</div></div>
+        <div class="m"><div class="m-l">Format</div><div class="m-v">HTML Report</div></div>
+        <div class="m"><div class="m-l">Submission</div><div class="m-v">GitHub Public Repo</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="cv-foot">
+    <div class="cv-foot-l">
+      AI 전문인재 과정
+      <span class="sub">Day 1 · 1B~7B Small Language Model</span>
+    </div>
+    <div class="cv-foot-r">Hugging Face Model Card Analysis · Technical Report Template</div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- BODY PAGE -->
+<!-- ============================================================ -->
+<section class="sheet">
+
+  <!-- ========== STUDENT IDENTITY ========== -->
+  <div class="id-block">
+    <div class="lbl">Student Identity · 수강생 정보</div>
+    <div class="id-grid">
+      <div class="id-cell">
+        <span class="k">수강생 소속</span>
+        <span class="v" contenteditable="true" data-ph="예: 행정안전부">코레일유통</span>
+      </div>
+      <div class="id-cell">
+        <span class="k">수강생 이름</span>
+        <span class="v" contenteditable="true" data-ph="예: 홍길동">한재진</span>
+      </div>
+      <div class="id-cell">
+        <span class="k">선택 모델명</span>
+        <span class="v" contenteditable="true" data-ph="예: Qwen2.5-3B-Instruct">gemma4-e2b</span>
+      </div>
+      <div class="id-cell">
+        <span class="k">Hugging Face 모델 링크</span>
+        <span class="v" contenteditable="true" data-ph="https://huggingface.co/...">https://huggingface.co/google/gemma-4-E2B-it</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== SECTION 1 ========== -->
+  <div class="sec">
+    <h2><span class="num">01</span>모델 선택 이유</h2>
+    <div class="body" contenteditable="true" data-ph="이 모델을 선택한 이유를 작성합니다. 특정 산업, 공공 업무, 행정, 문서처리, 질의응답 등 어떤 관점에서 적합하다고 판단했는지 설명합니다."><span style="letter-spacing: -0.0666667px;">해당 모델은 가장 최근에 Google에서 발표한&nbsp;</span>가장 주목 받는 최상위권 오픈 웨이트 모델<span style="letter-spacing: -0.0666667px;">로 GPU가 없는 로컬 ollama 환경에서 안</span>정적으로 답변 제공이 가능한 E2B 모델로 선택하였고, 멀티모달 지원으로 향후 이미지 분석 등의 용도 활용이 가능하여 선택하였습니다.</div>
+  </div>
+
+  <!-- ========== SECTION 2 ========== -->
+  <div class="sec">
+    <h2><span class="num">02</span>모델 기본 정보</h2>
+    <table class="kv-table">
+      <tbody><tr><td class="k">모델명</td><td class="v" contenteditable="true" data-ph="모델 카드 상단의 정식 명칭을 입력하세요.">gemma-4-e2b-it</td></tr>
+      <tr><td class="k">개발 주체</td><td class="v" contenteditable="true" data-ph="개발 회사·기관·연구팀·개인 개발자 등">Google DeepMind</td></tr>
+      <tr><td class="k">모델 규모</td><td class="v" contenteditable="true" data-ph="예: 1.5B / 3B / 7B">2B</td></tr>
+      <tr><td class="k">라이선스</td><td class="v" contenteditable="true" data-ph="예: Apache-2.0 / MIT / Llama 3 Community / 기타">Apache 2.0</td></tr>
+      <tr><td class="k">모델 유형</td><td class="v" contenteditable="true" data-ph="Base / Instruct / Chat / Domain-specific 등">Dense / Multimodal Instruct / Reasoning</td></tr>
+    </tbody></table>
+  </div>
+
+  <!-- ========== SECTION 3 ========== -->
+  <div class="sec">
+    <h2><span class="num">03</span>학습 데이터와 튜닝 방식</h2>
+    <div class="body" contenteditable="true" data-ph="모델이 어떤 데이터로 사전학습되었는지, 공개 데이터인지, 특정 산업·언어·도메인 데이터가 포함되었는지, Instruction Tuning · SFT · RLHF · DPO · LoRA · QLoRA 등 어떤 튜닝이 적용되었는지 정리합니다. 모델 카드에 명확히 공개되어 있지 않다면 '공개 범위 내에서는 확인 어려움'이라고 작성합니다."><strong style="letter-spacing: -0.0666667px;">사전학습 데이터:</strong><span style="letter-spacing: -0.0666667px;">&nbsp;</span><span style="letter-spacing: -0.0666667px;">Gemma-4-e2b는 Gemma-4-31b의 경량화 버전으로, 동일한 학습 데이터 소스(웹 크롤링, 학술 논문, 코드 저장소)를 사용하되 데이터 샘플링 전략을 조정하여 학습되었습니다. 특히 고품질의 대표적 데이터(representative samples)를 선별하여 학습 효율성을 극대화했습니다. 학습 토큰 규모는 약 10T~15T 수준으로 추정됩니다.</span><br style="letter-spacing: -0.0666667px;"><br style="letter-spacing: -0.0666667px;"><strong style="letter-spacing: -0.0666667px;">Instruction Tuning &amp; SFT:</strong><span style="letter-spacing: -0.0666667px;">&nbsp;</span><span style="letter-spacing: -0.0666667px;">Gemma-4-e2b는 31B 모델과 동일한 Instruction-tuned 데이터셋을 사용하여 SFT를 수행했습니다. 이로 인해 모델 크기는 작지만 대화형 질의응답, 명령어 수행 능력이 충분히 활성화되었습니다. 경량 모델의 특성상 일반적인 질의응답에는 우수하나, 복잡한 멀티턴 대화나 심화된 추론 작업에서는 성능 제약이 있습니다.</span><br style="letter-spacing: -0.0666667px;"><br style="letter-spacing: -0.0666667px;"><strong style="letter-spacing: -0.0666667px;">정렬(Alignment) 기법:</strong><span style="letter-spacing: -0.0666667px;">&nbsp;</span><span style="letter-spacing: -0.0666667px;">DPO(Direct Preference Optimization)를 주로 사용하여 모델을 정렬했습니다. RLHF는 계산 비용이 높아 경량 모델에 적용하기 어려우므로, DPO로 효율적으로 응답 품질을 개선했습니다.</span><br style="letter-spacing: -0.0666667px;"><br style="letter-spacing: -0.0666667px;"><strong style="letter-spacing: -0.0666667px;">한국어 지원 및 한계:</strong><span style="letter-spacing: -0.0666667px;">&nbsp;</span><span style="letter-spacing: -0.0666667px;">e2b는 다국어 사전학습에 한국어가 포함되어 있으나, 2B 모델의 제한된 용량으로 인해 한국어 성능은 약 80~85% 수준입니다. 로컬 PC(GPU 없음) 환경에서 빠른 추론을 목표로 설계되어, 응답 속도를 우선하는 대신 일부 정확도를 거래(trade-off)했습니다. 도메인 특화 LoRA 미세조정으로 한국어 성능 개선이 가능합니다.</span></div>
+  </div>
+
+  <!-- ========== SECTION 4 ========== -->
+  <div class="sec">
+    <h2><span class="num">04</span>파라미터 및 구조적 특징</h2>
+    <table class="kv-table">
+      <tbody><tr><td class="k">Architecture</td><td class="v" contenteditable="true" data-ph="예: Llama / Qwen2 / Mistral / Phi 등"><span style="font-size: 15.3333px;">Transformer (Gemma - Lightweight)</span></td></tr>
+      <tr><td class="k">Context Length</td><td class="v" contenteditable="true" data-ph="예: 4096 / 8192 / 32768 / 128000 토큰"><span style="font-size: 15.3333px;">8192 tokens (최대)</span></td></tr>
+      <tr><td class="k">Hidden Size</td><td class="v" contenteditable="true" data-ph="config.json의 hidden_size 값"><span style="font-size: 15.3333px;">576 (경량화)</span></td></tr>
+      <tr><td class="k">Layers</td><td class="v" contenteditable="true" data-ph="num_hidden_layers 값"><span style="font-size: 15.3333px;">18</span></td></tr>
+      <tr><td class="k">Attention Heads</td><td class="v" contenteditable="true" data-ph="num_attention_heads · num_key_value_heads"><span style="font-size: 15.3333px;">8 heads / 2 KV heads (GQA)</span></td></tr>
+      <tr><td class="k">Tokenizer</td><td class="v" contenteditable="true" data-ph="BPE / SentencePiece / Tiktoken 등 + vocab size"><span style="font-size: 15.3333px;">Tiktoken-based / Vocab size: ~256K</span></td></tr>
+    </tbody></table>
+  </div>
+
+  <!-- ========== SECTION 5 ========== -->
+  <div class="sec">
+    <h2><span class="num">05</span>모델 파일 구성</h2>
+    <div class="body" contenteditable="true" data-ph="Hugging Face 저장소에 있는 config.json · tokenizer.json · model.safetensors · generation_config.json · special_tokens_map.json 등 주요 파일이 어떤 역할을 하는지 정리합니다."><strong style="letter-spacing: -0.0666667px;">config.json:</strong><span style="letter-spacing: -0.0666667px;">&nbsp;</span><span style="letter-spacing: -0.0666667px;">모델의 아키텍처, 레이어 수(18), Hidden Size(576), Attention Heads(8), Vocab Size, Max Position Embeddings(8192) 등 모델 구조 전체 정의. 모델 초기화 시 필수 파일. e2b는 파라미터가 작아 파일 크기도 매우 작음(수 KB).</span><div><br style="letter-spacing: -0.0666667px;"><strong style="letter-spacing: -0.0666667px;">model.safetensors 또는 model-*.safetensors:</strong><span style="letter-spacing: -0.0666667px;">&nbsp;</span><span style="letter-spacing: -0.0666667px;">2B 모델의 경우 전체 가중치를 단일 파일로 저장 가능(약 4~5GB FP16 기준). 31B 모델과 달리 분할 저장이 불필요하여 로드 시간이 매우 빠름. SafeTensors 형식으로 저장되어 보안성과 로딩 속도 모두 우수.</span><br style="letter-spacing: -0.0666667px;"><br style="letter-spacing: -0.0666667px;"><strong style="letter-spacing: -0.0666667px;">tokenizer.json 및 tokenizer_config.json:</strong><span style="letter-spacing: -0.0666667px;">&nbsp;</span>SentencePiece 기반 토크나이저<span style="letter-spacing: -0.0666667px;">. 입력 텍스트를 토큰으로 변환하는 규칙 정의. e2b는 로컬 PC에서 추론하므로 토크나이저 성능이 전체 속도에 미치는 영향이 큼. 한국어는 자모 단위로 분해되는 경향이 있어 토큰 길이 증가.</span><br style="letter-spacing: -0.0666667px;"><br style="letter-spacing: -0.0666667px;"><strong style="letter-spacing: -0.0666667px;">special_tokens_map.json:</strong><span style="letter-spacing: -0.0666667px;">&nbsp;</span><span style="letter-spacing: -0.0666667px;">&lt;pad&gt;, &lt;eos&gt;, &lt;unk&gt; 등 특수 토큰 정의. e2b에서는 응답 길이 제한을 위해 &lt;eos&gt; 토큰이 중요한 역할. 로컬 환경에서 빠른 응답을 위해 top-k/top-p 샘플링과 함께 사용</span><br style="letter-spacing: -0.0666667px;"><br style="letter-spacing: -0.0666667px;"><strong style="letter-spacing: -0.0666667px;">generation_config.json:</strong><span style="letter-spacing: -0.0666667px;">텍스트 생성 시 기본 파라미터(temperature=0.7, top_p=0.9, max_length=512, repetition_penalty=1.0 등) 정의. 로컬 PC 환경에서는 max_length를 512~1024로 제한하여 응답 시간 최소화. 사용자 경험을 위해 low-latency 설정</span><br style="letter-spacing: -0.0666667px;"><br style="letter-spacing: -0.0666667px;"><strong style="letter-spacing: -0.0666667px;">README.md:</strong><span style="letter-spacing: -0.0666667px;">&nbsp;</span><span style="letter-spacing: -0.0666667px; font-size: 12pt;">모델의 메타정보, 라이선스(Apache 2.0), 성능 벤치마크, 한계점 명시. e2b는 경량 모델이므로 성능-속도 트레이드오프 명확히 표기.</span><br></div></div>
+  </div>
+
+  <!-- ========== SECTION 6 ========== -->
+  <div class="sec">
+    <h2><span class="num">06</span>활용 가능 업무</h2>
+    <div class="body" contenteditable="true" data-ph="공공기관 행정·민원 응대·내부 문서 분석·질의응답·요약·RAG 검색·챗봇·보고서 초안 작성 등 어떤 업무에 어떻게 활용 가능한지 구체 시나리오로 작성합니다."><strong style="letter-spacing: -0.0666667px;">1.&nbsp;</strong><strong style="letter-spacing: -0.0666667px;">개인 PC 기반 개발자 코딩 지원 (로컬 Vibe Coding):</strong><span style="letter-spacing: -0.0666667px;">&nbsp;GPU가 없는 로컬 환경에서 Ollama + VSCode 통합으로 코딩 질의응답 처리. Python, SQL, JavaScript 기초 문법 설명, 간단한 코드 자동완성, 버그 디버깅 가능. 31B 모델 대비 응답 속도가 3~5배 빨라 일상적인 코딩 질의에 최적. 예: "이 파이썬 에러가 뭐지?", "SQL JOIN 문법 알려줘" → 1~2초 내 응답. 내부망 폐쇄 환경에서도 작동.</span><br style="letter-spacing: -0.0666667px;"><strong style="letter-spacing: -0.0666667px;"><br></strong><div><strong style="letter-spacing: -0.0666667px;">2. 개인 정보 보호가 필수인 민원 초안 검토:</strong><span style="letter-spacing: -0.0666667px;">&nbsp;공공기관의 개인정보가 포함된 민원서를 로컬 PC에서 안전하게 분석 가능. "이 민원 답변이 법규를 위반하진 않을까?" 같은 법적 검토 자동화. 외부 API를 사용하지 않으므로 개인정보보호법 준수 용이. 단, 정확한 법규 해석은 담당자 검증 필수.</span><div><br style="letter-spacing: -0.0666667px;"><strong style="letter-spacing: -0.0666667px;">3. 외부망 차단 환경에서의 사내 문서 분석:</strong><span style="letter-spacing: -0.0666667px;">&nbsp;코레일유통 정책 문서, 한빛시청 규정을 로컬 Ollama + RAG로 학습시켜 직원 질의 즉시 답변. "교통비 지급 규정이 뭐지?", "휴가 신청 절차는?" → 로컬에서 즉시 응답. 인터넷 연결 불필요, 외부 서버 없음.</span><br><div><br style="letter-spacing: -0.0666667px;"><strong style="letter-spacing: -0.0666667px;">4. 간단한 보고서/이메일 초안 작성:</strong><span style="letter-spacing: -0.0666667px;">&nbsp;직원이 핵심 내용만 입력하면 "일일 회의 보고서 초안 작성", "상사에게 보낼 메일 존댓글로 수정" 등 자동화. 2B 모델이라 한국어 문체 자연스러움은 31B 대비 낮지만 기초적인 공식 톤 변환은 가능.</span><br style="letter-spacing: -0.0666667px;"><br style="letter-spacing: -0.0666667px;"><strong style="letter-spacing: -0.0666667px;">5. IT 운영 로그 분석 (간단한 수준):</strong><span style="letter-spacing: -0.0666667px;">&nbsp;서버 에러 로그, 접근 로그의 간단한 이상 패턴 감지. "이 로그가 정상인가?" 질의에 로컬에서 즉시 답변. 복잡한 보안 분석은 전문 도구 필요하지만, 1차 필터링 용도로는 충분.</span></div><div><br style="letter-spacing: -0.0666667px;"><strong style="letter-spacing: -0.0666667px;">6. MVP 프로토타입 개발용 AI 엔진:</strong><span style="letter-spacing: -0.0666667px;">&nbsp;Gemma-4-e2b의 빠른 추론 속도를 활용하여 AI 챗봇, 질의응답 시스템, 간단한 RAG 시스템의 프로토타입을 로컬에서 신속하게 개발. 성능 검증 후 필요시 31B 모델이나 클라우드 API로 업그레이드. 개발 비용 절감 및 빠른 검증 가능.</span><br style="letter-spacing: -0.0666667px;"><br style="letter-spacing: -0.0666667px;"><strong style="letter-spacing: -0.0666667px;">7. 외부망 차단된 조직의 AI 기초 교육용:</strong><span style="letter-spacing: -0.0666667px;">&nbsp;직원들을 대상으로 "AI가 어떻게 작동하는가"를 실습하며 학습 가능. 로컬 모델이므로 비용 무료, 모든 직원이 자기 PC에서 Ollama 설치하여 실습 가능.</span></div></div></div></div>
+  </div>
+
+  <!-- ========== SECTION 7 ========== -->
+  <div class="sec">
+    <h2><span class="num">07</span>한계와 주의사항</h2>
+    <div class="body" contenteditable="true" data-ph="성능 한계 · 환각 가능성 · 한국어 지원 수준 · 보안 이슈 · 라이선스 제한 · 상업적 활용 가능 여부 · 평가 데이터 한계 등을 정리합니다."><strong style="letter-spacing: -0.0666667px;">. 모델 크기에 따른 성능 한계:</strong><span style="letter-spacing: -0.0666667px;">&nbsp;2B 모델은 31B 대비 약 30~40% 수준의 성능을 가집니다. 복잡한 추론, 긴 문맥 이해, 멀티턴 대화에서 성능 저하 뚜렷. 예: "이 세 가지 정책을 비교하고 최선의 방법을 추천해줘" 같은 복잡한 요청은 부정확할 가능성 높음. 단순 Q&amp;A, 기초적인 코드 설명에는 충분함.</span><br style="letter-spacing: -0.0666667px;"><br style="letter-spacing: -0.0666667px;"><strong style="letter-spacing: -0.0666667px;">2. 환각(Hallucination) 위험:</strong><span style="letter-spacing: -0.0666667px;">&nbsp;2B 모델의 작은 용량으로 인해 근거 없는 정보를 생성할 확률이 31B 대비 높습니다. 특히 "2024년 코레일 신규 정책이 뭐야?"와 같은 최신 정보 질의에서 오류 발생 가능.&nbsp;</span><strong style="letter-spacing: -0.0666667px;">자동 생성 답변은 반드시 인간 검증 필수</strong><span style="letter-spacing: -0.0666667px;">.</span><br style="letter-spacing: -0.0666667px;"><br style="letter-spacing: -0.0666667px;"><strong style="letter-spacing: -0.0666667px;">3. 로컬 PC 리소스 제약:</strong><span style="letter-spacing: -0.0666667px;">&nbsp;약 4GB(FP16) 메모리 점유로 대부분의 노트북/PC에서 실행 가능하나, 동시에 다른 응용프로그램 실행 시 시스템 전체 성능 저하. 특히 Ollama + VSCode + 브라우저 동시 실행 시 메모리 부족 가능성. 응답 속도: 100토큰 생성에 약 2~5초(CPU 기준), GPU 있으면 0.5~1초.</span><br style="letter-spacing: -0.0666667px;"><br style="letter-spacing: -0.0666667px;"><strong style="letter-spacing: -0.0666667px;">4. 도메인 특화 성능 부족:</strong><span style="letter-spacing: -0.0666667px;">&nbsp;일반적인 질의응답은 가능하나, 코레일유통의 구체적인 정책, 제품 카테고리, 가격책정, 프로세스에 대해 학습하지 못함. RAG 시스템 + 도메인 문서 학습 필수. 초기 1~2주간은 오답율 15~25% 예상.</span><br style="letter-spacing: -0.0666667px;"><br style="letter-spacing: -0.0666667px;"><strong style="letter-spacing: -0.0666667px;">5. 실시간 정보 부족:</strong><span style="letter-spacing: -0.0666667px;">&nbsp;학습 데이터가 2024년 상반기 수준이므로 최신 정책, 법규 개정, 시장 정보 대응 불가. 로컬 모델의 특성상 인터넷 검색 API 연동 어려움. 필요시 별도로 검색 결과를 입력하는 방식으로 보완 필요.</span><br style="letter-spacing: -0.0666667px;"><br style="letter-spacing: -0.0666667px;"><strong style="letter-spacing: -0.0666667px;">6. 코드 생성 품질:</strong><span style="letter-spacing: -0.0666667px;">&nbsp;31B 모델 대비 코드 생성 능력 낮음. 간단한 Python 스크립트 생성은 가능하나, 복잡한 로직이나 버그 수정은 검증 필수. 개발자 코딩 보조는 가능하지만 자동 코드 생성 신뢰도는 70% 수준.</span><br style="letter-spacing: -0.0666667px;"><br style="letter-spacing: -0.0666667px;"><strong style="letter-spacing: -0.0666667px;">7. 라이선스 및 상업적 활용:</strong><span style="letter-spacing: -0.0666667px;">&nbsp;Apache 2.0 라이선스로 상업적 활용 가능. 로컬 PC에 설치하여 개인/조직 내부 사용은 완전히 자유로움. 다만 e2b 모델 자체는 Google의 제품이므로 향후 라이선스 정책 변경 가능성 모니터링 필요.</span><br style="letter-spacing: -0.0666667px;"><br style="letter-spacing: -0.0666667px;"><strong style="letter-spacing: -0.0666667px;">8. 멀티터닝 대화 능력 제한:</strong><span style="letter-spacing: -0.0666667px;">&nbsp;긴 대화 문맥 유지 능력 부족. 5턴 이상의 복잡한 대화에서 초반 내용 망각 가능. 각 질의마다 문맥 명시 필요.</span></div>
+  </div>
+
+  <!-- ========== SECTION 8 ========== -->
+  <div class="sec">
+    <h2><span class="num">08</span>종합 의견</h2>
+    <div class="body" contenteditable="true" data-ph="이 모델을 실제 조직 업무에 도입한다면 어떤 조건에서 적합한지, 어떤 추가 검증·POC가 필요한지 본인 의견을 작성합니다."><div><span style="letter-spacing: -0.0666667px;"><b>1.&nbsp;</b></span><strong style="letter-spacing: -0.0666667px;">로컬 PC 기반 개인 코딩 지원:</strong><span style="letter-spacing: -0.0666667px;">&nbsp;GPU 없는 일반 노트북에서도 2~5초 내 코딩 질의응답 가능. 개발팀의 일상적인 코드 검색, 문법 설명에 최적. 내부망에서도 작동하므로 보안 이슈 없음. 예상 효과: 개발 생산성 15~25% 향상.</span></div><div><br style="letter-spacing: -0.0666667px;"><span style="letter-spacing: -0.0666667px;"><b>2.&nbsp;</b></span><strong style="letter-spacing: -0.0666667px;">MVP 프로토타입 개발:</strong><span style="letter-spacing: -0.0666667px;">&nbsp;빠른 응답 속도로 AI 기반 애플리케이션 프로토타입을 신속하게 검증 가능. 성능 검증 후 필요시 31B 또는 클라우드 모델로 업그레이드하는 단계적 접근 가능.</span><br style="letter-spacing: -0.0666667px;"><span style="letter-spacing: -0.0666667px;"><br></span></div><div><span style="letter-spacing: -0.0666667px;"><b>3.&nbsp;</b></span><strong style="letter-spacing: -0.0666667px;">폐쇄 환경 AI 기초 교육:</strong><span style="letter-spacing: -0.0666667px;">&nbsp;모든 직원 PC에 Ollama + e2b 설치로 AI 체험 교육 가능. 비용 무료, 법적 제약 없음(Apache 2.0).</span><span style="letter-spacing: -0.0666667px;"><b></b></span></div><div><br></div><div><span style="letter-spacing: -0.0666667px;">Gemma-4-e2b는&nbsp;</span><strong style="letter-spacing: -0.0666667px;">로컬 PC 폐쇄 환경에서의 빠른 AI 활용</strong><span style="letter-spacing: -0.0666667px;">에 최적화된 모델입니다. 특히 개발자 지원, MVP 개발, 교육용으로 강력하며, 비용 부담 없이 즉시 도입 가능합니다. 다만 정확도가 필요한 업무(법규 해석, 민원 답변)는 31B 모델과 병렬 운영하거나 인간 검증을 강화해야 합니다.</span></div></div>
+  </div>
+
+  <!-- ========== SECTION 9 ========== -->
+  <div class="sec">
+    <h2><span class="num">09</span>참고 링크</h2>
+    <ul class="link-list" id="refList">
+      <li contenteditable="true" data-ph="Hugging Face 모델 페이지: https://huggingface.co/...">Hugging Face - Gemma-4-e2b-it: https://huggingface.co/google/gemma-4-e2b-it</li>
+      <li contenteditable="true" data-ph="모델 논문 또는 기술 블로그: https://...">Ollama Documentation (로컬 LLM 배포): https://ollama.ai/</li>
+      <li contenteditable="true" data-ph="GitHub 저장소: https://github.com/...">Gemma 4 model overview | Google AI for Developers : https://deepmind.google/models/gemma/</li>
+    </ul>
+  </div>
+
+  <!-- ========== SUBMISSION ========== -->
+  <div class="callout">
+    <div class="label">Submission · 제출 정보</div>
+    <p><strong style="color:var(--ink);font-weight:700">GitHub Repository 주소:</strong> <span contenteditable="true" data-ph="https://github.com/본인아이디/slm-model-report-소속-이름">&nbsp;</span></p>
+    <p><strong style="color:var(--ink);font-weight:700">파일명 예시:</strong> 행안부_김민수_slm_report.html</p>
+    <p style="margin-top:3mm;font-size:10pt;color:var(--ink-mute)">최종 제출 시 EDIT 버튼을 눌러 모든 항목을 채운 뒤, [HTML 저장] 버튼으로 파일을 다운로드해 GitHub Repository에 업로드하세요. 또는 EDIT하지 않고 동일한 양식 그대로 생성형 AI(Claude·ChatGPT 등)에 첨부해 채움을 요청해도 무방합니다.</p>
+  </div>
+
+</section>
+
+</div>
+
+<!-- ============================================================ -->
+<!-- SCRIPT -->
+<!-- ============================================================ -->
+<script>
+let editMode = false;
+
+function toggleEdit(){
+  editMode = !editMode;
+  document.body.classList.toggle('edit-mode', editMode);
+  const btn = document.getElementById('btnEdit');
+  if(editMode){
+    btn.classList.add('active');
+    btn.textContent = '✎ EDITING';
+  } else {
+    btn.classList.remove('active');
+    btn.textContent = '✎ EDIT';
+  }
+}
+
+// HTML 저장 — 현재 DOM 상태 그대로 다운로드
+function saveHtml(){
+  const idCells = document.querySelectorAll('.id-cell .v');
+  const num = (idCells[0]?.textContent || '').trim() || 'XX';
+  const name = (idCells[1]?.textContent || '').trim() || '이름';
+  const fname = `${num}_${name}_slm_report.html`.replace(/[\/\\?%*:|"<>]/g, '');
+
+  const wasEdit = editMode;
+  if(wasEdit) toggleEdit();
+
+  const doctype = '<!DOCTYPE html>\n';
+  const html = doctype + document.documentElement.outerHTML;
+  const blob = new Blob([html], {type: 'text/html;charset=utf-8'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = fname;
+  document.body.appendChild(a); a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+
+  if(wasEdit) toggleEdit();
+  showToast(`✓ ${fname} 다운로드 완료`);
+}
+
+function showToast(msg){
+  let t = document.getElementById('__toast');
+  if(!t){
+    t = document.createElement('div'); t.id='__toast';
+    t.style.cssText = 'position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:#0F172A;color:#fff;padding:12px 24px;border-radius:24px;font:700 11px Pretendard,sans-serif;letter-spacing:.6px;box-shadow:0 8px 28px rgba(15,23,42,.4);z-index:400;border:1px solid #2563EB;opacity:0;transition:.3s';
+    document.body.appendChild(t);
+  }
+  t.textContent = msg;
+  requestAnimationFrame(() => t.style.opacity = '1');
+  clearTimeout(t._tid);
+  t._tid = setTimeout(() => t.style.opacity = '0', 3500);
+}
+
+// 키보드 단축키
+document.addEventListener('keydown', (e) => {
+  if(e.key === 's' && (e.ctrlKey || e.metaKey)){
+    e.preventDefault(); saveHtml();
+  } else if(e.key === 'Escape' && editMode){
+    if(document.activeElement && document.activeElement.contentEditable === 'true'){
+      document.activeElement.blur();
+    } else {
+      toggleEdit();
+    }
+  } else if((e.key === 'e' || e.key === 'E') && !e.ctrlKey && !e.metaKey){
+    if(!document.activeElement || document.activeElement === document.body){
+      toggleEdit();
+    }
+  }
+});
+</script>
+
+
+
+<div id="__toast" style="position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); background: rgb(15, 23, 42); color: rgb(255, 255, 255); padding: 12px 24px; border-radius: 24px; font: 700 11px Pretendard, sans-serif; letter-spacing: 0.6px; box-shadow: rgba(15, 23, 42, 0.4) 0px 8px 28px; z-index: 400; border: 1px solid rgb(37, 99, 235); opacity: 0; transition: 0.3s;">✓ 코레일유통_한재진_slm_report.html 다운로드 완료</div><script>/* kg-preview: #<heading> \uc704\uce58\ub85c \uc774\ub3d9 */
+(function(){function norm(t){return (t||'').replace(/\s+/g,'').toLowerCase()}
+function go(){var h=decodeURIComponent(location.hash.slice(1));if(!h)return;var k=norm(h).slice(0,24);if(!k)return;
+var best=null,bl=1e9,els=document.body.querySelectorAll('h1,h2,h3,h4,h5,p,div,span,li,td,text,tspan,section,article');
+for(var i=0;i<els.length;i++){var e=els[i],t=norm(e.textContent);if(t.length<bl&&t.indexOf(k)>-1){best=e;bl=t.length}}
+if(!best)return;var box=best.closest('section,[class*=slide],[class*=page],article')||best;
+box.scrollIntoView({block:'start'});box.style.outline='3px solid #c0504d';box.style.outlineOffset='4px';
+setTimeout(function(){box.style.outline=''},2600)}
+window.addEventListener('load',function(){setTimeout(go,400)});window.addEventListener('hashchange',go)})();</script></body></html>
