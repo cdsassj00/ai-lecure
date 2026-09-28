@@ -340,6 +340,7 @@ def write_preview(src: Path, dst: Path) -> bool:
         except UnicodeDecodeError:
             continue
     b = re.sub(rb'(?i)<meta[^>]+charset=["\']?[a-z0-9_-]+["\']?[^>]*>', b'<meta charset="utf-8">', b)
+    b = b.replace("\ufffd".encode(), b"")  # 원본에 이미 깨져 있던 문자 제거
     if len(b) > PREVIEW_MAX:
         b = _DATA_URI_B.sub(_BLANK, b)
         if len(b) > PREVIEW_MAX:
