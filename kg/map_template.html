@@ -34,6 +34,21 @@ aside{background:var(--panel);border-right:1px solid var(--line);display:grid;gr
 .search input::placeholder{color:var(--faint)}
 .search svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--mut)}
 .search .x{position:absolute;right:8px;top:50%;transform:translateY(-50%);border:0;background:none;color:var(--mut);cursor:pointer;font-size:16px;padding:4px 6px}
+.modes{display:flex;gap:4px;margin-bottom:9px;background:var(--panel2);border:1px solid var(--line);border-radius:9px;padding:3px}
+.modes button{flex:1;border:0;background:transparent;border-radius:6px;padding:6px 8px;font-size:12.5px;color:var(--mut);cursor:pointer;font-weight:600}
+.modes button[aria-pressed="true"]{background:var(--coral);color:#1a0b09}
+.askrow{display:flex;gap:6px;margin-top:8px}
+.askrow .btn{flex:none}
+.answer{margin-top:12px;font-size:14px;line-height:1.75;color:var(--ink);background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+.answer p{margin:0 0 10px}.answer p:last-child{margin:0}
+.answer h4{margin:12px 0 6px;font-size:14.5px;color:var(--coral)}
+.answer ul,.answer ol{margin:0 0 10px;padding-left:20px}
+.answer li{margin:2px 0}
+.answer .think{color:var(--mut)}
+.cite{border:0;background:var(--coral-bg);color:var(--coral);font:600 11px var(--mono);border-radius:4px;padding:0 4px;margin:0 1px;cursor:pointer;vertical-align:1px}
+.cite:hover{background:var(--coral);color:#1a0b09}
+.ansbar{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:10px;font-size:11.5px;color:var(--mut)}
+.num{display:inline-block;min-width:20px;text-align:center;font:600 11px var(--mono);color:#1a0b09;background:var(--coral);border-radius:4px;margin-right:6px;padding:0 3px}
 .quick{display:flex;flex-wrap:wrap;gap:6px;margin-top:9px}
 .quick button{border:1px solid var(--line2);background:transparent;border-radius:999px;padding:2px 10px;font-size:12px;color:var(--body);cursor:pointer}
 .quick button:hover{border-color:var(--coral);color:var(--coral)}
@@ -155,11 +170,20 @@ dialog.ctx{width:min(780px,calc(100vw - 28px))}
   <aside>
     <div class="brand"><h1>강의 콘텐츠 <span>지도</span></h1><p id="stats"></p></div>
     <div class="searchbox">
+      <div class="modes" role="group" aria-label="모드">
+        <button type="button" id="modeSearch" aria-pressed="true">검색</button>
+        <button type="button" id="modeAsk" aria-pressed="false">AI에게 질문</button>
+      </div>
       <label class="search" for="q">
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="7" cy="7" r="5.2" stroke="currentColor" stroke-width="1.6"/><path d="M11 11l3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
         <input id="q" type="search" placeholder="검색어를 넣으면 네트워크에 표시됩니다" autocomplete="off" aria-label="슬라이드 내용 검색">
         <button class="x" type="button" id="qx" aria-label="검색어 지우기" hidden>×</button>
       </label>
+      <div class="askrow" id="askrow" hidden>
+        <button class="btn primary" type="button" id="askBtn">질문하기</button>
+        <button class="btn" type="button" id="stopBtn" hidden>중지</button>
+        <span class="meta" id="askHint">내 강의안에서 근거를 찾아 답합니다</span>
+      </div>
       <div class="quick" id="quick"></div>
     </div>
     <div class="pbody" id="pbody"></div>
@@ -240,8 +264,15 @@ const lectIds = [...lectTopic.keys()];
 $('#stats').innerHTML = `강의안 <b>${lectIds.length}</b>개 · 슬라이드 <b>${D.slides.length.toLocaleString()}</b>장 · 소주제 <b>${subs.length}</b>개 · ${esc(D.built)}`;
 $('#legend').innerHTML = D.groups.map((g, i) => `<span><i style="background:${GCOL[i]}"></i>${esc(g.name)}</span>`).join('') +
   `<span><i style="background:#8594aa"></i>강의안</span>`;
-$('#quick').innerHTML = ['MCP', '하네스', 'RAG', '프롬프트', '피벗', 'Apps Script', '할루시네이션', '배포']
-  .map(k => `<button type="button" data-q="${k}">${k}</button>`).join('');
+const QUICK_SEARCH = ['MCP', '하네스', 'RAG', '프롬프트', '피벗', 'Apps Script', '할루시네이션', '배포'];
+const QUICK_ASK = ['공무원에게 MCP를 처음 설명할 때 어떤 순서로 가르쳤나요?', '하네스를 비개발자에게 설명한 비유를 모아 주세요',
+  '엑셀 업무자동화 실습 예제는 뭐가 있었나요?', 'AI 데이터분석 8시간 과정 목차를 기존 강의로 짜 주세요'];
+let mode = 'search';
+function renderQuick() {
+  $('#quick').innerHTML = (mode === 'search' ? QUICK_SEARCH : QUICK_ASK)
+    .map(k => `<button type="button" data-q="${esc(k)}">${esc(mode === 'search' ? k : short(k, 24))}</button>`).join('');
+}
+renderQuick();
 
 // ───────── 3D 그래프 데이터: 대주제 → 소주제 → 강의안
 function lectMainGroup(id) {
@@ -427,12 +458,29 @@ function renderTopic() {
     <div class="sec"><h3>슬라이드</h3>${list.slice(0, 150).map(card).join('')}</div>`;
   $('#pbody').scrollTop = 0;
 }
+// '강의안으로 좁히기'를 네트워크에도 반영: 고른 강의안과 그 강의안이 다룬 주제만 남긴다
+function linkLectFilter() {
+  const t = subById.get(current); if (!t) return;
+  if (!lectFilter) {
+    currentLect = null;
+    hiTopic = new Map([[current, t.slides]]); for (const [r] of t.related) hiTopic.set(r, 0);
+    hiLect = new Map(t.top_lectures.map(([d, n], i) => [d, {n, rank: i}]));
+    refresh(); fly(nodeById.get(current), 220);
+    setStatus(`<b>${esc(t.name)}</b> · 슬라이드 ${t.slides}장 · 강의안 ${t.lectures}개`);
+    return;
+  }
+  const m = lectTopic.get(lectFilter) || new Map();
+  currentLect = lectFilter;
+  hiTopic = new Map(m); hiLect = new Map([[lectFilter, {n: m.get(current) || 0, rank: 0}]]);
+  refresh(); fitHi();
+  setStatus(`<b>${esc(short(L[lectFilter]?.t || '', 28))}</b> · 「${esc(t.name)}」 슬라이드 ${m.get(current) || 0}장 · 이 강의안이 다룬 주제 ${m.size}개`);
+}
 function openLecture(id, noModal) {
   currentLect = id; current = null; clearQuery();
   const m = lectTopic.get(id) || new Map();
   hiTopic = new Map(m); hiLect = new Map([[id, {n: 0, rank: 0}]]);
   focusMode = true; refresh();
-  const n = nodeById.get('L:' + id); if (n) fly(n, 180);
+  fitHi();
   const l = L[id] || {}, list = byLecture.get(id) || [];
   setStatus(`<b>${esc(short(l.t || id, 30))}</b> · 이 강의안이 다룬 주제 ${m.size}개`);
   $('#pbody').innerHTML = `<div class="kicker">강의안</div><h2>${esc(l.t || id)}</h2>
@@ -508,14 +556,16 @@ $('#pv').addEventListener('close', () => { $('#pvBody').innerHTML = ''; });
 
 // ───────── 이벤트
 document.addEventListener('click', e => {
-  const q = e.target.closest('[data-q]'); if (q) { $('#q').value = q.dataset.q; runSearch(q.dataset.q); return; }
+  const q = e.target.closest('[data-q]'); if (q) { $('#q').value = q.dataset.q; mode === 'ask' ? ask(q.dataset.q) : runSearch(q.dataset.q); return; }
+  const ct = e.target.closest('[data-cite]'); if (ct) { const s = askPicks[+ct.dataset.cite - 1]; if (s) openPreview(s, false); return; }
+  const ac = e.target.closest('[data-askctx]'); if (ac) { askPicks.forEach(s => selected.add(s.n)); updateFoot(); syncCards(); $('#makeCtx').click(); return; }
   const lo = e.target.closest('[data-lectopen]'); if (lo) { const list = byLecture.get(lo.dataset.lectopen) || []; if (list[0]) openPreview(list[0], true); return; }
   const pv = e.target.closest('[data-pv]'); if (pv) { openPreview(D.slides[+pv.dataset.pv], false); return; }
   const jp = e.target.closest('[data-jump]'); if (jp) { pvSrc = D.previewBase + pvLect + '.html#' + encodeURIComponent(jp.dataset.jump); setTab('render'); return; }
   const oi = e.target.closest('[data-oi]'); if (oi) { showDigest(+oi.dataset.oi); return; }
   const tb = e.target.closest('[data-tab]'); if (tb) { setTab(tb.dataset.tab); return; }
   const t = e.target.closest('[data-topic]'); if (t) { selectTopic(t.dataset.topic, true); return; }
-  const lf = e.target.closest('[data-lf]'); if (lf) { lectFilter = lf.dataset.lf || null; renderTopic(); return; }
+  const lf = e.target.closest('[data-lf]'); if (lf) { lectFilter = lf.dataset.lf || null; renderTopic(); linkLectFilter(); return; }
   const lc = e.target.closest('[data-lect]'); if (lc) { openLecture(lc.dataset.lect, true); return; }
 });
 $('#pbody').addEventListener('change', e => {
@@ -523,7 +573,23 @@ $('#pbody').addEventListener('change', e => {
   const n = +c.dataset.n; e.target.checked ? selected.add(n) : selected.delete(n);
   c.classList.toggle('picked', e.target.checked); updateFoot();
 });
-let qt; $('#q').addEventListener('input', e => { clearTimeout(qt); qt = setTimeout(() => runSearch(e.target.value.trim()), 220); });
+let qt; $('#q').addEventListener('input', e => { if (mode !== 'search') return; clearTimeout(qt); qt = setTimeout(() => runSearch(e.target.value.trim()), 220); });
+$('#q').addEventListener('keydown', e => { if (mode === 'ask' && e.key === 'Enter' && !e.isComposing) { e.preventDefault(); ask($('#q').value.trim()); } });
+function setMode(m) {
+  mode = m;
+  $('#modeSearch').setAttribute('aria-pressed', m === 'search'); $('#modeAsk').setAttribute('aria-pressed', m === 'ask');
+  $('#askrow').hidden = m !== 'ask';
+  $('#q').placeholder = m === 'search' ? '검색어를 넣으면 네트워크에 표시됩니다' : '질문을 쓰고 Enter (예: MCP를 공무원에게 어떻게 설명했지?)';
+  $('#q').value = ''; $('#qx').hidden = true; renderQuick(); $('#q').focus();
+  askCtl?.abort();
+  if (m === 'search') runSearch('');
+  else { $('#pbody').innerHTML = `<div class="kicker">AI에게 질문</div><h2>내 강의안을 근거로 답합니다</h2>
+    <div class="meta">질문을 쓰고 Enter를 누르면, 먼저 관련 슬라이드를 BM25로 찾아 네트워크에 표시하고 그 슬라이드만 근거로 LLM이 답합니다.
+    답의 [번호]를 누르면 해당 강의안 원본이 열립니다.</div>`; }
+}
+$('#modeSearch').onclick = () => setMode('search');
+$('#modeAsk').onclick = () => setMode('ask');
+$('#askBtn').onclick = () => ask($('#q').value.trim());
 $('#qx').onclick = () => { $('#q').value = ''; runSearch(''); $('#q').focus(); };
 $('#btnFit').onclick = () => focusMode ? fitHi() : Graph.zoomToFit(900, 10, n => n.kind !== 'lect');
 $('#btnLect').onclick = e => { showLects = !showLects; e.currentTarget.setAttribute('aria-pressed', showLects); refresh(); };
@@ -567,6 +633,147 @@ $('#copyCtx').onclick = async () => {
   try { await navigator.clipboard.writeText(ta.value); $('#copied').textContent = '복사했습니다.'; }
   catch (e) { ta.focus(); ta.select(); $('#copied').textContent = '자동 복사가 막혀 있어 전체 선택해 두었습니다. Ctrl+C로 복사하세요.'; }
 };
+
+// ───────── AI에게 질문: BM25로 근거 슬라이드 → LLM 답변
+function toks(s) {
+  const out = [];
+  for (const m of s.toLowerCase().matchAll(/[a-z0-9][a-z0-9+#.\-]*|[가-힣]+/g)) {
+    const w = m[0];
+    if (/[가-힣]/.test(w)) { if (w.length === 1) continue; for (let i = 0; i < w.length - 1; i++) out.push(w.slice(i, i + 2)); }
+    else if (w.length >= 2) out.push(w);
+  }
+  return out;
+}
+let IDX = null;
+function buildIdx() {
+  const tfs = [], lens = [], df = new Map();
+  for (const s of D.slides) {
+    const tf = new Map(); let len = 0;
+    for (const t of toks(s.h + ' ' + s.h + ' ' + s.x)) { tf.set(t, (tf.get(t) || 0) + 1); len++; }
+    tfs.push(tf); lens.push(len); for (const t of tf.keys()) df.set(t, (df.get(t) || 0) + 1);
+  }
+  IDX = {tfs, lens, df, N: D.slides.length, avg: lens.reduce((a, b) => a + b, 0) / D.slides.length};
+}
+// 질문 문장에 흔한 말(두 글자 조각)은 검색어에서 뺀다
+const QSTOP = new Set(toks('처음 설명 어떤 어떻게 순서 가르쳤나요 가르친 했나요 있었나요 알려 주세요 모아 짜 줘 기존 강의 강의안 과정 대상 시간 내용 관련 무엇 뭐가 방법 정리 해주 대해 위한 에게 할때 때 좋을까'));
+// 파일 경로·코드 조각처럼 생긴 슬라이드는 근거에서 뺀다
+const isJunk = s => /^\.{0,2}\//.test(s.h) || /[A-Za-z0-9_-]{24,}/.test(s.h) || (!/[가-힣]{2}/.test(s.h) && /[\/\\]/.test(s.h)) || s.x.length < 60;
+function retrieve(q, k = 14) {
+  if (!IDX) buildIdx();
+  const sc = new Float64Array(IDX.N);
+  for (const t of new Set(toks(q))) {
+    if (QSTOP.has(t)) continue;
+    const n = IDX.df.get(t); if (!n || n > IDX.N * .35) continue;       // 너무 흔한 조각은 무시
+    const w = /^[a-z0-9]/.test(t) ? 2.2 : 1;                              // MCP·RAG 같은 영문 용어는 더 크게
+    const idf = Math.log(1 + (IDX.N - n + .5) / (n + .5)) * w;
+    for (let i = 0; i < IDX.N; i++) { const f = IDX.tfs[i].get(t); if (f) sc[i] += idf * f * 2.4 / (f + 1.4 * (.3 + .7 * IDX.lens[i] / IDX.avg)); }
+  }
+  // 질문에 소주제 키워드가 나오면 그 주제에 배정된 슬라이드를 끌어올린다
+  const ql = q.toLowerCase(), boost = new Set();
+  for (const t of subs) if (t.keywords.some(kw => kw.length >= 2 && ql.includes(kw.toLowerCase()))) boost.add(t.id);
+  if (boost.size) for (let i = 0; i < IDX.N; i++) if (sc[i] && D.slides[i].t.some(t => boost.has(t))) sc[i] *= 1.8;
+  const order = [...sc.keys()].filter(i => sc[i] > 0).sort((a, b) => sc[b] - sc[a]);
+  const per = new Map(), picks = [];
+  for (const i of order) {
+    const s = D.slides[i]; if ((per.get(s.d) || 0) >= 3 || isJunk(s)) continue;
+    per.set(s.d, (per.get(s.d) || 0) + 1); picks.push(s); if (picks.length >= k) break;
+  }
+  return picks;
+}
+function highlightSlides(list, labelFn) {
+  current = null; currentLect = null; lectFilter = null; query = '';
+  hiTopic = new Map(); const lc = new Map();
+  for (const s of list) { for (const t of s.t) hiTopic.set(t, (hiTopic.get(t) || 0) + 1); for (const d of s.docs) lc.set(d, (lc.get(d) || 0) + 1); }
+  hiLect = new Map([...lc.entries()].sort((a, b) => b[1] - a[1]).map(([d, n], i) => [d, {n, rank: i}]));
+  focusMode = true; refresh(); if (list.length) fitHi();
+  setStatus(labelFn());
+}
+function buildPrompt(q, picks) {
+  const ctx = picks.map((s, i) => {
+    const l = L[s.d] || {};
+    return `[${i + 1}] ${s.h}\n출처: ${[l.t, l.date, (l.c || []).join(', ')].filter(Boolean).join(' · ')}\n${s.x.slice(0, 750)}`;
+  }).join('\n\n');
+  return `아래는 강사 신성진의 기존 강의안에서 검색한 슬라이드 ${picks.length}장입니다.\n` +
+    `규칙: 이 자료만 근거로 한국어 합니다체로 답합니다. 근거 문장 끝에 [번호]를 붙입니다. 자료에 없으면 "기존 강의안에는 없습니다"라고 씁니다. ` +
+    `새 강의 구성을 물으면 차시·목차 형태로 제안하고 각 항목에 재사용할 슬라이드 번호를 적습니다. 불릿과 짧은 소제목(### )을 써도 됩니다.\n\n` +
+    `질문: ${q}\n\n자료:\n${ctx}`;
+}
+function mdLite(text) {
+  const lines = esc(text).split('\n'); let html = '', list = null;
+  const inline = t => t.replace(/\*\*(.+?)\*\*/g, '<b>$1</b>').replace(/\[(\d{1,2})\]/g, (m, n) => `<button class="cite" type="button" data-cite="${n}">${n}</button>`);
+  for (const raw of lines) {
+    const l = raw.trim();
+    const li = l.match(/^(?:[-*•]|\d+[.)])\s+(.*)$/);
+    if (li) { if (!list) { html += '<ul>'; list = true; } html += `<li>${inline(li[1])}</li>`; continue; }
+    if (list) { html += '</ul>'; list = null; }
+    if (!l) continue;
+    const h = l.match(/^#{1,4}\s+(.*)$/);
+    html += h ? `<h4>${inline(h[1])}</h4>` : `<p>${inline(l)}</p>`;
+  }
+  if (list) html += '</ul>';
+  return html;
+}
+let askPicks = [], askCtl = null;
+const samplePromise = (window.claude && window.claude.use) ? window.claude.use('sample').catch(() => null) : Promise.resolve(null);
+async function viaServer(prompt, onText, signal) {
+  const r = await fetch('api/ask', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({prompt}), signal});
+  if (!r.ok) {
+    let m = `서버 응답 ${r.status}`;
+    try { const j = await r.json(); m = j.message || m; } catch (e) {}
+    if (r.status === 404) m = 'AI 서버 함수(/api/ask)가 없습니다. Vercel 배포본에서 여세요.';
+    throw {code: 'server', message: m};
+  }
+  const rd = r.body.getReader(), dec = new TextDecoder(); let buf = '', text = '';
+  for (;;) {
+    const {value, done} = await rd.read(); if (done) break;
+    buf += dec.decode(value, {stream: true});
+    const parts = buf.split('\n'); buf = parts.pop();
+    for (const line of parts) {
+      if (!line.startsWith('data:')) continue;
+      const d = line.slice(5).trim(); if (d === '[DONE]') continue;
+      try { const j = JSON.parse(d); const dl = j.choices?.[0]?.delta?.content; if (dl) { text += dl; onText(text); } if (j.error) throw {code: 'server', message: j.error.message || 'OpenRouter 오류'}; }
+      catch (e) { if (e.code) throw e; }
+    }
+  }
+  if (!text) throw {code: 'server', message: '빈 답변이 왔습니다.'};
+  return text;
+}
+async function ask(q) {
+  if (!q) { $('#q').focus(); return; }
+  askCtl?.abort(); askCtl = new AbortController(); const signal = askCtl.signal;
+  askPicks = retrieve(q);
+  highlightSlides(askPicks, () => `질문 근거: 슬라이드 <b>${askPicks.length}</b>장 · 주제 <b>${hiTopic.size}</b>개 · 강의안 <b>${hiLect.size}</b>개`);
+  $('#pbody').innerHTML = `<div class="kicker">AI 답변</div><h2>${esc(q)}</h2>
+    <div class="answer" id="ans"><span class="think">${askPicks.length ? '내 강의안 근거 ' + askPicks.length + '장을 읽고 답을 쓰는 중…' : '관련 슬라이드를 찾지 못했습니다.'}</span></div>
+    <div class="ansbar" id="ansbar"></div>
+    <div class="sec"><h3>근거 슬라이드 (BM25 상위 ${askPicks.length}장)</h3>${askPicks.map((s, i) => card(s).replace('<h4>', `<h4><span class="num">${i + 1}</span>`)).join('')}</div>`;
+  $('#pbody').scrollTop = 0;
+  if (!askPicks.length) return;
+  $('#stopBtn').hidden = false; $('#askBtn').disabled = true;
+  const out = $('#ans'), prompt = buildPrompt(q, askPicks);
+  const show = t => { out.innerHTML = mdLite(t); };
+  let via = '';
+  try {
+    const sample = await samplePromise;
+    if (sample) {
+      via = 'Claude (claude.ai)';
+      await sample(prompt, {signal, cache: false, onText: ({text}) => show(text)});
+    } else {
+      via = 'OpenRouter (Vercel)';
+      await viaServer(prompt, show, signal);
+    }
+    $('#ansbar').innerHTML = `<span>${esc(via)} · 근거 ${askPicks.length}장</span><button class="btn" type="button" data-askctx="1">근거 슬라이드로 컨텍스트 만들기</button>`;
+  } catch (e) {
+    if (e?.name === 'AbortError' || e?.code === 'cancelled') { $('#ansbar').textContent = '중지했습니다.'; }
+    else {
+      const msg = {not_granted: 'Claude 사용을 허용하지 않아 답할 수 없습니다.', rate_limited: '요청이 많습니다. 잠시 뒤 다시 질문하세요.',
+        sampling_disabled: '이 계정에서는 Claude 호출을 쓸 수 없습니다.'}[e?.code] || e?.message || '답변 중 오류가 났습니다.';
+      if (!out.textContent || out.querySelector('.think')) out.innerHTML = `<p class="note">${esc(msg)}</p>`;
+      $('#ansbar').innerHTML = `<span>${esc(msg)}</span>`;
+    }
+  } finally { $('#stopBtn').hidden = true; $('#askBtn').disabled = false; }
+}
+$('#stopBtn').onclick = () => askCtl?.abort();
 
 setStatus(defaultStatus());
 renderIntro(); updateFoot();
