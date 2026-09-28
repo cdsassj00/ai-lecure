@@ -691,7 +691,7 @@ function go(){var h=decodeURIComponent(location.hash.slice(1));if(!h)return;var 
 var best=null,bl=1e9,els=document.body.querySelectorAll('h1,h2,h3,h4,h5,p,div,span,li,td,text,tspan,section,article');
 for(var i=0;i<els.length;i++){var e=els[i],t=norm(e.textContent);if(t.length<bl&&t.indexOf(k)>-1){best=e;bl=t.length}}
 if(!best)return;var box=best.closest('section,[class*=slide],[class*=page],article')||best;
-box.scrollIntoView({block:'start'});box.style.outline='3px solid #c0504d';box.style.outlineOffset='4px';
+box.scrollIntoView({block:'start',inline:'nearest'});window.scrollTo(0,window.scrollY);box.style.outline='3px solid #c0504d';box.style.outlineOffset='4px';
 setTimeout(function(){box.style.outline=''},2600)}
 window.addEventListener('load',function(){setTimeout(go,400)});window.addEventListener('hashchange',go)})();</script></body>
 </html>

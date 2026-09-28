@@ -324,14 +324,22 @@ function go(){var h=decodeURIComponent(location.hash.slice(1));if(!h)return;var 
 var best=null,bl=1e9,els=document.body.querySelectorAll('h1,h2,h3,h4,h5,p,div,span,li,td,text,tspan,section,article');
 for(var i=0;i<els.length;i++){var e=els[i],t=norm(e.textContent);if(t.length<bl&&t.indexOf(k)>-1){best=e;bl=t.length}}
 if(!best)return;var box=best.closest('section,[class*=slide],[class*=page],article')||best;
-box.scrollIntoView({block:'start'});box.style.outline='3px solid #c0504d';box.style.outlineOffset='4px';
+box.scrollIntoView({block:'start',inline:'nearest'});window.scrollTo(0,window.scrollY);box.style.outline='3px solid #c0504d';box.style.outlineOffset='4px';
 setTimeout(function(){box.style.outline=''},2600)}
 window.addEventListener('load',function(){setTimeout(go,400)});window.addEventListener('hashchange',go)})();</script>"""
 
 
 def write_preview(src: Path, dst: Path) -> bool:
-    """원본 강의안을 사이트용 미리보기로 복사한다. 크면 base64 이미지를 빼고, 그래도 크면 만들지 않는다."""
+    """원본 강의안을 사이트용 미리보기로 복사한다 (UTF-8로 통일).
+    크면 base64 이미지를 빼고, 그래도 크면 만들지 않는다."""
     b = src.read_bytes()
+    for enc in ("utf-8-sig", "cp949", "latin-1"):
+        try:
+            b = b.decode(enc).encode("utf-8")
+            break
+        except UnicodeDecodeError:
+            continue
+    b = re.sub(rb'(?i)<meta[^>]+charset=["\']?[a-z0-9_-]+["\']?[^>]*>', b'<meta charset="utf-8">', b)
     if len(b) > PREVIEW_MAX:
         b = _DATA_URI_B.sub(_BLANK, b)
         if len(b) > PREVIEW_MAX:

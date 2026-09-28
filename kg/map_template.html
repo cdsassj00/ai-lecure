@@ -3,225 +3,188 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>
+/* 3D 네트워크에 맞춘 다크 단일 테마 (신성진 네이비·코랄 계열) */
 :root{
-  --paper:#eef0f3; --panel:#ffffff; --panel2:#f6f7f9; --line:#dde2e9; --line2:#c7cfda;
-  --ink:#0f1b2d; --body:#3a4658; --mut:#6b7789; --faint:#98a3b3;
-  --navy:#16294a; --coral:#c0504d; --coral-bg:#f7e6e5; --coral-ink:#9e3431;
-  --g-fill:#e3e7ed; --g-line:#cbd3de;
-  --r1:#d7dfea; --r2:#a9bad0; --r3:#6f8aae; --r4:#3b5a85; --r5:#18305a;
-  --lab-dark:#0f1b2d; --lab-light:#ffffff;
-  --shadow:0 1px 2px rgba(15,27,45,.06),0 4px 16px rgba(15,27,45,.06);
+  color-scheme:dark;
+  --bg:#070d17; --space:#0a1322; --panel:#0f1a2b; --panel2:#132238; --line:#1f3149; --line2:#2b4260;
+  --ink:#eef3fa; --body:#bcc8d8; --mut:#8594aa; --faint:#56657c;
+  --coral:#ff7b6b; --coral-2:#e2574a; --coral-bg:rgba(255,123,107,.14);
+  --g1:#3987e5; --g2:#d95926; --g3:#199e70; --g4:#c98500; --g5:#d55181; --g6:#2e9e46; --g7:#9085e9;
   --sans:'IBM Plex Sans KR','Pretendard','Apple SD Gothic Neo','Malgun Gothic',system-ui,sans-serif;
   --mono:'IBM Plex Mono',ui-monospace,Menlo,Consolas,monospace;
-}
-@media (prefers-color-scheme: dark){
-  :root:not([data-theme="light"]){
-    color-scheme:dark;
-    --paper:#0c1219; --panel:#121a25; --panel2:#17212e; --line:#233043; --line2:#2f3f56;
-    --ink:#e9eef5; --body:#b9c4d2; --mut:#8a97a9; --faint:#5f6c80;
-    --navy:#dbe4f1; --coral:#e37c72; --coral-bg:#3a2224; --coral-ink:#f0a39b;
-    --g-fill:#141d29; --g-line:#26344a;
-    --r1:#26364d; --r2:#35507a; --r3:#4f73a6; --r4:#7c9dcc; --r5:#b9cdea;
-    --lab-dark:#0c1219; --lab-light:#e9eef5;
-    --shadow:0 1px 2px rgba(0,0,0,.3),0 4px 16px rgba(0,0,0,.25);
-  }
-}
-:root[data-theme="dark"]{
-  color-scheme:dark;
-  --paper:#0c1219; --panel:#121a25; --panel2:#17212e; --line:#233043; --line2:#2f3f56;
-  --ink:#e9eef5; --body:#b9c4d2; --mut:#8a97a9; --faint:#5f6c80;
-  --navy:#dbe4f1; --coral:#e37c72; --coral-bg:#3a2224; --coral-ink:#f0a39b;
-  --g-fill:#141d29; --g-line:#26344a;
-  --r1:#26364d; --r2:#35507a; --r3:#4f73a6; --r4:#7c9dcc; --r5:#b9cdea;
-  --lab-dark:#0c1219; --lab-light:#e9eef5;
-  --shadow:0 1px 2px rgba(0,0,0,.3),0 4px 16px rgba(0,0,0,.25);
 }
 [hidden]{display:none!important}
 *{box-sizing:border-box}
 html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.55 var(--sans);-webkit-font-smoothing:antialiased;word-break:keep-all}
 @media (min-width:901px){body{overflow:hidden}}
-body{margin:0;background:var(--paper);color:var(--ink);font:14px/1.55 var(--sans);-webkit-font-smoothing:antialiased;word-break:keep-all}
 button,input,textarea{font:inherit;color:inherit}
 :focus-visible{outline:2px solid var(--coral);outline-offset:2px}
 
-.app{display:grid;grid-template-rows:max-content minmax(0,1fr);height:100%}
-header.bar{display:flex;align-items:center;gap:20px;padding:14px 22px;min-height:70px;border-bottom:1px solid var(--line);background:var(--panel)}
-.brand h1{margin:0;font-size:18px;font-weight:700;letter-spacing:-.4px;line-height:1.2}
-.brand p{margin:2px 0 0;font-size:12px;color:var(--mut)}
-.brand p b{color:var(--ink);font-weight:600;font-variant-numeric:tabular-nums}
-.search{margin-left:auto;position:relative;flex:0 1 380px}
-.search input{width:100%;padding:9px 12px 9px 34px;border:1px solid var(--line2);border-radius:8px;background:var(--panel2)}
-.search svg{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--mut)}
+.app{display:grid;grid-template-columns:minmax(360px,440px) minmax(0,1fr);height:100%}
+aside{background:var(--panel);border-right:1px solid var(--line);display:grid;grid-template-rows:max-content max-content minmax(0,1fr) max-content;min-height:0;z-index:2}
+.brand{padding:18px 20px 10px}
+.brand h1{margin:0;font-size:19px;font-weight:700;letter-spacing:-.4px}
+.brand h1 span{color:var(--coral)}
+.brand p{margin:3px 0 0;font-size:12px;color:var(--mut);font-variant-numeric:tabular-nums}
+.brand p b{color:var(--ink);font-weight:600}
+.searchbox{padding:4px 20px 14px;border-bottom:1px solid var(--line)}
+.search{position:relative;display:block}
+.search input{width:100%;padding:11px 36px 11px 38px;border:1px solid var(--line2);border-radius:10px;background:var(--panel2);font-size:14.5px}
+.search input::placeholder{color:var(--faint)}
+.search svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--mut)}
+.search .x{position:absolute;right:8px;top:50%;transform:translateY(-50%);border:0;background:none;color:var(--mut);cursor:pointer;font-size:16px;padding:4px 6px}
+.quick{display:flex;flex-wrap:wrap;gap:6px;margin-top:9px}
+.quick button{border:1px solid var(--line2);background:transparent;border-radius:999px;padding:2px 10px;font-size:12px;color:var(--body);cursor:pointer}
+.quick button:hover{border-color:var(--coral);color:var(--coral)}
 
-.main{display:grid;grid-template-columns:minmax(0,1fr) minmax(360px,480px);min-height:0}
-.mapwrap{position:relative;min-height:0;overflow:hidden}
-#map{width:100%;height:100%;display:block}
-.legend{position:absolute;left:18px;bottom:16px;display:flex;align-items:center;gap:10px;font-size:11.5px;color:var(--mut);
-  background:color-mix(in srgb,var(--paper) 85%,transparent);padding:6px 10px;border-radius:6px}
-.legend .ramp{display:flex}
-.legend .ramp i{width:18px;height:8px;display:block}
-.hintbar{position:absolute;left:18px;top:14px;font-size:12px;color:var(--mut)}
-
-g.group circle{fill:var(--g-fill);stroke:var(--g-line);stroke-width:1}
-text.glabel{font-size:12.5px;font-weight:700;fill:var(--body);letter-spacing:.04em;text-anchor:middle;pointer-events:none;
-  paint-order:stroke;stroke:var(--paper);stroke-width:5px;stroke-linejoin:round}
-g.sub{cursor:pointer}
-g.sub circle{stroke:var(--panel);stroke-width:1.5;transition:stroke .15s}
-g.sub:hover circle,g.sub:focus-visible circle{stroke:var(--coral);stroke-width:2.5}
-g.sub.sel circle{stroke:var(--coral);stroke-width:3.5}
-g.sub.dim{opacity:.28}
-g.sub text{text-anchor:middle;pointer-events:none;font-weight:600}
-g.sub text.n{font-family:var(--mono);font-weight:500;font-size:10.5px}
-g.sub .hit{fill:var(--coral);font-family:var(--mono);font-size:10px;font-weight:600}
-.tip{position:absolute;pointer-events:none;background:var(--ink);color:var(--paper);font-size:12px;padding:7px 10px;border-radius:6px;
-  box-shadow:var(--shadow);max-width:260px;line-height:1.45}
-.tip b{display:block;font-size:12.5px}
-
-aside{background:var(--panel);border-left:1px solid var(--line);display:grid;grid-template-rows:auto 1fr auto;min-height:0}
-.phead{padding:18px 22px 12px;border-bottom:1px solid var(--line)}
+.pbody{overflow:auto;min-height:0;padding:14px 18px 18px}
 .kicker{font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--coral)}
-.phead h2{margin:3px 0 4px;font-size:21px;line-height:1.3;letter-spacing:-.5px;text-wrap:balance}
+.pbody h2{margin:3px 0 4px;font-size:20px;line-height:1.3;letter-spacing:-.5px;text-wrap:balance}
 .meta{font-size:12.5px;color:var(--mut);font-variant-numeric:tabular-nums}
 .meta b{color:var(--ink);font-weight:600}
-.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
-.chip{border:1px solid var(--line2);background:transparent;border-radius:999px;padding:3px 10px;font-size:12px;color:var(--body);cursor:pointer}
-.chip:hover{border-color:var(--coral);color:var(--coral-ink)}
-.chip.on{background:var(--navy);border-color:var(--navy);color:var(--panel)}
-.chip .c{font-family:var(--mono);font-size:10.5px;color:var(--mut);margin-left:3px}
-.chip.on .c{color:inherit;opacity:.8}
-.rowlabel{font-size:11px;color:var(--mut);font-weight:600;letter-spacing:.06em;margin:12px 0 0}
+.sec{margin-top:16px}
+.sec>h3{margin:0 0 8px;font-size:11.5px;font-weight:600;letter-spacing:.08em;color:var(--mut);text-transform:uppercase}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line2);background:transparent;border-radius:999px;padding:3px 10px;font-size:12.5px;color:var(--body);cursor:pointer}
+.chip:hover{border-color:var(--coral);color:var(--ink)}
+.chip.on{background:var(--coral);border-color:var(--coral);color:#1a0b09;font-weight:600}
+.chip i{width:8px;height:8px;border-radius:50%;display:inline-block}
+.chip .c{font-family:var(--mono);font-size:10.5px;opacity:.75}
 
-.pbody{overflow:auto;padding:6px 14px 18px;min-height:0}
-.card{display:grid;grid-template-columns:auto 1fr;gap:4px 10px;padding:12px 10px;border-bottom:1px solid var(--line)}
+.tree{display:grid;gap:14px;margin-top:14px}
+.tree .g{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:700;letter-spacing:.06em;color:var(--body)}
+.tree .g i{width:10px;height:10px;border-radius:50%}
+.tree ul{list-style:none;margin:6px 0 0;padding:0;display:grid;gap:1px}
+.tree li button{all:unset;display:grid;grid-template-columns:1fr 90px 64px;align-items:center;gap:10px;width:100%;box-sizing:border-box;padding:5px 8px;border-radius:6px;cursor:pointer;font-size:13.5px}
+.tree li button:hover,.tree li button:focus-visible{background:var(--panel2)}
+.tree .bar{height:5px;background:var(--line);border-radius:3px;overflow:hidden}
+.tree .bar b{display:block;height:100%;border-radius:3px}
+.tree .n{font-family:var(--mono);font-size:11px;color:var(--mut);text-align:right;white-space:nowrap}
+
+.lects{list-style:none;margin:0;padding:0;display:grid;gap:2px}
+.lects button{all:unset;display:grid;grid-template-columns:1fr auto;gap:10px;width:100%;box-sizing:border-box;padding:7px 8px;border-radius:6px;cursor:pointer;font-size:13px}
+.lects button:hover{background:var(--panel2)}
+.lects .d{font-family:var(--mono);font-size:11px;color:var(--mut)}
+.lects .t{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+.card{display:grid;grid-template-columns:auto 1fr;gap:3px 10px;padding:11px 8px;border-bottom:1px solid var(--line)}
 .card:last-child{border-bottom:0}
 .card input{margin:3px 0 0;width:16px;height:16px;accent-color:var(--coral)}
-.card h3{margin:0;font-size:14px;line-height:1.45;font-weight:600;letter-spacing:-.2px}
-.card .x{grid-column:2;margin:2px 0 0;font-size:12.8px;color:var(--body);white-space:pre-line;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
-.card.open .x{-webkit-line-clamp:unset;display:block}
-.card .src{grid-column:2;display:flex;flex-wrap:wrap;gap:4px 8px;align-items:center;font-size:11.5px;color:var(--mut);margin-top:4px}
-.card .src a{color:inherit}
-.badge{font-size:10.5px;font-weight:600;color:var(--coral-ink);background:var(--coral-bg);border-radius:4px;padding:1px 6px}
-.more{border:0;background:none;padding:0;font-size:11.5px;color:var(--coral-ink);cursor:pointer;text-decoration:underline;text-underline-offset:2px}
-.card.picked{background:color-mix(in srgb,var(--coral-bg) 55%,transparent);border-radius:6px}
-
-.intro{padding:10px 8px}
-.intro ol{margin:10px 0 0;padding-left:20px;color:var(--body);font-size:13.5px;display:grid;gap:4px}
-.rank{width:100%;border-collapse:collapse;margin-top:14px;font-size:13px;font-variant-numeric:tabular-nums}
-.rank td{padding:6px 4px;border-bottom:1px solid var(--line)}
-.rank td.n{text-align:right;color:var(--mut);font-family:var(--mono);font-size:11.5px;white-space:nowrap}
-.rank button{all:unset;cursor:pointer;color:var(--ink)}
-.rank button:hover{color:var(--coral-ink);text-decoration:underline}
-.rank .g{color:var(--mut);font-size:11.5px}
-.bar{height:6px;background:var(--line);border-radius:3px;overflow:hidden;min-width:60px}
-.bar i{display:block;height:100%;background:var(--r4)}
+.card h4{margin:0;font-size:14px;line-height:1.45;font-weight:600}
+.card h4 button{all:unset;cursor:pointer}
+.card h4 button:hover,.card h4 button:focus-visible{color:var(--coral);text-decoration:underline;text-underline-offset:3px}
+.card .x{grid-column:2;margin:1px 0 0;font-size:12.8px;color:var(--body);white-space:pre-line;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.card .x mark{background:var(--coral-bg);color:var(--coral);border-radius:2px;padding:0 1px}
+.card .src{grid-column:2;display:flex;flex-wrap:wrap;gap:4px 8px;align-items:center;font-size:11.5px;color:var(--mut);margin-top:3px}
+.card.picked{background:var(--coral-bg);border-radius:8px}
+.badge{font-size:10.5px;font-weight:600;color:var(--coral);border:1px solid rgba(255,123,107,.4);border-radius:4px;padding:0 5px}
+.open{border:1px solid var(--line2);background:var(--panel2);border-radius:5px;padding:1px 8px;font-size:11px;cursor:pointer;color:var(--ink)}
+.open:hover{border-color:var(--coral)}
 
 .pfoot{border-top:1px solid var(--line);padding:12px 18px;display:flex;align-items:center;gap:8px;background:var(--panel2)}
 .pfoot .count{font-size:12.5px;color:var(--body);margin-right:auto}
 .pfoot .count b{font-family:var(--mono);color:var(--ink)}
-.btn{border:1px solid var(--line2);background:var(--panel);border-radius:7px;padding:7px 12px;font-size:12.5px;cursor:pointer;font-weight:500}
+.btn{border:1px solid var(--line2);background:var(--panel);border-radius:7px;padding:7px 12px;font-size:12.5px;cursor:pointer;font-weight:500;color:var(--ink)}
 .btn:hover{border-color:var(--ink)}
-.btn.primary{background:var(--coral);border-color:var(--coral);color:#fff;font-weight:600}
-.btn.primary:disabled{opacity:.45;cursor:default}
+.btn.primary{background:var(--coral);border-color:var(--coral);color:#1a0b09;font-weight:700}
+.btn.primary:disabled{opacity:.4;cursor:default}
 
-dialog{border:0;border-radius:12px;padding:0;width:min(760px,calc(100vw - 32px));max-height:calc(100vh - 48px);background:var(--panel);color:var(--ink);box-shadow:var(--shadow)}
-dialog::backdrop{background:rgba(8,14,24,.45)}
-.dlg{display:grid;grid-template-rows:auto 1fr auto;max-height:calc(100vh - 48px)}
-.dlg header{padding:18px 20px 10px}
-.dlg h2{margin:0;font-size:18px}
-.dlg p{margin:4px 0 0;font-size:12.5px;color:var(--mut)}
-.dlg textarea{margin:0 20px;min-height:320px;resize:vertical;border:1px solid var(--line2);border-radius:8px;padding:12px;background:var(--panel2);
-  font:12.5px/1.6 var(--mono);color:var(--body)}
-.dlg footer{display:flex;gap:8px;justify-content:flex-end;padding:14px 20px;align-items:center}
-.dlg footer .ok{margin-right:auto;font-size:12.5px;color:var(--mut)}
+main{position:relative;min-width:0;min-height:0;background:radial-gradient(1200px 800px at 60% 40%,#10203a 0%,var(--space) 55%,var(--bg) 100%)}
+#graph{position:absolute;inset:0}
+.overlay{position:absolute;left:18px;top:14px;right:18px;display:flex;gap:12px;align-items:flex-start;pointer-events:none}
+.status{font-size:12.5px;color:var(--body);background:rgba(10,19,34,.72);border:1px solid var(--line);border-radius:8px;padding:7px 11px;backdrop-filter:blur(6px)}
+.status b{color:var(--coral)}
+.legend{margin-left:auto;display:flex;flex-wrap:wrap;gap:6px 12px;justify-content:flex-end;max-width:62%;font-size:11.5px;color:var(--body);
+  background:rgba(10,19,34,.72);border:1px solid var(--line);border-radius:8px;padding:7px 11px;backdrop-filter:blur(6px);pointer-events:auto}
+.legend span{display:inline-flex;align-items:center;gap:5px}
+.legend i{width:9px;height:9px;border-radius:50%}
+.ctrl{position:absolute;right:18px;bottom:16px;display:flex;gap:6px}
+.ctrl button{border:1px solid var(--line2);background:rgba(10,19,34,.8);color:var(--ink);border-radius:7px;padding:6px 11px;font-size:12px;cursor:pointer}
+.ctrl button[aria-pressed="true"]{border-color:var(--coral);color:var(--coral)}
+.help{position:absolute;left:18px;bottom:16px;font-size:11.5px;color:var(--mut)}
+.scene-tip{background:#0b1526;border:1px solid var(--line2);color:var(--ink);font-size:12px;padding:7px 10px;border-radius:7px;max-width:280px;font-family:var(--sans)}
+#loading{position:absolute;inset:0;display:grid;place-items:center;color:var(--mut);font-size:13px;pointer-events:none}
 
-.card h3 button{all:unset;cursor:pointer}
-.card h3 button:hover,.card h3 button:focus-visible{color:var(--coral-ink);text-decoration:underline;text-underline-offset:3px}
-.pvbtn{border:1px solid var(--line2);background:var(--panel);border-radius:5px;padding:1px 7px;font-size:11px;cursor:pointer;color:var(--body)}
-.pvbtn:hover{border-color:var(--coral);color:var(--coral-ink)}
-dialog.pv{width:min(1240px,calc(100vw - 32px));height:calc(100vh - 48px);max-height:none}
+dialog{border:1px solid var(--line2);border-radius:14px;padding:0;background:var(--panel);color:var(--ink);box-shadow:0 20px 60px rgba(0,0,0,.55)}
+dialog::backdrop{background:rgba(3,7,14,.66)}
+dialog.pv{width:min(1320px,calc(100vw - 28px));height:calc(100vh - 36px);max-height:none}
 .pvwrap{display:grid;grid-template-rows:auto auto 1fr;height:100%}
-.pvhead{display:flex;gap:16px;align-items:flex-start;padding:16px 20px 10px;border-bottom:1px solid var(--line)}
+.pvhead{display:flex;gap:16px;align-items:flex-start;padding:14px 18px 10px}
 .pvhead h2{margin:2px 0 2px;font-size:17px;line-height:1.35}
-.pvhead .links{margin-left:auto;display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.pvhead .links{margin-left:auto;display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end;align-items:center}
 .pvhead a{font-size:12px;color:var(--body);border:1px solid var(--line2);border-radius:6px;padding:5px 9px;text-decoration:none;white-space:nowrap}
 .pvhead a:hover{border-color:var(--ink)}
-.tabs{display:flex;gap:2px;padding:0 20px;border-bottom:1px solid var(--line);background:var(--panel)}
-.tabs button{border:0;background:none;padding:10px 12px;font-size:13px;color:var(--mut);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px}
+.tabs{display:flex;gap:2px;padding:0 18px;border-bottom:1px solid var(--line)}
+.tabs button{border:0;background:none;padding:9px 12px;font-size:13px;color:var(--mut);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px}
 .tabs button[aria-selected="true"]{color:var(--ink);font-weight:600;border-bottom-color:var(--coral)}
-.pvbody{min-height:0;position:relative;background:var(--panel2)}
-.pvbody iframe{width:100%;height:100%;border:0;background:#fff;display:block}
-.digest{display:grid;grid-template-columns:minmax(220px,300px) 1fr;height:100%;min-height:0}
-.digest ol{margin:0;padding:14px 14px 14px 36px;overflow:auto;border-right:1px solid var(--line);font-size:12.5px;display:grid;gap:3px;align-content:start;background:var(--panel)}
-.digest ol li{color:var(--body);cursor:pointer;line-height:1.45}
-.digest ol li::marker{font-family:var(--mono);font-size:10.5px;color:var(--faint)}
-.digest ol li.has{color:var(--ink)}
-.digest ol li.cur{color:var(--coral-ink);font-weight:600}
+.pvbody{min-height:0;position:relative;background:#fff;overflow:hidden}
+.pvbody iframe{position:absolute;left:0;top:0;width:1600px;border:0;display:block;background:#fff;transform-origin:0 0}
+.digest{display:grid;grid-template-columns:minmax(220px,300px) 1fr;height:100%;min-height:0;background:var(--panel)}
+.digest ol{margin:0;padding:14px 14px 14px 36px;overflow:auto;border-right:1px solid var(--line);font-size:12.5px;display:grid;gap:3px;align-content:start}
+.digest ol li{color:var(--mut);cursor:pointer;line-height:1.45}
+.digest ol li.has{color:var(--body)}
+.digest ol li.cur{color:var(--coral);font-weight:600}
 .digest ol li:hover{text-decoration:underline}
 .digest .txt{overflow:auto;padding:22px 28px;min-height:0}
-.digest .txt h3{margin:0 0 10px;font-size:18px;letter-spacing:-.3px;line-height:1.4}
-.digest .txt pre{white-space:pre-wrap;font:13.5px/1.75 var(--sans);color:var(--body);margin:0;max-width:72ch}
-.digest .txt .note{font-size:12.5px;color:var(--mut)}
-.nopv{padding:40px;color:var(--mut);font-size:13.5px}
-@media (max-width:900px){.digest{grid-template-columns:1fr;grid-template-rows:40% 1fr}.digest ol{border-right:0;border-bottom:1px solid var(--line)}}
+.digest .txt h3{margin:0 0 10px;font-size:18px;line-height:1.4}
+.digest .txt pre{white-space:pre-wrap;font:13.5px/1.8 var(--sans);color:var(--body);margin:0;max-width:72ch}
+.note{font-size:12.5px;color:var(--mut)}
+.linkbtn{border:0;background:none;padding:0;color:var(--coral);cursor:pointer;text-decoration:underline;font-size:12.5px}
+dialog.ctx{width:min(780px,calc(100vw - 28px))}
+.ctxwrap{display:grid;grid-template-rows:auto 1fr auto;max-height:calc(100vh - 48px)}
+.ctxwrap header{padding:18px 20px 10px}
+.ctxwrap h2{margin:0;font-size:18px}
+.ctxwrap p{margin:4px 0 0;font-size:12.5px;color:var(--mut)}
+.ctxwrap textarea{margin:0 20px;min-height:340px;resize:vertical;border:1px solid var(--line2);border-radius:8px;padding:12px;background:var(--panel2);font:12.5px/1.6 var(--mono);color:var(--body)}
+.ctxwrap footer{display:flex;gap:8px;justify-content:flex-end;padding:14px 20px;align-items:center}
+.ctxwrap .ok{margin-right:auto;font-size:12.5px;color:var(--mut)}
 
 @media (max-width:900px){
-  .app{height:auto}
-  header.bar{flex-wrap:wrap;padding-inline:16px}
-  .search{flex:1 1 100%;margin-left:0}
-  .main{grid-template-columns:1fr}
-  .mapwrap{height:min(92vw,560px)}
-  aside{border-left:0;border-top:1px solid var(--line)}
-  .pbody{max-height:none}
+  .app{grid-template-columns:1fr;height:auto}
+  main{height:62vh;order:-1}
+  aside{border-right:0;border-top:1px solid var(--line)}
+  .legend{display:none}
   .pfoot{position:sticky;bottom:0}
+  .digest{grid-template-columns:1fr;grid-template-rows:40% 1fr}
 }
-@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 
 <div class="app">
-  <header class="bar">
-    <div class="brand">
-      <h1>강의 콘텐츠 지도</h1>
-      <p id="stats"></p>
+  <aside>
+    <div class="brand"><h1>강의 콘텐츠 <span>지도</span></h1><p id="stats"></p></div>
+    <div class="searchbox">
+      <label class="search" for="q">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="7" cy="7" r="5.2" stroke="currentColor" stroke-width="1.6"/><path d="M11 11l3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        <input id="q" type="search" placeholder="검색어를 넣으면 네트워크에 표시됩니다" autocomplete="off" aria-label="슬라이드 내용 검색">
+        <button class="x" type="button" id="qx" aria-label="검색어 지우기" hidden>×</button>
+      </label>
+      <div class="quick" id="quick"></div>
     </div>
-    <label class="search" for="q">
-      <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="7" cy="7" r="5.2" stroke="currentColor" stroke-width="1.6"/><path d="M11 11l3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
-      <input id="q" type="search" placeholder="슬라이드 내용 검색 (예: MCP, 피벗, 할루시네이션)" autocomplete="off" aria-label="슬라이드 내용 검색">
-    </label>
-  </header>
-  <div class="main">
-    <div class="mapwrap">
-      <svg id="map" role="img" aria-label="대주제별로 묶은 소주제 버블 지도"></svg>
-      <div class="hintbar" id="hintbar">버블 크기 = 슬라이드 수 · 버블을 누르면 오른쪽에 슬라이드가 모입니다</div>
-      <div class="legend" aria-hidden="true"><span>다룬 강의안 적음</span><span class="ramp"><i style="background:var(--r1)"></i><i style="background:var(--r2)"></i><i style="background:var(--r3)"></i><i style="background:var(--r4)"></i><i style="background:var(--r5)"></i></span><span>많음</span></div>
-      <div class="tip" id="tip" hidden></div>
+    <div class="pbody" id="pbody"></div>
+    <div class="pfoot">
+      <span class="count">선택 <b id="selN">0</b>장</span>
+      <button class="btn" type="button" id="autoPick">추천 12장</button>
+      <button class="btn" type="button" id="clearSel">비우기</button>
+      <button class="btn primary" type="button" id="makeCtx" disabled>컨텍스트 만들기</button>
     </div>
-    <aside>
-      <div class="phead" id="phead"></div>
-      <div class="pbody" id="pbody"></div>
-      <div class="pfoot">
-        <span class="count">선택 <b id="selN">0</b>장</span>
-        <button class="btn" type="button" id="autoPick">추천 12장 선택</button>
-        <button class="btn" type="button" id="clearSel">비우기</button>
-        <button class="btn primary" type="button" id="makeCtx" disabled>컨텍스트 만들기</button>
-      </div>
-    </aside>
-  </div>
+  </aside>
+  <main>
+    <div id="graph" aria-label="대주제·소주제·강의안 3D 네트워크"></div>
+    <div id="loading">3D 네트워크 준비 중…</div>
+    <div class="overlay">
+      <div class="status" id="status"></div>
+      <div class="legend" id="legend"></div>
+    </div>
+    <div class="help">드래그: 회전 · 휠: 확대 · 원 클릭: 주제/강의안 열기</div>
+    <div class="ctrl">
+      <button type="button" id="btnLect" aria-pressed="true">강의안 점 표시</button>
+      <button type="button" id="btnSpin" aria-pressed="false">자동 회전</button>
+      <button type="button" id="btnFit">전체 보기</button>
+    </div>
+  </main>
 </div>
-
-<dialog id="dlg">
-  <div class="dlg">
-    <header>
-      <h2>강의안 작성용 컨텍스트</h2>
-      <p>복사해서 Claude에게 붙여 넣고 "이 자료를 바탕으로 ○○ 대상 ○시간 강의안을 써줘"라고 요청하세요.</p>
-    </header>
-    <textarea id="ctx" readonly aria-label="생성된 컨텍스트"></textarea>
-    <footer>
-      <span class="ok" id="copied"></span>
-      <button class="btn" type="button" id="closeDlg">닫기</button>
-      <button class="btn primary" type="button" id="copyCtx">복사</button>
-    </footer>
-  </div>
-</dialog>
 
 <dialog id="pv" class="pv" aria-labelledby="pvTitle">
   <div class="pvwrap">
@@ -238,200 +201,349 @@ dialog.pv{width:min(1240px,calc(100vw - 32px));height:calc(100vh - 48px);max-hei
   </div>
 </dialog>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<dialog id="dlg" class="ctx">
+  <div class="ctxwrap">
+    <header><h2>강의안 작성용 컨텍스트</h2>
+      <p>복사해서 Claude에게 붙여 넣고 "이 자료를 바탕으로 ○○ 대상 ○시간 강의안을 써줘"라고 요청하세요.</p></header>
+    <textarea id="ctx" readonly aria-label="생성된 컨텍스트"></textarea>
+    <footer><span class="ok" id="copied"></span>
+      <button class="btn" type="button" id="closeDlg">닫기</button>
+      <button class="btn primary" type="button" id="copyCtx">복사</button></footer>
+  </div>
+</dialog>
+
+<script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three-spritetext@1.9.0/dist/three-spritetext.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/3d-force-graph@1.73.4/dist/3d-force-graph.min.js"></script>
 <script>
 const D = /*__DATA__*/null;
 const $ = s => document.querySelector(s);
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-const subs = D.groups.flatMap(g => g.subs.map(s => ({...s, group: g.name})));
+const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const GCOL = D.groups.map((g, i) => css('--g' + (i + 1)) || '#888');
+const CORAL = css('--coral');
+const subs = D.groups.flatMap((g, gi) => g.subs.map(s => ({...s, group: g.name, gi})));
 const subById = new Map(subs.map(s => [s.id, s]));
 const L = D.lectures;
 const selected = new Set();
-let current = null, lectureFilter = null, query = '';
+let current = null, currentLect = null, lectFilter = null, query = '';
+const short = (t, k = 18) => t.length > k ? t.slice(0, k - 1) + '…' : t;
 
-const nLect = new Set(D.slides.flatMap(s => s.docs)).size;
-$('#stats').innerHTML = `강의안 <b>${nLect}</b>개 · 슬라이드 <b>${D.slides.length.toLocaleString()}</b>장 · 주제 <b>${subs.length}</b>개 · ${esc(D.built)} 기준`;
-
-// ───────── 지도 (circle packing)
-const tip = $('#tip');
-const maxLect = Math.max(...subs.map(s => s.lectures));
-const shade = n => { const r = n / maxLect; return r > .72 ? 5 : r > .48 ? 4 : r > .28 ? 3 : r > .12 ? 2 : 1; };
-let nodeSel, hitSel;
-function drawMap() {
-  const wrap = $('.mapwrap'), W = wrap.clientWidth, H = wrap.clientHeight;
-  const svg = d3.select('#map').attr('viewBox', `0 0 ${W} ${H}`);
-  svg.selectAll('*').remove();
-  const root = d3.hierarchy({children: D.groups.map(g => ({name: g.name, children: g.subs.filter(s => s.slides)}))})
-    .sum(d => d.slides || 0).sort((a, b) => b.value - a.value);
-  d3.pack().size([W, H]).padding(d => d.depth === 0 ? 16 : 6)(root);
-  const top = 30;  // 힌트 문구 자리
-  const k = Math.min(1, (H - top) / H);
-  const tx = x => x, ty = y => top + y * k;
-  const grp = svg.append('g').selectAll('g').data(root.children).join('g').attr('class', 'group');
-  grp.append('circle').attr('cx', d => tx(d.x)).attr('cy', d => ty(d.y)).attr('r', d => d.r * k);
-  const leaves = root.leaves();
-  nodeSel = svg.append('g').selectAll('g').data(leaves).join('g').attr('class', 'sub')
-    .attr('tabindex', 0).attr('role', 'button').attr('aria-label', d => `${d.data.name}, 슬라이드 ${d.data.slides}장`)
-    .attr('transform', d => `translate(${tx(d.x)},${ty(d.y)})`)
-    .on('click', (e, d) => select(d.data.id))
-    .on('keydown', (e, d) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); select(d.data.id); } })
-    .on('mousemove', (e, d) => {
-      const s = d.data, b = wrap.getBoundingClientRect();
-      tip.hidden = false;
-      tip.innerHTML = `<b>${esc(s.name)}</b>슬라이드 ${s.slides}장 · 강의안 ${s.lectures}개<br>${esc(s.from || '')} ~ ${esc(s.to || '')}`;
-      tip.style.left = Math.min(e.clientX - b.left + 14, b.width - 270) + 'px';
-      tip.style.top = (e.clientY - b.top + 14) + 'px';
-    })
-    .on('mouseleave', () => { tip.hidden = true; });
-  nodeSel.append('circle').attr('r', d => d.r * k).attr('fill', d => `var(--r${shade(d.data.lectures)})`);
-  nodeSel.each(function (d) {
-    const r = d.r * k, g = d3.select(this), s = d.data, dark = shade(s.lectures) >= 3;
-    const fill = dark ? 'var(--lab-light)' : 'var(--lab-dark)';
-    if (r < 17) return;
-    const fs = Math.max(9.5, Math.min(15, r / 4));
-    const width = r * 1.7, perLine = Math.max(3, Math.floor(width / (fs * 1.02)));
-    // '·'와 공백에서 끊어 최대 3줄로 접는다
-    const parts = s.name.split(/(?<=·)|\s+/).filter(Boolean);
-    const lines = []; let cur = '';
-    for (const w of parts) { const t = cur ? (cur.endsWith('·') ? cur + w : cur + ' ' + w) : w; if (t.length > perLine && cur) { lines.push(cur); cur = w; } else cur = t; }
-    if (cur) lines.push(cur);
-    const maxLines = r > 34 ? 3 : 2;
-    let lab = lines.slice(0, maxLines);
-    if (lines.length > maxLines) lab[maxLines - 1] = lab[maxLines - 1].slice(0, perLine - 1) + '…';
-    lab = lab.map(t => t.length > perLine + 1 ? t.slice(0, perLine) + '…' : t);
-    const showN = r > 28;
-    const total = lab.length + (showN ? .9 : 0);
-    const y0 = -(total - 1) * fs * .6;
-    lab.forEach((t, i) => g.append('text').attr('y', y0 + i * fs * 1.18).attr('dy', '.35em').attr('font-size', fs).attr('fill', fill).text(t));
-    if (showN) g.append('text').attr('class', 'n').attr('y', y0 + lab.length * fs * 1.18 - 1).attr('dy', '.35em').attr('fill', fill).attr('opacity', .8).text(s.slides + '장');
-  });
-  // 대주제 이름은 맨 위에 테두리 글자로 얹는다 (버블에 가리지 않게)
-  svg.append('g').selectAll('text').data(root.children).join('text').attr('class', 'glabel')
-    .attr('x', d => tx(d.x)).attr('y', d => ty(d.y - d.r) + 4).attr('dy', '.35em').text(d => d.data.name);
-  hitSel = nodeSel.append('text').attr('class', 'hit').attr('y', d => -d.r * k + 12);
-  paintMap();
+// 강의안 ↔ 소주제 슬라이드 수
+const lectTopic = new Map(), byLecture = new Map();
+for (const s of D.slides) for (const d of s.docs) {
+  (byLecture.get(d) || byLecture.set(d, []).get(d)).push(s);
+  const m = lectTopic.get(d) || lectTopic.set(d, new Map()).get(d);
+  for (const t of s.t) m.set(t, (m.get(t) || 0) + 1);
 }
-function paintMap() {
-  if (!nodeSel) return;
-  nodeSel.classed('sel', d => d.data.id === current);
-  if (query) {
-    const hits = searchCounts();
-    nodeSel.classed('dim', d => !hits.get(d.data.id));
-    hitSel.text(d => hits.get(d.data.id) ? hits.get(d.data.id) + '건' : '');
-  } else {
-    nodeSel.classed('dim', false);
-    hitSel.text('');
+const lectIds = [...lectTopic.keys()];
+$('#stats').innerHTML = `강의안 <b>${lectIds.length}</b>개 · 슬라이드 <b>${D.slides.length.toLocaleString()}</b>장 · 소주제 <b>${subs.length}</b>개 · ${esc(D.built)}`;
+$('#legend').innerHTML = D.groups.map((g, i) => `<span><i style="background:${GCOL[i]}"></i>${esc(g.name)}</span>`).join('') +
+  `<span><i style="background:#8594aa"></i>강의안</span>`;
+$('#quick').innerHTML = ['MCP', '하네스', 'RAG', '프롬프트', '피벗', 'Apps Script', '할루시네이션', '배포']
+  .map(k => `<button type="button" data-q="${k}">${k}</button>`).join('');
+
+// ───────── 3D 그래프 데이터: 대주제 → 소주제 → 강의안
+function lectMainGroup(id) {
+  let best = null, bn = -1;
+  for (const [t, n] of lectTopic.get(id)) if (n > bn) { bn = n; best = t; }
+  return subById.get(best)?.gi ?? 0;
+}
+const nodes = [], links = [];
+D.groups.forEach((g, gi) => nodes.push({id: 'g' + gi, kind: 'group', name: g.name, gi, val: 60}));
+for (const s of subs) {
+  nodes.push({id: s.id, kind: 'topic', name: s.name, gi: s.gi, val: 5 + s.slides / 3, ref: s});
+  links.push({source: 'g' + s.gi, target: s.id, kind: 'gt'});
+}
+for (const id of lectIds) {
+  const m = lectTopic.get(id), total = [...m.values()].reduce((a, b) => a + b, 0);
+  nodes.push({id: 'L:' + id, kind: 'lect', name: L[id]?.t || id, lid: id, gi: lectMainGroup(id), val: 1 + Math.min(total, 60) / 10});
+  [...m.entries()].sort((a, b) => b[1] - a[1]).slice(0, 4).forEach(([t, n]) => links.push({source: t, target: 'L:' + id, kind: 'tl', n}));
+}
+for (const s of subs) for (const [t, n] of s.related.slice(0, 2)) if (s.id < t) links.push({source: s.id, target: t, kind: 'tt', n});
+const nodeById = new Map(nodes.map(n => [n.id, n]));
+
+// ───────── 강조 상태
+let hiTopic = new Map(), hiLect = new Map(), focusMode = false, showLects = true, topicRank = new Map();
+function rankTopics() { topicRank = new Map([...hiTopic.entries()].sort((a, b) => b[1] - a[1]).map(([t], i) => [t, i])); }
+function isHi(n) {
+  if (!focusMode) return true;
+  if (n.kind === 'group') return [...hiTopic.keys()].some(t => subById.get(t)?.gi === n.gi);
+  if (n.kind === 'topic') return hiTopic.has(n.id);
+  return hiLect.has(n.lid);
+}
+function nodeColor(n) {
+  if (!isHi(n)) return '#1a2638';
+  if (n.id === current || (n.lid && n.lid === currentLect)) return CORAL;
+  if (n.kind === 'lect') return focusMode ? '#ffb4a8' : '#7d8ca3';
+  return GCOL[n.gi];
+}
+function labelFor(n) {
+  if (n.kind === 'group') return {text: n.name, h: 16, bold: true, color: isHi(n) ? '#ffffff' : 'rgba(255,255,255,.22)', bg: 'rgba(7,13,23,.6)'};
+  if (n.kind === 'topic') {
+    if (focusMode && !isHi(n)) return null;
+    const c = hiTopic.get(n.id);
+    if (focusMode && topicRank.has(n.id) && topicRank.get(n.id) >= 10) return null;
+    return {text: n.name + (focusMode && c ? ` ${c}` : ''), h: focusMode ? 9 : 7.5, color: '#eef3fa',
+      bg: focusMode ? 'rgba(226,87,74,.92)' : 'rgba(7,13,23,.6)'};
   }
+  if (focusMode && hiLect.has(n.lid) && hiLect.get(n.lid).rank < 8)
+    return {text: short(n.name, 22) + (hiLect.get(n.lid).n ? ` · ${hiLect.get(n.lid).n}` : ''), h: 5.5, color: '#ffe4df', bg: 'rgba(7,13,23,.8)'};
+  return null;
 }
-let rt; window.addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(drawMap, 150); });
 
-// ───────── 패널
-function lectLine(did) {
-  const l = L[did]; if (!l) return '';
-  return [l.t, l.date, (l.c || []).join(', ')].filter(Boolean).map(esc).join(' · ');
+const el = $('#graph');
+const Graph = ForceGraph3D({controlType: 'orbit'})(el)
+  .backgroundColor('rgba(0,0,0,0)')
+  .showNavInfo(false)
+  .nodeRelSize(3)
+  .nodeVal(n => n.val)
+  .nodeResolution(18)
+  .nodeOpacity(.95)
+  .nodeVisibility(n => n.kind !== 'lect' || showLects || (focusMode && hiLect.has(n.lid)))
+  .nodeColor(nodeColor)
+  .nodeLabel(n => n.kind === 'lect' ? `<div class="scene-tip"><b>${esc(n.name)}</b><br>${esc(L[n.lid]?.date || '')} · 클릭하면 원본 보기</div>`
+    : n.kind === 'topic' ? `<div class="scene-tip"><b>${esc(n.name)}</b><br>슬라이드 ${n.ref.slides}장 · 강의안 ${n.ref.lectures}개</div>` : '')
+  .nodeThreeObjectExtend(true)
+  .nodeThreeObject(n => {
+    const lb = labelFor(n); if (!lb) return null;
+    const s = new SpriteText(lb.text);
+    s.fontFace = 'IBM Plex Sans KR, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
+    s.fontWeight = lb.bold ? '700' : '600';
+    s.textHeight = lb.h; s.color = lb.color; s.backgroundColor = lb.bg; s.padding = [2, 1]; s.borderRadius = 2;
+    s.material.depthWrite = false; s.material.depthTest = false; s.renderOrder = 10;
+    s.position.set(0, Math.cbrt(n.val) * 3 + lb.h * .8, 0);
+    return s;
+  })
+  .linkVisibility(l => l.kind !== 'tl' || showLects || focusMode)
+  .linkColor(l => {
+    const a = l.source, b = l.target;
+    if (focusMode && a.id && isHi(a) && isHi(b)) return l.kind === 'tl' ? 'rgba(255,140,125,.75)' : 'rgba(255,123,107,.95)';
+    if (focusMode) return 'rgba(90,110,140,.06)';
+    return l.kind === 'gt' ? 'rgba(170,195,230,.45)' : l.kind === 'tt' ? 'rgba(170,195,230,.25)' : 'rgba(150,170,200,.13)';
+  })
+  .linkWidth(l => { const a = l.source, b = l.target; return focusMode && a.id && isHi(a) && isHi(b) ? (l.kind === 'tl' ? .5 : 1.2) : l.kind === 'gt' ? .5 : 0; })
+  .onNodeClick(n => { if (n.kind === 'topic') selectTopic(n.id, true); else if (n.kind === 'lect') openLecture(n.lid); else fly(n, 260); })
+  .onNodeHover(n => { el.style.cursor = n ? 'pointer' : 'grab'; })
+  .graphData({nodes, links});
+Graph.d3Force('charge').strength(n => n.kind === 'group' ? -900 : n.kind === 'topic' ? -220 : -26);
+Graph.d3Force('link').distance(l => l.kind === 'gt' ? 95 : l.kind === 'tt' ? 160 : 52).strength(l => l.kind === 'gt' ? .8 : l.kind === 'tl' ? .18 : .03);
+Graph.cooldownTicks(180);
+let fitted = false;
+Graph.onEngineStop(() => { if (!fitted) { fitted = true; Graph.zoomToFit(900, 10, n => n.kind !== 'lect'); $('#loading').hidden = true; } });
+setTimeout(() => { $('#loading').hidden = true; }, 6000);
+function resize() { Graph.width(el.clientWidth).height(el.clientHeight); }
+window.addEventListener('resize', resize); resize();
+
+function refresh() {
+  rankTopics();
+  Graph.nodeColor(Graph.nodeColor()).nodeThreeObject(Graph.nodeThreeObject()).nodeVisibility(Graph.nodeVisibility())
+    .linkColor(Graph.linkColor()).linkWidth(Graph.linkWidth()).linkVisibility(Graph.linkVisibility());
+}
+function fly(n, dist) {
+  const len = Math.hypot(n.x || 1, n.y || 1, n.z || 1), r = 1 + dist / len;
+  Graph.cameraPosition({x: n.x * r, y: n.y * r, z: n.z * r}, {x: n.x, y: n.y, z: n.z}, 1000);
+}
+function fitHi() { setTimeout(() => Graph.zoomToFit(1000, 40, n => n.kind === 'topic' ? isHi(n) && (!topicRank.has(n.id) || topicRank.get(n.id) < 10) : n.kind === 'lect' && hiLect.has(n.lid) && hiLect.get(n.lid).rank < 8), 80); }
+function setStatus(html) { $('#status').innerHTML = html; }
+
+// ───────── 검색 → 네트워크 강조
+function hits(q) {
+  const ql = q.toLowerCase();
+  return D.slides.filter(s => s.h.toLowerCase().includes(ql) || s.x.toLowerCase().includes(ql))
+    .sort((a, b) => (b.h.toLowerCase().includes(ql)) - (a.h.toLowerCase().includes(ql)) || b.reuse - a.reuse);
+}
+function runSearch(q) {
+  query = q; current = null; currentLect = null; lectFilter = null;
+  $('#qx').hidden = !q;
+  if (!q) { focusMode = false; hiTopic = new Map(); hiLect = new Map(); refresh(); renderIntro(); Graph.zoomToFit(900, 10, n => n.kind !== 'lect'); setStatus(defaultStatus()); return; }
+  const hs = hits(q);
+  hiTopic = new Map(); const lc = new Map();
+  for (const s of hs) { for (const t of s.t) hiTopic.set(t, (hiTopic.get(t) || 0) + 1); for (const d of s.docs) lc.set(d, (lc.get(d) || 0) + 1); }
+  hiLect = new Map([...lc.entries()].sort((a, b) => b[1] - a[1]).map(([d, n], i) => [d, {n, rank: i}]));
+  focusMode = true; refresh(); if (hs.length) fitHi();
+  setStatus(`“${esc(q)}” → 슬라이드 <b>${hs.length}</b>장 · 주제 <b>${hiTopic.size}</b>개 · 강의안 <b>${hiLect.size}</b>개`);
+  renderSearch(hs);
+}
+function mark(t) {
+  if (!query) return esc(t);
+  const ql = query.toLowerCase(), i = t.toLowerCase().indexOf(ql);
+  if (i < 0) return esc(t);
+  const a = Math.max(0, i - 50), seg = (a ? '…' : '') + t.slice(a), j = seg.toLowerCase().indexOf(ql);
+  return esc(seg.slice(0, j)) + '<mark>' + esc(seg.slice(j, j + query.length)) + '</mark>' + esc(seg.slice(j + query.length));
 }
 function card(s) {
   const l = L[s.d] || {};
-  const link = `<button class="pvbtn" type="button" data-pv="${s.n}">${l.p ? '원본 보기' : '핵심 내용'}</button>`;
-  const reuse = s.reuse > 1 ? `<span class="badge">강의안 ${s.reuse}개에서 사용</span>` : '';
   return `<div class="card${selected.has(s.n) ? ' picked' : ''}" data-n="${s.n}">
-    <input type="checkbox" id="c${s.n}" ${selected.has(s.n) ? 'checked' : ''} aria-label="이 슬라이드 선택">
-    <h3><button type="button" data-pv="${s.n}" title="강의안에서 이 슬라이드 보기">${esc(s.h)}</button></h3>
-    <p class="x">${esc(s.x)}</p>
-    <div class="src"><span>${lectLine(s.d)}</span>${link}${reuse}${s.x.length > 150 ? '<button class="more" type="button">전문 보기</button>' : ''}</div>
-  </div>`;
+    <input type="checkbox" ${selected.has(s.n) ? 'checked' : ''} aria-label="이 슬라이드 선택">
+    <h4><button type="button" data-pv="${s.n}" title="원본에서 이 슬라이드 보기">${esc(s.h)}</button></h4>
+    <p class="x">${mark(s.x)}</p>
+    <div class="src"><span>${esc([short(l.t || '', 26), l.date].filter(Boolean).join(' · '))}</span>
+      <button class="open" type="button" data-pv="${s.n}">${l.p ? '원본 보기' : '핵심 내용'}</button>
+      ${s.reuse > 1 ? `<span class="badge">${s.reuse}개 강의안에서 사용</span>` : ''}</div></div>`;
 }
-function topicSlides(id) {
-  const t = subById.get(id);
-  let list = t.order.map(n => D.slides[n]);
-  if (lectureFilter) list = list.filter(s => s.docs.includes(lectureFilter));
-  return list;
+function lectList(entries) {
+  return `<ul class="lects">${entries.map(([d, n]) => `<li><button type="button" data-lect="${esc(d)}" title="${esc(L[d]?.t || '')}">
+    <span class="t">${esc(L[d]?.t || d)}</span><span class="d">${n}장 · ${esc(L[d]?.date || '')}</span></button></li>`).join('')}</ul>`;
 }
-function renderTopic() {
-  const t = subById.get(current);
-  const rel = t.related.filter(([id]) => subById.has(id));
-  $('#phead').innerHTML = `<div class="kicker">${esc(t.group)}</div><h2>${esc(t.name)}</h2>
-    <div class="meta">슬라이드 <b>${t.slides}</b>장 · 강의안 <b>${t.lectures}</b>개 · ${esc(t.from || '')} ~ ${esc(t.to || '')}</div>
-    ${rel.length ? `<div class="rowlabel">함께 가르친 주제</div><div class="chips">${rel.map(([id, n]) => `<button class="chip" type="button" data-topic="${id}">${esc(subById.get(id).name)}<span class="c">${n}</span></button>`).join('')}</div>` : ''}
-    <div class="rowlabel">강의안으로 좁히기</div>
-    <div class="chips"><button class="chip ${lectureFilter ? '' : 'on'}" type="button" data-lect="">전체<span class="c">${t.slides}</span></button>${t.top_lectures.slice(0, 8).map(([did, n]) => `<button class="chip ${lectureFilter === did ? 'on' : ''}" type="button" data-lect="${esc(did)}" title="${esc(L[did]?.t || '')}">${esc(short(L[did]?.t || did))}<span class="c">${n}</span></button>`).join('')}</div>`;
-  const list = topicSlides(current);
-  $('#pbody').innerHTML = list.slice(0, 150).map(card).join('') +
-    (list.length > 150 ? `<p class="meta" style="padding:10px">상위 150장만 표시합니다. 강의안으로 좁혀 보세요.</p>` : '');
+function topicChip(t, n) {
+  return `<button class="chip" type="button" data-topic="${t}"><i style="background:${GCOL[subById.get(t).gi]}"></i>${esc(subById.get(t).name)}${n != null ? `<span class="c">${n}</span>` : ''}</button>`;
+}
+function renderSearch(hs) {
+  const tops = [...hiTopic.entries()].sort((a, b) => b[1] - a[1]);
+  $('#pbody').innerHTML = `<div class="kicker">검색 결과</div><h2>“${esc(query)}”</h2>
+    <div class="meta">슬라이드 <b>${hs.length}</b>장 · 네트워크의 빨간 이름표가 해당 주제, 분홍 점이 해당 강의안입니다</div>
+    ${tops.length ? `<div class="sec"><h3>주제별</h3><div class="chips">${tops.map(([t, n]) => topicChip(t, n)).join('')}</div></div>` : ''}
+    ${hiLect.size ? `<div class="sec"><h3>강의안 (많이 다룬 순)</h3>${lectList([...hiLect.entries()].slice(0, 12).map(([d, v]) => [d, v.n]))}</div>` : ''}
+    <div class="sec"><h3>슬라이드</h3>${hs.length ? hs.slice(0, 120).map(card).join('') : '<p class="note">일치하는 슬라이드가 없습니다. 영문·한글 표기를 바꿔 보세요.</p>'}</div>`;
   $('#pbody').scrollTop = 0;
 }
-const short = t => t.length > 18 ? t.slice(0, 17) + '…' : t;
-function renderIntro() {
-  const ranked = [...subs].sort((a, b) => b.slides - a.slides);
-  const max = ranked[0].slides;
-  $('#phead').innerHTML = `<div class="kicker">사용법</div><h2>주제를 고르면, 그 주제로 가르쳤던 슬라이드가 모입니다</h2>
-    <div class="meta">여러 강의안에 똑같이 들어간 슬라이드는 한 장으로 합쳤습니다.</div>`;
-  $('#pbody').innerHTML = `<div class="intro">
-    <ol><li>왼쪽 지도에서 쓰려는 강의의 주제 버블을 누릅니다.</li>
-    <li>쓸 만한 슬라이드를 체크합니다. 다른 주제로 옮겨 가도 선택은 유지됩니다.</li>
-    <li><b>컨텍스트 만들기</b>를 눌러 복사한 뒤 Claude에게 붙여 넣습니다.</li></ol>
-    <table class="rank" aria-label="주제별 슬라이드 수"><tbody>${ranked.map(s => `<tr>
-      <td><button type="button" data-topic="${s.id}">${esc(s.name)}</button><div class="g">${esc(s.group)}</div></td>
-      <td style="width:30%"><div class="bar"><i style="width:${(100 * s.slides / max).toFixed(0)}%"></i></div></td>
-      <td class="n">${s.slides}장 · ${s.lectures}개</td></tr>`).join('')}</tbody></table></div>`;
+
+// ───────── 주제 / 강의안
+function topicSlides(id) {
+  let list = subById.get(id).order.map(n => D.slides[n]);
+  if (lectFilter) list = list.filter(s => s.docs.includes(lectFilter));
+  return list;
 }
-function searchHits() {
-  const q = query.toLowerCase();
-  return D.slides.filter(s => s.h.toLowerCase().includes(q) || s.x.toLowerCase().includes(q));
-}
-function searchCounts() {
-  const m = new Map();
-  for (const s of searchHits()) for (const t of s.t) m.set(t, (m.get(t) || 0) + 1);
-  return m;
-}
-function renderSearch() {
-  const hits = searchHits();
-  $('#phead').innerHTML = `<div class="kicker">검색</div><h2>“${esc(query)}”</h2>
-    <div class="meta">슬라이드 <b>${hits.length}</b>장 · 지도에서 빨간 숫자는 주제별 건수입니다</div>`;
-  $('#pbody').innerHTML = hits.length ? hits.slice(0, 120).map(card).join('') : '<p class="meta" style="padding:12px">일치하는 슬라이드가 없습니다. 영문·한글 표기를 바꿔 찾아보세요.</p>';
-}
-function render() {
-  if (query) renderSearch(); else if (current) renderTopic(); else renderIntro();
-  paintMap();
-}
-function select(id) {
-  current = id; lectureFilter = null; query = ''; $('#q').value = '';
+function clearQuery() { query = ''; $('#q').value = ''; $('#qx').hidden = true; }
+function selectTopic(id, flyTo) {
+  current = id; currentLect = null; lectFilter = null; clearQuery();
+  const t = subById.get(id);
+  hiTopic = new Map([[id, t.slides]]); for (const [r] of t.related) hiTopic.set(r, 0);
+  hiLect = new Map(t.top_lectures.map(([d, n], i) => [d, {n, rank: i}]));
+  focusMode = true; refresh();
+  if (flyTo) { const n = nodeById.get(id); if (n) fly(n, 220); }
+  setStatus(`<b>${esc(t.name)}</b> · 슬라이드 ${t.slides}장 · 강의안 ${t.lectures}개 — 분홍 점이 이 주제를 다룬 강의안`);
+  renderTopic();
   try { history.replaceState(null, '', '#' + id); } catch (e) {}
-  render();
+}
+function renderTopic() {
+  const t = subById.get(current), list = topicSlides(current);
+  const rel = t.related.filter(([id]) => subById.has(id));
+  $('#pbody').innerHTML = `<div class="kicker" style="color:${GCOL[t.gi]}">${esc(t.group)}</div><h2>${esc(t.name)}</h2>
+    <div class="meta">슬라이드 <b>${t.slides}</b>장 · 강의안 <b>${t.lectures}</b>개 · ${esc(t.from || '')} ~ ${esc(t.to || '')}</div>
+    ${rel.length ? `<div class="sec"><h3>함께 가르친 주제</h3><div class="chips">${rel.map(([id]) => topicChip(id)).join('')}</div></div>` : ''}
+    <div class="sec"><h3>강의안으로 좁히기</h3><div class="chips"><button class="chip ${lectFilter ? '' : 'on'}" type="button" data-lf="">전체<span class="c">${t.slides}</span></button>${t.top_lectures.slice(0, 8).map(([d, n]) => `<button class="chip ${lectFilter === d ? 'on' : ''}" type="button" data-lf="${esc(d)}" title="${esc(L[d]?.t || '')}">${esc(short(L[d]?.t || d, 16))}<span class="c">${n}</span></button>`).join('')}</div></div>
+    <div class="sec"><h3>슬라이드</h3>${list.slice(0, 150).map(card).join('')}</div>`;
+  $('#pbody').scrollTop = 0;
+}
+function openLecture(id, noModal) {
+  currentLect = id; current = null; clearQuery();
+  const m = lectTopic.get(id) || new Map();
+  hiTopic = new Map(m); hiLect = new Map([[id, {n: 0, rank: 0}]]);
+  focusMode = true; refresh();
+  const n = nodeById.get('L:' + id); if (n) fly(n, 180);
+  const l = L[id] || {}, list = byLecture.get(id) || [];
+  setStatus(`<b>${esc(short(l.t || id, 30))}</b> · 이 강의안이 다룬 주제 ${m.size}개`);
+  $('#pbody').innerHTML = `<div class="kicker">강의안</div><h2>${esc(l.t || id)}</h2>
+    <div class="meta">${esc([l.date, (l.c || []).join(', '), l.ty].filter(Boolean).join(' · '))}</div>
+    <div class="sec"><button class="btn primary" type="button" data-lectopen="${esc(id)}">${l.p ? '원본 화면 열기' : '핵심 내용 보기'}</button></div>
+    <div class="sec"><h3>다룬 주제</h3><div class="chips">${[...m.entries()].sort((a, b) => b[1] - a[1]).map(([t, k]) => topicChip(t, k)).join('')}</div></div>
+    <div class="sec"><h3>슬라이드</h3>${list.map(card).join('')}</div>`;
+  $('#pbody').scrollTop = 0;
+  if (!noModal && list[0]) openPreview(list[0], true);
+}
+function defaultStatus() { return `대주제 ${D.groups.length}개 · 소주제 ${subs.length}개 · 강의안 ${lectIds.length}개 — 왼쪽에서 검색하거나 원을 눌러 보세요`; }
+function renderIntro() {
+  const max = Math.max(...subs.map(s => s.slides));
+  $('#pbody').innerHTML = `<div class="kicker">주제 목록</div><h2>무엇을 가르쳤는지, 주제별로 모았습니다</h2>
+    <div class="meta">검색하거나 주제를 누르면 네트워크가 그쪽으로 이동하고 슬라이드가 여기에 모입니다. 슬라이드 제목을 누르면 원본이 열립니다.</div>
+    <div class="tree">${D.groups.map((g, gi) => `<div><div class="g"><i style="background:${GCOL[gi]}"></i>${esc(g.name)}</div><ul>${
+      [...g.subs].sort((a, b) => b.slides - a.slides).map(s => `<li><button type="button" data-topic="${s.id}"><span>${esc(s.name)}</span>
+        <span class="bar"><b style="width:${(100 * s.slides / max).toFixed(0)}%;background:${GCOL[gi]}"></b></span><span class="n">${s.slides}장·${s.lectures}</span></button></li>`).join('')}</ul></div>`).join('')}</div>`;
 }
 
-$('#pbody').addEventListener('change', e => {
-  const c = e.target.closest('.card'); if (!c || e.target.type !== 'checkbox') return;
-  const n = +c.dataset.n;
-  e.target.checked ? selected.add(n) : selected.delete(n);
-  c.classList.toggle('picked', e.target.checked); updateFoot();
-});
+// ───────── HTML 뷰어 (원본 화면 / 핵심 내용)
+let pvSlide = null, pvLect = null, pvSrc = '';
+const nrm = t => (t || '').replace(/\s+/g, '').toLowerCase();
+function openPreview(s, lectureOnly) {
+  pvSlide = s; pvLect = s.d;
+  const l = L[s.d] || {};
+  $('#pvKick').textContent = l.ty || '강의안';
+  $('#pvTitle').textContent = l.t || s.d;
+  $('#pvMeta').textContent = [l.date, (l.c || []).join(', '), l.n ? `섹션 ${l.n}개` : ''].filter(Boolean).join(' · ');
+  pvSrc = l.p ? D.previewBase + s.d + '.html' + (lectureOnly ? '' : '#' + encodeURIComponent(s.h.slice(0, 40))) : '';
+  $('#pvNew').hidden = !pvSrc; if (pvSrc) $('#pvNew').href = pvSrc;
+  $('#pvDrive').hidden = !l.url; if (l.url) $('#pvDrive').href = l.url;
+  $('#tabRender').hidden = !l.p;
+  setTab(l.p ? 'render' : 'digest');
+  if (!$('#pv').open) $('#pv').showModal();
+  requestAnimationFrame(fitFrame);
+}
+function setTab(t) {
+  $('#tabRender').setAttribute('aria-selected', t === 'render');
+  $('#tabDigest').setAttribute('aria-selected', t === 'digest');
+  const s = pvSlide, l = L[s.d] || {};
+  if (t === 'render') {
+    $('#pvBody').innerHTML = `<iframe title="강의안 원본 화면" sandbox="allow-scripts allow-popups allow-forms" src="${esc(pvSrc)}"></iframe>`;
+    fitFrame();
+  } else {
+    const o = l.o || [];
+    const known = new Map((byLecture.get(s.d) || []).map(x => [nrm(x.h), x]));
+    const cur = o.findIndex(h => nrm(h) === nrm(s.h));
+    $('#pvBody').innerHTML = `<div class="digest"><ol aria-label="강의안 목차">${o.map((h, i) =>
+      `<li data-oi="${i}" class="${known.has(nrm(h)) ? 'has' : ''}${i === cur ? ' cur' : ''}">${esc(h)}</li>`).join('')}</ol><div class="txt" id="digestTxt"></div></div>`;
+    showDigest(cur, s);
+  }
+}
+function showDigest(i, slide) {
+  const l = L[pvLect] || {}, o = l.o || [];
+  const known = new Map((byLecture.get(pvLect) || []).map(x => [nrm(x.h), x]));
+  const s = slide || known.get(nrm(o[i]));
+  document.querySelectorAll('.digest li').forEach((li, k) => li.classList.toggle('cur', k === i));
+  const box = $('#digestTxt'); if (!box) return;
+  const jump = h => l.p ? ` <button class="linkbtn" type="button" data-jump="${esc((h || '').slice(0, 40))}">원본 화면에서 보기</button>` : '';
+  if (s) box.innerHTML = `<h3>${esc(s.h)}</h3><pre>${esc(s.x)}</pre><p class="note">${s.t.map(t => subById.get(t)?.name).filter(Boolean).map(esc).join(' · ')} ·${jump(s.h)}</p>`;
+  else box.innerHTML = `<h3>${esc(o[i] || '')}</h3><p class="note">표지·안내 등 주제가 배정되지 않은 슬라이드라 본문을 싣지 않았습니다.${jump(o[i])}</p>`;
+}
+// 강의안은 대부분 1280~1600px 화면 기준이라, 1600px 가상 화면을 만들어 팝업 크기에 맞게 줄인다
+function fitFrame() {
+  const box = $('#pvBody'), f = box.querySelector('iframe'); if (!f) return;
+  const k = Math.min(1, box.clientWidth / 1600);
+  f.style.transform = `scale(${k})`; f.style.width = (k < 1 ? 1600 : box.clientWidth) + 'px'; f.style.height = (box.clientHeight / k) + 'px';
+}
+window.addEventListener('resize', fitFrame);
+$('#pvClose').onclick = () => $('#pv').close();
+$('#pv').addEventListener('close', () => { $('#pvBody').innerHTML = ''; });
+
+// ───────── 이벤트
 document.addEventListener('click', e => {
-  const pvb = e.target.closest('[data-pv]'); if (pvb) { openPreview(D.slides[+pvb.dataset.pv]); return; }
+  const q = e.target.closest('[data-q]'); if (q) { $('#q').value = q.dataset.q; runSearch(q.dataset.q); return; }
+  const lo = e.target.closest('[data-lectopen]'); if (lo) { const list = byLecture.get(lo.dataset.lectopen) || []; if (list[0]) openPreview(list[0], true); return; }
+  const pv = e.target.closest('[data-pv]'); if (pv) { openPreview(D.slides[+pv.dataset.pv], false); return; }
+  const jp = e.target.closest('[data-jump]'); if (jp) { pvSrc = D.previewBase + pvLect + '.html#' + encodeURIComponent(jp.dataset.jump); setTab('render'); return; }
   const oi = e.target.closest('[data-oi]'); if (oi) { showDigest(+oi.dataset.oi); return; }
   const tb = e.target.closest('[data-tab]'); if (tb) { setTab(tb.dataset.tab); return; }
-  const m = e.target.closest('.more');
-  if (m) { const c = m.closest('.card'); c.classList.toggle('open'); m.textContent = c.classList.contains('open') ? '접기' : '전문 보기'; return; }
-  const t = e.target.closest('[data-topic]'); if (t) { select(t.dataset.topic); return; }
-  const l = e.target.closest('[data-lect]'); if (l) { lectureFilter = l.dataset.lect || null; renderTopic(); }
+  const t = e.target.closest('[data-topic]'); if (t) { selectTopic(t.dataset.topic, true); return; }
+  const lf = e.target.closest('[data-lf]'); if (lf) { lectFilter = lf.dataset.lf || null; renderTopic(); return; }
+  const lc = e.target.closest('[data-lect]'); if (lc) { openLecture(lc.dataset.lect, true); return; }
 });
-let qt; $('#q').addEventListener('input', e => { clearTimeout(qt); qt = setTimeout(() => { query = e.target.value.trim(); render(); }, 160); });
+$('#pbody').addEventListener('change', e => {
+  const c = e.target.closest('.card'); if (!c || e.target.type !== 'checkbox') return;
+  const n = +c.dataset.n; e.target.checked ? selected.add(n) : selected.delete(n);
+  c.classList.toggle('picked', e.target.checked); updateFoot();
+});
+let qt; $('#q').addEventListener('input', e => { clearTimeout(qt); qt = setTimeout(() => runSearch(e.target.value.trim()), 220); });
+$('#qx').onclick = () => { $('#q').value = ''; runSearch(''); $('#q').focus(); };
+$('#btnFit').onclick = () => focusMode ? fitHi() : Graph.zoomToFit(900, 10, n => n.kind !== 'lect');
+$('#btnLect').onclick = e => { showLects = !showLects; e.currentTarget.setAttribute('aria-pressed', showLects); refresh(); };
+let spin = null;
+$('#btnSpin').onclick = e => {
+  const b = e.currentTarget, on = b.getAttribute('aria-pressed') !== 'true'; b.setAttribute('aria-pressed', on);
+  clearInterval(spin);
+  if (on) { const p = Graph.cameraPosition(); let a = Math.atan2(p.x, p.z); const d = Math.hypot(p.x, p.z) || 600, y = p.y;
+    spin = setInterval(() => { a += .003; Graph.cameraPosition({x: d * Math.sin(a), y, z: d * Math.cos(a)}); }, 16); }
+};
 
-function updateFoot() {
-  $('#selN').textContent = selected.size;
-  $('#makeCtx').disabled = !selected.size;
-}
-$('#clearSel').onclick = () => { selected.clear(); updateFoot(); render(); };
+function updateFoot() { $('#selN').textContent = selected.size; $('#makeCtx').disabled = !selected.size; }
+function syncCards() { document.querySelectorAll('.card').forEach(c => { const on = selected.has(+c.dataset.n); c.classList.toggle('picked', on); c.querySelector('input').checked = on; }); }
+$('#clearSel').onclick = () => { selected.clear(); updateFoot(); syncCards(); };
 $('#autoPick').onclick = () => {
-  let pool = query ? searchHits() : current ? topicSlides(current) : [];
-  if (!pool.length) { const big = [...subs].sort((a, b) => b.slides - a.slides)[0]; select(big.id); pool = topicSlides(big.id); }
+  const pool = query ? hits(query) : current ? topicSlides(current) : currentLect ? (byLecture.get(currentLect) || []) : [];
+  if (!pool.length) { setStatus('먼저 주제를 누르거나 검색하세요. 그 결과에서 12장을 골라 드립니다.'); return; }
   const per = new Map(); let k = 0;
-  for (const s of pool) {            // 강의안이 한쪽으로 쏠리지 않게 강의안당 3장까지
-    if (k >= 12) break;
-    if ((per.get(s.d) || 0) >= 3) continue;
-    per.set(s.d, (per.get(s.d) || 0) + 1); selected.add(s.n); k++;
-  }
-  updateFoot(); render();
+  for (const s of pool) { if (k >= 12) break; if ((per.get(s.d) || 0) >= 3) continue; per.set(s.d, (per.get(s.d) || 0) + 1); selected.add(s.n); k++; }
+  updateFoot(); syncCards();
 };
 $('#makeCtx').onclick = () => {
   const list = [...selected].map(n => D.slides[n]);
@@ -442,9 +554,8 @@ $('#makeCtx').onclick = () => {
     '> 아래는 원문 발췌입니다. 새 강의의 대상·시간에 맞게 다시 쓰고, 문체는 기존 강의안 문체를 따릅니다.', ''];
   list.forEach((s, i) => {
     const l = L[s.d] || {};
-    out.push(`## ${i + 1}. ${s.h}`);
-    out.push(`- 출처: ${[l.t, l.date, (l.c || []).join(', ')].filter(Boolean).join(' · ')} · fileId \`${s.d}\``);
-    out.push(`- 주제: ${s.t.map(t => subById.get(t)?.name).filter(Boolean).join(', ')}`, '', s.x.trim(), '');
+    out.push(`## ${i + 1}. ${s.h}`, `- 출처: ${[l.t, l.date, (l.c || []).join(', ')].filter(Boolean).join(' · ')} · fileId \`${s.d}\``,
+      `- 주제: ${s.t.map(t => subById.get(t)?.name).filter(Boolean).join(', ')}`, '', s.x.trim(), '');
   });
   $('#ctx').value = out.join('\n');
   $('#copied').textContent = `${list.length}장 · ${out.join('\n').length.toLocaleString()}자`;
@@ -457,56 +568,8 @@ $('#copyCtx').onclick = async () => {
   catch (e) { ta.focus(); ta.select(); $('#copied').textContent = '자동 복사가 막혀 있어 전체 선택해 두었습니다. Ctrl+C로 복사하세요.'; }
 };
 
-// ───────── 강의안 미리보기 (원본 화면 / 핵심 내용)
-let pvSlide = null, pvTab = 'render';
-const byLecture = new Map();
-for (const s of D.slides) for (const d of s.docs) (byLecture.get(d) || byLecture.set(d, []).get(d)).push(s);
-const nrm = t => (t || '').replace(/\s+/g, '').toLowerCase();
-function openPreview(s) {
-  pvSlide = s;
-  const l = L[s.d] || {};
-  $('#pvKick').textContent = l.ty || '강의안';
-  $('#pvTitle').textContent = l.t || s.d;
-  $('#pvMeta').textContent = [l.date, (l.c || []).join(', '), l.n ? `섹션 ${l.n}개` : ''].filter(Boolean).join(' · ');
-  const src = l.p ? D.previewBase + s.d + '.html#' + encodeURIComponent(s.h.slice(0, 40)) : '';
-  $('#pvNew').hidden = !src; if (src) $('#pvNew').href = src;
-  $('#pvDrive').hidden = !l.url; if (l.url) $('#pvDrive').href = l.url;
-  $('#tabRender').hidden = !l.p;
-  setTab(l.p ? 'render' : 'digest');
-  $('#pv').showModal();
-}
-function setTab(t) {
-  pvTab = t;
-  $('#tabRender').setAttribute('aria-selected', t === 'render');
-  $('#tabDigest').setAttribute('aria-selected', t === 'digest');
-  const s = pvSlide, l = L[s.d] || {};
-  if (t === 'render') {
-    $('#pvBody').innerHTML = `<iframe title="강의안 원본 화면" sandbox="allow-scripts allow-popups" loading="eager"
-      src="${esc(D.previewBase + s.d + '.html#' + encodeURIComponent(s.h.slice(0, 40)))}"></iframe>`;
-  } else {
-    const o = l.o || [];
-    const known = new Map((byLecture.get(s.d) || []).map(x => [nrm(x.h), x]));
-    const cur = o.findIndex(h => nrm(h) === nrm(s.h));
-    $('#pvBody').innerHTML = `<div class="digest"><ol aria-label="강의안 목차">${o.map((h, i) =>
-      `<li data-oi="${i}" class="${known.has(nrm(h)) ? 'has' : ''}${i === cur ? ' cur' : ''}">${esc(h)}</li>`).join('')}</ol>
-      <div class="txt" id="digestTxt"></div></div>`;
-    showDigest(cur, s);
-  }
-}
-function showDigest(i, slide) {
-  const l = L[pvSlide.d] || {}, o = l.o || [];
-  const known = new Map((byLecture.get(pvSlide.d) || []).map(x => [nrm(x.h), x]));
-  const s = slide || known.get(nrm(o[i]));
-  document.querySelectorAll('.digest li').forEach((li, k) => li.classList.toggle('cur', k === i));
-  const box = $('#digestTxt'); if (!box) return;
-  if (s) box.innerHTML = `<h3>${esc(s.h)}</h3><pre>${esc(s.x)}</pre>
-      <p class="note">${s.t.map(t => subById.get(t)?.name).filter(Boolean).map(esc).join(' · ')}${l.p ? ' · <button class="more" type="button" data-tab="render">원본 화면에서 보기</button>' : ''}</p>`;
-  else box.innerHTML = `<h3>${esc(o[i] || '')}</h3><p class="note">이 슬라이드는 내용 주제에 배정되지 않아(표지·안내 등) 본문을 지도에 싣지 않았습니다.${l.p ? ' 원본 화면 탭에서 볼 수 있습니다.' : ''}</p>`;
-}
-$('#pvClose').onclick = () => { $('#pv').close(); $('#pvBody').innerHTML = ''; };
-$('#pv').addEventListener('close', () => { $('#pvBody').innerHTML = ''; });
-
+setStatus(defaultStatus());
+renderIntro(); updateFoot();
 const start = (location.hash || '').slice(1);
-if (subById.has(start)) current = start;
-drawMap(); render(); updateFoot();
+if (subById.has(start)) setTimeout(() => selectTopic(start, true), 2500);
 </script>
