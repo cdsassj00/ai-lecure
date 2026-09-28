@@ -715,11 +715,14 @@ function mdLite(text) {
 }
 let askPicks = [], askCtl = null;
 const samplePromise = (window.claude && window.claude.use) ? window.claude.use('sample').catch(() => null) : Promise.resolve(null);
+const getPass = () => { try { return localStorage.getItem('kg.passcode') || ''; } catch (e) { return ''; } };
+const setPass = v => { try { localStorage.setItem('kg.passcode', v); } catch (e) {} };
 async function viaServer(prompt, onText, signal) {
-  const r = await fetch('api/ask', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({prompt}), signal});
+  const r = await fetch('api/ask', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({prompt, passcode: getPass()}), signal});
   if (!r.ok) {
-    let m = `서버 응답 ${r.status}`;
-    try { const j = await r.json(); m = j.message || m; } catch (e) {}
+    let m = `서버 응답 ${r.status}`, code = 'server';
+    try { const j = await r.json(); m = j.message || m; if (j.error === 'passcode') code = 'passcode'; } catch (e) {}
+    if (code === 'passcode') throw {code, message: m};
     if (r.status === 404) m = 'AI 서버 함수(/api/ask)가 없습니다. Vercel 배포본에서 여세요.';
     throw {code: 'server', message: m};
   }
@@ -768,6 +771,17 @@ async function ask(q) {
     else {
       const msg = {not_granted: 'Claude 사용을 허용하지 않아 답할 수 없습니다.', rate_limited: '요청이 많습니다. 잠시 뒤 다시 질문하세요.',
         sampling_disabled: '이 계정에서는 Claude 호출을 쓸 수 없습니다.'}[e?.code] || e?.message || '답변 중 오류가 났습니다.';
+      if (e?.code === 'passcode') {
+        out.innerHTML = `<p class="note">이 사이트는 질문 비밀번호로 잠겨 있습니다. 한 번 입력하면 이 브라우저에 기억합니다.</p>
+          <div class="askrow"><input id="passIn" type="password" autocomplete="current-password" aria-label="질문 비밀번호"
+            style="flex:1;padding:8px 10px;border:1px solid var(--line2);border-radius:8px;background:var(--panel)">
+          <button class="btn primary" type="button" id="passOk">확인 후 다시 질문</button></div>`;
+        $('#ansbar').innerHTML = '';
+        $('#passOk').onclick = () => { setPass($('#passIn').value.trim()); ask(q); };
+        $('#passIn').addEventListener('keydown', ev => { if (ev.key === 'Enter') $('#passOk').click(); });
+        $('#passIn').focus();
+        return;
+      }
       if (!out.textContent || out.querySelector('.think')) out.innerHTML = `<p class="note">${esc(msg)}</p>`;
       $('#ansbar').innerHTML = `<span>${esc(msg)}</span>`;
     }

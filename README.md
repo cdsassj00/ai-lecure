@@ -62,7 +62,8 @@ LLM 연결은 여는 곳에 따라 다릅니다.
   Vercel 프로젝트 **Settings → Environment Variables**에 다음을 넣고 다시 배포하세요.
   - `OPENROUTER_API_KEY` (필수)
   - `OPENROUTER_MODEL` (선택, 기본 `anthropic/claude-sonnet-5`)
-  - 사이트를 공개로 두면 누구나 이 키로 질문할 수 있습니다. **Deployment Protection**을 켜 두세요.
+  - `ASK_PASSCODE` (권장): 넣으면 이 비밀번호를 입력한 브라우저만 질문할 수 있습니다. 운영 주소(`*.vercel.app`)는
+    Standard 보호에서 제외돼 누구나 열 수 있으므로, 키 도용을 막으려면 꼭 넣으세요.
 - **claude.ai 페이지**: 키 없이 Claude(`sample` 기능)가 답합니다. 사용량은 보는 사람의 Claude 계정에서 나갑니다.
 
 ## 그래프 모델

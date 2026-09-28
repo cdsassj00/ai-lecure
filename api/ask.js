@@ -2,6 +2,7 @@
 // 키는 Vercel 프로젝트 환경변수에만 둔다 (브라우저로 내려가지 않음).
 //   OPENROUTER_API_KEY  (필수)
 //   OPENROUTER_MODEL    (선택, 기본 anthropic/claude-sonnet-5)
+//   ASK_PASSCODE        (권장) 설정하면 이 비밀번호를 보낸 요청만 답한다 — 공개 주소에서 키 도용 방지
 export const config = { runtime: 'edge' };
 
 const SYSTEM =
@@ -19,6 +20,8 @@ export default async function handler(req) {
 
   let body;
   try { body = await req.json(); } catch { return json({ error: 'bad_json', message: '요청 형식이 잘못됐습니다.' }, 400); }
+  const need = process.env.ASK_PASSCODE;
+  if (need && body?.passcode !== need) return json({ error: 'passcode', message: '질문 비밀번호가 필요합니다.' }, 401);
   const prompt = typeof body?.prompt === 'string' ? body.prompt : '';
   if (!prompt.trim() || prompt.length > 60000) return json({ error: 'bad_prompt', message: '질문이 비었거나 너무 깁니다.' }, 400);
 
