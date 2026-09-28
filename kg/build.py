@@ -341,6 +341,9 @@ def write_preview(src: Path, dst: Path) -> bool:
             continue
     b = re.sub(rb'(?i)<meta[^>]+charset=["\']?[a-z0-9_-]+["\']?[^>]*>', b'<meta charset="utf-8">', b)
     b = b.replace("\ufffd".encode(), b"")  # 원본에 이미 깨져 있던 문자 제거
+    b = b.lstrip()
+    if not b.startswith(b"<"):
+        b = b"<!doctype html>\n" + b
     if len(b) > PREVIEW_MAX:
         b = _DATA_URI_B.sub(_BLANK, b)
         if len(b) > PREVIEW_MAX:
