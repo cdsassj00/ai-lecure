@@ -284,10 +284,13 @@ def build(src_dirs: list[Path], raw_dirs: list[Path], max_chunk_chars: int) -> N
             fh.write(json.dumps(c, ensure_ascii=False) + "\n")
     (OUT / "graph.json").write_text(json.dumps(graph, ensure_ascii=False), encoding="utf-8")
     (OUT / "INDEX.md").write_text(make_index(docs, graph), encoding="utf-8")
-    (OUT / "viewer.html").write_text(
-        '<!doctype html>\n<meta charset="utf-8">\n'
-        '<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">\n'
-        + viewer_body(graph, docs), encoding="utf-8")
+    page = ('<!doctype html>\n<html lang="ko">\n<meta charset="utf-8">\n'
+            '<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">\n'
+            '<meta name="robots" content="noindex, nofollow">\n' + viewer_body(graph, docs))
+    (OUT / "viewer.html").write_text(page, encoding="utf-8")
+    site = ROOT / "site"  # Vercel 배포 폴더: 뷰어 한 장만 내보낸다 (본문 청크는 올리지 않음)
+    site.mkdir(exist_ok=True)
+    (site / "index.html").write_text(page, encoding="utf-8")
     with_c = sum(d["has_content"] for d in docs)
     print(f"파일 {len(files)}개 → 문서(계열) {len(docs)}개, 본문 확보 {with_c}개, 섹션 {len(chunks)}개")
     print(f"노드 {len(graph['nodes'])}개, 엣지 {len(graph['edges'])}개 → {OUT}")

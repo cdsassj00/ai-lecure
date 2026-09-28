@@ -7,7 +7,7 @@ cd "$(dirname "$0")/.."
 git pull --ff-only
 python3 kg/build.py --src "$LECTURE_DIR"
 python3 kg/query.py stats
-git add graph data
+git add graph data site
 if git diff --cached --quiet; then echo "변경 없음"; exit 0; fi
 git commit -m "강의안 지식그래프 갱신 ($(date +%F))"
 git push

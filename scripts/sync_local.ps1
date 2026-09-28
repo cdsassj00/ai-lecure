@@ -11,7 +11,7 @@ if (-not $LectureDir) { throw "-LectureDir 로 01_강의관련 폴더 경로를 
 git pull --ff-only
 python kg/build.py --src "$LectureDir"
 python kg/query.py stats
-git add graph data
+git add graph data site
 git diff --cached --quiet
 if ($LASTEXITCODE -eq 0) { Write-Host "변경 없음"; exit 0 }
 git commit -m "강의안 지식그래프 갱신 ($(Get-Date -Format yyyy-MM-dd))"
