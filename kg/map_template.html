@@ -10,14 +10,15 @@ try { document.documentElement.setAttribute('data-theme', localStorage.getItem('
   --bg:#000000; --panel:#1c1c1e; --panel2:#2c2c2e; --panel3:#3a3a3c; --line:#38383a; --line2:#48484a;
   --ink:#f5f5f7; --body:#d1d1d6; --mut:#98989d; --faint:#6e6e73;
   --accent:#0a84ff; --accent-hi:#409cff; --accent-bg:rgba(10,132,255,.16); --accent-line:rgba(10,132,255,.4); --on-accent:#ffffff;
-  --g1:#3987e5; --g2:#d95926; --g3:#199e70; --g4:#c98500; --g5:#d55181; --g6:#2e9e46; --g7:#9085e9;
+  /* 대주제 7색 — iOS 시스템 컬러 (인디고·오렌지·그린·옐로·핑크·틸·퍼플). 선택 강조는 블루(--accent)로 따로 둔다 */
+  --g1:#5e5ce6; --g2:#ff9f0a; --g3:#30d158; --g4:#ffd60a; --g5:#ff375f; --g6:#40c8e0; --g7:#bf5af2;
   --sans:"Pretendard Variable",Pretendard,-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",sans-serif;
   --mono:ui-monospace,"SF Mono",Menlo,Consolas,"D2Coding","Pretendard Variable",Pretendard,monospace;
-  --space:radial-gradient(1200px 800px at 60% 40%,#1c1c1e 0%,#0b0b0c 55%,#000000 100%);
+  --space:radial-gradient(1100px 760px at 58% 42%,#141416 0%,#050505 60%,#000000 100%);
   --glass:rgba(28,28,30,.72); --shadow:0 20px 60px rgba(0,0,0,.6); --backdrop:rgba(0,0,0,.72);
   /* 3D 네트워크 (스크립트가 읽는다) */
-  --n-dim:#2c2c2e; --n-lect:#8e8e93; --n-lect-hi:#64b5ff;
-  --lb-bg:rgba(0,0,0,.6); --lb-ink:#f5f5f7; --lb-dim:rgba(255,255,255,.22); --lb-hi-bg:rgba(10,132,255,.92); --lb-lect:#cfe6ff;
+  --n-dim:#2c2c2e; --n-lect:#6e6e73; --n-lect-hi:#64b5ff;
+  --lb-halo:rgba(0,0,0,.85); --lb-ink:#f5f5f7; --lb-sub:#d1d1d6; --lb-dim:rgba(255,255,255,.2); --lb-hi-bg:#0a84ff; --lb-lect:#98989d;
   --l-gt:rgba(200,200,210,.42); --l-tt:rgba(200,200,210,.22); --l-tl:rgba(180,180,190,.12); --l-dim:rgba(120,120,130,.06);
   --l-hi:rgba(64,156,255,.95); --l-hi2:rgba(100,181,255,.7);
 }
@@ -26,10 +27,11 @@ try { document.documentElement.setAttribute('data-theme', localStorage.getItem('
   --bg:#f5f5f7; --panel:#ffffff; --panel2:#f2f2f7; --panel3:#e5e5ea; --line:#d2d2d7; --line2:#c7c7cc;
   --ink:#1d1d1f; --body:#424245; --mut:#6e6e73; --faint:#86868b;
   --accent:#0071e3; --accent-hi:#0066cc; --accent-bg:rgba(0,113,227,.1); --accent-line:rgba(0,113,227,.35);
+  --g1:#5856d6; --g2:#ff9500; --g3:#28b94b; --g4:#e0a800; --g5:#ff2d55; --g6:#1ba6c2; --g7:#af52de;
   --space:radial-gradient(1200px 800px at 60% 40%,#ffffff 0%,#f5f5f7 60%,#ececf0 100%);
   --glass:rgba(255,255,255,.78); --shadow:0 20px 60px rgba(0,0,0,.16); --backdrop:rgba(0,0,0,.4);
-  --n-dim:#d8d8de; --n-lect:#8e8e93; --n-lect-hi:#0071e3;
-  --lb-bg:rgba(255,255,255,.82); --lb-ink:#1d1d1f; --lb-dim:rgba(0,0,0,.22); --lb-hi-bg:rgba(0,113,227,.92); --lb-lect:#0b3d75;
+  --n-dim:#e3e3e8; --n-lect:#b9b9c0; --n-lect-hi:#0071e3;
+  --lb-halo:rgba(245,245,247,.9); --lb-ink:#1d1d1f; --lb-sub:#424245; --lb-dim:rgba(0,0,0,.2); --lb-hi-bg:#0071e3; --lb-lect:#6e6e73;
   --l-gt:rgba(60,60,70,.35); --l-tt:rgba(60,60,70,.18); --l-tl:rgba(60,60,70,.1); --l-dim:rgba(60,60,70,.05);
   --l-hi:rgba(0,113,227,.9); --l-hi2:rgba(0,113,227,.55);
 }
@@ -43,8 +45,13 @@ button,input,textarea{font:inherit;color:inherit}
 ::selection{background:rgba(10,132,255,.35)}
 
 .app{display:grid;grid-template-columns:minmax(360px,440px) minmax(0,1fr);height:100%}
-aside{background:var(--panel);border-right:1px solid var(--line);display:grid;grid-template-rows:max-content max-content minmax(0,1fr) max-content;min-height:0;z-index:2}
-.brand{padding:18px 20px 10px;display:flex;align-items:flex-start;gap:12px}
+aside{background:var(--panel);border-right:1px solid var(--line);display:grid;grid-template-rows:max-content max-content max-content minmax(0,1fr) max-content;min-height:0;z-index:2}
+/* 서비스 선택 메뉴 — VibeStack 세 페이지와 같은 메뉴 (vibestack/style.css .site-switch) */
+.site-switch{display:flex;margin:14px 20px 0;padding:3px;border-radius:999px;background:var(--panel2);gap:2px}
+.site-switch a{flex:1;text-align:center;padding:5px 6px;border-radius:999px;font-size:12px;font-weight:500;line-height:1.3;white-space:nowrap;color:var(--mut);text-decoration:none;letter-spacing:-.02em;transition:background-color .15s,color .15s}
+.site-switch a:hover{color:var(--ink)}
+.site-switch a[aria-current="page"]{background:var(--ink);color:var(--bg);font-weight:600}
+.brand{padding:12px 20px 10px;display:flex;align-items:flex-start;gap:12px}
 .brand>div{flex:1;min-width:0}
 .theme{flex:none;display:grid;place-items:center;width:34px;height:34px;border:0;border-radius:999px;background:var(--panel2);color:var(--ink);cursor:pointer;transition:background-color .15s}
 .theme:hover{background:var(--panel3)}
@@ -190,7 +197,7 @@ dialog.ctx{width:min(780px,calc(100vw - 28px))}
   .app{grid-template-columns:1fr;height:auto}
   main{height:62vh;order:-1}
   aside{border-right:0;border-top:1px solid var(--line)}
-  .legend{display:none}
+  .legend,.help{display:none}
   .pfoot{position:sticky;bottom:0}
   .digest{grid-template-columns:1fr;grid-template-rows:40% 1fr}
 }
@@ -199,6 +206,12 @@ dialog.ctx{width:min(780px,calc(100vw - 28px))}
 
 <div class="app">
   <aside>
+    <nav class="site-switch" aria-label="서비스 선택">
+      <a href="https://ag-firebase-board-2026.web.app/" title="바이브코딩 스택">스택 추천</a>
+      <a href="https://ag-firebase-board-2026.web.app/vibecoding/" title="AI 바이브코딩 과정">바이브 과정</a>
+      <a href="https://ag-firebase-board-2026.web.app/curriculum/" title="AI 업무활용 과정">업무 AI 과정</a>
+      <a href="./" aria-current="page" title="강의안 지도">강의안</a>
+    </nav>
     <div class="brand"><div><h1>강의 콘텐츠 <span>지도</span></h1><p id="stats"></p></div>
       <button class="theme" type="button" id="themeBtn" aria-label="밝은 화면·어두운 화면 바꾸기" title="화면 테마 바꾸기">
         <svg class="sun" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
@@ -279,12 +292,14 @@ const D = /*__DATA__*/null;
 const $ = s => document.querySelector(s);
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
-const GCOL = D.groups.map((g, i) => css('--g' + (i + 1)) || '#888');
+// 대주제 색: 화면(HTML)은 CSS 변수를 그대로 쓰고, 3D 노드는 readColors()가 읽은 값을 쓴다
+const GCOL = D.groups.map((g, i) => `var(--g${i + 1})`);
 // 3D 네트워크 색은 테마 토큰에서 읽는다 (테마를 바꾸면 다시 읽고 그린다)
 let C = {};
 function readColors() {
-  C = Object.fromEntries(['accent', 'n-dim', 'n-lect', 'n-lect-hi', 'lb-bg', 'lb-ink', 'lb-dim', 'lb-hi-bg', 'lb-lect',
+  C = Object.fromEntries(['accent', 'n-dim', 'n-lect', 'n-lect-hi', 'lb-halo', 'lb-ink', 'lb-sub', 'lb-dim', 'lb-hi-bg', 'lb-lect',
     'l-gt', 'l-tt', 'l-tl', 'l-dim', 'l-hi', 'l-hi2'].map(k => [k, css('--' + k)]));
+  C.g = D.groups.map((g, i) => css('--g' + (i + 1)) || '#8e8e93');
 }
 readColors();
 const subs = D.groups.flatMap((g, gi) => g.subs.map(s => ({...s, group: g.name, gi})));
@@ -348,19 +363,20 @@ function nodeColor(n) {
   if (!isHi(n)) return C['n-dim'];
   if (n.id === current || (n.lid && n.lid === currentLect)) return C.accent;
   if (n.kind === 'lect') return focusMode ? C['n-lect-hi'] : C['n-lect'];
-  return GCOL[n.gi];
+  return C.g[n.gi];
 }
+// 라벨: 상자 없이 글자만 두고 배경색 테두리(halo)로 읽히게 한다. 강조된 주제만 블루 알약
 function labelFor(n) {
-  if (n.kind === 'group') return {text: n.name, h: 16, bold: true, color: isHi(n) ? C['lb-ink'] : C['lb-dim'], bg: C['lb-bg']};
+  if (n.kind === 'group') return {text: n.name, h: 15, w: 700, color: isHi(n) ? C['lb-ink'] : C['lb-dim']};
   if (n.kind === 'topic') {
     if (focusMode && !isHi(n)) return null;
     const c = hiTopic.get(n.id);
     if (focusMode && topicRank.has(n.id) && topicRank.get(n.id) >= 10) return null;
-    return {text: n.name + (focusMode && c ? ` ${c}` : ''), h: focusMode ? 9 : 7.5, color: focusMode ? '#ffffff' : C['lb-ink'],
-      bg: focusMode ? C['lb-hi-bg'] : C['lb-bg']};
+    if (focusMode) return {text: n.name + (c ? `  ${c}` : ''), h: 7.5, w: 600, color: '#ffffff', pill: C['lb-hi-bg']};
+    return {text: n.name, h: 7.5, w: 600, color: C['lb-sub']};
   }
   if (focusMode && hiLect.has(n.lid) && hiLect.get(n.lid).rank < 8)
-    return {text: short(n.name, 22) + (hiLect.get(n.lid).n ? ` · ${hiLect.get(n.lid).n}` : ''), h: 5.5, color: C['lb-lect'], bg: C['lb-bg']};
+    return {text: short(n.name, 22) + (hiLect.get(n.lid).n ? ` · ${hiLect.get(n.lid).n}` : ''), h: 5.2, w: 500, color: C['lb-lect']};
   return null;
 }
 
@@ -370,8 +386,8 @@ const Graph = ForceGraph3D({controlType: 'orbit'})(el)
   .showNavInfo(false)
   .nodeRelSize(3)
   .nodeVal(n => n.val)
-  .nodeResolution(18)
-  .nodeOpacity(.95)
+  .nodeResolution(24)
+  .nodeOpacity(1)
   .nodeVisibility(n => n.kind !== 'lect' || showLects || (focusMode && hiLect.has(n.lid)))
   .nodeColor(nodeColor)
   .nodeLabel(n => n.kind === 'lect' ? `<div class="scene-tip"><b>${esc(n.name)}</b><br>${esc(L[n.lid]?.date || '')} · 클릭하면 원본 보기</div>`
@@ -380,11 +396,14 @@ const Graph = ForceGraph3D({controlType: 'orbit'})(el)
   .nodeThreeObject(n => {
     const lb = labelFor(n); if (!lb) return null;
     const s = new SpriteText(lb.text);
-    s.fontFace = 'Pretendard Variable, Pretendard, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
-    s.fontWeight = lb.bold ? '700' : '600';
-    s.textHeight = lb.h; s.color = lb.color; s.backgroundColor = lb.bg; s.padding = [2, 1]; s.borderRadius = 2;
+    s.fontFace = '"Pretendard Variable", Pretendard, -apple-system, "Apple SD Gothic Neo", sans-serif';
+    s.fontWeight = String(lb.w);
+    s.fontSize = 160;  // 캔버스 해상도 — 높을수록 글자가 선명하다
+    s.textHeight = lb.h; s.color = lb.color;
+    if (lb.pill) { s.backgroundColor = lb.pill; s.padding = [lb.h * .55, lb.h * .22]; s.borderRadius = lb.h * .6; }
+    else { s.backgroundColor = false; s.strokeWidth = 1.6; s.strokeColor = C['lb-halo']; }
     s.material.depthWrite = false; s.material.depthTest = false; s.renderOrder = 10;
-    s.position.set(0, Math.cbrt(n.val) * 3 + lb.h * .8, 0);
+    s.position.set(0, Math.cbrt(n.val) * 3 + lb.h * .9, 0);
     return s;
   })
   .linkVisibility(l => l.kind !== 'tl' || showLects || focusMode)
@@ -834,6 +853,9 @@ setStatus(defaultStatus());
 renderIntro(); updateFoot();
 const start = (location.hash || '').slice(1);
 if (subById.has(start)) setTimeout(() => selectTopic(start, true), 2500);
+
+// Pretendard를 다 받은 뒤 3D 라벨을 다시 그린다 (먼저 그리면 기본 글꼴로 남는다)
+if (document.fonts?.load) Promise.all([600, 700].map(w => document.fonts.load(`${w} 40px "Pretendard Variable"`, '가A'))).then(() => refresh()).catch(() => {});
 
 // 화면 테마 (VibeStack과 같은 app_theme 키) — 바꾸면 3D 네트워크 색도 다시 읽는다
 $('#themeBtn').addEventListener('click', () => {
