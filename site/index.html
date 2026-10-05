@@ -15,30 +15,32 @@ try { document.documentElement.setAttribute('data-theme', localStorage.getItem('
   --bg:#000000; --panel:#1c1c1e; --panel2:#2c2c2e; --panel3:#3a3a3c; --line:#38383a; --line2:#48484a;
   --ink:#f5f5f7; --body:#d1d1d6; --mut:#98989d; --faint:#6e6e73;
   --accent:#0a84ff; --accent-hi:#409cff; --accent-bg:rgba(10,132,255,.16); --accent-line:rgba(10,132,255,.4); --on-accent:#ffffff;
-  /* 대주제 7색 — iOS 시스템 컬러 (인디고·오렌지·그린·옐로·핑크·틸·퍼플). 선택 강조는 블루(--accent)로 따로 둔다 */
-  --g1:#5e5ce6; --g2:#ff9f0a; --g3:#30d158; --g4:#ffd60a; --g5:#ff375f; --g6:#40c8e0; --g7:#bf5af2;
+  /* 대주제 7색 — iOS 시스템 컬러를 톤다운한 파스텔 (인디고·오렌지·그린·옐로·핑크·틸·퍼플). 선택 강조는 블루(--accent)로 따로 둔다 */
+  --g1:#9f9cf5; --g2:#f4b871; --g3:#7fd59a; --g4:#efd57a; --g5:#f28ba3; --g6:#86cfe2; --g7:#c9a2f2;
   --sans:"Pretendard Variable",Pretendard,-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",sans-serif;
   --mono:ui-monospace,"SF Mono",Menlo,Consolas,"D2Coding","Pretendard Variable",Pretendard,monospace;
   --space:radial-gradient(1100px 760px at 58% 42%,#141416 0%,#050505 60%,#000000 100%);
   --glass:rgba(28,28,30,.72); --shadow:0 20px 60px rgba(0,0,0,.6); --backdrop:rgba(0,0,0,.72);
   /* 3D 네트워크 (스크립트가 읽는다) */
-  --n-dim:#2c2c2e; --n-lect:#6e6e73; --n-lect-hi:#64b5ff;
+  --n-dim:#1c1c1e; --n-lect:#3a3a3c; --n-lect-hi:#64b5ff;
   --lb-halo:rgba(0,0,0,.85); --lb-ink:#f5f5f7; --lb-sub:#d1d1d6; --lb-dim:rgba(255,255,255,.2); --lb-hi-bg:#0a84ff; --lb-lect:#98989d;
   --l-gt:rgba(200,200,210,.42); --l-tt:rgba(200,200,210,.22); --l-tl:rgba(180,180,190,.12); --l-dim:rgba(120,120,130,.06);
   --l-hi:rgba(64,156,255,.95); --l-hi2:rgba(100,181,255,.7);
+  --b-disc:#1c1c1e; --b-ink:#f5f5f7; --b-sel:#ffd60a; --b-shadow:rgba(0,0,0,.55);
 }
 [data-theme="light"]{
   color-scheme:light;
   --bg:#f5f5f7; --panel:#ffffff; --panel2:#f2f2f7; --panel3:#e5e5ea; --line:#d2d2d7; --line2:#c7c7cc;
   --ink:#1d1d1f; --body:#424245; --mut:#6e6e73; --faint:#86868b;
   --accent:#0071e3; --accent-hi:#0066cc; --accent-bg:rgba(0,113,227,.1); --accent-line:rgba(0,113,227,.35);
-  --g1:#5856d6; --g2:#ff9500; --g3:#28b94b; --g4:#e0a800; --g5:#ff2d55; --g6:#1ba6c2; --g7:#af52de;
+  --g1:#6e6bd8; --g2:#d98a2b; --g3:#3fa863; --g4:#c9a227; --g5:#d9597a; --g6:#3a9fb8; --g7:#9a62d0;
   --space:radial-gradient(1200px 800px at 60% 40%,#ffffff 0%,#f5f5f7 60%,#ececf0 100%);
   --glass:rgba(255,255,255,.78); --shadow:0 20px 60px rgba(0,0,0,.16); --backdrop:rgba(0,0,0,.4);
-  --n-dim:#e3e3e8; --n-lect:#b9b9c0; --n-lect-hi:#0071e3;
+  --n-dim:#ebebf0; --n-lect:#d1d1d6; --n-lect-hi:#0071e3;
   --lb-halo:rgba(245,245,247,.9); --lb-ink:#1d1d1f; --lb-sub:#424245; --lb-dim:rgba(0,0,0,.2); --lb-hi-bg:#0071e3; --lb-lect:#6e6e73;
   --l-gt:rgba(60,60,70,.35); --l-tt:rgba(60,60,70,.18); --l-tl:rgba(60,60,70,.1); --l-dim:rgba(60,60,70,.05);
   --l-hi:rgba(0,113,227,.9); --l-hi2:rgba(0,113,227,.55);
+  --b-disc:#ffffff; --b-ink:#1d1d1f; --b-sel:#e0a800; --b-shadow:rgba(0,0,0,.18);
 }
 [hidden]{display:none!important}
 *{box-sizing:border-box}
@@ -301,9 +303,12 @@ const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).
 const GCOL = D.groups.map((g, i) => `var(--g${i + 1})`);
 // 3D 네트워크 색은 테마 토큰에서 읽는다 (테마를 바꾸면 다시 읽고 그린다)
 let C = {};
+const badgeCache = new Map();
 function readColors() {
   C = Object.fromEntries(['accent', 'n-dim', 'n-lect', 'n-lect-hi', 'lb-halo', 'lb-ink', 'lb-sub', 'lb-dim', 'lb-hi-bg', 'lb-lect',
-    'l-gt', 'l-tt', 'l-tl', 'l-dim', 'l-hi', 'l-hi2'].map(k => [k, css('--' + k)]));
+    'l-gt', 'l-tt', 'l-tl', 'l-dim', 'l-hi', 'l-hi2', 'b-disc', 'b-ink', 'b-sel', 'b-shadow'].map(k => [k, css('--' + k)]));
+  C.light = document.documentElement.getAttribute('data-theme') === 'light';
+  badgeCache.clear();
   C.g = D.groups.map((g, i) => css('--g' + (i + 1)) || '#8e8e93');
 }
 readColors();
@@ -385,6 +390,41 @@ function labelFor(n) {
   return null;
 }
 
+// 노드 배지 — 어두운 원판 + 대주제 색 테두리 + 바깥 빛 번짐 + 첫 글자 (opencabinet 네트워크와 같은 모양)
+// 캔버스 한 장에 원판(반지름 R)과 빛 번짐(2.2R)을 함께 그려 스프라이트로 붙인다
+const BADGE = 256, BR = BADGE / 2 / 2.4;
+function badgeTexture(color, letter, sel) {
+  const key = [color, letter, sel, C.light].join('|');
+  if (badgeCache.has(key)) return badgeCache.get(key);
+  const cv = document.createElement('canvas'); cv.width = cv.height = BADGE;
+  const x = cv.getContext('2d'), c = BADGE / 2, ring = sel ? C['b-sel'] : color;
+  const gl = x.createRadialGradient(c, c, BR * .4, c, c, BR * 2.2);
+  gl.addColorStop(0, ring + (C.light ? '26' : '4d')); gl.addColorStop(1, ring + '00');
+  x.fillStyle = gl; x.beginPath(); x.arc(c, c, BR * 2.2, 0, Math.PI * 2); x.fill();
+  x.save(); x.shadowColor = C['b-shadow']; x.shadowBlur = 14; x.shadowOffsetY = 4;
+  x.fillStyle = C['b-disc']; x.beginPath(); x.arc(c, c, BR, 0, Math.PI * 2); x.fill(); x.restore();
+  if (letter) {
+    x.fillStyle = C['b-ink']; x.textAlign = 'center'; x.textBaseline = 'middle';
+    x.font = `600 ${Math.round(BR * .92)}px "Pretendard Variable", Pretendard, sans-serif`;
+    x.fillText(letter, c, c + BR * .05);
+  }
+  x.strokeStyle = ring; x.lineWidth = BR * (sel ? .16 : .11);
+  x.beginPath(); x.arc(c, c, BR - x.lineWidth / 2, 0, Math.PI * 2); x.stroke();
+  const tex = new THREE.CanvasTexture(cv); tex.colorSpace = THREE.SRGBColorSpace; tex.anisotropy = 4;
+  badgeCache.set(key, tex);
+  return tex;
+}
+function badge(n, r) {
+  const sel = n.id === current || (n.lid && n.lid === currentLect);
+  const lect = n.kind === 'lect';
+  const color = lect ? (focusMode && isHi(n) ? C['n-lect-hi'] : C['n-lect']) : C.g[n.gi];
+  const tex = badgeTexture(color, lect ? '' : n.name.trim().charAt(0), sel);
+  const m = new THREE.SpriteMaterial({map: tex, transparent: true, depthWrite: false, opacity: isHi(n) ? 1 : .16});
+  const sp = new THREE.Sprite(m); const size = r * 2 * 2.4 * (sel ? 1.12 : 1);
+  sp.scale.set(size, size, 1);
+  return sp;
+}
+
 const el = $('#graph');
 const Graph = ForceGraph3D({controlType: 'orbit'})(el)
   .backgroundColor('rgba(0,0,0,0)')
@@ -397,19 +437,25 @@ const Graph = ForceGraph3D({controlType: 'orbit'})(el)
   .nodeColor(nodeColor)
   .nodeLabel(n => n.kind === 'lect' ? `<div class="scene-tip"><b>${esc(n.name)}</b><br>${esc(L[n.lid]?.date || '')} · 클릭하면 원본 보기</div>`
     : n.kind === 'topic' ? `<div class="scene-tip"><b>${esc(n.name)}</b><br>슬라이드 ${n.ref.slides}장 · 강의안 ${n.ref.lectures}개</div>` : '')
-  .nodeThreeObjectExtend(true)
+  .nodeThreeObjectExtend(false)
   .nodeThreeObject(n => {
-    const lb = labelFor(n); if (!lb) return null;
-    const s = new SpriteText(lb.text);
-    s.fontFace = '"Pretendard Variable", Pretendard, -apple-system, "Apple SD Gothic Neo", sans-serif';
-    s.fontWeight = String(lb.w);
-    s.fontSize = 160;  // 캔버스 해상도 — 높을수록 글자가 선명하다
-    s.textHeight = lb.h; s.color = lb.color;
-    if (lb.pill) { s.backgroundColor = lb.pill; s.padding = [lb.h * .55, lb.h * .22]; s.borderRadius = lb.h * .6; }
-    else { s.backgroundColor = false; s.strokeWidth = 1.6; s.strokeColor = C['lb-halo']; }
-    s.material.depthWrite = false; s.material.depthTest = false; s.renderOrder = 10;
-    s.position.set(0, Math.cbrt(n.val) * 3 + lb.h * .9, 0);
-    return s;
+    const g = new THREE.Group();
+    const r = Math.cbrt(n.val) * 3 * (n.kind === 'lect' ? 1.2 : 1.45);  // 배지는 공보다 커 보여야 읽힌다
+    g.add(badge(n, r));
+    const lb = labelFor(n);
+    if (lb) {
+      const s = new SpriteText(lb.text);
+      s.fontFace = '"Pretendard Variable", Pretendard, -apple-system, "Apple SD Gothic Neo", sans-serif';
+      s.fontWeight = String(lb.w);
+      s.fontSize = 160;  // 캔버스 해상도 — 높을수록 글자가 선명하다
+      s.textHeight = lb.h; s.color = lb.color;
+      if (lb.pill) { s.backgroundColor = lb.pill; s.padding = [lb.h * .55, lb.h * .22]; s.borderRadius = lb.h * .6; }
+      else { s.backgroundColor = false; s.strokeWidth = 1.6; s.strokeColor = C['lb-halo']; }
+      s.material.depthWrite = false; s.material.depthTest = false; s.renderOrder = 10;
+      s.position.set(0, -(r * 1.15 + lb.h * .75), 0);  // 이름은 원 아래
+      g.add(s);
+    }
+    return g;
   })
   .linkVisibility(l => l.kind !== 'tl' || showLects || focusMode)
   .linkColor(l => {
