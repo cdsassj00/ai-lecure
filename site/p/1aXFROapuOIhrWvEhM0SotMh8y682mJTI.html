@@ -1,0 +1,973 @@
+<!doctype html>
+<html lang="ko" style="--present-scale: 1.2652777777777777; --review-scale: 1;"><head><meta name="robots" content="noindex, nofollow"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>행정기관 AI 직접개발 가이드북 — 메시지와 운영 30분 설명영상 교안</title><style>@font-face{font-family:'Pretendard 30min Embedded';src:url(data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==) format('truetype');font-style:normal;font-weight:400;font-display:block}
+@font-face{font-family:'Pretendard 30min Embedded';src:url(data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==) format('truetype');font-style:normal;font-weight:500;font-display:block}
+@font-face{font-family:'Pretendard 30min Embedded';src:url(data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==) format('truetype');font-style:normal;font-weight:600 700;font-display:block}
+@font-face{font-family:'Pretendard 30min Embedded';src:url(data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==) format('truetype');font-style:normal;font-weight:800 900;font-display:block}
+
+@font-face{font-family:'Pretendard Embedded';src:url(data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==) format('truetype');font-style:normal;font-weight:400;font-display:swap}@font-face{font-family:'Pretendard Embedded';src:url(data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==) format('truetype');font-style:normal;font-weight:600;font-display:swap}@font-face{font-family:'Pretendard Embedded';src:url(data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==) format('truetype');font-style:normal;font-weight:700;font-display:swap}@font-face{font-family:'Pretendard Embedded';src:url(data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==) format('truetype');font-style:normal;font-weight:900;font-display:swap}
+:root{--paper:#f3f5f8;--surface:#fff;--tint:#e3e8ef;--line:#cfd7e2;--strong:#aeb9c8;--ink:#102139;--body:#3e4d62;--muted:#6c788b;--deep:#07111f;--deep2:#0b182b;--deep3:#12233b;--coral:#d45f5d;--coral2:#ff817d;--cyan:#43b9c8;--blue:#4f78bd;--green:#4ea47c;--gold:#d0a04b;--review-scale:1;--present-scale:1}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:'Pretendard Embedded',sans-serif;color:var(--ink);word-break:keep-all;overflow-wrap:break-word}body{background:#d8dde4;padding:24px 0 82px}.deck{display:flex;flex-direction:column;align-items:center;gap:24px}.slide{width:1280px;height:720px;position:relative;overflow:hidden;flex:none;background:var(--paper);zoom:var(--review-scale);isolation:isolate}.regular{display:grid;grid-template-rows:42px 106px 1fr 54px 28px;padding:0 48px}.regular.dark{background:var(--deep);color:#f7f9fc}.topline{margin:0 -48px;padding:0 48px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;background:var(--deep);color:#aebbd0;border-bottom:1px solid #ffffff18;font-size:12.5px;font-weight:700;letter-spacing:.2px}.topline b{padding:5px 15px;color:#ffbbb8;border-left:1px solid #ffffff22;border-right:1px solid #ffffff22;font-size:13px;letter-spacing:.8px}.topline span:last-child{text-align:right}.dark .topline{background:#050c16}.head{display:grid;grid-template-columns:58px 1fr;gap:18px;align-items:center;border-bottom:1px solid var(--line)}.dark .head{}.head-icon{width:48px;height:48px;display:grid;place-content:center;background:var(--deep);color:#fff;border-radius:0;}.dark .head-icon{background:#fff;color:var(--deep)}.head-icon svg{width:26px;height:26px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}.head h1{margin:0;font-size:34px;line-height:1.08;letter-spacing:-1.25px;font-weight:900}.head p{margin:8px 0 0;font-size:14px;line-height:1.35;color:var(--muted);font-weight:600}.dark .head p{color:#9facbf}.body{min-height:0;padding:24px 10px 18px}.anchor{margin:0;display:flex;align-items:center;padding:0 24px;background:var(--deep);color:#fff;font-size:15px;font-weight:800}.dark .anchor{background:#edf1f6;color:var(--deep)}.footer{height:28px;display:grid;grid-template-columns:1.2fr 1fr 70px;align-items:center;padding:0 12px;color:var(--muted);font-size:12.5px}.footer span:nth-child(2){text-align:center}.footer b{text-align:right;font-size:13.5px}.dark .footer,.transition .footer,.finale .footer{color:#8997ac}.speaker-note{display:none}
+.cover{background:var(--deep);color:#fff}.cover-grid,.transition-grid,.final-grid{position:absolute;inset:0;background-image:linear-gradient(#ffffff08 1px,transparent 1px),linear-gradient(90deg,#ffffff08 1px,transparent 1px);background-size:48px 48px;mask-image:linear-gradient(90deg,#000 0 60%,transparent 90%)}.cover-glow,.final-glow{position:absolute;width:620px;height:620px;border-radius:50%;right:-90px;top:30px;background:radial-gradient(circle,#43b9c82d 0,transparent 68%)}.cover-ring{position:absolute;border:1px solid #ffffff20;border-radius:50%;right:70px;top:115px}.cover-ring.r1{width:450px;height:450px}.cover-ring.r2{width:300px;height:300px;right:145px;top:190px}.cover-kicker{position:absolute;left:62px;top:46px;padding-left:22px;font-size:14px;font-weight:800;color:#b7c2d1}.cover-copy{position:absolute;left:84px;top:160px;width:820px}.cover-copy>span{font-size:13px;color:#76d1dc;font-weight:900;letter-spacing:1.6px}.cover-copy h1{font-size:65px;line-height:1.12;letter-spacing:-3.2px;margin:24px 0 28px}.cover-copy p{font-size:25px;color:#ffc2bf;margin:0}.cover-side{position:absolute;right:80px;top:260px;width:245px;padding-top:18px}.cover-side b{display:block;font-size:55px;line-height:1;color:#fff}.cover-side span{display:block;margin-top:15px;font-size:14px;line-height:1.6;color:#aab7c9}.cover-bottom{position:absolute;left:84px;right:84px;bottom:48px;display:flex;align-items:center;gap:22px;color:#d3dbe6;font-size:14px;font-weight:800}.cover-bottom i{height:1px;background:#627087;flex:1}
+.transition{display:block;background:var(--deep);color:#fff}.transition-orbit{position:absolute;border:1px solid #ffffff18;border-radius:50%}.transition-orbit.a{width:570px;height:570px;right:-80px;top:60px}.transition-orbit.b{width:330px;height:330px;right:40px;top:180px}.transition-copy{position:absolute;left:88px;top:145px;width:850px}.transition-copy>span{color:var(--cyan);font-size:13px;font-weight:900;letter-spacing:1.6px}.transition-coral .transition-copy>span{color:var(--coral2)}.transition-copy h1{font-size:62px;line-height:1.13;letter-spacing:-3px;margin:28px 0 30px}.transition-copy p{font-size:20px;line-height:1.6;color:#b9c4d3;margin:0;width:760px}.transition-mark{position:absolute;right:105px;bottom:110px;font-size:86px;color:#ffffff22}.transition .footer,.finale .footer{position:absolute;left:48px;right:48px;bottom:0}
+.objection-slide .body{padding:22px 4px 16px}.objection-stage{height:100%;display:grid;grid-template-columns:36% 1fr;gap:46px}.objection-lead{padding:24px 30px;background:#0d1c30}.objection-lead>span{font-size:13px;font-weight:900;color:#ffaaa6}.objection-lead h2{font-size:36px;line-height:1.25;margin:20px 0 24px}.objection-lead p{font-size:15px;line-height:1.7;color:#aebbd0}.voices{display:grid;grid-template-rows:repeat(5,1fr);border-top:1px solid #ffffff2b}.voices>div{display:grid;grid-template-columns:46px 1fr 120px;align-items:center;border-bottom:1px solid #ffffff20}.voices i{font-style:normal;color:#76879f;font-size:13px;font-weight:900}.voices b{font-size:17px}.voices span{text-align:right;color:#ffaaa6;font-size:12.5px;font-weight:800}
+.empathy-slide .body{display:grid;grid-template-columns:36% 1fr;gap:42px;padding-top:28px}.empathy-lead{padding:18px 12px;}.empathy-lead span{color:var(--coral);font-size:13px;font-weight:900}.empathy-lead h2{font-size:31px;line-height:1.42;margin:20px 0}.empathy-table{}.empathy-head,.empathy-row{display:grid;grid-template-columns:180px 1fr 170px;gap:18px;align-items:center}.empathy-head{height:42px;background:var(--deep);color:#fff;padding:0 18px;font-size:12.5px}.empathy-row{min-height:76px;padding:10px 18px;border-bottom:1px solid var(--line)}.empathy-row strong{font-size:15px}.empathy-row span{font-size:14px;line-height:1.45;color:var(--body)}.empathy-row em{font-style:normal;color:var(--green);font-size:14px;font-weight:900}
+.boundary-spectrum-slide .body{padding:38px 28px 18px}.boundary-spectrum{height:100%;position:relative;background:linear-gradient(180deg,transparent 0 56%,#e6eaf0 56% 100%)}.spectrum-line{position:absolute;left:70px;right:70px;top:128px;height:7px;background:linear-gradient(90deg,var(--green),var(--blue),var(--gold),var(--coral))}.spectrum-point{position:absolute;top:30px;width:220px;text-align:center}.spectrum-point i{display:block;width:34px;height:34px;border:6px solid currentColor;background:var(--paper);border-radius:50%;margin:42px auto 15px}.spectrum-point span,.spectrum-point b,.spectrum-point small{display:block}.spectrum-point span{font-size:13px;font-weight:900;color:currentColor}.spectrum-point b{font-size:20px;margin-top:10px;color:var(--ink)}.spectrum-point small{font-size:13px;color:var(--muted);margin-top:8px}.spectrum-point.p1{left:0;color:var(--green)}.spectrum-point.p2{left:285px;color:var(--blue)}.spectrum-point.p3{left:570px;color:var(--gold)}.spectrum-point.p4{right:0;color:var(--coral)}.spectrum-threshold{position:absolute;left:110px;right:110px;bottom:26px;display:grid;grid-template-columns:190px 1fr;align-items:center;padding:20px 24px}.spectrum-threshold span{color:var(--coral);font-size:13px;font-weight:900}.spectrum-threshold b{font-size:21px}
+.abandoned-slide .body{display:grid;grid-template-columns:56% 1fr;gap:46px;padding-top:25px}.abandoned-browser{height:385px;background:#f7f9fc;color:var(--ink);text-align:center;overflow:hidden;border:1px solid #31445f}.browser-top{height:42px;background:#15253b;display:flex;align-items:center;gap:8px;padding:0 17px;color:#a9b5c6;font-size:12.5px}.browser-top i{width:8px;height:8px;background:#607089;border-radius:50%}.browser-top i:first-child{background:var(--coral)}.browser-top span{margin-left:6px}.abandoned-browser .error{font-size:86px;font-weight:900;color:#d3d9e2;line-height:1;margin-top:42px}.abandoned-browser h2{font-size:22px;margin:8px 0 12px}.abandoned-browser p{font-size:14px;line-height:1.7;color:var(--body)}.abandoned-browser>b{display:inline-block;margin-top:8px;padding:8px 18px;border:1px solid var(--coral);color:var(--coral);font-size:12.5px}.abandoned-copy{padding:8px 0}.abandoned-copy>span{color:#ffaaa6;font-size:13px;font-weight:900}.abandoned-copy h2{font-size:35px;line-height:1.28;margin:18px 0 22px}.abandoned-copy ul{list-style:none;padding:0;margin:0}.abandoned-copy li{padding:11px 0;border-top:1px solid #ffffff22;font-size:14px;color:#bbc6d5}
+.trust-slide-new .body{display:grid;grid-template-columns:40% 1fr;grid-template-rows:1fr 62px;gap:22px 42px}.trust-quote{position:relative;padding:28px 32px;background:#0d1c30;}.trust-quote>span{position:absolute;right:20px;top:-15px;font-size:125px;color:#ffffff12;font-weight:900}.trust-quote h2{font-size:45px;line-height:1.05;margin:24px 0 22px}.trust-quote p{font-size:17px;color:#ffb7b3}.trust-quote small{color:#8d9ab0}.trust-path{display:grid;grid-template-columns:1fr 35px 1fr 35px 1fr;align-items:center}.trust-path>div{padding:22px 18px;background:#0d1c30;min-height:148px}.trust-path>div.public{border-color:var(--coral)}.trust-path b,.trust-path span{display:block}.trust-path b{font-size:18px}.trust-path span{font-size:13.5px;line-height:1.55;color:#aebbd0;margin-top:18px}.trust-path>i{font-style:normal;text-align:center;color:#6d7e96;font-size:25px}.trust-question{grid-column:1/3;display:grid;grid-template-columns:150px 1fr;align-items:center;border-top:1px solid #ffffff28;padding:14px 20px}.trust-question span{font-size:13px;font-weight:900;color:#ffaaa6}.trust-question b{font-size:19px}
+.continuity-slide .body{padding-top:30px}.continuity-cols{height:285px;display:grid;grid-template-columns:repeat(3,1fr)}.continuity-cols>div{padding:24px 34px;}.continuity-cols>div+div{border-left:1px solid var(--line)}.continuity-cols>div:nth-child(2){}.continuity-cols>div:nth-child(3){}.continuity-cols span{font-size:13px;font-weight:900;color:var(--muted)}.continuity-cols h2{font-size:28px;line-height:1.32;margin:18px 0}.continuity-cols p{font-size:14px;line-height:1.6;color:var(--body)}.continuity-fixed{height:92px;margin:18px 80px 0;background:var(--deep);color:#fff;display:grid;grid-template-columns:210px 1fr;align-items:center;padding:0 28px}.continuity-fixed span{color:#ffaaa6;font-size:13px;font-weight:900}.continuity-fixed b{font-size:19px}
+.before-after-slide .body{display:grid;grid-template-columns:1fr 145px 1fr;gap:28px}.era{padding:30px 34px;background:#fff}.era.after{border-color:var(--cyan)}.era>span{font-size:13px;font-weight:900;color:var(--muted)}.era.after>span{color:var(--cyan)}.era h2{font-size:30px;line-height:1.3;margin:22px 0}.era p{font-size:14px;line-height:1.6;color:var(--body);margin-top:28px}.handoff-chain{display:flex;align-items:center;gap:12px;font-size:13px}.handoff-chain i{font-style:normal;color:var(--strong)}.ai-shift{display:flex;flex-direction:column;align-items:center;justify-content:center;background:var(--deep);color:#fff}.ai-shift span{font-size:12.5px;color:#76d1dc;font-weight:900}.ai-shift b{font-size:25px;text-align:center;line-height:1.25;margin:18px 0}.ai-shift small{text-align:center;color:#9eabbd;line-height:1.5}.result-pair{display:grid;grid-template-columns:88px 1fr;gap:10px 14px;font-size:14px}.result-pair b{color:var(--coral)}.result-pair span{color:var(--body)}
+.shadow-new-slide .body{display:grid;grid-template-columns:1fr 240px;gap:35px}.shadow-map{position:relative;height:100%}.shadow-map svg{position:absolute;inset:0;width:100%;height:100%}.shadow-core,.shadow-node{position:absolute;background:#0d1c30;border:1px solid #40516a;color:#fff}.shadow-core{left:50%;top:50%;transform:translate(-50%,-50%);width:190px;height:115px;display:grid;place-content:center;text-align:center;border:2px solid var(--coral)}.shadow-core b{font-size:21px;line-height:1.35}.shadow-core span{font-size:12.5px;color:#aebbd0;margin-top:9px}.shadow-node{width:190px;padding:13px 15px}.shadow-node b,.shadow-node span{display:block}.shadow-node b{font-size:14px;color:#8ed7df}.shadow-node span{font-size:12.5px;color:#aebbd0;margin-top:7px}.shadow-node.n1{left:15px;top:20px}.shadow-node.n2{right:15px;top:15px}.shadow-node.n3{left:0;bottom:15px}.shadow-node.n4{right:0;bottom:15px}.shadow-node.n5{left:50%;top:0;transform:translateX(-50%)}.shadow-aside{border-left:1px solid #ffffff26;padding:40px 0 20px 28px;display:flex;flex-direction:column;justify-content:center}.shadow-aside span{font-size:13px;color:#8d9ab0;font-weight:800}.shadow-aside b{font-size:23px;margin:10px 0 36px}.shadow-aside b:last-child{color:#ffaaa6;margin-bottom:0}
+.risk-strip-slide .body{padding:16px 6px 12px}.risk-strip{height:100%;display:grid;grid-template-rows:repeat(4,1fr);}.risk-strip>div{display:grid;grid-template-columns:52px 345px 1fr 210px;gap:18px;align-items:center;border-bottom:1px solid var(--line);padding:0 15px}.risk-strip i{font-style:normal;width:34px;height:34px;background:var(--deep);color:#fff;display:grid;place-content:center;font-size:12.5px;font-weight:900}.risk-strip strong{font-size:16px}.risk-strip span{font-size:14px;color:var(--body)}.risk-strip b{text-align:right;color:var(--coral);font-size:14px}
+.gap-flow-slide .body{padding:42px 8px 18px}.gap-flow{display:grid;grid-template-columns:1fr 34px 1fr 34px 1fr 34px 1fr 34px 1fr;align-items:center}.gap-flow>div{height:164px;background:#0d1c30;padding:22px 18px}.gap-flow>div.danger{border-color:var(--coral);background:#28181f}.gap-flow span,.gap-flow b,.gap-flow small{display:block}.gap-flow span{font-size:12.5px;color:#7fd0da;font-weight:900}.gap-flow b{font-size:18px;line-height:1.4;margin-top:18px}.gap-flow small{font-size:12.5px;color:#9eabbd;margin-top:14px}.gap-flow>i{font-style:normal;text-align:center;color:#5d6d84;font-size:24px}.responsibility-gap{margin:34px 50px 0;display:grid;grid-template-columns:160px 1fr 190px;grid-template-rows:30px 42px;align-items:center}.responsibility-gap span{font-size:13px;font-weight:800;color:#aebbd0}.responsibility-gap span:nth-of-type(2){text-align:right}.responsibility-gap div{height:8px;background:linear-gradient(90deg,var(--cyan) 0 72%,var(--coral) 72%)}.responsibility-gap b{grid-column:1/4;text-align:center;color:#ffaaa6;font-size:18px}
+.myth-balance-slide .body{padding:25px 5px 18px}.extremes{height:100%;display:grid;grid-template-columns:1fr 220px 1fr;gap:22px}.extreme{padding:26px 30px;background:#fff}.extreme.neglect{border-color:var(--gold)}.extreme>span{font-size:13px;font-weight:900;color:var(--coral)}.extreme.neglect>span{color:var(--gold)}.extreme h2{font-size:26px;line-height:1.35;margin:22px 0}.extreme ul{list-style:none;margin:0;padding:0}.extreme li{padding:12px 0;border-top:1px solid var(--line);font-size:14px;color:var(--body)}.middle{background:var(--deep);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}.middle>span{font-size:13px;color:#76d1dc;font-weight:900}.middle b{font-size:22px;margin:11px 0}.middle i{font-style:normal;color:#607089}.middle small{font-size:12.5px;line-height:1.6;color:#aebbd0;margin-top:18px}
+.impact-question-slide .body{padding:34px 5px 14px}.impact-questions{display:grid;grid-template-columns:repeat(4,1fr);gap:13px}.impact-questions>div{min-height:230px;padding:22px 20px;background:#fff;position:relative}.impact-questions>div:nth-child(2){border-color:var(--blue)}.impact-questions>div:nth-child(3){border-color:var(--gold)}.impact-questions>div:nth-child(4){border-color:var(--coral)}.impact-questions i{font-style:normal;font-size:13px;color:var(--muted);font-weight:900}.impact-questions b{display:block;font-size:20px;line-height:1.45;margin:24px 0}.impact-questions span{display:inline-block;padding:5px 11px;background:#e9edf2;font-size:12.5px;font-weight:900}.impact-questions em{display:block;font-style:normal;font-size:13.5px;color:var(--body);margin-top:15px}.impact-rule{margin:22px 60px 0;display:grid;grid-template-columns:180px 1fr;align-items:center;padding:18px 24px;background:#e4e9f0}.impact-rule span{font-size:13px;color:var(--coral);font-weight:900}.impact-rule b{font-size:20px}
+.responsibility-stairs-slide .body{padding:25px 5px 10px}.responsibility-stairs{height:100%;display:flex;align-items:flex-end}.responsibility-stairs .stair{flex:1;padding:24px 26px;background:#0d1c30;border:2px solid #39506f;position:relative}.responsibility-stairs .s1{height:225px}.responsibility-stairs .s2{height:305px;border-color:#8d733e}.responsibility-stairs .s3{height:385px;border-color:#4f8c72}.stair>span{font-size:13px;font-weight:900;color:#7fd0da}.stair.s2>span{color:#e5bd68}.stair.s3>span{color:#7ec39f}.stair h2{font-size:28px;margin:18px 0}.stair p{font-size:14px;line-height:1.55;color:#aebbd0}.stair>b{position:absolute;left:26px;bottom:22px;font-size:13px;color:#fff}
+.responsibility-wire-slide .body{padding:52px 4px 15px}.responsibility-wire{display:grid;grid-template-columns:1fr 26px 1fr 26px 1fr 26px 1fr 26px 1fr;align-items:center}.wire-stage{height:175px;padding:22px 17px;background:#fff;}.wire-stage:nth-of-type(2){border-color:var(--cyan)}.wire-stage:nth-of-type(3){border-color:var(--gold)}.wire-stage:nth-of-type(4){border-color:var(--coral)}.wire-stage.final{border-color:var(--green);background:#e8f2ed}.wire-stage span,.wire-stage b,.wire-stage small{display:block}.wire-stage span{font-size:12.5px;color:var(--muted);font-weight:900}.wire-stage b{font-size:18px;margin-top:19px}.wire-stage small{font-size:12.5px;color:var(--body);line-height:1.45;margin-top:15px}.responsibility-wire>i{font-style:normal;text-align:center;color:var(--strong);font-size:20px}.wire-callout{margin:34px 95px 0;display:grid;grid-template-columns:150px 1fr;align-items:center;background:var(--deep);color:#fff;padding:18px 24px}.wire-callout span{font-size:13px;color:#ffaaa6;font-weight:900}.wire-callout b{font-size:18px}
+.handoff-case-keynote .body{padding:31px 2px 12px}.handoff-timeline{display:grid;grid-template-columns:1fr 24px 1fr 24px 1fr 24px 1fr 24px 1fr;align-items:center}.handoff-timeline>div{height:190px;background:#fff;padding:20px 16px}.handoff-timeline>div.handoff-point{border-color:var(--coral);background:#f8e9e8}.handoff-timeline>div.owner{border-color:var(--green);background:#e8f2ed}.handoff-timeline i,.handoff-timeline b,.handoff-timeline span{display:block}.handoff-timeline i{font-style:normal;font-size:12.5px;color:var(--muted);font-weight:900}.handoff-timeline b{font-size:17px;line-height:1.4;margin-top:18px}.handoff-timeline span{font-size:12.5px;color:var(--body);line-height:1.4;margin-top:15px}.handoff-timeline>em{font-style:normal;text-align:center;color:var(--strong)}.case-roles{height:78px;margin:26px 70px 0;display:grid;grid-template-columns:repeat(3,1fr);background:#e3e8ef}.case-roles>div{display:grid;grid-template-columns:1fr 1fr;align-items:center;padding:0 22px}.case-roles>div+div{border-left:1px solid var(--strong)}.case-roles span{font-size:12.5px;color:var(--muted);font-weight:800}.case-roles b{font-size:14px;text-align:right}.case-roles>div:nth-child(2) b{color:var(--green)}
+.record-protection-slide .body{display:grid;grid-template-columns:1fr 100px 1fr;gap:18px;padding-top:28px}.record-side{padding:26px 30px;background:#0d1c30;}.record-side.with{border-color:var(--green)}.record-side>span{font-size:13px;font-weight:900;color:#ffaaa6}.record-side.with>span{color:#7ec39f}.record-side h2{font-size:27px;margin:20px 0}.record-side blockquote{margin:0 0 22px;padding:15px 18px;background:#ffffff0d;font-size:17px;font-weight:800}.record-side ul{list-style:none;padding:0;margin:0}.record-side li{padding:10px 0;border-top:1px solid #ffffff20;color:#aebbd0;font-size:13.5px}.record-divider{display:flex;flex-direction:column;align-items:center;justify-content:center;color:#7f8da2}.record-divider i{font-style:normal;font-size:30px}.record-divider span{font-size:12.5px;writing-mode:vertical-rl;margin-top:18px}
+.value-number-slide .body{padding:22px 8px 12px}.number-story{height:180px;display:grid;grid-template-columns:1fr 100px 1fr;align-items:center;background:#e3e8ef}.number-story>div{text-align:center}.number-story b{display:block;font-size:82px;line-height:1;color:var(--blue)}.number-story>div:last-child b{color:var(--green)}.number-story span{display:block;font-size:14px;color:var(--body);margin-top:9px}.number-story>i{font-style:normal;text-align:center;font-size:54px;color:var(--coral)}.value-measures{display:grid;grid-template-columns:1fr 1fr;margin-top:18px}.value-measures>div{padding:17px 30px;}.value-measures>div:last-child{border-color:var(--green);border-left:1px solid var(--line)}.value-measures span{display:block;font-size:13px;color:var(--muted);font-weight:900;margin-bottom:10px}.value-measures b{display:inline-block;font-size:14px;margin:8px 22px 0 0}
+.report-questions-slide .body{padding:23px 4px 14px}.report-questions{height:100%;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr}.report-questions>div{position:relative;padding:24px 34px 20px 88px;border-top:1px solid #ffffff28}.report-questions>div:nth-child(odd){border-right:1px solid #ffffff28}.report-questions i{position:absolute;left:28px;top:27px;font-style:normal;width:38px;height:38px;border:1px solid #65758d;display:grid;place-content:center;color:#7fd0da;font-size:12.5px;font-weight:900}.report-questions span{font-size:13px;color:#ffaaa6;font-weight:900}.report-questions h2{font-size:25px;line-height:1.35;margin:11px 0}.report-questions p{font-size:13.5px;color:#aebbd0;margin:0}
+.finale{background:var(--deep);color:#fff}.final-kicker{position:absolute;left:70px;top:50px;color:#7fd0da;font-size:13px;font-weight:900;letter-spacing:1.6px}.final-copy{position:absolute;left:70px;right:70px;top:145px}.final-copy h1{font-size:55px;line-height:1.22;letter-spacing:-2.6px;margin:0}.final-principles{position:absolute;left:70px;right:70px;top:390px;height:100px;display:grid;grid-template-columns:1fr 70px 1fr 70px 1fr;align-items:center;border-top:1px solid #ffffff26;border-bottom:1px solid #ffffff26}.final-principles>div{text-align:center}.final-principles span,.final-principles b{display:block}.final-principles span{font-size:13px;color:#8e9db1}.final-principles b{font-size:23px;margin-top:9px}.final-principles i{height:1px;background:#526179}.final-answer{position:absolute;left:70px;right:70px;bottom:72px;text-align:center;color:#ffb7b3;font-size:17px;font-weight:800}
+.head h1{font-size:38px}.before-after-slide .head h1,.report-questions-slide .head h1{font-size:35px}.objection-lead h2{font-size:34px}.abandoned-copy h2{font-size:32px}.trust-quote h2{font-size:36px}
+.body{position:relative}.long-head .head h1{font-size:34px}.source-link{position:absolute;right:10px;bottom:4px;color:#425b80;font-size:12.5px;font-weight:700;text-decoration:none;border-bottom:1px solid currentColor}.source-link:hover{color:var(--coral)}.dark-source{color:#90a5c2}.hero-source{display:inline-block;margin-top:17px;color:#8194ad;font-size:12.5px;font-weight:700;text-decoration:none;border-bottom:1px solid currentColor}
+.essence-cover .cover-copy{top:150px}.essence-cover .cover-copy h1{font-size:67px}.essence-cover .cover-side b{font-size:42px;color:#ffaaa6}.essence-question{display:block;background:#050c16;color:#fff}.essence-grid{position:absolute;inset:0;background-image:linear-gradient(#ffffff08 1px,transparent 1px),linear-gradient(90deg,#ffffff08 1px,transparent 1px);background-size:52px 52px;mask-image:radial-gradient(circle at center,#000,transparent 78%)}.essence-ring{position:absolute;border:1px solid #ffffff19;border-radius:50%;left:50%;top:50%;transform:translate(-50%,-50%)}.essence-ring.er1{width:510px;height:510px}.essence-ring.er2{width:730px;height:730px}.essence-label{position:absolute;left:0;right:0;top:72px;text-align:center;color:#75849a;font-size:13px;font-weight:900;letter-spacing:2px}.essence-copy{position:absolute;left:0;right:0;top:190px;text-align:center}.essence-copy span{display:block;color:#ffaaa6;font-size:24px;font-weight:800}.essence-copy h1{font-size:94px;line-height:1;margin:23px 0 28px;letter-spacing:-5px}.essence-copy p{font-size:17px;color:#8f9db1;word-spacing:18px}.essence-whisper{position:absolute;left:0;right:0;bottom:75px;text-align:center;color:#98a6ba;font-size:17px;line-height:1.65}.essence-whisper b{color:#fff;font-size:21px}.essence-question .footer{position:absolute;left:48px;right:48px;bottom:0;color:#738198}
+.public-definition-slide .body{padding:32px 4px 20px}.public-pillars{height:100%;display:grid;grid-template-columns:repeat(3,1fr);border-bottom:1px solid var(--strong)}.public-pillars>div{padding:30px 31px 22px;position:relative}.public-pillars>div+div{border-left:1px solid var(--line)}.public-pillars span{font-size:12.5px;color:var(--coral);font-weight:900;letter-spacing:.7px}.public-pillars h2{font-size:25px;margin:27px 0 20px}.public-pillars p{font-size:15px;line-height:1.7;color:var(--body);margin:0}.public-pillars b{position:absolute;left:31px;bottom:22px;font-size:14px;color:var(--muted)}
+.constitution-slide .body{display:grid;grid-template-columns:230px 1fr;grid-template-rows:1fr 72px;gap:20px 35px;padding:30px 12px 25px}.constitution-mark{padding:29px 24px;background:#0d1c30;color:#91a0b5;font-size:15px;line-height:1.8}.constitution-mark b{font-size:27px;color:#fff}.constitution-quote{margin:0;padding:23px 0;font-size:34px;line-height:1.48;font-weight:800;letter-spacing:-1.2px}.constitution-meaning{grid-column:1/3;display:grid;grid-template-columns:auto 1fr auto 1fr auto;align-items:center;gap:19px;padding:0 25px;border-top:1px solid #ffffff28;border-bottom:1px solid #ffffff28}.constitution-meaning span{font-size:14px;color:#9facc0}.constitution-meaning i{height:1px;background:#45566f}.constitution-meaning b{font-size:17px;color:#ffaaa6}
+.dependency-slide .body{padding:43px 0 20px}.dependence-track{display:grid;grid-template-columns:1fr 34px 1fr 34px 1fr 34px 1fr 34px 1fr;align-items:center}.dependence-track>div{height:180px;padding:23px 17px;background:#fff;}.dependence-track>div.danger{border-color:var(--coral);background:#f8e9e8}.dependence-track span,.dependence-track b,.dependence-track small{display:block}.dependence-track span{font-size:12.5px;color:var(--muted);font-weight:900}.dependence-track b{font-size:21px;margin-top:28px}.dependence-track small{font-size:13px;color:var(--body);margin-top:16px}.dependence-track>i{font-style:normal;text-align:center;color:#8b98a8}.dependence-boundary{margin:29px 55px 0;display:grid;grid-template-columns:150px 1fr 150px;align-items:center;gap:18px}.dependence-boundary span{font-size:13px;color:var(--muted);font-weight:800}.dependence-boundary span:last-child{text-align:right;color:var(--coral)}.dependence-boundary b{text-align:center;padding:16px;font-size:15px}
+.shadow-voice-slide .body{display:grid;grid-template-columns:56% 1fr;gap:38px;padding:27px 12px 23px}.shadow-quote{padding:28px 36px;background:#0d1c30;}.shadow-quote>span{font-size:12.5px;color:#ffaaa6;font-weight:900}.shadow-quote h2{font-size:34px;line-height:1.34;margin:20px 0}.shadow-quote p{font-size:12.5px;color:#7f8da2}.shadow-numbers{display:grid;grid-template-rows:1fr 1fr;gap:14px}.shadow-numbers>div{display:grid;grid-template-columns:150px 1fr;align-items:center;padding:11px 16px;background:#0b192a}.shadow-numbers>div:last-child{border-color:var(--coral)}.shadow-numbers b{font-size:62px}.shadow-numbers span{font-size:14px;line-height:1.6;color:#adbacd}
+.invisible-slide .body{padding:24px 10px 17px}.invisible-map{height:100%;position:relative}.invisible-map:before,.invisible-map:after{content:"";position:absolute;background:#aab6c5;z-index:0}.invisible-map:before{height:1px;left:120px;right:120px;top:50%}.invisible-map:after{width:1px;top:52px;bottom:52px;left:50%}.invisible-core{position:absolute;z-index:2;left:50%;top:50%;transform:translate(-50%,-50%);width:310px;height:150px;background:var(--deep);color:#fff;padding:26px 30px;text-align:center}.invisible-core span,.invisible-core b,.invisible-core small{display:block}.invisible-core span{font-size:12.5px;color:#7fd0da;font-weight:900}.invisible-core b{font-size:24px;margin:14px 0}.invisible-core small{font-size:12.5px;color:#a9b6c8}.iv{position:absolute;z-index:2;width:190px;padding:16px 18px;background:#fff;}.iv b,.iv span{display:block}.iv b{font-size:16px}.iv span{font-size:12.5px;color:var(--muted);margin-top:9px}.iv1{left:35px;top:28px}.iv2{right:35px;top:28px;border-color:var(--coral)}.iv3{left:20px;bottom:24px;border-color:var(--gold)}.iv4{right:20px;bottom:24px;border-color:var(--green)}.iv5{left:50%;transform:translateX(-50%);top:0;border-color:var(--cyan)}
+.decay-slide .body{display:grid;grid-template-columns:58% 1fr;gap:42px;padding:27px 8px 25px}.decay-browser{height:360px;background:#f4f6f9;color:var(--ink);text-align:center;border:1px solid #334965;overflow:hidden}.decay-browser .browser-top{height:38px}.decay-code{font-size:105px;font-weight:900;line-height:1;color:#d4dae3;margin-top:31px}.decay-browser h2{font-size:21px;margin:10px}.decay-browser p{font-size:13px;color:var(--muted)}.decay-facts{display:grid;grid-template-columns:1fr 1fr;gap:12px}.decay-facts>div{padding:24px 16px;background:#0d1c30;}.decay-facts>div:nth-child(2){border-color:var(--cyan)}.decay-facts b,.decay-facts span{display:block}.decay-facts b{font-size:52px}.decay-facts span{font-size:13px;line-height:1.55;color:#aebbd0;margin-top:16px}.decay-facts p{grid-column:1/3;margin:0;padding:18px;border-top:1px solid #ffffff2a;color:#aebbd0;font-size:14px;line-height:1.6}.decay-facts strong{color:#fff}
+.web-fossil-slide .body{display:grid;grid-template-columns:58% 1fr;gap:39px;padding:29px 8px 25px}.pixel-site{background:#0b1727;padding:18px;color:#fff}.pixel-title{font-size:12.5px;letter-spacing:1px;color:#a7b4c6;margin-bottom:13px}.pixel-grid{height:270px;display:grid;grid-template-columns:repeat(12,1fr);grid-template-rows:repeat(8,1fr);gap:2px;background:#fff;padding:4px}.pixel-grid i{background:var(--c);opacity:.9}.pixel-site>span{display:block;text-align:center;color:#b4c0d0;font-size:13px;margin-top:12px}.fossil-reading{padding:8px 0}.fossil-reading>span{font-size:13px;color:var(--coral);font-weight:900}.fossil-reading>b{display:block;font-size:23px;margin:20px 0 12px}.fossil-reading>div{display:grid;grid-template-columns:100px 1fr 100px 1fr;align-items:center;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:17px 0}.fossil-reading strong{font-size:38px;color:var(--blue)}.fossil-reading small{font-size:12.5px;color:var(--muted)}.fossil-reading p{font-size:14px;line-height:1.7;color:var(--body);margin-top:22px}
+.citizen-404-slide .body{display:grid;grid-template-columns:48% 1fr;gap:52px;padding:27px 12px 20px}.empty-desk{position:relative;height:360px;background:#0c1a2d;}.desk-line{position:absolute;left:45px;right:45px;bottom:68px;height:10px;background:#43536a}.monitor{position:absolute;left:155px;top:48px;width:300px;height:175px;background:#f2f4f7;color:var(--ink);text-align:center;padding:30px 18px;border:11px solid #2c3b51}.monitor:after{content:"";position:absolute;width:18px;height:75px;background:#43536a;left:130px;bottom:-86px}.monitor span,.monitor b,.monitor small{display:block}.monitor span{font-size:13px;color:var(--coral);font-weight:900}.monitor b{font-size:21px;margin:22px 0}.monitor small{font-size:12.5px;color:var(--muted)}.chair{position:absolute;width:130px;height:90px;border:12px solid #596981;border-bottom:0;border-radius:0;left:240px;bottom:4px}.citizen-lines{padding-top:6px}.citizen-lines p{font-size:18px;margin:0;padding:17px 0;border-top:1px solid #ffffff24;color:#c1cbda}.citizen-lines b{display:block;font-size:25px;line-height:1.45;margin-top:27px;color:#ffaaa6}
+.excel-logic-slide .body{display:grid;grid-template-rows:254px 94px;gap:14px;padding:14px 4px 16px}.excel-to-notice{display:grid;grid-template-columns:minmax(0,1.55fr) 98px minmax(0,.74fr);gap:16px;align-items:stretch}.excel-window{min-width:0;border:1px solid #3a4656;border-radius:0;overflow:hidden;background:#1c1c1e;}.excel-titlebar{height:34px;display:flex;align-items:center;justify-content:space-between;padding:0 15px;background:linear-gradient(90deg,#0b6b3a,#0f8147);color:#fff}.excel-titlebar b{font-size:13px;color:#fff}.excel-titlebar span{font-size:12.5px;color:#dcf8e8;font-weight:700}.excel-formula{height:58px;display:grid;grid-template-columns:37px 1fr;align-items:center;border-bottom:1px solid #38383a;background:#232326}.excel-formula>b{height:100%;display:grid;place-items:center;border-right:1px solid #48484a;color:#30d158;font-size:16px;font-style:italic}.excel-formula code{padding:6px 11px;color:#e5e5ea;font-family:'Pretendard Embedded',sans-serif;font-size:12.5px;font-weight:600;line-height:1.35;letter-spacing:-.01em;white-space:normal}.excel-grid{display:grid;grid-template-columns:1.02fr .8fr 1fr .82fr .88fr;padding:0 10px}.excel-grid>*{min-width:0;height:25px;display:flex;align-items:center;padding:0 8px;border-right:1px solid #38383a;border-bottom:1px solid #38383a;color:#d1d1d6;font-size:12.5px;font-style:normal}.excel-grid>*:nth-child(5n){border-right:0}.excel-grid>b{background:#2c2c2e;color:#f5f5f7;font-size:12px;font-weight:800}.excel-grid strong{color:#60d394}.excel-grid em{color:#ff8a84}.excel-grid .risk-cell{background:#352a16}.excel-grid .blank{color:#ffd60a;font-weight:800}.excel-grid .risk-result{background:#55201e;color:#ff9b96}.excel-alert{height:36px;display:grid;grid-template-columns:76px 1fr;align-items:center;padding:0 13px;background:#241416;border-top:1px solid #6d2926}.excel-alert b{color:#ff9b96;font-size:12.5px}.excel-alert span{color:#e4b9b7;font-size:12.5px;font-weight:600}.result-transfer{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}.result-transfer small{color:#ff6961;font-size:12.5px;font-weight:800}.result-transfer b{margin:9px 0 4px;color:#f5f5f7;font-size:19px;line-height:1.25}.result-transfer i{color:#64b5ff;font-size:31px;font-style:normal;line-height:1}.notice-sheet{position:relative;padding:18px 19px;border:1px solid #8a8a8e;border-radius:0;background:#f5f5f7;color:#1c1c1e;}.notice-sheet>span{display:block;padding-bottom:8px;border-bottom:1px solid #c7c7cc;color:#636366;font-size:11.5px}.notice-sheet h2{margin:15px 0 10px;color:#1c1c1e;font-size:19px;line-height:1.35;text-align:center}.notice-sheet p{margin:0 0 12px;color:#48484a;font-size:12px;line-height:1.4}.notice-sheet>div{display:flex;gap:8px}.notice-sheet>div b{padding:7px 10px;border-radius:0;background:#e5f4eb;color:#1f6f3c;font-size:12.5px}.notice-sheet>div b.wrong{background:#ffe2df;color:#b4231a}.notice-sheet small{position:absolute;left:19px;bottom:15px;color:#636366;font-size:11px}.notice-sheet>i{position:absolute;right:18px;bottom:13px;width:43px;height:43px;display:grid;place-items:center;border:2px solid #c53b32;border-radius:50%;color:#c53b32;font-size:13px;font-style:normal;font-weight:900;transform:rotate(-8deg)}.logic-fallout{display:grid;grid-template-columns:1fr 28px 1fr 28px 1fr 28px 1fr;align-items:stretch}.logic-fallout>div{position:relative;padding:13px 15px;border:1px solid #38383a;border-radius:0;background:#1c1c1e}.logic-fallout>div:nth-of-type(2){}.logic-fallout>div:nth-of-type(3){}.logic-fallout>div.fallout-end{}.logic-fallout span{position:absolute;right:12px;top:10px;color:#636366;font-size:12px;font-weight:900}.logic-fallout b,.logic-fallout small{display:block}.logic-fallout b{color:#f5f5f7;font-size:15px}.logic-fallout small{margin-top:9px;color:#aeb4be;font-size:12.5px}.logic-fallout>i{display:grid;place-items:center;color:#636366;font-size:19px;font-style:normal}
+.horizon-slide .body{padding:33px 7px 25px}.horizon-flow{display:grid;grid-template-columns:1fr 45px 1fr 45px 1fr;align-items:center}.horizon-flow>div{height:152px;padding:22px 24px;background:#0d1c30;}.horizon-flow>div:last-of-type{border-color:var(--coral)}.horizon-flow span,.horizon-flow b,.horizon-flow small{display:block}.horizon-flow span{font-size:12.5px;color:#8fa0b7;font-weight:900}.horizon-flow b{font-size:20px;margin:24px 0 13px}.horizon-flow small{font-size:13px;color:#aebbd0}.horizon-flow>i{font-style:normal;text-align:center;color:#6c7c92;font-size:26px}.horizon-line{margin:28px 80px 0;padding:19px 26px;font-size:19px;line-height:1.6;color:#aebbd0}.horizon-line b{color:#fff;font-size:22px}
+.robodebt-slide .body{padding:43px 4px 22px}.robo-river{display:grid;grid-template-columns:1fr 42px 1fr 42px 1fr 42px 1fr;align-items:center}.robo-river>div{height:142px;padding:24px 20px;background:#fff;}.robo-river>div.robo-danger{background:#f8e9e8;border-color:var(--coral)}.robo-river span,.robo-river b{display:block}.robo-river span{font-size:12.5px;color:var(--muted);font-weight:900}.robo-river b{font-size:18px;line-height:1.45;margin-top:26px}.robo-river>i{font-style:normal;text-align:center;color:var(--coral);font-size:25px}.robo-meaning{margin:32px 85px 0;display:grid;grid-template-columns:260px 1fr;align-items:center;padding:18px 24px}.robo-meaning b{font-size:19px}.robo-meaning span{font-size:15px;color:var(--body)}
+.mycity-slide .body{display:grid;grid-template-columns:56% 1fr;gap:40px;padding:18px 8px 25px}.chat-window{height:368px;background:#fff;color:var(--ink);border:1px solid #28405f}.chat-head{height:45px;background:#152a47;color:#fff;display:flex;justify-content:space-between;align-items:center;padding:0 20px;font-size:13px}.chat-q{margin:14px 94px 8px 18px;padding:9px 13px;background:#e7ebf0;font-size:12.5px;line-height:1.35}.chat-a{margin:0 18px 10px 68px;padding:10px 13px;background:#f8e9e8;display:grid;grid-template-columns:38px 1fr;align-items:center}.chat-a i{font-style:normal;width:31px;height:31px;border-radius:50%;display:grid;place-content:center;background:var(--coral);color:#fff;font-size:11.5px;font-weight:900}.chat-a p{margin:0;font-size:13.5px;font-weight:800;line-height:1.35}.chat-q.second{margin-top:7px}.chat-a.second{margin-bottom:0}.chat-foot{margin-top:10px;border-top:1px solid var(--line);padding:11px 18px;font-size:12px;color:var(--muted)}.mycity-reading>span{font-size:12.5px;color:#ffaaa6;font-weight:900}.mycity-reading h2{font-size:29px;line-height:1.3;margin:20px 0 14px}.mycity-reading>p{font-size:13.5px;line-height:1.6;color:#aebbd0;margin:0}.mycity-record{display:grid;grid-template-columns:84px 1fr;gap:7px 12px;margin-top:18px;padding:14px 0;border-top:1px solid #ffffff2b;border-bottom:1px solid #ffffff2b}.mycity-record b{color:#64b5ff;font-size:12.5px}.mycity-record span{color:#f5f5f7;font-size:12.5px;line-height:1.4}
+.governance-hero .transition-copy{left:120px;right:120px;top:120px;width:auto;text-align:center}.governance-hero .transition-copy>span{font-size:14px}.governance-hero .transition-copy h1{font-size:86px;line-height:1.02;letter-spacing:-3px;margin:31px 0}.governance-hero .transition-copy p{width:850px;margin:0 auto;font-size:20px}.governance-hero .transition-mark{display:none}.governance-hero .transition-orbit.a{width:620px;height:620px;left:50%;right:auto;top:50%;transform:translate(-50%,-50%)}.governance-hero .transition-orbit.b{width:430px;height:430px;left:50%;right:auto;top:50%;transform:translate(-50%,-50%)}
+.automation-slide .body{padding:38px 5px 22px}.automation-timeline{display:grid;grid-template-columns:1fr 35px 1fr 35px 1fr 35px 1fr;align-items:center}.automation-timeline>div{height:132px;padding:20px 18px;background:#fff;}.automation-timeline>div.stop{border-color:var(--coral);background:#f8e9e8}.automation-timeline span,.automation-timeline b,.automation-timeline small{display:block}.automation-timeline span{font-size:12.5px;color:var(--muted);font-weight:900}.automation-timeline b{font-size:18px;margin:22px 0 10px}.automation-timeline small{font-size:12.5px;color:var(--body)}.automation-timeline>i{font-style:normal;text-align:center}.automation-callout{margin:28px 60px 0;padding:18px 24px;background:#e2e7ed;display:grid;grid-template-columns:170px 1fr;gap:7px 24px}.automation-callout span{font-size:12.5px;color:var(--coral);font-weight:900}.automation-callout b{font-size:17px}.automation-callout p{grid-column:1/3;margin:5px 0 0;font-size:13.5px;color:var(--body)}
+.context-slide .body{display:grid;grid-template-columns:58% 1fr;gap:48px;padding:25px 10px 20px}.context-stack{display:flex;flex-direction:column-reverse;justify-content:center}.context-stack>div{height:63px;display:grid;grid-template-columns:45px 230px 1fr;align-items:center;padding:0 18px;background:#0d1c30;border-top:1px solid #ffffff20}.context-stack>div:nth-child(odd){margin-left:30px}.context-stack span{font-size:12.5px;color:#7fd0da;font-weight:900}.context-stack b{font-size:16px}.context-stack small{font-size:12.5px;color:#92a1b6}.context-human{align-self:center;padding:27px 28px;background:#0d1c30}.context-human span{font-size:65px;color:#ffffff0f;font-weight:900}.context-human b{display:block;font-size:27px;line-height:1.4;margin-top:-20px}.context-human p{font-size:14px;line-height:1.65;color:#aebbd0;margin-top:22px}
+.data-boundary-slide .body{display:grid;grid-template-columns:62% 1fr;gap:42px;padding:30px 10px 20px}.data-quadrant{position:relative;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;margin:15px 24px 24px 48px;}.dq{padding:19px 22px;background:#fff;border-right:1px solid var(--line);border-top:1px solid var(--line)}.dq b,.dq span{display:block}.dq b{font-size:18px}.dq span{font-size:13px;color:var(--body);margin-top:14px}.q2{background:#f8e9e8;}.q4{background:#e7f2ed;}.axis-y{position:absolute;left:-55px;top:0;bottom:0;display:flex;flex-direction:column;justify-content:space-between;font-size:12.5px;color:var(--muted)}.axis-x{position:absolute;left:0;right:0;bottom:-29px;display:flex;justify-content:space-around;font-size:12.5px;color:var(--muted)}.data-question{padding:20px 23px;background:var(--deep);color:#fff}.data-question span{display:block;font-size:12.5px;color:#ffaaa6;font-weight:900;margin-bottom:20px}.data-question b{display:block;padding:14px 0;border-top:1px solid #ffffff25;font-size:17px}
+.trust-structure-slide .body{padding:31px 5px 20px}.trust-bridges{height:100%;display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid #ffffff2b;border-bottom:1px solid #ffffff2b}.trust-bridges>div{padding:27px 31px;position:relative}.trust-bridges>div+div{border-left:1px solid #ffffff22}.trust-bridges span{font-size:12.5px;color:#7fd0da;font-weight:900}.trust-bridges h2{font-size:27px;margin:25px 0 21px}.trust-bridges p{font-size:14px;line-height:1.7;color:#aebbd0}.trust-bridges b{position:absolute;left:31px;bottom:23px;color:#ffaaa6;font-size:14px}
+.freedom-slide .body{padding:40px 9px 20px}.freedom-axis{position:relative;height:235px;display:grid;grid-template-columns:repeat(4,1fr);gap:30px}.axis-line{position:absolute;left:75px;right:75px;top:42px;height:3px;background:linear-gradient(90deg,var(--green),var(--blue),var(--gold),var(--coral))}.fp{position:relative;text-align:center;padding-top:76px}.fp i{position:absolute;top:28px;left:50%;transform:translateX(-50%);width:30px;height:30px;border-radius:50%;background:var(--green);border:7px solid var(--paper);}.fp.p2 i{background:var(--blue);}.fp.p3 i{background:var(--gold);}.fp.p4 i{background:var(--coral);}.fp span,.fp b,.fp small{display:block}.fp span{font-size:12.5px;color:var(--muted);font-weight:900}.fp b{font-size:20px;margin:14px 0}.fp small{font-size:13px;color:var(--body)}.freedom-bottom{display:grid;grid-template-columns:190px 1fr 190px;align-items:center;gap:16px;padding:18px 22px}.freedom-bottom span{font-size:12.5px;color:var(--green);font-weight:900}.freedom-bottom span:last-child{text-align:right;color:var(--coral)}.freedom-bottom b{text-align:center;font-size:15px}
+.stage-slide .body{padding:27px 4px 16px}.stage-stairs{height:100%;display:grid;grid-template-columns:repeat(3,1fr);align-items:end;gap:18px}.st{padding:23px 25px;background:#fff;position:relative}.st.s1{height:270px}.st.s2{height:330px;border-color:var(--gold)}.st.s3{height:390px;border-color:var(--green)}.st span{font-size:12.5px;color:var(--muted);font-weight:900}.st h2{font-size:21px;margin:20px 0}.st p{font-size:13.5px;line-height:1.65;color:var(--body)}.st b{position:absolute;left:25px;bottom:22px;font-size:14px;color:var(--blue)}.st.s2 b{color:#a46d14}.st.s3 b{color:var(--green)}
+.essential-report-slide .body{padding:24px 5px 17px}.essential-questions{height:310px;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr}.essential-questions>div{position:relative;padding:21px 28px 18px 78px;border-top:1px solid #ffffff28}.essential-questions>div:nth-child(odd){border-right:1px solid #ffffff28}.essential-questions i{position:absolute;left:24px;top:25px;font-style:normal;width:34px;height:34px;display:grid;place-content:center;border:1px solid #6f8098;color:#7fd0da;font-size:12.5px;font-weight:900}.essential-questions span{font-size:12.5px;color:#ffaaa6;font-weight:900}.essential-questions h2{font-size:22px;line-height:1.4;margin:12px 0}.essential-answer{margin:22px 80px 0;text-align:center;padding:17px;font-size:17px;color:#fff}.essence-finale .final-answer{font-size:22px}.essence-finale .final-principles{top:398px}
+
+/* ── ssjsite V3 · pure-black immersive keynote ───────────── */
+:root{--paper:#000;--surface:#1c1c1e;--surf:#1c1c1e;--tint:#2c2c2e;--tint2:#3a3a3c;--line:#38383a;--strong:#48484a;--ink:#f5f5f7;--body:#d1d1d6;--muted:#98989d;--deep:#000;--deep2:#1c1c1e;--deep3:#2c2c2e;--coral:#ff453a;--coral2:#ff6961;--cyan:#64d2ff;--blue:#0a84ff;--green:#30d158;--gold:#ffd60a}
+html,body{font-family:'Pretendard Embedded',sans-serif;font-feature-settings:'ss05';letter-spacing:-.01em;-webkit-font-smoothing:antialiased}body{background:linear-gradient(135deg,#dfe6ef 0%,#c8d2df 48%,#e8edf3 100%)}.deck{gap:34px}.slide{background:#000;color:var(--ink);border:1px solid #536176;}.regular,.regular.dark{grid-template-rows:38px 152px 1fr 56px 26px;padding:0 64px;background:radial-gradient(circle at 9% 0%,rgba(10,132,255,.16),transparent 31%),radial-gradient(circle at 92% 100%,rgba(100,210,255,.08),transparent 30%),linear-gradient(155deg,#080e18 0%,#03060b 52%,#0a0d15 100%);color:var(--ink)}
+.topline{margin:0 -64px;padding:0 64px;background:linear-gradient(90deg,#07162b 0%,#0d3157 42%,#17434f 72%,#211f3a 100%);color:#b7c7dc;border-color:#31516f;font-size:12.5px;font-weight:600;grid-template-columns:1fr auto}.topline span:last-child{text-align:right;letter-spacing:.08em}.dark .topline{background:linear-gradient(90deg,#07162b 0%,#0d3157 42%,#17434f 72%,#211f3a 100%)}.head{grid-template-columns:5px minmax(0,1fr);gap:22px;align-items:center;border-color:#3e536b;max-width:1152px;width:100%;margin:0 auto;padding:17px 0 16px;background:linear-gradient(180deg,rgba(27,51,78,.25),rgba(0,0,0,0))}.dark .head{border-color:#3e536b}.head-accent{display:block;width:4px;height:60px;border-radius:0;background:linear-gradient(180deg,#64d2ff 0%,#0a84ff 58%,rgba(10,132,255,.15) 100%)}.head-part{display:block;margin:0 0 7px;color:#64b5ff;font-size:11.5px;font-weight:700;letter-spacing:.12em}.head h1{margin:0;font-size:40px;line-height:1.12;letter-spacing:-.035em;font-weight:700}.long-head .head h1{font-size:35px}.head p,.dark .head p{margin:9px 0 0;color:#a7b2c2;font-size:14px;line-height:1.45;font-weight:500}.body{width:100%;max-width:1152px;margin:0 auto;padding:22px 0 16px;color:var(--body)}.body h2,.body h3,.body strong,.body b{color:var(--ink)}.anchor,.dark .anchor{margin:0 0 8px;padding:0 24px;border:1px solid #39536d;border-radius:0;background:linear-gradient(90deg,rgba(10,132,255,.28) 0%,#20242d 44%,rgba(100,210,255,.16) 100%);color:#f5f5f7;font-size:15px;font-weight:650}.footer{padding:0 2px;color:#8795a8;font-size:12.5px}.regular>.footer{margin:0 -64px;padding:0 64px;background:linear-gradient(90deg,#101827 0%,#182231 48%,#10141f 100%);border-top:1px solid rgba(100,181,255,.18)}.dark .footer,.transition .footer,.finale .footer,.statement-stage .footer{color:#8795a8}.source-link,.dark-source,.hero-source{color:#8abfff}.source-link:hover,.hero-source:hover{color:#64d2ff}
+
+/* cover / proposition slides: centered vertical axis */
+.cover,.transition,.finale,.statement-stage,.essence-question{background:#000}.cover-grid,.transition-grid,.final-grid,.statement-grid{background-image:linear-gradient(#ffffff07 1px,transparent 1px),linear-gradient(90deg,#ffffff07 1px,transparent 1px);background-size:52px 52px;mask-image:radial-gradient(circle at center,#000 0 38%,transparent 78%)}.cover-glow,.final-glow,.stage-vignette{position:absolute;left:50%;top:48%;width:760px;height:560px;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(circle,rgba(10,132,255,.18),rgba(10,132,255,.05) 36%,transparent 70%)}.cover-ring{left:50%;right:auto;top:50%;transform:translate(-50%,-50%)}.cover-ring.r1{width:560px;height:560px}.cover-ring.r2{width:360px;height:360px;left:50%;right:auto;top:50%}.cover-kicker{left:0;right:0;top:46px;padding:0;border:0;text-align:center;color:#98989d;font-weight:600;letter-spacing:.06em}.essence-cover .cover-copy,.cover-copy{left:100px;right:100px;top:158px;width:auto;text-align:center}.essence-cover .cover-copy h1,.cover-copy h1{font-size:72px;line-height:1.06;letter-spacing:-.05em;font-weight:750;margin:24px 0 24px}.cover-copy>span{color:#64b5ff;font-weight:650}.cover-copy p{font-size:26px;color:#f5f5f7;font-weight:600}.cover-side{left:50%;right:auto;top:492px;width:auto;min-width:440px;transform:translateX(-50%);display:flex;align-items:center;justify-content:center;gap:16px;border-top:1px solid #38383a;padding-top:16px;text-align:center}.essence-cover .cover-side b,.cover-side b{font-size:12.5px;color:#64b5ff;letter-spacing:.12em}.cover-side span{margin:0;color:#98989d;font-size:14px}.cover-bottom{left:150px;right:150px;bottom:48px;color:#98989d}.cover-bottom i{background:#38383a}
+.opening-cover .cover-copy{top:112px}.opening-cover .cover-copy h1{font-size:59px;line-height:1.08;margin:18px 0}.opening-cover .cover-copy p{font-size:20px;color:#d1d1d6}.opening-cover .cover-side{top:500px}.opening-cover .cover-bottom{left:115px;right:115px}
+.transition-copy,.governance-hero .transition-copy{left:100px;right:100px;top:50%;width:auto;transform:translateY(-50%);text-align:center}.transition-copy>span,.transition-coral .transition-copy>span{color:#64b5ff;font-weight:650}.transition-copy h1,.governance-hero .transition-copy h1{font-size:70px;line-height:1.08;letter-spacing:-.045em;font-weight:750;margin:28px 0}.transition-copy p,.governance-hero .transition-copy p{width:900px;margin:0 auto;color:#98989d;font-size:19px;line-height:1.6}.transition-mark{display:none}.transition-orbit.a,.governance-hero .transition-orbit.a{width:650px;height:650px;left:50%;right:auto;top:50%;transform:translate(-50%,-50%);border-color:#ffffff14}.transition-orbit.b,.governance-hero .transition-orbit.b{width:430px;height:430px;left:50%;right:auto;top:50%;transform:translate(-50%,-50%);border-color:#0a84ff40}.governance-hero .transition-copy h1{font-size:94px;letter-spacing:-.055em}.debt-transition .transition-copy h1{font-size:64px}
+
+/* opening problem statements */
+.statement-stage{display:block;position:relative;color:#f5f5f7}.statement-stage .footer{position:absolute;left:64px;right:64px;bottom:0}.statement-label{position:absolute;left:0;right:0;top:54px;text-align:center;color:#64b5ff;font-size:13px;font-weight:650;letter-spacing:.16em}.hundred-copy{position:absolute;left:100px;right:100px;top:135px;text-align:center}.hundred-copy>span{display:block;color:#98989d;font-size:20px;font-weight:600}.hundred-copy h1{margin:18px 0 20px;font-size:55px;line-height:1.2;letter-spacing:-.045em;font-weight:700}.hundred-copy em{font-style:normal;color:#64b5ff}.hundred-copy p{margin:0;color:#98989d;font-size:18px}.hundred-meter{position:absolute;left:260px;right:260px;bottom:72px;display:grid;grid-template-columns:1fr 130px 1fr;align-items:center;border-top:1px solid #38383a;border-bottom:1px solid #38383a;padding:18px 0}.hundred-meter>div{text-align:center}.hundred-meter b,.hundred-meter span{display:block}.hundred-meter b{font-size:48px;line-height:1}.hundred-meter>div:last-child b{color:#ff6961}.hundred-meter span{margin-top:8px;color:#98989d;font-size:13px}.hundred-meter i{height:1px;background:#48484a}
+.hundred-sites .statement-label{top:38px}.hundred-sites .hundred-copy{top:82px}.hundred-sites .hundred-copy>span{font-size:16px}.hundred-sites .hundred-copy h1{margin:10px 0 12px;font-size:54px;line-height:1.08}.hundred-sites .hundred-copy p{font-size:16px}.field-log{position:absolute;left:72px;right:72px;top:337px;height:142px;display:grid;grid-template-columns:repeat(4,1fr);gap:18px}.field-log>div{position:relative;padding:18px 18px 14px;border-bottom:1px solid #38383a}.field-log>div:nth-child(2){}.field-log>div:nth-child(3){}.field-log>div:nth-child(4){}.field-log b,.field-log span,.field-log small{display:block}.field-log b{font-size:34px;line-height:1}.field-log span{margin-top:12px;color:#f5f5f7;font-size:14px;font-weight:650}.field-log small{position:absolute;right:17px;top:19px;color:#6e6e73;font-size:11.5px}.retention-question{position:absolute;left:160px;right:160px;bottom:52px;display:grid;grid-template-columns:150px 1fr;align-items:center;padding:18px 0;border-top:1px solid #48484a}.retention-question span{color:#98989d;font-size:13px;font-weight:650}.retention-question b{font-size:21px;color:#ff9b96;text-align:center}
+
+/* speaker credibility: evidence without a résumé wall */
+.speaker-profile-slide .body{padding:18px 0 16px}.speaker-profile{height:100%;display:grid;grid-template-columns:.72fr 1.55fr;border-top:1px solid #38383a;border-bottom:1px solid #38383a}.profile-identity{padding:28px 34px;border-right:1px solid #38383a;background:linear-gradient(145deg,rgba(10,132,255,.1),transparent 65%)}.profile-identity>span{color:#64b5ff;font-size:12px;font-weight:700;letter-spacing:.14em}.profile-identity h2{margin:13px 0 10px;font-size:46px;letter-spacing:-.045em}.profile-identity>p{margin:0;color:#d1d1d6;font-size:15px;line-height:1.65}.profile-credentials{margin-top:24px;padding-top:16px;border-top:1px solid #38383a}.profile-credentials b{display:block;padding:5px 0;color:#98989d!important;font-size:12.5px;font-weight:600}.profile-field{display:grid;grid-template-rows:165px 1fr;padding:22px 30px}.profile-stats{display:grid;grid-template-columns:repeat(3,1fr);border-bottom:1px solid #38383a}.profile-stats>div{padding:11px 22px 20px}.profile-stats>div+div{border-left:1px solid #38383a}.profile-stats b,.profile-stats span{display:block}.profile-stats b{font-size:42px;line-height:1;color:#8abfff!important}.profile-stats>div:nth-child(2) b{color:#64d2ff!important}.profile-stats>div:nth-child(3) b{color:#30d158!important}.profile-stats span{margin-top:15px;color:#d1d1d6;font-size:13px;line-height:1.55}.profile-reach{padding-top:14px}.profile-reach>div{display:grid;grid-template-columns:100px 1fr;align-items:start;padding:9px 0}.profile-reach>div+div{border-top:1px solid #2c2c2e}.profile-reach span{color:#64b5ff;font-size:12px;font-weight:700;letter-spacing:.1em}.profile-reach p{margin:0;color:#b9c2cf;font-size:12.5px;line-height:1.55}
+
+/* platform growth: two exact series and two direct deployment signals */
+.platform-growth-slide .body{display:grid;grid-template-rows:230px 92px 24px;gap:12px;padding:10px 0 12px}.growth-dual{display:grid;grid-template-columns:1fr 1fr;gap:18px}.growth-card{display:grid;grid-template-rows:36px 140px 28px;padding:16px 22px 10px;border:1px solid #38383a;border-radius:0;background:#1c1c1e}.growth-card.netlify-growth{}.growth-title{display:flex;align-items:flex-start;justify-content:space-between}.growth-title span{color:#8abfff;font-size:12px;font-weight:700;letter-spacing:.08em}.growth-title b{font-size:20px}.growth-bars{height:140px;display:grid;grid-template-columns:repeat(3,1fr);gap:28px;padding:0 12px}.growth-bars>div{height:100%;position:relative;border-bottom:1px solid #48484a}.growth-bars i{position:absolute;left:50%;bottom:20px;transform:translateX(-50%);width:58px;height:var(--h);min-height:18px;border-radius:0;background:linear-gradient(180deg,#64b5ff,#0a84ff);}.netlify-growth .growth-bars i{background:linear-gradient(180deg,#8ce8ef,#28a9b5)}.growth-bars b{position:absolute;left:0;right:0;bottom:calc(20px + var(--h) + 5px);font-size:13px;text-align:center}.growth-bars span{position:absolute;left:0;right:0;bottom:1px;color:#98989d;font-size:11.5px;text-align:center}.growth-card>p{margin:7px 0 0;color:#98989d;font-size:11.5px;text-align:center}.growth-proof{display:grid;grid-template-columns:1fr 1fr 1.15fr;border-top:1px solid #38383a;border-bottom:1px solid #38383a}.growth-proof>div,.growth-proof>p{margin:0;padding:12px 20px}.growth-proof>div+div,.growth-proof>p{border-left:1px solid #38383a}.growth-proof span,.growth-proof b,.growth-proof p{display:block}.growth-proof span{color:#ff9b96;font-size:11.5px;font-weight:700}.growth-proof b{margin-top:5px;font-size:22px}.growth-proof>div p{margin:4px 0 0;color:#98989d;font-size:11.5px;line-height:1.35}.growth-proof>p{display:flex;flex-direction:column;justify-content:center;color:#b8c2d0;font-size:12.5px;line-height:1.5}.growth-proof strong{color:#f5f5f7}.growth-sources{display:flex;align-items:center;justify-content:flex-end;gap:18px}.growth-sources a{color:#8abfff;font-size:11px;font-weight:650;text-decoration:none;border-bottom:1px solid #365e89}.growth-sources a:hover{color:#64d2ff}
+.making-boundary-slide .body{padding:27px 0 20px}.making-duality{height:100%;display:grid;grid-template-columns:1fr 112px 1fr;align-items:stretch}.making-duality section{border-radius:0;background:#1c1c1e;border:1px solid #38383a;padding:28px 30px}.making-duality section.logic-side{}.making-duality section>span{color:#64b5ff;font-size:12.5px;font-weight:700;letter-spacing:.08em}.making-duality .logic-side>span{color:#ff6961}.making-duality h2{font-size:30px;margin:22px 0 16px}.making-duality p{min-height:92px;margin:0;color:#d1d1d6;font-size:15px;line-height:1.7}.making-duality section>div{display:flex;gap:8px;flex-wrap:wrap;margin-top:24px}.making-duality section>div b{padding:7px 11px;border-radius:0;background:#2c2c2e;color:#d1d1d6;font-size:12.5px}.making-divider{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;color:#98989d;text-align:center}.making-divider i{width:1px;flex:1;background:#38383a}.making-divider strong{font-size:13px;line-height:1.5;color:#98989d}
+.process-gap-slide .body{padding:28px 0 18px}.process-tunnel{height:276px;display:grid;grid-template-columns:1.25fr .72fr .85fr;gap:18px}.process-tunnel>div{border-radius:0;border:1px solid #38383a}.process-tunnel .trail{display:grid;grid-template-columns:1fr 22px 1fr 22px 1fr 22px 1fr;align-items:center;padding:0 22px;background:#1c1c1e}.trail span{text-align:center;color:#d1d1d6;font-size:13px;font-weight:650}.trail i{height:1px;background:#48484a}.fog{display:flex;flex-direction:column;align-items:center;justify-content:center;background:repeating-linear-gradient(135deg,#1c1c1e,#1c1c1e 8px,#202022 8px,#202022 16px)}.fog b{font-size:48px;color:#6e6e73}.fog span{margin-top:14px;color:#6e6e73;font-size:12.5px;text-align:center;line-height:1.7}.answer{display:flex;flex-direction:column;align-items:center;justify-content:center;background:#07182f;border-color:#0a84ff!important;}.answer span{color:#8abfff;font-size:12.5px;font-weight:700}.answer b{margin:17px 0;font-size:64px}.answer small{color:#98989d;font-size:12.5px}.process-warning{margin:24px 80px 0;display:grid;grid-template-columns:170px 1fr;align-items:center;border-top:1px solid #48484a;padding:18px 22px}.process-warning span{color:#ff6961;font-size:13px;font-weight:700}.process-warning b{font-size:17px;line-height:1.5}
+.internal-work-slide .body{padding:20px 0 12px}.internal-orbit{position:relative;height:100%}.internal-orbit svg{position:absolute;inset:0;width:100%;height:100%}.internal-orbit svg path{fill:none;stroke:#3a3a3c;stroke-width:1.5}.work-core,.work-node{position:absolute;border-radius:0;border:1px solid #38383a;background:#1c1c1e}.work-core{left:50%;top:50%;transform:translate(-50%,-50%);width:280px;height:140px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;border-color:#0a84ff;}.work-core span{color:#64b5ff;font-size:12.5px;font-weight:700}.work-core b{margin:12px 0;font-size:27px}.work-core small{color:#98989d;font-size:12.5px}.work-node{width:190px;padding:14px 18px;text-align:center}.work-node b,.work-node span{display:block}.work-node b{font-size:16px}.work-node span{margin-top:7px;color:#98989d;font-size:12.5px}.work-node.n1{left:40px;top:18px}.work-node.n2{left:50%;top:0;transform:translateX(-50%)}.work-node.n3{right:40px;top:18px}.work-node.n4{left:40px;bottom:18px}.work-node.n5{left:50%;bottom:0;transform:translateX(-50%)}.work-node.n6{right:40px;bottom:18px}
+
+/* public work: plain-language scope and real-world consequence */
+.public-definition-slide .body{padding:20px 0 16px}.public-impact-grid{height:100%;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(2,1fr);gap:14px}.public-impact-grid>div{position:relative;border-radius:0;background:linear-gradient(145deg,#202a38,#1a1e25);border:1px solid #3c4a5c;padding:17px 21px}.public-impact-grid>div:nth-child(2){}.public-impact-grid>div:nth-child(3){}.public-impact-grid>div:nth-child(4){}.public-impact-grid>div:nth-child(5){}.public-impact-grid>div:nth-child(6){}.public-impact-grid span{display:block;color:#8abfff;font-size:12px;font-weight:700;letter-spacing:.08em}.public-impact-grid h2{margin:10px 0 9px;font-size:22px}.public-impact-grid p{margin:0;color:#c8d0dc;font-size:13.5px;line-height:1.5}
+.impact-cascade-slide .body{padding:16px 0 14px}.impact-cascade{height:100%;display:grid;grid-template-rows:40px repeat(4,1fr);overflow:hidden;border:1px solid #3a4d63;border-radius:0;background:rgba(15,22,32,.76)}.cascade-head,.cascade-row{display:grid;grid-template-columns:1.2fr 28px 1fr 28px 1.1fr;align-items:center;padding:0 24px}.cascade-head{background:linear-gradient(90deg,#0d2847,#16465a 62%,#29223c);color:#9fb5ce;font-size:12.5px;font-weight:700;letter-spacing:.04em}.cascade-head b:nth-child(1){grid-column:1}.cascade-head b:nth-child(2){grid-column:3}.cascade-head b:nth-child(3){grid-column:5}.cascade-row{border-top:1px solid #344253}.cascade-row strong{font-size:15px;line-height:1.4}.cascade-row span{color:#c1cad7;font-size:14px;line-height:1.4}.cascade-row em{color:#ff8a84;font-size:14px;font-weight:700;font-style:normal;line-height:1.4}.cascade-row i{text-align:center;color:#64b5ff;font-size:17px;font-style:normal}
+
+/* page 12: connectors share the same coordinate system as their boxes */
+.invisible-map:before,.invisible-map:after{content:none}.invisible-map>svg{position:absolute;inset:0;width:100%;height:100%;z-index:1;overflow:visible}.invisible-map>svg path{fill:none;stroke:#5b7492;stroke-width:2;stroke-linecap:round;vector-effect:non-scaling-stroke}.invisible-core{z-index:3;border:1px solid #0a84ff;}.iv{z-index:3;width:208px;height:76px;display:flex;flex-direction:column;justify-content:center;padding:12px 18px}.iv1{left:35px;top:28px}.iv2{right:35px;top:28px}.iv3{left:20px;bottom:24px}.iv4{right:20px;bottom:24px}.iv5{left:50%;top:0;transform:translateX(-50%)}
+
+/* public case captions on pages 22–23 */
+.case-footnote{position:absolute;left:8px;right:8px;bottom:29px;padding:9px 13px;border-radius:0;background:rgba(10,132,255,.09);color:#b8c2d0;font-size:12.5px;line-height:1.43}.case-footnote b{margin-right:7px;color:#d7ebff;font-size:12.5px}.robodebt-note{background:rgba(255,69,58,.07);color:#b8c1ce}.robodebt-note b{color:#ff9b96}
+
+/* technical debt */
+.tech-debt-slide .body{padding:23px 0 18px}.debt-ledger{height:100%;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:14px}.debt-ledger>div{position:relative;border-radius:0;background:#1c1c1e;border:1px solid #38383a;padding:20px 24px}.debt-ledger>div:nth-child(1){}.debt-ledger>div:nth-child(2){}.debt-ledger>div:nth-child(3){}.debt-ledger>div:nth-child(4){}.debt-ledger span{color:#98989d;font-size:12.5px;font-weight:700;letter-spacing:.08em}.debt-ledger h2{margin:11px 0 8px;font-size:20px}.debt-ledger p{margin:0;color:#d1d1d6;font-size:13.5px;line-height:1.55}.debt-ledger b{position:absolute;right:22px;bottom:16px;color:#ff6961;font-size:12.5px}.debt-interest-slide .body{padding:35px 0 18px}.debt-chain{display:grid;grid-template-columns:1fr 28px 1fr 28px 1fr 28px 1fr;align-items:center}.debt-chain>div{height:218px;padding:22px 19px;border-radius:0;background:#1c1c1e;border:1px solid #38383a;position:relative}.debt-chain>div:nth-of-type(2){}.debt-chain>div:nth-of-type(3){}.debt-chain>div.debt-due{background:#241416}.debt-chain>i{text-align:center;font-style:normal;color:#6e6e73}.debt-chain span,.debt-chain h2,.debt-chain small,.debt-chain b{display:block}.debt-chain span{color:#98989d;font-size:12.5px;font-weight:700}.debt-chain h2{font-size:19px;line-height:1.35;margin:19px 0 13px}.debt-chain small{color:#98989d;font-size:12.5px;line-height:1.5}.debt-chain b{position:absolute;left:19px;bottom:17px;color:#64b5ff;font-size:12.5px}.debt-chain .debt-due b{color:#ff6961}.debt-equation{margin:26px 70px 0;display:grid;grid-template-columns:170px 1fr;align-items:center;border-top:1px solid #48484a;padding:18px 22px}.debt-equation span{color:#ff6961;font-size:13px;font-weight:700}.debt-equation b{text-align:center;font-size:18px}
+
+/* existing content translated to the same dark surface language */
+.public-pillars{gap:14px}.public-pillars>div,.dependence-track>div,.iv,.robo-river>div,.automation-timeline>div,.dq,.st{background:#1c1c1e;color:#f5f5f7;border-color:#38383a;border-radius:0;}.public-pillars>div+div{border-left:1px solid #38383a}.public-pillars>div{}.public-pillars>div:nth-child(2){}.public-pillars>div:nth-child(3){}.public-pillars span{color:#64b5ff}.constitution-mark,.shadow-quote,.shadow-numbers>div,.invisible-core,.decay-facts>div,.horizon-flow>div,.context-stack>div,.context-human,.data-question{background:#1c1c1e;border-radius:0;}.constitution-meaning{border-color:#38383a}.dependence-track>div.danger,.robo-river>div.robo-danger,.automation-timeline>div.stop,.q2{background:#241416}.dependence-track>div{}.dependence-boundary b{}.invisible-map:before,.invisible-map:after{background:#38383a}.iv{}.decay-browser{background:#1c1c1e;color:#f5f5f7;border-color:#38383a;border-radius:0;}.decay-code{color:#48484a}.pixel-site{border-radius:0;background:#1c1c1e}.pixel-grid{background:#2c2c2e;border-radius:0;}.fossil-reading{padding:14px 0}.monitor{background:#2c2c2e;color:#f5f5f7;border-color:#48484a}.logic-code{border-radius:0;background:#111d2d}.logic-zoom>div:last-child span{background:#2c2c2e;color:#d1d1d6;border-radius:0;}.logic-warning{}.robo-meaning{}.chat-window{background:#1c1c1e;color:#f5f5f7;border-color:#38383a;border-radius:0;overflow:hidden}.chat-head{background:#07182f}.chat-q{background:#2c2c2e}.chat-a{background:#241416}.automation-callout{background:#1c1c1e;border:1px solid #38383a;border-radius:0;}.context-stack>div{border-color:#38383a}.data-quadrant{border-color:#48484a}.q4{background:#102218}.data-question{border:1px solid #38383a}.trust-bridges{gap:14px;border:0}.trust-bridges>div{border-radius:0;background:#1c1c1e;border:1px solid #38383a;}.trust-bridges>div+div{border-left:1px solid #38383a}.trust-bridges>div:nth-child(2){}.trust-bridges>div:nth-child(3){}.freedom-bottom{}.st{}.st.s2{}.st.s3{}.essential-questions{gap:12px;height:320px}.essential-questions>div{background:#1c1c1e;border:1px solid #38383a;border-radius:0;}.essential-questions>div:nth-child(odd){border-right:1px solid #38383a}.essential-answer{}.note-panel{background:#1c1c1e;color:#f5f5f7;}.controls{background:#000e;border-color:#38383a;border-radius:0;backdrop-filter:blur(18px)}.controls button{border-radius:0;background:#1c1c1e;color:#f5f5f7}.controls button:hover{background:#2c2c2e}
+
+/* final balance */
+.excel-logic-slide .notice-sheet h2{color:#1c1c1e}
+.final-kicker{left:0;right:0;top:56px;text-align:center;color:#64b5ff}.final-copy{left:110px;right:110px;top:154px;text-align:center}.final-copy h1{font-size:58px;line-height:1.18;letter-spacing:-.045em}.final-principles,.essence-finale .final-principles{left:110px;right:110px;top:392px;height:112px;border-color:#38383a}.final-principles b{font-size:21px}.final-principles i{background:#38383a}.final-answer{color:#8abfff}.essence-grid{background-size:52px 52px}.essence-question{background:#000}.essence-copy span{color:#64b5ff}.essence-copy h1{font-size:88px;letter-spacing:-.055em}.essence-copy p{color:#98989d}.essence-whisper{color:#98989d}.essence-question .footer{left:64px;right:64px}
+.controls{position:fixed;z-index:1000;left:50%;bottom:13px;transform:translateX(-50%);display:flex;gap:6px;align-items:center;padding:8px;background:#07111fee;border:1px solid #ffffff20;border-radius:0;}.controls button{border:0;border-radius:0;background:#263850;color:#fff;padding:8px 11px;font-family:inherit;font-size:13px;font-weight:800;cursor:pointer}.controls button:hover{background:#3b506d}.status{min-width:75px;text-align:center;color:#dce3ed;font-size:13px}.note-panel{display:none;position:fixed;z-index:2000;left:24px;right:24px;bottom:24px;max-height:32vh;overflow:auto;background:#fff;padding:18px 24px;color:var(--ink);font-size:15px;line-height:1.65}.note-panel.show{display:block}.editing [contenteditable="true"]{outline:1px dashed var(--coral);outline-offset:3px;cursor:text}
+body.presenting,body.single{padding:0;overflow:hidden;background:#000}.presenting .deck,.single .deck{display:block}.presenting .slide,.single .slide{display:none;zoom:1;}.presenting .slide.active,.single .slide.active{display:grid;position:fixed;left:50%;top:50%;transform:translate(-50%,-50%) scale(var(--present-scale));transform-origin:center}.presenting .cover.active,.presenting .transition.active,.presenting .finale.active,.presenting .statement-stage.active,.presenting .essence-question.active,.single .cover.active,.single .transition.active,.single .finale.active,.single .statement-stage.active,.single .essence-question.active{display:block}.presenting .controls{opacity:.16;transition:opacity .2s}.presenting .controls:hover{opacity:1}.single .controls{display:none}.presenting .slide.active [data-step]{opacity:0;transform:translateY(12px)}.presenting .slide.active [data-step].revealed{opacity:1;transform:none;transition:opacity .55s cubic-bezier(.2,.7,.2,1),transform .55s cubic-bezier(.2,.7,.2,1)}
+@page{size:1280px 720px;margin:0}@media print{body{padding:0;background:#fff}.controls,.note-panel{display:none!important}.deck{display:block}.slide,.presenting .slide,.single .slide{display:grid!important;position:relative!important;left:auto!important;top:auto!important;transform:none!important;zoom:1!important;break-after:page;page-break-after:always}.cover,.transition,.finale{display:block!important}.slide [data-step]{opacity:1!important;transform:none!important}.footer{break-inside:avoid}}@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+
+
+/* ── 30-minute balanced explainer additions ───────────────── */
+html,body{font-family:'Pretendard 30min Embedded','Pretendard Embedded',sans-serif}.hundred-sites .hundred-copy h1{padding-bottom:4px}.essence-question .essence-ring.er2{width:700px;height:700px}
+.guide-slide .head h1{font-size:35px}.guide-slide .body{position:relative;padding:16px 0 28px}.guide-ref{position:absolute;left:0;bottom:5px;color:#77869a;font-size:12px;font-weight:600;letter-spacing:.01em}.guide-ref:before{content:"";display:inline-block;width:18px;height:1px;margin:0 8px 3px 0;background:#53677f}.guide-transition .transition-copy h1{font-size:72px}.guide-transition .transition-copy p{max-width:920px}.guide-transition .footer{position:absolute;left:64px;right:64px;bottom:0}
+.section-meter{position:absolute;left:50%;top:58px;transform:translateX(-50%);display:flex;align-items:center;gap:10px;color:#6e6e73;font-size:12px;font-weight:700}.section-meter b{color:#64b5ff}.section-meter i{width:160px;height:2px;background:linear-gradient(90deg,#0a84ff 0 50%,#38383a 50%)}
+
+/* three-stage hourglass */
+.stage-system{height:354px;position:relative;display:grid;grid-template-columns:1.05fr .8fr 1.05fr;gap:24px;align-items:center}.stage-system svg{position:absolute;inset:0;width:100%;height:100%;z-index:0}.stage-system svg path{fill:none;stroke:#53677f;stroke-width:2;stroke-linecap:round}.stage-card{z-index:2;min-height:250px;border:1px solid #38383a;border-radius:0;background:#1c1c1e;padding:24px 25px;}.stage-card.narrow{min-height:300px;background:linear-gradient(155deg,#211d11,#1c1c1e 45%)}.stage-card.formal{}.stage-card>span{color:#8abfff;font-size:12.5px;font-weight:750;letter-spacing:.1em}.stage-card.narrow>span{color:#ffd60a}.stage-card.formal>span{color:#30d158}.stage-card h2{margin:18px 0 13px;font-size:27px}.stage-card p{margin:0;color:#d1d1d6;font-size:14.5px;line-height:1.6}.stage-card ul{margin:16px 0 0;padding:0;list-style:none}.stage-card li{position:relative;padding:4px 0 4px 15px;color:#aeb8c6;font-size:13.5px}.stage-card li:before{content:"";position:absolute;left:0;top:11px;width:5px;height:5px;border-radius:50%;background:#64b5ff}.stage-card.narrow li:before{background:#ffd60a}.stage-card.formal li:before{background:#30d158}.stage-exits{position:absolute;left:40px;right:40px;bottom:0;display:flex;justify-content:space-between;color:#98989d;font-size:12.5px;font-weight:650}.stage-exits b{color:#f5f5f7}
+
+/* data classes */
+.data-three{height:345px;display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.data-card{position:relative;border:1px solid #38383a;border-radius:0;background:#1c1c1e;padding:23px 24px}.data-card.s{}.data-card.c{background:#241416}.data-letter{position:absolute;right:20px;top:13px;color:#ffffff10;font-size:92px;line-height:1;font-weight:800}.data-card>span{color:#30d158;font-size:12.5px;font-weight:750;letter-spacing:.1em}.data-card.s>span{color:#ffd60a}.data-card.c>span{color:#ff6961}.data-card h2{margin:18px 0 13px;font-size:26px}.data-card p{margin:0;color:#d1d1d6;font-size:14px;line-height:1.58}.data-rule{position:absolute;left:24px;right:24px;bottom:20px;padding-top:13px;border-top:1px solid #38383a;color:#98989d;font-size:12.5px;line-height:1.45}.data-card.c .data-rule{border-color:#5a2b2d;color:#ffaaa6}
+
+/* five temporary-use tool types */
+.tool-types{height:344px;display:grid;grid-template-columns:repeat(6,1fr);grid-template-rows:repeat(2,1fr);gap:12px}.tool-type{position:relative;border:1px solid #38383a;border-radius:0;background:#1c1c1e;padding:18px 20px}.tool-type:nth-child(1){grid-column:1/3;background:#102218}.tool-type:nth-child(2){grid-column:3/5;}.tool-type:nth-child(3){grid-column:5/7;}.tool-type:nth-child(4){grid-column:2/4;}.tool-type:nth-child(5){grid-column:4/6;}.tool-type i{font-style:normal;position:absolute;right:15px;top:10px;color:#ffffff12;font-size:44px;font-weight:800}.tool-type span{font-size:11.5px;font-weight:750;color:#64b5ff}.tool-type:nth-child(1) span{color:#30d158}.tool-type:nth-child(4) span{color:#ffd60a}.tool-type:nth-child(5) span{color:#d0a8ff}.tool-type h2{margin:14px 0 8px;font-size:19px}.tool-type p{margin:0;color:#b5bfcc;font-size:12.7px;line-height:1.47}.tool-type b{display:block;margin-top:8px;color:#98989d;font-size:11.8px}.tool-type:nth-child(1) b{color:#7fe49a}
+
+/* experiment */
+.experiment-loop{height:346px;display:grid;grid-template-columns:235px 1fr 250px;gap:20px}.experiment-start,.experiment-exit{border:1px solid #38383a;border-radius:0;background:#1c1c1e;padding:24px}.experiment-start{}.experiment-start span,.experiment-exit span{color:#64b5ff;font-size:12.5px;font-weight:750}.experiment-start h2,.experiment-exit h2{margin:17px 0 12px;font-size:24px}.experiment-start p,.experiment-exit p{margin:0;color:#b9c2cf;font-size:13.5px;line-height:1.55}.experiment-start b{display:block;margin-top:22px;padding:10px 12px;border-radius:0;background:#10213a;color:#8abfff;font-size:13px}.experiment-cycle{display:grid;grid-template-columns:repeat(2,1fr);grid-template-rows:repeat(2,1fr);gap:12px;position:relative}.experiment-cycle:after{content:"↻";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:48px;height:48px;display:grid;place-content:center;border-radius:50%;background:#07182f;border:1px solid #0a84ff;color:#64b5ff;font-size:23px}.cycle-step{border-radius:0;background:#1c1c1e;border:1px solid #38383a;padding:20px}.cycle-step b{display:block;font-size:18px}.cycle-step small{display:block;margin-top:9px;color:#98989d;font-size:12.5px;line-height:1.45}.experiment-exit{display:flex;flex-direction:column;justify-content:center;}.exit-list{margin-top:18px}.exit-list div{padding:10px 0;border-top:1px solid #38383a}.exit-list b{display:block;font-size:14px}.exit-list small{display:block;margin-top:4px;color:#98989d;font-size:11.8px}
+
+/* through-line case */
+.case-brief{height:345px;display:grid;grid-template-columns:1fr 1.35fr;gap:22px}.case-person{border-radius:0;background:linear-gradient(150deg,#0b2341,#111923 70%);border:1px solid #31506e;padding:28px}.case-person>span{color:#64b5ff;font-size:12.5px;font-weight:750}.case-person h2{font-size:29px;line-height:1.3;margin:20px 0 15px}.case-person p{margin:0;color:#c4cedb;font-size:14.5px;line-height:1.65}.case-person b{display:block;margin-top:23px;color:#ffd60a;font-size:14px}.case-board{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.case-board>div{position:relative;border-radius:0;background:#1c1c1e;border:1px solid #38383a;padding:19px 20px}.case-board i{font-style:normal;color:#64b5ff;font-size:12px;font-weight:750}.case-board h3{margin:10px 0 7px;font-size:18px}.case-board p{margin:0;color:#aeb8c6;font-size:12.8px;line-height:1.48}.case-board .case-result{border-color:#40623f;background:#102218}.case-board .case-result i{color:#30d158}
+
+/* concrete site + form routes */
+.site-form-flow{height:344px;display:grid;grid-template-columns:repeat(4,1fr);gap:13px}.site-step{position:relative;border-radius:0;background:#1c1c1e;border:1px solid #38383a;padding:20px 20px 18px}.site-step:not(:last-child):after{content:"→";position:absolute;right:-13px;top:50%;z-index:3;width:25px;height:25px;display:grid;place-content:center;border-radius:50%;background:#000;color:#64b5ff;font-size:17px;font-weight:700}.site-step>span{color:#64b5ff;font-size:11.5px;font-weight:800;letter-spacing:.05em}.site-step h2{font-size:20px;line-height:1.25;margin:14px 0 9px}.site-step p{margin:0;color:#aeb8c6;font-size:12.7px;line-height:1.47}.site-step dl{margin:14px 0 0;padding-top:11px;border-top:1px solid #38383a}.site-step dt{color:#6e6e73;font-size:10.8px;font-weight:700}.site-step dd{margin:4px 0 9px;color:#d1d1d6;font-size:12px;line-height:1.35}.site-step.gitlab{}.site-step.gitlab>span{color:#ffd60a}.site-step.report{}.site-step.report>span{color:#30d158}.flow-caveat{position:absolute;left:0;right:0;bottom:3px;display:flex;justify-content:center;gap:16px;color:#98989d;font-size:11.8px}.flow-caveat b{color:#ffd60a}
+
+.document-run{height:344px;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(2,1fr);gap:12px}.document-card{position:relative;border-radius:0;background:#1c1c1e;border:1px solid #38383a;padding:17px 19px}.document-card>i{font-style:normal;position:absolute;right:14px;top:10px;color:#ffffff12;font-size:42px;font-weight:800}.document-card>span{color:#64b5ff;font-size:11.5px;font-weight:800}.document-card h3{font-size:17px;margin:10px 0 7px}.document-card p{margin:0;color:#aeb8c6;font-size:12.1px;line-height:1.39}.document-card small{display:block;margin-top:8px;padding-top:7px;border-top:1px solid #38383a;color:#98989d;font-size:10.8px;line-height:1.35}.document-card small b{color:#d1d1d6}.document-card.accept{}.document-card.accept>span{color:#ffd60a}.document-card.approve{background:#102218}.document-card.approve>span{color:#30d158}
+
+.receive-route{height:344px;display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:repeat(2,1fr);gap:11px;position:relative}.receive-step{position:relative;border-radius:0;background:#1c1c1e;border:1px solid #38383a;padding:15px 17px}.receive-step:not(:nth-child(4)):not(:nth-child(8)):after{content:"→";position:absolute;right:-11px;top:50%;z-index:2;color:#64b5ff;font-size:15px}.receive-step>span{color:#64b5ff;font-size:10.8px;font-weight:800}.receive-step h3{font-size:16px;margin:8px 0 6px}.receive-step p{margin:0;color:#aeb8c6;font-size:11.7px;line-height:1.38}.receive-step small{display:block;margin-top:7px;color:#7f8c9c;font-size:10.5px;line-height:1.3}.receive-step.pivot{}.receive-step.pivot>span{color:#ffd60a}.receive-step.done{background:#102218}.receive-step.done>span{color:#30d158}.receive-divider{position:absolute;left:20px;right:20px;top:50%;height:1px;background:#38383a;z-index:0}
+
+.form-ledger{height:344px;display:grid;grid-template-columns:1.05fr 1.35fr .9fr;gap:14px}.form-lane{border-radius:0;background:#1c1c1e;border:1px solid #38383a;padding:20px}.form-lane>span{color:#64b5ff;font-size:11.5px;font-weight:800}.form-lane h2{font-size:20px;margin:12px 0}.form-list{display:grid;gap:7px}.form-list div{display:grid;grid-template-columns:110px 1fr;gap:9px;padding-top:7px;border-top:1px solid #38383a}.form-list b{font-size:11.8px;color:#f5f5f7}.form-list small{font-size:11.2px;color:#aeb8c6;line-height:1.35}.form-lane.location{}.form-lane.location>span{color:#30d158}.form-lane.gap{}.form-lane.gap>span{color:#ffd60a}.form-lane.gap ul{list-style:none;margin:0;padding:0}.form-lane.gap li{padding:8px 0;border-top:1px solid #38383a;color:#c4ced9;font-size:12px;line-height:1.38}.form-lane.gap b{color:#ffd60a}
+
+.platform-readiness{height:344px;display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.readiness-column{border-radius:0;background:#1c1c1e;border:1px solid #38383a;padding:22px 23px}.readiness-column>span{color:#64b5ff;font-size:11.5px;font-weight:800}.readiness-column h2{font-size:22px;margin:14px 0 12px}.readiness-column ul{list-style:none;margin:0;padding:0}.readiness-column li{padding:9px 0;border-top:1px solid #38383a;color:#bbc5d1;font-size:12.6px;line-height:1.4}.readiness-column.planned{}.readiness-column.planned>span{color:#ffd60a}.readiness-column.local{background:#241416}.readiness-column.local>span{color:#ff6961}.readiness-column.local li{border-color:#5a2b2d;color:#efc0bd}.readiness-column b{color:#f5f5f7}
+
+/* temporary-use boundary */
+.temporary-frame{height:345px;display:grid;grid-template-columns:1.18fr .82fr;gap:22px}.three-conditions{display:grid;grid-template-rows:repeat(3,1fr);gap:11px}.condition{display:grid;grid-template-columns:56px 1fr;align-items:center;border:1px solid #38383a;border-radius:0;background:#1c1c1e;padding:14px 20px}.condition b{width:40px;height:40px;display:grid;place-content:center;border-radius:50%;background:#10213a;color:#64b5ff;font-size:18px}.condition h3{margin:0 0 5px;font-size:18px}.condition p{margin:0;color:#aeb8c6;font-size:13px;line-height:1.42}.not-allowed{border:1px solid #5a2b2d;border-radius:0;background:#241416;padding:22px 24px}.not-allowed>span{color:#ff6961;font-size:12.5px;font-weight:750}.not-allowed h2{margin:13px 0 12px;font-size:22px}.not-allowed ul{list-style:none;padding:0;margin:0}.not-allowed li{padding:9px 0;border-top:1px solid #5a2b2d;color:#f0c3c1;font-size:13.5px;line-height:1.4}.temporary-meaning{position:absolute;right:0;bottom:5px;color:#ffd60a;font-size:12.5px;font-weight:700}
+
+/* entry requirements */
+.gate-flow{height:344px;display:grid;grid-template-columns:1fr 38px 1.45fr 38px 1fr;align-items:center}.gate-box{height:250px;border-radius:0;border:1px solid #38383a;background:#1c1c1e;padding:25px}.gate-box>span{color:#64b5ff;font-size:12px;font-weight:750}.gate-box h2{font-size:23px;margin:17px 0 14px}.gate-box p{margin:0;color:#b8c2cf;font-size:13.5px;line-height:1.55}.gate-arrow{color:#6e6e73;font-size:24px;text-align:center}.evidence-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:11px}.evidence{min-height:116px;border-radius:0;background:#1c1c1e;border:1px solid #38383a;padding:17px}.evidence i{font-style:normal;color:#ffd60a;font-size:12px;font-weight:800}.evidence b{display:block;margin-top:10px;font-size:16px}.evidence small{display:block;margin-top:6px;color:#98989d;font-size:11.8px;line-height:1.4}.approval-box{background:#102218}.approval-box>span{color:#30d158}.approval-box strong{display:block;margin-top:20px;padding-top:15px;border-top:1px solid #315f39;color:#bcecc8;font-size:13px;line-height:1.5}
+
+/* responsibility handoff */
+.handoff-map{height:344px;display:grid;grid-template-columns:1fr 116px 1fr;align-items:stretch}.owner-side{border-radius:0;border:1px solid #38383a;background:#1c1c1e;padding:27px 29px}.owner-side.creator{}.owner-side.operator{}.owner-side>span{color:#64b5ff;font-size:12.5px;font-weight:750}.owner-side.operator>span{color:#30d158}.owner-side h2{font-size:26px;margin:18px 0 13px}.owner-side p{font-size:14px;line-height:1.62;color:#c4cedb}.owner-side b{display:block;margin-top:18px;color:#ffd60a;font-size:13.5px}.handoff-center{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;text-align:center}.handoff-center i{font-style:normal;color:#64b5ff;font-size:30px}.handoff-center span{font-size:12px;color:#98989d}.handoff-center b{font-size:13.5px;color:#f5f5f7}.handoff-center small{font-size:11px;color:#6e6e73}.handoff-bottom{position:absolute;left:0;right:0;bottom:3px;text-align:center;color:#98989d;font-size:12px}
+
+/* basic responsibilities */
+.responsibility-five{height:344px;display:grid;grid-template-columns:repeat(6,1fr);grid-template-rows:1fr 1fr;gap:12px}.responsibility-five>div{position:relative;border:1px solid #38383a;border-radius:0;background:#1c1c1e;padding:19px 20px}.responsibility-five>div:nth-child(1){grid-column:1/3}.responsibility-five>div:nth-child(2){grid-column:3/5}.responsibility-five>div:nth-child(3){grid-column:5/7}.responsibility-five>div:nth-child(4){grid-column:2/4}.responsibility-five>div:nth-child(5){grid-column:4/6}.responsibility-five i{font-style:normal;position:absolute;right:15px;top:11px;color:#ffffff12;font-size:44px;font-weight:800}.responsibility-five span{color:#64b5ff;font-size:11.5px;font-weight:750}.responsibility-five h2{font-size:19px;margin:15px 0 8px}.responsibility-five p{font-size:12.7px;line-height:1.48;color:#aeb8c6;margin:0}.responsibility-five>div:nth-child(2) span,.responsibility-five>div:nth-child(5) span{color:#ffd60a}.responsibility-five>div:nth-child(3) span{color:#ff6961}.responsibility-five>div:nth-child(4) span{color:#30d158}
+
+/* change, incident, succession */
+.operate-three{height:344px;display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.operate-panel{border-radius:0;background:#1c1c1e;border:1px solid #38383a;padding:22px 23px}.operate-panel>span{color:#64b5ff;font-size:12px;font-weight:750}.operate-panel h2{margin:15px 0 13px;font-size:22px}.operate-panel p{margin:0 0 12px;color:#c3ccd8;font-size:13.5px;line-height:1.55}.operate-panel ul{list-style:none;margin:0;padding:0}.operate-panel li{padding:7px 0;border-top:1px solid #38383a;color:#98989d;font-size:12.5px;line-height:1.4}.operate-panel.incident{}.operate-panel.incident>span{color:#ff6961}.operate-panel.succession{}.operate-panel.succession>span{color:#30d158}
+
+/* other people's tools */
+.borrow-two{height:344px;display:grid;grid-template-columns:1fr 1fr;gap:20px}.borrow-panel{border-radius:0;background:#1c1c1e;border:1px solid #38383a;padding:23px 25px}.borrow-panel.external{}.borrow-panel>span{color:#64d2ff;font-size:12px;font-weight:750}.borrow-panel.external>span{color:#ffd60a}.borrow-panel h2{font-size:24px;margin:16px 0 14px}.borrow-steps{display:grid;gap:7px}.borrow-steps div{display:grid;grid-template-columns:25px 1fr;gap:9px;align-items:start}.borrow-steps i{font-style:normal;width:24px;height:24px;display:grid;place-content:center;border-radius:50%;background:#10213a;color:#8abfff;font-size:11px;font-weight:800}.external .borrow-steps i{background:#2b2411;color:#ffd60a}.borrow-steps p{margin:2px 0 0;color:#bcc6d2;font-size:12.7px;line-height:1.42}.borrow-note{margin-top:13px;padding-top:11px;border-top:1px solid #38383a;color:#98989d;font-size:12px;line-height:1.45}.borrow-note b{color:#f5f5f7}
+
+/* formal use */
+.formal-paths{height:344px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}.formal-card{position:relative;border-radius:0;background:#1c1c1e;border:1px solid #38383a;padding:23px 24px}.formal-card.platform{}.formal-card.bridge{}.formal-card>span{color:#30d158;font-size:12px;font-weight:750}.formal-card.platform>span{color:#64d2ff}.formal-card.bridge>span{color:#ffd60a}.formal-card h2{font-size:23px;margin:16px 0 12px}.formal-card p{margin:0;color:#bec7d4;font-size:13.5px;line-height:1.55}.formal-card ul{list-style:none;margin:14px 0 0;padding:0}.formal-card li{padding:7px 0;border-top:1px solid #38383a;color:#98989d;font-size:12.3px;line-height:1.4}.formal-card b{position:absolute;left:24px;right:24px;bottom:19px;color:#f5f5f7;font-size:13px}
+
+/* records and forms */
+.record-map{height:344px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}.record-card{border-radius:0;background:#1c1c1e;border:1px solid #38383a;padding:22px 23px}.record-card>span{color:#64b5ff;font-size:12px;font-weight:750}.record-card h2{font-size:22px;margin:15px 0 12px}.record-card ul{list-style:none;margin:0;padding:0}.record-card li{padding:7px 0;border-top:1px solid #38383a;color:#b6c0cd;font-size:12.6px;line-height:1.4}.record-card li b{color:#f5f5f7}.record-location{margin-top:13px;padding:10px 12px;border-radius:0;background:#10213a;color:#8abfff;font-size:11.8px;line-height:1.4}.record-card.forms{}.record-card.ledger{}.record-card.forms>span{color:#ffd60a}.record-card.ledger>span{color:#30d158}
+
+/* performance and protection */
+.outcome-map{height:344px;display:grid;grid-template-columns:1fr .86fr 1.14fr;gap:16px}.outcome-panel{border-radius:0;background:#1c1c1e;border:1px solid #38383a;padding:21px 22px}.outcome-panel>span{color:#64b5ff;font-size:12px;font-weight:750}.outcome-panel h2{font-size:21px;margin:14px 0 12px}.metric-four{display:grid;grid-template-columns:1fr 1fr;gap:9px}.metric-four div{border-radius:0;background:#10213a;padding:12px}.metric-four b{display:block;color:#8abfff;font-size:20px}.metric-four small{display:block;margin-top:4px;color:#b9c6d6;font-size:11.5px}.ownership-pair{display:grid;gap:10px}.ownership-pair div{border-top:1px solid #38383a;padding:12px 0}.ownership-pair b,.ownership-pair small{display:block}.ownership-pair b{font-size:17px}.ownership-pair small{margin-top:6px;color:#98989d;font-size:12px;line-height:1.4}.outcome-panel.protection{}.outcome-panel.protection>span{color:#ffd60a}.proof-list{list-style:none;margin:0;padding:0}.proof-list li{padding:8px 0;border-top:1px solid #38383a;color:#bec7d3;font-size:12.5px;line-height:1.4}.proof-list b{color:#f5f5f7}.proof-limit{margin-top:11px;padding:10px 12px;border-radius:0;background:#241416;color:#ffaaa6;font-size:11.8px;line-height:1.4}
+
+/* end-to-end example */
+.journey-case{height:344px;position:relative;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(2,1fr);gap:12px}.journey-case:before{content:"";position:absolute;left:50px;right:50px;top:50%;height:1px;background:#48484a}.journey-step{position:relative;z-index:2;border-radius:0;background:#1c1c1e;border:1px solid #38383a;padding:18px 19px}.journey-step i{font-style:normal;color:#64b5ff;font-size:11.5px;font-weight:800}.journey-step h3{font-size:17px;margin:10px 0 7px}.journey-step p{margin:0;color:#aeb8c6;font-size:12.2px;line-height:1.42}.journey-step:nth-child(4){}.journey-step:nth-child(5){}.journey-step:nth-child(6){}.journey-badge{position:absolute;right:14px;top:13px;padding:4px 7px;border-radius:0;background:#10213a;color:#8abfff;font-size:10.5px;font-weight:750}
+
+/* final */
+.site-step>span{font-size:12px}.site-step h2{font-size:21px}.site-step p{font-size:13.4px;color:#b9c3d0}.site-step dt{font-size:11.5px;color:#929da9}.site-step dd{font-size:12.7px}
+.receive-step>span{font-size:11.4px}.receive-step h3{font-size:17px}.receive-step p{font-size:12.5px;color:#bac5d1}.receive-step small{font-size:11.2px;color:#9ba8b8}
+.document-card p{font-size:12.7px}.document-card small{font-size:11.4px}.form-list small{font-size:12px}.readiness-column li{font-size:13px}
+.handoff-bottom{bottom:30px}
+.guide-final{background:#020508}.guide-final:after{content:"";position:absolute;left:90px;right:90px;top:524px;height:1px;background:linear-gradient(90deg,transparent,#64d2ff 50%,transparent);opacity:.65}.guide-final .final-grid{position:absolute;inset:0;opacity:.58}.guide-final .final-glow{top:46%;width:1020px;height:650px;background:radial-gradient(ellipse,rgba(10,132,255,.19),rgba(10,132,255,.055) 38%,transparent 70%)}.guide-final .final-kicker{top:74px;color:#8fb5cb;letter-spacing:.24em;font-size:12px}.guide-final .final-copy{top:172px;left:65px;right:65px}.guide-final .final-copy h1{font-size:66px;line-height:1.3;font-weight:750;letter-spacing:-.055em}.guide-final .final-copy em{font-style:normal;color:#64d2ff;text-shadow:0 0 40px rgba(100,210,255,.18)}.guide-final .final-principles{left:156px;right:156px;top:452px;height:54px;border:0;grid-template-columns:1fr 64px 1fr 64px 1fr}.guide-final .final-principles b{font-size:16px;font-weight:600;color:#c1c9d3;margin:0}.guide-final .final-principles i{height:1px;background:#385971}.guide-final .final-answer{position:absolute;left:0;right:0;top:559px;text-align:center;font-size:18px;font-weight:650;color:#cbd7e4}.guide-final .final-answer strong{color:#fff;font-weight:750}.guide-final .footer{position:absolute;left:64px;right:64px;bottom:0}
+/* Supporting line is deliberately quieter than the headline. */
+.regular .anchor,.regular.dark .anchor{margin:0 0 8px;padding:0 5px;border:0;border-top:1px solid #3b4e63;border-radius:0;background:transparent;color:#a9b8c9;font-size:13.5px;font-weight:500;line-height:1.35}
+
+/* Flat glass surfaces: hierarchy comes from the fill, never a colored top edge. */
+.slide .body :is(.growth-card,.making-duality section,.process-tunnel>div,.work-core,.work-node,.public-impact-grid>div,.impact-cascade,.debt-ledger>div,.debt-chain>div,.public-pillars>div,.dependence-track>div,.iv,.shadow-numbers>div,.decay-facts>div,.horizon-flow>div,.robo-river>div,.automation-timeline>div,.context-stack>div,.dq,.st,.trust-bridges>div,.essential-questions>div,.logic-fallout>div,.stage-card,.data-card,.tool-type,.experiment-start,.experiment-exit,.cycle-step,.case-person,.case-board>div,.site-step,.document-card,.receive-step,.form-lane,.readiness-column,.condition,.not-allowed,.gate-box,.evidence,.owner-side,.responsibility-five>div,.operate-panel,.borrow-panel,.formal-card,.record-card,.outcome-panel,.journey-step){border:1px solid rgba(139,175,207,.25)!important;border-radius:0;background:rgba(28,43,59,.46)!important;-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+.slide .body :is(.field-log>div,.empathy-lead,.empathy-table,.trust-path>div,.continuity-cols>div,.era,.risk-strip,.gap-flow>div,.extreme,.impact-questions>div,.wire-stage,.handoff-timeline>div,.record-side,.value-measures>div,.constitution-mark,.shadow-quote,.invisible-core,.context-human,.data-question,.automation-callout,.fossil-reading>div){border:1px solid rgba(139,175,207,.25)!important;border-radius:0;background:rgba(28,43,59,.46)!important;-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+.slide .body :is(.excel-window,.notice-sheet,.decay-browser,.pixel-site,.logic-code,.chat-window){border-radius:0;}
+.slide .body :is(.data-card.s,.tool-type:nth-child(4),.stage-card.narrow,.document-card.accept,.receive-step.pivot,.form-lane.gap,.readiness-column.planned,.borrow-panel.external,.formal-card.bridge,.record-card.forms,.outcome-panel.protection,.journey-step:nth-child(4),.logic-fallout>div:nth-child(2),.debt-ledger>div:nth-child(3)){background:rgba(51,46,69,.50)!important;border-color:rgba(172,153,211,.32)!important}
+.slide .body :is(.data-card.c,.not-allowed,.readiness-column.local,.operate-panel.incident,.tool-type:nth-child(3),.public-impact-grid>div:nth-child(3),.debt-ledger>div:nth-child(4),.logic-fallout>div.fallout-end){background:rgba(61,37,49,.50)!important;border-color:rgba(205,130,145,.30)!important}
+.slide .body :is(.stage-card.formal,.tool-type:nth-child(1),.case-board .case-result,.site-step.report,.document-card.approve,.receive-step.done,.form-lane.location,.approval-box,.owner-side.operator,.operate-panel.succession,.formal-card,.record-card.ledger,.journey-step:nth-child(6)){background:rgba(24,57,57,.50)!important;border-color:rgba(118,191,183,.35)!important}
+.slide .body :is(.experiment-start,.stage-card:not(.narrow):not(.formal),.tool-type:nth-child(2),.site-step.gitlab,.owner-side.creator,.borrow-panel:not(.external),.formal-card.platform,.journey-step:nth-child(1),.journey-step:nth-child(2)){background:rgba(23,48,74,.52)!important;border-color:rgba(117,169,216,.34)!important}
+.slide .body :is(.data-rule,.borrow-note,.record-location,.proof-limit,.journey-badge,.experiment-start b,.condition b,.metric-four div){border-radius:0;}
+.slide .body :is(.data-rule,.borrow-note){}
+/* Direct selectors for the six public-work cards; their fills carry the emphasis. */
+.regular .body [class]{border-radius:0;}
+.public-impact-grid>div{border:1px solid rgba(169,195,216,.23)!important;border-top:1px solid rgba(169,195,216,.23)!important;border-radius:0;-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
+.public-impact-grid>div:nth-child(1){background:rgba(32,66,105,.53)!important}
+.public-impact-grid>div:nth-child(2){background:rgba(30,71,84,.53)!important}
+.public-impact-grid>div:nth-child(3){background:rgba(39,63,89,.53)!important}
+.public-impact-grid>div:nth-child(4){background:rgba(49,57,92,.53)!important}
+.public-impact-grid>div:nth-child(5){background:rgba(63,49,83,.53)!important}
+.public-impact-grid>div:nth-child(6){background:rgba(37,68,77,.53)!important}
+/* Pages 28–29: official distribution and source adaptation are separate processes. */
+.official-distribution,.adaptation-case{height:100%;display:flex;flex-direction:column;gap:10px}
+.official-flow{display:grid;grid-template-columns:1fr 18px 1fr 18px 1fr 18px 1fr 18px 1fr;align-items:stretch;gap:0}
+.official-arrow{display:grid;place-items:center;color:#74a6cf;font-style:normal;font-size:18px}
+.official-step{min-width:0;padding:12px 11px;border:1px solid rgba(148,181,209,.26);background:rgba(19,49,75,.48)}
+.official-step span,.official-detail span,.adapt-step span,.environment-roles span{display:block;margin-bottom:6px;color:#83b5e5;font-size:12.5px;font-weight:800;letter-spacing:.035em}
+.official-step h3,.adapt-step h3{margin:0 0 7px;color:#f4f7fb;font-size:16px;line-height:1.25}
+.official-step p,.adapt-step p{margin:0;color:#bdc9d6;font-size:12.5px;line-height:1.46}
+.official-step.final{background:rgba(26,67,62,.54);border-color:rgba(117,186,176,.30)}
+.official-detail-grid{display:grid;grid-template-columns:1.05fr 1fr 1.15fr;gap:10px}
+.official-detail{padding:11px 13px;border:1px solid rgba(148,181,209,.23);background:rgba(27,39,56,.45)}
+.official-detail p,.environment-roles p{margin:0;color:#bfcad6;font-size:12.5px;line-height:1.47}
+.official-detail b,.environment-roles b{color:#f4f7fb}.official-detail.gap{background:rgba(65,43,45,.50);border-color:rgba(205,134,143,.28)}.official-detail.gap span,.environment-roles .gap span{color:#e9a7ad}
+.adapt-route{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
+.adapt-step{min-width:0;padding:11px 13px;border:1px solid rgba(148,181,209,.24);background:rgba(21,46,69,.48)}
+.adapt-step small{display:block;margin-top:7px;color:#91a1b3;font-size:12.5px;line-height:1.3}.adapt-step.decision{background:rgba(54,47,72,.50);border-color:rgba(173,153,210,.28)}.adapt-step.done{background:rgba(24,61,57,.52);border-color:rgba(117,190,181,.30)}
+.environment-roles{display:grid;grid-template-columns:1.08fr 1fr 1.08fr;gap:9px}
+.environment-roles>div{padding:10px 13px;border:1px solid rgba(148,181,209,.22);background:rgba(28,40,56,.44)}.environment-roles>div.gap{background:rgba(65,43,45,.48);border-color:rgba(205,134,143,.27)}
+/* Page 28: role combinations that the current draft still needs to distinguish. */
+.role-scenario-matrix{display:grid;grid-template-rows:34px repeat(4,1fr) 42px;height:100%;border:1px solid rgba(146,177,205,.24);background:rgba(18,29,43,.34)}
+.role-scenario-head,.role-scenario-row{display:grid;grid-template-columns:132px 190px 1fr 1.15fr;align-items:stretch}
+.role-scenario-head{background:rgba(39,64,91,.62);color:#b9d9f6;font-size:12.5px;font-weight:800;letter-spacing:.025em}
+.role-scenario-head span{display:flex;align-items:center;padding:0 12px;border-right:1px solid rgba(166,195,220,.18)}
+.role-scenario-row{border-top:1px solid rgba(148,177,202,.20)}
+.role-scenario-row>*{margin:0;padding:9px 12px;border-right:1px solid rgba(148,177,202,.16);font-size:12.5px;line-height:1.38}
+.role-scenario-row b{display:flex;align-items:center;color:#f4f7fb;font-size:13.5px}.role-scenario-row>span{display:flex;align-items:center;color:#9dc9ee;font-weight:700}.role-scenario-row p{color:#b8c5d2}.role-scenario-row p strong{color:#f3f6fa;font-weight:750}.role-scenario-row.external{background:rgba(54,42,63,.38)}
+.role-scenario-rule{display:grid;grid-template-columns:1.25fr repeat(4,1fr);align-items:center;border-top:1px solid rgba(130,181,219,.32);background:rgba(24,58,80,.52)}
+.role-scenario-rule>*{padding:0 10px;color:#c3d3e1;font-size:12.5px;line-height:1.25}.role-scenario-rule b{color:#7fc2f0;font-size:13px}
+
+
+.essence-question .essence-copy h1{font-size:66px;line-height:1.13}
+.governance-hero .transition-copy h1{font-size:72px;line-height:1.12}
+.guide-transition .transition-copy h1{font-size:58px;line-height:1.17}
+.hundred-sites .hundred-copy h1{font-size:49px;line-height:1.20}
+.guide-final .final-copy h1{font-size:57px;line-height:1.28}
+.regular .body{background:radial-gradient(ellipse at 18% 18%,rgba(44,107,160,.17),transparent 52%),radial-gradient(ellipse at 82% 78%,rgba(89,67,135,.13),transparent 50%)}
+.slide.regular .body :is(.growth-card,.making-duality section,.process-tunnel>div,.work-core,.work-node,.public-impact-grid>div,.impact-cascade,.debt-ledger>div,.debt-chain>div,.public-pillars>div,.dependence-track>div,.iv,.shadow-numbers>div,.decay-facts>div,.horizon-flow>div,.robo-river>div,.automation-timeline>div,.context-stack>div,.dq,.st,.trust-bridges>div,.essential-questions>div,.logic-fallout>div,.stage-card,.data-card,.tool-type,.experiment-start,.experiment-exit,.cycle-step,.case-person,.case-board>div,.site-step,.document-card,.receive-step,.form-lane,.readiness-column,.condition,.not-allowed,.gate-box,.evidence,.owner-side,.responsibility-five>div,.operate-panel,.borrow-panel,.formal-card,.record-card,.outcome-panel,.journey-step,.field-log>div,.empathy-lead,.empathy-table,.trust-path>div,.continuity-cols>div,.era,.risk-strip,.gap-flow>div,.extreme,.impact-questions>div,.wire-stage,.handoff-timeline>div,.record-side,.value-measures>div,.constitution-mark,.shadow-quote,.invisible-core,.context-human,.data-question,.automation-callout,.fossil-reading>div,.official-step,.official-detail,.adapt-step,.environment-roles>div){box-shadow:inset 0 1px 0 rgba(226,242,255,.17),inset 0 -26px 40px rgba(0,0,0,.28),inset 1px 0 0 rgba(207,232,255,.075)!important;-webkit-backdrop-filter:blur(18px) saturate(130%);backdrop-filter:blur(18px) saturate(130%)}
+
+/* Part 2 roadmap, inserted before the worked example. */
+.stage-overview-slide .body{padding:28px 8px 12px;display:flex;flex-direction:column;gap:22px}
+.stage-overview-flow{display:grid;grid-template-columns:1fr 44px 1fr 44px 1fr;align-items:stretch;min-height:270px}
+.stage-overview-node{position:relative;padding:27px 24px 24px;background:rgba(23,48,74,.58);border:1px solid rgba(117,169,216,.40);box-shadow:inset 0 1px 0 rgba(226,242,255,.20),inset 0 -30px 45px rgba(0,0,0,.25),0 15px 36px rgba(0,0,0,.13);backdrop-filter:blur(18px);border-radius:0}
+.stage-overview-node.temporary{background:rgba(51,46,69,.58);border-color:rgba(172,153,211,.43)}
+.stage-overview-node.formal{background:rgba(24,57,57,.58);border-color:rgba(118,191,183,.43)}
+.stage-overview-node .stage-num{display:block;font-size:13px;font-weight:900;letter-spacing:.07em;color:#95c5fa}
+.stage-overview-node.temporary .stage-num{color:#c8b4ee}.stage-overview-node.formal .stage-num{color:#90d6c7}
+.stage-overview-node h2{margin:17px 0 13px;font-size:29px;line-height:1.12;letter-spacing:-.04em}
+.stage-overview-node p{margin:0;color:#d0d9e6;font-size:17px;line-height:1.48;font-weight:650}
+.stage-overview-node .stage-owner{position:absolute;left:24px;right:24px;bottom:21px;padding-top:13px;border-top:1px solid #ffffff35;color:#aebbd0;font-size:14px;font-weight:700}
+.stage-overview-arrow{display:grid;place-items:center;color:#85a9ce;font-size:29px;font-weight:300}
+.stage-overview-notes{display:grid;grid-template-columns:1.12fr 1fr;gap:16px}
+.stage-overview-notes>div{padding:17px 19px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.17);font-size:15px;line-height:1.42;color:#e0e7ef}
+.stage-overview-notes b{color:#8fcee2}
+.stage-overview-slide .guide-ref{margin-top:auto}
+
+
+/* 33–36: one worked example carried across forms, locations, reasons, and decisions. */
+.plain-formal{height:365px;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 78px;gap:15px}
+.plain-formal>section{padding:25px 27px;border:1px solid #ffffff34;background:rgba(27,56,83,.50);box-shadow:inset 0 1px 0 #ffffff22,inset 0 -28px 45px #0005}
+.plain-formal>section:nth-child(2){background:rgba(37,73,67,.48)}
+.plain-formal small{font-size:13px;color:#9fc9e9;font-weight:900}.plain-formal h2{font-size:27px;margin:14px 0 13px}.plain-formal p{font-size:17px;line-height:1.52;color:#d7e0ea}.plain-formal b{display:block;margin-top:14px;color:#e9f5fa;font-size:15px;line-height:1.45}
+.plain-formal>div{grid-column:1/3;padding:14px 23px;border:1px solid #8db4d047;background:rgba(46,52,79,.43);font-size:15px;line-height:1.4;color:#d1deeb}.plain-formal>div strong{color:#a7d5f5}
+.plain-flow{display:grid;grid-template-rows:36px repeat(5,1fr);height:365px;border:1px solid rgba(146,177,205,.32);background:rgba(14,26,42,.38)}
+.plain-flow-head,.plain-flow-row{display:grid;grid-template-columns:90px 185px 264px 1fr;align-items:center;column-gap:10px;padding:0 18px}
+.plain-flow-head{background:rgba(52,91,124,.35);color:#9cc8e9;font-size:13px;font-weight:850}.plain-flow-row{border-top:1px solid #ffffff2a;font-size:15px;line-height:1.42}
+.plain-flow-row>i{font-style:normal;color:#84bfff;font-weight:900}.plain-flow-row>b{color:#f6f9ff;font-size:16px}.plain-flow-row>strong{color:#c9e2f6;font-size:15px}.plain-flow-row>span{color:#c2cfdf}
+.plain-flow-row:last-child{background:rgba(37,79,70,.32)}
+.plain-location{height:365px;display:grid;grid-template-columns:repeat(3,1fr);gap:17px}
+.plain-location>section{position:relative;padding:25px 24px;border:1px solid #ffffff32;background:rgba(27,56,83,.48);box-shadow:inset 0 1px 0 #ffffff24,inset 0 -32px 48px #0005}
+.plain-location>section:nth-child(2){background:rgba(57,47,77,.50)}.plain-location>section:nth-child(3){background:rgba(33,73,65,.48)}
+.plain-location small{display:block;color:#9ac5ea;font-size:13px;font-weight:900}.plain-location h2{font-size:27px;line-height:1.25;margin:16px 0 14px}.plain-location p{font-size:16px;line-height:1.58;color:#d6dfe9;margin:0}.plain-location b{display:block;position:absolute;bottom:22px;left:24px;right:24px;border-top:1px solid #ffffff38;padding-top:13px;font-size:14px;color:#bde1ed}
+.plain-reasons{height:365px;display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.plain-reasons>section{padding:25px 24px;background:rgba(24,54,80,.52);border:1px solid #ffffff32;box-shadow:inset 0 1px 0 #ffffff24,inset 0 -30px 48px #0005}
+.plain-reasons>section:nth-child(2){background:rgba(45,48,74,.50)}.plain-reasons>section:nth-child(3){background:rgba(36,72,64,.48)}
+.plain-reasons small{font-size:13px;font-weight:900;color:#9fc9e9}.plain-reasons h2{font-size:26px;line-height:1.27;margin:19px 0}.plain-reasons p{font-size:16px;line-height:1.55;color:#d1dce8}.plain-reasons b{display:block;margin-top:19px;padding-top:13px;border-top:1px solid #ffffff35;color:#f1f6fb;font-size:15px;line-height:1.4}
+.plain-journey{height:365px;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 65px;gap:14px 18px}
+.plain-journey>section{padding:22px 25px;background:rgba(25,57,83,.50);border:1px solid #ffffff32}
+.plain-journey>section:nth-child(2){background:rgba(42,74,67,.48)}
+.plain-journey small{font-size:13px;font-weight:900;color:#9cc8ec}.plain-journey h2{font-size:27px;margin:10px 0 14px}.plain-journey p{padding:8px 0;margin:0;border-top:1px solid #ffffff2c;font-size:16px;line-height:1.36;color:#d7e1ec}.plain-journey p b{color:#fff}
+.plain-journey>div{grid-column:1/3;display:flex;align-items:center;justify-content:center;border:1px solid #66a9a95f;background:rgba(40,84,81,.35);font-size:19px;font-weight:800;color:#ecf8fb}
+
+
+.source-fork{height:365px;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 60px;gap:15px}
+.source-fork>div:not(.fork-rule){padding:23px 25px;border:1px solid rgba(154,194,220,.38);background:rgba(22,52,78,.52);box-shadow:inset 0 1px 0 #ffffff2b,inset 0 -28px 40px #0006}
+.source-fork>.fork-open{background:rgba(62,50,78,.52)!important;border-color:rgba(183,162,210,.42)!important}
+.source-fork span{color:#9bcaf0;font-size:13px;font-weight:850}.source-fork .fork-open span{color:#dbbdf2}
+.source-fork h2{font-size:25px;margin:14px 0}.source-fork p{font-size:15px;line-height:1.55;color:#d3deea;margin:12px 0}
+.source-fork .fork-rule{grid-column:1/3;display:flex;align-items:center;justify-content:center;text-align:center;border:1px solid #f3cb7b6b;background:rgba(87,67,33,.34);padding:6px 18px;font-size:15px;line-height:1.35;color:#fae3b3;min-width:0}
+.source-fork .fork-rule p{margin:0;max-width:100%;font-size:15px;line-height:1.35;overflow-wrap:break-word}
+.source-fork .fork-rule strong{color:#fff}.footer-source{font-size:11px;white-space:normal;line-height:1.12;text-align:center;letter-spacing:-.025em}
+
+.platform-growth-slide .growth-bars{grid-template-columns:repeat(2,1fr)}
+</style></head>
+<body class=""><main class="deck">
+<section class="slide cover essence-cover opening-cover balanced-cover" data-role="도입" data-layout="cover-stage" data-purpose="가이드의 필요성과 운영 방법을 30분에 설명한다">
+  <div class="cover-grid"></div><div class="cover-glow"></div><div class="cover-ring r1"></div><div class="cover-ring r2"></div>
+  <div class="cover-kicker">행정기관 AI 직접개발 실험·활용 가이드북 · 설명영상 교안</div>
+  <div class="cover-copy"><span>WHY 15 MIN · HOW 15 MIN</span><h1><div><br></div><div><br></div>AI 바이브 코딩 시대,<br>우리가 생각해야 할 것은 무엇인가</h1><p>왜 지금 이 가이드가 필요한가 — 그리고 실제로 어떻게 운영하는가</p></div>
+  <div class="cover-side"><b>30-MINUTE EXPLAINER</b><span>메시지 15분 + 운영 가이드 15분</span></div>
+  <div class="cover-bottom"><span>실험의 자유</span><i></i><span>활용의 검증</span><i></i><span>운영의 책임</span></div>
+  <aside class="speaker-note">[약 30초] 오늘 발표는 두 부분으로 나뉩니다. 앞의 15분은 왜 이 가이드가 필요한지, 뒤의 15분은 실제로 어떤 단계와 서류, 책임 구조로 운영하는지 설명합니다. 결론은 단순합니다. 만드는 속도를 늦추려는 절차가 아니라, 좋은 실험이 실제 업무로 살아남도록 하는 절차입니다.</aside>
+</section>
+
+<section class="slide regular dark speaker-profile-slide long-head" data-role="소개" data-layout="profile-evidence" data-purpose="발표자의 공공·기업 현장 경험과 대규모 제작 경험을 통해 문제의식의 신뢰 근거를 제시한다">
+  <div class="topline"><span>행정기관 AI 직접개발 가이드북</span><span>PART 1 · WHY · 15 MIN</span></div>
+  <header class="head"><i class="head-accent" aria-hidden="true"></i><div><span class="head-part">SPEAKER · 현장에서 나온 문제의식</span><h1>수천 개의 제작과 공공 교육 현장 경험을 정리해 보았습니다.</h1><p>공공과 기업에서 도구를 만들고, 가르치고, 검토하며 반복해서 마주친 질문입니다</p></div></header>
+  <div class="body">
+  <div class="speaker-profile" data-step="">
+    <section class="profile-identity">
+      <span>SHIN SUNG JIN</span><h2>신성진</h2>
+      <p>한국데이터사이언티스트협회 대표이사<br>공공·기업 AI 도입·교육·자문</p>
+      <div class="profile-credentials"><b>aSSIST AI·빅데이터경영학 석사</b><b>중소벤처기업부 경영지도사</b><b>과기정통부 데이터기반행정 자문</b></div>
+    </section>
+    <section class="profile-field">
+      <div class="profile-stats">
+        <div><b>수천+</b><span>강의와 실습에서 만든<br>사이트·업무도구</span></div>
+        <div><b>600여</b><span>기관 구성원·현장 직원과<br>함께한 교육과 실습</span></div>
+        <div><b>약 70%</b><span>전체 교육활동 중<br>공공부문 비중</span></div>
+      </div>
+      <div class="profile-reach">
+        <div><span>PUBLIC</span><p>행정안전부 · NIA · 식품의약품안전처 · 인사혁신처 · 국민권익위원회 · K-DATA · KAIST</p></div>
+        <div><span>ENTERPRISE</span><p>삼성전자 · CJ올리브네트웍스 · 한진그룹 · LG그룹 인화원 · 한국전력 · SK텔레콤 · 풀무원 · 유한양행</p></div>
+      </div>
+    </section>
+  </div></div>
+  <div class="anchor">도구를 많이 만든 뒤에는 “이 중 무엇을 동료들이 계속 쓰고 있는가?”를 묻게 됐습니다</div>
+  <footer class="footer"><span>행정기관 AI 직접개발 가이드북 · 메시지와 운영</span><span>설명영상 교안 · 30분 구성</span><b data-page-number="">02 / 38</b></footer>
+  <aside class="speaker-note">[약 1분] 제 이력을 길게 소개하려는 장은 아닙니다. 이 발표의 문제의식이 어디에서 왔는지를 말씀드리기 위한 장입니다. 저는 공공과 기업에서 AI와 데이터, 업무자동화 교육과 자문을 해 왔고, 교육활동의 약 70퍼센트는 공공부문에서 진행했습니다. 600여 기관의 구성원과 현장 직원이 참여한 교육과 실습에서 수천 개의 사이트와 업무도구가 만들어지는 과정을 봤습니다. 삼성전자, CJ올리브네트웍스, 한진그룹을 비롯한 기업 현장과 행정안전부, NIA, 식품의약품안전처 등 공공 현장을 오가며 반복해서 느낀 점은 만드는 능력보다 함께 쓰고 검증하고 이어받는 구조가 훨씬 늦게 따라온다는 것이었습니다.</aside>
+</section>
+
+<section class="slide statement-stage hundred-sites" data-role="문제제기" data-layout="centered-statement" data-purpose="바이브코딩의 생산성 충격과 검증 공백을 발표자의 경험으로 제기한다">
+  <div class="stage-vignette"></div><div class="statement-grid"></div>
+  <div class="statement-label">FIELD LOG · 최근 제작과 검토</div>
+  <div class="hundred-copy" data-step=""><span>이제는 분명합니다</span><h1><div><br></div>100개의 프로그램을 만드는 하루,&nbsp;<div>실제로 남는 도구는 몇 개일까?</div></h1><p>문제는 얼마나 만들었느냐가 아니라 무엇이 남아 함께 쓰이는가입니다.</p></div>
+  <div class="field-log" data-step="">
+    <div><b>100</b><span>어제 만든 사이트</span><small>직접 제작</small></div>
+    <div><b>300+</b><span>지난주 제작을 도운 사이트</span><small>교육·실습</small></div>
+    <div><b>약 200+</b><span>다양한 실습과정에서 만든 MCP</span><small>도구 연결</small></div>
+    <div><b>약 500+</b><span>심사한 풀스택 프로젝트</span><small>평가·검토</small></div>
+  </div>
+  <div class="retention-question" data-step=""><span>그 수천 개 중에서</span><b>동료들과 반복해서 함께 쓰는 프로그램은 1%가 될까요?</b></div>
+  <footer class="footer"><span>행정기관 AI 직접개발 가이드북 · 메시지와 운영</span><span>설명영상 교안 · 30분 구성</span><b data-page-number="">03 / 38</b></footer>
+  <aside class="speaker-note">[약 1분] 저는 어제 백 개의 사이트를 만들었습니다. 지난주에는 교육과 실습에서 삼백 개 넘는 사이트의 제작을 도왔고, 다양한 과정에서 MCP를 이백 개 넘게 만들어 보았습니다. 풀스택 프로젝트도 오백 개 넘게 심사했습니다. 지금까지 강의와 실습에서 만들어진 사이트와 프로그램은 수천 개가 될 겁니다. 그런데 그중 동료들과 반복해서 함께 쓰는 프로그램은 과연 1퍼센트가 될까요. 이 숫자는 성과를 자랑하기보다 생산량과 지속성 사이의 간격을 보여 줍니다.</aside>
+</section>
+
+<section class="slide regular dark platform-growth-slide long-head" data-role="문제제기" data-layout="growth-evidence" data-purpose="만들기와 배포의 확산을 서로 다른 지표로 구분해 보여준다">
+  <div class="topline"><span>행정기관 AI 직접개발 가이드북</span><span>PART 1 · WHY · 15 MIN</span></div>
+  <header class="head"><i class="head-accent" aria-hidden="true"></i><div><span class="head-part">SIGNAL · 만들기와 배포의 확산</span><h1>코드를 올리고 사이트를 여는 사람이 빠르게 늘었습니다.</h1><p>GitHub는 개발자 계정, Netlify는 가입 개발자 수입니다. 아래 수치를 같은 종류의 사이트 수로 읽지 않습니다.</p></div></header>
+  <div class="body">
+    <div class="growth-dual" data-step="">
+      <div class="growth-card"><div class="growth-title"><span>CODE · GitHub</span><b>개발자 계정</b></div><div class="growth-bars"><div><i style="--h:54px"></i><b>1억+</b><span>2023년 초</span></div><div><i style="--h:102px"></i><b>1.8억+</b><span>2025년</span></div></div><p>GitHub Octoverse가 밝힌 각 시점의 전체 개발자 수</p></div>
+      <div class="growth-card netlify-growth"><div class="growth-title"><span>DEPLOY · Netlify</span><b>가입 개발자</b></div><div class="growth-bars"><div><i style="--h:54px"></i><b>500만+</b><span>2024년 9월</span></div><div><i style="--h:102px"></i><b>1,000만+</b><span>2025년 12월</span></div></div><p>각 시점에 Netlify가 발표한 가입자 이정표</p></div>
+    </div>
+    <div class="growth-proof" data-step=""><div><span>AI 제작·배포 사례</span><b>100만+ 사이트</b><p>Bolt.new에서 제작해 Netlify에 배포 · 2024.11~2025.03</p></div><div><span>이 숫자가 말하는 것</span><b>배포의 속도</b><p>아이디어를 URL로 만드는 문턱이 낮아졌습니다.</p></div><p><strong>그다음 질문</strong>은 몇 개를 만들었느냐가 아닙니다.<br>누가 검증하고, 동료가 다시 쓰며, 담당자가 바뀌어도 남는가입니다.</p></div>
+    <div class="growth-sources"><a href="https://github.blog/news-insights/research/the-state-of-open-source-and-ai/" target="_blank">GitHub 2023</a><a href="https://github.blog/news-insights/octoverse/octoverse-a-new-developer-joins-github-every-second-as-ai-leads-typescript-to-1/" target="_blank">GitHub 2025</a><a href="https://www.netlify.com/blog/celebrating-5-million-developers/" target="_blank">Netlify 2024</a><a href="https://www.netlify.com/blog/10-million-developers/" target="_blank">Netlify 2026</a><a href="https://www.netlify.com/press/bolt-netlify-1-million-ai-generated-websites/" target="_blank">Bolt × Netlify</a></div>
+  </div>
+  <div class="anchor">공개와 배포가 쉬워진 만큼, 실제 업무에 쓸 도구를 가려내는 질문은 더 중요해졌습니다.</div>
+  <footer class="footer"><span>행정기관 AI 직접개발 가이드북 · 메시지와 운영</span><span>출처 · GitHub Octoverse · Netlify 공식 발표</span><b data-page-number="">04 / 38</b></footer>
+  <aside class="speaker-note">[약 50초] 제가 느끼는 변화가 개인적인 착각만은 아닙니다. GitHub는 2023년 초 개발자 계정 1억 명을 넘겼고 2025년에는 1억 8천만 명을 넘겼습니다. Netlify는 2024년 9월 가입 개발자 500만 명, 2025년 12월 1천만 명을 발표했습니다. Bolt.new로 만든 뒤 Netlify에 배포된 AI 생성 사이트도 5개월 사이 100만 개를 넘었습니다. 서로 다른 지표이므로 합쳐서 사이트 수라고 말할 수 없고, 증가 원인을 AI만으로 돌릴 수도 없습니다. 다만 만들고 공개하는 문턱이 빠르게 낮아졌다는 신호입니다. 제가 묻는 것은 그중 무엇이 동료의 업무에 남느냐는 것입니다.</aside>
+</section>
+
+<section class="slide regular light internal-work-slide long-head" data-role="현황" data-layout="radial-workflow" data-purpose="바이브코딩의 주된 활용이 내부 행정업무 보조도구임을 중심축으로 전환한다">
+  <div class="topline"><span>행정기관 AI 직접개발 가이드북</span><span>PART 1 · WHY · 15 MIN</span></div>
+  <header class="head"><i class="head-accent" aria-hidden="true"></i><div><span class="head-part">OPENING · 실제 활용</span><h1>동료가 결과를 업무에 반영하는 순간,&nbsp;<span style="letter-spacing: -0.035em;">개인 도구는 조직의 일이 됩니다.</span></h1><p>직접 만든 작은 프로그램을 집계·문서·대장·일정·민원 초안에 쓰기 시작했습니다</p></div></header>
+  <div class="body">
+  <div class="internal-orbit" data-step="">
+    <svg viewBox="0 0 1000 330" aria-hidden="true"><g><path d="M500 165 170 70"></path><path d="M500 165 500 38"></path><path d="M500 165 830 70"></path><path d="M500 165 170 265"></path><path d="M500 165 500 292"></path><path d="M500 165 830 265"></path></g></svg>
+    <div class="work-core"><span>행정의 안쪽</span><b>부서 업무 흐름</b><small>매일 반복하고 다음 담당자에게 넘겨야 하는 일</small></div>
+    <div class="work-node n1"><b>엑셀 통합</b><span>취합 · 정제 · 계산</span></div>
+    <div class="work-node n2"><b>문서 생성</b><span>보고서 · 공문 · 서식</span></div>
+    <div class="work-node n3"><b>파일 분류</b><span>명명 · 이동 · 검색</span></div>
+    <div class="work-node n4"><b>대장 관리</b><span>현황 · 이력 · 점검</span></div>
+    <div class="work-node n5"><b>일정·배정</b><span>담당 · 순번 · 알림</span></div>
+    <div class="work-node n6"><b>민원 초안</b><span>분류 · 요약 · 답변</span></div>
+  </div></div>
+  <div class="anchor">공무원의 내부 업무 도구가 먼저 늘고 있습니다.</div>
+  <footer class="footer"><span>행정기관 AI 직접개발 가이드북 · 메시지와 운영</span><span>설명영상 교안 · 30분 구성</span><b data-page-number="">05 / 38</b></footer>
+  <aside class="speaker-note">[약 50초] 현장에서 먼저 늘어나는 것은 거대한 시민용 서비스가 아닙니다. 여러 부서 파일을 합치고, 보고서를 만들고, 대장을 관리하고, 일정을 배정하고, 민원 초안을 만드는 작은 내부 업무도구입니다. 처음에는 개인의 편의를 위한 도구지만 동료가 결과를 믿고 다음 업무를 이어가는 순간부터 부서의 업무 방식이 됩니다. 그래서 이 발표의 중심도 시민 서비스가 아니라 공무원의 내부 행정업무에 두겠습니다.</aside>
+</section>
+
+<section class="slide regular dark process-gap-slide long-head" data-role="문제제기" data-layout="process-visibility" data-purpose="AI 결과 소비가 과정 검토를 대체하는 문제를 시각화한다">
+  <div class="topline"><span>행정기관 AI 직접개발 가이드북</span><span>PART 1 · WHY · 15 MIN</span></div>
+  <header class="head"><i class="head-accent" aria-hidden="true"></i><div><span class="head-part">OPENING · 보이지 않는 과정</span><h1>AI가 만들어준 결과는 입력·판단 기준·예외를 다시 확인할 수 있어야 합니다.</h1><p>결과가 빨리 나와도 입력 자료나 계산 기준이 틀리면 잘못된 결론이 나옵니다</p></div></header>
+  <div class="body">
+  <div class="process-tunnel" data-step="">
+    <div class="trail"><span>원문·규정</span><i></i><span>AI의 해석</span><i></i><span>생성된 코드</span><i></i><span>데이터 처리</span></div>
+    <div class="fog"><b>과정</b><span>전제 · 변환 · 생략 · 예외 · 오류</span></div>
+    <div class="answer"><span>우리가 보는 것</span><b>결론</b><small>표 한 장 · 숫자 하나 · 완료 메시지</small></div>
+  </div>
+  <div class="process-warning" data-step=""><span>행정업무의 정확성은</span><b>결과가 맞는지는 입력 자료와 계산 과정을 다시 확인해야 알 수 있습니다.</b></div></div>
+  <div class="anchor">결과만 보면 어떤 자료를 넣었고, 어떤 기준과 예외를 적용했는지 놓치기 쉽습니다.</div>
+  <footer class="footer"><span>행정기관 AI 직접개발 가이드북 · 메시지와 운영</span><span>설명영상 교안 · 30분 구성</span><b data-page-number="">06 / 38</b></footer>
+  <aside class="speaker-note">[약 1분] AI를 사용할 때 우리는 대개 최종 답과 표와 파일을 봅니다. 그 안에서 어떤 전제가 선택됐고 어떤 예외가 빠졌으며, 자연어 기준이 코드로 어떻게 번역됐는지는 좀처럼 읽지 않습니다. 그러나 행정업무의 정확성은 결론의 문장력이 아니라 과정을 다시 추적하고 같은 조건에서 재현할 수 있는지로 확인해야 합니다.</aside>
+</section>
+
+<section class="slide regular dark making-boundary-slide long-head" data-role="비교" data-layout="balanced-duality" data-purpose="디자인 생성과 행정 로직 검증의 책임 차이를 분명히 구분한다">
+  <div class="topline"><span>행정기관 AI 직접개발 가이드북</span><span>PART 1 · WHY · 15 MIN</span></div>
+  <header class="head"><i class="head-accent" aria-hidden="true"></i><div><span class="head-part">OPENING · 두 종류의 정확성</span><h1>화면은 고치기 쉽지만, 계산 로직의 오류는 어떻게 찾을까?</h1><p>AI가 코드를 만들었다고 해서 업무 규정과 계산 기준까지 정확히 반영한 것은 아닙니다</p></div></header>
+  <div class="body">
+  <div class="making-duality" data-step="">
+    <section><span>DESIGN · USABILITY</span><h2>보면 알 수 있습니다</h2><p>배치가 불편한지, 글자가 작은지, 버튼이 작동하는지 사용자가 직접 확인하고 곧바로 고칠 수 있습니다.</p><div><b>눈으로 확인</b><b>즉시 수정</b><b>되돌리기 쉬움</b></div></section>
+    <div class="making-divider"><i></i><strong>같은 코드여도<br>확인할 것은 다릅니다</strong><i></i></div>
+    <section class="logic-side"><span>BUSINESS LOGIC</span><h2>틀려도 정상처럼 보입니다</h2><p>계산 기준이나 예외 처리가 틀려도 화면은 정상적으로 열리고 숫자가 나옵니다.</p><div><b>업무전문가</b><b>동료 검토</b><b>기술 검증</b></div></section>
+  </div></div>
+  <div class="anchor">AI가 만든 계산과 판단 기준은 업무 담당자와 동료가 따로 확인해야 합니다</div>
+  <footer class="footer"><span>행정기관 AI 직접개발 가이드북 · 메시지와 운영</span><span>설명영상 교안 · 30분 구성</span><b data-page-number="">07 / 38</b></footer>
+  <aside class="speaker-note">[약 1분] 디자인과 사용성은 중요한 영역입니다. 다만 화면의 불편함은 대부분 눈에 보이고 빠르게 고칠 수 있습니다. 반면 업무 로직은 틀려도 정상처럼 보입니다. 집계 기준과 예외 조건, 처리 순서는 업무 담당자와 동료, 기술 담당자가 서로 다른 관점으로 확인해야 합니다. 공공업무에 쓰는 로직의 정확성은 한 사람의 확신이 아니라 여러 사람의 검증으로 만들어져야 합니다.</aside>
+</section>
+
+<section class="slide essence-question" data-role="토론" data-layout="discussion-lens" data-purpose="공공의 본질을 청중 스스로 정의하게 만드는 질문을 던진다">
+  <div class="essence-grid"></div><div class="essence-ring er1"></div><div class="essence-ring er2"></div>
+  <div class="essence-label">THE SIMPLEST QUESTION</div>
+  <div class="essence-copy" data-step=""><span><br>공공업무는</span><h1><div><span style="font-size: 66px; letter-spacing: -0.055em; color: rgb(245, 245, 247); display: inline !important;">우리가 자동화하는 행정업무는&nbsp;</span></div><div>어떤 결정을 바꾸나?</div></h1><p>안전 · 생활 · 편의 · 복지 · 권리 · 건강과 환경</p></div>
+  <div class="essence-whisper" data-step="">겉으로는 서류와 데이터와 결재처럼 보이지만<br><b>그 끝에는 국민의 하루가 있습니다.</b></div>
+  <footer class="footer"><span>행정기관 AI 직접개발 가이드북 · 메시지와 운영</span><span>설명영상 교안 · 30분 구성</span><b data-page-number="">08 / 38</b></footer>
+  <aside class="speaker-note">[약 40초] 공공업무를 어렵게 정의할 필요는 없습니다. 공무원이 처리하는 서류와 데이터와 결재의 끝에는 국민의 안전과 생활, 편의와 복지, 권리, 건강과 환경이 있습니다. 국민을 직접 만나지 않는 내부 집계와 대장 업무도 결국 현장의 서비스와 지원을 움직입니다.</aside>
+</section>
+
+<section class="slide regular light public-definition-slide" data-role="개념" data-layout="public-impact-grid" data-purpose="공공업무가 국민의 삶에서 다루는 구체적인 영역을 평이하게 설명한다">
+  <div class="topline"><span>행정기관 AI 직접개발 가이드북</span><span>PART 1 · WHY · 15 MIN</span></div>
+  <header class="head"><i class="head-accent" aria-hidden="true"></i><div><span class="head-part">ESSENCE · 공공업무의 실체</span><h1><span style="font-size: 35px; letter-spacing: -0.035em;">직접적인 대민 서비스가 아니더라도, 국민의 생활에 중요한 영향을 줍니다.</span></h1><p>집계·분류·결재 같은 내부 업무의 결과가 지원 대상 선정과 서비스 제공에 쓰입니다</p></div></header>
+  <div class="body">
+  <div class="public-impact-grid" data-step="">
+    <div><span>SAFETY</span><h2>안전</h2><p>재난 대응, 시설 점검, 소방·교통·산업안전</p></div>
+    <div><span>DAILY LIFE</span><h2>생활</h2><p>상하수도, 도로, 폐기물, 주거와 지역생활</p></div>
+    <div><span>CONVENIENCE</span><h2>편의</h2><p>민원, 증명, 인허가, 안내와 행정서비스</p></div>
+    <div><span>WELFARE</span><h2>복지</h2><p>지원금, 돌봄, 보건, 취약계층 지원</p></div>
+    <div><span>RIGHTS</span><h2>권리와 공정</h2><p>대상 선정, 처분·통지, 이의제기와 권리구제</p></div>
+    <div><span>HEALTH · ENVIRONMENT</span><h2>건강과 환경</h2><p>감염병, 식품안전, 대기·수질과 생활환경</p></div>
+  </div></div>
+  <div class="anchor">내부에서 자료를 잘못 모으거나 분류하면 지원·안내·서비스도 잘못될 수 있습니다.</div>
+  <footer class="footer"><span>행정기관 AI 직접개발 가이드북 · 메시지와 운영</span><span>설명영상 교안 · 30분 구성</span><b data-page-number="">09 / 38</b></footer>
+  <aside class="speaker-note">[약 1분] 행정업무의 끝에는 국민의 삶이 있습니다. 재난과 시설점검은 안전으로, 상하수도와 도로는 생활로, 민원과 인허가는 편의로, 지원금과 돌봄은 복지로 이어집니다. 대상 선정과 통지는 권리와 공정에 영향을 주고, 감염병과 식품안전, 대기와 수질은 건강과 환경을 지킵니다. 내부 업무도구도 이 연결 속에서 봐야 합니다.</aside>
+</section>
+
+<section class="slide regular light excel-logic-slide long-head" data-role="사례" data-layout="excel-decision" data-purpose="AI가 만든 복잡한 엑셀 중첩 함수의 결과를 검증 없이 공고에 사용했을 때 행정상 피해가 발생하는 과정을 보여준다">
+  <div class="topline"><span>행정기관 AI 직접개발 가이드북</span><span>PART 1 · WHY · 15 MIN</span></div>
+  <header class="head"><i class="head-accent" aria-hidden="true"></i><div><span class="head-part">LOGIC · 공고 전 검증</span><h1>공고문에 들어간 숫자는 국민의 권리와 직결됩니다.</h1><p>AI가 만든 엑셀 수식이 값을 내더라도 규정, 예외, 빈칸을 제대로 처리했는지 확인해야 합니다</p></div></header>
+  <div class="body">
+  <div class="excel-to-notice" data-step="">
+    <div class="excel-window">
+      <div class="excel-titlebar"><b>지원사업_선정결과.xlsx</b><span>수식 오류 없음 · 값 출력 완료</span></div>
+      <div class="excel-formula"><b>fx</b><code>=IF(AND(C2&lt;=$H$2, OR(D2="수료", AND(D2="면제",B2&gt;=36)),<br>COUNTIF(제외목록!A:A,A2)=0), "선정", "제외")</code></div>
+      <div class="excel-grid">
+        <b>신청번호</b><b>거주기간</b><b>소득인정액</b><b>교육상태</b><b>최종판정</b>
+        <span>A-1042</span><span>48개월</span><span>221만원</span><span>면제</span><strong>선정</strong>
+        <span>A-1043</span><span>12개월</span><span>198만원</span><span>수료</span><em>제외</em>
+        <span class="risk-cell">A-1044</span><span class="risk-cell">60개월</span><span class="risk-cell blank">빈칸</span><span class="risk-cell">수료</span><strong class="risk-cell risk-result">선정</strong>
+        <span>A-1045</span><span>42개월</span><span>245만원</span><span>수료</span><em>제외</em>
+      </div>
+      <div class="excel-alert"><b>경계 오류</b><span>소득 빈칸이 0처럼 계산되면 A-1044가 ‘선정’될 수 있지만, 화면에는 경고가 없습니다.</span></div>
+    </div>
+    <div class="result-transfer"><small>검증 없이</small><b>결과값<br>복사</b><i>→</i></div>
+    <div class="notice-sheet">
+      <span>○○기관 공고 제2026-17호</span>
+      <h2>2026년 지원사업<br>선정 결과 공고</h2>
+      <p>선정 대상자를 다음과 같이 공고합니다.</p>
+      <div><b>A-1042</b><b class="wrong">A-1044</b></div>
+      <small>게시일 2026. 09. 20.</small>
+      <i>공고</i>
+    </div>
+  </div>
+  <div class="logic-fallout" data-step="">
+    <div><span>01</span><b>적격자 누락</b><small>지원·참여 기회 상실</small></div>
+    <i>→</i><div><span>02</span><b>부적격자 포함</b><small>재공고·환수·예산 왜곡</small></div>
+    <i>→</i><div><span>03</span><b>설명 근거 부재</b><small>이의제기·감사·소송</small></div>
+    <i>→</i><div class="fallout-end"><span>04</span><b>기관 신뢰 손상</b><small>엑셀 오류가 공식 공고로 이어짐</small></div>
+  </div></div>
+  <div class="anchor">엑셀의 선정 결과를 검토 없이 공고문에 옮기면 잘못된 대상자가 발표될 수 있습니다.</div>
+  <footer class="footer"><span>행정기관 AI 직접개발 가이드북 · 메시지와 운영</span><span>설명영상 교안 · 30분 구성</span><b data-page-number="">10 / 38</b></footer>
+  <aside class="speaker-note">[약 1분 30초] 가상의 행정업무 예시입니다. 신청번호, 거주기간, 소득인정액, 교육상태 네 개의 입력을 받아 마지막 열에서 선정 여부를 계산합니다. AI가 만든 중첩 함수는 문법 오류 없이 값을 내지만, 소득이 비어 있는 셀을 0처럼 취급하거나 숨겨진 제외목록의 기준을 잘못 참조할 수 있습니다. 담당자가 수식의 뜻을 모른 채 ‘선정’ 결과만 공고문에 복사하면 적격자는 빠지고 부적격자는 포함될 수 있습니다. 그 뒤에는 재공고와 환수, 이의제기와 감사, 경우에 따라 소송이 이어집니다. 공고 전에는 기준을 평문으로 다시 쓰고, 빈칸·경계값·예외 사례를 시험하고, 다른 담당자가 표본을 수기로 재계산하며, 사용한 수식과 기준표 버전을 함께 보존해야 합니다.</aside>
+</section>
+
+<section class="slide regular dark horizon-slide long-head" data-role="사례" data-layout="case-strip" data-purpose="Horizon 사례에서 시스템 출력이 증거로 굳어질 때의 위험을 보여준다">
+  <div class="topline"><span>행정기관 AI 직접개발 가이드북</span><span>PART 1 · WHY · 15 MIN</span></div>
+  <header class="head"><i class="head-accent" aria-hidden="true"></i><div><span class="head-part">FAILURE · HORIZON</span><h1>업무에 쓰는 숫자는 계산 근거와 개발로직을 되짚을 수 있어야 합니다.</h1><p>영국 우체국 Horizon 사건은 시스템의 숫자를 반박해야 했던 사람들이 어떤 피해를 입는지 보여 줍니다</p></div></header>
+  <div class="body">
+  <div class="horizon-flow" data-step="">
+    <div><span>시스템</span><b>회계상 부족액 표시</b><small>bugs · errors · defects</small></div><i>→</i>
+    <div><span>기관</span><b>시스템을 사실로 간주</b><small>출력의 권위화</small></div><i>→</i>
+    <div><span>개인</span><b>당사자가 오류를 입증</b><small>잘못된 기소와 피해</small></div>
+  </div>
+  <blockquote class="horizon-line" data-step="">시스템은 설명하지 않았고,<br><b>피해 당사자들이 시스템의 숫자가 틀렸다는 사실을 스스로 입증해야 했습니다.</b></blockquote>
+  <div class="case-footnote horizon-note"><b>공개된 실제 사건 · 영국 Post Office ‘Horizon’</b> 20년 넘게 사용된 지점 회계시스템의 버그·오류·결함이 장부상 부족액을 만들었지만 기관은 시스템 출력을 사실로 취급했습니다. 공식 조사에 따르면 우체국 지점 운영자와 직원 수백 명이 절도·사기 혐의를 받았고 계약 해지·기소·유죄판결·파산·수감과 가족 피해가 이어졌습니다.</div>
+  <a class="source-link dark-source" href="https://www.postofficehorizoninquiry.org.uk/sites/default/files/2025-07/Post_Office_Horizon_Inquiry_Volume_1_Rapid_Read.pdf" target="_blank" rel="noreferrer">공식 조사 · Post Office Horizon IT Inquiry, Final Report Vol. 1 요약, 2025</a></div>
+  <div class="anchor">입력 자료와 계산 과정을 남겨야 잘못된 결과를 찾아 바로잡을 수 있습니다.</div>
+  <footer class="footer"><span>행정기관 AI 직접개발 가이드북 · 메시지와 운영</span><span>설명영상 교안 · 30분 구성</span><b data-page-number="">11 / 38</b></footer>
+  <aside class="speaker-note">[약 1분 30초] Horizon 회계 시스템에는 버그와 오류, 결함이 있었고 회계 부족액이 표시됐습니다. 영국의 공식 조사에 따르면 수백 명의 우체국 지점 운영자와 직원이 절도와 사기 혐의를 받았고 계약 해지, 기소, 유죄판결, 파산과 수감 등 심각한 피해가 이어졌습니다. 문제는 기관이 시스템의 숫자를 사실로 받아들이고 개인에게 반박 책임을 떠넘겼다는 것입니다. 공공 시스템의 출력은 권위가 크기 때문에 그만큼 반박 가능성과 추적 가능성이 필요합니다.</aside>
+</section>
+
+<section class="slide regular dark tech-debt-slide long-head" data-role="개념" data-layout="debt-ledger" data-purpose="기술부채를 내부 행정도구의 검증·인계 지연으로 정의한다">
+  <div class="topline"><span>행정기관 AI 직접개발 가이드북</span><span>PART 1 · WHY · 15 MIN</span></div>
+  <header class="head"><i class="head-accent" aria-hidden="true"></i><div><span class="head-part">DEBT · 미뤄 둔 책임</span><h1>업무에 적극적으로 활용되기 전에 임시 코드의 유지관리 방법을 정해야 합니다.</h1><p>시험 삼아 만든 코드가 부서의 일상 업무에 쓰이기 시작하면, 계산 기준과 고치는 방법도 함께 남겨야 합니다</p></div></header>
+  <div class="body">
+  <div class="debt-ledger" data-step="">
+    <div><span>LOGIC DEBT</span><h2>기준을 코드에만 남겼습니다</h2><p>왜 이 계산식과 조건을 썼는지 설명이 없습니다.</p><b>나중에 결과가 맞는지 확인하기 어려움</b></div>
+    <div><span>TEST DEBT</span><h2>정상 사례만 확인했습니다</h2><p>빈값·중복·경계값·예외 업무에서 어떻게 되는지 모릅니다.</p><b>예외 상황에서 틀린 결과를 늦게 발견</b></div>
+    <div><span>DEPENDENCY DEBT</span><h2>개인 환경에 묶여 있습니다</h2><p>개인 계정·API 키·확장도구·특정 PC가 없으면 실행되지 않습니다.</p><b>계정이나 PC가 바뀌면 실행이 멈출 수 있음</b></div>
+    <div><span>OWNERSHIP DEBT</span><h2>다음 운영자가 없습니다</h2><p>만든 사람이 이동하면 수정·복구·종료를 판단할 사람이 사라집니다.</p><b>다음 담당자가 프로그램부터 업무 기준까지 다시 파악해야 함</b></div>
+  </div></div>
+  <div class="anchor">누가 고칠지, 어떻게 실행하는지, 기준은 무엇인지 남겨야 다음 담당자가 이어 쓸 수 있습니다.</div>
+  <footer class="footer"><span>행정기관 AI 직접개발 가이드북 · 메시지와 운영</span><span>설명영상 교안 · 30분 구성</span><b data-page-number="">12 / 38</b></footer>
+  <aside class="speaker-note">[약 1분] 기술부채를 네 종류로 나눠 보겠습니다. 기준을 코드에만 남긴 로직 부채, 정상 사례만 본 테스트 부채, 개인 계정과 특정 PC에 묶인 의존성 부채, 다음 운영자가 없는 소유권 부채입니다. 실험에서 이런 부채가 생기는 것은 자연스럽습니다. 다만 동료가 사용하고 부서 업무가 의존하기 전에 무엇을 언제 갚을지 정해야 합니다.</aside>
+</section>
+
+<section class="slide regular dark decay-slide long-head" data-role="근거" data-layout="case-canvas" data-purpose="웹의 링크 부패 통계로 내부 업무도구의 디지털 지속성 문제를 환기한다">
+  <div class="topline"><span>행정기관 AI 직접개발 가이드북</span><span>PART 1 · WHY · 15 MIN</span></div>
+  <header class="head"><i class="head-accent" aria-hidden="true"></i><div><span class="head-part">DECAY · 디지털 소멸</span><h1>해외 한 조사에서 만들어진 웹사이트가 사라지는 현상을 주목합니다.</h1><p>웹사이트와 연결된 API는 주소, 서버, 담당자가 유지되어야 계속 쓸 수 있습니다</p></div></header>
+  <div class="body">
+  <div class="decay-browser" data-step=""><div class="browser-top"><i></i><i></i><i></i><span>example.org/old-guide · 화면 예시</span></div><div class="decay-code">404</div><h2>페이지를 찾을 수 없습니다</h2><p>담당자 이동 · 도메인 종료 · 자료 삭제 · 링크 변경</p></div>
+  <div class="decay-facts" data-step="">
+    <div><b>21%</b><span>조사된 정부 사이트 페이지에서<br>깨진 링크가 하나 이상 발견</span></div>
+    <div><b>38%</b><span>2013년에 존재했던 웹페이지가<br>10년 뒤 접근 불가</span></div>
+    <p>업무에 필요한 사이트가 사라지면<br><strong>다음 담당자가 자료와 계산 과정을 확인하기 어려워집니다.</strong></p>
+  </div>
+  <a class="source-link dark-source" href="https://www.pewresearch.org/data-labs/2024/05/17/when-online-content-disappears/" target="_blank" rel="noreferrer">근거 · Pew Research Center, 「When Online Content Disappears」, 2024</a></div>
+  <div class="anchor">도구가 쓰는 외부 서비스와 파일의 보관 방법, 서비스가 종료될 때의 대체 방법을 정해 둬야 합니다</div>
+  <footer class="footer"><span>행정기관 AI 직접개발 가이드북 · 메시지와 운영</span><span>설명영상 교안 · 30분 구성</span><b data-page-number="">13 / 38</b></footer>
+  <aside class="speaker-note">[약 50초] 화면의 404와 주소는 실제 조사 대상이 아닌 예시입니다. Pew Research Center는 정부 웹페이지의 21퍼센트에서 깨진 링크를 하나 이상 발견했습니다. 2013년에 존재했던 웹페이지 중 38퍼센트는 10년 뒤 접근할 수 없었습니다. 이 수치는 내부 업무도구도 예외가 아니라는 점을 환기합니다. 외부 API, 개인 저장소, 브라우저 확장이 사라지면 화면 하나가 아니라 그 도구에 의존한 집계와 보고의 재현 경로가 끊깁니다.</aside>
+</section>
+
+<section class="slide regular dark citizen-404-slide colleague-404-slide long-head" data-role="사례" data-layout="anatomy" data-purpose="담당자 이탈 이후 동료가 경험하는 업무 공백을 한 장면으로 전달한다">
+  <div class="topline"><span>행정기관 AI 직접개발 가이드북</span><span>PART 1 · WHY · 15 MIN</span></div>
+  <header class="head"><i class="head-accent" aria-hidden="true"></i><div><span class="head-part">DECAY · 남겨진 업무</span><h1>다음 담당자가 같은 결과를 재현할 수 있어야 업무가 이어질 수 있습니다.</h1><p>담당자가 바뀔 때마다 계산식과 업무 기준을 처음부터 찾아야 한다면 인계가 부족한 것입니다</p></div></header>
+  <div class="body">
+  <div class="empty-desk" data-step=""><div class="chair"></div><div class="monitor"><span>업무도구 오류</span><b>제작자에게 문의하세요</b><small>제작자 전보 · 계정 만료</small></div><div class="desk-line"></div></div>
+  <div class="citizen-lines" data-step=""><p>“지난달 집계 기준은 어디에 있습니까?”</p><p>“이 숫자가 왜 이렇게 나왔는지 아는 사람이 있습니까?”</p><p>“새 양식에 맞추려면 무엇을 고쳐야 합니까?”</p><b>다음 담당자에게 계산 기준·파일 위치·<br>수정 방법을 함께 넘겨야 합니다.</b></div></div>
+  <div class="anchor">사이트가 닫히거나 만든 직원이 이동해도 같은 업무를 처리할 방법이 있어야 합니다.</div>
+  <footer class="footer"><span>행정기관 AI 직접개발 가이드북 · 메시지와 운영</span><span>설명영상 교안 · 30분 구성</span><b data-page-number="">14 / 38</b></footer>
+  <aside class="speaker-note">[약 50초] 다음 담당자에게 404는 단순한 오류 코드가 아닙니다. 지난달 집계 기준이 어디에 있는지, 숫자가 왜 그렇게 나왔는지, 새 양식에 맞추려면 무엇을 고쳐야 하는지 알 수 없는 상태입니다. 인사이동은 정상적인 일이지만 그때마다 업무의 원리를 역설계하는 것은 정상적인 인계가 아닙니다.</aside>
+</section>
+
+<section class="slide regular dark shadow-voice-slide long-head" data-role="근거" data-layout="number-story" data-purpose="숨은 AI 사용을 익명 목소리와 조사 수치로 감정적으로 전달한다">
+  <div class="topline"><span>행정기관 AI 직접개발 가이드북</span><span>PART 1 · WHY · 15 MIN</span></div>
+  <header class="head"><i class="head-accent" aria-hidden="true"></i><div><span class="head-part">DEPENDENCE · 숨은 사용</span><h1>개발과정이 투명해야 오류를 발견해도 조직이 함께 고칠 수 있습니다.</h1><p>직원들이 개인적으로 AI를 쓰는 속도가 조직의 사용 기준을 정하는 속도보다 빠릅니다</p></div></header>
+  <div class="body">
+  <div class="shadow-quote" data-step=""><span>현장의 목소리로 바꾸면</span><h2>“업무에는 씁니다.<br>다만 중요한 일에 썼다고는<br>말하지 않습니다.”</h2><p>※ 아래 조사 결과를 발표용 1인칭 문장으로 재구성</p></div>
+  <div class="shadow-numbers" data-step="">
+    <div><b>78%</b><span>AI 사용자가 조직이 제공하지 않은<br>개인 AI 도구를 업무에 반입</span></div>
+    <div><b>52%</b><span>중요한 업무에 AI를 썼다고<br>밝히기를 꺼림</span></div>
+  </div>
+  <a class="source-link dark-source" href="https://www.microsoft.com/en-us/worklab/work-trend-index/ai-at-work-is-here-now-comes-the-hard-part" target="_blank" rel="noreferrer">근거 · Microsoft·LinkedIn 2024 Work Trend Index, 31개국 31,000명 조사</a></div>
+  <div class="anchor">어디에 AI를 썼는지 모르면 결과를 확인하거나 오류에 대응하기 어렵습니다.</div>
+  <footer class="footer"><span>행정기관 AI 직접개발 가이드북 · 메시지와 운영</span><span>설명영상 교안 · 30분 구성</span><b data-page-number="">15 / 38</b></footer>
+  <aside class="speaker-note">[약 50초] 이 문장은 직접 인용이 아니라 조사 결과를 발표용 목소리로 재구성한 것입니다. 조사에서는 AI 사용자 78퍼센트가 개인 AI 도구를 업무에 가져오고, 52퍼센트는 중요한 업무에 AI를 썼다고 밝히기를 꺼렸습니다. 금지와 침묵은 사용을 없애는 대신 조직의 시야에서 사라지게 합니다.</aside>
+</section>
+
+<section class="slide regular light freedom-slide" data-role="비교" data-layout="spectrum" data-purpose="모든 개인 실험을 동일하게 관리하지 않는 비례 원칙을 설명한다">
+  <div class="topline"><span>행정기관 AI 직접개발 가이드북</span><span>PART 1 · WHY · 15 MIN</span></div>
+  <header class="head"><i class="head-accent" aria-hidden="true"></i><div><span class="head-part">TRUST · 자유의 경계</span><h1></h1><h1 style="font-size: 35px; outline: rgb(255, 69, 58) dashed 1px;">업무적용 범위가 확산됨에 따라, 조직의 책임이 함께 고려되어야 합니다.</h1><p>동료가 사용하거나 집계·보고·통지에 결과를 쓰기 시작하면 검토와 관리가 필요해집니다</p></div></header>
+  <div class="body">
+  <div class="freedom-axis" data-step=""><div class="axis-line"></div>
+    <div class="fp p1"><i></i><span>개인 참고</span><b>자유롭게 실험</b><small>공개·가상 데이터</small></div>
+    <div class="fp p2"><i></i><span>동료 공유</span><b>기록과 테스트</b><small>다른 사람이 의존</small></div>
+    <div class="fp p3"><i></i><span>업무 반영</span><b>검증과 승인</b><small>판단·통지에 영향</small></div>
+    <div class="fp p4"><i></i><span>부서 표준·대외</span><b>정식 운영</b><small>조직이 운영 책임</small></div>
+  </div>
+  <div class="freedom-bottom" data-step=""><span>개인의 자유가 큰 영역</span><b>프로그램이 작아도 많은 사람이 결과를 업무에 쓰면 더 꼼꼼히 확인해야 합니다</b><span>조직의 책임이 큰 영역</span></div></div>
+  <div class="anchor">작은 도구라도 그 결과를 다음 업무에 쓴다면 실제 업무용 도구로 봅니다.</div>
+  <footer class="footer"><span>행정기관 AI 직접개발 가이드북 · 메시지와 운영</span><span>설명영상 교안 · 30분 구성</span><b data-page-number="">16 / 38</b></footer>
+  <aside class="speaker-note">[약 1분] 모든 개인 실험을 관리하자는 이야기가 아닙니다. 개인 참고 수준의 공개·가상 데이터 실험은 자유롭게 해야 합니다. 그러나 동료가 의존하고 집계와 보고, 통지에 반영되며 부서의 표준이 되는 순간 책임이 커집니다. 관리 강도는 프로그램의 크기가 아니라 업무 의존과 결과 영향으로 정해야 합니다.</aside>
+</section>
+
+<section class="slide transition governance-hero transition-coral" data-role="전환" data-layout="proposition" data-purpose="메시지 전환을 만든다">
+  <div class="transition-grid"></div><div class="transition-orbit a"></div><div class="transition-orbit b"></div>
+  <div class="transition-copy"><span>THE CORE MESSAGE</span><h1>GOVERNANCE IS TRUST</h1><p>통제의 다른 이름이 아니라, 같은 업무를 반복하고 검증하고 인계하며 끝까지 책임질 수 있다는 약속.</p></div>
+  <div class="transition-mark">↘</div>
+  <footer class="footer"><span>행정기관 AI 직접개발 가이드북 · 메시지와 운영</span><span>설명영상 교안 · 30분 구성</span><b data-page-number="">17 / 38</b></footer>
+  <aside class="speaker-note">[약 40초] 거버넌스는 통제의 영어 표현이 아닙니다. 공무원이 만든 좋은 도구를 동료와 조직이 안심하고 이어 쓸 수 있게 하는 신뢰의 조건입니다. 누가 만들었는지, 어떤 업무 기준을 검증했는지, 문제가 생기면 누가 고치는지, 담당자가 떠난 뒤 누가 이어받는지를 말할 수 있는 상태가 신뢰입니다.</aside>
+</section>
+
+<section class="slide transition guide-transition transition-cyan" data-role="전환" data-layout="proposition" data-purpose="메시지에서 운영 가이드 설명으로 전환한다">
+  <div class="transition-grid"></div><div class="transition-orbit a"></div><div class="transition-orbit b"></div>
+  <div class="transition-copy"><span>PART 2 · THE OPERATING GUIDE</span><h1>공개된 프로젝트를&nbsp;<div>실제 업무에 쓰려면 무엇이 필요한가?</div></h1><p>A주무관의 주간회의 취합 도구를 따라가며, 만드는 사람·쓰기로 결정하는 부서·계속 운영할 주체를 구분해 보겠습니다.</p></div>
+  
+  <footer class="footer"><span>행정기관 AI 직접개발 가이드북 · 메시지와 운영</span><span>설명영상 교안 · 30분 구성</span><b data-page-number="">18 / 38</b></footer>
+  <aside class="speaker-note">[약 30초] 공개 GitLab에 프로젝트가 있다는 사실과 실제 행정업무에 쓰는 결정은 다릅니다. 이제 A주무관의 주간회의 취합 도구를 따라가며 실험, 실제 업무 사용, 지속 운영에서 누가 무엇을 확인하는지 살펴보겠습니다.</aside>
+</section>
+
+
+<section class="slide regular dark guide-slide stage-overview-slide long-head" data-role="운영요약" data-layout="three-stage-roadmap" data-purpose="2부의 세 단계 전체 흐름을 먼저 보여준다">
+  <div class="topline"><span>행정기관 AI 직접개발 가이드북</span><span>PART 2 · HOW · 15 MIN</span></div>
+  <header class="head"><i class="head-accent" aria-hidden="true"></i><div><span class="head-part">ROADMAP · 운영의 전체 흐름</span><h1>먼저 만들고 시험한 뒤, 필요한 범위에서 쓰고, 지속할 도구는 정식 운영으로 옮깁니다.</h1><p>회람본의 단계명은 실험·임시활용·본격활용입니다. 실험이나 임시활용에서 끝낼 수도 있습니다</p></div></header>
+  <div class="body"><div class="stage-overview-flow" data-step="">
+    <div class="stage-overview-node"><span class="stage-num">01 · 실험</span><h2>만들고 시험</h2><p>공개·가상·샘플 데이터로<br>가능성과 오류를 확인</p><div class="stage-owner">실제 업무에는 아직 사용하지 않음 · 계획과 코드 기록</div></div>
+    <div class="stage-overview-arrow" aria-hidden="true">→</div>
+    <div class="stage-overview-node temporary"><span class="stage-num">02 · 임시활용</span><h2>제한해서 사용</h2><p>시험·보안검증과 부서 승인 후<br>허용된 내부 업무에 적용</p><div class="stage-owner">업무 담당 부서가 운영 · 수작업 대체 방법 유지</div></div>
+    <div class="stage-overview-arrow" aria-hidden="true">→</div>
+    <div class="stage-overview-node formal"><span class="stage-num">03 · 본격활용</span><h2>지속 운영</h2><p>정보화사업으로 옮겨<br>지원 창구와 장애 대응 방법을 마련</p><div class="stage-owner">유지관리 주체와 운영 책임 명확화</div></div>
+  </div><div class="stage-overview-notes"><div><b>실험·임시활용에서 마칠 수 있고, 실험 뒤 바로 정보화사업으로 갈 수도 있습니다.</b><br>실험·임시활용에서 종료할 수 있고, 실험 후 정보화사업으로 바로 갈 수도 있습니다.</div><div><b>GitLab 커밋은 개발 기록입니다. 실제 업무 사용에는 별도의 요건과 소관부서장 승인이 필요합니다.</b><br>다른 부서가 실제 업무에 쓰려면 별도의 검토와 사용 결정이 필요합니다.</div></div><div class="guide-ref">회람본 §1.3·제2~3장</div></div>
+  <div class="anchor">이제 A주무관이 도구를 만들고 부서가 사용하기까지의 절차를 보겠습니다.</div>
+  <footer class="footer"><span>행정기관 AI 직접개발 가이드북 · 메시지와 운영</span><span class="footer-source">회람본 §1.3·제2~3장</span><b data-page-number="">19 / 38</b></footer>
+  <aside class="speaker-note">[약 40초] 2부의 지도를 먼저 보겠습니다. 실험에서는 공개·가상·샘플 데이터로 만들고 시험하며 실제 업무를 처리하지 않습니다. 검증과 부서 승인을 거치면 허용된 범위에서 임시활용할 수 있습니다. 지속적인 지원과 장애 대응이 필요한 도구는 정보화사업으로 이관해 본격활용합니다. 모든 도구가 끝까지 갈 필요는 없습니다. 실험이나 임시활용에서 끝날 수 있고, 실험 후 본격활용으로 직행할 수도 있습니다. GitLab에 코드를 올리는 일은 실제 사용 승인과 다릅니다. 이제 A주무관의 사례에 대입해 보겠습니다.</aside>
+</section>
+
+<section class="slide regular dark guide-slide case-start-slide long-head" data-role="운영요약" data-layout="guide" data-purpose="가이드북의 실제 운영 구조를 설명한다">
+  <div class="topline"><span>행정기관 AI 직접개발 가이드북</span><span>PART 2 · HOW · 15 MIN</span></div>
+  <header class="head"><i class="head-accent" aria-hidden="true"></i><div><span class="head-part">EXAMPLE A · 주간회의 자료 자동 취합·서식 변환</span><h1>실험개발단계에서는 실제 회의자료를 넣기 전에 검증과 승인을 끝내야 합니다.</h1><p>설명용 가정: A주무관이 회의자료 취합 도구를 만듭니다. 실험에서는 샘플만 쓰고, 실제 자료는 임시활용 승인 후에 씁니다</p></div></header>
+  <div class="body"><div class="case-brief" data-step="">
+      <div class="case-person"><span>설명용 가상 사례 · 기획조정 부서 A주무관</span><h2>“매주 여러 파일을 합치고<br>제목·순서·서식을 다시 맞춥니다.”</h2><p>주간회의 자료에 비공개 내용이 있을 수 있으므로 이 사례에서는 S로 분류합니다. 만들고 시험할 때는 실제 자료 대신 샘플 파일을 씁니다.</p><b>임시활용 가정: 업무망 본인 PC · 개별 서버 없음 · 내부 업무 · 시스템 자동 입력 없음</b></div>
+      <div class="case-board">
+        <div><i>01 · 문제 정의</i><h3>수작업 취합과 재편집</h3><p>부서마다 다른 파일명·항목 순서·글꼴을 공식 주간회의 서식으로 맞춥니다.</p></div>
+        <div><i>02 · 완료 기준</i><h3>결과를 사람이 대조할 수 있게</h3><p>샘플 10개 부서 자료가 기준 서식과 일치하고 빈칸·중복·누락을 경고합니다.</p></div>
+        <div><i>03 · 도구 유형</i><h3>독립구동형 후보</h3><p>사용자가 파일을 내려받아 본인 PC에서 실행하고 결과 파일을 직접 확인합니다.</p></div>
+        <div class="case-result"><i>04 · 소관</i><h3>기획조정 부서가 운영합니다</h3><p>이 사례에서는 기획조정 부서가 주간회의 업무도 맡는다고 가정합니다. 이 부서장이 사용을 결정하고 운영 담당자를 지정합니다.</p></div>
+      </div>
+    </div><div class="guide-ref">예시 · 회람본 §2.2·3.1·3.2</div></div>
+  <div class="anchor">A주무관의 주간회의 자료 취합·서식 변환 도구를 예로 봅니다.</div>
+  
+  <footer class="footer"><span>행정기관 AI 직접개발 가이드북 · 메시지와 운영</span><span class="footer-source">예시 · 회람본 §2.2·3.1·3.2</span><b data-page-number="">20 / 38</b></footer>
+  <aside class="speaker-note">[약 1분] A주무관의 도구는 회람본에 없는 설명용 가정입니다. 실험에는 실제 회의자료를 넣지 않고 공개·가상·샘플 데이터만 씁니다. 비공개 업무내용이 있다고 가정하여 실제 자료는 S로 분류했습니다. 원문상 PoC 보고서와 체크리스트로 임시활용을 요청하고, 소관부서장이 수용하면 제3자 시험·보안검증·운영계획을 마련합니다. 소관부서장이 사용을 승인한 뒤에야 실제 자료를 처리합니다. 제목은 사용자가 수정한 문구를 유지했지만, 검증과 승인의 시점은 실험 중이 아니라 실제 사용 전이라는 점을 설명합니다.</aside>
+</section>
+
+<section class="slide regular dark guide-slide three-stage-slide long-head" data-role="운영요약" data-layout="guide" data-purpose="가이드북의 실제 운영 구조를 설명한다">
+  <div class="topline"><span>행정기관 AI 직접개발 가이드북</span><span>PART 2 · HOW · 15 MIN</span></div>
+  <header class="head"><i class="head-accent" aria-hidden="true"></i><div><span class="head-part">SYSTEM · AI 도구 3단계 운영체계</span><h1>정부실험실과 임시활용에서 끝나도 개발/기획자의 성과는 기록으로 남습니다.</h1><p>회람본의 실험·임시활용·본격활용은 운영 단계입니다. AI 정부 실험실은 이 절차를 지원하는 개발·관리 환경입니다</p></div></header>
+  <div class="body"><div class="stage-system" data-step="">
+      <svg viewBox="0 0 1152 354" aria-hidden="true"><path d="M324 88 C400 88 405 177 455 177"></path><path d="M697 177 C748 177 752 88 828 88"></path><path d="M324 260 C490 320 660 320 828 260"></path></svg>
+      <div class="stage-card"><span>01 · 실험(운영 단계)</span><h2>만들고 시험합니다</h2><p>실제 업무 처리에는 쓰지 않고 가능성과 효과를 확인합니다.</p><ul><li>계획 등록으로 시작</li><li>공개·가상·샘플 데이터</li><li>중단하면 결과서를 남김</li></ul></div>
+      <div class="stage-card narrow"><span>02 · 임시활용</span><h2>제한된 내부 업무에 씁니다</h2><p>보안검증과 사용 승인을 거친 뒤 업무 담당 부서가 운영합니다. 장애 대응 시간을 보장하는 약속은 없습니다.</p><ul><li>실제 업무자료는 허용된 범위에서만</li><li>대체 수단을 유지</li><li>도구가 중단될 수 있음을 사용자에게 안내</li></ul></div>
+      <div class="stage-card formal"><span>03 · 본격활용</span><h2>정보화사업으로 계속 운영합니다</h2><p>유지관리 담당과 문의 창구를 두고 장애가 나면 어떻게 대응할지 약속합니다.</p><ul><li>대국민 서비스 가능</li><li>업무시스템 연계 가능</li><li>유지관리 책임 명확화</li></ul></div>
+      <div class="stage-exits"><span><b>실험 → 종료</b>도 성과</span><span><b>실험 → 본격활용</b> 직행도 가능</span></div>
+    </div><div class="guide-ref">회람본 1.3·2장·3장</div></div>
+  <div class="anchor">실험이나 임시활용에서 끝낼 수 있고, 오래 쓸 도구는 정보화사업으로 옮깁니다.</div>
+  
+  <footer class="footer"><span>행정기관 AI 직접개발 가이드북 · 메시지와 운영</span><span class="footer-source">회람본 1.3·2장·3장</span><b data-page-number="">21 / 38</b></footer>
+  <aside class="speaker-note">[약 1분 20초] 가이드북은 도구를 세 단계로 운영합니다. 실험은 만들고 시험하는 단계라 실제 업무 처리에 쓰지 않습니다. 임시활용은 보안검증을 통과한 도구를 제한된 내부 업무에 실제로 쓰지만 SLA는 없는 과도 단계입니다. 본격활용은 정보화사업으로 이관해 유지관리와 지원 창구, 장애 대응을 갖추는 단계입니다. 모든 도구가 본격활용으로 갈 필요는 없고 실험 또는 임시활용에서 목적을 다하고 끝나는 것도 정상적인 종료입니다. 설명영상에서는 회람본의 ‘본격활용’을 검토의견의 용어 기준에 따라 ‘본격활용’으로 부릅니다.</aside>
+</section>
+
+<section class="slide regular dark guide-slide data-class-slide long-head" data-role="운영요약" data-layout="guide" data-purpose="가이드북의 실제 운영 구조를 설명한다">
+  <div class="topline"><span>행정기관 AI 직접개발 가이드북</span><span>PART 2 · HOW · 15 MIN</span></div>
+  <header class="head"><i class="head-accent" aria-hidden="true"></i><div><span class="head-part">DATA · O·S·C 구분</span><h1>실험-임시활용-적극활용의 모든 단계에서 사용가능한 데이터 유형을 확인해야 합니다.</h1><p>본문은 회람본의 단계명인 실험·임시활용·본격활용에 따라 설명합니다. 도구의 데이터 구분은 가장 민감한 자료를 기준으로 정합니다</p></div></header>
+  <div class="body"><div class="data-three" data-step="">
+      <div class="data-card"><div class="data-letter">O</div><span>OPEN · 공개데이터</span><h2>누구나 볼 수 있는 자료</h2><p>법령·통계·공공데이터 등. 실험에서는 O 또는 시험용 가상·샘플 데이터만 사용합니다.</p><div class="data-rule">임시활용 시 외부 AI·클라우드 이용과 외부 저장이 가능합니다.</div></div>
+      <div class="data-card s"><div class="data-letter">S</div><span>SENSITIVE · 민감데이터</span><h2>비공개 자료·개인정보</h2><p>실험에는 넣지 않습니다. 임시활용에서는 업무망의 본인 PC에서만 구동하고 기관이 허용한 시스템에만 연결합니다.</p><div class="data-rule">외부 저장은 불가하며, 공개 자료라도 개인정보가 포함되면 S 기준을 적용합니다.</div></div>
+      <div class="data-card c"><div class="data-letter">C</div><span>CLASSIFIED · 기밀데이터</span><h2>기밀·대외비 자료</h2><p>AI 도구에는 실험·임시활용·본격활용 어느 단계에서도 넣을 수 없습니다.</p><div class="data-rule">기밀·대외비 자료는 AI 도구에 입력하지 않습니다.</div></div>
+    </div><div class="guide-ref">회람본 데이터 구분·2.2</div></div>
+  <div class="anchor">O·S·C 구분에 따라 구동·통신·저장 방식이 달라집니다.</div>
+  
+  <footer class="footer"><span>행정기관 AI 직접개발 가이드북 · 메시지와 운영</span><span class="footer-source">회람본 데이터 구분·2.2</span><b data-page-number="">22 / 38</b></footer>
+  <aside class="speaker-note">[약 1분] 가장 먼저 볼 것은 데이터입니다. 공개데이터 O, 비공개 자료와 개인정보인 민감데이터 S, 기밀과 대외비인 C로 구분합니다. C는 어느 단계에서도 AI 도구에 넣을 수 없습니다. 실험은 O와 시험용 가상·샘플 데이터만 사용합니다. S를 임시활용에서 다루려면 업무망의 본인 PC에서 구동하고, 조회와 전송은 허용목록에 있는 시스템으로만 하며 외부 저장은 할 수 없습니다. 공개 자료라도 개인정보가 섞이면 S 기준으로 판단합니다.</aside>
+</section>
+
+<section class="slide regular dark guide-slide tool-types-slide long-head" data-role="운영요약" data-layout="guide" data-purpose="가이드북의 실제 운영 구조를 설명한다">
+  <div class="topline"><span>행정기관 AI 직접개발 가이드북</span><span>PART 2 · HOW · 15 MIN</span></div>
+  <header class="head"><i class="head-accent" aria-hidden="true"></i><div><span class="head-part">TYPE · 임시활용 도구의 다섯 가지 형태</span><h1>도구의 기술스택과 통신방식, 데이터 활용 방식에 따라 검증할 항목이 달라집니다.</h1><p>회람본 2.2는 기술 언어 자체보다 구동 위치, 조회·전송 상대, 저장 방식과 데이터 등급에 따라 허용 범위를 정합니다</p></div></header>
+  <div class="body"><div class="tool-types" data-step="">
+      <div class="tool-type"><i>1</i><span>기본 · 통신 없음</span><h2>독립구동형</h2><p>자료를 사람이 내려받아 본인 PC에서 처리합니다. 구동 위치와 저장만 확인합니다.</p><b>처음 만드는 도구라면 여기서 시작</b></div>
+      <div class="tool-type"><i>2</i><span>읽어오기</span><h2>조회 결합형</h2><p>조회 API로 다른 시스템의 자료를 읽어 본인 PC 자료와 결합합니다.</p><b>S자료는 실험실 허용목록에 등재된 시스템에서만 조회</b></div>
+      <div class="tool-type"><i>3</i><span>내보내기</span><h2>AI 호출형</h2><p>실행 중 AI를 호출하거나 데이터를 전송합니다. 통신 상대를 확인합니다.</p><b>O는 기준표 범위에서 외부 가능 · S는 허용목록만</b></div>
+      <div class="tool-type"><i>4</i><span>업무망 플랫폼</span><h2>AI 공통기반형</h2><p>업무망의 공통기반 빌더로 만든 에이전트입니다. O와 S를 플랫폼 정책 안에서 다룹니다.</p><b>실험 후 본격활용으로 바로 갈 수 있음</b></div>
+      <div class="tool-type"><i>5</i><span>인터넷망 플랫폼</span><h2>외부 플랫폼형</h2><p>GPTs·아티팩트·클라우드처럼 주소로 접속합니다. 공개데이터 O만 다룹니다.</p><b>내부 업무 한정 · 중단 가능성 고지</b></div>
+    </div><div class="guide-ref">회람본 2.2</div></div>
+  <div class="anchor">독립구동형은 구동 위치와 저장을 중심으로 확인합니다.</div>
+  
+  <footer class="footer"><span>행정기관 AI 직접개발 가이드북 · 메시지와 운영</span><span class="footer-source">회람본 2.2</span><b data-page-number="">23 / 38</b></footer>
+  <aside class="speaker-note">[약 1분] 가이드북은 임시활용 도구를 다섯 형태로 설명합니다. 독립구동형은 통신이 없어 구동과 저장만 확인하면 되므로 처음 만드는 도구에 권장합니다. 조회 결합형은 API로 자료를 읽어오므로 조회 상대를 확인합니다. AI 호출형은 데이터를 보내거나 AI를 부르므로 전송 상대를 확인합니다. 업무망 플랫폼형은 AI 공통기반 정책 안에서 O와 S를 다룰 수 있고 실험 뒤 본격활용으로 바로 갈 수 있습니다. 외부 플랫폼형은 GPTs나 클라우드처럼 주소로 쓰는 형태로 공개데이터 O만 다루고 내부 업무에 한정합니다. 번호가 커질수록 좋다는 뜻이 아니라 확인할 경계가 늘어난다는 뜻입니다.</aside>
+</section>
+
+<section class="slide regular dark guide-slide experiment-slide long-head" data-role="운영요약" data-layout="guide" data-purpose="가이드북의 실제 운영 구조를 설명한다">
+  <div class="topline"><span>행정기관 AI 직접개발 가이드북</span><span>PART 2 · HOW · 15 MIN</span></div>
+  <header class="head"><i class="head-accent" aria-hidden="true"></i><div><span class="head-part">STAGE 1 · 실험</span><h1>GitLab에는 코드뿐 아니라 개발 경위도 남겨야 합니다.</h1><p>샘플로 만들고 시험한 뒤 실험을 끝낼지, 제한적으로 사용할지, 정식 운영을 요청할지 정합니다</p></div></header>
+  <div class="body"><div class="experiment-loop" data-step="">
+      <div class="experiment-start"><span>START</span><h2>실험 계획 등록</h2><p>문제 정의 · 구현 방법 · 기대 효과 · 완료 기준 · 업무 소관부서를 간단히 적습니다.</p><b>별도 승인 없음 · 소속부서장에게 보고</b></div>
+      <div class="experiment-cycle">
+        <div class="cycle-step"><b>개발</b><small>과제별 개발 공간에서 AI를 써서 구현</small></div>
+        <div class="cycle-step"><b>기록</b><small>코드와 AI에 입력한 지시문을 GitLab에 저장</small></div>
+        <div class="cycle-step"><b>자체 시험</b><small>완료 기준과 정상·예외 사례를 확인</small></div>
+        <div class="cycle-step"><b>보완</b><small>오류를 고쳐 다시 커밋하고 계획도 갱신</small></div>
+      </div>
+      <div class="experiment-exit"><span>EXIT</span><h2>시험 결과에 따라 다음 단계를 정합니다</h2><p>실제 업무에는 아직 쓰지 않습니다.</p><div class="exit-list"><div><b>종료</b><small>실험결과서</small></div><div><b>임시활용 요청</b><small>PoC 보고서 + 체크리스트</small></div><div><b>정보화사업 이관</b><small>PoC 보고서</small></div></div></div>
+    </div><div class="guide-ref">회람본 3.1·부록 2</div></div>
+  <div class="anchor">실험계획을 적고 샘플로 시험하면서 코드와 수정 내용을 GitLab에 남깁니다.</div>
+  
+  <footer class="footer"><span>행정기관 AI 직접개발 가이드북 · 메시지와 운영</span><span class="footer-source">회람본 3.1·부록 2</span><b data-page-number="">24 / 38</b></footer>
+  <aside class="speaker-note">[약 1분 15초] 실험은 계획을 등록하면 시작됩니다. 별도의 승인 절차는 없지만 업무 활동이므로 소속부서장의 지휘와 관리는 유지됩니다. 문제 정의, 구현 방법, 기대 효과, 완료 기준, 소관부서를 적고 개발과 자체 시험, 보완을 반복합니다. 소스코드와 프롬프트는 깃랩에 커밋해 이력을 남깁니다. 실험에서는 실제 업무를 처리하지 않고 공개데이터나 가상·샘플 데이터만 씁니다. 결과에 따라 실험결과서로 끝내거나, PoC 보고서와 체크리스트를 붙여 임시활용을 요청하거나, 곧바로 정보화사업 이관을 제안할 수 있습니다.</aside>
+</section>
+
+<section class="slide regular dark guide-slide before-gitlab-slide long-head" data-role="운영요약" data-layout="guide" data-purpose="가이드북의 실제 운영 구조를 설명한다">
+  <div class="topline"><span>행정기관 AI 직접개발 가이드북</span><span>PART 2 · HOW · 15 MIN</span></div>
+  <header class="head"><i class="head-accent" aria-hidden="true"></i><div><span class="head-part">EXAMPLE A · 깃랩 첫 커밋 전</span><h1>실험계획을 먼저 등록하고 GitLab에 변경 이력을 쌓습니다.</h1><p>가이드북에는 계획 등록과 부서 보고가 먼저라고 적혀 있습니다. 다만 어느 화면에 등록하고 관리대장에 어떻게 연결하는지는 아직 정해지지 않았습니다</p></div></header>
+  <div class="body"><div class="site-form-flow" data-step="">
+      <div class="site-step"><span>01 · CAIO 신청 창구</span><h2>실험실 계정을 신청합니다</h2><p>A주무관이 기관 CAIO에게 실험실 계정을 신청합니다. 계정관리 지침은 향후 수립 예정입니다.</p><dl><dt>작성</dt><dd>계정 신청</dd><dt>확인</dt><dd>CAIO 계정 발급</dd></dl></div>
+      <div class="site-step"><span>02 · 계획 기록</span><h2>실험계획을 등록합니다</h2><p>도구명, 문제, 방법, 기대 효과, 완료 기준, 소관부서를 적습니다.</p><dl><dt>서식</dt><dd>부록 2 실험계획서</dd><dt>위치</dt><dd>향후 고려 · 계획 입력 메뉴 안내 필요</dd></dl></div>
+      <div class="site-step report"><span>03 · 부서 보고</span><h2>소속부서장에게 시작을 알립니다</h2><p>승인을 받는 단계는 아닙니다. 실험실 자동 알림이 없으면 기관이 정한 수동 채널로 직접 보고합니다.</p><dl><dt>수신</dt><dd>소속부서장</dd><dt>다른 소관이면</dt><dd>실제로 사용할 부서에도 알림</dd></dl></div>
+      <div class="site-step gitlab"><span>04 · 가상개발환경·깃랩</span><h2>그다음 개발하고 커밋합니다</h2><p>샘플 파일로 구현·자체시험·보완을 반복하며 소스코드와 프롬프트를 커밋합니다.</p><dl><dt>기록</dt><dd>코드·프롬프트·변경 이력</dd><dt>금지</dt><dd>실제 주간회의 자료 사용</dd></dl></div>
+      <div class="flow-caveat"><span><b>절차상 순서</b> · 계정 → 계획 등록 → 보고 → 개발 → 깃랩 커밋</span><span>정확한 URL·메뉴·수동 보고 양식은 가이드북에 아직 없음</span></div>
+    </div><div class="guide-ref">회람본 1.5·3.1·부록 1·2</div></div>
+  <div class="anchor">계정 신청 → 계획 등록 → 부서 보고 → 샘플 개발 → GitLab 커밋</div>
+  
+  <footer class="footer"><span>행정기관 AI 직접개발 가이드북 · 메시지와 운영</span><span class="footer-source">회람본 1.5·3.1·부록 1·2</span><b data-page-number="">25 / 38</b></footer>
+  <aside class="speaker-note">[약 1분 20초] A주무관이 깃랩에 올리기 전 가이드북에 적힌 순서입니다. 먼저 CAIO에게 계정을 신청하고 부록 2의 실험계획 항목을 작성·등록합니다. 계획 등록만으로 실험이 시작되며 별도 승인은 없지만 소속부서장에게 보고해야 합니다. 현재 시범운영에는 공공 GitLab을 통한 과제 문서·코드·프롬프트 관리가 소개되어 있으나, 실험계획을 입력할 화면과 관리대장에 옮기는 방법은 아직 정해지지 않았습니다. 자동 알림도 향후 지원 기능입니다. 그 뒤 샘플로 개발하고 코드와 프롬프트를 커밋합니다. 실제 사용하려는 기관은 등록 메뉴, 보고 채널, 대장 담당을 구체화해야 합니다.</aside>
+</section>
+
+<section class="slide regular dark guide-slide temporary-boundary-slide long-head" data-role="운영요약" data-layout="guide" data-purpose="가이드북의 실제 운영 구조를 설명한다">
+  <div class="topline"><span>행정기관 AI 직접개발 가이드북</span><span>PART 2 · HOW · 15 MIN</span></div>
+  <header class="head"><i class="head-accent" aria-hidden="true"></i><div><span class="head-part">STAGE 2 · 임시활용 대상</span><h1>도구가 멈춰도 업무를 계속할 수 있을 때만 임시활용을 허용하시면 됩니다.</h1><p>보안검증을 통과한 도구를 내부 업무에 쓰면서도, 고장 나면 기존 방식으로 업무를 이어갈 수 있어야 합니다</p></div></header>
+  <div class="body"><div class="temporary-frame" data-step="">
+      <div class="three-conditions">
+        <div class="condition"><b>1</b><div><h3>개인 서버를 운영하지 않습니다</h3><p>직접수행직원의 개별 서버를 행정기관에 설치·운영하지 않습니다. 기관의 AI 지원 자원은 이용할 수 있습니다.</p></div></div>
+        <div class="condition"><b>2</b><div><h3>내부 업무에만 씁니다</h3><p>국민이 접속하는 서비스로 제공하지 않고 기관 내부 업무에만 씁니다.</p></div></div>
+        <div class="condition"><b>3</b><div><h3>데이터 기준표를 지킵니다</h3><p>O와 S에 따라 구동·조회·전송·저장 범위를 구분합니다.</p></div></div>
+      </div>
+      <div class="not-allowed"><span>COMMON STOP · 공통 금지</span><h2>다음 기능은 임시활용하지 않고<br>정보화사업에서 구현합니다</h2><ul><li>업무시스템에 자동 기록·변경</li><li>조회 API 없는 화면 자동 접속·수집</li><li>대국민 서비스 운영</li><li>S데이터의 허용목록 밖 통신·외부 저장</li></ul></div>
+      <div class="temporary-meaning">기간 제한 규정 없음 · ‘임시’ = SLA 이전의 과도 단계</div>
+    </div><div class="guide-ref">회람본 2.2·3.2</div></div>
+  <div class="anchor">임시활용에는 SLA가 없으므로 기존 처리 방식을 유지합니다.</div>
+  
+  <footer class="footer"><span>행정기관 AI 직접개발 가이드북 · 메시지와 운영</span><span class="footer-source">회람본 2.2·3.2</span><b data-page-number="">26 / 38</b></footer>
+  <aside class="speaker-note">[약 1분 10초] 임시활용은 단순한 시험 사용이 아니라 실제 업무에 쓰는 단계입니다. 여기서 임시는 기간이 짧다는 뜻이 아닙니다. 가이드북에는 기간 제한 규정이 없고, SLA가 없는 과도 단계라는 의미입니다. 따라서 도구가 멈추면 수동 처리 같은 기존 방식으로 업무를 계속할 수 있어야 합니다. 대상은 개인 서버를 운영하지 않고, 업무시스템을 자동 변경하지 않으며, 내부 업무에만 쓰고, 데이터 기준표를 지키는 도구입니다. 대국민 서비스나 시스템 자동 기록이 꼭 필요하면 실험으로 효용을 입증한 뒤 정보화사업으로 구현합니다.</aside>
+</section>
+
+<section class="slide regular dark guide-slide entry-gate-slide long-head" data-role="운영요약" data-layout="guide" data-purpose="가이드북의 실제 운영 구조를 설명한다">
+  <div class="topline"><span>행정기관 AI 직접개발 가이드북</span><span>PART 2 · HOW · 15 MIN</span></div>
+  <header class="head"><i class="head-accent" aria-hidden="true"></i><div><span class="head-part">EXAMPLE A · 실제 주간회의 자료를 쓰기까지</span><h1>네 가지 근거를 확인하고 부서장이 실제 사용을 승인하면 됩니다.</h1><p>만든 직원이 PoC 보고서와 체크리스트를 냅니다. 부서가 쓰기로 결정하면 시험·보안검증·운영계획을 마련해 사용 승인을 받습니다</p></div></header>
+  <div class="body"><div class="document-run" data-step="">
+      <div class="document-card"><i>1</i><span>A주무관 작성 · 전환 요청</span><h3>PoC 보고서 + 활용 대상 체크리스트</h3><p>도구의 효과와 한계, 실행 위치, 연결 대상, 저장 위치, 사용할 사람을 적어 업무 담당 부서장에게 냅니다.</p><small><b>제출</b> 실제 채널은 미확정 · 대장 기능은 구축 예정</small></div>
+      <div class="document-card accept"><i>2</i><span>소관부서장 판단</span><h3>업무 수용 결정 + 운영 담당 지정</h3><p>부서장이 주간회의 업무에 쓸지 결정하고, 쓰기로 했다면 A주무관이나 다른 직원을 운영 담당자로 지정합니다.</p><small><b>불수용</b> 업무에 쓰지 않더라도 시험 결과를 기록</small></div>
+      <div class="document-card"><i>3</i><span>동료 시험자 작성</span><h3>제3자 시험결과서</h3><p>직접수행직원이 아닌 동료가 기능에 맞는 항목을 시험합니다. 누락·중복·빈칸은 이 사례에 적용한 시험 항목입니다.</p><small><b>서식</b> 항목 · 방법 · 통과/실패 · 조치 · 종합의견</small></div>
+      <div class="document-card"><i>4</i><span>협의한 수행자 작성</span><h3>보안검증결과서</h3><p>검증·보완·재검증을 반복합니다. 업무망으로 옮기는 경우 보안·개인정보 담당부서가 결과서의 적정성을 확인합니다.</p><small><b>서식</b> 별도 바이브코딩 보안가이드북의 검사 결과 요약서</small></div>
+      <div class="document-card"><i>5</i><span>운영 담당 작성</span><h3>활용 운영계획서</h3><p>누가 어디서 쓸지, 문의는 누구에게 할지, 고장 나면 어떻게 처리할지, 결과 파일을 어디에 저장하고 지울지 적습니다.</p><small><b>이유</b> 운영을 맡을 직원이 작성하며, 다른 부서가 만들었다면 함께 사용 방법을 인계받음</small></div>
+      <div class="document-card approve"><i>6</i><span>소관부서장 승인</span><h3>네 서류 확인 후 임시활용 전환</h3><p>체크리스트·제3자 시험·보안검증·운영계획을 확인합니다. 업무망으로 가져오는 도구라면 이 승인이 반입 승인도 대신합니다.</p><small><b>결과</b> 단계·승인 이력을 남기고 실제 자료 사용 시작</small></div>
+    </div><div class="guide-ref">회람본 3.2·부록 2·5</div></div>
+  <div class="anchor">활용 체크리스트·제3자 시험·보안검증·운영계획을 확인합니다.</div>
+  
+  <footer class="footer"><span>행정기관 AI 직접개발 가이드북 · 메시지와 운영</span><span class="footer-source">회람본 3.2·부록 2·5</span><b data-page-number="">27 / 38</b></footer>
+  <aside class="speaker-note">[약 1분 40초] A주무관이 실제 주간회의 자료를 처리하기까지 누가 무엇을 쓰는지 보겠습니다. 먼저 PoC 보고서와 활용 대상 체크리스트를 작성해 소관부서장에게 전환을 요청합니다. 부서장이 업무로 수용하면 운영 담당을 지정합니다. 그 뒤 A주무관이 아닌 동료가 제3자 시험결과서를 작성합니다. 보안검증을 거치고 업무망으로 옮기는 경우 보안·개인정보보호 담당부서가 결과서의 적정성을 확인합니다. 운영계획서는 지정된 운영 담당이 작성합니다. 마지막으로 네 서류를 확인받고 소관부서장의 사용 승인을 받아야 실제 자료를 쓸 수 있습니다. 가이드북은 서류를 관리대장에 등재하도록 하지만 현재 기능과 제출 경로는 확정되지 않았으므로 기관 시행 안내가 필요합니다.</aside>
+</section>
+
+<section class="slide regular dark guide-slide handoff-slide long-head" data-role="운영요약" data-layout="guide" data-purpose="가이드북의 실제 운영 구조를 설명한다">
+  <div class="topline"><span>행정기관 AI 직접개발 가이드북</span><span>PART 2 · HOW · 15 MIN</span></div>
+  <header class="head"><i class="head-accent" aria-hidden="true"></i><div><span class="head-part">OWNERSHIP · 소속부서와 소관부서</span><h1>업무 소관부서가 운영을 인수해야 인사이동에도 지속될 수 있습니다.</h1><p>같은 기관에서 만든 부서와 업무 담당 부서가 다르면, 소속부서장은 실험을 관리하고 소관부서장은 사용할지 결정해 운영 담당자를 지정합니다</p></div></header>
+  <div class="body"><div class="handoff-map" data-step="">
+      <div class="owner-side creator"><span>소속부서 · 만든 사람이 있는 곳</span><h2>개발 담당자/부서</h2><p>샘플로 복무 현황 정리 도구를 시험한 뒤 PoC 보고서와 체크리스트를 복무 담당 부서에 냅니다.</p><b>만들고 시험한 내용 기록</b></div>
+      <div class="handoff-center"><span>소관부서장</span><i>→</i><b>사용하기로 결정</b><small>담당 직원 지정</small></div>
+      <div class="owner-side operator"><span>소관부서 · 업무를 계속 맡는 곳</span><h2>업무활용 담당 부서</h2><p>소관부서장이 운영 담당자를 정합니다. 제3자 시험과 보안검증은 두 부서가 수행자를 협의하고, 운영계획서는 운영 담당자가 직접 씁니다. 소관부서장이 승인한 뒤 운영을 맡습니다.</p><b>승인 · 운영 · 변경 · 인계 책임</b></div>
+      <div class="handoff-bottom">수용·승인이 지연되거나 부서 간 이견이 있으면 CAIO가 조정합니다. 만든 직원의 운영 협조는 권고입니다.</div>
+    </div><div class="guide-ref">회람본 1.4·3.2·부록 5 표 2</div></div>
+  <div class="anchor">도구를 만든 부서와 사용하는 부서가 다르면, 사용하기로 결정한 부서가 운영을 맡습니다.</div>
+  
+  <footer class="footer"><span>행정기관 AI 직접개발 가이드북 · 메시지와 운영</span><span class="footer-source">회람본 1.4·3.2·부록 5 표 2</span><b data-page-number="">28 / 38</b></footer>
+  <aside class="speaker-note">[약 1분 10초] 도구를 만든 부서와 도구가 다루는 업무의 부서가 다를 수 있습니다. 사업부서의 서무 담당자가 복무 관리 도구를 만들었다면 소속은 사업부서지만 소관은 복무 담당 부서입니다. 소관부서장이 업무로 수용하는 순간을 경계로 이후의 요건 이행, 승인, 운영 책임이 소관부서로 넘어갑니다. 운영계획서는 실제 운영할 담당 직원이 작성하는데, 이 과정 자체가 인수인계가 됩니다. 직접수행직원은 협조자로 남고, 수용되지 않으면 PoC 보고서로 종료합니다. 부서 간 이견은 CAIO가 조정합니다.</aside>
+</section>
+
+<section class="slide regular dark guide-slide basic-responsibility-slide long-head" data-role="운영요약" data-layout="guide" data-purpose="가이드북의 실제 운영 구조를 설명한다">
+  <div class="topline"><span>행정기관 AI 직접개발 가이드북</span><span>PART 2 · HOW · 15 MIN</span></div>
+  <header class="head"><i class="head-accent" aria-hidden="true"></i><div><span class="head-part">OPERATION · SLA 없는 대신 지키는 다섯 가지</span><h1>오류가 나면 사용을 중단하고 알린 뒤 수작업으로 이어갑니다.</h1><p>업무 담당 부서가 운영 담당자를 정하고 오류·변경·인계 내용을 기록해야 담당자가 바뀌어도 계속 쓸 수 있습니다</p></div></header>
+  <div class="body"><div class="responsibility-five" data-step="">
+      <div><i>1</i><span>OWNER</span><h2>운영주체와 담당 지정</h2><p>소관부서장이 총괄하고 문의·운영 담당은 두 명 이상 지정을 권장합니다.</p></div>
+      <div><i>2</i><span>STOP</span><h2>오류·사고 시 즉시 중단</h2><p>사용과 배포를 멈추고 공지·안내하며 필요한 신고와 초동 조치를 합니다.</p></div>
+      <div><i>3</i><span>NOTICE</span><h2>사용자에게 한계를 고지</h2><p>복구 시간을 약속할 수 없고 중단될 수 있음을 알립니다. 사용자는 결과를 확인한 뒤 업무에 반영하고, 도구가 멈추면 대체 방법으로 업무를 계속합니다.</p></div>
+      <div><i>4</i><span>LOG</span><h2>오류·개선·실적 기록</h2><p>사용 실적과 사용자 의견, 장애와 조치 내역을 운영 기록으로 남깁니다.</p></div>
+      <div><i>5</i><span>RETEST</span><h2>변경하면 다시 검사</h2><p>기능을 바꾼 부분을 시험하고, 데이터·통신·저장 방식이 달라지는 큰 변경은 다시 검증하고 승인받습니다.</p></div>
+    </div><div class="guide-ref">회람본 3.2 기본책임</div></div>
+  <div class="anchor">운영 담당·문의처·중단 공지·대체 방법과 조치 이력을 남깁니다.</div>
+  
+  <footer class="footer"><span>행정기관 AI 직접개발 가이드북 · 메시지와 운영</span><span class="footer-source">회람본 3.2 기본책임</span><b data-page-number="">29 / 38</b></footer>
+  <aside class="speaker-note">[약 1분] 임시활용에는 SLA가 없지만 다섯 가지 기본책임이 있습니다. 첫째 운영주체와 담당을 정하고 복수 지정을 권장합니다. 둘째 오류나 사고를 알면 즉시 멈추고 알립니다. 셋째 사용자에게 SLA가 없고 언제든 중단될 수 있으며 결과를 확인한 뒤 써야 한다고 고지합니다. 넷째 오류와 개선사항, 사용 실적을 기록합니다. 다섯째 기능을 변경하면 다시 검사합니다. 임시활용의 기본 대응은 완벽한 복구를 약속하는 것이 아니라 즉시 중단하고 대체 방식으로 업무를 계속하도록 안내하는 것입니다.</aside>
+</section>
+
+<section class="slide regular dark guide-slide operate-continuity-slide long-head" data-role="운영요약" data-layout="guide" data-purpose="가이드북의 실제 운영 구조를 설명한다">
+  <div class="topline"><span>행정기관 AI 직접개발 가이드북</span><span>PART 2 · HOW · 15 MIN</span></div>
+  <header class="head"><i class="head-accent" aria-hidden="true"></i><div><span class="head-part">CONTROL · 변경·사고·인계</span><h1>문제가 생기면 즉시 멈추고 담당자가 바뀌면 인계합니다.</h1><p>기능을 바꾸면 반영 전에 다시 시험합니다. 데이터 구분·통신·저장 방식이 달라지면 체크리스트·보안검증과 재승인이 필요합니다</p></div></header>
+  <div class="body"><div class="operate-three" data-step="">
+      <div class="operate-panel"><span>CHANGE · 변경</span><h2>마이너와 메이저를 구분합니다</h2><p>개발·GitLab 커밋·자체 시험·보완을 반복하고 반영 전 제3자 시험을 거칩니다. 마이너 변경은 변경 부분을 검사하고, 메이저 변경은 재검증·재승인을 거칩니다.</p><ul><li>데이터 등급 변경</li><li>통신 추가·변경</li><li>저장 위치·방식 변경 → 재검증·재승인</li></ul></div>
+      <div class="operate-panel incident"><span>INCIDENT · 사고</span><h2>인지하는 즉시 멈춥니다</h2><p>도구가 고장 나면 기존 방식으로 업무를 처리합니다. 보안사고라면 사용과 배포를 멈추고 신고합니다.</p><ul><li>중단·공지·신고 기록</li><li>원인 조치와 재개 결정</li><li>신고와 대응 자체를 문책 사유로 삼지 않도록 함</li></ul></div>
+      <div class="operate-panel succession"><span>SUCCESSION · 인계</span><h2>도구도 업무처럼 인계합니다</h2><p>담당자가 이동하면 후임을 정합니다. 후임이 없으면 관리할 수 없는 상태라고 기록하고 사용자에게 알립니다.</p><ul><li>유예 기간 안에 승계 담당 지정</li><li>미지정 시 종료 공지</li><li>기관 외 배포분도 같은 채널로 공지</li></ul></div>
+    </div><div class="guide-ref">회람본 3.2 변경·사고·인계</div></div>
+  <div class="anchor">사용 자료, 연결 대상, 저장 방식이 바뀌면 다시 검증하고 필요한 승인을 받습니다.</div>
+  
+  <footer class="footer"><span>행정기관 AI 직접개발 가이드북 · 메시지와 운영</span><span class="footer-source">회람본 3.2 변경·사고·인계</span><b data-page-number="">30 / 38</b></footer>
+  <aside class="speaker-note">[약 1분] 운영 중에는 세 가지를 관리합니다. 변경은 데이터 구분이나 통신, 저장 방식이 달라지는지에 따라 마이너와 메이저로 나눕니다. 메이저 변경은 체크리스트를 다시 작성하고 보안검증과 소관부서장 승인을 다시 받습니다. 사고를 알면 즉시 사용을 멈추고, 보안사고는 담당부서에 신고합니다. 담당자가 이동할 때는 업무처럼 도구를 인계합니다. 후임을 정할 수 없으면 관리대장에 관리불가로 표시하고 사용자에게 알린 뒤, 유예 기간 안에 승계가 안 되면 종료합니다.</aside>
+</section>
+
+<section class="slide regular dark guide-slide role-scenario-slide long-head" data-role="검토" data-layout="evidence-matrix" data-purpose="개발 담당자와 운영 담당자의 소속 및 겸임 여부에 따른 추가 운영 시나리오를 제안한다">
+  <div class="topline"><span>행정기관 AI 직접개발 가이드북</span><span>PART 2 · HOW · 15 MIN</span></div>
+  <header class="head"><i class="head-accent" aria-hidden="true"></i><div><span class="head-part">NEXT REVISION · 역할 조합별 보강 과제</span><h1>개발 담당자와 운영 담당자의 관계에 따라<br>인계·유지보수·책임 시나리오가 달라집니다.</h1><p>회람본은 소관부서장과 운영 담당자의 기본 역할을 정합니다. 개발자 변경·기관 간 설치·업데이트 책임은 향후 고려할 사항입니다</p></div></header>
+  <div class="body"><div class="role-scenario-matrix" data-step="">
+      <div class="role-scenario-head"><span>관계</span><span>구조</span><span>현재 원칙으로 설명되는 부분</span><span>향후 고려할 사항 · 원문 미확정</span></div>
+      <div class="role-scenario-row"><b>같은 사람<br>같은 부서</b><span>개발자 = 운영 담당자</span><p>직접수행직원이 개발·운영할 수 있고, 소관부서가 운영 책임을 집니다.</p><p><strong>향후 고려 · 겸임자가 이동할 때</strong><br>코드·설정과 운영 기록을 인계할 후임을 정할 필요</p></div>
+      <div class="role-scenario-row"><b>다른 사람<br>같은 부서</b><span>개발 담당 ≠ 운영 담당</span><p>운영 담당자가 바뀌어도 부서가 도구를 계속 관리한다는 원칙을 적용할 수 있습니다.</p><p><strong>향후 고려 · 담당자가 각각 이동할 때</strong><br>개발·운영 담당의 인계 범위를 나눌 필요</p></div>
+      <div class="role-scenario-row"><b>다른 부서<br>같은 기관</b><span>개발부서 ≠ 소관·운영부서</span><p>업무 담당 부서장이 사용할지 결정하고 운영을 맡는다는 원칙은 적혀 있습니다.</p><p><strong>향후 고려 · 소관부서 수용 뒤</strong><br>오류 수정·버전·설정의 기술지원 담당을 정할 필요</p></div>
+      <div class="role-scenario-row external"><b>다른 기관</b><span>A기관 개발·배포<br>B기관 사용·운영</span><p>처음 배포한 기관은 배포를 책임지고, 사용하는 기관은 중단에 대비하도록 되어 있습니다.</p><p><strong>향후 고려 · 기관 간 제공 뒤</strong><br>설치·업데이트·개발자 이탈 때의 연락과 지원 범위를 정할 필요</p></div>
+      <div class="role-scenario-rule"><b>향후 고려 · 관리대장 보강 제안</b><span>개발·유지보수 담당</span><span>운영 담당</span><span>API 키 관리 담당</span><span>각 역할의 후임·종료 조건</span></div>
+    </div><div class="guide-ref">회람본 §1.4·3.2 / 향후 §5.2</div></div>
+  <div class="anchor">회람본은 소관부서의 운영 책임을 정합니다. 개발·기술 지원 및 기관 간 승계의 세부 기준은 향후 고려할 사항입니다.</div>
+  
+  <footer class="footer"><span>행정기관 AI 직접개발 가이드북 · 메시지와 운영</span><span class="footer-source">회람본 §1.4·3.2 / 향후 §5.2</span><b data-page-number="">31 / 38</b></footer>
+  <aside class="speaker-note">[약 1분] 이 장은 확정된 원칙과 향후 고려할 사항을 나눠 설명합니다. 같은 기관의 다른 부서가 만들었다면 소관부서장이 수용·승인·운영을 맡고, 시험·보안검증 수행자는 두 부서가 협의하며 운영계획서는 운영 담당자가 씁니다. 개발과 운영을 한 사람이 겸해도 소관부서 책임은 같습니다. 그러나 개발자가 이동할 때의 기술 승계, 기관 간 설치·업데이트·API 키의 담당은 확정돼 있지 않습니다. 표의 오른쪽은 의무사항이 아니라 향후 고려할 사항입니다.</aside>
+</section>
+
+<section class="slide regular dark guide-slide other-tools-slide long-head" data-role="사례" data-layout="process-river" data-purpose="A기관의 공식 배포본을 B기관이 사용하는 절차와 기술 공백을 설명한다">
+  <div class="topline"><span>행정기관 AI 직접개발 가이드북</span><span>PART 2 · HOW · 15 MIN</span></div>
+  <header class="head"><i class="head-accent" aria-hidden="true"></i><div><span class="head-part">CASE 1 · 실행 가능한 프로그램을 공식 배포받는 경우</span><h1>A기관이 검증한 배포본을 제공하고,<br>B기관은 한계를 확인한 뒤 그대로 사용합니다.</h1><p>회람본 3.2의 기관 외 활용(2차) 절차입니다. 배포 채널과 설치·기술지원 방식은 아직 구체화할 사항입니다</p></div></header>
+  <div class="body"><div class="official-distribution" data-step="">
+      <div class="official-flow">
+        <div class="official-step"><span><br>01 · A기관 내부</span><h3>A기관 내부에서 먼저 사용</h3><p>체크리스트·제3자 시험·보안검증·운영계획과 부서장 승인을 먼저 갖춥니다.</p><div><br></div><p></p></div>
+        <i class="official-arrow">→</i>
+        <div class="official-step"><span><br>02 · A주무관</span><h3>기관 외 운영계획서</h3><p>내부 활용 실적과 배포 대상·방법·범위·중단 계획을 작성합니다.</p><div><br></div><p></p></div>
+        <i class="official-arrow">→</i>
+        <div class="official-step"><span><br>03 · A기관</span><h3>결재·통보·확인</h3><p>A부서장 결재와 CAIO 통보 후, 공통업무는 제도 소관기관 의견을 조회합니다.</p></div>
+        <i class="official-arrow">→</i>
+        <div class="official-step"><span><br>04 · 실험실</span><h3>배포기관 확인</h3><p>실험실이 내용을 확인하고 배포기관을 지정합니다. 실제 기관 외 배포 기능과 채널은 구축 예정입니다.</p></div>
+        <i class="official-arrow">→</i>
+        <div class="official-step final"><span><br>05 · B기관 사용자</span><h3>고지에 동의해 사용</h3><p>기술 지원과 안정성이 보장되지 않고 중단될 수 있음을 확인한 뒤, 수작업 등 대체 방법을 마련합니다.</p></div>
+      </div>
+      <div class="official-detail-grid">
+        <div class="official-detail"><span>배포 때 함께 가야 할 근거</span><p><b>시험 결과·보안검증 결과·사용 설명서</b>는 의견을 요청할 때 참고자료로 보냅니다. 소스·프롬프트는 GitLab 커밋으로 관리합니다.</p></div>
+        <div class="official-detail"><span>책임의 위치</span><p><b>최초 배포기관이 배포 도구의 책임을 집니다.</b> B기관의 별도 승인과 네 서류 재작성은 이 절차에 명시돼 있지 않습니다.</p></div>
+        <div class="official-detail gap"><span>원문에 남은 기술 공백</span><p><b>향후 고려 · 설치, API 키 발급·보관, 의존성·PC 호환 문제의 지원 주체는 정해져 있지 않습니다.</b></p></div>
+      </div>
+    </div><div class="guide-ref">회람본 §3.2·부록 1·2 / 향후 §5.2</div></div>
+  <div class="anchor">기관 외 배포 원칙은 회람본에 있지만 채널 구현과 개작 책임은 향후 고려할 사항입니다.</div>
+  
+  <footer class="footer"><span>행정기관 AI 직접개발 가이드북 · 메시지와 운영</span><span class="footer-source">회람본 §3.2·부록 1·2 / 향후 §5.2</span><b data-page-number="">32 / 38</b></footer>
+  <aside class="speaker-note">[약 1분] 회람본 3.2에는 기관 외 활용 절차가 있습니다. 기관 내 임시활용 성과, 기관외 운영계획서, 소관부서장 결재와 CAIO 통보가 먼저입니다. 공통업무라면 제도 소관기관의 의견 조회가 더해집니다. AI 실험실의 내용 확인과 배포기관 지정도 적혀 있지만, 실제 배포 채널은 부록 1에서 구축 예정으로 분류합니다. 다른 기관의 사용자는 지원·안정성 비보장과 중단 가능성을 확인하고 대체 수단을 마련합니다. 최초 배포기관이 배포 도구의 책임을 지는 것이 원칙입니다. 실행파일 제공 방식, 설치 담당, API 키 관리는 원문에 없으므로 향후 고려할 사항입니다.</aside>
+</section>
+
+<section class="slide regular dark guide-slide receive-code-slide long-head" data-role="과정" data-layout="action-roadmap" data-purpose="B기관이 공유 소스를 개작할 때 새 실험부터 승인까지의 역할을 설명한다">
+  <div class="topline"><span>행정기관 AI 직접개발 가이드북</span><span>PART 2 · HOW · 15 MIN</span></div>
+  <header class="head"><i class="head-accent" aria-hidden="true"></i><div><span class="head-part">CASE 2 · GitLab 소스를 B기관 환경에 맞게 고치는 경우</span><h1>B기관이 소스를 수정하면,<br>A기관의 승인이 아니라 B기관의 새 실험으로 시작합니다.</h1><p>부록 10에는 “받은 기관이 실험부터 새로 시작”이라는 구두 설명이 있습니다. 개작과 기술지원의 세부 책임은 향후 고려할 사항입니다</p></div></header>
+  <div class="body"><div class="source-fork" data-step="">
+  <div class="fork-confirmed"><span>회람본에서 확인되는 내용</span><h2>코드와 프롬프트는 GitLab에 남깁니다</h2><p>3.1은 만든 도구의 코드와 프롬프트를 GitLab에 커밋하도록 합니다. 부록 10 검토표에는 “소스 공유는 받은 기관에서 실험부터 새로 시작”이라는 구두 설명이 기록돼 있습니다.</p><p>B기관이 코드를 고쳐 새 도구를 만든다면, 실험계획·샘플 시험과 실제 업무 사용 전의 검증·승인 원칙을 적용해 설명할 수 있습니다.</p></div>
+  <div class="fork-open"><span>향후 고려할 사항 · 확정 절차 아님</span><h2>원본과 수정본을 어떻게 관리할까?</h2><p>5.2는 기관 외 배포 채널과 개작 시 책임을 앞으로 마련할 세부 절차로 둡니다. GitLab 복제 방식, 원본·수정본 연결, 업데이트 통지와 기술지원은 정해지지 않았습니다.</p><p>설치 담당, API 키 관리, B기관의 실제 제출·결재 경로도 여기서 확정되지 않았습니다.</p></div>
+  <div class="fork-rule"><p>B기관의 새 실험은 <strong>회람본을 적용한 설명</strong>입니다. 소스 개작의 세부 운영 기준은 향후 고려할 사항입니다.</p></div>
+</div><div class="guide-ref">회람본 §3.1·3.2·부록 10 / 향후 §5.2</div></div>
+  <div class="anchor">B기관의 구체 절차는 원문 원칙을 적용한 설명이며, 개작 책임은 향후 고려할 사항입니다.</div>
+  
+  <footer class="footer"><span>행정기관 AI 직접개발 가이드북 · 메시지와 운영</span><span class="footer-source">회람본 §3.1·3.2·부록 10 / 향후 §5.2</span><b data-page-number="">33 / 38</b></footer>
+  <aside class="speaker-note">[약 1분] 이 장은 확정된 기관 간 포크 운영 매뉴얼이 아닙니다. 부록 10 검토표에는 소스를 받은 기관이 실험부터 새로 시작한다는 구두 설명이 있습니다. 본문 3.1·3.2를 적용하면 B기관도 실험계획과 샘플 시험, 실제 업무 사용 전의 검증·승인 요건을 검토해야 한다고 설명할 수 있습니다. 다만 5.2는 개작 시 책임을 향후 정할 과제로 둡니다. GitLab 원본과 수정본 연결, 설치·업데이트·API 키·기술지원 담당은 원문에 확정되지 않았습니다.</aside>
+</section>
+
+<section class="slide regular dark guide-slide formal-use-slide long-head" data-role="운영요약" data-layout="guide" data-purpose="가이드북의 실제 운영 구조를 설명한다">
+  <div class="topline"><span>행정기관 AI 직접개발 가이드북</span><span>PART 2 · HOW · 15 MIN</span></div>
+  <header class="head"><i class="head-accent" aria-hidden="true"></i><div><span class="head-part">STAGE 3 · 본격활용</span><h1>실험으로 확인한 수요와 효과를 확인하고 정보화사업으로 넘길 수 있습니다.</h1><p>오래 쓸 도구는 정보화사업으로 옮깁니다. 유지관리형은 소관부서장이 CAIO와 협의하고 보안·중복·인계 요건을 확인합니다</p></div></header>
+  <div class="body"><div class="plain-formal" data-step="">
+   <section><small>방법 1 · 지금 도구를 계속 쓴다면</small><h2>기존 유지관리 사업에 넣습니다</h2><p>A부서가 쓰던 도구를 크게 바꾸지 않고, 이미 있는 유지관리 사업이나 여러 소규모 도구를 묶은 사업에서 관리합니다.</p><b>이관 시 보안검증, 유사·중복 도구 검토, 소스코드·재현 프롬프트·매뉴얼 등의 인계를 확인합니다.</b></section>
+   <section><small>방법 2 · 큰 기능이 더 필요하다면</small><h2>새 정보화사업으로 만듭니다</h2><p>부서 밖의 많은 사람이 쓰거나 업무시스템과 자동으로 연결해야 한다면, 실험 결과를 근거로 새 사업을 추진합니다.</p><b>계약 체결 전까지 임시활용 기준으로 운영합니다. 원문상 단계 전환일은 계약 체결일입니다.</b></section>
+   <div><strong>별도 경로 · AI 공통기반 빌더</strong>는 기반 자체가 정보화사업이므로, 가이드북의 약식 요건을 거쳐 실험 후 본격활용으로 바로 갈 수 있습니다.</div>
+ </div><div class="guide-ref">회람본 3.3·4.4</div></div>
+  <div class="anchor">본격활용은 ‘계속 쓸 도구의 유지관리·문의·장애 대응을 누가 맡는가’를 정하는 단계입니다.</div>
+  <footer class="footer"><span>행정기관 AI 직접개발 가이드북 · 메시지와 운영</span><span class="footer-source">회람본 3.3·4.4</span><b data-page-number="">34 / 38</b></footer>
+  <aside class="speaker-note">[약 1분] A주무관의 주간회의 취합 도구가 오래 필요하다면 임시활용 상태에만 둘 수는 없습니다. 크게 고칠 필요가 없으면 기존 유지관리 사업이나 공통 유지관리 사업에 넣고, 보안 상태와 중복 도구를 확인한 뒤 코드와 운영 자료를 인계합니다. 많은 사람이 쓰거나 업무시스템에 자동 연결하는 큰 기능이 필요하면 실험 결과를 근거로 새 정보화사업을 추진합니다. 계약 전까지는 임시활용 기준으로 운영하고 계약이 이뤄지면 본격활용으로 바뀝니다. AI 공통기반 빌더에서 만든 도구는 기반이 이미 정보화사업이므로 실험 후 제3자 시험, 운영계획, 소관부서장 승인이라는 약식 요건으로 본격활용에 갈 수 있습니다.</aside>
+</section>
+
+<section class="slide regular dark guide-slide records-slide long-head" data-role="운영요약" data-layout="guide" data-purpose="가이드북의 실제 운영 구조를 설명한다">
+  <div class="topline"><span>행정기관 AI 직접개발 가이드북</span><span>PART 2 · HOW · 15 MIN</span></div>
+  <header class="head"><i class="head-accent" aria-hidden="true"></i><div><span class="head-part">RECORDS · 무엇을 어디에 남기는가</span><h1>GitLab·관리대장·서식에는 서로 다른 기록을 남깁니다.</h1><p>회람본 3.1·3.2의 작성 순서입니다. 운영 담당과 시험·보안검증 수행자는 소속·소관부서 관계에 따라 정합니다</p></div></header>
+  <div class="body"><div class="plain-flow" data-step="">
+   <div class="plain-flow-head"><span>순서</span><span>누가</span><span>무엇을 남기나</span><span>언제, 왜 쓰나</span></div>
+   <div class="plain-flow-row"><i>01 · 시작</i><b>A주무관</b><strong>실험계획서</strong><span>해결할 문제와 완료 기준을 적고 소속부서장에게 시작을 알립니다.</span></div>
+   <div class="plain-flow-row"><i>02 · 개발</i><b>A주무관</b><strong>GitLab의 코드·프롬프트</strong><span>샘플로 만들고 시험한 내용과 수정 이력을 남깁니다.</span></div>
+   <div class="plain-flow-row"><i>03 · 사용 요청</i><b>A주무관</b><strong>PoC 보고서·활용 체크리스트</strong><span>효과와 한계, 사용할 자료·실행 위치 등을 A부서장에게 설명합니다.</span></div>
+   <div class="plain-flow-row"><i>04 · 결정 후</i><b>제3자 시험자·협의한 검증 수행자·운영 담당</b><strong>시험결과·보안검증·운영계획</strong><span>A부서가 수용한 뒤 시험·검증 수행자를 협의합니다. 운영계획서는 운영 담당이 쓰고, 업무망 반입 시 보안 담당이 결과서를 확인합니다.</span></div>
+   <div class="plain-flow-row"><i>05 · 사용 중</i><b>A부서 운영 담당</b><strong>오류·변경·사용 실적</strong><span>부서장의 최종 사용 승인을 받은 다음 실제 자료를 처리하며 남깁니다.</span></div>
+ </div><div class="guide-ref">회람본 3.1·3.2·부록 2·5</div></div>
+  <div class="anchor">서류를 한꺼번에 쓰지 않습니다. 도구를 만들고, 사용을 요청하고, 승인받은 뒤 순서대로 남깁니다.</div>
+  <footer class="footer"><span>행정기관 AI 직접개발 가이드북 · 메시지와 운영</span><span class="footer-source">회람본 3.1·3.2·부록 2·5</span><b data-page-number="">35 / 38</b></footer>
+  <aside class="speaker-note">[약 1분] A주무관은 설명용 가상 사례입니다. 실험계획과 GitLab 커밋, PoC 보고서와 체크리스트를 거쳐 소관부서장이 수용 여부를 결정합니다. 이후 제3자 시험과 보안검증을 시행하고 운영 담당이 계획을 씁니다. 만든 부서와 사용할 부서가 다르면 시험·보안검증의 수행자를 두 부서가 협의합니다. 업무망 반입 도구는 보안·개인정보보호 담당부서가 결과서를 확인합니다. 한편 부록 2의 PoC 보고서 서식 설명은 정보화사업 이관 때 작성한다고 적혀 있어, 본문 3.1의 임시활용 전환 요청과 서식 적용 범위를 향후 정리할 필요가 있습니다.</aside>
+</section>
+
+<section class="slide regular dark guide-slide outcomes-slide long-head" data-role="운영요약" data-layout="guide" data-purpose="가이드북의 실제 운영 구조를 설명한다">
+  <div class="topline"><span>행정기관 AI 직접개발 가이드북</span><span>PART 2 · HOW · 15 MIN</span></div>
+  <header class="head"><i class="head-accent" aria-hidden="true"></i><div><span class="head-part">OUTCOME · 성과와 책임</span><h1>평소 남긴 시험·승인 이력은 사고 대응과 소명의 근거가 됩니다.</h1><p>회람본 4장은 성과 인정과 면책 검토의 근거를 다룹니다. 기록만으로 면책이 보장되는 것은 아닙니다</p></div></header>
+  <div class="body"><div class="plain-reasons" data-step="">
+   <section><small>01 · 만든 직원</small><h2>무엇을 만들고<br>시험했는지 남습니다</h2><p>실험계획과 결과가 있으면 A주무관의 업무 개선 시도와 성과를 확인할 수 있습니다.</p><b>업무상 결과물은 기관이 관리하고, 만든 직원의 공로는 평가·포상 등에 반영하도록 합니다.</b></section>
+   <section><small>02 · 다음 담당자</small><h2>누가 어떻게<br>운영했는지 압니다</h2><p>버전, 운영계획, 오류와 수정 내역을 남기면 담당자가 바뀌어도 사용 방법을 이어받을 수 있습니다.</p><b>기록이 없으면 새 담당자가 계산 기준과 설치 방법부터 다시 찾아야 합니다.</b></section>
+   <section><small>03 · 오류 발생</small><h2>어디서 잘못됐는지<br>되짚을 수 있습니다</h2><p>시험 결과와 승인·변경 기록을 보면 어떤 조건을 확인했고 언제 사용을 시작했는지 알 수 있습니다.</p><b>기록은 면책 검토 때 경위를 설명하는 근거일 수 있지만 면책을 보장하지는 않습니다.</b></section>
+ </div><div class="guide-ref">회람본 1.5·4.1~4.3</div></div>
+  <div class="anchor">기록의 목적은 성과를 확인하고, 다음 담당자가 이어받고, 오류가 났을 때 경위를 찾는 것입니다.</div>
+  <footer class="footer"><span>행정기관 AI 직접개발 가이드북 · 메시지와 운영</span><span class="footer-source">회람본 1.5·4.1~4.3</span><b data-page-number="">36 / 38</b></footer>
+  <aside class="speaker-note">[약 1분] 왜 이렇게 기록할까요? 첫째, 도구를 만든 A주무관이 어떤 문제를 해결하고 무엇을 시험했는지 남아야 공로를 확인할 수 있습니다. 결과물은 기관의 업무상저작물로 관리하되 직원의 기여도는 따로 인정합니다. 둘째, 운영계획과 변경 기록이 있어야 담당자가 바뀌어도 계속 사용할 수 있습니다. 셋째, 오류가 나면 어떤 시험을 했고 누가 언제 사용을 승인했는지 되짚을 수 있습니다. 기록은 성과와 사고 경위를 설명하는 자료이지, 기록만으로 면책을 보장하는 장치는 아닙니다.</aside>
+</section>
+
+<section class="slide regular dark guide-slide journey-slide long-head" data-role="운영요약" data-layout="guide" data-purpose="가이드북의 실제 운영 구조를 설명한다">
+  <div class="topline"><span>행정기관 AI 직접개발 가이드북</span><span>PART 2 · HOW · 15 MIN</span></div>
+  <header class="head"><i class="head-accent" aria-hidden="true"></i><div><span class="head-part">EXAMPLE · 한 도구의 전체 여정</span><h1>A주무관이 만들고 A부서가 쓰기까지, 누가 무엇을 승인하나?</h1><p>설명용 가정: A주무관의 실험 기록과 A부서의 수용·승인을 구분해 회람본 3.1·3.2의 순서에 대입했습니다</p></div></header>
+  <div class="body"><div class="journey-case" data-step="">
+      <div class="journey-step"><span class="journey-badge">승인 없음</span><i>01 · A주무관</i><h3>실험계획 등록·보고</h3><p>계정을 신청하고 문제·방법·효과·완료 기준을 적습니다. 시작은 부서장에게 보고합니다.</p></div>
+      <div class="journey-step"><span class="journey-badge">GitLab</span><i>02 · 개발 이력</i><h3>샘플로 만들고 커밋</h3><p>코드·프롬프트·수정 이력을 남기며 실제 회의자료는 아직 넣지 않습니다.</p></div>
+      <div class="journey-step"><span class="journey-badge">전환 요청</span><i>03 · A주무관</i><h3>PoC + 체크리스트</h3><p>효과·한계와 데이터·구동·통신·저장을 적어 A부서장에게 냅니다.</p></div>
+      <div class="journey-step"><span class="journey-badge">수용 결정</span><i>04 · A부서장</i><h3>주간회의 업무에 쓸지 결정</h3><p>쓰기로 했다면 운영 담당자를 정합니다. 실제 자료는 시험·보안검증과 최종 승인 후에 씁니다.</p></div>
+      <div class="journey-step"><span class="journey-badge">근거 작성</span><i>05 · 동료·검증 수행자·운영 담당</i><h3>시험·보안·운영계획</h3><p>제3자 시험결과서, 보안검증결과서, 활용 운영계획서를 각각 마련합니다.</p></div>
+      <div class="journey-step"><span class="journey-badge">사용 승인</span><i>06 · A부서장</i><h3>네 서류 확인 후 승인</h3><p>체크리스트까지 네 서류를 확인합니다. 그 뒤 실제 자료를 쓰고 운영 기록을 남깁니다.</p></div>
+    </div><div class="guide-ref">설명용 가정 · 회람본 3.1·3.2</div></div>
+  <div class="anchor">실험계획 → GitLab 기록 → 사용 요청 → 부서의 결정 → 시험·검증 → 사용 승인</div>
+  
+  <footer class="footer"><span>행정기관 AI 직접개발 가이드북 · 메시지와 운영</span><span class="footer-source">설명용 가정 · 회람본 3.1·3.2</span><b data-page-number="">37 / 38</b></footer>
+  <aside class="speaker-note">[약 1분 30초] A주무관 사례를 한 번에 정리하겠습니다. 첫째 실험계획을 등록하고 부서장에게 알립니다. 둘째 샘플로 개발하고 공공 GitLab에 과제 문서와 코드·프롬프트·시험 결과를 남깁니다. 셋째 PoC 보고서와 활용 대상 체크리스트로 부서장에게 전환을 요청합니다. 넷째 부서장이 업무로 수용하고 운영 담당을 지정합니다. 다섯째 제3자 시험, 보안검증, 운영계획을 갖춰 소관부서장의 사용 승인을 받습니다. 그 뒤 실제 자료를 처리하고 운영 이력을 남깁니다. </aside>
+</section>
+
+<section class="slide finale essence-finale guide-final active" data-role="회수" data-layout="recap-map" data-purpose="실제 업무 사용의 검증과 운영 책임을 묻는다">
+    <div class="final-grid"></div><div class="final-glow"></div>
+    <div class="final-kicker">THE QUESTION THAT REMAINS</div>
+    <div class="final-copy revealed" data-step=""><h1><div><br></div>만드는 것이 쉬워진 지금,<br><em>검증하고 활용하는 일이 더 중요해졌습니다.</em></h1></div>
+    <div class="final-principles" data-step=""><div><b>직원의 실험</b></div><i></i><div><b>부서의 사용 결정</b></div><i></i><div><b>지속 운영의 주체</b></div></div>
+    <div class="final-answer" data-step=""><strong>GitLab 공개</strong>만으로 실제 업무 사용이 승인되지는 않습니다.</div>
+    
+  <footer class="footer"><span>행정기관 AI 직접개발 가이드북 · 메시지와 운영</span><span class="footer-source">발표자 결론 · 회람본 1.2·4.4 취지</span><b data-page-number="">38 / 38</b></footer>
+    <aside class="speaker-note">[약 1분] A주무관은 샘플로 도구를 만들고 GitLab에 개발 경위를 남깁니다. 그러나 주간회의의 실제 자료를 처리하려면 소관부서가 필요성과 범위를 판단하고, 제3자 시험·보안검증·운영계획을 확인해 사용을 승인해야 합니다. 여러 사람이 계속 쓴다면 담당과 유지관리 체계가 필요합니다. 만드는 것이 쉬워진 지금, 이제는 더 많이 만드는 것보다 제대로 검증하고 실제 업무에 활용할 수 있게 만드는 일이 중요해졌습니다.</aside>
+  </section>
+</main>
+<div class="controls"><button data-action="prev">◀</button><button data-action="next">▶</button><span class="status">38 / 38</span><button data-action="present">발표 P</button><button data-action="notes">노트 N</button><button data-action="edit">편집 E</button><button data-action="save">HTML 저장</button><button data-action="print">PDF</button></div>
+<div class="note-panel">[약 1분] A주무관은 샘플로 도구를 만들고 GitLab에 개발 경위를 남깁니다. 그러나 주간회의의 실제 자료를 처리하려면 소관부서가 필요성과 범위를 판단하고, 제3자 시험·보안검증·운영계획을 확인해 사용을 승인해야 합니다. 여러 사람이 계속 쓴다면 담당과 유지관리 체계가 필요합니다. 만드는 것이 쉬워진 지금, 이제는 더 많이 만드는 것보다 제대로 검증하고 실제 업무에 활용할 수 있게 만드는 일이 중요해졌습니다.</div><script>
+const slides=[...document.querySelectorAll('.slide')];
+const status=document.querySelector('.status');
+const notePanel=document.querySelector('.note-panel');
+let current=0;
+let editing=false;
+
+function syncPages(){
+  slides.forEach((slide,index)=>slide.querySelectorAll('[data-page-number]').forEach(node=>node.textContent=String(index+1).padStart(2,'0')+' / '+String(slides.length).padStart(2,'0')));
+}
+function fit(){
+  const scale=Math.min(innerWidth/1280,innerHeight/720);
+  document.documentElement.style.setProperty('--present-scale',String(scale));
+  const review=Math.min(1,(innerWidth-36)/1280);
+  document.documentElement.style.setProperty('--review-scale',String(review));
+}
+function revealState(slide,all=false){
+  const items=[...slide.querySelectorAll('[data-step]')];
+  items.forEach((item,index)=>item.classList.toggle('revealed',all||index===0));
+}
+function show(index){
+  current=Math.max(0,Math.min(slides.length-1,index));
+  slides.forEach((slide,i)=>slide.classList.toggle('active',i===current));
+  revealState(slides[current],false);
+  status.textContent=(current+1)+' / '+slides.length;
+  const note=slides[current].querySelector('.speaker-note');
+  notePanel.textContent=note?note.textContent:'';
+}
+function revealNext(){
+  const hidden=[...slides[current].querySelectorAll('[data-step]:not(.revealed)')];
+  if(hidden.length){hidden[0].classList.add('revealed');return true}
+  return false;
+}
+function present(){document.body.classList.add('presenting');fit();show(current)}
+function exitPresent(){document.body.classList.remove('presenting','single');slides.forEach(s=>s.classList.add('active'))}
+function toggleEdit(){
+  editing=!editing;document.body.classList.toggle('editing',editing);
+  document.querySelectorAll('.slide h1,.slide h2,.slide h3,.slide p,.slide li,.slide blockquote,.slide .anchor,.slide strong,.slide small,.slide span,.slide b').forEach(node=>{
+    if(!node.closest('.topline,.footer')&&!node.hasAttribute('data-page-number'))node.contentEditable=editing?'true':'false';
+  });
+}
+function saveHtml(){
+  syncPages();const clone=document.documentElement.cloneNode(true);
+  clone.querySelector('body').classList.remove('presenting','single','editing');
+  clone.querySelectorAll('[contenteditable]').forEach(n=>n.removeAttribute('contenteditable'));
+  const blob=new Blob(['<!doctype html>\n'+clone.outerHTML],{type:'text/html;charset=utf-8'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='행정기관_AI직접개발_가이드북_30분_메시지와_운영요약.html';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+}
+document.querySelector('[data-action="prev"]').onclick=()=>show(current-1);
+document.querySelector('[data-action="next"]').onclick=()=>revealNext()||show(current+1);
+document.querySelector('[data-action="present"]').onclick=present;
+document.querySelector('[data-action="edit"]').onclick=toggleEdit;
+document.querySelector('[data-action="notes"]').onclick=()=>notePanel.classList.toggle('show');
+document.querySelector('[data-action="save"]').onclick=saveHtml;
+document.querySelector('[data-action="print"]').onclick=()=>print();
+addEventListener('resize',fit);
+addEventListener('keydown',event=>{
+  if(editing&&['ArrowLeft','ArrowRight',' '].includes(event.key))return;
+  if(event.key==='p'||event.key==='P')present();
+  else if(event.key==='e'||event.key==='E')toggleEdit();
+  else if(event.key==='n'||event.key==='N')notePanel.classList.toggle('show');
+  else if(event.key==='ArrowRight'||event.key===' '){event.preventDefault();revealNext()||show(current+1)}
+  else if(event.key==='ArrowLeft')show(current-1);
+  else if(event.key==='Home')show(0);
+  else if(event.key==='End')show(slides.length-1);
+  else if(event.key==='Escape'){notePanel.classList.remove('show');exitPresent()}
+});
+syncPages();fit();slides.forEach(s=>s.classList.add('active'));
+const requested=new URLSearchParams(location.search).get('slide');
+if(requested){document.body.classList.add('single');show(Number(requested)-1)}else{status.textContent='1 / '+slides.length}
+window.__deck={slides,show,fit,revealNext,syncPages};
+</script><script>/* kg-preview: #<heading> \uc704\uce58\ub85c \uc774\ub3d9 */
+(function(){function norm(t){return (t||'').replace(/\s+/g,'').toLowerCase()}
+function go(){var h=decodeURIComponent(location.hash.slice(1));if(!h)return;var k=norm(h).slice(0,24);if(!k)return;
+var best=null,bl=1e9,els=document.body.querySelectorAll('h1,h2,h3,h4,h5,p,div,span,li,td,text,tspan,section,article');
+for(var i=0;i<els.length;i++){var e=els[i],t=norm(e.textContent);if(t.length<bl&&t.indexOf(k)>-1){best=e;bl=t.length}}
+if(!best)return;var box=best.closest('section,[class*=slide],[class*=page],article')||best;
+box.scrollIntoView({block:'start',inline:'nearest'});window.scrollTo(0,window.scrollY);box.style.outline='3px solid #c0504d';box.style.outlineOffset='4px';
+setTimeout(function(){box.style.outline=''},2600)}
+window.addEventListener('load',function(){setTimeout(go,400)});window.addEventListener('hashchange',go)})();</script></body></html>

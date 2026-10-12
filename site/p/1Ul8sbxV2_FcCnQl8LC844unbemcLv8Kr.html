@@ -1,0 +1,361 @@
+<!doctype html><html lang="ko"><head><meta name="robots" content="noindex, nofollow"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>8차시 · 경영실적 분석</title><style>@font-face{font-family:Pretendard;src:url('assets/fonts/Pretendard-Regular.ttf') format('truetype'),url('../assets/fonts/Pretendard-Regular.ttf') format('truetype');font-weight:400;font-style:normal}
+@font-face{font-family:Pretendard;src:url('assets/fonts/Pretendard-SemiBold.ttf') format('truetype'),url('../assets/fonts/Pretendard-SemiBold.ttf') format('truetype');font-weight:600;font-style:normal}
+@font-face{font-family:Pretendard;src:url('assets/fonts/Pretendard-Bold.ttf') format('truetype'),url('../assets/fonts/Pretendard-Bold.ttf') format('truetype');font-weight:700;font-style:normal}
+@font-face{font-family:Pretendard;src:url('assets/fonts/Pretendard-ExtraBold.ttf') format('truetype'),url('../assets/fonts/Pretendard-ExtraBold.ttf') format('truetype');font-weight:800 900;font-style:normal}
+
+@page{size:1280px 720px;margin:0}
+:root{--green:#0b3d2e;--green2:#176b4d;--accent:#00a56a;--mint:#e2f1ea;--mint2:#f2f8f5;--ink:#1c2521;--gray:#55615b;--gray2:#88928d;--line:#d5ddd9;--pale:#f6f8f7;--amber:#c7771f;--red:#b5453a;--blue:#2c6e9b;--bluep:#e8f1f7;--amberp:#faf0e4;--redp:#f7eae8;--grayp:#f1f3f2}
+*{box-sizing:border-box}
+html,body{margin:0;background:#d9dfdc;font-family:Pretendard,sans-serif;color:var(--ink);-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.deck{display:flex;flex-direction:column;align-items:center;gap:24px;padding:24px 0 48px}
+.slide{position:relative;width:1280px;height:720px;background:#fff;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,.16)}
+.tool{position:fixed;z-index:20;right:16px;top:12px;display:flex;gap:6px}
+.tool button{border:1px solid #cad5cf;background:#fff;color:var(--green);padding:7px 10px;border-radius:5px;font:700 12px Pretendard,sans-serif;cursor:pointer}
+.tool button.on{background:var(--green);color:#fff}
+@media print{.tool{display:none}html,body{background:#fff}.deck{display:block;padding:0}.slide{box-shadow:none;page-break-after:always;break-after:page}}
+
+/* 머리·바닥 */
+.head{position:absolute;left:60px;right:60px;top:32px;height:116px;border-bottom:1px solid var(--line)}
+.kicker{font-size:12.5px;font-weight:800;letter-spacing:1.2px;color:var(--green2)}
+.title{margin-top:10px;font-size:31px;line-height:1.2;letter-spacing:-1.2px;font-weight:900}
+.subtitle{margin-top:10px;font-size:15.5px;line-height:1.45;color:var(--gray)}
+.content{position:absolute;left:60px;right:60px;top:166px;bottom:62px;display:flex;flex-direction:column;gap:14px}
+.footer{position:absolute;left:60px;right:60px;bottom:16px;height:28px;border-top:1px solid var(--line);font-size:11px;color:var(--gray2);padding-top:9px}
+.footer .page{position:absolute;right:0;top:8px;color:var(--green2);font-weight:800;font-size:12px}
+
+/* 공통 요소 */
+.bar{flex:0 0 54px;border-radius:6px;background:var(--green);color:#fff;display:grid;grid-template-columns:150px 1fr;align-items:center;padding:0 22px;overflow:hidden}
+.bar b{font-size:12px;letter-spacing:.5px;color:#bde3d2}
+.bar span{font-size:16px;font-weight:700;line-height:1.35}
+.bar.light{background:var(--pale);color:var(--green);border:1px solid #e3e9e6}
+.bar.light b{color:var(--green2)}
+.badge{display:inline-block;border-radius:5px;padding:5px 12px;color:#fff;font-size:12px;font-weight:800;background:var(--green2)}
+.c-blue{--c:var(--blue);--cp:var(--bluep)}.c-mint{--c:var(--green2);--cp:var(--mint)}.c-amber{--c:var(--amber);--cp:var(--amberp)}.c-red{--c:var(--red);--cp:var(--redp)}.c-gray{--c:#6d7873;--cp:var(--grayp)}
+.row{display:flex;gap:14px;min-height:0}
+.grow{flex:1;min-height:0}
+
+/* 표지 */
+.cover .strip{position:absolute;left:0;top:0;bottom:0;width:10px;background:var(--accent)}
+.cover .left{position:absolute;left:66px;top:46px;width:720px;bottom:40px;display:flex;flex-direction:column}
+.cover .series{font-size:13px;font-weight:800;color:var(--green2);letter-spacing:.3px}
+.cover h1{margin:74px 0 0;font-size:44px;line-height:1.18;letter-spacing:-2px;font-weight:900}
+.cover h2{margin:12px 0 0;font-size:27px;line-height:1.3;letter-spacing:-1px;font-weight:800;color:var(--green2)}
+.cover .rule{width:56px;height:4px;background:var(--accent);margin:28px 0 20px}
+.cover .meta{font-size:15px;font-weight:700;color:var(--gray)}
+.cover .info{margin-top:auto;border-top:1px solid var(--line)}
+.cover .info div{display:grid;grid-template-columns:110px 1fr;border-bottom:1px solid var(--line);padding:12px 0;font-size:14.5px;line-height:1.4}
+.cover .info b{color:var(--green2);font-weight:800}
+.cover .right{position:absolute;right:0;top:0;bottom:0;width:430px;background:var(--green);color:#fff;padding:52px 44px}
+.cover .num{font-size:72px;font-weight:900;letter-spacing:-2px;line-height:1}
+.cover .num small{display:block;font-size:13px;letter-spacing:2px;color:#bde3d2;margin-top:12px;font-weight:700}
+.cover .rline{height:1px;background:rgba(255,255,255,.3);margin:30px 0 26px}
+.cover .kw{display:flex;align-items:center;gap:14px;margin-bottom:20px}
+.cover .kw i{flex:0 0 36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-style:normal;font-weight:900;font-size:15px;background:var(--c)}
+.cover .kw i.c-blue{background:#3f86b8}.cover .kw i.c-mint{background:var(--accent)}.cover .kw i.c-amber{background:#dd8a35}
+.cover .kw b{font-size:18px;font-weight:800;display:block}
+.cover .kw span{font-size:13px;color:#cfe6dc;display:block;margin-top:3px;line-height:1.35}
+.cover .who{position:absolute;left:44px;bottom:40px;font-size:13px;color:#bde3d2}
+
+/* 한눈에 보기 */
+.trio{display:grid;grid-template-columns:1fr 34px 1fr 34px 1fr;flex:0 0 238px}
+.tcard{border:1px solid var(--line);border-radius:8px;background:var(--cp);padding:18px 20px;display:flex;flex-direction:column;overflow:hidden;border-top:5px solid var(--c)}
+.tcard .lab{font-size:12px;font-weight:900;color:var(--c);letter-spacing:.5px}
+.tcard h3{margin:8px 0 10px;font-size:20px;line-height:1.3;letter-spacing:-.5px}
+.tcard ul{margin:0;padding:0;list-style:none}
+.tcard li{font-size:14px;line-height:1.35;padding:5px 0 5px 14px;position:relative;color:#2d3833}
+.tcard li:before{content:"";position:absolute;left:0;top:12px;width:6px;height:6px;border-radius:50%;background:var(--c)}
+.chips{display:flex;flex-wrap:wrap;gap:7px}
+.chip{display:inline-block;font-size:13.5px;font-weight:700;padding:6px 11px;border-radius:5px;background:#fff;border:1px solid var(--line);color:var(--ink)}
+.chip.on{background:var(--c);border-color:var(--c);color:#fff}
+.arr{display:flex;align-items:center;justify-content:center;font-size:24px;color:var(--accent);font-weight:900}
+.flowbox{flex:1;border:1px solid var(--line);border-radius:8px;background:var(--pale);padding:14px 18px;display:flex;flex-direction:column;min-height:0}
+.flowbox .fl{font-size:13px;font-weight:900;color:var(--green2);margin-bottom:10px}
+.steps{flex:1;display:flex;align-items:stretch;gap:0;min-height:0}
+.step{flex:1;background:#fff;border:1px solid var(--line);border-radius:7px;padding:12px 14px;display:flex;gap:12px;overflow:hidden}
+.step i{flex:0 0 30px;height:30px;border-radius:50%;background:var(--green2);color:#fff;font-style:normal;font-weight:900;font-size:14px;display:flex;align-items:center;justify-content:center}
+.step b{display:block;font-size:15.5px;margin-top:4px}
+.step span{display:block;font-size:13px;color:var(--gray);line-height:1.4;margin-top:5px}
+.step+.sarr{flex:0 0 26px;display:flex;align-items:center;justify-content:center;color:var(--accent);font-weight:900;font-size:18px}
+
+/* 샘플 자료 */
+.samp{display:grid;grid-template-columns:1.25fr 1fr;gap:18px;flex:1;min-height:0}
+.win{border:1px solid #c8d2cd;border-radius:8px;overflow:hidden;display:flex;flex-direction:column;background:#fff}
+.win .wt{height:40px;background:var(--green);color:#fff;display:flex;align-items:center;gap:10px;padding:0 16px;font-size:14px;font-weight:700}
+.win .wt em{font-style:normal;font-size:11px;font-weight:800;background:rgba(255,255,255,.18);padding:3px 8px;border-radius:4px}
+.win .wt .dots{display:flex;gap:5px;margin-left:auto}.win .wt .dots i{width:9px;height:9px;border-radius:50%;background:rgba(255,255,255,.35)}
+.win .wb{flex:1;padding:14px 16px;overflow:hidden;background:#fbfcfb;display:flex;flex-direction:column;gap:8px}
+.wtab{width:100%;border-collapse:collapse;table-layout:auto;font-size:12.5px}
+.wtab th{background:#e7eeea;color:var(--green);font-weight:800;padding:7px 6px;text-align:left;border:1px solid #d7e0db;white-space:nowrap;overflow:hidden}
+.wtab td{padding:6.5px 6px;border:1px solid #e1e7e4;color:#34403a;white-space:nowrap;overflow:hidden;background:#fff}
+.wtab td.miss{background:#fdf1e4}
+.sheettabs{display:flex;gap:4px;margin-top:auto}.sheettabs span{font-size:11.5px;padding:4px 9px;border:1px solid var(--line);border-radius:0 0 5px 5px;background:#fff;color:var(--gray)}.sheettabs span.on{background:var(--mint);color:var(--green);font-weight:800}
+.outline{display:flex;flex-direction:column;gap:6px}
+.osec{border-left:4px solid var(--c);background:var(--cp);border-radius:0 6px 6px 0;padding:7px 14px}
+.osec b{font-size:14.5px;display:block}
+.osec span{font-size:12.5px;color:var(--gray);line-height:1.4;display:block;margin-top:3px}
+.pages{display:flex;gap:12px;flex:1}
+.pg{flex:1;border:1px solid var(--line);border-radius:4px;background:#fff;padding:12px;display:flex;flex-direction:column;gap:6px;box-shadow:0 3px 8px rgba(0,0,0,.06);overflow:hidden}
+.pg .ph{height:36px;background:var(--green);border-radius:3px;color:#fff;font-size:12px;font-weight:800;display:flex;align-items:center;padding:0 9px}
+.pg .pl{height:6px;border-radius:3px;background:#e1e7e4}
+.pg .pt{font-size:11.5px;font-weight:800;color:var(--green)}
+.pg .pn{margin-top:auto;font-size:11px;color:var(--gray2)}
+.side{display:flex;flex-direction:column;gap:14px;min-height:0}
+.box{border:1px solid var(--line);border-radius:8px;padding:14px 18px;background:#fff;overflow:hidden}
+.box.fill{flex:1}
+.box h4{margin:0 0 8px;font-size:14px;font-weight:900;color:var(--green2)}
+.box dl{margin:0;display:grid;grid-template-columns:96px 1fr;gap:7px 10px}
+.box dt{font-size:13.5px;font-weight:800;color:var(--ink)}
+.box dd{margin:0;font-size:13.5px;color:var(--gray);line-height:1.4}
+.box ul{margin:0;padding:0;list-style:none}
+.box li{font-size:14px;line-height:1.4;padding:5px 0 5px 22px;position:relative}
+.box li:before{content:"";position:absolute;left:2px;top:9px;width:11px;height:11px;border:2px solid var(--amber);border-radius:3px}
+
+/* 기능 지도 */
+.feat{display:grid;grid-template-columns:repeat(5,1fr);grid-template-rows:1fr 1fr;gap:12px;flex:1;min-height:0}
+.ft{border:1px solid var(--line);border-radius:8px;padding:14px 15px;display:flex;flex-direction:column;overflow:hidden;border-top:5px solid var(--c);background:#fff}
+.ft.main{background:var(--mint)}.ft.opt{background:#fafbfa}
+.ft .fh{display:flex;align-items:center;justify-content:space-between;gap:6px}
+.ft .fh b{font-size:17px;letter-spacing:-.4px;line-height:1.2}
+.ft .lv{flex:0 0 auto;font-size:11px;font-weight:800;padding:3px 7px;border-radius:4px;color:#fff;background:var(--c)}
+.ft .gd{font-size:12px;color:var(--gray2);margin-top:6px;line-height:1.35;font-weight:600}
+.ft .us{font-size:14px;line-height:1.45;margin-top:10px;color:#26312c;border-top:1px dashed #cdd6d1;padding-top:10px}
+.ft.opt .us{color:var(--gray)}
+
+/* 사례 12 */
+.sampstrip{flex:0 0 38px;display:flex;align-items:center;gap:12px;background:var(--pale);border:1px solid #e3e9e6;border-radius:6px;padding:0 16px;font-size:14px;overflow:hidden}
+.sampstrip b{color:var(--green2);font-weight:900}
+.sampstrip span{color:var(--gray)}
+.cases{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:repeat(6,1fr);grid-auto-flow:column;gap:8px 18px;flex:1;min-height:0}
+.case{display:grid;grid-template-columns:34px 1fr auto;align-items:center;gap:12px;border:1px solid var(--line);border-radius:7px;padding:0 14px;background:#fff;overflow:hidden}
+.case:nth-child(4n+1),.case:nth-child(4n+2){background:#fbfcfb}
+.case i{width:30px;height:30px;border-radius:50%;background:var(--green);color:#fff;font-style:normal;font-weight:900;font-size:13px;display:flex;align-items:center;justify-content:center}
+.case b{display:block;font-size:15.5px;letter-spacing:-.3px}
+.case span{display:block;font-size:13px;color:var(--gray);margin-top:3px;line-height:1.35}
+.case .tg{display:flex;flex-direction:column;gap:4px;align-items:flex-end}
+.case .tg em{font-style:normal;font-size:11.5px;font-weight:800;padding:3px 8px;border-radius:4px;white-space:nowrap}
+.case .tg em.f{background:var(--mint);color:var(--green)}
+.case .tg em.o{background:var(--amberp);color:#9a5a12}
+
+/* 결과물 */
+.outs{display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:1fr 1fr;gap:14px;flex:1;min-height:0}
+.oc{border:1px solid var(--line);border-radius:8px;overflow:hidden;display:grid;grid-template-columns:150px 1fr;background:#fff}
+.mock{background:var(--cp);padding:14px;display:flex;align-items:center;justify-content:center;border-right:1px solid var(--line)}
+.oc .ob{padding:14px 16px;display:flex;flex-direction:column;overflow:hidden}
+.oc .ob .ty{font-size:11.5px;font-weight:900;color:var(--c);letter-spacing:.5px}
+.oc .ob b{font-size:17px;margin-top:4px;letter-spacing:-.4px}
+.oc .ob p{margin:8px 0 0;font-size:13.5px;line-height:1.45;color:#2d3833}
+.oc .ob p.ck{margin-top:auto;padding-top:8px;border-top:1px dashed #cdd6d1;color:var(--gray);font-size:13px}
+.oc .ob p.ck:before{content:"확인  ";font-weight:900;color:var(--c)}
+/* 목업 */
+.m{width:118px;background:#fff;border:1px solid #c9d3ce;border-radius:4px;box-shadow:0 3px 8px rgba(0,0,0,.08);overflow:hidden}
+.m .l{height:5px;border-radius:3px;background:#dfe6e2;margin:5px 8px}
+.m .l.s{width:55%}.m .l.t{height:8px;background:var(--c);width:60%;margin-top:9px}
+.m-x{display:grid;grid-template-columns:repeat(4,1fr)}
+.m-x span{height:15px;border-right:1px solid #e3e9e6;border-bottom:1px solid #e3e9e6}
+.m-x span.h{background:var(--c)}.m-x span.v{background:#eef3f0}
+.m-doc{height:130px;padding-top:4px}.m-pdf{height:130px}
+.m-pdf .hd{height:26px;background:var(--c)}
+.m-dash{padding:7px;height:100px;display:flex;flex-direction:column;gap:6px}
+.m-dash .k{display:flex;gap:4px}.m-dash .k span{flex:1;height:18px;border-radius:3px;background:var(--cp)}
+.m-dash .b{flex:1;display:flex;align-items:flex-end;gap:5px;border-bottom:1px solid #c9d3ce}
+.m-dash .b span{flex:1;background:var(--c);border-radius:2px 2px 0 0}
+.m-web .tb{height:12px;background:#e6ebe8;display:flex;gap:3px;align-items:center;padding-left:5px}.m-web .tb i{width:4px;height:4px;border-radius:50%;background:#aab5af}
+.m-web .hero{height:40px;background:var(--c);margin:6px;border-radius:3px}
+.m-web .cd{display:flex;gap:4px;margin:0 6px 8px}.m-web .cd span{flex:1;height:26px;background:#eef3f0;border-radius:3px}
+.m-img{height:92px;background:linear-gradient(180deg,#dcebe4 0,#dcebe4 60%,#b9d5c7 60%);position:relative}
+.m-img:before{content:"";position:absolute;left:20px;bottom:18px;width:52px;height:30px;border-radius:5px;background:#3b4a44}
+.m-img:after{content:"";position:absolute;right:18px;top:12px;width:18px;height:18px;border-radius:50%;background:var(--c)}
+.m-slide{height:72px;padding:4px}.m-slide .blk{display:flex;gap:5px;margin:4px 8px}.m-slide .blk span{flex:1;height:26px;background:var(--cp);border-radius:3px}
+.m-list{padding:6px 0}.m-list div{display:flex;align-items:center;gap:6px;margin:6px 8px}.m-list i{flex:0 0 9px;height:9px;border:2px solid var(--c);border-radius:2px}.m-list span{flex:1;height:5px;background:#dfe6e2;border-radius:3px}
+.m-mail .hd{height:18px;background:#eef3f0;border-bottom:1px solid #dfe6e2}
+
+/* 확인 관점 */
+.chk{display:grid;grid-template-columns:1.2fr 1fr;gap:18px;flex:1;min-height:0}
+.chk .cl{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:12px}
+.ck{border:1px solid var(--line);border-left:6px solid var(--c);border-radius:6px;padding:16px 18px;background:var(--cp);overflow:hidden}
+.ck i{font-style:normal;font-size:12px;font-weight:900;color:var(--c)}
+.ck b{display:block;font-size:18px;margin:6px 0 8px;letter-spacing:-.4px}
+.ck span{font-size:14px;line-height:1.5;color:#2d3833}
+.chk .cr{border:1px solid #ecd6d2;border-radius:8px;background:#fdf8f7;padding:16px 18px;display:flex;flex-direction:column;overflow:hidden}
+.chk .cr h4{margin:0 0 6px;font-size:14px;color:var(--red);font-weight:900}
+.warn{display:flex;gap:12px;padding:12px 0;border-top:1px solid #efdeda;font-size:14.5px;line-height:1.5;flex:1;align-items:center}
+.warn:first-of-type{border-top:0}
+.warn i{flex:0 0 24px;height:24px;border-radius:50%;background:var(--red);color:#fff;font-style:normal;font-weight:900;font-size:13px;display:flex;align-items:center;justify-content:center}
+
+/* 정리 */
+.sum{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;flex:1;min-height:0}
+.sc{border:1px solid var(--line);border-radius:8px;background:var(--cp);padding:18px;display:flex;flex-direction:column;overflow:hidden}
+.sc .n{align-self:flex-start;background:var(--c);color:#fff;border-radius:5px;padding:4px 10px;font-size:12px;font-weight:900}
+.sc h3{font-size:20px;margin:14px 0 10px;color:var(--c);letter-spacing:-.5px;line-height:1.3}
+.sc p{margin:0;font-size:14px;line-height:1.55;color:#2d3833}
+.sc ul{margin:auto 0 0;padding:12px 0 0;list-style:none;border-top:1px solid rgba(0,0,0,.08)}
+.sc li{font-size:13.5px;line-height:1.45;padding:3px 0 3px 12px;position:relative;color:var(--gray)}
+.sc li:before{content:"·";position:absolute;left:2px;font-weight:900;color:var(--c)}
+
+/* 차시별 도식 */
+.ov-common{flex:0 0 92px;border:1px dashed #9fc4b3;border-radius:8px;background:var(--mint2);display:grid;grid-template-columns:170px 1fr;align-items:center;padding:0 20px}
+.ov-common b{font-size:15px;color:var(--green2);font-weight:900;line-height:1.35}
+.ov3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;flex:1;min-height:0}
+.ovc{border:1px solid var(--line);border-top:5px solid var(--c);border-radius:8px;background:var(--cp);padding:16px 18px;display:flex;flex-direction:column;overflow:hidden}
+.ovc h3{margin:10px 0 6px;font-size:20px;color:var(--c);letter-spacing:-.5px}
+.ovc p{margin:0 0 10px;font-size:14px;line-height:1.5}
+.ovc dl{margin:auto 0 0;display:grid;grid-template-columns:92px 1fr;gap:7px 8px;border-top:1px solid rgba(0,0,0,.08);padding-top:10px}
+.ovc dt{font-size:12.5px;font-weight:800;color:var(--gray2)}
+.ovc dd{margin:0;font-size:13.5px;line-height:1.4;font-weight:600}
+.mx{width:100%;flex:1;border-collapse:separate;border-spacing:0;table-layout:fixed;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.mx th{background:var(--green);color:#fff;font-size:14px;padding:10px 14px;text-align:left}
+.mx td{border-top:1px solid var(--line);border-left:1px solid var(--line);padding:10px 14px;font-size:13.5px;line-height:1.45;vertical-align:middle}
+.mx td:first-child{border-left:0;background:var(--pale)}
+.mx td:first-child b{display:block;font-size:15px;color:var(--green)}
+.mx td:first-child span{display:block;color:var(--gray);font-size:13px;margin-top:4px}
+.mx td.best{background:var(--mint)}
+.mk{display:inline-flex;width:22px;height:22px;border-radius:50%;align-items:center;justify-content:center;font-size:12px;font-weight:900;margin-right:6px;vertical-align:-2px;border:2px solid var(--green2);color:var(--green2)}
+.mk.b{background:var(--green2);color:#fff}
+.legend{display:flex;gap:18px;font-size:13px;color:var(--gray);align-items:center}
+.q{display:grid;grid-template-columns:1fr 30px 130px;align-items:center;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:#fff;flex:1}
+.q .qt{padding:12px 18px;font-size:15.5px;line-height:1.45;font-weight:700}
+.q .qt span{display:block;font-size:13px;color:var(--gray);font-weight:500;margin-top:4px}
+.q .qa{height:100%;display:flex;align-items:center;justify-content:center;background:var(--c);color:#fff;font-weight:900;font-size:17px}
+.chain{display:flex;flex-direction:column;gap:0;border:1px solid var(--line);border-radius:8px;background:var(--pale);padding:14px 18px;overflow:hidden}
+.chain h4{margin:0 0 8px;font-size:14px;color:var(--green2);font-weight:900}
+.ch{display:grid;grid-template-columns:78px 1fr;gap:10px;align-items:center;padding:9px 0;border-top:1px dashed #cdd6d1;font-size:14px;line-height:1.4}
+.ch:first-of-type{border-top:0}
+.ch em{font-style:normal;text-align:center;font-size:12px;font-weight:900;color:#fff;background:var(--c);border-radius:4px;padding:5px 0}
+.wa{width:100%;flex:1;border-collapse:separate;border-spacing:0;table-layout:fixed;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.wa th{font-size:15px;padding:12px 16px;text-align:left;color:#fff}
+.wa td{border-top:1px solid var(--line);padding:11px 16px;font-size:14px;line-height:1.45;vertical-align:middle}
+.wa td:first-child{background:var(--pale);font-weight:800;color:var(--green)}
+.sym{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;flex:1;min-height:0}
+.sy{border:1px solid var(--line);border-radius:8px;background:#fff;padding:16px 18px;display:flex;flex-direction:column;overflow:hidden}
+.sy .top{display:flex;align-items:center;gap:14px}
+.sy .top i{flex:0 0 58px;height:58px;border-radius:50%;background:var(--c);color:#fff;font-style:normal;font-size:30px;font-weight:900;display:flex;align-items:center;justify-content:center}
+.sy .top b{font-size:19px;display:block}.sy .top span{font-size:13px;color:var(--gray);display:block;margin-top:3px}
+.sy p{font-size:14px;line-height:1.5;margin:12px 0}
+.dd{margin-top:auto;border:1px solid #c9d3ce;border-radius:6px;overflow:hidden;font-size:13px}
+.dd .in{background:#f4f6f5;padding:8px 10px;font-weight:800;color:var(--c);border-bottom:1px solid #dfe6e2}
+.dd .it{padding:6px 10px;border-top:1px solid #eef2f0;display:flex;justify-content:space-between;color:#2d3833}
+.dd .it:first-of-type{border-top:0}.dd .it em{font-style:normal;color:var(--gray2);font-size:12px}
+.defs{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;flex:1;min-height:0}
+.df{border:1px solid var(--line);border-radius:8px;display:flex;flex-direction:column;overflow:hidden;background:#fff}
+.df .dg{flex:0 0 150px;background:var(--cp);border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:center;gap:10px;padding:12px}
+.df .db{padding:14px 18px;display:flex;flex-direction:column;flex:1}
+.df .db .ty{font-size:12px;font-weight:900;color:var(--c)}
+.df .db h3{margin:4px 0 8px;font-size:21px;letter-spacing:-.5px}
+.df .db p{margin:0;font-size:14.5px;line-height:1.5}
+.df .db dl{margin:auto 0 0;display:grid;grid-template-columns:70px 1fr;gap:6px 8px;border-top:1px solid var(--line);padding-top:10px}
+.df .db dt{font-size:12.5px;font-weight:800;color:var(--gray2)}.df .db dd{margin:0;font-size:13.5px;line-height:1.4}
+.pk{border:2px solid var(--c);border-radius:8px;background:#fff;padding:8px 10px 10px;text-align:center}
+.pk b{font-size:12px;color:var(--c);display:block;margin-bottom:6px}
+.pk .in{display:flex;gap:6px}.pk .in span{font-size:12.5px;font-weight:700;background:var(--cp);border-radius:4px;padding:7px 9px}
+.hub{display:flex;align-items:center;gap:0}
+.hub .me{width:74px;height:74px;border-radius:50%;background:var(--c);color:#fff;font-size:12.5px;font-weight:800;display:flex;align-items:center;justify-content:center;text-align:center;line-height:1.2}
+.hub .pipe{width:34px;height:4px;background:var(--c)}
+.hub .srcs{display:flex;flex-direction:column;gap:5px}.hub .srcs span{font-size:12.5px;font-weight:700;background:#fff;border:1px solid var(--line);border-radius:4px;padding:5px 12px}
+.fold{width:180px;background:#fff;border:1px solid #c9d3ce;border-radius:6px;overflow:hidden}
+.fold .fh{background:var(--c);color:#fff;font-size:12px;font-weight:800;padding:6px 10px}
+.fold div{font-size:12.5px;padding:5px 10px;border-top:1px solid #eef2f0}
+.when{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;flex:1;min-height:0}
+.wh{border:1px solid var(--line);border-radius:8px;overflow:hidden;display:flex;flex-direction:column;background:#fff}
+.wh .wh1{background:var(--c);color:#fff;padding:12px 18px}
+.wh .wh1 b{font-size:19px;display:block}.wh .wh1 span{font-size:13px;opacity:.85}
+.wh ul{margin:0;padding:6px 18px;list-style:none;flex:1;display:flex;flex-direction:column}
+.wh li{flex:1;display:flex;align-items:center;border-bottom:1px dashed #d5ddd9;font-size:14.5px;line-height:1.4;padding:6px 0 6px 16px;position:relative}
+.wh li:before{content:"";position:absolute;left:0;top:50%;margin-top:-4px;width:7px;height:7px;border-radius:50%;background:var(--c)}
+.wh .ex{background:var(--cp);padding:11px 18px;font-size:13.5px;line-height:1.45}
+.wh .ex b{color:var(--c)}
+.hubbig{display:grid;grid-template-columns:1fr 200px 1fr;gap:16px;flex:1;min-height:0;align-items:stretch}
+.hcol{display:flex;flex-direction:column;gap:10px}
+.hs{flex:1;border:1px solid var(--line);border-radius:8px;background:#fff;padding:10px 16px;display:grid;grid-template-columns:46px 1fr;gap:12px;align-items:center;overflow:hidden}
+.hs i{width:44px;height:44px;border-radius:10px;background:var(--cp);color:var(--c);font-style:normal;font-weight:900;font-size:13px;display:flex;align-items:center;justify-content:center}
+.hs b{display:block;font-size:16px}.hs span{display:block;font-size:13.5px;color:var(--gray);line-height:1.4;margin-top:3px}
+.hc{display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative}
+.hc .core{width:150px;height:150px;border-radius:50%;background:var(--green);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;z-index:1;box-shadow:0 0 0 12px var(--mint)}
+.hc .core b{font-size:18px}.hc .core span{font-size:12px;color:#bde3d2;margin-top:6px;line-height:1.4}
+.hc:before{content:"";position:absolute;left:-16px;right:-16px;top:50%;height:2px;background:#9fc4b3}
+.fr{display:grid;grid-template-columns:120px 1fr 26px 1fr 26px 1fr 26px 1fr;align-items:stretch;flex:1;min-height:0}
+.fr .fl{background:var(--c);color:#fff;border-radius:8px 0 0 8px;display:flex;flex-direction:column;justify-content:center;padding:0 16px}
+.fr .fl b{font-size:19px}.fr .fl span{font-size:12.5px;opacity:.85;margin-top:4px;line-height:1.35}
+.fr .fn{background:var(--cp);border:1px solid var(--line);border-radius:6px;padding:12px 14px;display:flex;flex-direction:column;justify-content:center;overflow:hidden;margin-left:10px}
+.fr .fn+.a{margin-left:0}
+.fr .fn i{font-style:normal;font-size:12px;font-weight:900;color:var(--c)}
+.fr .fn b{font-size:15.5px;margin-top:4px}.fr .fn span{font-size:13px;color:var(--gray);margin-top:4px;line-height:1.4}
+.fr .a{display:flex;align-items:center;justify-content:center;color:var(--c);font-weight:900;font-size:18px}
+.fr .fn.nm{margin-left:0}
+.skin{flex:0 0 96px;border:1px solid var(--line);border-radius:8px;background:#fff;display:grid;grid-template-columns:150px repeat(5,1fr);align-items:stretch;overflow:hidden}
+.skin>b{background:var(--pale);display:flex;align-items:center;padding:0 18px;font-size:15px;color:var(--green2);font-weight:900;border-right:1px solid var(--line)}
+.skin div{padding:12px 14px;border-right:1px solid #eef2f0;display:flex;flex-direction:column;justify-content:center}
+.skin div b{font-size:14.5px}.skin div span{font-size:12.5px;color:var(--gray);margin-top:4px;line-height:1.35}
+.perm{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;flex:1;min-height:0}
+.pm{border:1px solid var(--line);border-top:5px solid var(--c);border-radius:8px;background:var(--cp);padding:16px 18px;display:flex;flex-direction:column;overflow:hidden}
+.pm i{font-style:normal;font-size:12px;font-weight:900;color:var(--c)}
+.pm b{font-size:19px;margin:6px 0 8px;display:block}
+.pm p{margin:0;font-size:14px;line-height:1.5}
+.pm .ex{margin-top:auto;border-top:1px dashed #c8d1cc;padding-top:10px;font-size:13px;color:var(--gray);line-height:1.45}
+.combo{display:flex;flex-direction:column;gap:10px;flex:1;min-height:0}
+.cb{flex:1;display:grid;grid-template-columns:52px 1.55fr 26px 1fr 1.25fr;align-items:center;border:1px solid var(--line);border-radius:8px;background:#fff;overflow:hidden}
+.cb>i{height:100%;display:flex;align-items:center;justify-content:center;background:var(--c);color:#fff;font-style:normal;font-weight:900;font-size:16px}
+.cb .fx{display:flex;flex-wrap:wrap;gap:6px;align-items:center;padding:0 16px}
+.cb .fx span{font-size:13.5px;font-weight:800;background:var(--cp);color:var(--c);border-radius:5px;padding:6px 10px}
+.cb .fx em{font-style:normal;color:var(--gray2);font-weight:900}
+.cb .a{color:var(--accent);font-weight:900;font-size:18px;text-align:center}
+.cb .rs{font-size:15px;font-weight:800;padding-right:12px}
+.cb .ds{font-size:13.5px;color:var(--gray);line-height:1.45;padding:10px 16px;border-left:1px dashed #cdd6d1}
+
+.box.fill{display:flex;flex-direction:column}
+.box.fill ul{flex:1;display:flex;flex-direction:column}
+.box.fill li{flex:1;display:flex;align-items:center;border-bottom:1px dashed #dde4e0;font-size:15px}
+.box.fill li:last-child{border-bottom:0}
+.box.fill li:before{top:50%;margin-top:-7px}
+.box dt,.box dd{font-size:14.5px}
+.ft .fh b{font-size:18.5px}.ft .gd{font-size:13px}
+.ft .us{flex:1;display:flex;align-items:center;font-size:15px;line-height:1.5}
+.ck{display:flex;flex-direction:column;justify-content:center}
+.ck b{font-size:21px}.ck span{font-size:15.5px;line-height:1.55}
+.warn{font-size:15.5px}
+.sc p{font-size:15px}
+.recap{flex:0 0 70px;display:grid;grid-template-columns:130px 1fr;align-items:center;border:1px solid var(--line);border-radius:8px;background:var(--pale);padding:0 18px;overflow:hidden}
+.recap>b{font-size:14px;color:var(--green2);font-weight:900}
+.recap .rs{display:flex;align-items:center;gap:8px}
+.recap .rs div{flex:1;display:flex;align-items:center;gap:10px;background:#fff;border:1px solid var(--line);border-radius:6px;padding:9px 12px;font-size:14.5px;font-weight:700}
+.recap .rs i{flex:0 0 24px;height:24px;border-radius:50%;background:var(--green2);color:#fff;font-style:normal;font-size:12px;font-weight:900;display:flex;align-items:center;justify-content:center}
+.recap .rs em{font-style:normal;color:var(--accent);font-weight:900}
+
+.sc h3{font-size:22px}.sc p{font-size:16px;line-height:1.6}
+.sc ul{padding-top:14px}.sc li{font-size:15px;padding:6px 0 6px 14px}
+.ovc p{font-size:15.5px;line-height:1.55}
+.ovc dl{gap:11px 10px;padding-top:14px}.ovc dt{font-size:13px}.ovc dd{font-size:14.5px}
+.ov-common .chip{font-size:14.5px;padding:8px 13px}
+.chain{flex:1}.chain .ch{flex:1;font-size:15px}
+.sy p{font-size:15.5px;line-height:1.6}
+.dd{font-size:14px}.dd .in{padding:10px 12px}.dd .it{padding:9px 12px}
+.df .db p{font-size:15.5px;line-height:1.55}.df .db dd{font-size:14.5px}
+.pm p{font-size:15.5px;line-height:1.55}
+.pm dl{margin:14px 0 0;display:grid;grid-template-columns:1fr;gap:4px;background:#fff;border:1px solid var(--line);border-radius:6px;padding:10px 12px}
+.pm dt{font-size:12px;font-weight:800;color:var(--c)}.pm dd{margin:0;font-size:14px;line-height:1.45}
+.pm .ex{font-size:14px}
+.pg .pt{font-size:12.5px}.pg{gap:7px}
+
+.mk{position:relative;width:18px;height:18px}.mk.b:after{content:"";position:absolute;left:4px;top:4px;width:6px;height:6px;border-radius:50%;background:#fff}
+
+.box.files{flex:0 0 auto;padding:12px 16px}.box.files h4{margin-bottom:6px}
+.fi{display:grid;grid-template-columns:1.15fr 1fr;gap:8px;padding:5px 0;border-top:1px dashed #dde4e0;align-items:baseline}
+.fi:first-of-type{border-top:0}.fi b{font-size:13px;color:var(--green);word-break:break-all}.fi span{font-size:12.5px;color:var(--gray);line-height:1.35}
+</style></head><body><div class="tool"><button onclick="toggleEdit(this)">편집</button><button onclick="window.print()">PDF 저장</button></div><main class="deck"><section class="slide cover"><div class="strip"></div><div class="left"><div class="series">직장인을 위한 ChatGPT Chat · Work · Codex 업무활용</div><h1>경영실적 분석</h1><h2>월별 엑셀을 통합·분석해 대시보드와 보고서 만들기</h2><div class="rule"></div><div class="meta">8차시 · 15분 온라인 강의</div><div class="info"><div><b>샘플 자료</b><span>1~8월 실적 파일 8개, 지역별 목표, 경영회의 요청 메모</span></div><div><b>활용 기능</b><span>Python, Codex, Work, Chat, 스킬</span></div><div><b>결과물</b><span>통합 엑셀, Excel·HTML 대시보드, 월간 실적 보고서</span></div></div></div><div class="right"><div class="num">08<small>LESSON</small></div><div class="rline"></div><div class="kw"><i class="c-blue">1</i><div><b>통합</b><span>월별 시트를 하나로</span></div></div><div class="kw"><i class="c-mint">2</i><div><b>분석</b><span>매출·이익·반품 변화</span></div></div><div class="kw"><i class="c-amber">3</i><div><b>대시보드</b><span>Excel·HTML·보고서</span></div></div><div class="who">신성진</div></div></section>
+<section class="slide "><div class="head"><div class="kicker">이번 차시 한눈에 보기</div><div class="title">월별로 나뉜 실적 파일을 합쳐 변화와 원인 후보 찾기</div><div class="subtitle">매달 따로 쌓이는 실적 파일을 하나로 합치고, 지표를 계산해 대시보드와 보고서로 만듭니다.</div></div><div class="content"><div class="trio"><div class="tcard c-blue"><div class="lab">샘플 자료</div><h3>월별 실적 파일 8개</h3><ul><li>월별실적_파일 (8개)</li><li>샘플_월별경영실적.xlsx</li><li>2026_지역별_매출목표.xlsx</li><li>경영회의_요청메모.md</li></ul></div><div class="arr">→</div><div class="tcard c-mint"><div class="lab">활용 기능</div><h3>통합과 분석</h3><div class="chips c-mint"><span class="chip on">Python</span><span class="chip on">Codex</span><span class="chip on">Work</span><span class="chip">Chat</span><span class="chip">스킬</span><span class="chip">커넥터</span></div></div><div class="arr">→</div><div class="tcard c-amber"><div class="lab">결과물 예</div><h3>분석 결과물</h3><div class="chips c-amber"><span class="chip on">통합 엑셀</span><span class="chip on">Excel 대시보드</span><span class="chip on">HTML 대시보드</span><span class="chip">실적 보고서</span></div></div></div><div class="flowbox"><div class="fl">작업 흐름 예 · 강사가 고른 사례에 따라 단계는 달라질 수 있습니다</div><div class="steps"><div class="step"><i>1</i><div><b>월별 파일 합치기</b><span>8개 파일을 하나의 표로 모으고 합계를 대조합니다.</span></div></div><span class="sarr">›</span><div class="step"><i>2</i><div><b>지표 계산</b><span>이익, 반품률, 광고비 대비 매출 등을 계산합니다.</span></div></div><span class="sarr">›</span><div class="step"><i>3</i><div><b>변화 찾기</b><span>월·지역·채널·제품군별로 크게 달라진 곳을 찾습니다.</span></div></div><span class="sarr">›</span><div class="step"><i>4</i><div><b>결과물 만들기</b><span>대시보드나 보고서로 정리합니다.</span></div></div></div></div><div class="bar"><b>진행 방식</b><span>통합·지표 분석·대시보드 중 하나를 골라 진행합니다. 강사가 가진 실적 자료로 바꿀 수 있습니다.</span></div></div><div class="footer">8차시 · 경영실적 분석<span class="page">02</span></div></section>
+<section class="slide "><div class="head"><div class="kicker">샘플 자료</div><div class="title">달마다 따로 만든 경영실적 파일</div><div class="subtitle">가상 회사의 2026년 1~8월 실적입니다. 월별 파일 8개와, 같은 자료를 시트로 묶은 파일이 함께 있습니다.</div></div><div class="content"><div class="samp"><div class="win"><div class="wt">샘플_월별경영실적.xlsx<em>Excel · 시트 8개</em><span class="dots"><i></i><i></i><i></i></span></div><div class="wb"><table class="wtab"><tr><th>지역</th><th>채널</th><th>제품군</th><th>매출</th><th>주문수</th><th>반품</th><th>광고비</th><th>원가</th></tr><tr><td>수도권</td><td>직영</td><td>기본형</td><td>6,068,000</td><td>74</td><td>2</td><td>250,000</td><td>3,883,520</td></tr><tr><td>수도권</td><td>직영</td><td>고급형</td><td>13,340,000</td><td>92</td><td>2</td><td>250,000</td><td>7,870,600</td></tr><tr><td>수도권</td><td>온라인</td><td>기본형</td><td>7,052,000</td><td>86</td><td>3</td><td>1,030,000</td><td>4,513,280</td></tr><tr><td>수도권</td><td>온라인</td><td>고급형</td><td>15,080,000</td><td>104</td><td>3</td><td>1,030,000</td><td>8,897,200</td></tr><tr><td>수도권</td><td>파트너</td><td>기본형</td><td>8,036,000</td><td>98</td><td>4</td><td>430,000</td><td>5,143,040</td></tr><tr><td>수도권</td><td>파트너</td><td>고급형</td><td>16,820,000</td><td>116</td><td>5</td><td>430,000</td><td>9,923,800</td></tr><tr><td>충청</td><td>직영</td><td>기본형</td><td>6,806,000</td><td>83</td><td>2</td><td>250,000</td><td>4,355,840</td></tr><tr><td>충청</td><td>직영</td><td>고급형</td><td>14,645,000</td><td>101</td><td>3</td><td>250,000</td><td>8,640,550</td></tr><tr><td>충청</td><td>온라인</td><td>기본형</td><td>7,790,000</td><td>95</td><td>3</td><td>1,030,000</td><td>4,985,600</td></tr><tr><td>충청</td><td>온라인</td><td>고급형</td><td>16,385,000</td><td>113</td><td>4</td><td>1,030,000</td><td>9,667,150</td></tr></table><div class="sheettabs"><span class="on">1월</span><span>2월</span><span>3월</span><span>4월</span><span>5월</span><span>6월</span><span>7월</span><span>8월</span></div></div></div><div class="side"><div class="box files"><h4>실습 폴더 · 08차시_샘플자료</h4><div class="fi"><b>월별실적_파일 (8개)</b><span>1~8월 파일, 형식이 조금씩 다름</span></div><div class="fi"><b>샘플_월별경영실적.xlsx</b><span>같은 자료를 시트 8개로 묶은 파일</span></div><div class="fi"><b>2026_지역별_매출목표.xlsx</b><span>지역·월별 목표</span></div><div class="fi"><b>경영회의_요청메모.md</b><span>경영회의에서 보고 싶은 내용</span></div></div><div class="box fill"><h4>살펴볼 만한 지점</h4><ul><li>파일마다 열 순서·단위·합계 행이 같은지</li><li>광고비가 늘어난 달에 매출도 함께 늘었는지</li><li>반품률이 높은 지역·채널이 있는지</li></ul></div></div></div><div class="bar light"><b>바꿔 쓰기</b><span>회사의 월별 매출 파일이나 부서별 실적 파일로 바꾸어 같은 방식으로 통합·분석할 수 있습니다.</span></div></div><div class="footer">8차시 · 경영실적 분석<span class="page">03</span></div></section>
+<section class="slide "><div class="head"><div class="kicker">활용 기능</div><div class="title">이 샘플에 활용할 수 있는 기능</div><div class="subtitle">색이 진한 칸이 이번 차시에서 주로 쓰는 기능이며, 나머지는 사례에 따라 더할 수 있습니다.</div></div><div class="content"><div class="feat"><div class="ft sub c-blue"><div class="fh"><b>Chat</b><span class="lv">함께 활용</span></div><div class="gd">대화로 자료를 해석하고 답변·초안 작성</div><div class="us">지표의 뜻을 정리하고 분석 결과를 보고서 문장으로 씁니다.</div></div><div class="ft sub c-blue"><div class="fh"><b>Work</b><span class="lv">함께 활용</span></div><div class="gd">여러 자료와 도구를 한 과업으로 묶어 산출물까지</div><div class="us">통합부터 분석·보고서 작성까지 한 과업으로 진행합니다.</div></div><div class="ft main c-mint"><div class="fh"><b>Codex</b><span class="lv">주로 활용</span></div><div class="gd">작업 폴더의 파일을 읽고 만들고 고치며 실행 확인</div><div class="us">통합 엑셀과 HTML 대시보드 파일을 만들고 고칩니다.</div></div><div class="ft opt c-gray"><div class="fh"><b>웹 검색·딥리서치</b><span class="lv">선택</span></div><div class="gd">공개 웹 자료를 찾고 출처와 함께 정리</div><div class="us">업계 공개 통계를 찾아 비교 참고 자료로 씁니다.</div></div><div class="ft opt c-gray"><div class="fh"><b>커넥터</b><span class="lv">선택</span></div><div class="gd">허용한 메일·드라이브 등 외부 자료에 연결</div><div class="us">드라이브에 흩어진 월별 파일을 불러옵니다.</div></div><div class="ft sub c-blue"><div class="fh"><b>스킬</b><span class="lv">함께 활용</span></div><div class="gd">반복 업무의 설명·양식·자료를 저장해 재사용</div><div class="us">월간 분석 지표와 보고서 양식을 저장해 매달 다시 씁니다.</div></div><div class="ft main c-mint"><div class="fh"><b>Python</b><span class="lv">주로 활용</span></div><div class="gd">계산·집계·파일 변환·차트 작성</div><div class="us">시트를 합치고 집계·지표 계산·차트를 만듭니다.</div></div><div class="ft opt c-gray"><div class="fh"><b>컴퓨터 유즈</b><span class="lv">선택</span></div><div class="gd">화면을 보며 브라우저·앱을 직접 조작</div><div class="us">엑셀 화면에서 피벗과 차트를 직접 확인합니다.</div></div><div class="ft opt c-gray"><div class="fh"><b>서브에이전트</b><span class="lv">선택</span></div><div class="gd">일을 나누어 여러 갈래로 동시에 진행</div><div class="us">지역별·채널별 분석을 나누어 동시에 진행합니다.</div></div><div class="ft opt c-gray"><div class="fh"><b>이미지 생성·인식</b><span class="lv">선택</span></div><div class="gd">이미지를 만들거나 사진·스캔 내용을 읽기</div><div class="us">보고서에 넣을 차트 이미지를 만듭니다.</div></div></div><div class="bar"><b>기능 고르기</b><span>기능은 서로 겹칩니다. 강의 시점 화면에서 쓸 수 있는 기능을 기준으로 고릅니다.</span></div></div><div class="footer">8차시 · 경영실적 분석<span class="page">04</span></div></section>
+<section class="slide "><div class="head"><div class="kicker">가능한 작업 사례</div><div class="title">이 샘플로 해볼 수 있는 작업 12가지</div><div class="subtitle">초록 칸은 주로 쓰는 기능, 주황 칸은 결과물 형식입니다. 같은 사례도 다른 기능으로 진행할 수 있습니다.</div></div><div class="content"><div class="sampstrip"><b>실습 폴더</b><span>08차시_샘플자료 · 파일 4개</span><b style="margin-left:auto">진행</b><span>사례 하나를 골라 화면에서 실습합니다</span></div><div class="cases"><div class="case"><i>01</i><div><b>월별 파일 통합</b><span>8개 파일을 하나의 표로 합치기</span></div><div class="tg"><em class="f">Python</em><em class="o">엑셀</em></div></div><div class="case"><i>02</i><div><b>매출·이익 요약</b><span>월별 매출·원가·이익 요약표</span></div><div class="tg"><em class="f">Python</em><em class="o">표</em></div></div><div class="case"><i>03</i><div><b>전월 대비 변화</b><span>지표별 증감과 증감률 계산</span></div><div class="tg"><em class="f">Codex</em><em class="o">엑셀</em></div></div><div class="case"><i>04</i><div><b>지역·채널 비교</b><span>지역·채널별 실적 순위와 비중</span></div><div class="tg"><em class="f">Python</em><em class="o">차트</em></div></div><div class="case"><i>05</i><div><b>제품군별 이익률</b><span>기본형·고급형 이익률 비교</span></div><div class="tg"><em class="f">Chat</em><em class="o">표</em></div></div><div class="case"><i>06</i><div><b>반품률 추이</b><span>월별·채널별 반품률 변화</span></div><div class="tg"><em class="f">Python</em><em class="o">차트</em></div></div><div class="case"><i>07</i><div><b>광고비 효과</b><span>광고비 대비 매출 변화 살펴보기</span></div><div class="tg"><em class="f">Work</em><em class="o">보고서</em></div></div><div class="case"><i>08</i><div><b>크게 달라진 곳</b><span>평소와 다른 값이 나온 지역·월 찾기</span></div><div class="tg"><em class="f">Python</em><em class="o">목록</em></div></div><div class="case"><i>09</i><div><b>Excel 대시보드</b><span>피벗·차트 시트가 있는 엑셀</span></div><div class="tg"><em class="f">Codex</em><em class="o">엑셀</em></div></div><div class="case"><i>10</i><div><b>HTML 대시보드</b><span>필터로 골라 보는 웹 대시보드</span></div><div class="tg"><em class="f">Codex</em><em class="o">HTML</em></div></div><div class="case"><i>11</i><div><b>월간 실적 보고서</b><span>핵심 수치와 해석이 담긴 보고서</span></div><div class="tg"><em class="f">Work</em><em class="o">PDF</em></div></div><div class="case"><i>12</i><div><b>경영회의 요약</b><span>회의용 3~4장 요약 슬라이드</span></div><div class="tg"><em class="f">Work</em><em class="o">발표자료</em></div></div></div></div><div class="footer">8차시 · 경영실적 분석<span class="page">05</span></div></section>
+<section class="slide "><div class="head"><div class="kicker">결과물 예</div><div class="title">만들어 볼 수 있는 결과물</div><div class="subtitle">사례에 따라 한 가지 형식을 고르거나, 같은 내용을 여러 형식으로 바꿔 볼 수 있습니다.</div></div><div class="content"><div class="outs"><div class="oc c-mint"><div class="mock"><div class="m"><div class="m-x"><span class="h"></span><span class="h"></span><span class="h"></span><span class="h"></span><span class="v"></span><span class=""></span><span class=""></span><span class=""></span><span class="v"></span><span class=""></span><span class=""></span><span class=""></span><span class="v"></span><span class=""></span><span class=""></span><span class=""></span><span class="v"></span><span class=""></span><span class=""></span><span class=""></span><span class="v"></span><span class=""></span><span class=""></span><span class=""></span><span class="v"></span><span class=""></span><span class=""></span><span class=""></span></div></div></div><div class="ob"><span class="ty">EXCEL</span><b>통합 엑셀</b><p>1~8월 데이터를 합친 표와 지표 열</p><p class="ck">통합 전후 합계가 같은지</p></div></div><div class="oc c-amber"><div class="mock"><div class="m m-dash"><div class="k"><span></span><span></span><span></span></div><div class="b"><span style="height:45%"></span><span style="height:70%"></span><span style="height:55%"></span><span style="height:90%"></span><span style="height:65%"></span></div></div></div><div class="ob"><span class="ty">대시보드</span><b>Excel 대시보드</b><p>피벗 표와 월별·지역별 차트 시트</p><p class="ck">차트 범위가 전체 기간인지</p></div></div><div class="oc c-blue"><div class="mock"><div class="m m-web"><div class="tb"><i></i><i></i><i></i></div><div class="hero"></div><div class="cd"><span></span><span></span><span></span></div></div></div><div class="ob"><span class="ty">웹페이지</span><b>HTML 대시보드</b><p>지역·채널을 골라 보는 웹 화면</p><p class="ck">필터 결과가 표와 같은지</p></div></div><div class="oc c-blue"><div class="mock"><div class="m m-doc"><div class="l t"></div><div class="l"></div><div class="l"></div><div class="l"></div><div class="l s"></div><div class="l"></div><div class="l"></div><div class="l"></div><div class="l s"></div></div></div><div class="ob"><span class="ty">문서</span><b>월간 실적 보고서</b><p>핵심 수치, 변화, 원인 후보</p><p class="ck">사실과 추정이 나뉘었는지</p></div></div><div class="oc c-amber"><div class="mock"><div class="m m-slide"><div class="l t"></div><div class="blk"><span></span><span></span><span></span></div></div></div><div class="ob"><span class="ty">발표자료</span><b>회의 요약 슬라이드</b><p>경영회의용 3~4장 요약</p><p class="ck">숫자가 엑셀과 같은지</p></div></div><div class="oc c-gray"><div class="mock"><div class="m m-list"><div><i></i><span></span></div><div><i></i><span></span></div><div><i></i><span></span></div><div><i></i><span></span></div><div><i></i><span></span></div><div><i></i><span></span></div></div></div><div class="ob"><span class="ty">목록</span><b>확인 필요 목록</b><p>원인을 확인해야 할 지역·월</p><p class="ck">담당자 확인 항목이 있는지</p></div></div></div><div class="bar"><b>결과 보기</b><span>결과 파일은 화면에서 직접 열어 원본 자료와 비교해 봅니다.</span></div></div><div class="footer">8차시 · 경영실적 분석<span class="page">06</span></div></section>
+<section class="slide "><div class="head"><div class="kicker">결과 확인</div><div class="title">결과를 확인하는 관점과 주의할 점</div><div class="subtitle">AI가 만든 결과는 원본 자료와 비교하며 확인하고, 외부로 나가는 행동은 사람이 결정합니다.</div></div><div class="content"><div class="chk"><div class="cl"><div class="ck c-mint"><i>확인 1</i><b>합계 일치</b><span>통합하기 전 파일별 합계와 통합 후 합계가 같은지 봅니다.</span></div><div class="ck c-blue"><i>확인 2</i><b>계산 기준</b><span>이익·반품률 같은 지표의 계산식을 보고서에 적었는지 봅니다.</span></div><div class="ck c-amber"><i>확인 3</i><b>해석 구분</b><span>숫자로 확인된 변화와 원인에 대한 추정을 나누어 썼는지 봅니다.</span></div><div class="ck c-gray"><i>확인 4</i><b>차트 표기</b><span>차트의 기간·단위·축 이름이 맞는지 봅니다.</span></div></div><div class="cr"><h4>주의할 점</h4><div class="warn"><i>!</i><span>원인 설명은 데이터로 확인한 사실과 추정을 나누어 표시합니다.</span></div><div class="warn"><i>!</i><span>실제 실적 자료는 공유 범위를 확인한 뒤 허용된 도구에서 다룹니다.</span></div><div class="warn"><i>!</i><span>자동으로 만든 차트와 표는 원본 숫자와 한 번 더 대조합니다.</span></div></div></div><div class="bar"><b>사람의 확인</b><span>원인 판단과 경영회의 배포 여부는 보고서를 검토한 담당자가 결정합니다.</span></div></div><div class="footer">8차시 · 경영실적 분석<span class="page">07</span></div></section>
+<section class="slide "><div class="head"><div class="kicker">정리</div><div class="title">8차시 정리</div><div class="subtitle">이번 차시에서 살펴본 샘플·기능·사례·확인 관점을 정리합니다.</div></div><div class="content"><div class="recap"><b>흐름 다시 보기</b><div class="rs"><div><i>1</i>월별 파일 합치기</div><em>›</em><div><i>2</i>지표 계산</div><em>›</em><div><i>3</i>변화 찾기</div><em>›</em><div><i>4</i>결과물 만들기</div></div></div><div class="sum"><div class="sc c-blue"><span class="n">01 샘플 자료</span><h3>월별 실적 파일</h3><p>달마다 따로 만든 파일은 형식을 맞춰 통합하는 것부터 시작합니다.</p><ul><li>파일 8개</li><li>목표·요청 메모</li><li>형식 차이 포함</li></ul></div><div class="sc c-mint"><span class="n">02 활용 기능</span><h3>Python과 Codex</h3><p>통합·계산은 Python, 엑셀·HTML 결과 파일은 Codex로 만듭니다.</p><ul><li>시트 통합</li><li>지표 계산</li><li>대시보드</li></ul></div><div class="sc c-amber"><span class="n">03 작업 사례</span><h3>분석 사례 12가지</h3><p>요약표, 전월 대비, 이익률, 대시보드, 보고서 등에서 골라 진행합니다.</p><ul><li>요약·변화</li><li>비교·추이</li><li>대시보드·보고서</li></ul></div><div class="sc c-gray"><span class="n">04 결과 확인</span><h3>합계와 해석</h3><p>합계 일치, 계산 기준, 사실·추정 구분, 차트 표기를 확인합니다.</p><ul><li>합계 대조</li><li>계산식 명시</li><li>사실·추정 구분</li></ul></div></div><div class="bar"><b>다음 차시</b><span>9차시에서는 교육 대상 명단의 수식을 확인하고 여러 문서를 보고서와 시트로 정리합니다.</span></div></div><div class="footer">8차시 · 경영실적 분석<span class="page">08</span></div></section></main><script>
+function toggleEdit(b){var on=!b.classList.contains('on');b.classList.toggle('on',on);
+document.querySelectorAll('.slide').forEach(function(s){s.contentEditable=on});}
+</script><script>/* kg-preview: #<heading> \uc704\uce58\ub85c \uc774\ub3d9 */
+(function(){function norm(t){return (t||'').replace(/\s+/g,'').toLowerCase()}
+function go(){var h=decodeURIComponent(location.hash.slice(1));if(!h)return;var k=norm(h).slice(0,24);if(!k)return;
+var best=null,bl=1e9,els=document.body.querySelectorAll('h1,h2,h3,h4,h5,p,div,span,li,td,text,tspan,section,article');
+for(var i=0;i<els.length;i++){var e=els[i],t=norm(e.textContent);if(t.length<bl&&t.indexOf(k)>-1){best=e;bl=t.length}}
+if(!best)return;var box=best.closest('section,[class*=slide],[class*=page],article')||best;
+box.scrollIntoView({block:'start',inline:'nearest'});window.scrollTo(0,window.scrollY);box.style.outline='3px solid #c0504d';box.style.outlineOffset='4px';
+setTimeout(function(){box.style.outline=''},2600)}
+window.addEventListener('load',function(){setTimeout(go,400)});window.addEventListener('hashchange',go)})();</script></body></html>

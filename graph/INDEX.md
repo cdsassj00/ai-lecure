@@ -1,6 +1,6 @@
 # 강의안 지식그래프 인덱스
 
-- 문서(버전 묶음 기준) 505개 · 본문 색인 254개 · 원본 파일 891개
+- 문서(버전 묶음 기준) 531개 · 본문 색인 271개 · 원본 파일 918개
 - 검색: `python kg/query.py search "키워드"` · 재료팩: `python kg/query.py pack "새 강의 주제"`
 - 문서 링크는 Google Drive 원본입니다. Claude는 Drive 커넥터로 fileId를 열어 원문을 볼 수 있습니다.
 
@@ -96,9 +96,11 @@
 - 2026-04-19 `session-01-slides` (강의안) `1nvJz1qYrDcwNShoxEMs-gyUABjNFxtfS`
 - … 외 26개 (`python kg/query.py topic "공공 AI 인재과정·AI챔피언"`)
 
-### 기관 사업·제안·보고 (35, 본문 23)
+### 기관 사업·제안·보고 (37, 본문 24)
 ASTIS·보건복지 등 수행 사업의 착수·중간보고, 교육 제안서·소개서, 기획 문서
 
+- 2026-10-12 `07차시_견적_계약_검토_온라인강의안` (제안서·소개서) `1rNVSuBqehJ7n9ipWnEOcJTTbZV87EuRm`
+- 2026-09-26 `05차시_제안서_PDF_제작_온라인강의안_20260926_1603` (제안서·소개서) `1m8_KgOIL9AQYPxq0MftYGOUF519IePdM`
 - 2026-09-24 `ASTIS_바이브코딩_실무교재_초안` (교재·매뉴얼) `1aQuPy_L_uE5NxNyYqMjeLoNB1oTOWjxH`
 - 2026-09-22 `ASTIS_바이브코딩_교재_스켈레톤` (교재·매뉴얼) `1svHkeX6em_B8-P3C8UiMjB_cndt72cf5`
 - 2026-09-21 `청소년지도사_디지털도구200활용_교재_페이지뷰` (교재·매뉴얼) `15fbNfppqPPR2b_hlDXszFgWKHH-2Tmmt`
@@ -138,13 +140,13 @@ ASTIS·보건복지 등 수행 사업의 착수·중간보고, 교육 제안서�
 ### AI 데이터분석 (21, 본문 13)
 삼성전자 등 기업 대상 AI 데이터분석 실무, EDA·시각화·머신러닝
 
+- 2026-09-29 `삼성전자_AI데이터분석_강의안_기존정본_SVG` (강의안) `1wzSoTti8t3TjQxUYdQCpx6L08pFL8Ltz`
 - 2026-08-30 `08차시_데이터분석_자동화_온라인강의안` (강의안) `1UCZ9bv_UpWsU_w__HRalKvkdVednlD9v`
 - 2026-08-25 `삼성전자_20260825_AI데이터분석실무` (강의안) `1759rWBlz9MPvZ_8jvOghVuWhHd4l0YNf`
 - 2026-08-23 `삼성전자_AI데이터분석_강의안_20장_SVG` (강의안) `1LCW9vsXLf5Dhajqkeac9uSLReOcD9MK_`
 - 2026-08-23 `삼성전자_AI데이터분석_강의안_ssjhtml4_SVG` (강의안) `14VhRbtsxgYsfDi3qXxug5sZYkcG9PDVY`
 - 2026-08-22 `삼성전자_AI데이터분석_강의안_10장` (강의안) `1tRT9RVUU149MF5CxPM-UK4V8bXyaLgUL`
 - 2026-08-22 `삼성전자_AI데이터분석_강의안_35장_마스터_SVG` (강의안) `17mQT5zNmyzt7ORtQYbGht9p90v8xYDUc`
-- 2026-08-22 `삼성전자_AI데이터분석_강의안_기존정본_SVG` (강의안) `1wzSoTti8t3TjQxUYdQCpx6L08pFL8Ltz`
 - 2026-08-22 `삼성전자_AI데이터분석_전체강의안_112장_SSJHTML4` (강의안) `1ZgoZHIiWW1MgKEmAW2H--K-VXfJHGp43`
 - 2026-08-22 `삼성전자_AI데이터분석_전체강의안_112장_고품질` (강의안) `1mgLscb6GpnOhkAY1cg48Z39S9sxhbRo5`
 - 2026-07-09 `기후부_AI데이터리더_강의안_샘플5장` (강의안) `1nPaJz5sexFR84yV7MXSnTUifD9Mmaczn`
@@ -160,9 +162,18 @@ ASTIS·보건복지 등 수행 사업의 착수·중간보고, 교육 제안서�
 - 2026-02-02 `AI데이터분석` (기타) `1uQbMJpSqhSWTytILdHI7L58y2YqAFakd`
 - 2026-01-26 `강의안` (강의안) `1p1cxdP-kyLy4xzfAJIGTR9ZeOVU8FFr9`
 
-### 직장인 업무자동화·스프레드시트 (27, 본문 10)
+### 직장인 업무자동화·스프레드시트 (36, 본문 19)
 엑셀·구글 시트·오피스 자동화, 직장인 온라인 차시 강의
 
+- 2026-09-26 `02차시_Chat_Work_Codex와_호출기호_온라인강의안` (강의안) `1LiacT_ntvP2YjmeHrbDC0a5RkAg1FCgg`
+- 2026-09-26 `03차시_플러그인_커넥터_스킬_온라인강의안_20260926_1603` (강의안) `1Z-ctXVWUE7AfLRzzcm0zYDMCl25SC2xa`
+- 2026-09-26 `04차시_경쟁사_제품_조사_온라인강의안_20260926_1603` (강의안) `1jf-tWo2ytLG9njU2np-NwqtW_zcCaLVk`
+- 2026-09-26 `06차시_재무_증빙_검토_온라인강의안_20260926_1603` (보고서) `1gyhZqE_hXnMDiRib7DYC_6fIh4vkhgTu`
+- 2026-09-26 `08차시_경영실적_분석_온라인강의안` (강의안) `1Ul8sbxV2_FcCnQl8LC844unbemcLv8Kr`
+- 2026-09-26 `09차시_인사_총무_자료_활용_온라인강의안` (강의안) `1lX-jMZBCHnk_FI7jtxWKpQCI6FN-oxTK`
+- 2026-09-26 `10차시_마케팅_콘텐츠_온라인강의안` (강의안) `1_bj9gazDfR9NGpY2gs_aIvlZO-SE_cyL`
+- 2026-09-26 `11차시_프로젝트_자료_정리_온라인강의안` (강의안) `1A1R2qxnHzllgJ8_UNe8de8vCosFCbdxZ`
+- 2026-09-26 `12차시_업무_자동화_조합_온라인강의안` (강의안) `1DpLv4tBF46TUjracYuL8_M-dEIeqoyPi`
 - 2026-09-15 `tiffany_omnichannel_copilot_curriculum` (강의계획·커리큘럼) `1FTkQzMZSxN5HhV-M_x71r2D4E7W9k72V`
 - 2026-08-30 `03차시_플러그인_커넥터_스킬_온라인강의안` (강의안) `1Y0viOj03fWpYs9xQmvG9g3qgiq_kGH0L`
 - 2026-08-30 `04차시_경쟁사_제품_조사_온라인강의안` (강의안) `1m9znViFJrkaK4vTMgiq7-wW9Q1OFt63A`
@@ -191,9 +202,14 @@ ASTIS·보건복지 등 수행 사업의 착수·중간보고, 교육 제안서�
 - 2026-06-19 `excel_auto_deck` (강의안) `1T-JVAPDzb5h2WsEfXq1t1v6I4zpoOxXc`
 - 2025-11-21 `구글함수` (기타) `11WX3nJxMcmw2orR746r0RK_kNj7ISAAa`
 
-### 행정 업무자동화 (17, 본문 13)
+### 행정 업무자동화 (22, 본문 18)
 공무원·교육행정 대상 행정업무 자동화, 기관 거버넌스·업무혁신 과정
 
+- 2026-10-09 `01_행정업무자동화_05_국가공무원인재개발원_공식교재` (교재·매뉴얼) `1EYJuDkO7z0ZQu9Edh9HBO9F4MpC7D6pF`
+- 2026-10-09 `03_기관통합거버넌스_05_국가공무원인재개발원_공식교재` (교재·매뉴얼) `17MQ69yy19OCD3UCnRZ6KCpKaAOGWLAe_`
+- 2026-10-09 `04_행정업무자동화_심화` (기타) `1R0lIFafrmDl7VOV9TBL1VPdBT5RCfkS1`
+- 2026-09-26 `행정기관_AI직접개발_가이드북_30분_회람본근거_역할구분` (교재·매뉴얼) `1aXFROapuOIhrWvEhM0SotMh8y682mJTI`
+- 2026-09-26 `행정기관_AI직접개발_가이드북_발표대본_38장` (교재·매뉴얼) `1ERu7YzhR3ICUNH5Vm0k_SxDKT_awD5vl`
 - 2026-09-22 `01_행정업무자동화_기초_안내문` (안내·운영) `1OPjCk2Tw-LVS3HyVrV7lPJygt876dgIE`
 - 2026-09-22 `02_행정업무자동화_심화_안내문` (안내·운영) `1e1_ot4WSoKlrOqqb92On8jIfYSCJ3UVi`
 - 2026-09-22 `04_기관업무혁신시스템_안내문` (안내·운영) `1wDusf00WpB9-3JfL6gQOUmR5gXoImddj`
@@ -241,9 +257,10 @@ Claude Code·Codex·Cursor로 만드는 바이브코딩, 기업 특강(유한킴
 - 2026-04-23 `kakaoent_lecture` (강의안) `1M8F1sPQJDOOjvR0ekJOS-hTtG0SnQwp3`
 - 2026-03-02 `claude_code_lesson_plan` (강의계획·커리큘럼) `1r5zBXrYnQgltD5vSiqOeD18UZluv6UfE`
 
-### AI 에이전트·하네스 (40, 본문 32)
+### AI 에이전트·하네스 (41, 본문 33)
 LLM·에이전트·하네스 실행구조, MCP·스킬·컨텍스트, AI 트렌드 특강·키노트
 
+- 2026-10-01 `풀무원푸드앤컬처_C레벨_AI에이전트활용_교육안` (기타) `1BhdxCZMBndEqVXLRN2C2gyJtu5o7asLR`
 - 2026-09-20 `transformer-eli5` (강의안) `19163leM5gn5u0n8AIwqINWCxLwU2qksc`
 - 2026-09-13 `uiseong_ai_agent_leadership_redesign` (실습 도구·데모 앱) `18Ft1VjLKv7cmSbmVqb6QMXx-DxqKIuQv`
 - 2026-09-13 `질문의시대는끝났다_키노트__202609_의성군` (발표·키노트) `1pgMuhrwyhj4P2xyAwFSQ1AEHu-afSXI7`
@@ -283,11 +300,13 @@ LLM·에이전트·하네스 실행구조, MCP·스킬·컨텍스트, AI 트렌�
 - 2026-05-09 `transformer_qkv_stepper` (강의안) `1-9mXMDdeYz_kfOlovrsIuK0bWpZ1c95a`
 - 2026-04-15 `harness-editorial` (강의안) `1btDt_fbt-iJfDy49TOj2fiROikiQhhJi`
 - 2026-04-09 `북마크` (교재·매뉴얼) `1YYcfJWfNInWmLIxYuVGDmUJuGUrrYE8a`
-- 2026-04-01 `lrm` (실습 도구·데모 앱) `1BTF5mdrqDUCdDMejYcpEikaNPHNzJDtR`
+- … 외 1개 (`python kg/query.py topic "AI 에이전트·하네스"`)
 
-### 생성형 AI 리터러시·강사양성 (25, 본문 19)
+### 생성형 AI 리터러시·강사양성 (28, 본문 20)
 생성형 AI 기초·프롬프트·리터러시, 강사양성 과정, 교육청 직무연수
 
+- 2026-10-08 `전북교육청_휴가운영지침_편집가능` (안내·운영) `1tmR78iYsnRxy-iD2TF0ZYUq7k-oUYlPr`
+- 2026-09-24 `강사양성과정_교재_페이지뷰_초안_20260924_1935` (교재·매뉴얼) `1LLEIDFqGB8bI2bwKrkbN5O0B7acWoHPg`
 - 2026-09-18 `새해농업인실용교육_AI활용교육기획과_강의교안작성_4H_초안` (강의안) `14E2JNJZk46Gy-w8cNcVmzM0iakCFGGKd`
 - 2026-09-15 `67명_자료검토` (보고서) `1MLxj2fkRK4XWVgeDgPgZ9CIV9D7tulK0`
 - 2026-09-10 `강사양성과정_강의안_초안` (강의안) `1aN0Ed0gecm3DIJTPJEBb2XzIzFzu12Kl`
@@ -297,6 +316,7 @@ LLM·에이전트·하네스 실행구조, MCP·스킬·컨텍스트, AI 트렌�
 - 2026-08-25 `전북교육청_전산직_AI통합플랫폼_직무연수_7H_강의안` (강의안) `1BGKvOArgkxRhf-NzNx-VAl8m0EkLM2OE`
 - 2026-08-25 `전북교육청_전산직_생성형AI실무역량강화_7H_lecture-deck` (강의안) `1zMfLTvAl3ckJUH9TXlyVURqZW17Wtt3Q`
 - 2026-07-19 `generative_ai_book_spread` (교재·매뉴얼) `1n_oC7W7qMpgluceM0OhMkVt8RJJzMMZN`
+- 2026-07-16 `생성형AI_강사양성과정_합본` (강의안) `1p6rUvXaedGHhnMjD8IhlSK0Yf5cYZ_7b`
 - 2026-07-15 `2026_강사양성과정_강의안_v2.dc` (강의안) `17toMNJL02FlMxuWaO0bL2ieDVsg6VFA5`
 - 2026-07-15 `2026_강사양성과정_강의안_v2.dc__2026_강사양성과정` (강의안) `1dv91kYMz2eoVR8DU0nEfSN213xRCotZg`
 - 2026-07-15 `생성형AI_강사양성과정` (강의안) `1AM7rDiuodltEYEQg1BZLA8Cq9Z7i7woV`
@@ -359,9 +379,15 @@ LLM·에이전트·하네스 실행구조, MCP·스킬·컨텍스트, AI 트렌�
 - 2026-05-30 `shin_profile_integrated_site` (실습 도구·데모 앱) `1WtnX5QZxPX2eEOtITyGY1yMP_soxPix0`
 - … 외 21개 (`python kg/query.py topic "실습 데모·웹 도구"`)
 
-### 기타 (120, 본문 30)
+### 기타 (126, 본문 30)
 주제를 특정하기 어려운 파일 (제목만 있는 짧은 파일 등)
 
+- 2026-10-11 `10_시간표_과정1-3` (강의안) `1mw95Dh6YUE8f0lGJS-HNky16_R5aKDcJ`
+- 2026-10-09 `index_05_국가공무원인재개발원_공식교재` (교재·매뉴얼) `1sRLCMJv-CpelEHcY_Uh5UJ3rZInFpkg1`
+- 2026-10-09 `교육커리큘럼_20261009` (강의계획·커리큘럼) `1u4yeyzWLCZGZ0EsU4rgbH2krfJG5CLtL`
+- 2026-10-06 `ai_isagi_manual` (교재·매뉴얼) `1S-vgHIuvm1fUQDM8RBqUUZiEW1_VbUGP`
+- 2026-10-04 `카드뉴스_4장` (기타) `1Bh3Oftx0-VJhSqYpZMLTkS4goRakhC1z`
+- 2026-10-04 `커리큘럼과기술참고_출처` (강의계획·커리큘럼) `1CXIm8KOjjGtWlp4DjJkj6OEA7-ZHwpts`
 - 2026-09-21 `code_artifact` (기타) `1EhkPJ2K_M1OxWNupUxwIBtmsovFVK7nf`
 - 2026-09-20 `typesafe_jev_model` (기타) `1BMAmSzIe_5mLnIAIeHZIGGHKvKTAimAb`
 - 2026-09-19 `System_One_Jev_교재형_페이지뷰` (교재·매뉴얼) `1YICj9ieAArz97o8_hQCgQb6gELQZAugR`
@@ -396,103 +422,97 @@ LLM·에이전트·하네스 실행구조, MCP·스킬·컨텍스트, AI 트렌�
 - 2026-07-01 `문서` (기타) `1p2nvpRgE63tSUoqqnPa4inzpcZ88aGuT`
 - 2026-07-01 `파일정리` (기타) `1fdVOB4gM1fv1km_Hm1OFL-MxYF6uA1gZ`
 - 2026-06-28 `curriculum` (강의계획·커리큘럼) `1iNvVkaRMw_l3mlg1rvUWETHeaRJa7TKi`
-- 2026-06-26 `bonghwa_ai_slides_view_only` (강의안) `1DNy9sFJspb1ZzpFC9LfM9kEyh7UmS-mZ`
-- 2026-06-23 `zoom_meeting_link` (기타) `12p4Ncn3v3MWbVdj_KDXAqwVPdHxMwMbQ`
-- 2026-06-22 `00_all_topics_16x9` (강의안) `1sMhT1GrkayKIGrobLw9ZW_futSgNMzDg`
-- 2026-06-22 `00_all_topics_3pages_16x9` (강의안) `1N7TEyfh8HsUTiULfbLrirVD8Z9F3z2g0`
-- 2026-06-22 `01_welfare_topic` (기타) `1B_6zoF3F8PUAntJrUlCatQly4c6AYuHJ`
-- 2026-06-22 `hackathon_topics_problem_only` (평가·문제) `1n8T5-k7aR045CniKzDJFuK9Y71fgR6fX`
-- … 외 80개 (`python kg/query.py topic "기타"`)
+- … 외 86개 (`python kg/query.py topic "기타"`)
 
 ## 개념별 문서
 
 ### AI 기초
-- **AI 윤리·보안** (87) — `AI기반_업무자동화_강의안`, `교육행정_AI실습카드_100선_별책부록`, `01_행정업무자동화`, `AI챔피언_전문인재과정_연습용_모의평가시험지`, `67명_자료검토`, `03_기관통합거버넌스`, `모듈카드_라이브러리.dc`, `생성형AI전문역량강화_교재_페이지뷰`
+- **AI 윤리·보안** (94) — `AI기반_업무자동화_강의안`, `교육행정_AI실습카드_100선_별책부록`, `생성형AI_강사양성과정_합본`, `01_행정업무자동화`, `AI챔피언_전문인재과정_연습용_모의평가시험지`, `67명_자료검토`, `03_기관통합거버넌스`, `모듈카드_라이브러리.dc`
 - **LLM** (80) — `harness_runtime_guide_dense`, `AI에이전트_서비스별_PPT생성플로우_19장_상세설명_ssjhtml2`, `강사양성과정_교재_페이지뷰_초안`, `ax_camp_proposal`, `정리노트_LLM위키와_온톨로지`, `ax_camp_slides`, `강사양성과정_강의안_초안`, `2026_행안부_AI교육_8과목_교육개요서_커리큘럼`
-- **생성형 AI** (50) — `생성형AI전문역량강화_교재_페이지뷰`, `생성형AI_강사양성과정`, `google_sheets_ssjhtml2_50`, `생성형AI전문역량강화_강의안_16by9`, `kakao_sheets_lecture_deck`, `67명_자료검토`, `AI챔피언_전문인재과정_연습용_모의평가시험지`, `강사양성과정_강의안_초안`
+- **생성형 AI** (51) — `생성형AI전문역량강화_교재_페이지뷰`, `생성형AI_강사양성과정`, `생성형AI_강사양성과정_합본`, `google_sheets_ssjhtml2_50`, `생성형AI전문역량강화_강의안_16by9`, `kakao_sheets_lecture_deck`, `67명_자료검토`, `AI챔피언_전문인재과정_연습용_모의평가시험지`
 - **토큰** (19) — `생성형AI_강사양성과정`, `생성형AI전문역량강화_교재_페이지뷰`, `harness_runtime_guide_dense`, `01_AI_에이전트_시대`, `백엔드란무엇인가_Supabase-Cloudflare_교재`, `전북교육청_전산직_AI통합플랫폼_직무연수_7H_강의안`, `05_바이브코딩2_업무자동화`, `06_AI_에이전트_개발_입문`
-- **멀티모달** (16) — `session-02-complete`, `모듈카드_라이브러리.dc`, `kakaoent_lecture`, `01_AI_에이전트_시대`, `05_바이브코딩2_업무자동화`, `AI챔피언_교육의_취지와_방향_·_국가공무원인재원_10분_발표_편집본`, `AI챔피언_인재원장_키노트_7장`, `generative_ai_book_spread`
+- **멀티모달** (17) — `session-02-complete`, `모듈카드_라이브러리.dc`, `kakaoent_lecture`, `01_AI_에이전트_시대`, `05_바이브코딩2_업무자동화`, `10차시_마케팅_콘텐츠_온라인강의안`, `AI챔피언_교육의_취지와_방향_·_국가공무원인재원_10분_발표_편집본`, `AI챔피언_인재원장_키노트_7장`
 - **AI 리터러시** (4) — `① AI리터러시와_업무활용_교재_페이지뷰`, `Module01_AI리터러시와업무활용_강의안`, `Module01_강의안_SVG다운로드`, `코레일유통_AI챔피언_GREEN_BLUE_통합_8H_커리큘럼`
 - **할루시네이션** (3) — `모듈카드_라이브러리.dc`, `생성형AI_강사양성과정`, `청소년지도사_디지털도구200활용_교재_페이지뷰`
 - **추론 모델** (1) — `06_AI_에이전트_개발_입문`
 
 ### 프롬프트·컨텍스트
-- **프롬프트 엔지니어링** (111) — `AI기반_업무자동화_강의안`, `교육행정_AI실습카드_100선_별책부록`, `session-03-complete`, `모듈카드_라이브러리.dc`, `session-03-slides`, `harness_runtime_guide_dense`, `SB일렉트릭_강의안_전체`, `① AI리터러시와_업무활용_교재_페이지뷰`
+- **프롬프트 엔지니어링** (116) — `AI기반_업무자동화_강의안`, `교육행정_AI실습카드_100선_별책부록`, `생성형AI_강사양성과정_합본`, `session-03-complete`, `모듈카드_라이브러리.dc`, `session-03-slides`, `harness_runtime_guide_dense`, `SB일렉트릭_강의안_전체`
 - **CLAUDE.md·메모리** (19) — `session-06-complete`, `session-06-slides`, `03_AI_서비스_워크플로우_구성`, `AI에이전트_서비스별_PPT생성플로우_19장_상세설명_ssjhtml2`, `정리노트_LLM위키와_온톨로지`, `전북교육청_전산직_AI통합플랫폼_직무연수_7H_강의안`, `harness-editorial`, `AI활용_서비스개발_이중균_교안`
 - **역할 부여** (5) — `harness_runtime_guide_dense`, `security_role_editor`, `06_AI_에이전트_개발_입문`, `harness-editorial`, `백엔드란무엇인가_Supabase-Cloudflare_교재`
 - **퓨샷·예시** (1) — `03_AI_서비스_워크플로우_구성`
 
 ### 에이전트
-- **AI 에이전트** (137) — `01_행정업무자동화`, `03_기관통합거버넌스`, `session-06-complete`, `06_AI_에이전트_개발_입문`, `AI기반_업무자동화_강의안`, `교육행정_AI실습카드_100선_별책부록`, `session-08-complete`, `harness_runtime_guide_dense`
-- **RAG** (62) — `session-07-complete`, `session-07-slides`, `생성형AI전문역량강화_교재_페이지뷰`, `전북교육청_전산직_AI통합플랫폼_직무연수_7H_강의안`, `2026_행안부_전문인재과정_페이지뷰_실습과제포함`, `session-08-complete`, `전북교육청_전산직_생성형AI실무역량강화_7H_lecture-deck`, `session-01-slides`
+- **AI 에이전트** (144) — `01_행정업무자동화`, `03_기관통합거버넌스`, `session-06-complete`, `생성형AI_강사양성과정_합본`, `06_AI_에이전트_개발_입문`, `AI기반_업무자동화_강의안`, `교육행정_AI실습카드_100선_별책부록`, `session-08-complete`
+- **RAG** (63) — `session-07-complete`, `session-07-slides`, `생성형AI전문역량강화_교재_페이지뷰`, `전북교육청_전산직_AI통합플랫폼_직무연수_7H_강의안`, `2026_행안부_전문인재과정_페이지뷰_실습과제포함`, `session-08-complete`, `전북교육청_전산직_생성형AI실무역량강화_7H_lecture-deck`, `session-01-slides`
+- **워크플로 자동화** (50) — `AI기반_업무자동화_강의안`, `생성형AI_강사양성과정_합본`, `교육행정_AI실습카드_100선_별책부록`, `session-03-complete`, `session-03-slides`, `모듈카드_라이브러리.dc`, `session-07-complete`, `강의안 템플릿.dc`
+- **MCP** (48) — `session-08-complete`, `바이브코딩_에이전트_MCP_컨텍스트_페이지교재_v3_가독성개선`, `03_기관통합거버넌스`, `session-08-slides`, `AI에이전트_서비스별_PPT생성플로우_19장_상세설명_ssjhtml2`, `바이브코딩_에이전트_MCP_컨텍스트_페이지교재`, `Context_Injection_교재_키워드_시맨틱검색_확장판`, `Context_Injection_교재_페이지뷰`
 - **하네스** (47) — `harness_runtime_guide_dense`, `AI에이전트_서비스별_PPT생성플로우_19장_상세설명_ssjhtml2`, `harness-editorial`, `생성형AI전문역량강화_교재_페이지뷰`, `강사양성과정_강의안_초안`, `전북교육청_전산직_생성형AI실무역량강화_7H_lecture-deck`, `hyperframe_llm_harness_flow`, `에이전틱AI_실무활용_교안`
-- **MCP** (46) — `session-08-complete`, `바이브코딩_에이전트_MCP_컨텍스트_페이지교재_v3_가독성개선`, `03_기관통합거버넌스`, `session-08-slides`, `AI에이전트_서비스별_PPT생성플로우_19장_상세설명_ssjhtml2`, `바이브코딩_에이전트_MCP_컨텍스트_페이지교재`, `Context_Injection_교재_키워드_시맨틱검색_확장판`, `Context_Injection_교재_페이지뷰`
-- **워크플로 자동화** (46) — `AI기반_업무자동화_강의안`, `교육행정_AI실습카드_100선_별책부록`, `session-03-complete`, `session-03-slides`, `모듈카드_라이브러리.dc`, `session-07-complete`, `강의안 템플릿.dc`, `03_AI_서비스_워크플로우_구성`
-- **스킬** (24) — `강사양성과정_강의안_초안`, `01_행정업무자동화`, `session-06-complete`, `AI에이전트_서비스별_PPT생성플로우_19장_상세설명_ssjhtml2`, `강사양성과정_교재_페이지뷰_초안`, `reference_deck`, `에이전틱AI_실무활용_교안`, `harness_runtime_guide_dense`
+- **스킬** (36) — `03차시_플러그인_커넥터_스킬_온라인강의안_20260926_1603`, `강사양성과정_강의안_초안`, `01_행정업무자동화`, `session-06-complete`, `AI에이전트_서비스별_PPT생성플로우_19장_상세설명_ssjhtml2`, `강사양성과정_교재_페이지뷰_초안`, `05차시_제안서_PDF_제작_온라인강의안_20260926_1603`, `reference_deck`
 - **도구 호출** (14) — `harness_runtime_guide_dense`, `hyperframe_llm_harness_flow`, `AI에이전트_서비스별_PPT생성플로우_19장_상세설명_ssjhtml2`, `LLM_에이전트_하네스_실행구조_한장_DOM_SVG`, `hyperframe_llm_harness_flow_v3_clean`, `에이전틱AI_실무활용_교안`, `기후에너지환경부_AI프렌즈_발대식특강_35min`, `기후에너지환경부_AI프렌즈_발대식특강_35min_1`
-- **서브에이전트** (3) — `reference_deck`, `harness_runtime_guide_dense`, `session-06-slides`
+- **서브에이전트** (5) — `reference_deck`, `12차시_업무_자동화_조합_온라인강의안`, `harness_runtime_guide_dense`, `session-06-slides`, `11차시_프로젝트_자료_정리_온라인강의안`
 - **지식그래프** (1) — `정리노트_LLM위키와_온톨로지`
 
 ### 바이브코딩
-- **웹앱 제작** (127) — `01_행정업무자동화`, `03_기관통합거버넌스`, `AI기반_업무자동화_강의안`, `ASTIS_바이브코딩_실무교재_초안`, `3주차_강의요약_HTML_CSS_JS_업무자동화`, `SB일렉트릭_강의안_전체`, `session-04-complete`, `교육행정_AI실습카드_100선_별책부록`
-- **파이썬** (97) — `2주차_강의요약_엑셀_파이썬_업무자동화`, `01_행정업무자동화`, `ASTIS_바이브코딩_실무교재_초안`, `03_기관통합거버넌스`, `AI기반_업무자동화_강의안`, `AI활용_서비스개발_이중균_교안`, `AI활용_서비스개발_이중균_교안__202607_농촌진흥청바이브코딩`, `session-04-complete`
-- **배포** (84) — `백엔드란무엇인가_Supabase-Cloudflare_교재`, `AI기반_업무자동화_강의안`, `교육행정_바이브코딩_업무자동화_4일_통합강의안`, `삼성전자_AI데이터분석_강의안_기존정본_SVG`, `session-07-complete`, `풍산_총무담당자_바이브코딩_3시간_강의안`, `삼성전자_AI데이터분석_강의안_35장_마스터_SVG`, `SB일렉트릭_강의안_전체`
-- **바이브코딩** (72) — `ASTIS_바이브코딩_실무교재_초안`, `ASTIS_바이브코딩_교재_스켈레톤`, `교육행정_바이브코딩_업무자동화_4일_통합강의안`, `유한킴벌리_바이브코딩_특강_20260818`, `풍산_총무담당자_바이브코딩_3시간_강의안`, `바이브코딩_에이전트_MCP_컨텍스트_페이지교재_v3_가독성개선`, `67명_자료검토`, `바이브코딩_에이전트_MCP_컨텍스트_페이지교재`
-- **PRD·기획** (41) — `03_기관통합거버넌스`, `청소년지도사_디지털도구200활용_교재_페이지뷰`, `유한킴벌리_바이브코딩_특강_20260818`, `교육행정_바이브코딩_업무자동화_4일_통합강의안`, `04_바이브코딩1_데이터시각화`, `삼성전자_20260825_AI데이터분석실무`, `2026_행안부_AI교육_8과목_교육개요서_커리큘럼`, `2026_행안부_AI교육_8과목_교육개요서_커리큘럼__2026-cdsa-`
-- **CLI·터미널** (40) — `03_기관통합거버넌스`, `01_행정업무자동화`, `ChatGPT_Claude_Web_Desktop_CLI_구조_강의안_SS`, `AI에이전트_서비스별_PPT생성플로우_19장_상세설명_ssjhtml2`, `harness_runtime_guide_dense`, `삼성전자_AI데이터분석_강의안_20장_SVG`, `삼성전자_AI데이터분석_강의안_ssjhtml4_SVG`, `백엔드란무엇인가_Supabase-Cloudflare_교재`
-- **Claude Code** (33) — `AI에이전트_서비스별_PPT생성플로우_19장_상세설명_ssjhtml2`, `ChatGPT_Claude_Web_Desktop_CLI_구조_강의안_SS`, `카카오엔터_코딩에이전트활용`, `session-06-complete`, `harness-editorial`, `kakaoent_lecture`, `session-06-slides`, `session-01-slides`
-- **GitHub** (19) — `harness_runtime_guide_dense`, `06_AI_에이전트_개발_입문`, `ChatGPT_Claude_Web_Desktop_CLI_구조_강의안_SS`, `ax_camp_proposal`, `ax_camp_slides`, `session-06-complete`, `02_AI_프론티어_탐색`, `session-08-complete`
-- **Codex** (10) — `AI에이전트_서비스별_PPT생성플로우_19장_상세설명_ssjhtml2`, `ChatGPT_Claude_Web_Desktop_CLI_구조_강의안_SS`, `session-06-complete`, `백엔드란무엇인가_Supabase-Cloudflare_교재`, `session-06-slides`, `02_AI_프론티어_탐색`, `카카오엔터_코딩에이전트활용`, `2026_ASTIS_중간보고_코덱스`
+- **웹앱 제작** (140) — `01_행정업무자동화`, `03_기관통합거버넌스`, `AI기반_업무자동화_강의안`, `생성형AI_강사양성과정_합본`, `ASTIS_바이브코딩_실무교재_초안`, `3주차_강의요약_HTML_CSS_JS_업무자동화`, `SB일렉트릭_강의안_전체`, `session-04-complete`
+- **파이썬** (108) — `2주차_강의요약_엑셀_파이썬_업무자동화`, `01_행정업무자동화`, `ASTIS_바이브코딩_실무교재_초안`, `03_기관통합거버넌스`, `AI기반_업무자동화_강의안`, `생성형AI_강사양성과정_합본`, `AI활용_서비스개발_이중균_교안`, `AI활용_서비스개발_이중균_교안__202607_농촌진흥청바이브코딩`
+- **배포** (86) — `백엔드란무엇인가_Supabase-Cloudflare_교재`, `AI기반_업무자동화_강의안`, `교육행정_바이브코딩_업무자동화_4일_통합강의안`, `삼성전자_AI데이터분석_강의안_기존정본_SVG`, `행정기관_AI직접개발_가이드북_30분_회람본근거_역할구분`, `session-07-complete`, `풍산_총무담당자_바이브코딩_3시간_강의안`, `삼성전자_AI데이터분석_강의안_35장_마스터_SVG`
+- **바이브코딩** (74) — `ASTIS_바이브코딩_실무교재_초안`, `ASTIS_바이브코딩_교재_스켈레톤`, `교육행정_바이브코딩_업무자동화_4일_통합강의안`, `유한킴벌리_바이브코딩_특강_20260818`, `풍산_총무담당자_바이브코딩_3시간_강의안`, `바이브코딩_에이전트_MCP_컨텍스트_페이지교재_v3_가독성개선`, `67명_자료검토`, `바이브코딩_에이전트_MCP_컨텍스트_페이지교재`
+- **PRD·기획** (43) — `03_기관통합거버넌스`, `청소년지도사_디지털도구200활용_교재_페이지뷰`, `유한킴벌리_바이브코딩_특강_20260818`, `교육행정_바이브코딩_업무자동화_4일_통합강의안`, `04_바이브코딩1_데이터시각화`, `삼성전자_20260825_AI데이터분석실무`, `2026_행안부_AI교육_8과목_교육개요서_커리큘럼`, `2026_행안부_AI교육_8과목_교육개요서_커리큘럼__2026-cdsa-`
+- **CLI·터미널** (42) — `03_기관통합거버넌스`, `01_행정업무자동화`, `ChatGPT_Claude_Web_Desktop_CLI_구조_강의안_SS`, `AI에이전트_서비스별_PPT생성플로우_19장_상세설명_ssjhtml2`, `harness_runtime_guide_dense`, `삼성전자_AI데이터분석_강의안_20장_SVG`, `삼성전자_AI데이터분석_강의안_ssjhtml4_SVG`, `백엔드란무엇인가_Supabase-Cloudflare_교재`
+- **Claude Code** (34) — `AI에이전트_서비스별_PPT생성플로우_19장_상세설명_ssjhtml2`, `ChatGPT_Claude_Web_Desktop_CLI_구조_강의안_SS`, `카카오엔터_코딩에이전트활용`, `session-06-complete`, `harness-editorial`, `kakaoent_lecture`, `session-06-slides`, `session-01-slides`
+- **GitHub** (21) — `harness_runtime_guide_dense`, `06_AI_에이전트_개발_입문`, `ChatGPT_Claude_Web_Desktop_CLI_구조_강의안_SS`, `행정기관_AI직접개발_가이드북_30분_회람본근거_역할구분`, `ax_camp_proposal`, `ax_camp_slides`, `session-06-complete`, `02_AI_프론티어_탐색`
+- **Codex** (20) — `AI에이전트_서비스별_PPT생성플로우_19장_상세설명_ssjhtml2`, `ChatGPT_Claude_Web_Desktop_CLI_구조_강의안_SS`, `02차시_Chat_Work_Codex와_호출기호_온라인강의안`, `session-06-complete`, `백엔드란무엇인가_Supabase-Cloudflare_교재`, `session-06-slides`, `09차시_인사_총무_자료_활용_온라인강의안`, `02_AI_프론티어_탐색`
 - **Apps Script** (7) — `AI와_함께_쓰는_구글스프레드시트`, `google_sheets_ssjhtml2_50`, `kakao_sheets_lecture`, `05_바이브코딩2_업무자동화`, `kakao_sheets_lecture_deck`, `google_sheets_manual_pageview`, `구글스프레드시트_사전학습자료`
 - **Cursor** (5) — `session-06-complete`, `session-06-slides`, `카카오엔터_코딩에이전트활용`, `harness-editorial`, `2주차_강의요약_엑셀_파이썬_업무자동화`
 
 ### 데이터
-- **스프레드시트** (110) — `AI와_함께_쓰는_구글스프레드시트`, `google_sheets_ssjhtml2_50`, `AI기반_업무자동화_강의안`, `ASTIS_바이브코딩_실무교재_초안`, `SB일렉트릭_강의안_전체`, `01_행정업무자동화`, `2주차_강의요약_엑셀_파이썬_업무자동화`, `03_기관통합거버넌스`
-- **시각화** (73) — `session-04-complete`, `② 데이터 리터러시_교재_페이지뷰`, `session-04-slides`, `AI기반_업무자동화_강의안`, `교육행정_AI실습카드_100선_별책부록`, `삼성전자_20260825_AI데이터분석실무`, `ASTIS_바이브코딩_실무교재_초안`, `AI와_함께_쓰는_구글스프레드시트`
-- **데이터 분석** (65) — `삼성전자_20260825_AI데이터분석실무`, `67명_자료검토`, `삼성전자_AI데이터분석_강의안_기존정본_SVG`, `삼성전자_AI데이터분석_강의안_ssjhtml4_SVG`, `삼성전자_AI데이터분석_강의안_20장_SVG`, `삼성전자_AI데이터분석_강의안_35장_마스터_SVG`, `AI챔피언_전문인재과정_연습용_모의평가시험지`, `모듈카드_라이브러리.dc`
-- **통계·머신러닝** (40) — `삼성전자_AI데이터분석_강의안_기존정본_SVG`, `삼성전자_AI데이터분석_강의안_20장_SVG`, `삼성전자_AI데이터분석_강의안_ssjhtml4_SVG`, `AI기반_업무자동화_강의안`, `교육행정_AI실습카드_100선_별책부록`, `삼성전자_AI데이터분석_강의안_35장_마스터_SVG`, `② 데이터 리터러시_교재_페이지뷰`, `session-04-complete`
+- **스프레드시트** (124) — `AI와_함께_쓰는_구글스프레드시트`, `google_sheets_ssjhtml2_50`, `AI기반_업무자동화_강의안`, `ASTIS_바이브코딩_실무교재_초안`, `SB일렉트릭_강의안_전체`, `생성형AI_강사양성과정_합본`, `01_행정업무자동화`, `2주차_강의요약_엑셀_파이썬_업무자동화`
+- **시각화** (79) — `session-04-complete`, `② 데이터 리터러시_교재_페이지뷰`, `생성형AI_강사양성과정_합본`, `session-04-slides`, `AI기반_업무자동화_강의안`, `교육행정_AI실습카드_100선_별책부록`, `삼성전자_20260825_AI데이터분석실무`, `ASTIS_바이브코딩_실무교재_초안`
+- **데이터 분석** (67) — `삼성전자_20260825_AI데이터분석실무`, `생성형AI_강사양성과정_합본`, `67명_자료검토`, `삼성전자_AI데이터분석_강의안_기존정본_SVG`, `삼성전자_AI데이터분석_강의안_ssjhtml4_SVG`, `삼성전자_AI데이터분석_강의안_20장_SVG`, `삼성전자_AI데이터분석_강의안_35장_마스터_SVG`, `AI챔피언_전문인재과정_연습용_모의평가시험지`
+- **통계·머신러닝** (43) — `삼성전자_AI데이터분석_강의안_기존정본_SVG`, `삼성전자_AI데이터분석_강의안_20장_SVG`, `삼성전자_AI데이터분석_강의안_ssjhtml4_SVG`, `AI기반_업무자동화_강의안`, `교육행정_AI실습카드_100선_별책부록`, `삼성전자_AI데이터분석_강의안_35장_마스터_SVG`, `② 데이터 리터러시_교재_페이지뷰`, `session-04-complete`
 - **공공데이터** (9) — `② 데이터 리터러시_교재_페이지뷰`, `강의안 템플릿.dc`, `session-04-slides`, `AI챔피언_전문인재과정_연습용_모의평가시험지`, `에이전틱AI_실무활용_교안`, `ASTIS_바이브코딩_교재_스켈레톤`, `session-08-slides`, `바이브코딩_에이전트_MCP_컨텍스트_페이지교재_v3_가독성개선`
 - **시뮬레이션** (8) — `2026_ASTIS_중간보고_ssjhtml2`, `2026_ASTIS_중간보고_전면재작성`, `ASTIS_중간보고_웹키노트`, `ASTIS_중간보고_웹키노트__중간보고_클로드`, `3주차_강의요약_HTML_CSS_JS_업무자동화`, `AI혁신연구재단`, `2026-전문인재 1기-조편성-발표`, `2026_ASTIS_중간보고_코덱스`
 - **지리공간 분석** (7) — `session-01`, `② 데이터 리터러시_교재_페이지뷰`, `session-01_1`, `session-01_2`, `지리공간_머신러닝_분석지도`, `전국_버스정류장_밀집도_보고서_완성본`, `hyperframe_llm_agent_animation`
 
 ### 업무 적용
-- **문서·보고서 작성** (140) — `01_행정업무자동화`, `AI기반_업무자동화_강의안`, `ASTIS_바이브코딩_실무교재_초안`, `교육행정_AI실습카드_100선_별책부록`, `청소년지도사_디지털도구200활용_교재_페이지뷰`, `session-05-complete`, `KCA_연구보고서의 최신화와 재현 방법론`, `ai-curriculum-board`
-- **업무 자동화** (138) — `01_행정업무자동화`, `AI기반_업무자동화_강의안`, `SB일렉트릭_강의안_전체`, `교육행정_바이브코딩_업무자동화_4일_통합강의안`, `session-05-complete`, `CDSA_2026_교육소개서_V4_A4세로_책자판`, `CDSA_2026_교육소개서_V4_가로형_전체판`, `03_기관통합거버넌스`
-- **공공행정 AI** (119) — `01_행정업무자동화`, `67명_자료검토`, `교육행정_AI실습카드_100선_별책부록`, `생성형AI전문역량강화_교재_페이지뷰`, `20260527_기관맞춤형_AI챔피언_운영가이드`, `교육행정_바이브코딩_업무자동화_4일_통합강의안`, `Q3_source__행정안전부_보도자료_검색페이지`, `의성군_AI전략리더_AI에이전트_강의안`
-- **회의·요약** (104) — `AI기반_업무자동화_강의안`, `01_행정업무자동화`, `교육행정_AI실습카드_100선_별책부록`, `① AI리터러시와_업무활용_교재_페이지뷰`, `모듈카드_라이브러리.dc`, `3주차_강의요약_HTML_CSS_JS_업무자동화`, `AI활용_서비스개발_이중균_교안`, `AI활용_서비스개발_이중균_교안__202607_농촌진흥청바이브코딩`
-- **교육 설계** (99) — `03_기관통합거버넌스`, `01_행정업무자동화`, `harness_runtime_guide_dense`, `강의안 템플릿.dc`, `session-04-complete`, `모듈카드_라이브러리.dc`, `session-04-slides`, `session-03-complete`
-- **평가·문제은행** (67) — `AI챔피언_전문인재과정_연습용_모의평가시험지`, `20260527_기관맞춤형_AI챔피언_운영가이드`, `03_기관통합거버넌스`, `AI활용_서비스개발_이중균_교안`, `AI활용_서비스개발_이중균_교안__202607_농촌진흥청바이브코딩`, `발표_슬라이드쇼_AI에이전트시대_공공교육_개정본`, `2026_보건복지_AI실습데이터_개발계획안_페이지뷰`, `67명_자료검토`
-- **발표자료 제작** (42) — `AI에이전트_서비스별_PPT생성플로우_19장_상세설명_ssjhtml2`, `session-02-complete`, `교육행정_AI실습카드_100선_별책부록`, `ai-curriculum-board`, `모듈카드_라이브러리.dc`, `design-system-guide`, `session-03-slides`, `AI활용_서비스개발_이중균_교안`
+- **문서·보고서 작성** (156) — `01_행정업무자동화`, `생성형AI_강사양성과정_합본`, `AI기반_업무자동화_강의안`, `ASTIS_바이브코딩_실무교재_초안`, `교육행정_AI실습카드_100선_별책부록`, `청소년지도사_디지털도구200활용_교재_페이지뷰`, `session-05-complete`, `KCA_연구보고서의 최신화와 재현 방법론`
+- **업무 자동화** (146) — `01_행정업무자동화`, `AI기반_업무자동화_강의안`, `04_행정업무자동화_심화`, `01_행정업무자동화_05_국가공무원인재개발원_공식교재`, `SB일렉트릭_강의안_전체`, `교육행정_바이브코딩_업무자동화_4일_통합강의안`, `session-05-complete`, `생성형AI_강사양성과정_합본`
+- **공공행정 AI** (126) — `01_행정업무자동화`, `67명_자료검토`, `교육행정_AI실습카드_100선_별책부록`, `생성형AI_강사양성과정_합본`, `01_행정업무자동화_05_국가공무원인재개발원_공식교재`, `04_행정업무자동화_심화`, `생성형AI전문역량강화_교재_페이지뷰`, `20260527_기관맞춤형_AI챔피언_운영가이드`
+- **회의·요약** (118) — `생성형AI_강사양성과정_합본`, `AI기반_업무자동화_강의안`, `01_행정업무자동화`, `교육행정_AI실습카드_100선_별책부록`, `① AI리터러시와_업무활용_교재_페이지뷰`, `모듈카드_라이브러리.dc`, `3주차_강의요약_HTML_CSS_JS_업무자동화`, `01_행정업무자동화_05_국가공무원인재개발원_공식교재`
+- **교육 설계** (117) — `생성형AI_강사양성과정_합본`, `03_기관통합거버넌스`, `01_행정업무자동화`, `harness_runtime_guide_dense`, `강의안 템플릿.dc`, `session-04-complete`, `모듈카드_라이브러리.dc`, `session-04-slides`
+- **평가·문제은행** (70) — `AI챔피언_전문인재과정_연습용_모의평가시험지`, `20260527_기관맞춤형_AI챔피언_운영가이드`, `행정기관_AI직접개발_가이드북_30분_회람본근거_역할구분`, `03_기관통합거버넌스`, `AI활용_서비스개발_이중균_교안`, `AI활용_서비스개발_이중균_교안__202607_농촌진흥청바이브코딩`, `발표_슬라이드쇼_AI에이전트시대_공공교육_개정본`, `2026_보건복지_AI실습데이터_개발계획안_페이지뷰`
+- **발표자료 제작** (46) — `AI에이전트_서비스별_PPT생성플로우_19장_상세설명_ssjhtml2`, `session-02-complete`, `교육행정_AI실습카드_100선_별책부록`, `ai-curriculum-board`, `모듈카드_라이브러리.dc`, `design-system-guide`, `session-03-slides`, `AI활용_서비스개발_이중균_교안`
 - **AI 챔피언** (30) — `67명_자료검토`, `20260527_기관맞춤형_AI챔피언_운영가이드`, `AI챔피언_인재원장_키노트_v2_keynote_dark`, `AI챔피언_인재원장_키노트_v2_keynote_dark__참고파일`, `session-02-complete`, `바이브코딩_에이전트_MCP_컨텍스트_페이지교재`, `바이브코딩_에이전트_MCP_컨텍스트_페이지교재_v3_가독성개선`, `발표_슬라이드쇼_AI에이전트시대_공공교육_개정본`
 - **해커톤·프로젝트** (13) — `2026_AI챔피언_해커톤_대회_운영지침`, `session-05-complete`, `AI_프로젝트_기획_질문지`, `사전_프로젝트_기획서`, `session-01_3`, `서울교육연수원프로젝트기획서`, `서울교육연수원프로젝트기획서_팀`, `전문인재_운영계획_발표사이트`
-- **브랜딩·디자인** (12) — `lrm`, `AI챔피언_전문인재과정_연습용_모의평가시험지`, `kakaoent_lecture`, `KAK_brand_portfolio_10p_standalone`, `KAK_brand_portfolio_saventure`, `tiffany_omnichannel_copilot_curriculum`, `KAK_immersive_brand_site`, `profile_portfolio_site`
+- **브랜딩·디자인** (13) — `lrm`, `AI챔피언_전문인재과정_연습용_모의평가시험지`, `kakaoent_lecture`, `10차시_마케팅_콘텐츠_온라인강의안`, `KAK_brand_portfolio_10p_standalone`, `KAK_brand_portfolio_saventure`, `tiffany_omnichannel_copilot_curriculum`, `KAK_immersive_brand_site`
 
 ### 도구
-- **Claude** (57) — `AI에이전트_서비스별_PPT생성플로우_19장_상세설명_ssjhtml2`, `03_기관통합거버넌스`, `01_행정업무자동화`, `ChatGPT_Claude_Web_Desktop_CLI_구조_강의안_SS`, `session-06-complete`, `67명_자료검토`, `카카오엔터_코딩에이전트활용`, `session-02-complete`
-- **Gemini** (45) — `01_행정업무자동화`, `03_기관통합거버넌스`, `67명_자료검토`, `kakaoent_lecture`, `삼성전자_AI데이터분석_강의안_20장_SVG`, `삼성전자_AI데이터분석_강의안_ssjhtml4_SVG`, `kakao_sheets_lecture`, `kakao_sheets_lecture_deck`
-- **ChatGPT** (40) — `03_기관통합거버넌스`, `01_행정업무자동화`, `67명_자료검토`, `session-02-complete`, `harness_runtime_guide_dense`, `02_AI_프론티어_탐색`, `AI에이전트_서비스별_PPT생성플로우_19장_상세설명_ssjhtml2`, `ChatGPT_Claude_Web_Desktop_CLI_구조_강의안_SS`
+- **Claude** (58) — `AI에이전트_서비스별_PPT생성플로우_19장_상세설명_ssjhtml2`, `03_기관통합거버넌스`, `01_행정업무자동화`, `ChatGPT_Claude_Web_Desktop_CLI_구조_강의안_SS`, `session-06-complete`, `67명_자료검토`, `카카오엔터_코딩에이전트활용`, `session-02-complete`
+- **Gemini** (48) — `01_행정업무자동화`, `03_기관통합거버넌스`, `67명_자료검토`, `kakaoent_lecture`, `삼성전자_AI데이터분석_강의안_20장_SVG`, `삼성전자_AI데이터분석_강의안_ssjhtml4_SVG`, `kakao_sheets_lecture`, `kakao_sheets_lecture_deck`
+- **ChatGPT** (43) — `03_기관통합거버넌스`, `01_행정업무자동화`, `67명_자료검토`, `session-02-complete`, `harness_runtime_guide_dense`, `02_AI_프론티어_탐색`, `AI에이전트_서비스별_PPT생성플로우_19장_상세설명_ssjhtml2`, `ChatGPT_Claude_Web_Desktop_CLI_구조_강의안_SS`
 - **Copilot** (6) — `tiffany_omnichannel_copilot_curriculum`, `유한킴벌리_바이브코딩_특강_20260818`, `유한킴벌리_바이브코딩특강_강의안_20260818`, `유한킴벌리_바이브코딩특강_강의안_SIGNAL_20260818`, `2026_AI챔피언_해커톤_대회_운영지침`, `경영자를_위한_프라이빗_AI_라운지_2026`
 - **이미지·영상 생성** (3) — `session-02-complete`, `kakaoent_lecture`, `session-02-slides`
 - **Perplexity** (1) — `session-02-complete`
 
 ## 고객사별 문서
 
-- **행정안전부** (25) — `research_revalidation_framework_ssjhtml4`, `67명_자료검토`, `Q3_source__소스.zip`, `Q3_source__행정안전부_보도자료_검색페이지`, `sample`, `전문인재_운영계획_발표사이트`, `2026_강사양성과정_강의안_v2.dc`, `2026_강사양성과정_강의안_v2.dc__2026_강사양성과정`, `05_바이브코딩2_업무자동화`, `발표_슬라이드쇼_AI에이전트시대_공공교육_개정본`, `mois_org_report_editable_html`, `mois_org_report_style`
+- **행정안전부** (27) — `행정기관_AI직접개발_가이드북_30분_회람본근거_역할구분`, `research_revalidation_framework_ssjhtml4`, `67명_자료검토`, `Q3_source__소스.zip`, `Q3_source__행정안전부_보도자료_검색페이지`, `sample`, `전문인재_운영계획_발표사이트`, `생성형AI_강사양성과정_합본`, `2026_강사양성과정_강의안_v2.dc`, `2026_강사양성과정_강의안_v2.dc__2026_강사양성과정`, `05_바이브코딩2_업무자동화`, `발표_슬라이드쇼_AI에이전트시대_공공교육_개정본`
 - **ASTIS** (13) — `ASTIS_바이브코딩_실무교재_초안`, `ASTIS_바이브코딩_교재_스켈레톤`, `ASTIS_중간보고_발표사이트`, `2026_ASTIS_중간보고_ssjhtml2`, `2026_ASTIS_중간보고_전면재작성`, `2026_ASTIS_중간보고_코덱스`, `ASTIS_중간보고_웹키노트`, `ASTIS_중간보고_웹키노트__중간보고_클로드`, `ASTIS_중간보고_클로드`, `중간보고서_ssjhtml2`, `중간보고서_ssjhtml2__중간보고_안티그래비티`, `2026_ASTIS_착수보고`
+- **삼성전자** (11) — `삼성전자_AI데이터분석_강의안_기존정본_SVG`, `행정기관_AI직접개발_가이드북_30분_회람본근거_역할구분`, `삼성전자_20260825_AI데이터분석실무`, `삼성전자_20260825_샘플5장`, `삼성전자_AI데이터분석_강의안_20장_SVG`, `삼성전자_AI데이터분석_강의안_ssjhtml4_SVG`, `삼성전자_AI데이터분석_강의안_10장`, `삼성전자_AI데이터분석_강의안_35장_마스터_SVG`, `삼성전자_AI데이터분석_전체강의안_112장_SSJHTML4`, `삼성전자_AI데이터분석_전체강의안_112장_고품질`, `삼성전자재무보고서`
 - **국가공무원인재원** (10) — `질문의시대는끝났다_키노트__202609_의성군`, `질문의시대는끝났다_키노트`, `질문의시대는끝났다_키노트__202608_한국방송통신전파진흥원`, `AI챔피언_인재원장_키노트_v2_keynote_dark`, `AI챔피언_인재원장_키노트_v2_keynote_dark__참고파일`, `AI챔피언_교육의_취지와_방향_·_국가공무원인재원_10분_발표_편집본`, `AI챔피언_인재원장_키노트_7장`, `AI챔피언_인재원장_키노트_7장_dark`, `AI챔피언_인재원장_키노트_7장_light`, `강의안_AI데이터챔피언_마라토너_lecture-deck`
-- **삼성전자** (10) — `삼성전자_20260825_AI데이터분석실무`, `삼성전자_20260825_샘플5장`, `삼성전자_AI데이터분석_강의안_20장_SVG`, `삼성전자_AI데이터분석_강의안_ssjhtml4_SVG`, `삼성전자_AI데이터분석_강의안_10장`, `삼성전자_AI데이터분석_강의안_35장_마스터_SVG`, `삼성전자_AI데이터분석_강의안_기존정본_SVG`, `삼성전자_AI데이터분석_전체강의안_112장_SSJHTML4`, `삼성전자_AI데이터분석_전체강의안_112장_고품질`, `삼성전자재무보고서`
 - **기후에너지환경부** (9) — `PRD_EGIS`, `AI기반_업무자동화_강의안`, `AI프렌즈_발대식특강_시네마틱`, `기후에너지환경부_AI프렌즈_발대식특강_강의안`, `기후에너지환경부_AI프렌즈_발대식특강`, `기후에너지환경부_AI프렌즈_발대식특강_35min`, `기후에너지환경부_AI프렌즈_발대식특강_35min_1`, `02_AI_프론티어_탐색`, `session-03-slides`
 - **농촌진흥청** (8) — `2026_ASTIS_중간보고_ssjhtml2`, `2026_ASTIS_중간보고_전면재작성`, `AI활용_서비스개발_이중균_교안`, `AI활용_서비스개발_이중균_교안__202607_농촌진흥청바이브코딩`, `ASTIS_중간보고_웹키노트`, `ASTIS_중간보고_웹키노트__중간보고_클로드`, `ASTIS_중간보고_클로드`, `농촌진흥청`
 - **CDSA** (8) — `유한킴벌리_바이브코딩특강_강의계획서_20260818_CDSA`, `유한킴벌리_바이브코딩특강_강의안_20260818`, `유한킴벌리_바이브코딩특강_강의안_SIGNAL_20260818`, `CDSA_2026_교육소개서_V4_A4세로_책자판`, `CDSA_2026_교육소개서_V4_가로형_전체판`, `CDSA_교육소개서_V4_프로토타입_가로`, `2026_CDSA_교육소개서_세로형`, `2026_CDSA_교육제안서_가로형`
 - **한국방송통신전파진흥원(KCA)** (7) — `KCA_연구보고서의 최신화와 재현 방법론`, `KCA_전자파_안전_신호관제실`, `AI트렌드특강_프롬프트에서에이전트로`, `질문의시대는끝났다_키노트__202608_한국방송통신전파진흥원`, `에이전틱AI_실무활용_교안`, `KCA_에이전틱AI_교육제안`, `한국방송통신전파진흥원_정백철_slm_model_report`
 - **카카오** (6) — `kakao_sheets_lecture_deck`, `kakao_sheets_curriculum`, `kakao_sheets_lecture`, `03_kakao_prompt_korean`, `03_kakao_prompt_only`, `03_kakao_public_chat_card`
 - **보건복지** (5) — `01_후보주제20개_중간보고검토안`, `2026_보건복지_AI실습데이터_개발계획안`, `2026_보건복지_AI실습데이터_개발계획안_페이지뷰`, `강의안_AI데이터챔피언_마라토너_lecture-deck`, `01_welfare_topic`
+- **한진** (4) — `행정기관_AI직접개발_가이드북_30분_회람본근거_역할구분`, `0313한진`, `보고서한진`, `2025 한진 ESG 성과지표`
+- **전북교육청** (4) — `전북교육청_휴가운영지침_편집가능`, `생성형AI전문역량강화_강의안_16by9`, `전북교육청_전산직_AI통합플랫폼_직무연수_7H_강의안`, `전북교육청_전산직_생성형AI실무역량강화_7H_lecture-deck`
 - **유한킴벌리** (4) — `유한킴벌리_바이브코딩_특강_20260818`, `유한킴벌리_바이브코딩특강_강의계획서_20260818_CDSA`, `유한킴벌리_바이브코딩특강_강의안_20260818`, `유한킴벌리_바이브코딩특강_강의안_SIGNAL_20260818`
 - **코레일유통** (4) — `코레일유통_AI챔피언_GREEN_BLUE_통합_8H_A4커리큘럼`, `코레일유통_AI챔피언_GREEN_BLUE_통합_8H_커리큘럼`, `코레일유통_한재진_slm_report (Gemma4-E2B)`, `코레일유통_한재진_slm_report(Gemma4-31B)`
-- **한진** (3) — `0313한진`, `보고서한진`, `2025 한진 ESG 성과지표`
 - **KAK** (3) — `KAK_brand_portfolio_10p_standalone`, `KAK_brand_portfolio_saventure`, `KAK_immersive_brand_site`
 - **의성군** (3) — `uiseong_ai_agent_leadership_redesign`, `질문의시대는끝났다_키노트__202609_의성군`, `의성군_AI전략리더_AI에이전트_강의안`
-- **전북교육청** (3) — `생성형AI전문역량강화_강의안_16by9`, `전북교육청_전산직_AI통합플랫폼_직무연수_7H_강의안`, `전북교육청_전산직_생성형AI실무역량강화_7H_lecture-deck`
 - **KCC건설** (2) — `KCC건설_AI교육_제안서`, `KCC_분자구조뷰어`
 - **SB일렉트릭** (2) — `SB일렉트릭_강의안_전체`, `SB일렉트릭_AI교육_과정기획서`
 - **한화** (2) — `hanwha_preview`, `한화첨단소재`
@@ -500,20 +520,30 @@ LLM·에이전트·하네스 실행구조, MCP·스킬·컨텍스트, AI 트렌�
 - **교육행정** (2) — `교육행정_AI실습카드_100선_별책부록`, `교육행정_바이브코딩_업무자동화_4일_통합강의안`
 - **김천시** (2) — `지리공간_머신러닝_분석지도`, `김천시이슈리포트`
 - **서울교육연수원** (2) — `서울교육연수원프로젝트기획서`, `서울교육연수원프로젝트기획서_팀`
+- **식품의약품안전처** (2) — `행정기관_AI직접개발_가이드북_30분_회람본근거_역할구분`, `식약처`
+- **풀무원** (2) — `풀무원푸드앤컬처_C레벨_AI에이전트활용_교육안`, `풀무원`
 - **한국교통안전공단** (1) — `kotsa_ai_portal`
 - **서울시교육청** (1) — `서울시교육청_AI프로젝트_분임별_프로포절_취합본`
-- **식품의약품안전처** (1) — `식약처`
 - **원익** (1) — `원익 그룹 리서처-saved`
-- **풀무원** (1) — `풀무원`
 - **해양수산인재개발원** (1) — `해양수산인재개발원`
 - **한국환경공단** (1) — `환경공단_하수도처_AI퍼실리테이션_견적안`
 
 ## 문서 목록 (유형 → 최신순)
 
-### 강의안 (113)
+### 강의안 (123)
 
 | 날짜 | 문서 | 섹션 | 주요 개념 | fileId |
 |---|---|---:|---|---|
+| 2026-10-11 | 10_시간표_과정1-3 | — |  | `1mw95Dh6YUE8f0lGJS-HNky16_R5aKDcJ` |
+| 2026-09-29 | 삼성전자_AI데이터분석_강의안_기존정본_SVG | 80 | 데이터 분석, 통계·머신러닝, 스프레드시트, 프롬프트 엔지니어링, 배포 | `1wzSoTti8t3TjQxUYdQCpx6L08pFL8Ltz` |
+| 2026-09-26 | 02차시_Chat_Work_Codex와_호출기호_온라인강의안 | 8 | Codex, 교육 설계, 스킬, 문서·보고서 작성, 스프레드시트 | `1LiacT_ntvP2YjmeHrbDC0a5RkAg1FCgg` |
+| 2026-09-26 | 03차시_플러그인_커넥터_스킬_온라인강의안_20260926_1603 | 8 | 스킬, 교육 설계, 회의·요약, ChatGPT, 문서·보고서 작성 | `1Z-ctXVWUE7AfLRzzcm0zYDMCl25SC2xa` |
+| 2026-09-26 | 04차시_경쟁사_제품_조사_온라인강의안_20260926_1603 | 8 | 교육 설계, 회의·요약, 문서·보고서 작성, 스킬, 스프레드시트 | `1jf-tWo2ytLG9njU2np-NwqtW_zcCaLVk` |
+| 2026-09-26 | 08차시_경영실적_분석_온라인강의안 | 8 | 교육 설계, 웹앱 제작, 스프레드시트, 문서·보고서 작성, 시각화 | `1Ul8sbxV2_FcCnQl8LC844unbemcLv8Kr` |
+| 2026-09-26 | 09차시_인사_총무_자료_활용_온라인강의안 | 8 | 교육 설계, 스프레드시트, AI 윤리·보안, 문서·보고서 작성, Codex | `1lX-jMZBCHnk_FI7jtxWKpQCI6FN-oxTK` |
+| 2026-09-26 | 10차시_마케팅_콘텐츠_온라인강의안 | 8 | 교육 설계, 회의·요약, 웹앱 제작, 브랜딩·디자인, 멀티모달 | `1_bj9gazDfR9NGpY2gs_aIvlZO-SE_cyL` |
+| 2026-09-26 | 11차시_프로젝트_자료_정리_온라인강의안 | 8 | 교육 설계, 회의·요약, 웹앱 제작, 스킬, 문서·보고서 작성 | `1A1R2qxnHzllgJ8_UNe8de8vCosFCbdxZ` |
+| 2026-09-26 | 12차시_업무_자동화_조합_온라인강의안 | 9 | 업무 자동화, 교육 설계, 스킬, 파이썬, 시각화 | `1DpLv4tBF46TUjracYuL8_M-dEIeqoyPi` |
 | 2026-09-20 | transformer-eli5 | — |  | `19163leM5gn5u0n8AIwqINWCxLwU2qksc` |
 | 2026-09-18 | 새해농업인실용교육_AI활용교육기획과_강의교안작성_4H_초안 | 31 | 생성형 AI, 교육 설계, 배포, AI 윤리·보안, 프롬프트 엔지니어링 | `14E2JNJZk46Gy-w8cNcVmzM0iakCFGGKd` |
 | 2026-09-13 | 01_교육과정_재설계_배경과_설득논리 | — | 교육 설계 | `1xUMvpdFSyDpGoYvRxBXONr7Oyw-U6Bru` |
@@ -543,7 +573,6 @@ LLM·에이전트·하네스 실행구조, MCP·스킬·컨텍스트, AI 트렌�
 | 2026-08-23 | 삼성전자_AI데이터분석_강의안_ssjhtml4_SVG | 86 | 데이터 분석, 통계·머신러닝, 스프레드시트, 파이썬, 시각화 | `14VhRbtsxgYsfDi3qXxug5sZYkcG9PDVY` |
 | 2026-08-22 | 삼성전자_AI데이터분석_강의안_10장 (+2판) | — | 데이터 분석 | `1tRT9RVUU149MF5CxPM-UK4V8bXyaLgUL` |
 | 2026-08-22 | 삼성전자_AI데이터분석_강의안_35장_마스터_SVG | 76 | 데이터 분석, 스프레드시트, 통계·머신러닝, 배포, 웹앱 제작 | `17mQT5zNmyzt7ORtQYbGht9p90v8xYDUc` |
-| 2026-08-22 | 삼성전자_AI데이터분석_강의안_기존정본_SVG | 80 | 데이터 분석, 통계·머신러닝, 스프레드시트, 프롬프트 엔지니어링, 배포 | `1wzSoTti8t3TjQxUYdQCpx6L08pFL8Ltz` |
 | 2026-08-22 | 삼성전자_AI데이터분석_전체강의안_112장_SSJHTML4 | — | 데이터 분석 | `1ZgoZHIiWW1MgKEmAW2H--K-VXfJHGp43` |
 | 2026-08-22 | 삼성전자_AI데이터분석_전체강의안_112장_고품질 | — | 데이터 분석 | `1mgLscb6GpnOhkAY1cg48Z39S9sxhbRo5` |
 | 2026-08-18 | 2주차_강의요약_엑셀_파이썬_업무자동화 | 26 | 파이썬, 스프레드시트, 업무 자동화, 회의·요약, 하네스 | `1NRPNXdM2UC-5RhytceEeeDhP_uINJlpk` |
@@ -563,6 +592,7 @@ LLM·에이전트·하네스 실행구조, MCP·스킬·컨텍스트, AI 트렌�
 | 2026-07-16 | LLM_에이전트_하네스_실행구조_이미지동일_16대9 (+1판) | — | LLM, AI 에이전트, 하네스 | `1wehRIWbvFs6Of4HRiUoSdkGWtk7TbaFU` |
 | 2026-07-16 | LLM_에이전트_하네스_실행구조_한장_DOM_SVG (+1판) | 2 | AI 에이전트, LLM, 하네스, 도구 호출, 파이썬 | `1BrMc1qki9yG6BGzeCK_NOcIXZ90oAyfP` |
 | 2026-07-16 | LLM_에이전트_하네스_클라우드_로컬_실행구조_4장_16대9_SSJHTML2 (+1판) | 1 | LLM, AI 에이전트, 하네스, 문서·보고서 작성, 도구 호출 | `12D51Z80z-LHqwcaoeV1W8yo-PlgKErbd` |
+| 2026-07-16 | 생성형AI_강사양성과정_합본 | 144 | 프롬프트 엔지니어링, 교육 설계, 공공행정 AI, AI 윤리·보안, AI 에이전트 | `1p6rUvXaedGHhnMjD8IhlSK0Yf5cYZ_7b` |
 | 2026-07-15 | 2026_강사양성과정_강의안_v2.dc | 7 | 공공행정 AI, 교육 설계, AI 에이전트, LLM, Claude Code | `17toMNJL02FlMxuWaO0bL2ieDVsg6VFA5` |
 | 2026-07-15 | 2026_강사양성과정_강의안_v2.dc__2026_강사양성과정 | 7 | 공공행정 AI, 교육 설계, AI 에이전트, LLM, Claude Code | `1dv91kYMz2eoVR8DU0nEfSN213xRCotZg` |
 | 2026-07-15 | 생성형AI_강사양성과정 (+1판) | 31 | 생성형 AI, 교육 설계, 토큰, 프롬프트 엔지니어링, 회의·요약 | `1AM7rDiuodltEYEQg1BZLA8Cq9Z7i7woV` |
@@ -628,10 +658,13 @@ LLM·에이전트·하네스 실행구조, MCP·스킬·컨텍스트, AI 트렌�
 | 2026-01-26 | 강의안 (+2판) | 60 | 스프레드시트, 시각화, 데이터 분석, 파이썬, 통계·머신러닝 | `1p1cxdP-kyLy4xzfAJIGTR9ZeOVU8FFr9` |
 | 2025-12-28 | 과정_상세 | — |  | `1vYmEzU3ASoFB17ftYhbNgqWG-WyTwL-7` |
 
-### 기타 (112)
+### 기타 (115)
 
 | 날짜 | 문서 | 섹션 | 주요 개념 | fileId |
 |---|---|---:|---|---|
+| 2026-10-09 | 04_행정업무자동화_심화 | 47 | 업무 자동화, 공공행정 AI, AI 에이전트, 스프레드시트, 문서·보고서 작성 | `1R0lIFafrmDl7VOV9TBL1VPdBT5RCfkS1` |
+| 2026-10-04 | 카드뉴스_4장 | — |  | `1Bh3Oftx0-VJhSqYpZMLTkS4goRakhC1z` |
+| 2026-10-01 | 풀무원푸드앤컬처_C레벨_AI에이전트활용_교육안 | 9 | 업무 자동화, AI 에이전트, 문서·보고서 작성, 회의·요약, Claude Code | `1BhdxCZMBndEqVXLRN2C2gyJtu5o7asLR` |
 | 2026-09-21 | code_artifact | — |  | `1EhkPJ2K_M1OxWNupUxwIBtmsovFVK7nf` |
 | 2026-09-20 | typesafe_jev_model | — |  | `1BMAmSzIe_5mLnIAIeHZIGGHKvKTAimAb` |
 | 2026-09-18 | research_revalidation_framework_ssjhtml4 | 22 | 문서·보고서 작성, 하네스, 통계·머신러닝, 공공행정 AI, 평가·문제은행 | `1ZMsik4E_gSXcvWOZqyi4So4vr_v31Atl` |
@@ -867,10 +900,11 @@ LLM·에이전트·하네스 실행구조, MCP·스킬·컨텍스트, AI 트렌�
 | 2025-11-27 | text_tool | — |  | `1S5_woWfvnk44OAbeHENgIVJxsG0zCv82` |
 | 2025-11-14 | 마인드맵제작프로그램 | — |  | `1Pwa8Xtpx30FtXvrE_5gfzzJiwTjyYeZf` |
 
-### 보고서 (49)
+### 보고서 (50)
 
 | 날짜 | 문서 | 섹션 | 주요 개념 | fileId |
 |---|---|---:|---|---|
+| 2026-09-26 | 06차시_재무_증빙_검토_온라인강의안_20260926_1603 | 8 | 교육 설계, 스프레드시트, 회의·요약, Codex, 파이썬 | `1gyhZqE_hXnMDiRib7DYC_6fIh4vkhgTu` |
 | 2026-09-19 | KCA_연구보고서의 최신화와 재현 방법론 | 23 | 문서·보고서 작성, 하네스, Claude Code, 통계·머신러닝, GitHub | `1hf8wNLW2NMN7NYyoMwoipNIwrTusmqt5` |
 | 2026-09-15 | 67명_자료검토 | 200 | 공공행정 AI, AI 챔피언, 데이터 분석, ChatGPT, AI 윤리·보안 | `1MLxj2fkRK4XWVgeDgPgZ9CIV9D7tulK0` |
 | 2026-09-15 | 시작본 (+3판) | 2 |  | `14hlvlsrohN7kSxgwKADCOwQoCxMC7NUq` |
@@ -921,11 +955,18 @@ LLM·에이전트·하네스 실행구조, MCP·스킬·컨텍스트, AI 트렌�
 | 2025-12-14 | 한글보고서양식 | — | 문서·보고서 작성 | `1Zr-3C9KtYGmE2o9XxqSNA9hS0MG0DuDI` |
 | 2025-11-14 | 보고서 | — | 문서·보고서 작성 | `1YxG9jHos4WsuF2A-m1ogOkznRvXXaAI6` |
 
-### 교재·매뉴얼 (38)
+### 교재·매뉴얼 (45)
 
 | 날짜 | 문서 | 섹션 | 주요 개념 | fileId |
 |---|---|---:|---|---|
+| 2026-10-09 | 01_행정업무자동화_05_국가공무원인재개발원_공식교재 | 47 | 업무 자동화, 공공행정 AI, AI 에이전트, 문서·보고서 작성, 웹앱 제작 | `1EYJuDkO7z0ZQu9Edh9HBO9F4MpC7D6pF` |
+| 2026-10-09 | 03_기관통합거버넌스_05_국가공무원인재개발원_공식교재 | 53 | AI 에이전트, 웹앱 제작, 공공행정 AI, 파이썬, 교육 설계 | `17MQ69yy19OCD3UCnRZ6KCpKaAOGWLAe_` |
+| 2026-10-09 | index_05_국가공무원인재개발원_공식교재 | — | 공공행정 AI | `1sRLCMJv-CpelEHcY_Uh5UJ3rZInFpkg1` |
+| 2026-10-06 | ai_isagi_manual | — |  | `1S-vgHIuvm1fUQDM8RBqUUZiEW1_VbUGP` |
+| 2026-09-26 | 행정기관_AI직접개발_가이드북_30분_회람본근거_역할구분 | 38 | 공공행정 AI, 평가·문제은행, AI 윤리·보안, 배포, GitHub | `1aXFROapuOIhrWvEhM0SotMh8y682mJTI` |
+| 2026-09-26 | 행정기관_AI직접개발_가이드북_발표대본_38장 | 40 | 평가·문제은행, 공공행정 AI, 배포, AI 윤리·보안, GitHub | `1ERu7YzhR3ICUNH5Vm0k_SxDKT_awD5vl` |
 | 2026-09-24 | ASTIS_바이브코딩_실무교재_초안 (+1판) | 90 | 바이브코딩, 스프레드시트, 파이썬, 문서·보고서 작성, 웹앱 제작 | `1aQuPy_L_uE5NxNyYqMjeLoNB1oTOWjxH` |
+| 2026-09-24 | 강사양성과정_교재_페이지뷰_초안_20260924_1935 | — |  | `1LLEIDFqGB8bI2bwKrkbN5O0B7acWoHPg` |
 | 2026-09-22 | ASTIS_바이브코딩_교재_스켈레톤 | 89 | 바이브코딩, 파이썬, 문서·보고서 작성, 스프레드시트, 웹앱 제작 | `1svHkeX6em_B8-P3C8UiMjB_cndt72cf5` |
 | 2026-09-21 | AI에이전트_바이브코딩_교재_페이지뷰 | 12 | AI 에이전트, 프롬프트 엔지니어링, MCP, 하네스, 바이브코딩 | `1VC_PrRNm2G5X6qNGMfLsAbT9RHBKyhSH` |
 | 2026-09-21 | 청소년지도사_디지털도구200활용_교재_페이지뷰 | 57 | 문서·보고서 작성, PRD·기획, AI 윤리·보안, 회의·요약, 업무 자동화 | `15fbNfppqPPR2b_hlDXszFgWKHH-2Tmmt` |
@@ -964,10 +1005,12 @@ LLM·에이전트·하네스 실행구조, MCP·스킬·컨텍스트, AI 트렌�
 | 2026-04-18 | design-system-guide | 14 | 발표자료 제작, 프롬프트 엔지니어링, 교육 설계, 워크플로 자동화, 웹앱 제작 | `1aOpfu1sGWRVOTUeCzxzNUEhmjVmgM-Ug` |
 | 2026-04-09 | 북마크 | 1 | AI 에이전트, RAG, 파이썬, Claude | `1YYcfJWfNInWmLIxYuVGDmUJuGUrrYE8a` |
 
-### 강의계획·커리큘럼 (28)
+### 강의계획·커리큘럼 (30)
 
 | 날짜 | 문서 | 섹션 | 주요 개념 | fileId |
 |---|---|---:|---|---|
+| 2026-10-09 | 교육커리큘럼_20261009 | — | 교육 설계 | `1u4yeyzWLCZGZ0EsU4rgbH2krfJG5CLtL` |
+| 2026-10-04 | 커리큘럼과기술참고_출처 | — | 교육 설계 | `1CXIm8KOjjGtWlp4DjJkj6OEA7-ZHwpts` |
 | 2026-09-22 | ai-curriculum-board | 70 | 문서·보고서 작성, 공공행정 AI, 웹앱 제작, 스프레드시트, 회의·요약 | `10ffH-vSCcRxka3jpP5rfsU6Ygdh_AHM8` |
 | 2026-09-15 | tiffany_omnichannel_copilot_curriculum | 14 | Copilot, 스프레드시트, 웹앱 제작, 업무 자동화, 워크플로 자동화 | `1FTkQzMZSxN5HhV-M_x71r2D4E7W9k72V` |
 | 2026-09-12 | 00_후보주제_검토 | — |  | `1JgcuaIBpZiPJ9UVQdCttQ3nN2zoADaE0` |
@@ -996,6 +1039,25 @@ LLM·에이전트·하네스 실행구조, MCP·스킬·컨텍스트, AI 트렌�
 | 2026-04-15 | curriculum-overview | 10 | AI 에이전트, RAG, 프롬프트 엔지니어링, 업무 자동화, 워크플로 자동화 | `1Z6pmMWS4aDuNwFAgmJcoFmWnB5V3reWh` |
 | 2026-03-29 | ai_writing_curriculum_polished | — |  | `1fgiFUt1bGU8lEa4i1qywH5cyeJmwb-Bi` |
 | 2026-03-02 | claude_code_lesson_plan | — | Claude Code, Claude | `1r5zBXrYnQgltD5vSiqOeD18UZluv6UfE` |
+
+### 제안서·소개서 (14)
+
+| 날짜 | 문서 | 섹션 | 주요 개념 | fileId |
+|---|---|---:|---|---|
+| 2026-10-12 | 07차시_견적_계약_검토_온라인강의안 (+1판) | — | 교육 설계 | `1rNVSuBqehJ7n9ipWnEOcJTTbZV87EuRm` |
+| 2026-09-26 | 05차시_제안서_PDF_제작_온라인강의안_20260926_1603 | 8 | 교육 설계, 스킬, 발표자료 제작, 회의·요약, Codex | `1m8_KgOIL9AQYPxq0MftYGOUF519IePdM` |
+| 2026-08-30 | 05차시_제안서_PDF_제작_온라인강의안 | — | 교육 설계 | `1G_K57tn4NCvc4LhovZsXgJGdXIIdKbeV` |
+| 2026-08-30 | 참고_제안서_디자인 | — |  | `1boonoIJXZ-Y8IvMmOj2msxQS7ku588Ht` |
+| 2026-08-05 | CDSA_2026_교육소개서_V4_A4세로_책자판 | 23 | 업무 자동화, 문서·보고서 작성, 교육 설계, 스프레드시트, AI 에이전트 | `1doQAUE9UJuPNOm1TcnirV0xTffU4pPHk` |
+| 2026-08-05 | CDSA_2026_교육소개서_V4_가로형_전체판 | 20 | 업무 자동화, 교육 설계, 문서·보고서 작성, 공공행정 AI, 스프레드시트 | `19_234JSwBXh1nLpkMPCmUyu9jinVvG-t` |
+| 2026-08-05 | CDSA_교육소개서_V4_프로토타입_가로 | 10 | 업무 자동화, AI 에이전트, MCP, 공공행정 AI, 교육 설계 | `1h_WOYOhKekMgSzyBmzyQ1l2MqVBRCm_2` |
+| 2026-08-04 | 2026_CDSA_교육소개서_세로형 (+1판) | 33 | 업무 자동화, 스프레드시트, 문서·보고서 작성, 회의·요약, 교육 설계 | `1F_VXG4nKz8Vd7czYc42r849AkhLT-4vd` |
+| 2026-08-04 | 2026_CDSA_교육제안서_가로형 (+1판) | — |  | `1p74V863_c1MUX5Hz162dZBWyV3KucNNO` |
+| 2026-07-15 | KCA_에이전틱AI_교육제안 (+1판) | — | AI 에이전트 | `1-H6QWzAtFpcUu1Y6Gtfy61Quwinv4pps` |
+| 2026-06-23 | KCC건설_AI교육_제안서 | — |  | `1BbukNd1dyDgtM26iQO2Ot6ajRQjcptBr` |
+| 2026-05-07 | ax_camp_proposal | 20 | LLM, 웹앱 제작, 파이썬, AI 에이전트, 업무 자동화 | `18Hwdj_4ehUa5rHajMIsQn97OqHc-ZCdH` |
+| 2026-04-14 | 환경공단_하수도처_AI퍼실리테이션_견적안 | — |  | `1bHGk6-TwkxPbd5C72-9e-yaPeOE9fLyj` |
+| 2026-01-02 | 제안서 | — |  | `1ZhgxpTa3FFEnXy3gWZIhdA7HzpQV13xk` |
 
 ### 발표·키노트 (13)
 
@@ -1033,27 +1095,11 @@ LLM·에이전트·하네스 실행구조, MCP·스킬·컨텍스트, AI 트렌�
 | 2026-04-14 | oy-quizverse-iso | 6 |  | `14AzjEpX5W1MY6SP5rNFfBY6uq1xER7I5` |
 | 2026-03-14 | ai_champion_problem_bank | — | AI 챔피언 | `1IKDN8K94Qg2gf9o5V9IeHlpGiTNslvdE` |
 
-### 제안서·소개서 (12)
+### 안내·운영 (9)
 
 | 날짜 | 문서 | 섹션 | 주요 개념 | fileId |
 |---|---|---:|---|---|
-| 2026-08-30 | 05차시_제안서_PDF_제작_온라인강의안 | — | 교육 설계 | `1G_K57tn4NCvc4LhovZsXgJGdXIIdKbeV` |
-| 2026-08-30 | 참고_제안서_디자인 | — |  | `1boonoIJXZ-Y8IvMmOj2msxQS7ku588Ht` |
-| 2026-08-05 | CDSA_2026_교육소개서_V4_A4세로_책자판 | 23 | 업무 자동화, 문서·보고서 작성, 교육 설계, 스프레드시트, AI 에이전트 | `1doQAUE9UJuPNOm1TcnirV0xTffU4pPHk` |
-| 2026-08-05 | CDSA_2026_교육소개서_V4_가로형_전체판 | 20 | 업무 자동화, 교육 설계, 문서·보고서 작성, 공공행정 AI, 스프레드시트 | `19_234JSwBXh1nLpkMPCmUyu9jinVvG-t` |
-| 2026-08-05 | CDSA_교육소개서_V4_프로토타입_가로 | 10 | 업무 자동화, AI 에이전트, MCP, 공공행정 AI, 교육 설계 | `1h_WOYOhKekMgSzyBmzyQ1l2MqVBRCm_2` |
-| 2026-08-04 | 2026_CDSA_교육소개서_세로형 (+1판) | 33 | 업무 자동화, 스프레드시트, 문서·보고서 작성, 회의·요약, 교육 설계 | `1F_VXG4nKz8Vd7czYc42r849AkhLT-4vd` |
-| 2026-08-04 | 2026_CDSA_교육제안서_가로형 (+1판) | — |  | `1p74V863_c1MUX5Hz162dZBWyV3KucNNO` |
-| 2026-07-15 | KCA_에이전틱AI_교육제안 (+1판) | — | AI 에이전트 | `1-H6QWzAtFpcUu1Y6Gtfy61Quwinv4pps` |
-| 2026-06-23 | KCC건설_AI교육_제안서 | — |  | `1BbukNd1dyDgtM26iQO2Ot6ajRQjcptBr` |
-| 2026-05-07 | ax_camp_proposal | 20 | LLM, 웹앱 제작, 파이썬, AI 에이전트, 업무 자동화 | `18Hwdj_4ehUa5rHajMIsQn97OqHc-ZCdH` |
-| 2026-04-14 | 환경공단_하수도처_AI퍼실리테이션_견적안 | — |  | `1bHGk6-TwkxPbd5C72-9e-yaPeOE9fLyj` |
-| 2026-01-02 | 제안서 | — |  | `1ZhgxpTa3FFEnXy3gWZIhdA7HzpQV13xk` |
-
-### 안내·운영 (8)
-
-| 날짜 | 문서 | 섹션 | 주요 개념 | fileId |
-|---|---|---:|---|---|
+| 2026-10-08 | 전북교육청_휴가운영지침_편집가능 | — |  | `1tmR78iYsnRxy-iD2TF0ZYUq7k-oUYlPr` |
 | 2026-09-22 | 01_행정업무자동화_기초_안내문 | — | 업무 자동화, 공공행정 AI | `1OPjCk2Tw-LVS3HyVrV7lPJygt876dgIE` |
 | 2026-09-22 | 02_행정업무자동화_심화_안내문 | — | 업무 자동화, 공공행정 AI | `1e1_ot4WSoKlrOqqb92On8jIfYSCJ3UVi` |
 | 2026-09-22 | 04_기관업무혁신시스템_안내문 | — |  | `1wDusf00WpB9-3JfL6gQOUmR5gXoImddj` |
